@@ -1,0 +1,199 @@
+---
+interface Props {
+  title: string;
+  tagline: string;
+  href: string;
+  imageBase: string;
+  tone?: "light" | "dark";
+  priority?: boolean;
+  shopLabel?: string;
+}
+
+const {
+  title,
+  tagline,
+  href,
+  imageBase,
+  tone = "light",
+  priority = false,
+  shopLabel = "Shop Now",
+} = Astro.props;
+---
+
+<section class:list={["home-hero", `home-hero--${tone}`]}>
+  <div class="home-hero__media" aria-hidden="true">
+    <picture>
+      <source
+        media="(max-width: 47.99rem)"
+        type="image/webp"
+        srcset={`${imageBase}-mobile.webp`}
+      />
+      <source
+        media="(max-width: 47.99rem)"
+        type="image/jpeg"
+        srcset={`${imageBase}-mobile.jpg`}
+      />
+      <source
+        type="image/webp"
+        srcset={`${imageBase}-medium.webp 1400w, ${imageBase}-large.webp 2400w`}
+        sizes="100vw"
+      />
+      <img
+        class="home-hero__img"
+        src={`${imageBase}-large.jpg`}
+        srcset={`${imageBase}-medium.jpg 1400w, ${imageBase}-large.jpg 2400w`}
+        sizes="100vw"
+        alt=""
+        width="2400"
+        height="1029"
+        loading={priority ? "eager" : "lazy"}
+        decoding="async"
+        fetchpriority={priority ? "high" : "auto"}
+      />
+    </picture>
+  </div>
+
+  <div class="home-hero__copy">
+    <h2 class="home-hero__title">{title}</h2>
+    <p class="home-hero__tagline">{tagline}</p>
+    <div class="home-hero__actions">
+      <a class:list={["btn", tone === "dark" ? "btn--inverse" : "btn--primary"]} href={href}>
+        {shopLabel}
+      </a>
+      <a
+        class:list={[
+          "btn",
+          tone === "dark" ? "btn--ghost-inverse" : "btn--secondary",
+        ]}
+        href="/trade-in"
+      >
+        Trade In &amp; Save
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .home-hero {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    min-height: min(72dvh, 36rem);
+    overflow: hidden;
+    background: var(--color-grey-100);
+  }
+
+  .home-hero--dark {
+    background: var(--color-black);
+  }
+
+  .home-hero__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .home-hero__media picture {
+    display: contents;
+  }
+
+  .home-hero__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100% !important;
+    max-width: none;
+    display: block;
+    object-fit: cover;
+    object-position: center center;
+  }
+
+  .home-hero__copy {
+    position: relative;
+    z-index: 1;
+    align-self: start;
+    justify-self: center;
+    width: min(100% - 1.5rem, 40rem);
+    padding: var(--space-8) 0 var(--space-5);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .home-hero--light .home-hero__copy {
+    color: var(--color-black);
+  }
+
+  .home-hero--dark .home-hero__copy {
+    color: var(--color-white);
+  }
+
+  .home-hero__title {
+    font-size: clamp(1.85rem, 7vw, 3.75rem);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: -0.03em;
+    line-height: var(--leading-tight);
+  }
+
+  .home-hero__tagline {
+    font-size: clamp(0.9rem, 2.4vw, 1.2rem);
+    max-width: 28rem;
+    line-height: var(--leading-snug);
+    padding-inline: 0.25rem;
+  }
+
+  .home-hero--light .home-hero__tagline {
+    color: var(--color-grey-700);
+  }
+
+  .home-hero--dark .home-hero__tagline {
+    color: var(--color-grey-300);
+  }
+
+  .home-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+    width: 100%;
+  }
+
+  .home-hero__actions .btn {
+    flex: 1 1 auto;
+    min-width: min(100%, 9.5rem);
+  }
+
+  @media (min-width: 40rem) {
+    .home-hero {
+      min-height: min(78dvh, 44rem);
+    }
+
+    .home-hero__copy {
+      width: min(100% - 2rem, 40rem);
+      padding: var(--space-10) 0 var(--space-6);
+    }
+
+    .home-hero__actions {
+      gap: var(--space-3);
+      width: auto;
+    }
+
+    .home-hero__actions .btn {
+      flex: 0 1 auto;
+      min-width: 0;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .home-hero {
+      min-height: min(78dvh, 48rem);
+    }
+
+    .home-hero__copy {
+      padding-top: var(--space-14);
+    }
+  }
+</style>

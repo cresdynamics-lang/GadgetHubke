@@ -1,0 +1,157 @@
+---
+import type { Subcategory } from "../lib/catalog";
+
+interface Props {
+  items: Subcategory[];
+  /** denser for mega-menu strip */
+  compact?: boolean;
+  class?: string;
+}
+
+const { items, compact = false, class: className = "" } = Astro.props;
+---
+
+<ul class:list={["lineup", { "lineup--compact": compact }, className]}>
+  {
+    items.map((item) => (
+      <li>
+        <a class="lineup__card" href={item.href}>
+          <span class="lineup__media">
+            {item.image ? (
+              <picture>
+                {item.image.srcWebp && (
+                  <source srcset={item.image.srcWebp} type="image/webp" />
+                )}
+                <img
+                  src={item.image.src}
+                  alt={item.image.alt}
+                  width={compact ? 120 : 200}
+                  height={compact ? 90 : 150}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
+            ) : (
+              <span class="lineup__placeholder" aria-hidden="true">
+                <span class="lineup__glyph">{item.label.charAt(0)}</span>
+              </span>
+            )}
+          </span>
+          <span class="lineup__label">{item.label}</span>
+          {item.blurb && <span class="lineup__blurb">{item.blurb}</span>}
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .lineup {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .lineup--compact {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2);
+  }
+
+  @media (min-width: 40rem) {
+    .lineup {
+      grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+    }
+
+    .lineup--compact {
+      grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .lineup {
+      grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+    }
+  }
+
+  .lineup__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.45rem;
+    padding: var(--space-3) var(--space-2);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid transparent;
+    transition:
+      background-color var(--duration-fast) var(--ease),
+      border-color var(--duration-fast) var(--ease);
+  }
+
+  .lineup__card:hover {
+    background: var(--color-grey-50);
+    border-color: var(--color-border);
+    color: inherit;
+  }
+
+  .lineup__media {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-sm);
+    background: var(--color-grey-100);
+    overflow: hidden;
+  }
+
+  .lineup__media picture {
+    display: contents;
+  }
+
+  .lineup__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .lineup__placeholder {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(160deg, var(--color-grey-100), var(--color-grey-200));
+  }
+
+  .lineup__glyph {
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: -0.04em;
+    color: var(--color-grey-500);
+  }
+
+  .lineup__label {
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .lineup__blurb {
+    font-size: 0.6875rem;
+    color: var(--color-grey-500);
+    line-height: 1;
+  }
+
+  .lineup--compact .lineup__card {
+    padding: var(--space-2) 0.35rem;
+  }
+
+  .lineup--compact .lineup__label {
+    font-size: 0.75rem;
+  }
+</style>

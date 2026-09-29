@@ -1,0 +1,41 @@
+---
+/**
+ * Temporary stub for sitemap routes until full pages are built.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+interface Props {
+  title: string;
+  heading: string;
+}
+
+const { title, heading } = Astro.props;
+---
+
+<BaseLayout title={`${title} — GadgetHub`}>
+  <section class="stub container">
+    <h1>{heading}</h1>
+    <p>Page shell — content coming in Phase 1 build.</p>
+  </section>
+</BaseLayout>
+
+<style>
+  .stub {
+    padding-block: var(--space-12) calc(var(--space-16) + var(--fab-clearance));
+  }
+
+  @media (min-width: 40rem) {
+    .stub {
+      padding-block: var(--space-20);
+    }
+  }
+
+  .stub h1 {
+    font-size: clamp(1.75rem, 5vw, var(--text-3xl));
+    margin-bottom: var(--space-3);
+  }
+
+  .stub p {
+    color: var(--color-fg-muted);
+  }
+</style>

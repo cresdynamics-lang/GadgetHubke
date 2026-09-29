@@ -1,0 +1,95 @@
+---
+/**
+ * Left-corner brand: original logo mark + “Gadget Hub” wordmark.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+---
+
+<a class:list={["brand", className]} href="/" aria-label="Gadget Hub home">
+  <span class="brand__logo-frame">
+    <img
+      class="brand__logo"
+      src="/images/logo-mark.png"
+      alt=""
+      width="44"
+      height="44"
+      decoding="async"
+    />
+  </span>
+  <span class="brand__wordmark">Gadget Hub</span>
+</a>
+
+<style>
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    text-decoration: none;
+    color: inherit;
+    flex-shrink: 0;
+    overflow: visible;
+  }
+
+  .brand:hover {
+    opacity: 0.9;
+  }
+
+  .brand__logo-frame {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.375rem;
+    background: var(--color-black);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .brand__logo {
+    width: 115%;
+    height: 115%;
+    object-fit: cover;
+    object-position: center center;
+  }
+
+  .brand__wordmark {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: -0.035em;
+    line-height: 1.5;
+    color: var(--color-black);
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding-block: 0.15em;
+    overflow: visible;
+  }
+
+  @media (max-width: 22rem) {
+    .brand__wordmark {
+      display: none;
+    }
+  }
+
+  @media (min-width: 40rem) {
+    .brand__logo-frame {
+      width: 2.75rem;
+      height: 2.75rem;
+    }
+
+    .brand__wordmark {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .brand__wordmark {
+      font-size: 1.3rem;
+    }
+  }
+</style>

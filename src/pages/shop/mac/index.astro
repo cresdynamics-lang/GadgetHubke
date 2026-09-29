@@ -1,0 +1,12 @@
+---
+import CategoryPage from "../../../layouts/CategoryPage.astro";
+import { macSubcategories } from "../../../lib/catalog";
+---
+
+<CategoryPage
+  title="Mac"
+  eyebrow="Mac"
+  heading="Choose your Mac"
+  lede="New devices only. Pick a lineup to explore models, configs, and pricing."
+  items={macSubcategories}
+/>

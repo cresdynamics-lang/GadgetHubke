@@ -1,0 +1,33 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import HomeHero from "../components/HomeHero.astro";
+import { site } from "../lib/site";
+---
+
+<BaseLayout
+  title={`${site.name} — New devices in Nairobi`}
+  description="Shop new iPhone, Mac, and iPad at GadgetHub Kenya. Trade-in and Lipa Mdogo Mdogo available."
+>
+  <HomeHero
+    title="iPhone"
+    tagline="The lineup that leads. New, sealed, ready for Nairobi."
+    href="/shop/iphone"
+    imageBase="/images/heroes/iphone"
+    tone="light"
+    priority
+  />
+  <HomeHero
+    title="Mac"
+    tagline="Thin. Powerful. Built for what you do next."
+    href="/shop/mac"
+    imageBase="/images/heroes/mac"
+    tone="light"
+  />
+  <HomeHero
+    title="iPad"
+    tagline="Colour, canvas, and performance — all day."
+    href="/shop/ipad"
+    imageBase="/images/heroes/ipad"
+    tone="light"
+  />
+</BaseLayout>

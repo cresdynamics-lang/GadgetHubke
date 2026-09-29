@@ -1,0 +1,87 @@
+---
+/**
+ * Category landing with subcategory lineup cards.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SubcategoryLineup from "../components/SubcategoryLineup.astro";
+import type { Subcategory } from "../lib/catalog";
+
+interface Props {
+  title: string;
+  eyebrow: string;
+  heading: string;
+  lede: string;
+  items: Subcategory[];
+}
+
+const { title, eyebrow, heading, lede, items } = Astro.props;
+---
+
+<BaseLayout title={`${title} — GadgetHub`} description={lede}>
+  <section class="cat-page">
+    <div class="container cat-page__intro">
+      <p class="cat-page__eyebrow">{eyebrow}</p>
+      <h1>{heading}</h1>
+      <p class="cat-page__lede">{lede}</p>
+    </div>
+    <div class="container cat-page__lineup">
+      <SubcategoryLineup items={items} />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .cat-page {
+    padding-block: var(--space-8) calc(var(--space-16) + var(--fab-clearance));
+  }
+
+  @media (min-width: 40rem) {
+    .cat-page {
+      padding-block: var(--space-12) var(--space-20);
+    }
+  }
+
+  .cat-page__intro {
+    margin-bottom: var(--space-8);
+    max-width: 40rem;
+  }
+
+  @media (min-width: 40rem) {
+    .cat-page__intro {
+      margin-bottom: var(--space-10);
+    }
+  }
+
+  .cat-page__eyebrow {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-grey-500);
+    margin-bottom: var(--space-3);
+  }
+
+  .cat-page h1 {
+    font-size: clamp(1.75rem, 5vw, 2.75rem);
+    margin-bottom: var(--space-3);
+  }
+
+  .cat-page__lede {
+    color: var(--color-fg-muted);
+    max-width: 32rem;
+    font-size: clamp(0.95rem, 2vw, 1.05rem);
+  }
+
+  .cat-page__lineup {
+    padding: var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-white);
+  }
+
+  @media (min-width: 40rem) {
+    .cat-page__lineup {
+      padding: var(--space-6);
+    }
+  }
+</style>

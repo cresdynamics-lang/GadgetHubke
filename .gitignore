@@ -1,0 +1,45 @@
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# environment variables
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Agent / local scratch
+*.local
+.cursor/
+
+# Debug / temp image exports
+public/images/_*.png
+public/images/_*.jpg
+
+# Saved Apple.com page dumps (not site assets)
+public/images/**/*_files/
+public/images/**/*.html
+public/images/iPhone - mac.html
+public/images/iPhone - mac_files/
+public/images/iPhone 17 Pro and iPhone 17 Pro Max - Apple (KE).html
+public/images/iPhone 17 Pro and iPhone 17 Pro Max - Apple (KE)_files/
+
+# Loose Apple CDN dumps at images root (site uses heroes/, iphone/, mac/, ipad/)
+/public/images/hero_*.jpg
+/public/images/highlights_*.jpg
+/public/images/promo_*.jpg
+/public/images/iphone_*.jpg
