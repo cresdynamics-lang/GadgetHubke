@@ -1,4 +1,4 @@
-/** Product catalog — lineups shared by nav hover + category pages */
+/** Product catalog - lineups shared by nav hover + category pages */
 
 export type Subcategory = {
   id: string;

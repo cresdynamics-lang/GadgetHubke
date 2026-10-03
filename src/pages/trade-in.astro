@@ -5,17 +5,17 @@ import { site, whatsappUrl } from "../lib/site";
 const brands = ["iPhone", "Samsung"] as const;
 const storages = ["64GB", "128GB", "256GB", "512GB", "1TB", "2TB"] as const;
 const conditions = [
-  { value: "excellent", label: "Excellent — minimal wear" },
-  { value: "good", label: "Good — light marks" },
-  { value: "fair", label: "Fair — visible wear, works fully" },
-  { value: "poor", label: "Poor — heavy wear or issues" },
+  { value: "excellent", label: "Excellent - minimal wear" },
+  { value: "good", label: "Good - light marks" },
+  { value: "fair", label: "Fair - visible wear, works fully" },
+  { value: "poor", label: "Poor - heavy wear or issues" },
 ] as const;
 
 const waBase = whatsappUrl();
 ---
 
 <BaseLayout
-  title="Trade-In — GadgetHub"
+  title="Trade-In - GadgetHub"
   description="Trade in an iPhone or Samsung toward any new device at GadgetHub. Estimates online; final value after inspection."
 >
   <section class="tradein container">
@@ -25,7 +25,7 @@ const waBase = whatsappUrl();
       <p class="tradein__lede">
         We accept <strong>iPhone</strong> and <strong>Samsung</strong> only. Credit
         applies toward <strong>any new device</strong> in our catalog. Online values
-        are estimates — final offer after in-person inspection at{" "}
+        are estimates - final offer after in-person inspection at{" "}
         {site.address}.
       </p>
     </header>
@@ -104,7 +104,7 @@ const waBase = whatsappUrl();
       <aside class="tradein__aside">
         <h2>Good to know</h2>
         <ul>
-          <li>iPhone and Samsung only — other brands are not accepted</li>
+          <li>iPhone and Samsung only - other brands are not accepted</li>
           <li>Credit toward any new sealed device we sell</li>
           <li>Devices with iCloud/Google lock or unclear ownership may be declined</li>
           <li>Visit us: {site.hours.short}</li>
@@ -129,7 +129,7 @@ const waBase = whatsappUrl();
     const phone = String(data.get("phone") || "").trim();
 
     const message = [
-      "Hi GadgetHub — Trade-In enquiry",
+      "Hi GadgetHub - Trade-In enquiry",
       "",
       `Name: ${name}`,
       `Phone: ${phone}`,

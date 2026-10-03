@@ -11,7 +11,7 @@ const { product } = Astro.props;
 ---
 
 <BaseLayout
-  title={`${product.name} Tech Specs — GadgetHub`}
+  title={`${product.name} Tech Specs - GadgetHub`}
   description={`Full specifications for ${product.name}. Warranty via ${site.legalName}.`}
 >
   <article class="specs container">
@@ -21,7 +21,7 @@ const { product } = Astro.props;
         <span aria-hidden="true"> / </span>
         Tech Specs
       </p>
-      <h1>{product.name} — Tech Specs</h1>
+      <h1>{product.name} - Tech Specs</h1>
       <p class="specs__lede">
         <a href={product.overviewHref}>← Back to Overview</a>
         <span aria-hidden="true"> · </span>
@@ -46,14 +46,14 @@ const { product } = Astro.props;
     }
 
     <p class="specs__note">
-      New sealed devices only. Warranty is the manufacturer’s standard coverage —
+      New sealed devices only. Warranty is the manufacturer’s standard coverage - 
       see <a href="/warranty-repairs">Warranty &amp; Repairs</a> and{" "}
       <a href="/returns">Returns</a>.
     </p>
 
     <section class="specs__buy">
       <h2>Ready to buy?</h2>
-      <p>Configure storage and finish on the overview — then Add to Cart or Buy on WhatsApp.</p>
+      <p>Configure storage and finish on the overview - then Add to Cart or Buy on WhatsApp.</p>
       <p class="specs__buy-actions">
         <a class="btn btn--primary" href={`${product.overviewHref}#buy`}>Buy on GadgetHub</a>
         <a class="btn btn--secondary" href={product.overviewHref}>Back to Overview</a>

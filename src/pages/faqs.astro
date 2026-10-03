@@ -2,12 +2,12 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { site, policy, whatsappUrl } from "../lib/site";
 
-const waHref = whatsappUrl("Hi GadgetHub — I have a question from the FAQs.");
+const waHref = whatsappUrl("Hi GadgetHub - I have a question from the FAQs.");
 
 const faqs = [
   {
     q: "Do you sell refurbished or used phones?",
-    a: "No. We only sell new, sealed devices. Trade-ins are accepted as credit toward a new purchase — they are not sold as inventory on this site.",
+    a: "No. We only sell new, sealed devices. Trade-ins are accepted as credit toward a new purchase - they are not sold as inventory on this site.",
   },
   {
     q: "How do I order?",
@@ -19,7 +19,7 @@ const faqs = [
   },
   {
     q: "What is Lipa Mdogo Mdogo?",
-    a: "An installment plan run by Gadget Hub Investments — no external finance partner. See the Lipa Mdogo Mdogo page for how it works, then WhatsApp us to apply.",
+    a: "An installment plan run by Gadget Hub Investments - no external finance partner. See the Lipa Mdogo Mdogo page for how it works, then WhatsApp us to apply.",
   },
   {
     q: "Which devices can I trade in?",
@@ -41,7 +41,7 @@ const faqs = [
 ---
 
 <BaseLayout
-  title="FAQs — GadgetHub"
+  title="FAQs - GadgetHub"
   description="Answers on new-only stock, ordering, Lipa Mdogo Mdogo, trade-in, warranty, and returns."
 >
   <section class="faqs container">
@@ -139,7 +139,7 @@ const faqs = [
   }
 
   .faqs__item[open] summary::after {
-    content: "–";
+    content: "-";
   }
 
   .faqs__item p {

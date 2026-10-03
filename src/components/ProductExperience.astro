@@ -1,6 +1,6 @@
 ---
 /**
- * Interactive “how it feels” panels — Design / Capture / Everyday / Mac.
+ * Interactive “how it feels” panels - Design / Capture / Everyday / Mac.
  * Keeps exploration on-site and routes attention back to buy.
  */
 import type { ProductExperience as Experience } from "../lib/products";
@@ -21,7 +21,7 @@ const { productName, experiences, buyHref = "#buy" } = Astro.props;
         <p class="feel__eyebrow">How it feels</p>
         <h2 id="feel-heading">Living with {productName}</h2>
         <p class="feel__lede">
-          Tap through the moments that make an iPhone feel immediate — in the hand,
+          Tap through the moments that make an iPhone feel immediate - in the hand,
           at the shutter, across your day, and on your Mac.
         </p>
       </header>
@@ -141,7 +141,7 @@ const { productName, experiences, buyHref = "#buy" } = Astro.props;
       });
     });
 
-    // Reveal on scroll — subtle presence, not noise
+    // Reveal on scroll - subtle presence, not noise
     const shell = root.querySelector(".feel__shell");
     if (shell && "IntersectionObserver" in window) {
       const io = new IntersectionObserver(

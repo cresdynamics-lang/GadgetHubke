@@ -1,5 +1,5 @@
 /**
- * GadgetHub brand tokens — strictly black & white + greyscale.
+ * GadgetHub brand tokens - strictly black & white + greyscale.
  * No accent color. CTAs, prices, and badges use black, white, or grey only.
  */
 
@@ -37,7 +37,7 @@
   --color-fg-inverse: var(--color-white);
   --color-border-inverse: var(--color-grey-800);
 
-  /* CTA (strict B&W — primary is solid black) */
+  /* CTA (strict B&W - primary is solid black) */
   --color-cta-bg: var(--color-black);
   --color-cta-fg: var(--color-white);
   --color-cta-hover: var(--color-grey-800);
@@ -45,12 +45,12 @@
   --color-cta-secondary-fg: var(--color-black);
   --color-cta-secondary-border: var(--color-black);
 
-  /* Price / badge (same palette — weight via contrast, not hue) */
+  /* Price / badge (same palette - weight via contrast, not hue) */
   --color-price: var(--color-black);
   --color-badge-bg: var(--color-black);
   --color-badge-fg: var(--color-white);
 
-  /* Typography — Inter variable, 2–3 weights */
+  /* Typography - Inter variable, 2-3 weights */
   --font-sans: "Inter Variable", Inter, system-ui, sans-serif;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
@@ -93,7 +93,7 @@
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
 
-  /* Breakpoints (reference — use in media queries) */
+  /* Breakpoints (reference - use in media queries) */
   --bp-sm: 40rem;
   --bp-md: 48rem;
   --bp-lg: 64rem;

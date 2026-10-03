@@ -1,6 +1,6 @@
 ---
 /**
- * Placeholder product page — WhatsApp stock check until full PDP lands.
+ * Placeholder product page - WhatsApp stock check until full PDP lands.
  */
 import BaseLayout from "./BaseLayout.astro";
 import { site, whatsappUrl } from "../lib/site";
@@ -19,11 +19,11 @@ const {
   blurb = "New sealed stock. Message us for current configurations and pricing.",
 } = Astro.props;
 
-const waHref = whatsappUrl(`Hi GadgetHub — interested in ${title}.`);
+const waHref = whatsappUrl(`Hi GadgetHub - interested in ${title}.`);
 ---
 
 <BaseLayout
-  title={`${title} — GadgetHub`}
+  title={`${title} - GadgetHub`}
   description={`${title} at GadgetHub Kenya. New devices only. WhatsApp ${site.phoneDisplay}.`}
 >
   <section class="stock container">

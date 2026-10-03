@@ -2,7 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { site, whatsappUrl, telUrl } from "../lib/site";
 
-const waHref = whatsappUrl("Hi GadgetHub — I'd like to visit the store.");
+const waHref = whatsappUrl("Hi GadgetHub - I'd like to visit the store.");
 const mapsQuery = encodeURIComponent(
   `${site.address}, Nairobi, Kenya`,
 );
@@ -11,7 +11,7 @@ const mapsEmbed = `https://www.google.com/maps?q=${mapsQuery}&output=embed`;
 ---
 
 <BaseLayout
-  title="Visit Us — GadgetHub"
+  title="Visit Us - GadgetHub"
   description={`Visit ${site.legalName} at ${site.address}. ${site.hours.weekday}. WhatsApp ${site.phoneDisplay}.`}
 >
   <section class="visit container">
@@ -45,7 +45,7 @@ const mapsEmbed = `https://www.google.com/maps?q=${mapsQuery}&output=embed`;
           {site.phoneDisplay}
         </a>{" "}
         or by email at{" "}
-        <a href={`mailto:${site.email}`}>{site.email}</a> — most customers order
+        <a href={`mailto:${site.email}`}>{site.email}</a> - most customers order
         ahead on WhatsApp and either collect in-store or arrange delivery, but
         walk-ins are always welcome during opening hours.
       </p>
@@ -69,7 +69,7 @@ const mapsEmbed = `https://www.google.com/maps?q=${mapsQuery}&output=embed`;
 
     <div class="visit__map">
       <iframe
-        title={`Map — ${site.address}`}
+        title={`Map - ${site.address}`}
         src={mapsEmbed}
         loading="lazy"
         referrerpolicy="no-referrer-when-downgrade"

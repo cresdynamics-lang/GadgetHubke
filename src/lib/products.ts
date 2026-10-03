@@ -69,14 +69,14 @@ export type Product = {
 
 type FeelShot = { src: string; alt: string };
 
-/** Shared Continuity story — iPhone capture → Mac motion, buy stays on GadgetHub */
+/** Shared Continuity story - iPhone capture → Mac motion, buy stays on GadgetHub */
 function continuityFeel(image?: FeelShot): ProductExperience {
   return {
     id: "continuity",
     label: "Mac & Continuity",
     title: "Stills on iPhone. Motion on Mac.",
     cue: "One library. Two screens. No cable ritual.",
-    body: "Shoot on iPhone, then open the same Photos library on Mac. Turn a burst of stills into a short cinematic clip, refine it at a desk, and send it back to Messages or AirDrop — the handset starts the memory; the Mac finishes the story.",
+    body: "Shoot on iPhone, then open the same Photos library on Mac. Turn a burst of stills into a short cinematic clip, refine it at a desk, and send it back to Messages or AirDrop - the handset starts the memory; the Mac finishes the story.",
     image,
   };
 }
@@ -169,15 +169,15 @@ const pro18GalleryShots = (name: "iPhone 18 Pro" | "iPhone 18 Pro Max") =>
     },
     {
       src: pro18Gallery[2],
-      alt: `${name} in Black — Pro Fusion camera system, Apple logo, and all-screen front with Dynamic Island`,
+      alt: `${name} in Black - Pro Fusion camera system, Apple logo, and all-screen front with Dynamic Island`,
     },
     {
       src: pro18Gallery[3],
-      alt: `${name} in Glacier — Pro Fusion camera system with three lenses, flash, microphone, and LiDAR Scanner`,
+      alt: `${name} in Glacier - Pro Fusion camera system with three lenses, flash, microphone, and LiDAR Scanner`,
     },
     {
       src: pro18Gallery[4],
-      alt: `${name} in Silver — thin construction with side button, Camera Control, and raised Pro Fusion camera system`,
+      alt: `${name} in Silver - thin construction with side button, Camera Control, and raised Pro Fusion camera system`,
     },
     {
       src: pro18Gallery[5],
@@ -201,7 +201,7 @@ export const products: Product[] = [
     },
     gallery: duoGallery.map((src, i) => ({
       src,
-      alt: `iPhone Duo — gallery ${i + 1}`,
+      alt: `iPhone Duo - gallery ${i + 1}`,
     })),
     finishesLabel: "Available in 2 finishes",
     storages: [
@@ -225,7 +225,7 @@ export const products: Product[] = [
     stories: [
       {
         title: "Folding Super Retina XDR",
-        body: "A 7.6-inch Super Retina XDR folding display with nano-texture, paired with a 5.4-inch Super Retina XDR outer display — built for immersive viewing and everyday reach.",
+        body: "A 7.6-inch Super Retina XDR folding display with nano-texture, paired with a 5.4-inch Super Retina XDR outer display - built for immersive viewing and everyday reach.",
       },
       {
         title: "Durability by design",
@@ -237,7 +237,7 @@ export const products: Product[] = [
       },
       {
         title: "48MP Dual Fusion camera",
-        body: "A Dual Fusion camera system with all-new ways to shoot — including Smart Take that captures pictures automatically.",
+        body: "A Dual Fusion camera system with all-new ways to shoot - including Smart Take that captures pictures automatically.",
       },
       {
         title: "A20 Pro. Vapor-cooled.",
@@ -300,7 +300,7 @@ export const products: Product[] = [
         rows: [
           {
             label: "System",
-            value: "Dual-battery system — all-day power",
+            value: "Dual-battery system - all-day power",
           },
           {
             label: "Video playback",
@@ -338,7 +338,7 @@ export const products: Product[] = [
     id: "iphone-pro",
     name: "iPhone 18 Pro",
     tagline:
-      "6.3‑inch ProMotion display. Ultimate Pro camera system. A20 Pro chip — total AI powerhouse.",
+      "6.3‑inch ProMotion display. Ultimate Pro camera system. A20 Pro chip - total AI powerhouse.",
     categoryLabel: "iPhone",
     categoryHref: "/shop/iphone",
     overviewHref: "/shop/iphone/iphone-pro",
@@ -363,8 +363,8 @@ export const products: Product[] = [
     experiences: buildIphoneFeel({
       design: {
         title: "Forged aluminum. Solid in the hand.",
-        cue: "Weight that reads premium — not heavy.",
-        body: "The unibody settles into your grip with Ceramic Shield 2 up front. Side button, Camera Control, and Action button sit where your thumb expects them — pro tools without a bulky chassis.",
+        cue: "Weight that reads premium - not heavy.",
+        body: "The unibody settles into your grip with Ceramic Shield 2 up front. Side button, Camera Control, and Action button sit where your thumb expects them - pro tools without a bulky chassis.",
         image: {
           src: pro18Gallery[0],
           alt: "iPhone 18 Pro finishes in hand context",
@@ -372,7 +372,7 @@ export const products: Product[] = [
       },
       camera: {
         title: "Variable aperture. Pro on demand.",
-        cue: "Low light. Depth. Reach — without hunting menus.",
+        cue: "Low light. Depth. Reach - without hunting menus.",
         body: "48MP Fusion with variable aperture and 8x optical‑quality zoom. Center Stage on the front expands the frame for groups. Shoot now; refine later with Apple Intelligence tools.",
         image: {
           src: pro18Gallery[3],
@@ -381,7 +381,7 @@ export const products: Product[] = [
       },
       everyday: {
         title: "A20 Pro through a full Nairobi day.",
-        cue: "Games, maps, WhatsApp — still responsive at dusk.",
+        cue: "Games, maps, WhatsApp - still responsive at dusk.",
         body: "Vapor‑cooled performance and Apple Intelligence keep Writing Tools, Clean Up, and Siri AI ready when you are. Dynamic Island keeps Live Activities glancing‑distance away.",
         image: {
           src: pro18Gallery[1],
@@ -404,25 +404,25 @@ export const products: Product[] = [
     stories: [
       {
         title: "Design. Our finest unibody.",
-        body: "Forged aluminum unibody with Ceramic Shield 2 front and Ceramic Shield back. Four finishes — Burgundy, Glacier, Silver, Black — with color-matched back glass. Camera Control and Action button keep your favorites one press away.",
+        body: "Forged aluminum unibody with Ceramic Shield 2 front and Ceramic Shield back. Four finishes - Burgundy, Glacier, Silver, Black - with color-matched back glass. Camera Control and Action button keep your favorites one press away.",
       },
       {
         title: "6.3″ Super Retina XDR",
-        body: "Brilliant ProMotion display up to 120Hz. Redesigned Dynamic Island shows up to three Live Activities at once — sports, navigation, music — without leaving the moment.",
+        body: "Brilliant ProMotion display up to 120Hz. Redesigned Dynamic Island shows up to three Live Activities at once - sports, navigation, music - without leaving the moment.",
       },
       {
         title: "Ultimate Pro camera system",
-        body: "48MP Fusion Main with variable aperture (ƒ/1.48–ƒ/4.0) for low light and depth of field. 48MP Ultra Wide and Telephoto. Up to 8x optical‑quality zoom. 18MP Center Stage front camera frames more people, more flexibly.",
+        body: "48MP Fusion Main with variable aperture (ƒ/1.48-ƒ/4.0) for low light and depth of field. 48MP Ultra Wide and Telephoto. Up to 8x optical‑quality zoom. 18MP Center Stage front camera frames more people, more flexibly.",
       },
       {
         title: "A20 Pro. Total AI powerhouse.",
-        body: "Next‑generation vapor chamber. Dual 16‑core Neural Engine. Apple Intelligence and Siri AI — more personal, more powerful.",
+        body: "Next‑generation vapor chamber. Dual 16‑core Neural Engine. Apple Intelligence and Siri AI - more personal, more powerful.",
       },
     ],
     batteryStat: {
       value: "Up to 36 hrs",
       label:
-        "of video playback. Faster wired charging — up to 50% in around 15 minutes with a compatible adapter.",
+        "of video playback. Faster wired charging - up to 50% in around 15 minutes with a compatible adapter.",
     },
     apps: [
       "Camera",
@@ -474,7 +474,7 @@ export const products: Product[] = [
           {
             label: "Main",
             value:
-              "48MP Fusion with variable aperture ƒ/1.48–ƒ/4.0; 24/48 mm (1x/2x)",
+              "48MP Fusion with variable aperture ƒ/1.48-ƒ/4.0; 24/48 mm (1x/2x)",
           },
           {
             label: "Ultra Wide",
@@ -496,7 +496,7 @@ export const products: Product[] = [
           { label: "Camera Control", value: "Capture, record, and adjust settings" },
           {
             label: "Action button",
-            value: "Customizable — Silent, Translate, Shortcut, and more",
+            value: "Customizable - Silent, Translate, Shortcut, and more",
           },
         ],
       },
@@ -507,7 +507,7 @@ export const products: Product[] = [
           {
             label: "Charging",
             value:
-              "Faster wired charging — up to 50% in around 15 minutes with a compatible adapter; MagSafe / Qi wireless where supported",
+              "Faster wired charging - up to 50% in around 15 minutes with a compatible adapter; MagSafe / Qi wireless where supported",
           },
         ],
       },
@@ -516,7 +516,7 @@ export const products: Product[] = [
         rows: [
           {
             label: "Features",
-            value: "Apple Intelligence and Siri AI — more personal, more powerful",
+            value: "Apple Intelligence and Siri AI - more personal, more powerful",
           },
         ],
       },
@@ -539,7 +539,7 @@ export const products: Product[] = [
           {
             label: "Warranty",
             value:
-              "Manufacturer’s standard warranty. Claims follow manufacturer terms and GadgetHub’s Return & Refund Policy — not AppleCare retail terms.",
+              "Manufacturer’s standard warranty. Claims follow manufacturer terms and GadgetHub’s Return & Refund Policy - not AppleCare retail terms.",
           },
         ],
       },
@@ -575,7 +575,7 @@ export const products: Product[] = [
       design: {
         title: "The larger Pro canvas.",
         cue: "6.9″ that still feels one‑handed at the edges.",
-        body: "A bigger Super Retina XDR with ProMotion up to 120Hz. Forged aluminum, Ceramic Shield 2, Camera Control under the thumb — immersive without tipping into awkward.",
+        body: "A bigger Super Retina XDR with ProMotion up to 120Hz. Forged aluminum, Ceramic Shield 2, Camera Control under the thumb - immersive without tipping into awkward.",
         image: {
           src: pro18Gallery[1],
           alt: "Hand holding iPhone 18 Pro Max",
@@ -583,7 +583,7 @@ export const products: Product[] = [
       },
       camera: {
         title: "Ultimate Pro capture.",
-        cue: "ƒ/1.48 light to ƒ/4.0 depth — then 8x reach.",
+        cue: "ƒ/1.48 light to ƒ/4.0 depth - then 8x reach.",
         body: "All‑48MP rear system with variable aperture, Ultra Wide, and Telephoto. Dual Capture and ProRes‑class tools when you need cinema energy after the fact.",
         image: {
           src: pro18Gallery[3],
@@ -592,7 +592,7 @@ export const products: Product[] = [
       },
       everyday: {
         title: "Longest battery. Quiet confidence.",
-        cue: "Up to 45 hours of video — leave the power bank at home.",
+        cue: "Up to 45 hours of video - leave the power bank at home.",
         body: "A20 Pro and a next‑gen vapor chamber keep gaming and on‑device AI smooth. Apple Intelligence drafts, cleans, and frames while you stay in the conversation.",
         image: {
           src: pro18Gallery[2],
@@ -615,33 +615,33 @@ export const products: Product[] = [
     stories: [
       {
         title: "Design. Our finest unibody.",
-        body: "Forged aluminum unibody with Ceramic Shield 2 front and Ceramic Shield back. Four gorgeous finishes — Burgundy, Glacier, Silver, Black — with color-matched back glass. Camera Control captures in an instant; Action button launches Silent mode, Translate, Shortcut, and more.",
+        body: "Forged aluminum unibody with Ceramic Shield 2 front and Ceramic Shield back. Four gorgeous finishes - Burgundy, Glacier, Silver, Black - with color-matched back glass. Camera Control captures in an instant; Action button launches Silent mode, Translate, Shortcut, and more.",
       },
       {
         title: "6.9″ Super Retina XDR",
-        body: "The larger Pro canvas — brilliant Super Retina XDR with ProMotion up to 120Hz. Redesigned Dynamic Island shows up to three Live Activities at once so scores, turns, and tracks stay in view.",
+        body: "The larger Pro canvas - brilliant Super Retina XDR with ProMotion up to 120Hz. Redesigned Dynamic Island shows up to three Live Activities at once so scores, turns, and tracks stay in view.",
       },
       {
         title: "Ultimate Pro camera system",
-        body: "All 48MP rear cameras. Variable aperture on the Fusion Main (ƒ/1.48 maximum light through ƒ/4.0 maximum depth) for low-light photos, video, and depth of field. Ultra Wide for landscapes and macro. Telephoto with 8x optical‑quality zoom — 16x total optical zoom range. 18MP Center Stage front camera for flexible framing.",
+        body: "All 48MP rear cameras. Variable aperture on the Fusion Main (ƒ/1.48 maximum light through ƒ/4.0 maximum depth) for low-light photos, video, and depth of field. Ultra Wide for landscapes and macro. Telephoto with 8x optical‑quality zoom - 16x total optical zoom range. 18MP Center Stage front camera for flexible framing.",
       },
       {
         title: "Pro controls. Photographic Styles.",
-        body: "Bring aperture, shutter speed, white balance, and histogram to the top of Camera. Customize texture and grain. Intelligent editing with Spatial Reframing, Extend, and Clean Up — powered by Apple Intelligence.",
+        body: "Bring aperture, shutter speed, white balance, and histogram to the top of Camera. Customize texture and grain. Intelligent editing with Spatial Reframing, Extend, and Clean Up - powered by Apple Intelligence.",
       },
       {
         title: "A20 Pro. Vapor-cooled.",
-        body: "Next‑generation vapor chamber with far more surface area to dissipate heat. Dual 16‑core Neural Engine. Built for intensive AI workloads, gaming, and pro video — including ProRes RAW, Apple Log 2, and Dual Capture.",
+        body: "Next‑generation vapor chamber with far more surface area to dissipate heat. Dual 16‑core Neural Engine. Built for intensive AI workloads, gaming, and pro video - including ProRes RAW, Apple Log 2, and Dual Capture.",
       },
       {
         title: "Apple Intelligence and Siri AI",
-        body: "More personal. More powerful. Conversational assistance, personal context across your apps, and systemwide writing help — rolling out in English.",
+        body: "More personal. More powerful. Conversational assistance, personal context across your apps, and systemwide writing help - rolling out in English.",
       },
     ],
     batteryStat: {
       value: "Up to 45 hrs",
       label:
-        "of video playback — the longest battery life in an iPhone. Up to 30 hours of use per charge. Faster wired charging — up to 50% in around 15 minutes with a compatible adapter.",
+        "of video playback - the longest battery life in an iPhone. Up to 30 hours of use per charge. Faster wired charging - up to 50% in around 15 minutes with a compatible adapter.",
     },
     apps: [
       "Camera",
@@ -724,7 +724,7 @@ export const products: Product[] = [
           { label: "Camera Control", value: "Capture, record, and adjust settings" },
           {
             label: "Action button",
-            value: "Customizable — Silent, Translate, Shortcut, and more",
+            value: "Customizable - Silent, Translate, Shortcut, and more",
           },
         ],
       },
@@ -733,7 +733,7 @@ export const products: Product[] = [
         rows: [
           {
             label: "Video playback",
-            value: "Up to 45 hours — longest battery life in an iPhone",
+            value: "Up to 45 hours - longest battery life in an iPhone",
           },
           {
             label: "Use per charge",
@@ -742,7 +742,7 @@ export const products: Product[] = [
           {
             label: "Charging",
             value:
-              "Faster wired charging — up to 50% in around 15 minutes with a compatible adapter; MagSafe / Qi wireless where supported",
+              "Faster wired charging - up to 50% in around 15 minutes with a compatible adapter; MagSafe / Qi wireless where supported",
           },
         ],
       },
@@ -751,7 +751,7 @@ export const products: Product[] = [
         rows: [
           {
             label: "Features",
-            value: "Apple Intelligence and Siri AI — more personal, more powerful",
+            value: "Apple Intelligence and Siri AI - more personal, more powerful",
           },
         ],
       },
@@ -785,7 +785,7 @@ export const products: Product[] = [
           {
             label: "Warranty",
             value:
-              "Manufacturer’s standard warranty. Claims follow manufacturer terms and GadgetHub’s Return & Refund Policy — not AppleCare retail terms.",
+              "Manufacturer’s standard warranty. Claims follow manufacturer terms and GadgetHub’s Return & Refund Policy - not AppleCare retail terms.",
           },
         ],
       },
@@ -802,28 +802,28 @@ export const products: Product[] = [
     specsHref: "/shop/iphone/iphone-air/specs",
     image: {
       src: airGallery[0],
-      alt: "iPhone Air in Sky Blue — thin titanium profile",
+      alt: "iPhone Air in Sky Blue - thin titanium profile",
     },
     gallery: [
       {
         src: airGallery[0],
-        alt: "Hand holds iPhone Air from the bottom — very thin titanium side profile in Sky Blue with Side button, Camera Control, and raised camera lens",
+        alt: "Hand holds iPhone Air from the bottom - very thin titanium side profile in Sky Blue with Side button, Camera Control, and raised camera lens",
       },
       {
         src: airGallery[1],
-        alt: "iPhone Air in Sky Blue — Fusion camera, all-screen front with Dynamic Island, titanium sides, Action button, volume, Side button, and Camera Control",
+        alt: "iPhone Air in Sky Blue - Fusion camera, all-screen front with Dynamic Island, titanium sides, Action button, volume, Side button, and Camera Control",
       },
       {
         src: airGallery[2],
-        alt: "iPhone Air in Cloud White — Fusion camera system with transparent housing, single lens, microphone, and flash",
+        alt: "iPhone Air in Cloud White - Fusion camera system with transparent housing, single lens, microphone, and flash",
       },
       {
         src: airGallery[3],
-        alt: "iPhone Air in Light Gold — Fusion camera at top, Apple logo centered, titanium side exterior, Side button, Camera Control, and raised camera lens",
+        alt: "iPhone Air in Light Gold - Fusion camera at top, Apple logo centered, titanium side exterior, Side button, Camera Control, and raised camera lens",
       },
       {
         src: airGallery[4],
-        alt: "iPhone Air in Light Gold — back exterior with Fusion camera and thin side profile with Side button and Camera Control",
+        alt: "iPhone Air in Light Gold - back exterior with Fusion camera and thin side profile with Side button and Camera Control",
       },
       {
         src: airGallery[5],
@@ -855,7 +855,7 @@ export const products: Product[] = [
       design: {
         title: "Almost disappears. Still present.",
         cue: "5.6 mm. 165 grams. Titanium that feels inevitable.",
-        body: "Hold it at the edge and the thinness reads first — then the 6.5″ ProMotion display fills your field. Grade 5 titanium, Ceramic Shield 2, Camera Control and Action button exactly where muscle memory wants them.",
+        body: "Hold it at the edge and the thinness reads first - then the 6.5″ ProMotion display fills your field. Grade 5 titanium, Ceramic Shield 2, Camera Control and Action button exactly where muscle memory wants them.",
         image: {
           src: airGallery[0],
           alt: "Hand holds thin iPhone Air profile",
@@ -864,7 +864,7 @@ export const products: Product[] = [
       camera: {
         title: "Center Stage and Fusion in one pocket.",
         cue: "Group selfies that expand. Dual Capture that tells both sides.",
-        body: "18MP Center Stage up front, 48MP Fusion with 2x optical‑quality zoom on the back. Frame, rotate, and shoot without wrestling the phone — then finish the edit with Intelligence tools.",
+        body: "18MP Center Stage up front, 48MP Fusion with 2x optical‑quality zoom on the back. Frame, rotate, and shoot without wrestling the phone - then finish the edit with Intelligence tools.",
         image: {
           src: airGallery[2],
           alt: "iPhone Air Fusion camera",
@@ -872,7 +872,7 @@ export const products: Product[] = [
       },
       everyday: {
         title: "Pro within thin.",
-        cue: "A19 Pro for games and streams — without the brick.",
+        cue: "A19 Pro for games and streams - without the brick.",
         body: "All‑day battery, MagSafe when you want a top‑up, and Apple Intelligence that drafts and cleans while you stay light on your feet.",
         image: {
           src: airGallery[1],
@@ -895,7 +895,7 @@ export const products: Product[] = [
     stories: [
       {
         title: "So this is what the future feels like.",
-        body: "At 5.6 mm and just 165 grams, iPhone Air nearly disappears in your hand — even with a large 6.5‑inch Super Retina XDR display and A19 Pro inside. Grade 5 titanium frame with 80 percent recycled titanium. Ceramic Shield 2 front with 3x better scratch resistance; Ceramic Shield back for crack resistance.",
+        body: "At 5.6 mm and just 165 grams, iPhone Air nearly disappears in your hand - even with a large 6.5‑inch Super Retina XDR display and A19 Pro inside. Grade 5 titanium frame with 80 percent recycled titanium. Ceramic Shield 2 front with 3x better scratch resistance; Ceramic Shield back for crack resistance.",
       },
       {
         title: "Immersive pro display",
@@ -907,15 +907,15 @@ export const products: Product[] = [
       },
       {
         title: "48MP Fusion Main camera",
-        body: "The power of two high‑end cameras in one — shoot in 48MP for detail or 24MP by default, with 2x optical‑quality Telephoto zoom. Next‑generation portraits, Photographic Styles, Night mode, and Camera Control for the shot you need, faster.",
+        body: "The power of two high‑end cameras in one - shoot in 48MP for detail or 24MP by default, with 2x optical‑quality Telephoto zoom. Next‑generation portraits, Photographic Styles, Night mode, and Camera Control for the shot you need, faster.",
       },
       {
         title: "A19 Pro. Pro within thin.",
-        body: "A19 Pro with a 5‑core GPU delivers pro performance for demanding tasks and advanced gaming — without giving up the ultralight design.",
+        body: "A19 Pro with a 5‑core GPU delivers pro performance for demanding tasks and advanced gaming - without giving up the ultralight design.",
       },
       {
         title: "iOS and Apple Intelligence",
-        body: "A thoughtfully refined software experience with smarter everyday features — from Writing Tools and Clean Up to visual intelligence — so thin never means less capable.",
+        body: "A thoughtfully refined software experience with smarter everyday features - from Writing Tools and Clean Up to visual intelligence - so thin never means less capable.",
       },
     ],
     batteryStat: {
@@ -981,7 +981,7 @@ export const products: Product[] = [
           {
             label: "Front",
             value:
-              "18MP Center Stage — flexible framing, group selfies, Dual Capture",
+              "18MP Center Stage - flexible framing, group selfies, Dual Capture",
           },
           {
             label: "Video",
@@ -995,7 +995,7 @@ export const products: Product[] = [
           { label: "Camera Control", value: "Capture, record, and adjust settings" },
           {
             label: "Action button",
-            value: "Customizable — Silent, Translation, Shortcuts, and more",
+            value: "Customizable - Silent, Translation, Shortcuts, and more",
           },
         ],
       },
@@ -1018,7 +1018,7 @@ export const products: Product[] = [
           {
             label: "Features",
             value:
-              "Apple Intelligence — Writing Tools, Clean Up, visual intelligence, and more",
+              "Apple Intelligence - Writing Tools, Clean Up, visual intelligence, and more",
           },
         ],
       },
@@ -1041,7 +1041,7 @@ export const products: Product[] = [
           {
             label: "Warranty",
             value:
-              "Manufacturer’s standard warranty. Claims follow manufacturer terms and GadgetHub’s Return & Refund Policy — not AppleCare retail terms.",
+              "Manufacturer’s standard warranty. Claims follow manufacturer terms and GadgetHub’s Return & Refund Policy - not AppleCare retail terms.",
           },
         ],
       },
@@ -1051,7 +1051,7 @@ export const products: Product[] = [
     id: "iphone-17",
     name: "iPhone 17",
     tagline:
-      "6.3‑inch ProMotion display. 48MP Dual Fusion cameras. A19 chip — all‑day power in aluminum and glass.",
+      "6.3‑inch ProMotion display. 48MP Dual Fusion cameras. A19 chip - all‑day power in aluminum and glass.",
     categoryLabel: "iPhone",
     categoryHref: "/shop/iphone",
     overviewHref: "/shop/iphone/iphone-17",
@@ -1063,27 +1063,27 @@ export const products: Product[] = [
     gallery: [
       {
         src: seventeenGallery[0],
-        alt: "A hand holds iPhone 17 — all-screen display, Dynamic Island centered near the top, rounded corners",
+        alt: "A hand holds iPhone 17 - all-screen display, Dynamic Island centered near the top, rounded corners",
       },
       {
         src: seventeenGallery[1],
-        alt: "iPhone 17 in Lavender — Dual Fusion camera, all-screen front with Dynamic Island, Action button, volume, Side button, and Camera Control",
+        alt: "iPhone 17 in Lavender - Dual Fusion camera, all-screen front with Dynamic Island, Action button, volume, Side button, and Camera Control",
       },
       {
         src: seventeenGallery[2],
-        alt: "iPhone 17 in Mist Blue — Dual Fusion camera system with two lenses, microphone, transparent housing, and flash",
+        alt: "iPhone 17 in Mist Blue - Dual Fusion camera system with two lenses, microphone, transparent housing, and flash",
       },
       {
         src: seventeenGallery[3],
-        alt: "iPhone 17 in Sage — Dual Fusion camera in top left, Apple logo centered, thin side profile with Side button, Camera Control, and raised camera system",
+        alt: "iPhone 17 in Sage - Dual Fusion camera in top left, Apple logo centered, thin side profile with Side button, Camera Control, and raised camera system",
       },
       {
         src: seventeenGallery[4],
-        alt: "iPhone 17 in Sage — back exterior with Dual Fusion camera and thin side profile with Side button and Camera Control",
+        alt: "iPhone 17 in Sage - back exterior with Dual Fusion camera and thin side profile with Side button and Camera Control",
       },
       {
         src: seventeenGallery[5],
-        alt: "iPhone 17 accessories — vanilla Silicone Case on White, moss Silicone Case with FineWoven Wallet on Sage, and anchor blue Silicone Case with Crossbody Strap on Mist Blue",
+        alt: "iPhone 17 accessories - vanilla Silicone Case on White, moss Silicone Case with FineWoven Wallet on Sage, and anchor blue Silicone Case with Crossbody Strap on Mist Blue",
       },
     ],
     finishesLabel: "Available in 5 finishes",
@@ -1107,7 +1107,7 @@ export const products: Product[] = [
       design: {
         title: "Contoured. Contained. Comfortable.",
         cue: "Thinner borders. Ceramic Shield 2 that shrugs off the day.",
-        body: "Aluminum and glass in five finishes. Action button and Camera Control under the fingers — the phone feels finished the first time you unlock it.",
+        body: "Aluminum and glass in five finishes. Action button and Camera Control under the fingers - the phone feels finished the first time you unlock it.",
         image: {
           src: seventeenGallery[0],
           alt: "Hand holds iPhone 17",
@@ -1115,7 +1115,7 @@ export const products: Product[] = [
       },
       camera: {
         title: "Dual Fusion. Double the starting clarity.",
-        cue: "48MP Main and Ultra Wide — detail by default.",
+        cue: "48MP Main and Ultra Wide - detail by default.",
         body: "Center Stage expands for group selfies. Dual Capture records you and the room. 2x optical‑quality zoom keeps subjects close without the soft crop.",
         image: {
           src: seventeenGallery[2],
@@ -1124,7 +1124,7 @@ export const products: Product[] = [
       },
       everyday: {
         title: "A19 through work and weekend.",
-        cue: "Up to 30 hours of video — maps, Matatu playlists, late calls.",
+        cue: "Up to 30 hours of video - maps, Matatu playlists, late calls.",
         body: "Apple Intelligence helps draft replies and clean photos while ProMotion keeps scrolling smooth. It feels quick without asking you to think about the chip.",
         image: {
           src: seventeenGallery[1],
@@ -1146,12 +1146,12 @@ export const products: Product[] = [
     ],
     stories: [
       {
-        title: "Looks — and stays — beautiful.",
-        body: "Contoured edges, thinner borders, and Ceramic Shield 2 on the front with 3x better scratch resistance. Aluminum and glass design in five finishes — Lavender, Mist Blue, White, Sage, and Black. Camera Control and Action button keep capture and shortcuts close at hand.",
+        title: "Looks - and stays - beautiful.",
+        body: "Contoured edges, thinner borders, and Ceramic Shield 2 on the front with 3x better scratch resistance. Aluminum and glass design in five finishes - Lavender, Mist Blue, White, Sage, and Black. Camera Control and Action button keep capture and shortcuts close at hand.",
       },
       {
         title: "6.3″ Super Retina XDR",
-        body: "Our best everyday ProMotion display up to 120Hz — smoother scrolling, more immersive gaming, up to 3000 nits peak brightness, and fewer reflections. Dynamic Island brings Live Activities and alerts forward.",
+        body: "Our best everyday ProMotion display up to 120Hz - smoother scrolling, more immersive gaming, up to 3000 nits peak brightness, and fewer reflections. Dynamic Island brings Live Activities and alerts forward.",
       },
       {
         title: "18MP Center Stage front camera",
@@ -1159,7 +1159,7 @@ export const products: Product[] = [
       },
       {
         title: "48MP Dual Fusion camera system",
-        body: "Super‑high‑resolution shots by default. Fusion Main with 2x optical‑quality zoom, plus a 48MP Fusion Ultra Wide — stunning detail up close or far away, indoors and out.",
+        body: "Super‑high‑resolution shots by default. Fusion Main with 2x optical‑quality zoom, plus a 48MP Fusion Ultra Wide - stunning detail up close or far away, indoors and out.",
       },
       {
         title: "A19 chip. All‑day battery.",
@@ -1167,7 +1167,7 @@ export const products: Product[] = [
       },
       {
         title: "iOS and Apple Intelligence",
-        body: "A new look with smarter everyday features — Writing Tools, Clean Up, visual intelligence, and more — so your iPhone stays helpful from morning to night.",
+        body: "A new look with smarter everyday features - Writing Tools, Clean Up, visual intelligence, and more - so your iPhone stays helpful from morning to night.",
       },
     ],
     batteryStat: {
@@ -1234,7 +1234,7 @@ export const products: Product[] = [
           {
             label: "Front",
             value:
-              "18MP Center Stage — flexible framing, group selfies, Dual Capture",
+              "18MP Center Stage - flexible framing, group selfies, Dual Capture",
           },
           {
             label: "Video",
@@ -1248,7 +1248,7 @@ export const products: Product[] = [
           { label: "Camera Control", value: "Capture, record, and adjust settings" },
           {
             label: "Action button",
-            value: "Customizable — Silent, Translation, Shortcuts, and more",
+            value: "Customizable - Silent, Translation, Shortcuts, and more",
           },
         ],
       },
@@ -1268,7 +1268,7 @@ export const products: Product[] = [
           {
             label: "Features",
             value:
-              "Apple Intelligence — Writing Tools, Clean Up, visual intelligence, and more",
+              "Apple Intelligence - Writing Tools, Clean Up, visual intelligence, and more",
           },
         ],
       },
@@ -1291,7 +1291,7 @@ export const products: Product[] = [
           {
             label: "Warranty",
             value:
-              "Manufacturer’s standard warranty. Claims follow manufacturer terms and GadgetHub’s Return & Refund Policy — not AppleCare retail terms.",
+              "Manufacturer’s standard warranty. Claims follow manufacturer terms and GadgetHub’s Return & Refund Policy - not AppleCare retail terms.",
           },
         ],
       },
@@ -1301,7 +1301,7 @@ export const products: Product[] = [
     id: "iphone-17e",
     name: "iPhone 17e",
     tagline:
-      "6.1‑inch Super Retina XDR. A19 chip. 48MP Fusion camera. A whole lot of iPhone — for a lot less.",
+      "6.1‑inch Super Retina XDR. A19 chip. 48MP Fusion camera. A whole lot of iPhone - for a lot less.",
     categoryLabel: "iPhone",
     categoryHref: "/shop/iphone",
     overviewHref: "/shop/iphone/iphone-17e",
@@ -1313,27 +1313,27 @@ export const products: Product[] = [
     gallery: [
       {
         src: seventeenEGallery[0],
-        alt: "iPhone 17e in Black, White, and Soft Pink — back and front views",
+        alt: "iPhone 17e in Black, White, and Soft Pink - back and front views",
       },
       {
         src: seventeenEGallery[1],
-        alt: "A hand holds iPhone 17e in Soft Pink — Super Retina XDR display with notch",
+        alt: "A hand holds iPhone 17e in Soft Pink - Super Retina XDR display with notch",
       },
       {
         src: seventeenEGallery[2],
-        alt: "iPhone 17e in Soft Pink — front Super Retina XDR display and back with 48MP Fusion camera",
+        alt: "iPhone 17e in Soft Pink - front Super Retina XDR display and back with 48MP Fusion camera",
       },
       {
         src: seventeenEGallery[3],
-        alt: "iPhone 17e in White — close-up of 48MP Fusion camera, flash, and microphone",
+        alt: "iPhone 17e in White - close-up of 48MP Fusion camera, flash, and microphone",
       },
       {
         src: seventeenEGallery[4],
-        alt: "iPhone 17e in Black — back exterior with Fusion camera and thin side profile with Side button",
+        alt: "iPhone 17e in Black - back exterior with Fusion camera and thin side profile with Side button",
       },
       {
         src: seventeenEGallery[5],
-        alt: "iPhone 17e accessories — midnight purple FineWoven Wallet on Soft Pink, MagSafe charger on Black, and Clear Case with MagSafe on White",
+        alt: "iPhone 17e accessories - midnight purple FineWoven Wallet on Soft Pink, MagSafe charger on Black, and Clear Case with MagSafe on White",
       },
     ],
     finishesLabel: "Available in 3 finishes",
@@ -1354,8 +1354,8 @@ export const products: Product[] = [
     experiences: buildIphoneFeel({
       design: {
         title: "A good buy you still want to hold.",
-        cue: "Soft Pink, White, or Black — aluminum that feels finished.",
-        body: "Ceramic Shield 2, Face ID, Action button, USB‑C, and MagSafe. It doesn’t shout “budget” — it just fits the day.",
+        cue: "Soft Pink, White, or Black - aluminum that feels finished.",
+        body: "Ceramic Shield 2, Face ID, Action button, USB‑C, and MagSafe. It doesn’t shout “budget” - it just fits the day.",
         image: {
           src: seventeenEGallery[0],
           alt: "iPhone 17e in three finishes",
@@ -1372,7 +1372,7 @@ export const products: Product[] = [
       },
       everyday: {
         title: "A19 for games, streams, and space.",
-        cue: "256GB from the start — room for what matters.",
+        cue: "256GB from the start - room for what matters.",
         body: "Up to 26 hours of video playback. Fast USB‑C and MagSafe charging. Apple Intelligence for drafting and cleanup when you’re mid‑commute.",
         image: {
           src: seventeenEGallery[1],
@@ -1395,7 +1395,7 @@ export const products: Product[] = [
     stories: [
       {
         title: "Designed to go the distance.",
-        body: "Durable aluminum frame with Ceramic Shield 2 on the front — 3x better scratch resistance. Stunning 6.1‑inch Super Retina XDR display with a seven‑layer antireflective coating. Face ID, Action button, USB‑C, and MagSafe wireless charging up to 15W.",
+        body: "Durable aluminum frame with Ceramic Shield 2 on the front - 3x better scratch resistance. Stunning 6.1‑inch Super Retina XDR display with a seven‑layer antireflective coating. Face ID, Action button, USB‑C, and MagSafe wireless charging up to 15W.",
       },
       {
         title: "48MP Fusion camera",
@@ -1403,21 +1403,21 @@ export const products: Product[] = [
       },
       {
         title: "A19 chip. Blasts and lasts.",
-        body: "Latest‑generation A19 with a 4‑core GPU — powerful AAA gaming, 4K streaming, and more. C1X modem for fast, efficient connectivity. Up to 26 hours of video playback.",
+        body: "Latest‑generation A19 with a 4‑core GPU - powerful AAA gaming, 4K streaming, and more. C1X modem for fast, efficient connectivity. Up to 26 hours of video playback.",
       },
       {
         title: "256GB starting storage",
-        body: "More space for what matters — photos, videos, apps, and downloads — right from the base model.",
+        body: "More space for what matters - photos, videos, apps, and downloads - right from the base model.",
       },
       {
         title: "iOS and Apple Intelligence",
-        body: "A new look with smarter everyday features — Writing Tools, Clean Up, visual intelligence, and more — so your iPhone stays helpful all day.",
+        body: "A new look with smarter everyday features - Writing Tools, Clean Up, visual intelligence, and more - so your iPhone stays helpful all day.",
       },
     ],
     batteryStat: {
       value: "Up to 26 hrs",
       label:
-        "of video playback. Fast charging with USB‑C — and now with MagSafe. Up to 50% charge in 30 minutes with a compatible 20W adapter or higher.",
+        "of video playback. Fast charging with USB‑C - and now with MagSafe. Up to 50% charge in 30 minutes with a compatible 20W adapter or higher.",
     },
     apps: [
       "Camera",
@@ -1480,7 +1480,7 @@ export const products: Product[] = [
           {
             label: "Action button",
             value:
-              "Customizable — Silent, Translation, visual intelligence, and more",
+              "Customizable - Silent, Translation, visual intelligence, and more",
           },
         ],
       },
@@ -1501,7 +1501,7 @@ export const products: Product[] = [
           {
             label: "Features",
             value:
-              "Apple Intelligence — Writing Tools, Clean Up, visual intelligence, and more",
+              "Apple Intelligence - Writing Tools, Clean Up, visual intelligence, and more",
           },
         ],
       },
@@ -1524,7 +1524,7 @@ export const products: Product[] = [
           {
             label: "Warranty",
             value:
-              "Manufacturer’s standard warranty. Claims follow manufacturer terms and GadgetHub’s Return & Refund Policy — not AppleCare retail terms.",
+              "Manufacturer’s standard warranty. Claims follow manufacturer terms and GadgetHub’s Return & Refund Policy - not AppleCare retail terms.",
           },
         ],
       },
@@ -1534,7 +1534,7 @@ export const products: Product[] = [
     id: "iphone-16",
     name: "iPhone 16",
     tagline:
-      "6.1‑inch aerospace‑grade aluminum. Camera Control. A18 chip. All‑day battery — built for Apple Intelligence.",
+      "6.1‑inch aerospace‑grade aluminum. Camera Control. A18 chip. All‑day battery - built for Apple Intelligence.",
     categoryLabel: "iPhone",
     categoryHref: "/shop/iphone",
     overviewHref: "/shop/iphone/iphone-16",
@@ -1550,23 +1550,23 @@ export const products: Product[] = [
       },
       {
         src: sixteenGallery[1],
-        alt: "A hand holds iPhone 16 in Pink — all-screen display with Dynamic Island",
+        alt: "A hand holds iPhone 16 in Pink - all-screen display with Dynamic Island",
       },
       {
         src: sixteenGallery[2],
-        alt: "iPhone 16 in Ultramarine — Dual camera back and all-screen front with Dynamic Island",
+        alt: "iPhone 16 in Ultramarine - Dual camera back and all-screen front with Dynamic Island",
       },
       {
         src: sixteenGallery[3],
-        alt: "iPhone 16 in Pink — close-up of vertical Dual camera system and flash",
+        alt: "iPhone 16 in Pink - close-up of vertical Dual camera system and flash",
       },
       {
         src: sixteenGallery[4],
-        alt: "iPhone 16 in Teal — back exterior with Camera Control button on the side",
+        alt: "iPhone 16 in Teal - back exterior with Camera Control button on the side",
       },
       {
         src: sixteenGallery[5],
-        alt: "MagSafe accessories — FineWoven Wallet in Deep Blue on Ultramarine, MagSafe Charger on black Silicone Case, Clear Case on Teal",
+        alt: "MagSafe accessories - FineWoven Wallet in Deep Blue on Ultramarine, MagSafe Charger on black Silicone Case, Clear Case on Teal",
       },
     ],
     finishesLabel: "Available in 5 finishes",
@@ -1590,8 +1590,8 @@ export const products: Product[] = [
     experiences: buildIphoneFeel({
       design: {
         title: "Color you notice. Edges you forget.",
-        cue: "Ultramarine to Black — aluminum that feels precise.",
-        body: "Aerospace‑grade design with Ceramic Shield, Action button, and Camera Control recessed into the side. Unlock, scroll, pocket — it disappears until you need it.",
+        cue: "Ultramarine to Black - aluminum that feels precise.",
+        body: "Aerospace‑grade design with Ceramic Shield, Action button, and Camera Control recessed into the side. Unlock, scroll, pocket - it disappears until you need it.",
         image: {
           src: sixteenGallery[0],
           alt: "iPhone 16 in five finishes",
@@ -1609,7 +1609,7 @@ export const products: Product[] = [
       everyday: {
         title: "A18 for Apple Intelligence days.",
         cue: "Console‑level games. All‑day battery feel.",
-        body: "Up to 22 hours of video playback. Intelligence that drafts, cleans, and surfaces what you need — so the phone feels like a partner, not a chore.",
+        body: "Up to 22 hours of video playback. Intelligence that drafts, cleans, and surfaces what you need - so the phone feels like a partner, not a chore.",
         image: {
           src: sixteenGallery[1],
           alt: "Hand holds iPhone 16 Pink",
@@ -1631,19 +1631,19 @@ export const products: Product[] = [
     stories: [
       {
         title: "Aerospace‑grade aluminum.",
-        body: "A 6.1‑inch design with durable Ceramic Shield front, Action button, and USB‑C. Five finishes — Ultramarine, Teal, Pink, White, and Black.",
+        body: "A 6.1‑inch design with durable Ceramic Shield front, Action button, and USB‑C. Five finishes - Ultramarine, Teal, Pink, White, and Black.",
       },
       {
         title: "Camera Control",
-        body: "An easier way to quickly access camera tools — so you never miss the moment. Capture magical spatial photos and videos, then relive them on Apple Vision Pro.",
+        body: "An easier way to quickly access camera tools - so you never miss the moment. Capture magical spatial photos and videos, then relive them on Apple Vision Pro.",
       },
       {
         title: "A18 chip",
-        body: "Enables Apple Intelligence and console‑level gaming with exceptional power efficiency — fast for everything you do, every day.",
+        body: "Enables Apple Intelligence and console‑level gaming with exceptional power efficiency - fast for everything you do, every day.",
       },
       {
         title: "iOS and Apple Intelligence",
-        body: "A new look with smarter features — Writing Tools, Clean Up, visual intelligence, and more — so your iPhone stays helpful from morning to night.",
+        body: "A new look with smarter features - Writing Tools, Clean Up, visual intelligence, and more - so your iPhone stays helpful from morning to night.",
       },
     ],
     batteryStat: {
@@ -1736,7 +1736,7 @@ export const products: Product[] = [
           {
             label: "Features",
             value:
-              "Apple Intelligence — Writing Tools, Clean Up, visual intelligence, and more",
+              "Apple Intelligence - Writing Tools, Clean Up, visual intelligence, and more",
           },
         ],
       },
@@ -1759,7 +1759,7 @@ export const products: Product[] = [
           {
             label: "Warranty",
             value:
-              "Manufacturer’s standard warranty. Claims follow manufacturer terms and GadgetHub’s Return & Refund Policy — not AppleCare retail terms.",
+              "Manufacturer’s standard warranty. Claims follow manufacturer terms and GadgetHub’s Return & Refund Policy - not AppleCare retail terms.",
           },
         ],
       },
@@ -1805,7 +1805,7 @@ export const products: Product[] = [
     ],
     batteryStat: {
       value: "Up to 18 hrs",
-      label: "video playback class battery life — depends on configuration and use.",
+      label: "video playback class battery life - depends on configuration and use.",
     },
     apps: ["Safari", "Mail", "Photos", "Messages", "FaceTime", "Notes", "Freeform"],
     inTheBox: ['MacBook Pro 14"', "USB-C Power Adapter", "USB-C Charge Cable"],
@@ -1894,12 +1894,12 @@ export const products: Product[] = [
       },
       {
         title: "Display",
-        body: "Ultra Retina clarity for reading, drawing, and media — indoors and out.",
+        body: "Ultra Retina clarity for reading, drawing, and media - indoors and out.",
       },
     ],
     batteryStat: {
       value: "All-day",
-      label: "battery for mixed Wi‑Fi use — actual results vary.",
+      label: "battery for mixed Wi‑Fi use - actual results vary.",
     },
     apps: ["Safari", "Files", "Notes", "Freeform", "Photos", "Stage Manager"],
     inTheBox: ["iPad Pro", "USB-C Charge Cable", "20W USB-C Power Adapter"],

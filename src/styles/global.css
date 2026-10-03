@@ -13,7 +13,7 @@ html {
   text-size-adjust: 100%;
   scroll-behavior: smooth;
   /*
-    Do not set overflow-x: clip/hidden on html/body — if one axis is not
+    Do not set overflow-x: clip/hidden on html/body - if one axis is not
     visible, the other computes away from visible and shears glyph tops
     (e.g. header wordmark) that paint slightly outside their line box.
   */
@@ -122,7 +122,7 @@ button {
   }
 }
 
-/* Buttons — black & white only */
+/* Buttons - black & white only */
 .btn {
   display: inline-flex;
   align-items: center;

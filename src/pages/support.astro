@@ -2,7 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { site, whatsappUrl, telUrl, policy } from "../lib/site";
 
-const waHref = whatsappUrl("Hi GadgetHub — I need support.");
+const waHref = whatsappUrl("Hi GadgetHub - I need support.");
 
 const topics = [
   {
@@ -39,7 +39,7 @@ const topics = [
 ---
 
 <BaseLayout
-  title="Support — GadgetHub"
+  title="Support - GadgetHub"
   description={`Help with warranty, returns, delivery, and orders. WhatsApp or call ${site.phoneDisplay}.`}
 >
   <section class="support container">
@@ -47,7 +47,7 @@ const topics = [
       <p class="support__eyebrow">Support</p>
       <h1>How can we help?</h1>
       <p class="support__lede">
-        Start with a topic below, or message the shop directly — WhatsApp{" "}
+        Start with a topic below, or message the shop directly - WhatsApp{" "}
         {site.phoneDisplay} is usually fastest.
       </p>
       <div class="support__actions">

@@ -5,7 +5,7 @@ import { whatsappUrl } from "../lib/site";
 const waBase = whatsappUrl();
 ---
 
-<BaseLayout title="Cart — GadgetHub" description="Your GadgetHub cart. Checkout via WhatsApp.">
+<BaseLayout title="Cart - GadgetHub" description="Your GadgetHub cart. Checkout via WhatsApp.">
   <section class="cart container" data-cart-page>
     <header class="cart__intro">
       <h1>Cart</h1>
@@ -106,9 +106,9 @@ const waBase = whatsappUrl();
     if (checkout instanceof HTMLAnchorElement) {
       const lines = cart.map(
         (l) =>
-          `• ${l.name} — ${l.storage}, ${l.color} ×${l.qty} (${formatKes(l.priceKes * l.qty)})`,
+          `• ${l.name} - ${l.storage}, ${l.color} ×${l.qty} (${formatKes(l.priceKes * l.qty)})`,
       );
-      const msg = ["Hi GadgetHub — Cart checkout", "", ...lines, "", `Total: ${formatKes(total)}`].join(
+      const msg = ["Hi GadgetHub - Cart checkout", "", ...lines, "", `Total: ${formatKes(total)}`].join(
         "\n",
       );
       checkout.href = `${waBase}?text=${encodeURIComponent(msg)}`;

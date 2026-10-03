@@ -1,4 +1,4 @@
-/** Homepage merchandising content — KES base prices */
+/** Homepage merchandising content - KES base prices */
 
 import { latestPosts } from "./blog";
 

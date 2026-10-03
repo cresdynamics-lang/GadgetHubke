@@ -1,8 +1,8 @@
-# GadgetHub Website — Phase 1 To-Do List
+# GadgetHub Website - Phase 1 To-Do List
 
 **Starting point:** logo only (`gadgethublogo.jpg`)  
 **Shop contact:** `0729585471` (calls + WhatsApp)  
-**Inventory rule:** new devices only — trade-ins accepted as currency; no refurbished/used stock on site
+**Inventory rule:** new devices only - trade-ins accepted as currency; no refurbished/used stock on site
 
 ---
 
@@ -10,8 +10,8 @@
 
 - [x] New-only storefront confirmed: no Refurbished nav, no A/B/C condition on products for sale, no used inventory listings
 - [x] Trade-in condition applies only to the device being traded in (Trade-In form), never to buy-side configurators
-- [x] Strict black & white only — no accent color; CTAs/prices/badges use black, white, and greyscale
-- [x] One type family (Inter variable), 2–3 weights max
+- [x] Strict black & white only - no accent color; CTAs/prices/badges use black, white, and greyscale
+- [x] One type family (Inter variable), 2-3 weights max
 - [x] Static-first stack (Astro preferred, or Next.js static export) with JS islands only
 - [x] WhatsApp / call number everywhere: **0729585471**
 
@@ -23,14 +23,14 @@
 - [x] Define near-black `#0A0A0A` as primary text/surface dark (not pure `#000`)
 - [x] Define white as primary light surface
 - [x] Define full greyscale tokens for cards, dividers, borders, disabled states
-- [x] Strict B&W — no accent color; CTAs/prices/badges use black / white / grey only
+- [x] Strict B&W - no accent color; CTAs/prices/badges use black / white / grey only
 - [x] Document palette rules in `src/styles/tokens.css`
 
 ### Typography
 - [x] Load Inter as a single variable font file (`@fontsource-variable/inter`)
-- [x] Limit to 2–3 weights site-wide (400 / 500 / 600)
+- [x] Limit to 2-3 weights site-wide (400 / 500 / 600)
 - [x] Ban decorative / display fonts from the project
-- [x] Set type scale (hero, H1–H3, body, small, price) on the greyscale system
+- [x] Set type scale (hero, H1-H3, body, small, price) on the greyscale system
 
 ### Logo & assets
 - [x] Place logo in `public/images/` (jpg + png); WebP/AVIF optimization later with image pipeline
@@ -112,16 +112,16 @@
 
 ---
 
-## 4. Homepage (section order — build in this order)
+## 4. Homepage (section order - build in this order)
 
-1. [ ] **Hero** — current flagship, one line of original copy, price, **Shop Now** + **Trade In & Save**
-2. [ ] **Category tile strip** — one tap to each top-level category
-3. [ ] **Deals row** — bestsellers + promos, horizontal scroll
-4. [ ] **Trade-In banner** — iPhone or Samsung toward any new device
-5. [ ] **Lipa Mdogo Mdogo strip** — plain-language installments → financing page
-6. [ ] **Trust row** — warranty, authenticity, reviews
-7. [ ] **Blog teaser** — 2–3 latest posts
-8. [x] **Footer** — as above
+1. [ ] **Hero** - current flagship, one line of original copy, price, **Shop Now** + **Trade In & Save**
+2. [ ] **Category tile strip** - one tap to each top-level category
+3. [ ] **Deals row** - bestsellers + promos, horizontal scroll
+4. [ ] **Trade-In banner** - iPhone or Samsung toward any new device
+5. [ ] **Lipa Mdogo Mdogo strip** - plain-language installments → financing page
+6. [ ] **Trust row** - warranty, authenticity, reviews
+7. [ ] **Blog teaser** - 2-3 latest posts
+8. [x] **Footer** - as above
 
 ### Homepage QA
 - [ ] First viewport: brand-strong, not a dashboard of widgets
@@ -133,21 +133,21 @@
 ## 5. Category / Shop pages
 
 - [ ] Category landing for each mega-menu node
-- [ ] Product cards: image, name, from-price, optional badge (Deal / New) — accent on price/badge only
-- [ ] Filters appropriate to new-only catalog (storage, color where useful) — **no condition filter**
+- [ ] Product cards: image, name, from-price, optional badge (Deal / New) - accent on price/badge only
+- [ ] Filters appropriate to new-only catalog (storage, color where useful) - **no condition filter**
 - [ ] Empty states and “coming soon” for unpopulated categories
 - [ ] Deals page listing promos / bestsellers
 
 ---
 
-## 6. Product pages — two-page pattern per model
+## 6. Product pages - two-page pattern per model
 
 ### Overview page
 - [ ] Hero with product imagery
 - [ ] Storage selector
 - [ ] Color / finish selector
 - [ ] Live price tied to configuration
-- [ ] Highlights strip (4–6 icon + stat tiles)
+- [ ] Highlights strip (4-6 icon + stat tiles)
 - [ ] Chip / performance story section
 - [ ] Display story section
 - [ ] Battery story section (large-number stat callout)
@@ -186,10 +186,10 @@
 ## 7. Trade-In flow
 
 - [ ] Trade-In page with short form:
-  - [ ] Device brand (iPhone / Samsung)
-  - [ ] Model
-  - [ ] Storage
-  - [ ] Condition of **trade-in device** (not the device being purchased)
+ - [ ] Device brand (iPhone / Samsung)
+ - [ ] Model
+ - [ ] Storage
+ - [ ] Condition of **trade-in device** (not the device being purchased)
 - [ ] On submit: compile message → redirect to WhatsApp `0729585471` with prefilled quote request
 - [ ] Copy clarifies: credit toward **any new** device in catalog
 - [ ] No used/refurbished products listed as inventory from this flow
@@ -210,7 +210,7 @@
 ### Blog
 - [x] Blog index
 - [x] Post template
-- [x] Homepage teaser wired to latest 2–3 posts (static or content collection)
+- [x] Homepage teaser wired to latest 2-3 posts (static or content collection)
 
 ### Support
 - [x] Support landing (FAQs, warranty help, how to reach shop)
@@ -227,8 +227,8 @@
 ### Policies (footer)
 - [x] Privacy (stub page live; full copy TBD)
 - [x] Terms (stub page live; full copy TBD)
-- [x] Warranty & service (GadgetHub terms) — stub at `/warranty-repairs`
-- [x] Shipping / returns / Lipa terms as needed — stubs at `/shipping-delivery`, `/returns`
+- [x] Warranty & service (GadgetHub terms) - stub at `/warranty-repairs`
+- [x] Shipping / returns / Lipa terms as needed - stubs at `/shipping-delivery`, `/returns`
 
 ---
 
@@ -238,7 +238,7 @@
 - [ ] Add / update quantity / remove
 - [ ] Persist cart (localStorage or equivalent)
 - [ ] Cart drawer or page
-- [ ] Checkout path for Phase 1 (WhatsApp order handoff and/or placeholder checkout — decide and implement consistently)
+- [ ] Checkout path for Phase 1 (WhatsApp order handoff and/or placeholder checkout - decide and implement consistently)
 - [ ] Line items show configured storage/color; never condition
 
 ### Account
@@ -251,14 +251,14 @@
 ## 11. Cross-cutting QA & launch readiness
 
 ### Product rules
-- [ ] Full-site search for “Refurbished”, “Used”, condition grades on sale pages — must be absent
+- [ ] Full-site search for “Refurbished”, “Used”, condition grades on sale pages - must be absent
 - [ ] Configurators: storage + color/finish only
 
 ### Contact consistency
 - [ ] Header WhatsApp, FAB, footer, Contact, Trade-In, Product WhatsApp Order all use `0729585471`
 
 ### Performance
-- [x] Lighthouse (or equivalent) on Home, Category, Product Overview, Trade-In — see `PERFORMANCE.md`
+- [x] Lighthouse (or equivalent) on Home, Category, Product Overview, Trade-In - see `PERFORMANCE.md`
 - [x] Confirm islands-only JS on interactive surfaces
 - [x] Font / image / CDN caching verified in build + deploy config
 - [x] Verify minimal JS payload on static pages
@@ -286,9 +286,9 @@ Do **not** start full catalog until Phase 1 templates are done. Then:
 
 - [ ] Confirm Overview + Specs templates ready for content injection
 - [ ] Pilot content slots for:
-  - [ ] iPhone flagship (brief named iPhone 18 Pro — confirm real SKU/name at content time)
-  - [ ] MacBook Pro 14"
-  - [ ] iPad Pro
+ - [ ] iPhone flagship (brief named iPhone 18 Pro - confirm real SKU/name at content time)
+ - [ ] MacBook Pro 14"
+ - [ ] iPad Pro
 - [ ] Specs, original copy, and imagery checklist per pilot SKU
 - [ ] Only then roll out remaining catalog categories
 
@@ -310,4 +310,4 @@ Do **not** start full catalog until Phase 1 templates are done. Then:
 
 ---
 
-*This list is the Phase 1 definition of done: brand system, sitemap/chrome, homepage, product templates, trade-in, financing entry, supporting pages, and speed-first technical foundation — reflecting new-only inventory.*
+*This list is the Phase 1 definition of done: brand system, sitemap/chrome, homepage, product templates, trade-in, financing entry, supporting pages, and speed-first technical foundation - reflecting new-only inventory.*

@@ -6,7 +6,7 @@ const waBase = whatsappUrl();
 ---
 
 <BaseLayout
-  title="Track My Order — GadgetHub"
+  title="Track My Order - GadgetHub"
   description={`Check order status with ${site.name}. WhatsApp ${site.phoneDisplay}.`}
 >
   <section class="track container">
@@ -37,7 +37,7 @@ const waBase = whatsappUrl();
 
     <p class="track__alt">
       Or message directly:{" "}
-      <a href={whatsappUrl("Hi GadgetHub — I'd like to track my order.")} target="_blank" rel="noopener noreferrer">
+      <a href={whatsappUrl("Hi GadgetHub - I'd like to track my order.")} target="_blank" rel="noopener noreferrer">
         {site.phoneDisplay}
       </a>
     </p>
@@ -54,7 +54,7 @@ const waBase = whatsappUrl();
     const phone = String(data.get("phone") || "").trim();
     const ref = String(data.get("ref") || "").trim();
     const text = [
-      "Hi GadgetHub — Track my order",
+      "Hi GadgetHub - Track my order",
       "",
       `Name: ${name}`,
       `Phone: ${phone}`,

@@ -1,4 +1,4 @@
-/** Central site constants — Phase 1 */
+/** Central site constants - Phase 1 */
 
 export const site = {
   name: "GadgetHub",
@@ -23,11 +23,11 @@ export const site = {
     "Nairobi, Kenya",
   ],
   hours: {
-    weekday: "Monday – Saturday: 8:00 AM – 8:00 PM",
-    sunday: "Sunday: 10:00 AM – 8:00 PM",
-    short: "Mon–Sat 8am–8pm · Sun 10am–8pm",
+    weekday: "Monday - Saturday: 8:00 AM - 8:00 PM",
+    sunday: "Sunday: 10:00 AM - 8:00 PM",
+    short: "Mon-Sat 8am-8pm · Sun 10am-8pm",
   },
-  /** Lipa Mdogo Mdogo is operated by Gadget Hub Investments — no external finance partner */
+  /** Lipa Mdogo Mdogo is operated by Gadget Hub Investments - no external finance partner */
   lipa: {
     inHouse: true,
     label: "Lipa Mdogo Mdogo",
@@ -66,7 +66,7 @@ export const policy = {
   changeOfMindReturns: false,
   /** Who pays return shipping when the item is faulty / not as described */
   faultyReturnShipping: "GadgetHub" as const,
-  /** Card rail — processor name TBD; do not invent a provider */
+  /** Card rail - processor name TBD; do not invent a provider */
   cardPaymentsLabel: "card payments via our payment provider",
   paymentMethods: ["M-Pesa", "card", "Lipa Mdogo Mdogo"] as const,
 } as const;

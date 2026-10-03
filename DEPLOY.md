@@ -1,8 +1,8 @@
-# GadgetHub Kenya — deploy notes
+# GadgetHub Kenya - deploy notes
 
 ## Recommended host
 
-**Cloudflare Pages** or **Vercel** — both have strong African/Middle East edge coverage for Nairobi visitors.
+**Cloudflare Pages** or **Vercel** - both have strong African/Middle East edge coverage for Nairobi visitors.
 
 ### Cloudflare Pages
 1. Connect the GitHub repo.

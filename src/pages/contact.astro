@@ -2,12 +2,12 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { site, whatsappUrl, telUrl } from "../lib/site";
 
-const waHref = whatsappUrl("Hi GadgetHub — I have a question.");
+const waHref = whatsappUrl("Hi GadgetHub - I have a question.");
 const waBase = whatsappUrl();
 ---
 
 <BaseLayout
-  title="Contact — GadgetHub"
+  title="Contact - GadgetHub"
   description={`Call or WhatsApp ${site.phoneDisplay}. Visit ${site.address}. ${site.hours.short}.`}
 >
   <section class="contact container">
@@ -62,7 +62,7 @@ const waBase = whatsappUrl();
       <form class="contact__form" data-contact-form>
         <h2>Send a message</h2>
         <p class="contact__form-note">
-          Opens WhatsApp with your note — no account required.
+          Opens WhatsApp with your note - no account required.
         </p>
 
         <label class="contact__field">
@@ -117,7 +117,7 @@ const waBase = whatsappUrl();
     const message = String(data.get("message") || "").trim();
 
     const text = [
-      "Hi GadgetHub — Contact form",
+      "Hi GadgetHub - Contact form",
       "",
       `Name: ${name}`,
       `Phone: ${phone}`,
