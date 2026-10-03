@@ -1,4 +1,50 @@
 ---
-import StubPage from "../layouts/StubPage.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site, whatsappUrl } from "../lib/site";
+
+const waHref = whatsappUrl("Hi GadgetHub — account / order help.");
 ---
-<StubPage title="Account" heading="Account" />
+
+<BaseLayout
+  title="Account — GadgetHub"
+  description="Account coming soon. For order help, WhatsApp or visit the shop."
+>
+  <section class="account container">
+    <h1>Account</h1>
+    <p class="account__lede">
+      Online accounts are coming in a later phase. For now, track and manage
+      orders with us on WhatsApp {site.phoneDisplay}.
+    </p>
+    <div class="account__actions">
+      <a class="btn btn--primary" href={waHref} target="_blank" rel="noopener noreferrer">
+        WhatsApp help
+      </a>
+      <a class="btn btn--secondary" href="/track-order">Track order</a>
+      <a class="btn btn--secondary" href="/shop">Continue shopping</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .account {
+    padding-block: var(--space-12) calc(var(--space-16) + var(--fab-clearance));
+    max-width: 36rem;
+  }
+
+  .account h1 {
+    font-size: clamp(1.75rem, 5vw, var(--text-3xl));
+    margin-bottom: var(--space-3);
+  }
+
+  .account__lede {
+    color: var(--color-fg-muted);
+    margin-bottom: var(--space-6);
+    line-height: var(--leading-normal);
+  }
+
+  .account__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+</style>

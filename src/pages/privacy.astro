@@ -1,0 +1,119 @@
+---
+import PolicyPage from "../layouts/PolicyPage.astro";
+import { site, policy } from "../lib/site";
+
+const sections = [
+  { id: "collect", title: "What we collect" },
+  { id: "why", title: "Why we collect it" },
+  { id: "basis", title: "Legal basis" },
+  { id: "sharing", title: "Sharing" },
+  { id: "retention", title: "Retention" },
+  { id: "rights", title: "Your rights" },
+  { id: "cookies", title: "Cookies" },
+  { id: "security", title: "Security" },
+  { id: "cross-border", title: "Cross-border storage" },
+];
+---
+
+<PolicyPage
+  title="Privacy Policy"
+  heading="Privacy Policy"
+  description={`How ${site.legalName} collects and uses personal data under Kenya’s Data Protection Act, 2019.`}
+  sections={sections}
+>
+  <section id="collect">
+    <h2>What we collect</h2>
+    <p>Depending on how you use GadgetHub, we may collect:</p>
+    <ul>
+      <li>Name, phone number, email, and delivery address</li>
+      <li>
+        National ID details when required for trade-in verification or high-value
+        purchases
+      </li>
+      <li>
+        Order and payment history (we do not store full card numbers — card data is
+        processed by our payment gateway / card payment provider)
+      </li>
+      <li>Messages you send us via WhatsApp, email, or forms on this site</li>
+    </ul>
+  </section>
+
+  <section id="why">
+    <h2>Why we collect it</h2>
+    <p>We use personal data to:</p>
+    <ul>
+      <li>Process orders and trade-ins</li>
+      <li>Communicate via WhatsApp or email about your purchase</li>
+      <li>Verify identity for trade-ins</li>
+      <li>Prevent fraud and secure our systems</li>
+      <li>With your consent, send offers and updates</li>
+    </ul>
+  </section>
+
+  <section id="basis">
+    <h2>Legal basis</h2>
+    <p>
+      Processing is based on performing our contract with you (fulfilling orders),
+      our legitimate business interests (fraud prevention and site security), and your
+      consent (marketing communications), consistent with the Data Protection Act,
+      2019.
+    </p>
+  </section>
+
+  <section id="sharing">
+    <h2>Sharing</h2>
+    <p>
+      We share data only with parties needed to fulfil your order: payment
+      processors, delivery partners, and WhatsApp/Meta for order communication. We do
+      not sell personal data.
+    </p>
+  </section>
+
+  <section id="retention">
+    <h2>Retention</h2>
+    <p>
+      We retain order and identity-verification records only as long as necessary for
+      legal, tax, and warranty purposes, then delete or anonymize them.
+    </p>
+  </section>
+
+  <section id="rights">
+    <h2>Your rights</h2>
+    <p>
+      Under the Data Protection Act, you may request access to, correction of, or
+      deletion of your data, object to processing, and lodge a complaint with the
+      Office of the Data Protection Commissioner (ODPC) if you believe your data has
+      been mishandled.
+    </p>
+    <p>
+      For data requests, email{" "}
+      <a href={`mailto:${site.privacyEmail}`}>{site.privacyEmail}</a> or WhatsApp{" "}
+      {site.phoneDisplay}.
+    </p>
+  </section>
+
+  <section id="cookies">
+    <h2>Cookies</h2>
+    <p>
+      See our <a href="/cookies">Cookie Policy</a> for how we use cookies and tracking
+      on this site. Policy version dated {policy.lastUpdated}.
+    </p>
+  </section>
+
+  <section id="security">
+    <h2>Security</h2>
+    <p>
+      We apply reasonable technical and organizational measures to protect your data,
+      though no online system is completely secure.
+    </p>
+  </section>
+
+  <section id="cross-border">
+    <h2>Cross-border storage</h2>
+    <p>
+      Some data may be processed or stored on servers outside Kenya (for example cloud
+      hosting). Where this happens, we take steps to ensure it is protected to a
+      comparable standard.
+    </p>
+  </section>
+</PolicyPage>

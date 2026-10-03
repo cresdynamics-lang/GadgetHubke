@@ -1,0 +1,7 @@
+---
+import ProductSpecs from "../../../../layouts/ProductSpecs.astro";
+import { getProduct } from "../../../../lib/products";
+
+const product = getProduct("iphone-pro")!;
+---
+<ProductSpecs product={product} />

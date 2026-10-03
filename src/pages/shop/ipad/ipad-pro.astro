@@ -1,4 +1,7 @@
 ---
-import StubPage from "../../../layouts/StubPage.astro";
+import ProductOverview from "../../../layouts/ProductOverview.astro";
+import { getProduct } from "../../../lib/products";
+
+const product = getProduct("ipad-pro")!;
 ---
-<StubPage title="iPad Pro" heading="iPad Pro" />
+<ProductOverview product={product} />

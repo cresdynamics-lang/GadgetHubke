@@ -1,4 +1,261 @@
 ---
-import StubPage from "../layouts/StubPage.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site, whatsappUrl, telUrl } from "../lib/site";
+
+const waHref = whatsappUrl("Hi GadgetHub — I have a question.");
+const waBase = whatsappUrl();
 ---
-<StubPage title="Contact" heading="Contact" />
+
+<BaseLayout
+  title="Contact — GadgetHub"
+  description={`Call or WhatsApp ${site.phoneDisplay}. Visit ${site.address}. ${site.hours.short}.`}
+>
+  <section class="contact container">
+    <header class="contact__intro">
+      <p class="contact__eyebrow">Contact</p>
+      <h1>Talk to the shop</h1>
+      <p class="contact__lede">
+        WhatsApp is fastest for stock checks, Lipa questions, and orders. Or
+        call, email, or visit us in Nairobi.
+      </p>
+    </header>
+
+    <div class="contact__grid">
+      <div class="contact__channels">
+        <ul class="contact__list">
+          <li>
+            <span class="contact__label">WhatsApp / Call</span>
+            <a href={waHref} target="_blank" rel="noopener noreferrer">
+              {site.phoneDisplay}
+            </a>
+            <span class="contact__sep">·</span>
+            <a href={telUrl()}>Call</a>
+          </li>
+          <li>
+            <span class="contact__label">Email</span>
+            <a href={`mailto:${site.email}`}>{site.email}</a>
+          </li>
+          <li>
+            <span class="contact__label">Visit</span>
+            <a href="/locations">{site.address}</a>
+          </li>
+          <li>
+            <span class="contact__label">Hours</span>
+            <span>{site.hours.short}</span>
+          </li>
+        </ul>
+
+        <div class="contact__actions">
+          <a
+            class="btn btn--primary"
+            href={waHref}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            WhatsApp {site.phoneDisplay}
+          </a>
+          <a class="btn btn--secondary" href={telUrl()}>Call</a>
+          <a class="btn btn--secondary" href="/locations">Directions</a>
+        </div>
+      </div>
+
+      <form class="contact__form" data-contact-form>
+        <h2>Send a message</h2>
+        <p class="contact__form-note">
+          Opens WhatsApp with your note — no account required.
+        </p>
+
+        <label class="contact__field">
+          <span>Name</span>
+          <input type="text" name="name" required autocomplete="name" />
+        </label>
+
+        <label class="contact__field">
+          <span>Phone</span>
+          <input
+            type="tel"
+            name="phone"
+            required
+            autocomplete="tel"
+            placeholder="07…"
+          />
+        </label>
+
+        <label class="contact__field">
+          <span>Topic</span>
+          <select name="topic" required>
+            <option value="" disabled selected>Select</option>
+            <option value="Stock / availability">Stock / availability</option>
+            <option value="Order help">Order help</option>
+            <option value="Lipa Mdogo Mdogo">Lipa Mdogo Mdogo</option>
+            <option value="Trade-In">Trade-In</option>
+            <option value="Warranty / returns">Warranty / returns</option>
+            <option value="Other">Other</option>
+          </select>
+        </label>
+
+        <label class="contact__field">
+          <span>Message</span>
+          <textarea name="message" rows="4" required></textarea>
+        </label>
+
+        <button class="btn btn--primary" type="submit">Continue on WhatsApp</button>
+      </form>
+    </div>
+  </section>
+</BaseLayout>
+
+<script define:vars={{ waBase }}>
+  const form = document.querySelector("[data-contact-form]");
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!(form instanceof HTMLFormElement)) return;
+    const data = new FormData(form);
+    const name = String(data.get("name") || "").trim();
+    const phone = String(data.get("phone") || "").trim();
+    const topic = String(data.get("topic") || "").trim();
+    const message = String(data.get("message") || "").trim();
+
+    const text = [
+      "Hi GadgetHub — Contact form",
+      "",
+      `Name: ${name}`,
+      `Phone: ${phone}`,
+      `Topic: ${topic}`,
+      "",
+      message,
+    ].join("\n");
+
+    window.open(
+      `${waBase}?text=${encodeURIComponent(text)}`,
+      "_blank",
+      "noopener,noreferrer",
+    );
+  });
+</script>
+
+<style>
+  .contact {
+    padding-block: var(--space-12) calc(var(--space-16) + var(--fab-clearance));
+  }
+
+  .contact__intro {
+    max-width: 40rem;
+    margin-bottom: var(--space-10);
+  }
+
+  .contact__eyebrow {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+    margin-bottom: var(--space-3);
+  }
+
+  .contact h1 {
+    font-size: clamp(1.75rem, 5vw, var(--text-3xl));
+    margin-bottom: var(--space-3);
+  }
+
+  .contact__lede {
+    color: var(--color-fg-muted);
+    line-height: var(--leading-normal);
+  }
+
+  .contact__grid {
+    display: grid;
+    gap: var(--space-10);
+  }
+
+  @media (min-width: 64rem) {
+    .contact__grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: var(--space-12);
+      align-items: start;
+    }
+  }
+
+  .contact__list {
+    list-style: none;
+    margin: 0 0 var(--space-6);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .contact__label {
+    display: block;
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+    margin-bottom: 0.25rem;
+  }
+
+  .contact__sep {
+    margin-inline: 0.35rem;
+    color: var(--color-fg-subtle);
+  }
+
+  .contact__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .contact__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-subtle);
+  }
+
+  .contact__form h2 {
+    font-size: var(--text-lg);
+    margin: 0;
+  }
+
+  .contact__form-note {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+
+  .contact__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .contact__field input,
+  .contact__field select,
+  .contact__field textarea {
+    min-height: 2.75rem;
+    padding: 0.65rem 0.85rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    background: var(--color-white);
+    font-weight: var(--font-weight-regular);
+    font: inherit;
+  }
+
+  .contact__field textarea {
+    min-height: 6.5rem;
+    resize: vertical;
+  }
+
+  .contact__field input:focus-visible,
+  .contact__field select:focus-visible,
+  .contact__field textarea:focus-visible {
+    outline: 2px solid var(--color-black);
+    outline-offset: 2px;
+  }
+</style>

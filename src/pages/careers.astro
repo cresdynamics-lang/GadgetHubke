@@ -1,0 +1,66 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site, whatsappUrl } from "../lib/site";
+
+const waHref = whatsappUrl("Hi GadgetHub — careers enquiry.");
+---
+
+<BaseLayout
+  title="Careers — GadgetHub"
+  description={`Work with ${site.legalName} in Nairobi.`}
+>
+  <section class="careers container">
+    <p class="careers__eyebrow">Company</p>
+    <h1>Careers</h1>
+    <p class="careers__lede">
+      We’re a small Nairobi team selling new devices only. When roles open, we
+      share them here and on WhatsApp.
+    </p>
+    <p class="careers__body">
+      No open roles listed right now. You’re welcome to introduce yourself —
+      send a short note and CV link to{" "}
+      <a href={`mailto:${site.email}`}>{site.email}</a> or WhatsApp{" "}
+      {site.phoneDisplay}.
+    </p>
+    <div class="careers__actions">
+      <a class="btn btn--primary" href={waHref} target="_blank" rel="noopener noreferrer">
+        WhatsApp intro
+      </a>
+      <a class="btn btn--secondary" href={`mailto:${site.email}`}>Email {site.email}</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .careers {
+    padding-block: var(--space-12) calc(var(--space-16) + var(--fab-clearance));
+    max-width: 36rem;
+  }
+
+  .careers__eyebrow {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+    margin-bottom: var(--space-3);
+  }
+
+  .careers h1 {
+    font-size: clamp(1.75rem, 5vw, var(--text-3xl));
+    margin-bottom: var(--space-3);
+  }
+
+  .careers__lede,
+  .careers__body {
+    color: var(--color-fg-muted);
+    line-height: var(--leading-normal);
+    margin-bottom: var(--space-5);
+  }
+
+  .careers__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+</style>

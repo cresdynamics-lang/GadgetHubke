@@ -1,0 +1,80 @@
+---
+import { homeBlog } from "../../lib/home";
+---
+
+<section class="home-section home-blog">
+  <div class="container">
+    <header class="home-section__head home-section__head--row">
+      <div>
+        <h2>From the desk</h2>
+        <p>Guides and updates for Nairobi buyers.</p>
+      </div>
+      <a class="home-section__link" href="/blog">Blog</a>
+    </header>
+    <ul class="home-blog__list">
+      {
+        homeBlog.map((post) => (
+          <li>
+            <a class="home-blog__card" href={post.href}>
+              <span class="home-blog__meta">{post.dateLabel}</span>
+              <h3>{post.title}</h3>
+              <p>{post.excerpt}</p>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .home-blog__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 48rem) {
+    .home-blog__list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-5);
+    }
+  }
+
+  .home-blog__card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    height: 100%;
+    padding: var(--space-5);
+    text-decoration: none;
+    color: inherit;
+    border-top: 1px solid var(--color-border-strong);
+  }
+
+  .home-blog__card:hover h3 {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  .home-blog__meta {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+  }
+
+  .home-blog__card h3 {
+    font-size: var(--text-lg);
+    line-height: var(--leading-snug);
+  }
+
+  .home-blog__card p {
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+    line-height: var(--leading-snug);
+  }
+</style>

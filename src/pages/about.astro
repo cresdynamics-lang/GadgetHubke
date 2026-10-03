@@ -1,4 +1,190 @@
 ---
-import StubPage from "../layouts/StubPage.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site } from "../lib/site";
+
+const pillars = [
+  {
+    title: "Genuine, new Apple devices only",
+    body: "Never refurbished, never grey-market.",
+  },
+  {
+    title: "Trade-in you can follow",
+    body: "A process that's fast and doesn't leave you guessing on value.",
+  },
+  {
+    title: "Lipa Mdogo Mdogo, run entirely by us",
+    body: "Pay a deposit, take your device, settle the rest on terms we agree with you directly — no third-party lender.",
+  },
+  {
+    title: "Real people on WhatsApp",
+    body: "Talk to our team for the whole process — not a call-center script.",
+  },
+] as const;
 ---
-<StubPage title="About" heading="About" />
+
+<BaseLayout
+  title="About Us — GadgetHub"
+  description={`${site.legalName} — genuine, brand-new Apple products in Nairobi. Trade-in, in-house Lipa Mdogo Mdogo, manufacturer warranty.`}
+>
+  <section class="about container">
+    <header class="about__intro">
+      <p class="about__eyebrow">About Us</p>
+      <h1>{site.legalName}</h1>
+      <p class="about__lede">
+        {site.legalName} is a Kenyan retailer of genuine, brand-new Apple
+        products — iPhone, Mac, iPad, Apple Watch, AirPods, and the accessories
+        that go with them. We don’t sell refurbished or used devices; everything
+        we stock is new, sealed, and backed by the manufacturer’s warranty.
+      </p>
+    </header>
+
+    <div class="about__prose">
+      <p>
+        We built Gadget Hub around three things Kenyan Apple buyers consistently
+        struggle to find in one place: genuine stock you can trust, a
+        straightforward way to trade in your old device toward a new one, and
+        payment that doesn’t force you to pay the full price upfront — our own
+        in-house Lipa Mdogo Mdogo option lets you take a device home and pay the
+        balance over time, directly with us, no third-party lender involved.
+      </p>
+      <p>
+        Whether you’re upgrading your iPhone, kitting out a home office with a
+        Mac, or trading in an old Samsung toward something new, our team is
+        reachable on WhatsApp for the whole process — from picking a device to
+        scheduling delivery.
+      </p>
+    </div>
+
+    <div class="about__stand">
+      <h2>What we stand for</h2>
+      <ul>
+        {
+          pillars.map((item) => (
+            <li>
+              <strong>{item.title}</strong>
+              <span>{item.body}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <aside class="about__corporate">
+      <h2>For businesses</h2>
+      <p>
+        Gadget Hub also supplies corporate and bulk orders — outfitting an office
+        with MacBooks, for instance. Corporate clients work with us directly on
+        quantity, pricing, and payment terms under a signed agreement, separate
+        from our standard retail process.
+      </p>
+      <a href="/corporate-bulk">Corporate &amp; bulk orders →</a>
+    </aside>
+
+    <div class="about__cta">
+      <a class="btn btn--primary" href="/shop">Shop new devices</a>
+      <a class="btn btn--secondary" href="/locations">Visit us</a>
+      <a class="btn btn--secondary" href="/contact">Contact</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about {
+    padding-block: var(--space-12) calc(var(--space-16) + var(--fab-clearance));
+    max-width: 42rem;
+  }
+
+  .about__intro {
+    margin-bottom: var(--space-8);
+  }
+
+  .about__eyebrow {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+    margin-bottom: var(--space-3);
+  }
+
+  .about h1 {
+    font-size: clamp(1.75rem, 5vw, var(--text-3xl));
+    margin-bottom: var(--space-4);
+  }
+
+  .about__lede,
+  .about__prose p {
+    color: var(--color-fg-muted);
+    line-height: var(--leading-normal);
+  }
+
+  .about__prose {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    margin-bottom: var(--space-10);
+  }
+
+  .about__stand {
+    margin-bottom: var(--space-10);
+  }
+
+  .about__stand h2,
+  .about__corporate h2 {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-4);
+  }
+
+  .about__stand ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .about__stand li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .about__stand strong {
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .about__stand span {
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+    line-height: var(--leading-snug);
+  }
+
+  .about__corporate {
+    padding: var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-subtle);
+    margin-bottom: var(--space-10);
+  }
+
+  .about__corporate p {
+    color: var(--color-fg-muted);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    margin-bottom: var(--space-4);
+  }
+
+  .about__corporate a {
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .about__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+</style>

@@ -1,0 +1,110 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site, whatsappUrl } from "../lib/site";
+
+const waHref = whatsappUrl("Hi GadgetHub — authenticity question.");
+---
+
+<BaseLayout
+  title="Authenticity — GadgetHub"
+  description={`How ${site.legalName} sources and sells new, sealed devices in Nairobi.`}
+>
+  <section class="auth container">
+    <header class="auth__intro">
+      <p class="auth__eyebrow">Trust</p>
+      <h1>Authenticity</h1>
+      <p class="auth__lede">
+        We sell <strong>new, sealed</strong> devices only. No refurbished grades and
+        no used inventory on this site.
+      </p>
+    </header>
+
+    <div class="auth__blocks">
+      <article>
+        <h2>What you get</h2>
+        <ul>
+          <li>Factory-sealed packaging where the manufacturer supplies it</li>
+          <li>Manufacturer’s standard warranty with GadgetHub proof of purchase</li>
+          <li>Support via WhatsApp {site.phoneDisplay} if something isn’t right</li>
+        </ul>
+      </article>
+      <article>
+        <h2>What we don’t sell</h2>
+        <ul>
+          <li>Refurbished or “certified pre-owned” listings</li>
+          <li>Condition grades (A/B/C) on products for sale</li>
+          <li>Trade-in devices as shop inventory — those become credit only</li>
+        </ul>
+      </article>
+      <article>
+        <h2>Questions</h2>
+        <p>
+          Ask us before you buy — WhatsApp or visit {site.address}. Related:{" "}
+          <a href="/warranty-repairs">Warranty</a>, <a href="/returns">Returns</a>,{" "}
+          <a href="/about">About</a>.
+        </p>
+        <a class="btn btn--primary" href={waHref} target="_blank" rel="noopener noreferrer">
+          WhatsApp {site.phoneDisplay}
+        </a>
+      </article>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .auth {
+    padding-block: var(--space-12) calc(var(--space-16) + var(--fab-clearance));
+  }
+
+  .auth__intro {
+    max-width: 40rem;
+    margin-bottom: var(--space-10);
+  }
+
+  .auth__eyebrow {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+    margin-bottom: var(--space-3);
+  }
+
+  .auth h1 {
+    font-size: clamp(1.75rem, 5vw, var(--text-3xl));
+    margin-bottom: var(--space-3);
+  }
+
+  .auth__lede {
+    color: var(--color-fg-muted);
+    line-height: var(--leading-normal);
+  }
+
+  .auth__blocks {
+    display: grid;
+    gap: var(--space-8);
+    max-width: 42rem;
+  }
+
+  .auth__blocks h2 {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-3);
+  }
+
+  .auth__blocks ul {
+    margin: 0;
+    padding-left: 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    color: var(--color-fg-muted);
+    font-size: var(--text-sm);
+  }
+
+  .auth__blocks p {
+    color: var(--color-fg-muted);
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-5);
+    line-height: var(--leading-normal);
+  }
+</style>

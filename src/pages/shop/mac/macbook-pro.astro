@@ -1,4 +1,7 @@
 ---
-import StubPage from "../../../layouts/StubPage.astro";
+import ProductOverview from "../../../layouts/ProductOverview.astro";
+import { getProduct } from "../../../lib/products";
+
+const product = getProduct("macbook-pro")!;
 ---
-<StubPage title="MacBook Pro" heading="MacBook Pro" />
+<ProductOverview product={product} />

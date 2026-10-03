@@ -1,0 +1,70 @@
+---
+import { homeCategories } from "../../lib/home";
+---
+
+<section class="home-section home-categories">
+  <div class="container">
+    <header class="home-section__head">
+      <h2>Shop</h2>
+      <p>New devices across the lineup.</p>
+    </header>
+    <ul class="home-categories__list">
+      {
+        homeCategories.map((cat) => (
+          <li>
+            <a class="home-categories__tile" href={cat.href}>
+              {cat.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .home-categories__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+  }
+
+  @media (min-width: 40rem) {
+    .home-categories__list {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .home-categories__list {
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+    }
+  }
+
+  .home-categories__tile {
+    display: grid;
+    place-items: center;
+    min-height: 3.25rem;
+    padding: 0.75rem 0.5rem;
+    text-align: center;
+    text-decoration: none;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-fg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg);
+    transition:
+      background-color var(--duration-fast) var(--ease),
+      border-color var(--duration-fast) var(--ease);
+  }
+
+  .home-categories__tile:hover {
+    background: var(--color-bg-muted);
+    border-color: var(--color-border-strong);
+    color: var(--color-fg);
+  }
+</style>

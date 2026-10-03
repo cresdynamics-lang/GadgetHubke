@@ -1,0 +1,129 @@
+---
+import PolicyPage from "../layouts/PolicyPage.astro";
+import { site, policy } from "../lib/site";
+
+const sections = [
+  { id: "eligibility", title: "Eligibility" },
+  { id: "not-eligible", title: "Not eligible for return" },
+  { id: "warranty", title: "Warranty vs. return" },
+  { id: "refunds", title: "Refund method and timing" },
+  { id: "exchanges", title: "Exchanges" },
+  { id: "trade-in", title: "Trade-in specifics" },
+  { id: "transit", title: "Damaged in transit" },
+  { id: "shipping", title: "Return shipping" },
+  { id: "start", title: "How to start a return" },
+];
+---
+
+<PolicyPage
+  title="Return & Refund Policy"
+  heading="Return & Refund Policy"
+  description={`Returns, refunds, and trade-in rules for purchases from ${site.legalName}.`}
+  sections={sections}
+>
+  <section id="eligibility">
+    <h2>Eligibility</h2>
+    <p>
+      New devices may be returned within <strong>{policy.returnWindowDays} days</strong>{" "}
+      of delivery if faulty, damaged on arrival, or materially not as described. The
+      device must be in its original condition and packaging, with all accessories and
+      proof of purchase.
+    </p>
+    {
+      !policy.changeOfMindReturns && (
+        <p>
+          We do not offer change-of-mind returns on sealed new devices. Returns are
+          limited to the eligibility reasons above.
+        </p>
+      )
+    }
+  </section>
+
+  <section id="not-eligible">
+    <h2>Not eligible for return</h2>
+    <ul>
+      <li>Devices with removed or pending activation locks</li>
+      <li>Physical or liquid damage caused after delivery</li>
+      <li>Any trade-in device once accepted and paid out</li>
+      {
+        !policy.changeOfMindReturns && (
+          <li>Change-of-mind or buyer’s remorse on sealed stock</li>
+        )
+      }
+    </ul>
+  </section>
+
+  <section id="warranty">
+    <h2>Warranty vs. return</h2>
+    <p>
+      All new devices carry the manufacturer’s standard warranty.{" "}
+      {site.legalName} does not provide any additional warranty beyond the
+      manufacturer’s terms.
+    </p>
+    <p>
+      Issues reported after the {policy.returnWindowDays}-day return window are
+      handled as warranty claims under manufacturer terms, not as a return. See also{" "}
+      <a href="/warranty-repairs">Warranty &amp; Repairs</a>.
+    </p>
+  </section>
+
+  <section id="refunds">
+    <h2>Refund method and timing</h2>
+    <p>
+      Approved refunds are issued to the original payment method (M-Pesa reversal,
+      card refund, or bank transfer) within{" "}
+      <strong>{policy.refundBusinessDays} business days</strong> of the returned item
+      passing inspection.
+    </p>
+  </section>
+
+  <section id="exchanges">
+    <h2>Exchanges</h2>
+    <p>
+      You may request an exchange in place of a refund, subject to stock availability,
+      within the same {policy.returnWindowDays}-day return window.
+    </p>
+  </section>
+
+  <section id="trade-in">
+    <h2>Trade-in specifics</h2>
+    <p>
+      A trade-in valuation shown online or given verbally is an estimate; the final
+      offer is confirmed only after in-person inspection and is not guaranteed to match
+      the online estimate. Once a trade-in is accepted and its value applied or paid
+      out, it cannot be reversed.
+    </p>
+  </section>
+
+  <section id="transit">
+    <h2>Damaged in transit</h2>
+    <p>
+      If an item arrives damaged, contact us within{" "}
+      <strong>{policy.transitDamageHours} hours</strong> of delivery with photos; do
+      not use the device before this is resolved.
+    </p>
+  </section>
+
+  <section id="shipping">
+    <h2>Return shipping</h2>
+    <p>
+      For approved returns of faulty, damaged-on-arrival, or not-as-described items,{" "}
+      {policy.faultyReturnShipping === "GadgetHub"
+        ? "GadgetHub covers reasonable return shipping within Kenya once we have authorised the return."
+        : "return shipping costs are as we confirm when authorising your return."}
+      {
+        !policy.changeOfMindReturns &&
+          " Because we do not accept change-of-mind returns, buyer-paid return shipping for preference changes does not apply."
+      }
+    </p>
+  </section>
+
+  <section id="start">
+    <h2>How to start a return</h2>
+    <p>
+      Contact us via WhatsApp ({site.phoneDisplay}) or email (
+      <a href={`mailto:${site.email}`}>{site.email}</a>) with your order number and
+      reason for return. We will confirm next steps before you send anything back.
+    </p>
+  </section>
+</PolicyPage>

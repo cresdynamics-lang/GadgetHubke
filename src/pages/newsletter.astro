@@ -1,0 +1,113 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site, whatsappUrl } from "../lib/site";
+
+const waBase = whatsappUrl();
+---
+
+<BaseLayout
+  title="Newsletter — GadgetHub"
+  description="Deals and new arrivals from GadgetHub Kenya."
+>
+  <section class="news container">
+    <p class="news__eyebrow">Stay updated</p>
+    <h1>Newsletter</h1>
+    <p class="news__lede">
+      Phase 1 sign-up is WhatsApp-first. Tell us your name and we’ll add you to
+      deal updates — no spam stack yet.
+    </p>
+
+    <form class="news__form" data-news-form>
+      <label class="news__field">
+        <span>Name</span>
+        <input type="text" name="name" required autocomplete="name" />
+      </label>
+      <label class="news__field">
+        <span>WhatsApp number</span>
+        <input type="tel" name="phone" required autocomplete="tel" placeholder="07…" />
+      </label>
+      <button class="btn btn--primary" type="submit">Join via WhatsApp</button>
+    </form>
+
+    <p class="news__note">
+      Prefer email? Write to{" "}
+      <a href={`mailto:${site.email}?subject=Newsletter`}>{site.email}</a>.
+      Privacy: <a href="/privacy">Privacy Policy</a>.
+    </p>
+  </section>
+</BaseLayout>
+
+<script define:vars={{ waBase }}>
+  document.querySelector("[data-news-form]")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    if (!(form instanceof HTMLFormElement)) return;
+    const data = new FormData(form);
+    const name = String(data.get("name") || "").trim();
+    const phone = String(data.get("phone") || "").trim();
+    const text = [
+      "Hi GadgetHub — Newsletter signup",
+      "",
+      `Name: ${name}`,
+      `WhatsApp: ${phone}`,
+      "",
+      "Please add me to deal / new arrival updates.",
+    ].join("\n");
+    window.open(`${waBase}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
+  });
+</script>
+
+<style>
+  .news {
+    padding-block: var(--space-12) calc(var(--space-16) + var(--fab-clearance));
+    max-width: 28rem;
+  }
+
+  .news__eyebrow {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+    margin-bottom: var(--space-3);
+  }
+
+  .news h1 {
+    font-size: clamp(1.75rem, 5vw, var(--text-3xl));
+    margin-bottom: var(--space-3);
+  }
+
+  .news__lede {
+    color: var(--color-fg-muted);
+    margin-bottom: var(--space-8);
+    line-height: var(--leading-normal);
+  }
+
+  .news__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  .news__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .news__field input {
+    min-height: 2.75rem;
+    padding: 0.65rem 0.85rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    font-weight: var(--font-weight-regular);
+  }
+
+  .news__note {
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+</style>

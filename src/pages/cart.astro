@@ -1,4 +1,227 @@
 ---
-import StubPage from "../layouts/StubPage.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { whatsappUrl } from "../lib/site";
+
+const waBase = whatsappUrl();
 ---
-<StubPage title="Cart" heading="Cart" />
+
+<BaseLayout title="Cart — GadgetHub" description="Your GadgetHub cart. Checkout via WhatsApp.">
+  <section class="cart container" data-cart-page>
+    <header class="cart__intro">
+      <h1>Cart</h1>
+      <p class="cart__lede">Saved on this device. Checkout continues on WhatsApp.</p>
+    </header>
+
+    <div data-cart-empty class="cart__empty" hidden>
+      <p>Your cart is empty.</p>
+      <a class="btn btn--primary" href="/shop">Continue shopping</a>
+    </div>
+
+    <div data-cart-filled hidden>
+      <ul class="cart__list" data-cart-list></ul>
+      <div class="cart__footer">
+        <p class="cart__total">
+          Total <span data-cart-total></span>
+        </p>
+        <div class="cart__actions">
+          <button type="button" class="btn btn--secondary" data-cart-clear>Clear</button>
+          <a
+            class="btn btn--primary"
+            data-cart-checkout
+            href={waBase}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            WhatsApp checkout
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script define:vars={{ waBase }}>
+  const CART_KEY = "gh-cart";
+  const listEl = document.querySelector("[data-cart-list]");
+  const emptyEl = document.querySelector("[data-cart-empty]");
+  const filledEl = document.querySelector("[data-cart-filled]");
+  const totalEl = document.querySelector("[data-cart-total]");
+  const checkout = document.querySelector("[data-cart-checkout]");
+
+  function readCart() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
+      return Array.isArray(raw) ? raw : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function writeCart(cart) {
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    window.dispatchEvent(new CustomEvent("gh:cart", { detail: { cart } }));
+  }
+
+  function formatKes(n) {
+    return `KSh ${Math.round(n).toLocaleString("en-KE")}`;
+  }
+
+  function render() {
+    const cart = readCart();
+    if (!listEl || !emptyEl || !filledEl) return;
+
+    if (cart.length === 0) {
+      emptyEl.hidden = false;
+      filledEl.hidden = true;
+      return;
+    }
+
+    emptyEl.hidden = true;
+    filledEl.hidden = false;
+    listEl.replaceChildren();
+
+    let total = 0;
+    for (const line of cart) {
+      total += line.priceKes * line.qty;
+      const li = document.createElement("li");
+      li.className = "cart__item";
+      li.innerHTML = `
+        <div>
+          <a href="${line.href || "/shop"}"><strong>${line.name}</strong></a>
+          <p>${line.storage} · ${line.color}</p>
+        </div>
+        <div class="cart__item-meta">
+          <label>Qty <input type="number" min="1" max="9" value="${line.qty}" data-qty="${line.id}" /></label>
+          <span>${formatKes(line.priceKes * line.qty)}</span>
+          <button type="button" data-remove="${line.id}">Remove</button>
+        </div>
+      `;
+      listEl.appendChild(li);
+    }
+
+    if (totalEl) {
+      totalEl.textContent = formatKes(total);
+    }
+
+    if (checkout instanceof HTMLAnchorElement) {
+      const lines = cart.map(
+        (l) =>
+          `• ${l.name} — ${l.storage}, ${l.color} ×${l.qty} (${formatKes(l.priceKes * l.qty)})`,
+      );
+      const msg = ["Hi GadgetHub — Cart checkout", "", ...lines, "", `Total: ${formatKes(total)}`].join(
+        "\n",
+      );
+      checkout.href = `${waBase}?text=${encodeURIComponent(msg)}`;
+    }
+  }
+
+  document.querySelector("[data-cart-page]")?.addEventListener("click", (e) => {
+    const t = e.target;
+    if (!(t instanceof HTMLElement)) return;
+    if (t.matches("[data-remove]")) {
+      const id = t.getAttribute("data-remove");
+      writeCart(readCart().filter((l) => l.id !== id));
+      render();
+    }
+    if (t.matches("[data-cart-clear]")) {
+      writeCart([]);
+      render();
+    }
+  });
+
+  document.querySelector("[data-cart-page]")?.addEventListener("change", (e) => {
+    const t = e.target;
+    if (!(t instanceof HTMLInputElement) || !t.matches("[data-qty]")) return;
+    const id = t.getAttribute("data-qty");
+    const qty = Math.max(1, Math.min(9, Number(t.value) || 1));
+    const cart = readCart().map((l) => (l.id === id ? { ...l, qty } : l));
+    writeCart(cart);
+    render();
+  });
+
+  render();
+</script>
+
+<style>
+  .cart {
+    padding-block: var(--space-12) calc(var(--space-16) + var(--fab-clearance));
+    max-width: 40rem;
+  }
+
+  .cart h1 {
+    font-size: clamp(1.75rem, 5vw, var(--text-3xl));
+    margin-bottom: var(--space-3);
+  }
+
+  .cart__lede {
+    color: var(--color-fg-muted);
+    margin-bottom: var(--space-8);
+  }
+
+  .cart__empty p {
+    margin-bottom: var(--space-5);
+    color: var(--color-fg-muted);
+  }
+
+  .cart__list {
+    list-style: none;
+    margin: 0 0 var(--space-8);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  :global(.cart__item) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-block: var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  :global(.cart__item p) {
+    margin: 0.25rem 0 0;
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+
+  :global(.cart__item-meta) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--text-sm);
+  }
+
+  :global(.cart__item-meta input) {
+    width: 3rem;
+    margin-left: 0.35rem;
+    padding: 0.25rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+  }
+
+  :global(.cart__item-meta button) {
+    background: none;
+    border: 0;
+    padding: 0;
+    text-decoration: underline;
+    cursor: pointer;
+    font: inherit;
+    color: var(--color-fg-muted);
+  }
+
+  .cart__total {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--space-5);
+  }
+
+  .cart__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+</style>

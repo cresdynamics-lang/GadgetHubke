@@ -1,0 +1,174 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site, whatsappUrl, telUrl } from "../lib/site";
+
+const waHref = whatsappUrl("Hi GadgetHub — I'd like to visit the store.");
+const mapsQuery = encodeURIComponent(
+  `${site.address}, Nairobi, Kenya`,
+);
+const mapsHref = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
+const mapsEmbed = `https://www.google.com/maps?q=${mapsQuery}&output=embed`;
+---
+
+<BaseLayout
+  title="Visit Us — GadgetHub"
+  description={`Visit ${site.legalName} at ${site.address}. ${site.hours.weekday}. WhatsApp ${site.phoneDisplay}.`}
+>
+  <section class="visit container">
+    <header class="visit__intro">
+      <p class="visit__eyebrow">Visit Us</p>
+      <h1>Location</h1>
+    </header>
+
+    <address class="visit__card">
+      <h2>{site.legalName}</h2>
+      <p class="visit__lines">
+        {
+          site.addressLines.map((line) => (
+            <>
+              {line}
+              <br />
+            </>
+          ))
+        }
+      </p>
+
+      <div class="visit__hours">
+        <h3>Hours</h3>
+        <p>{site.hours.weekday}</p>
+        <p>{site.hours.sunday}</p>
+      </div>
+
+      <p class="visit__reach">
+        Reach us on WhatsApp at{" "}
+        <a href={waHref} target="_blank" rel="noopener noreferrer">
+          {site.phoneDisplay}
+        </a>{" "}
+        or by email at{" "}
+        <a href={`mailto:${site.email}`}>{site.email}</a> — most customers order
+        ahead on WhatsApp and either collect in-store or arrange delivery, but
+        walk-ins are always welcome during opening hours.
+      </p>
+
+      <ul class="visit__actions">
+        <li>
+          <a class="btn btn--primary" href={waHref} target="_blank" rel="noopener noreferrer">
+            WhatsApp {site.phoneDisplay}
+          </a>
+        </li>
+        <li>
+          <a class="btn btn--secondary" href={telUrl()}>Call</a>
+        </li>
+        <li>
+          <a class="btn btn--secondary" href={mapsHref} target="_blank" rel="noopener noreferrer">
+            Open in Maps
+          </a>
+        </li>
+      </ul>
+    </address>
+
+    <div class="visit__map">
+      <iframe
+        title={`Map — ${site.address}`}
+        src={mapsEmbed}
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .visit {
+    padding-block: var(--space-12) calc(var(--space-16) + var(--fab-clearance));
+    max-width: 42rem;
+  }
+
+  .visit__intro {
+    margin-bottom: var(--space-8);
+  }
+
+  .visit__eyebrow {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+    margin-bottom: var(--space-3);
+  }
+
+  .visit h1 {
+    font-size: clamp(1.75rem, 5vw, var(--text-3xl));
+  }
+
+  .visit__card {
+    display: block;
+    font-style: normal;
+    padding: var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-subtle);
+    margin-bottom: var(--space-6);
+  }
+
+  .visit__card h2 {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-3);
+  }
+
+  .visit__lines {
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    margin-bottom: var(--space-5);
+  }
+
+  .visit__hours {
+    margin-bottom: var(--space-5);
+  }
+
+  .visit__hours h3 {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+    margin-bottom: var(--space-2);
+  }
+
+  .visit__hours p {
+    font-size: var(--text-sm);
+    margin-bottom: 0.25rem;
+  }
+
+  .visit__reach {
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+    line-height: var(--leading-normal);
+    margin-bottom: var(--space-6);
+  }
+
+  .visit__actions {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .visit__map {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+    background: var(--color-bg-subtle);
+  }
+
+  .visit__map iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+</style>

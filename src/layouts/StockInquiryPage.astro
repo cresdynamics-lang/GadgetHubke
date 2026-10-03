@@ -1,0 +1,98 @@
+---
+/**
+ * Placeholder product page — WhatsApp stock check until full PDP lands.
+ */
+import BaseLayout from "./BaseLayout.astro";
+import { site, whatsappUrl } from "../lib/site";
+
+interface Props {
+  title: string;
+  categoryLabel: string;
+  categoryHref: string;
+  blurb?: string;
+}
+
+const {
+  title,
+  categoryLabel,
+  categoryHref,
+  blurb = "New sealed stock. Message us for current configurations and pricing.",
+} = Astro.props;
+
+const waHref = whatsappUrl(`Hi GadgetHub — interested in ${title}.`);
+---
+
+<BaseLayout
+  title={`${title} — GadgetHub`}
+  description={`${title} at GadgetHub Kenya. New devices only. WhatsApp ${site.phoneDisplay}.`}
+>
+  <section class="stock container">
+    <nav class="stock__crumb" aria-label="Breadcrumb">
+      <a href="/shop">Shop</a>
+      <span aria-hidden="true">/</span>
+      <a href={categoryHref}>{categoryLabel}</a>
+    </nav>
+    <p class="stock__eyebrow">{categoryLabel}</p>
+    <h1>{title}</h1>
+    <p class="stock__lede">{blurb}</p>
+    <p class="stock__note">
+      Full product pages are rolling out. For now, confirm availability on
+      WhatsApp or visit {site.address}.
+    </p>
+    <div class="stock__actions">
+      <a class="btn btn--primary" href={waHref} target="_blank" rel="noopener noreferrer">
+        WhatsApp stock check
+      </a>
+      <a class="btn btn--secondary" href={categoryHref}>Back to {categoryLabel}</a>
+      <a class="btn btn--secondary" href="/trade-in">Trade In &amp; Save</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .stock {
+    padding-block: var(--space-12) calc(var(--space-16) + var(--fab-clearance));
+    max-width: 36rem;
+  }
+
+  .stock__crumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    font-size: var(--text-xs);
+    color: var(--color-fg-subtle);
+    margin-bottom: var(--space-4);
+  }
+
+  .stock__crumb a {
+    color: inherit;
+  }
+
+  .stock__eyebrow {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+    margin-bottom: var(--space-3);
+  }
+
+  .stock h1 {
+    font-size: clamp(1.75rem, 5vw, var(--text-3xl));
+    margin-bottom: var(--space-3);
+  }
+
+  .stock__lede,
+  .stock__note {
+    color: var(--color-fg-muted);
+    line-height: var(--leading-normal);
+    margin-bottom: var(--space-4);
+  }
+
+  .stock__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+  }
+</style>

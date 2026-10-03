@@ -1,0 +1,172 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { homeCategories } from "../lib/home";
+import { productNav, secondaryNav } from "../lib/catalog";
+import { blogPosts } from "../lib/blog";
+
+const company = [
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
+  { label: "Support", href: "/support" },
+  { label: "FAQs", href: "/faqs" },
+  { label: "Locations", href: "/locations" },
+  { label: "Careers", href: "/careers" },
+  { label: "Authenticity", href: "/authenticity" },
+  { label: "Blog", href: "/blog" },
+  { label: "Newsletter", href: "/newsletter" },
+] as const;
+
+const care = [
+  { label: "Trade-In", href: "/trade-in" },
+  { label: "Lipa Mdogo Mdogo", href: "/lipa-mdogo-mdogo" },
+  { label: "Warranty & Repairs", href: "/warranty-repairs" },
+  { label: "Shipping & Delivery", href: "/shipping-delivery" },
+  { label: "Returns", href: "/returns" },
+  { label: "Track order", href: "/track-order" },
+  { label: "Corporate & Bulk", href: "/corporate-bulk" },
+] as const;
+
+const legal = [
+  { label: "Terms", href: "/terms" },
+  { label: "Privacy", href: "/privacy" },
+  { label: "Cookies", href: "/cookies" },
+] as const;
+---
+
+<BaseLayout
+  title="Site Map — GadgetHub"
+  description="All main pages on gadgethubke.com."
+>
+  <section class="map container">
+    <h1>Site map</h1>
+    <p class="map__lede">Jump to any section of the storefront.</p>
+
+    <div class="map__grid">
+      <nav aria-label="Shop">
+        <h2>Shop</h2>
+        <ul>
+          <li><a href="/shop">Shop home</a></li>
+          {homeCategories.map((c) => (
+            <li>
+              <a href={c.href}>{c.label}</a>
+            </li>
+          ))}
+          {productNav
+            .flatMap((c) => c.children ?? [])
+            .map((child) => (
+              <li>
+                <a href={child.href}>{child.label}</a>
+              </li>
+            ))}
+        </ul>
+      </nav>
+
+      <nav aria-label="Programs">
+        <h2>Programs</h2>
+        <ul>
+          {secondaryNav.map((l) => (
+            <li>
+              <a href={l.href}>{l.label}</a>
+            </li>
+          ))}
+          {care.map((l) => (
+            <li>
+              <a href={l.href}>{l.label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <nav aria-label="Company">
+        <h2>Company</h2>
+        <ul>
+          {company.map((l) => (
+            <li>
+              <a href={l.href}>{l.label}</a>
+            </li>
+          ))}
+          <li><a href="/cart">Cart</a></li>
+          <li><a href="/account">Account</a></li>
+        </ul>
+      </nav>
+
+      <nav aria-label="Legal & blog">
+        <h2>Legal &amp; blog</h2>
+        <ul>
+          {legal.map((l) => (
+            <li>
+              <a href={l.href}>{l.label}</a>
+            </li>
+          ))}
+          {blogPosts.map((p) => (
+            <li>
+              <a href={`/blog/${p.slug}`}>{p.title}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .map {
+    padding-block: var(--space-12) calc(var(--space-16) + var(--fab-clearance));
+  }
+
+  .map h1 {
+    font-size: clamp(1.75rem, 5vw, var(--text-3xl));
+    margin-bottom: var(--space-3);
+  }
+
+  .map__lede {
+    color: var(--color-fg-muted);
+    margin-bottom: var(--space-10);
+  }
+
+  .map__grid {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 48rem) {
+    .map__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .map__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .map__grid h2 {
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+    margin-bottom: var(--space-3);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .map__grid ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .map__grid a {
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+
+  .map__grid a:hover {
+    color: var(--color-fg);
+  }
+</style>

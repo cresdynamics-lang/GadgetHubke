@@ -1,0 +1,804 @@
+---
+/**
+ * Product Overview — storage + color configurator, stories, buy module + sticky bar.
+ * No condition field (new devices only).
+ */
+import BaseLayout from "./BaseLayout.astro";
+import ProductExperience from "../components/ProductExperience.astro";
+import type { Product } from "../lib/products";
+import { site, whatsappUrl } from "../lib/site";
+
+interface Props {
+  product: Product;
+}
+
+const { product } = Astro.props;
+const basePrice = product.storages[0]?.priceKes ?? 0;
+const defaultStorage = product.storages[0];
+const defaultColor = product.colors[0];
+const waBase = whatsappUrl();
+const gallery =
+  product.gallery && product.gallery.length > 0
+    ? product.gallery
+    : [{ src: product.image.src, alt: product.image.alt }];
+const lipaMonths = product.lipaMonths ?? 0;
+const lipaFrom =
+  lipaMonths > 0 ? Math.ceil(basePrice / lipaMonths) : 0;
+---
+
+<BaseLayout
+  title={`${product.name} — GadgetHub`}
+  description={product.tagline}
+>
+  <article class="pdp" data-product-id={product.id} data-product-name={product.name}>
+    <div class="container pdp__hero">
+      <div class="pdp__media" data-gallery>
+        <div class="pdp__stage">
+          <img
+            data-gallery-main
+            src={gallery[0].src}
+            alt={gallery[0].alt}
+            width="728"
+            height="666"
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
+          />
+        </div>
+        {
+          gallery.length > 1 ? (
+            <ul class="pdp__thumbs" role="list">
+              {gallery.map((shot, i) => (
+                <li>
+                  <button
+                    type="button"
+                    class:list={["pdp__thumb", { "is-active": i === 0 }]}
+                    data-gallery-thumb
+                    data-src={shot.src}
+                    data-alt={shot.alt}
+                    aria-label={`View image ${i + 1}`}
+                    aria-pressed={i === 0 ? "true" : "false"}
+                  >
+                    <img
+                      src={shot.src}
+                      alt=""
+                      width="120"
+                      height="110"
+                      loading={i === 0 ? "eager" : "lazy"}
+                      decoding="async"
+                    />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : null
+        }
+      </div>
+
+      <div class="pdp__buy" id="buy" data-configurator data-lipa-months={lipaMonths || ""}>
+        <nav class="pdp__crumb" aria-label="Breadcrumb">
+          <a href="/shop">Shop</a>
+          <span aria-hidden="true">/</span>
+          <a href={product.categoryHref}>{product.categoryLabel}</a>
+        </nav>
+        <h1>{product.name}</h1>
+        <p class="pdp__tagline">{product.tagline}</p>
+
+        <div class="pdp__pricing">
+          <p class="pdp__price">
+            Buy from{" "}
+            <span data-config-price class="price">
+              <span class="price__amount">
+                {`KSh ${Math.round(basePrice).toLocaleString("en-KE")}`}
+              </span>
+            </span>
+          </p>
+          {
+            lipaMonths > 0 ? (
+              <p class="pdp__lipa">
+                or{" "}
+                <span data-lipa-price>
+                  {`KSh ${lipaFrom.toLocaleString("en-KE")}`}
+                </span>
+                /mo. for {lipaMonths} mo. with{" "}
+                <a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo</a>
+              </p>
+            ) : null
+          }
+        </div>
+
+        <fieldset class="pdp__fieldset">
+          <legend>Storage</legend>
+          <div class="pdp__options" role="radiogroup" aria-label="Storage">
+            {
+              product.storages.map((s, i) => (
+                <label class="pdp__option">
+                  <input
+                    type="radio"
+                    name="storage"
+                    value={s.id}
+                    data-price-kes={s.priceKes}
+                    data-label={s.label}
+                    checked={i === 0}
+                  />
+                  <span>{s.label}</span>
+                </label>
+              ))
+            }
+          </div>
+        </fieldset>
+
+        <fieldset class="pdp__fieldset">
+          <legend>{product.finishesLabel ?? "Color / finish"}</legend>
+          <div class="pdp__swatches" role="radiogroup" aria-label="Finish">
+            {
+              product.colors.map((c, i) => (
+                <label class="pdp__swatch" title={c.label}>
+                  <input
+                    type="radio"
+                    name="color"
+                    value={c.id}
+                    data-label={c.label}
+                    checked={i === 0}
+                  />
+                  <span
+                    class="pdp__swatch-chip"
+                    style={`background:${c.hex}`}
+                    aria-hidden="true"
+                  />
+                  <span class="pdp__swatch-label">{c.label}</span>
+                </label>
+              ))
+            }
+          </div>
+        </fieldset>
+
+        <div class="pdp__actions">
+          <button
+            type="button"
+            class="btn btn--primary"
+            data-add-cart
+            data-storage={defaultStorage?.id}
+            data-color={defaultColor?.id}
+            data-price={basePrice}
+          >
+            Add to Cart
+          </button>
+          <a
+            class="btn btn--primary"
+            data-buy-now
+            href={waBase}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Buy
+          </a>
+          <a class="btn btn--secondary" href="/trade-in">Trade In</a>
+        </div>
+        <p class="pdp__specs-link">
+          <a href={product.specsHref}>Tech Specs</a>
+          {
+            product.related ? (
+              <>
+                <span aria-hidden="true"> · </span>
+                <a href={product.related.href}>{product.related.label}</a>
+              </>
+            ) : null
+          }
+          <span aria-hidden="true"> · </span>
+          New sealed only · manufacturer warranty
+        </p>
+      </div>
+    </div>
+
+    <section class="container pdp__section">
+      <h2>Highlights</h2>
+      <ul class="pdp__highlights">
+        {
+          product.highlights.map((h) => (
+            <li>
+              <span class="pdp__hl-value">{h.value}</span>
+              <span class="pdp__hl-label">{h.label}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    {
+      product.experiences && product.experiences.length > 0 ? (
+        <ProductExperience productName={product.name} experiences={product.experiences} />
+      ) : null
+    }
+
+    {
+      product.stories.map((story) => (
+        <section class="container pdp__section pdp__story">
+          <h2>{story.title}</h2>
+          <p>{story.body}</p>
+        </section>
+      ))
+    }
+
+    {
+      product.batteryStat ? (
+        <section class="container pdp__section pdp__battery">
+          <p class="pdp__battery-value">{product.batteryStat.value}</p>
+          <p class="pdp__battery-label">{product.batteryStat.label}</p>
+        </section>
+      ) : null
+    }
+
+    <section class="container pdp__section">
+      <h2>Built-in apps</h2>
+      <ul class="pdp__apps">
+        {product.apps.map((app) => (
+          <li>{app}</li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="container pdp__section pdp__explore">
+      <h2>Explore {product.name} further</h2>
+      <p>
+        Relive the interactive feel above, dig into Tech Specs, then configure
+        and buy from GadgetHub — not a detour off-site.
+      </p>
+      <p class="pdp__explore-actions">
+        <a class="btn btn--secondary" href="#experience">How it feels</a>
+        <a class="btn btn--secondary" href={product.specsHref}>Tech Specs</a>
+        <a class="btn btn--primary" href="#buy">Buy on GadgetHub</a>
+        <a
+          class="btn btn--primary"
+          data-buy-now
+          href={waBase}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Buy
+        </a>
+        {
+          product.related ? (
+            <a class="btn btn--secondary" href={product.related.href}>
+              {product.related.label}
+            </a>
+          ) : null
+        }
+      </p>
+    </section>
+
+    <section class="container pdp__section pdp__close">
+      <h2>Ready to buy?</h2>
+      <p>
+        Configure storage and finish above. Add to Cart, Buy on WhatsApp{" "}
+        {site.phoneDisplay}, or Trade In toward {product.name}.
+      </p>
+      <div class="pdp__actions">
+        <button type="button" class="btn btn--primary" data-add-cart>Add to Cart</button>
+        <a class="btn btn--primary" data-buy-now href={waBase} target="_blank" rel="noopener noreferrer">
+          Buy
+        </a>
+        <a class="btn btn--secondary" href="/trade-in">Trade In</a>
+      </div>
+    </section>
+  </article>
+
+  <div class="pdp-sticky" data-sticky-bar hidden>
+    <div class="container pdp-sticky__inner">
+      <span class="pdp-sticky__name">{product.name}</span>
+      <span class="pdp-sticky__price" data-sticky-price></span>
+      <div class="pdp-sticky__actions">
+        <button type="button" class="btn btn--primary btn--sm" data-add-cart-sticky>
+          Add to Cart
+        </button>
+        <a
+          class="btn btn--primary btn--sm"
+          data-buy-now
+          href={waBase}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Buy
+        </a>
+        <a class="btn btn--secondary btn--sm" href="/trade-in">Trade In</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script define:vars={{ waBase, productName: product.name, productId: product.id }}>
+  const root = document.querySelector("[data-configurator]");
+  const sticky = document.querySelector("[data-sticky-bar]");
+  if (!root) throw new Error("configurator missing");
+
+  const CART_KEY = "gh-cart";
+  const lipaMonths = Number(root.getAttribute("data-lipa-months") || 0);
+
+  function selected() {
+    const storage = root.querySelector('input[name="storage"]:checked');
+    const color = root.querySelector('input[name="color"]:checked');
+    const priceKes = Number(storage?.getAttribute("data-price-kes") || 0);
+    return {
+      storageId: storage?.value || "",
+      storageLabel: storage?.getAttribute("data-label") || "",
+      colorId: color?.value || "",
+      colorLabel: color?.getAttribute("data-label") || "",
+      priceKes,
+    };
+  }
+
+  function formatKes(n) {
+    return `KSh ${Math.round(n).toLocaleString("en-KE")}`;
+  }
+
+  function syncPrice() {
+    const { priceKes, storageLabel, colorLabel } = selected();
+    const priceHost = root.querySelector("[data-config-price]");
+    if (priceHost) priceHost.textContent = formatKes(priceKes);
+
+    const lipaEl = root.querySelector("[data-lipa-price]");
+    if (lipaEl && lipaMonths > 0) {
+      lipaEl.textContent = formatKes(Math.ceil(priceKes / lipaMonths));
+    }
+
+    const stickyPrice = document.querySelector("[data-sticky-price]");
+    if (stickyPrice) {
+      stickyPrice.textContent = `${storageLabel} · ${colorLabel} · ${formatKes(priceKes)}`;
+    }
+
+    const msg = [
+      "Hi GadgetHub — I'd like to buy",
+      "",
+      `Product: ${productName}`,
+      `Storage: ${storageLabel}`,
+      `Finish: ${colorLabel}`,
+      `Price: ${formatKes(priceKes)}`,
+    ].join("\n");
+    const href = `${waBase}?text=${encodeURIComponent(msg)}`;
+    document.querySelectorAll("[data-buy-now]").forEach((el) => {
+      if (el instanceof HTMLAnchorElement) el.href = href;
+    });
+  }
+
+  function addToCart() {
+    const cfg = selected();
+    let cart = [];
+    try {
+      cart = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
+      if (!Array.isArray(cart)) cart = [];
+    } catch {
+      cart = [];
+    }
+    const lineId = `${productId}-${cfg.storageId}-${cfg.colorId}`;
+    const existing = cart.find((l) => l.id === lineId);
+    if (existing) existing.qty += 1;
+    else {
+      cart.push({
+        id: lineId,
+        productId,
+        name: productName,
+        storage: cfg.storageLabel,
+        color: cfg.colorLabel,
+        priceKes: cfg.priceKes,
+        qty: 1,
+        href: location.pathname,
+      });
+    }
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    window.dispatchEvent(new CustomEvent("gh:cart", { detail: { cart } }));
+    window.location.href = "/cart";
+  }
+
+  root.addEventListener("change", syncPrice);
+  syncPrice();
+
+  document.querySelectorAll("[data-add-cart], [data-add-cart-sticky]").forEach((btn) => {
+    btn.addEventListener("click", addToCart);
+  });
+
+  const gallery = document.querySelector("[data-gallery]");
+  const main = gallery?.querySelector("[data-gallery-main]");
+  gallery?.querySelectorAll("[data-gallery-thumb]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (!(btn instanceof HTMLButtonElement) || !(main instanceof HTMLImageElement)) return;
+      const src = btn.getAttribute("data-src");
+      const alt = btn.getAttribute("data-alt") || "";
+      if (!src) return;
+      main.src = src;
+      main.alt = alt;
+      gallery.querySelectorAll("[data-gallery-thumb]").forEach((t) => {
+        t.classList.toggle("is-active", t === btn);
+        t.setAttribute("aria-pressed", t === btn ? "true" : "false");
+      });
+    });
+  });
+
+  const buyBlock = root;
+  const io = new IntersectionObserver(
+    ([entry]) => {
+      if (!sticky) return;
+      sticky.hidden = entry.isIntersecting;
+    },
+    { threshold: 0.15 },
+  );
+  io.observe(buyBlock);
+</script>
+
+<style>
+  .pdp {
+    padding-bottom: calc(var(--space-16) + var(--fab-clearance) + 4rem);
+  }
+
+  .pdp__hero {
+    display: grid;
+    gap: var(--space-8);
+    padding-block: var(--space-8) var(--space-10);
+  }
+
+  @media (min-width: 64rem) {
+    .pdp__hero {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: var(--space-12);
+      align-items: start;
+      padding-block: var(--space-12) var(--space-14);
+    }
+  }
+
+  .pdp__media {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .pdp__stage {
+    background: var(--color-bg-subtle);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    aspect-ratio: 728 / 666;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--color-border);
+  }
+
+  .pdp__stage img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .pdp__thumbs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 0.4rem;
+  }
+
+  .pdp__thumb {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-subtle);
+    cursor: pointer;
+    overflow: hidden;
+    aspect-ratio: 728 / 666;
+  }
+
+  .pdp__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .pdp__thumb.is-active {
+    border-color: var(--color-black);
+    outline: 1px solid var(--color-black);
+  }
+
+  .pdp__thumb:focus-visible {
+    outline: 2px solid var(--color-black);
+    outline-offset: 2px;
+  }
+
+  .pdp__crumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    font-size: var(--text-xs);
+    color: var(--color-fg-subtle);
+    margin-bottom: var(--space-3);
+  }
+
+  .pdp__crumb a {
+    color: inherit;
+  }
+
+  .pdp__buy h1 {
+    font-size: clamp(1.85rem, 4.5vw, 2.75rem);
+    margin-bottom: var(--space-3);
+    letter-spacing: -0.03em;
+  }
+
+  .pdp__tagline {
+    color: var(--color-fg-muted);
+    margin-bottom: var(--space-5);
+    line-height: var(--leading-normal);
+    max-width: 28rem;
+  }
+
+  .pdp__pricing {
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .pdp__price {
+    font-size: clamp(1.15rem, 2.5vw, 1.35rem);
+    font-weight: var(--font-weight-semibold);
+    margin: 0 0 var(--space-2);
+  }
+
+  .pdp__lipa {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+    line-height: var(--leading-snug);
+  }
+
+  .pdp__lipa a {
+    font-weight: var(--font-weight-medium);
+    color: var(--color-fg);
+  }
+
+  .pdp__fieldset {
+    border: 0;
+    margin: 0 0 var(--space-5);
+    padding: 0;
+  }
+
+  .pdp__fieldset legend {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+    margin-bottom: var(--space-3);
+    padding: 0;
+  }
+
+  .pdp__options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .pdp__option {
+    cursor: pointer;
+  }
+
+  .pdp__option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .pdp__option span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.5rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .pdp__option input:checked + span {
+    background: var(--color-black);
+    color: var(--color-white);
+    border-color: var(--color-black);
+  }
+
+  .pdp__option input:focus-visible + span {
+    outline: 2px solid var(--color-black);
+    outline-offset: 2px;
+  }
+
+  .pdp__swatches {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .pdp__swatch {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    cursor: pointer;
+    padding: 0.35rem 0;
+  }
+
+  .pdp__swatch input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .pdp__swatch-chip {
+    width: 1.35rem;
+    height: 1.35rem;
+    border-radius: 50%;
+    border: 1px solid var(--color-border-strong);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+  }
+
+  .pdp__swatch input:checked + .pdp__swatch-chip {
+    outline: 2px solid var(--color-black);
+    outline-offset: 2px;
+  }
+
+  .pdp__swatch-label {
+    font-size: var(--text-sm);
+  }
+
+  .pdp__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .pdp__actions .btn {
+    flex: 1 1 auto;
+    min-width: min(100%, 8.5rem);
+    justify-content: center;
+  }
+
+  .pdp__specs-link {
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+    margin: 0 0 var(--space-2);
+  }
+
+  .pdp__section {
+    padding-block: var(--space-10);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .pdp__section h2 {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-4);
+  }
+
+  .pdp__highlights {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (min-width: 48rem) {
+    .pdp__highlights {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .pdp__hl-value {
+    display: block;
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: 0.2rem;
+  }
+
+  .pdp__hl-label {
+    font-size: var(--text-xs);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+  }
+
+  .pdp__story p {
+    max-width: 40rem;
+    color: var(--color-fg-muted);
+    line-height: var(--leading-normal);
+  }
+
+  .pdp__battery-value {
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: var(--space-3);
+  }
+
+  .pdp__battery-label {
+    max-width: 28rem;
+    color: var(--color-fg-muted);
+  }
+
+  .pdp__apps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+    font-size: var(--text-sm);
+  }
+
+  .pdp__explore p {
+    max-width: 40rem;
+    color: var(--color-fg-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .pdp__explore-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .pdp__apps li::after {
+    content: "·";
+    margin-left: var(--space-4);
+    color: var(--color-fg-subtle);
+  }
+
+  .pdp__apps li:last-child::after {
+    content: none;
+  }
+
+  .pdp__close p {
+    color: var(--color-fg-muted);
+    margin-bottom: var(--space-5);
+  }
+
+  .pdp-sticky {
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 40;
+    background: var(--color-white);
+    border-top: 1px solid var(--color-border);
+    padding-block: var(--space-3);
+    padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
+  }
+
+  .pdp-sticky[hidden] {
+    display: none;
+  }
+
+  .pdp-sticky__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .pdp-sticky__name {
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--text-sm);
+  }
+
+  .pdp-sticky__price {
+    flex: 1;
+    font-size: var(--text-xs);
+    color: var(--color-fg-muted);
+  }
+
+  .pdp-sticky__actions {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  :global(.btn--sm) {
+    min-height: 2.25rem;
+    padding: 0.4rem 0.85rem;
+    font-size: var(--text-sm);
+  }
+</style>

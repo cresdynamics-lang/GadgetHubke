@@ -1,0 +1,92 @@
+---
+import PolicyPage from "../layouts/PolicyPage.astro";
+import { site } from "../lib/site";
+
+const sections = [
+  { id: "what", title: "What cookies are" },
+  { id: "essential", title: "Essential cookies" },
+  { id: "functional", title: "Functional cookies" },
+  { id: "analytics", title: "Analytics cookies" },
+  { id: "marketing", title: "Marketing cookies" },
+  { id: "third-party", title: "Third-party cookies" },
+  { id: "managing", title: "Managing cookies" },
+  { id: "changes", title: "Changes" },
+];
+---
+
+<PolicyPage
+  title="Cookie Policy"
+  heading="Cookie Policy"
+  description={`How ${site.domain} uses cookies and similar technologies.`}
+  sections={sections}
+>
+  <section id="what">
+    <h2>What cookies are</h2>
+    <p>
+      Cookies are small files stored on your device that help the site function and
+      let us understand how it is used.
+    </p>
+  </section>
+
+  <section id="essential">
+    <h2>Essential cookies</h2>
+    <p>
+      Required for core functionality: keeping items in your cart and remembering your
+      session during checkout. These cannot be disabled without breaking the site.
+    </p>
+  </section>
+
+  <section id="functional">
+    <h2>Functional cookies</h2>
+    <p>
+      Remember preferences such as selected device configuration or recently viewed
+      products so your next visit is smoother.
+    </p>
+  </section>
+
+  <section id="analytics">
+    <h2>Analytics cookies</h2>
+    <p>
+      Help us understand traffic and usage (for example a lightweight analytics tool)
+      so we can improve the site; these are anonymized or aggregated where possible.
+      Non-essential analytics cookies are only set with your consent when a preference
+      banner is active.
+    </p>
+  </section>
+
+  <section id="marketing">
+    <h2>Marketing cookies</h2>
+    <p>
+      Used for retargeting ads (for example Meta Pixel) so you may see GadgetHub ads
+      on other sites after visiting. These are only set with your consent.
+    </p>
+  </section>
+
+  <section id="third-party">
+    <h2>Third-party cookies</h2>
+    <p>
+      Some cookies are set by services we embed, such as WhatsApp-related tools or
+      social links, and are governed by those providers’ own policies.
+    </p>
+  </section>
+
+  <section id="managing">
+    <h2>Managing cookies</h2>
+    <p>
+      You can control or delete cookies through your browser settings, or via the
+      cookie preference banner on this site (Accept all, Essential only, or Customize).
+      Disabling non-essential cookies will not affect your ability to browse or
+      purchase. To reset your choice later, clear site data for {site.domain} in your
+      browser and reload.
+    </p>
+  </section>
+
+  <section id="changes">
+    <h2>Changes</h2>
+    <p>
+      We may update this policy as our use of cookies changes; the “Last updated”
+      date at the top of this page reflects the latest version. Related documents:{" "}
+      <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms of Service</a>.
+    </p>
+  </section>
+</PolicyPage>

@@ -1,0 +1,47 @@
+---
+/**
+ * Single analytics loader — Plausible only, gated by cookie consent.
+ * Set PUBLIC_PLAUSIBLE_DOMAIN (e.g. gadgethubke.com) to enable.
+ */
+const domain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN as string | undefined;
+---
+
+{
+  domain ? (
+    <script define:vars={{ domain }}>
+      const SRC = "https://plausible.io/js/script.js";
+      let loaded = false;
+
+      function load() {
+        if (loaded) return;
+        if (document.querySelector(`script[data-domain="${domain}"]`)) {
+          loaded = true;
+          return;
+        }
+        const s = document.createElement("script");
+        s.defer = true;
+        s.dataset.domain = domain;
+        s.src = SRC;
+        document.head.appendChild(s);
+        loaded = true;
+      }
+
+      function maybeLoad() {
+        try {
+          const raw = localStorage.getItem("gh-cookie-consent");
+          if (!raw) return;
+          const consent = JSON.parse(raw);
+          if (consent?.analytics === true) load();
+        } catch {
+          /* ignore */
+        }
+      }
+
+      maybeLoad();
+      window.addEventListener("gh:consent", (event) => {
+        const detail = /** @type {CustomEvent} */ (event).detail;
+        if (detail?.analytics) load();
+      });
+    </script>
+  ) : null
+}

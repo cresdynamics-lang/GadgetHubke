@@ -1,0 +1,122 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site, whatsappUrl } from "../lib/site";
+
+const waBase = whatsappUrl();
+---
+
+<BaseLayout
+  title="Track My Order — GadgetHub"
+  description={`Check order status with ${site.name}. WhatsApp ${site.phoneDisplay}.`}
+>
+  <section class="track container">
+    <header class="track__intro">
+      <p class="track__eyebrow">Orders</p>
+      <h1>Track My Order</h1>
+      <p class="track__lede">
+        Phase 1 tracking is via WhatsApp. Send your name, phone, and any order
+        reference we gave you.
+      </p>
+    </header>
+
+    <form class="track__form" data-track-form>
+      <label class="track__field">
+        <span>Name</span>
+        <input type="text" name="name" required autocomplete="name" />
+      </label>
+      <label class="track__field">
+        <span>Phone</span>
+        <input type="tel" name="phone" required autocomplete="tel" placeholder="07…" />
+      </label>
+      <label class="track__field">
+        <span>Order reference (optional)</span>
+        <input type="text" name="ref" autocomplete="off" placeholder="e.g. date or device" />
+      </label>
+      <button class="btn btn--primary" type="submit">Continue on WhatsApp</button>
+    </form>
+
+    <p class="track__alt">
+      Or message directly:{" "}
+      <a href={whatsappUrl("Hi GadgetHub — I'd like to track my order.")} target="_blank" rel="noopener noreferrer">
+        {site.phoneDisplay}
+      </a>
+    </p>
+  </section>
+</BaseLayout>
+
+<script define:vars={{ waBase }}>
+  document.querySelector("[data-track-form]")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    if (!(form instanceof HTMLFormElement)) return;
+    const data = new FormData(form);
+    const name = String(data.get("name") || "").trim();
+    const phone = String(data.get("phone") || "").trim();
+    const ref = String(data.get("ref") || "").trim();
+    const text = [
+      "Hi GadgetHub — Track my order",
+      "",
+      `Name: ${name}`,
+      `Phone: ${phone}`,
+      ref ? `Reference: ${ref}` : null,
+    ]
+      .filter(Boolean)
+      .join("\n");
+    window.open(`${waBase}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
+  });
+</script>
+
+<style>
+  .track {
+    padding-block: var(--space-12) calc(var(--space-16) + var(--fab-clearance));
+    max-width: 28rem;
+  }
+
+  .track__eyebrow {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+    margin-bottom: var(--space-3);
+  }
+
+  .track h1 {
+    font-size: clamp(1.75rem, 5vw, var(--text-3xl));
+    margin-bottom: var(--space-3);
+  }
+
+  .track__lede {
+    color: var(--color-fg-muted);
+    margin-bottom: var(--space-8);
+    line-height: var(--leading-normal);
+  }
+
+  .track__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  .track__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .track__field input {
+    min-height: 2.75rem;
+    padding: 0.65rem 0.85rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    font-weight: var(--font-weight-regular);
+  }
+
+  .track__alt {
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+</style>

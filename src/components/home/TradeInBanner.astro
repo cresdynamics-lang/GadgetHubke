@@ -1,0 +1,63 @@
+---
+---
+
+<section class="home-section home-promo home-promo--tradein">
+  <div class="container home-promo__inner">
+    <div class="home-promo__copy">
+      <h2>Trade in. Save on any new device.</h2>
+      <p>
+        Bring an iPhone or Samsung — get credit toward anything new in our catalog.
+        Online values are estimates; we confirm after inspection.
+      </p>
+    </div>
+    <a class="btn btn--primary" href="/trade-in">Start Trade-In</a>
+  </div>
+</section>
+
+<style>
+  .home-promo--tradein {
+    background: var(--color-bg-inverse);
+    color: var(--color-fg-inverse);
+  }
+
+  .home-promo__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    align-items: flex-start;
+  }
+
+  @media (min-width: 48rem) {
+    .home-promo__inner {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-8);
+    }
+  }
+
+  .home-promo__copy {
+    max-width: 36rem;
+  }
+
+  .home-promo__copy h2 {
+    font-size: clamp(1.35rem, 3vw, 1.85rem);
+    margin-bottom: var(--space-3);
+  }
+
+  .home-promo__copy p {
+    color: var(--color-grey-400);
+    font-size: var(--text-sm);
+    line-height: var(--leading-snug);
+  }
+
+  .home-promo--tradein :global(.btn--primary) {
+    background: var(--color-white);
+    color: var(--color-black);
+  }
+
+  .home-promo--tradein :global(.btn--primary:hover) {
+    background: var(--color-grey-200);
+    color: var(--color-black);
+  }
+</style>

@@ -1,0 +1,54 @@
+---
+/**
+ * Responsive product/card image — WebP source + lazy by default.
+ */
+interface Props {
+  src: string;
+  srcWebp?: string;
+  alt: string;
+  width: number;
+  height: number;
+  loading?: "lazy" | "eager";
+  fetchpriority?: "high" | "low" | "auto";
+  class?: string;
+  sizes?: string;
+}
+
+const {
+  src,
+  srcWebp,
+  alt,
+  width,
+  height,
+  loading = "lazy",
+  fetchpriority = "auto",
+  class: className = "",
+  sizes,
+} = Astro.props;
+---
+
+<picture class:list={["rimg", className]}>
+  {srcWebp ? <source srcset={srcWebp} type="image/webp" sizes={sizes} /> : null}
+  <img
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    loading={loading}
+    decoding="async"
+    fetchpriority={fetchpriority}
+    sizes={sizes}
+  />
+</picture>
+
+<style>
+  .rimg {
+    display: contents;
+  }
+
+  .rimg img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+</style>

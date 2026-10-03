@@ -1,0 +1,139 @@
+---
+import Price from "../Price.astro";
+import { homeDeals } from "../../lib/home";
+---
+
+<section class="home-section home-deals">
+  <div class="container">
+    <header class="home-section__head home-section__head--row">
+      <div>
+        <h2>Deals</h2>
+        <p>Bestsellers and current promos.</p>
+      </div>
+      <a class="home-section__link" href="/deals">View all</a>
+    </header>
+  </div>
+
+  <div class="home-deals__scroller" tabindex="0" aria-label="Deals">
+    <ul class="home-deals__track">
+      {
+        homeDeals.map((deal) => (
+          <li>
+            <a class="home-deals__card" href={deal.href}>
+              <span class="home-deals__media">
+                {deal.badge && <span class="badge home-deals__badge">{deal.badge}</span>}
+                {deal.image ? (
+                  <picture>
+                    {deal.image.srcWebp && (
+                      <source srcset={deal.image.srcWebp} type="image/webp" />
+                    )}
+                    <img
+                      src={deal.image.src}
+                      alt={deal.image.alt}
+                      width="220"
+                      height="165"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                ) : (
+                  <span class="home-deals__placeholder" aria-hidden="true" />
+                )}
+              </span>
+              <span class="home-deals__name">{deal.name}</span>
+              <Price kes={deal.priceKes} prefix="From" />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .home-deals__scroller {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: var(--space-2);
+  }
+
+  .home-deals__scroller:focus-visible {
+    outline: 2px solid var(--color-black);
+    outline-offset: -2px;
+  }
+
+  .home-deals__track {
+    list-style: none;
+    margin: 0;
+    padding: 0 var(--space-4);
+    display: flex;
+    gap: var(--space-4);
+    width: max-content;
+  }
+
+  @media (min-width: 40rem) {
+    .home-deals__track {
+      padding-inline: max(var(--space-4), calc((100vw - var(--container)) / 2));
+    }
+  }
+
+  .home-deals__card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    width: 11.5rem;
+    text-decoration: none;
+    color: inherit;
+    scroll-snap-align: start;
+  }
+
+  @media (min-width: 40rem) {
+    .home-deals__card {
+      width: 13rem;
+    }
+  }
+
+  .home-deals__card:hover .home-deals__name {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  .home-deals__media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background: var(--color-bg-muted);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .home-deals__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .home-deals__placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(145deg, var(--color-grey-200), var(--color-grey-100));
+  }
+
+  .home-deals__badge {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 1;
+  }
+
+  .home-deals__name {
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .home-deals__card :global(.price) {
+    font-size: var(--text-sm);
+  }
+</style>

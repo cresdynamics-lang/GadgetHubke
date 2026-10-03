@@ -1,0 +1,74 @@
+---
+const items = [
+  {
+    title: "New only",
+    text: "Sealed stock — no refurbished devices on this site.",
+  },
+  {
+    title: "Manufacturer warranty",
+    text: "Covered under the maker’s standard warranty terms.",
+  },
+  {
+    title: "Trade-In & Lipa",
+    text: "Credit your old phone, or pay mdogo mdogo with us.",
+  },
+  {
+    title: "Nairobi store",
+    text: "Norwich Union Building, 4th Floor, Suite 15.",
+  },
+] as const;
+---
+
+<section class="home-section home-trust">
+  <div class="container">
+    <header class="home-section__head">
+      <h2>Why GadgetHub</h2>
+      <p>Trust that matters when buying Apple in Kenya.</p>
+    </header>
+    <ul class="home-trust__list">
+      {
+        items.map((item) => (
+          <li class="home-trust__item">
+            <h3>{item.title}</h3>
+            <p>{item.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .home-trust__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 40rem) {
+    .home-trust__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .home-trust__list {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-5);
+    }
+  }
+
+  .home-trust__item h3 {
+    font-size: var(--text-base);
+    margin-bottom: var(--space-2);
+  }
+
+  .home-trust__item p {
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+    line-height: var(--leading-snug);
+  }
+</style>

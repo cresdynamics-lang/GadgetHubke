@@ -1,4 +1,6 @@
 ---
+import Price from "./Price.astro";
+
 interface Props {
   title: string;
   tagline: string;
@@ -7,6 +9,8 @@ interface Props {
   tone?: "light" | "dark";
   priority?: boolean;
   shopLabel?: string;
+  /** From-price in KES */
+  priceKes?: number;
 }
 
 const {
@@ -17,6 +21,7 @@ const {
   tone = "light",
   priority = false,
   shopLabel = "Shop Now",
+  priceKes,
 } = Astro.props;
 ---
 
@@ -56,6 +61,13 @@ const {
   <div class="home-hero__copy">
     <h2 class="home-hero__title">{title}</h2>
     <p class="home-hero__tagline">{tagline}</p>
+    {
+      typeof priceKes === "number" ? (
+        <p class="home-hero__price">
+          <Price kes={priceKes} prefix="From" />
+        </p>
+      ) : null
+    }
     <div class="home-hero__actions">
       <a class:list={["btn", tone === "dark" ? "btn--inverse" : "btn--primary"]} href={href}>
         {shopLabel}
@@ -150,6 +162,16 @@ const {
 
   .home-hero--dark .home-hero__tagline {
     color: var(--color-grey-300);
+  }
+
+  .home-hero__price {
+    font-size: clamp(1rem, 2.6vw, 1.25rem);
+    margin: 0;
+  }
+
+  .home-hero--dark .home-hero__price :global(.price),
+  .home-hero--dark .home-hero__price :global(.price__prefix) {
+    color: var(--color-white);
   }
 
   .home-hero__actions {

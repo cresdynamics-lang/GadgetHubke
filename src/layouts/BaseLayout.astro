@@ -1,8 +1,10 @@
 ---
 import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
 import FloatingActions from "../components/FloatingActions.astro";
-import "@fortawesome/fontawesome-free/css/fontawesome.min.css";
-import "@fortawesome/fontawesome-free/css/brands.min.css";
+import CookieBanner from "../components/CookieBanner.astro";
+import Analytics from "../components/Analytics.astro";
+import interLatin from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
 import "../styles/global.css";
 import { site } from "../lib/site";
 
@@ -27,6 +29,13 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
     <meta name="description" content={description} />
     <meta name="theme-color" content="#0A0A0A" />
     <link rel="canonical" href={canonical} />
+    <link
+      rel="preload"
+      href={interLatin}
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <link rel="icon" type="image/png" href="/images/logo.png" />
     <link rel="apple-touch-icon" href="/images/logo.png" />
     <meta property="og:title" content={title} />
@@ -43,7 +52,9 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
     <main id="main">
       <slot />
     </main>
-    <slot name="footer" />
+    <Footer />
     <FloatingActions />
+    <CookieBanner />
+    <Analytics />
   </body>
 </html>

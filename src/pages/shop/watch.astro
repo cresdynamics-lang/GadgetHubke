@@ -1,4 +1,59 @@
 ---
-import StubPage from "../../layouts/StubPage.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { site, whatsappUrl } from "../../lib/site";
+
+const waHref = whatsappUrl("Hi GadgetHub — interested in Apple Watch.");
 ---
-<StubPage title="Watch" heading="Watch" />
+
+<BaseLayout
+  title="Apple Watch — GadgetHub"
+  description="New Apple Watch stock at GadgetHub Kenya. Ask for current models and prices on WhatsApp."
+>
+  <section class="coming container">
+    <p class="coming__eyebrow">Watch</p>
+    <h1>Apple Watch</h1>
+    <p class="coming__lede">
+      New sealed watches — lineup pages are expanding. Message us for what’s in
+      stock today, or visit {site.address}.
+    </p>
+    <div class="coming__actions">
+      <a class="btn btn--primary" href={waHref} target="_blank" rel="noopener noreferrer">
+        WhatsApp stock check
+      </a>
+      <a class="btn btn--secondary" href="/shop">All categories</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .coming {
+    padding-block: var(--space-12) calc(var(--space-16) + var(--fab-clearance));
+    max-width: 40rem;
+  }
+
+  .coming__eyebrow {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+    margin-bottom: var(--space-3);
+  }
+
+  .coming h1 {
+    font-size: clamp(1.75rem, 5vw, var(--text-3xl));
+    margin-bottom: var(--space-3);
+  }
+
+  .coming__lede {
+    color: var(--color-fg-muted);
+    margin-bottom: var(--space-6);
+    line-height: var(--leading-normal);
+  }
+
+  .coming__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+</style>

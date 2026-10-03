@@ -8,12 +8,12 @@
 
 ## 0. Decisions locked (do not reverse)
 
-- [ ] New-only storefront confirmed: no Refurbished nav, no A/B/C condition on products for sale, no used inventory listings
-- [ ] Trade-in condition applies only to the device being traded in (Trade-In form), never to buy-side configurators
+- [x] New-only storefront confirmed: no Refurbished nav, no A/B/C condition on products for sale, no used inventory listings
+- [x] Trade-in condition applies only to the device being traded in (Trade-In form), never to buy-side configurators
 - [x] Strict black & white only — no accent color; CTAs/prices/badges use black, white, and greyscale
-- [ ] One type family (Inter variable), 2–3 weights max
-- [ ] Static-first stack (Astro preferred, or Next.js static export) with JS islands only
-- [ ] WhatsApp / call number everywhere: **0729585471**
+- [x] One type family (Inter variable), 2–3 weights max
+- [x] Static-first stack (Astro preferred, or Next.js static export) with JS islands only
+- [x] WhatsApp / call number everywhere: **0729585471**
 
 ---
 
@@ -54,16 +54,16 @@
 - [ ] Confirm all other pages ship minimal / no client JS by default
 
 ### Media & delivery
-- [ ] Image pipeline: WebP/AVIF, responsive `srcset`/`sizes`
-- [ ] Lazy-load all below-the-fold images
-- [ ] Eager-load only LCP hero assets
-- [ ] CDN hosting setup (Vercel / Netlify / Cloudflare Pages)
-- [ ] Confirm Kenya-friendly edge delivery
+- [x] Image pipeline: WebP/AVIF, responsive `srcset`/`sizes`
+- [x] Lazy-load all below-the-fold images
+- [x] Eager-load only LCP hero assets
+- [x] CDN hosting setup (Vercel / Netlify / Cloudflare Pages)
+- [x] Confirm Kenya-friendly edge delivery
 
 ### Analytics & fonts
-- [ ] Add **one** lightweight analytics tool only
-- [ ] Self-host or optimally load Inter variable font; preload critical face
-- [ ] No extra tracking pixels / tag managers in Phase 1
+- [x] Add **one** lightweight analytics tool only
+- [x] Self-host or optimally load Inter variable font; preload critical face
+- [x] No extra tracking pixels / tag managers in Phase 1
 
 ### Contact constants
 - [ ] Centralize shop phone/WhatsApp as `0729585471` (single config source)
@@ -99,16 +99,16 @@
 - [ ] Confirm **no** Refurbished / Used item in menu
 
 ### Persistent WhatsApp
-- [ ] Floating WhatsApp button site-wide → `0729585471`
-- [ ] Accessible label; does not block primary CTAs on mobile
+- [x] Floating WhatsApp button site-wide → `0729585471`
+- [x] Accessible label; does not block primary CTAs on mobile
 
 ### Footer
-- [ ] Location / store address block
-- [ ] WhatsApp + call: `0729585471`
-- [ ] Social links
-- [ ] Newsletter signup
-- [ ] Policy links (privacy, terms, warranty, shipping/returns as applicable)
-- [ ] Sitemap echoes of key nav items
+- [x] Location / store address block
+- [x] WhatsApp + call: `0729585471`
+- [x] Social links
+- [x] Newsletter signup
+- [x] Policy links (privacy, terms, warranty, shipping/returns as applicable)
+- [x] Sitemap echoes of key nav items
 
 ---
 
@@ -121,7 +121,7 @@
 5. [ ] **Lipa Mdogo Mdogo strip** — plain-language installments → financing page
 6. [ ] **Trust row** — warranty, authenticity, reviews
 7. [ ] **Blog teaser** — 2–3 latest posts
-8. [ ] **Footer** — as above
+8. [x] **Footer** — as above
 
 ### Homepage QA
 - [ ] First viewport: brand-strong, not a dashboard of widgets
@@ -208,27 +208,27 @@
 ## 9. Content pages
 
 ### Blog
-- [ ] Blog index
-- [ ] Post template
-- [ ] Homepage teaser wired to latest 2–3 posts (static or content collection)
+- [x] Blog index
+- [x] Post template
+- [x] Homepage teaser wired to latest 2–3 posts (static or content collection)
 
 ### Support
-- [ ] Support landing (FAQs, warranty help, how to reach shop)
-- [ ] Paths to WhatsApp / call `0729585471`
+- [x] Support landing (FAQs, warranty help, how to reach shop)
+- [x] Paths to WhatsApp / call `0729585471`
 
 ### About
-- [ ] About page (brand story, new-only positioning, Nairobi/Kenya context as available)
+- [x] About page (brand story, new-only positioning, Nairobi/Kenya context as available)
 
 ### Contact
-- [ ] Contact page with call + WhatsApp `0729585471`
-- [ ] Location / map or address
-- [ ] Optional short contact form (or WhatsApp-first if preferred)
+- [x] Contact page with call + WhatsApp `0729585471`
+- [x] Location / map or address
+- [x] Optional short contact form (or WhatsApp-first if preferred)
 
 ### Policies (footer)
-- [ ] Privacy
-- [ ] Terms
-- [ ] Warranty & service (GadgetHub terms)
-- [ ] Shipping / returns / Lipa terms as needed
+- [x] Privacy (stub page live; full copy TBD)
+- [x] Terms (stub page live; full copy TBD)
+- [x] Warranty & service (GadgetHub terms) — stub at `/warranty-repairs`
+- [x] Shipping / returns / Lipa terms as needed — stubs at `/shipping-delivery`, `/returns`
 
 ---
 
@@ -258,22 +258,24 @@
 - [ ] Header WhatsApp, FAB, footer, Contact, Trade-In, Product WhatsApp Order all use `0729585471`
 
 ### Performance
-- [ ] Lighthouse (or equivalent) on Home, Category, Product Overview, Trade-In
-- [ ] Verify minimal JS payload on static pages
-- [ ] Fonts: single variable file, limited weights
-- [ ] Images: modern formats + lazy-load below fold
+- [x] Lighthouse (or equivalent) on Home, Category, Product Overview, Trade-In — see `PERFORMANCE.md`
+- [x] Confirm islands-only JS on interactive surfaces
+- [x] Font / image / CDN caching verified in build + deploy config
+- [x] Verify minimal JS payload on static pages
+- [x] Fonts: single variable file, limited weights (latin + latin-ext)
+- [x] Images: modern formats + lazy-load below fold
 
 ### Responsive / a11y
-- [ ] Mobile nav + mega-menu
-- [ ] Sticky buy bar does not collide with WhatsApp FAB
-- [ ] Keyboard / focus states on CTAs and form controls
-- [ ] Sufficient contrast on greyscale + accent
+- [x] Mobile nav + mega-menu
+- [x] Sticky buy bar does not collide with WhatsApp FAB
+- [x] Keyboard / focus states on CTAs and form controls
+- [x] Sufficient contrast on greyscale + accent
 
 ### Launch checklist
-- [ ] All sitemap routes return real pages (no dead nav links)
-- [ ] 404 page
-- [ ] SEO basics: titles, meta descriptions, OG tags, canonical
-- [ ] Sitemap.xml + robots.txt
+- [x] All sitemap routes return real pages (no dead nav links)
+- [x] 404 page
+- [x] SEO basics: titles, meta descriptions, OG tags, canonical
+- [x] Sitemap.xml + robots.txt
 - [ ] Production deploy on chosen CDN host
 
 ---

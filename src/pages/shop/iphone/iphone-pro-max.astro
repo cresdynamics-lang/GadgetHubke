@@ -1,0 +1,7 @@
+---
+import ProductOverview from "../../../layouts/ProductOverview.astro";
+import { getProduct } from "../../../lib/products";
+
+const product = getProduct("iphone-pro-max")!;
+---
+<ProductOverview product={product} />

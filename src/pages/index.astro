@@ -1,6 +1,12 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HomeHero from "../components/HomeHero.astro";
+import CategoryStrip from "../components/home/CategoryStrip.astro";
+import DealsRow from "../components/home/DealsRow.astro";
+import TradeInBanner from "../components/home/TradeInBanner.astro";
+import LipaStrip from "../components/home/LipaStrip.astro";
+import TrustRow from "../components/home/TrustRow.astro";
+import BlogTeaser from "../components/home/BlogTeaser.astro";
 import { site } from "../lib/site";
 ---
 
@@ -9,12 +15,14 @@ import { site } from "../lib/site";
   description="Shop new iPhone, Mac, and iPad at GadgetHub Kenya. Trade-in and Lipa Mdogo Mdogo available."
 >
   <HomeHero
-    title="iPhone"
-    tagline="The lineup that leads. New, sealed, ready for Nairobi."
-    href="/shop/iphone"
+    title="iPhone Duo"
+    tagline="Folding Super Retina XDR. A20 Pro. New, sealed, Nairobi."
+    href="/shop/iphone/iphone-duo"
     imageBase="/images/heroes/iphone"
     tone="light"
     priority
+    shopLabel="Buy"
+    priceKes={259999}
   />
   <HomeHero
     title="Mac"
@@ -22,6 +30,7 @@ import { site } from "../lib/site";
     href="/shop/mac"
     imageBase="/images/heroes/mac"
     tone="light"
+    priceKes={189999}
   />
   <HomeHero
     title="iPad"
@@ -29,5 +38,13 @@ import { site } from "../lib/site";
     href="/shop/ipad"
     imageBase="/images/heroes/ipad"
     tone="light"
+    priceKes={89999}
   />
+
+  <CategoryStrip />
+  <DealsRow />
+  <TradeInBanner />
+  <LipaStrip />
+  <TrustRow />
+  <BlogTeaser />
 </BaseLayout>

@@ -1,0 +1,136 @@
+---
+import PolicyPage from "../layouts/PolicyPage.astro";
+import { site, policy } from "../lib/site";
+
+const sections = [
+  { id: "about", title: "About GadgetHub" },
+  { id: "products", title: "Products and pricing" },
+  { id: "orders", title: "Orders" },
+  { id: "payment", title: "Payment" },
+  { id: "trade-in", title: "Trade-In program" },
+  { id: "delivery", title: "Delivery" },
+  { id: "warranty", title: "Warranty" },
+  { id: "ip", title: "Intellectual property" },
+  { id: "liability", title: "Limitation of liability" },
+  { id: "law", title: "Governing law" },
+  { id: "changes", title: "Changes" },
+];
+---
+
+<PolicyPage
+  title="Terms of Service"
+  heading="Terms of Service"
+  description={`Terms governing use of ${site.domain} and purchases from ${site.legalName}.`}
+  sections={sections}
+>
+  <section id="about">
+    <h2>About GadgetHub</h2>
+    <p>
+      {site.legalName} (“GadgetHub,” “we,” “us”), operating{" "}
+      <a href={site.url}>{site.domain}</a>, sells genuine, new Apple devices and
+      accessories in Kenya. By using this site or placing an order, you agree to
+      these terms.
+    </p>
+  </section>
+
+  <section id="products">
+    <h2>Products and pricing</h2>
+    <p>
+      All prices are listed in Kenyan Shillings (KES) and{" "}
+      {policy.pricesIncludeVat ? "include" : "exclude"} VAT as applicable. The
+      contract price is the KES amount confirmed at checkout.
+    </p>
+    <p>
+      Prices, specifications, and availability are subject to change without notice.
+      We make reasonable efforts to keep stock levels accurate but cannot guarantee
+      availability at the time of order.
+    </p>
+  </section>
+
+  <section id="orders">
+    <h2>Orders</h2>
+    <p>
+      Orders can be placed via the website cart or via WhatsApp (
+      <a href={`tel:${site.phoneE164}`}>{site.phoneDisplay}</a>). An order
+      confirmation does not guarantee stock; we will notify you promptly if an item
+      becomes unavailable and offer a refund or alternative.
+    </p>
+  </section>
+
+  <section id="payment">
+    <h2>Payment</h2>
+    <p>
+      We accept M-Pesa and {policy.cardPaymentsLabel}. Lipa Mdogo Mdogo is an
+      in-house installment option offered directly by {site.legalName} — there is
+      no third-party lender. Corporate and bulk buyers may arrange separate
+      payment terms under a signed agreement with us directly.
+    </p>
+    <p>
+      Approval for any installment arrangement is at our discretion and subject to
+      the terms we communicate for that arrangement.
+    </p>
+  </section>
+
+  <section id="trade-in">
+    <h2>Trade-In program</h2>
+    <p>
+      Trade-in values shown online are estimates only. Final value is confirmed after
+      physical inspection of the device. We reserve the right to decline any device
+      that fails verification (including devices with an active iCloud or Google
+      account lock, outstanding finance, or unclear ownership).
+    </p>
+  </section>
+
+  <section id="delivery">
+    <h2>Delivery</h2>
+    <p>
+      Delivery terms are described in our{" "}
+      <a href="/shipping-delivery">Shipping &amp; Delivery</a> information. Risk in
+      the goods passes to you on delivery.
+    </p>
+  </section>
+
+  <section id="warranty">
+    <h2>Warranty</h2>
+    <p>
+      All new devices carry the manufacturer’s standard warranty.{" "}
+      {site.legalName} does not provide any additional warranty beyond the
+      manufacturer’s terms. Warranty claims are handled per manufacturer terms and
+      our <a href="/returns">Return &amp; Refund Policy</a>. See also{" "}
+      <a href="/warranty-repairs">Warranty &amp; Repairs</a>.
+    </p>
+  </section>
+
+  <section id="ip">
+    <h2>Intellectual property</h2>
+    <p>
+      All site content, branding, and imagery belong to GadgetHub or its licensors
+      and may not be reproduced without permission.
+    </p>
+  </section>
+
+  <section id="liability">
+    <h2>Limitation of liability</h2>
+    <p>
+      To the extent permitted by Kenyan law, GadgetHub is not liable for indirect or
+      consequential losses arising from use of this site or its products.
+    </p>
+  </section>
+
+  <section id="law">
+    <h2>Governing law</h2>
+    <p>
+      These terms are governed by the laws of Kenya. Disputes are subject to the
+      jurisdiction of Kenyan courts.
+    </p>
+  </section>
+
+  <section id="changes">
+    <h2>Changes</h2>
+    <p>
+      We may update these terms; continued use of the site after changes constitutes
+      acceptance. The “Last updated” date at the top of this page reflects the
+      current version.
+    </p>
+  </section>
+</PolicyPage>

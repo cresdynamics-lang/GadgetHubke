@@ -1,0 +1,51 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site, policy } from "../lib/site";
+---
+
+<BaseLayout
+  title="Warranty & Repairs — GadgetHub"
+  description={`Manufacturer warranty support for new devices purchased from ${site.legalName}.`}
+>
+  <section class="page container">
+    <h1>Warranty &amp; Repairs</h1>
+    <p class="page__lede">{site.warranty.note}</p>
+    <ul class="page__points">
+      <li>Keep your proof of purchase from GadgetHub</li>
+      <li>
+        Issues within {policy.returnWindowDays} days of delivery may qualify under our{" "}
+        <a href="/returns">Return &amp; Refund Policy</a> instead of warranty
+      </li>
+      <li>Contact us on WhatsApp {site.phoneDisplay} to start a claim</li>
+    </ul>
+    <p>
+      Related: <a href="/terms">Terms of Service</a> ·{" "}
+      <a href="/returns">Returns</a>
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .page {
+    padding-block: var(--space-12) calc(var(--space-16) + var(--fab-clearance));
+    max-width: 40rem;
+  }
+
+  .page h1 {
+    font-size: clamp(1.75rem, 5vw, var(--text-3xl));
+    margin-bottom: var(--space-3);
+  }
+
+  .page__lede {
+    color: var(--color-fg-muted);
+    margin-bottom: var(--space-6);
+  }
+
+  .page__points {
+    margin: 0 0 var(--space-6);
+    padding-left: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+</style>

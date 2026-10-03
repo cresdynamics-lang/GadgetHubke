@@ -1,0 +1,53 @@
+/* Shared homepage section chrome */
+.home-section {
+  padding-block: var(--space-10);
+}
+
+@media (min-width: 40rem) {
+  .home-section {
+    padding-block: var(--space-14, 3.5rem);
+  }
+}
+
+@media (min-width: 64rem) {
+  .home-section {
+    padding-block: var(--space-16);
+  }
+}
+
+.home-section__head {
+  margin-bottom: var(--space-6);
+  max-width: 36rem;
+}
+
+.home-section__head h2 {
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  margin-bottom: var(--space-2);
+}
+
+.home-section__head p {
+  font-size: var(--text-sm);
+  color: var(--color-fg-muted);
+}
+
+.home-section__head--row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3);
+  max-width: none;
+}
+
+.home-section__link {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-fg);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.home-section__link:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}

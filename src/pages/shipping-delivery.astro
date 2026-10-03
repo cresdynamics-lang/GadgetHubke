@@ -1,0 +1,103 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site, policy, whatsappUrl } from "../lib/site";
+
+const waHref = whatsappUrl("Hi GadgetHub — shipping question.");
+---
+
+<BaseLayout
+  title="Shipping & Delivery — GadgetHub"
+  description={`Delivery options from ${site.legalName}. Report transit damage within ${policy.transitDamageHours} hours.`}
+>
+  <section class="ship container">
+    <header class="ship__intro">
+      <p class="ship__eyebrow">Customer care</p>
+      <h1>Shipping &amp; Delivery</h1>
+      <p class="ship__lede">
+        Orders are confirmed on WhatsApp. We’ll agree delivery or pickup before
+        you pay.
+      </p>
+    </header>
+
+    <div class="ship__body">
+      <section>
+        <h2>Nairobi</h2>
+        <p>
+          Same-day or next-day delivery may be available depending on stock and
+          area. Pickup at {site.address} during store hours ({site.hours.short}).
+        </p>
+      </section>
+      <section>
+        <h2>Outside Nairobi</h2>
+        <p>
+          We arrange courier delivery after confirming your location and the
+          device. Timelines and fees are quoted on WhatsApp before payment.
+        </p>
+      </section>
+      <section>
+        <h2>Damaged in transit</h2>
+        <p>
+          Report visible damage within <strong>{policy.transitDamageHours} hours</strong> of
+          delivery with photos. See our{" "}
+          <a href="/returns">Return &amp; Refund Policy</a>.
+        </p>
+      </section>
+      <section>
+        <h2>Track an order</h2>
+        <p>
+          Use <a href="/track-order">Track My Order</a> or WhatsApp{" "}
+          {site.phoneDisplay} with your name and order details.
+        </p>
+      </section>
+    </div>
+
+    <a class="btn btn--primary" href={waHref} target="_blank" rel="noopener noreferrer">
+      Ask about delivery
+    </a>
+  </section>
+</BaseLayout>
+
+<style>
+  .ship {
+    padding-block: var(--space-12) calc(var(--space-16) + var(--fab-clearance));
+    max-width: 40rem;
+  }
+
+  .ship__eyebrow {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+    margin-bottom: var(--space-3);
+  }
+
+  .ship h1 {
+    font-size: clamp(1.75rem, 5vw, var(--text-3xl));
+    margin-bottom: var(--space-3);
+  }
+
+  .ship__lede {
+    color: var(--color-fg-muted);
+    margin-bottom: var(--space-8);
+  }
+
+  .ship__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    margin-bottom: var(--space-8);
+  }
+
+  .ship__body h2 {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-2);
+  }
+
+  .ship__body p {
+    margin: 0;
+    color: var(--color-fg-muted);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+  }
+</style>

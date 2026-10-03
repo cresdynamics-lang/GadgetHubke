@@ -1,4 +1,71 @@
 ---
-import StubPage from "../layouts/StubPage.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site, whatsappUrl } from "../lib/site";
+
+const waHref = whatsappUrl(
+  "Hi GadgetHub — I'd like to ask about Lipa Mdogo Mdogo.",
+);
 ---
-<StubPage title="Lipa Mdogo Mdogo" heading="Lipa Mdogo Mdogo" />
+
+<BaseLayout
+  title="Lipa Mdogo Mdogo — GadgetHub"
+  description={`${site.lipa.label} installment plans from ${site.legalName}. Pay in smaller amounts — no external finance partner.`}
+>
+  <section class="page container">
+    <p class="page__eyebrow">Pay your way</p>
+    <h1>{site.lipa.label}</h1>
+    <p class="page__lede">
+      Spread the cost of a new device with installment plans offered directly by{" "}
+      {site.legalName}. There is no third-party financing partner — you deal with us.
+    </p>
+    <ul class="page__points">
+      <li>Available on qualifying new devices, subject to approval</li>
+      <li>Terms and schedule are confirmed with you before you commit</li>
+      <li>Corporate and bulk purchases can be settled by separate agreement</li>
+    </ul>
+    <p class="page__note">{site.lipa.note}</p>
+    <a class="btn btn--primary" href={waHref} target="_blank" rel="noopener noreferrer">
+      Ask on WhatsApp
+    </a>
+  </section>
+</BaseLayout>
+
+<style>
+  .page {
+    padding-block: var(--space-12) calc(var(--space-16) + var(--fab-clearance));
+    max-width: 40rem;
+  }
+
+  .page__eyebrow {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+    margin-bottom: var(--space-3);
+  }
+
+  .page h1 {
+    font-size: clamp(1.75rem, 5vw, var(--text-3xl));
+    margin-bottom: var(--space-3);
+  }
+
+  .page__lede {
+    color: var(--color-fg-muted);
+    margin-bottom: var(--space-6);
+  }
+
+  .page__points {
+    margin: 0 0 var(--space-5);
+    padding-left: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .page__note {
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+    margin-bottom: var(--space-6);
+  }
+</style>

@@ -1,0 +1,157 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site, policy, whatsappUrl } from "../lib/site";
+
+const waHref = whatsappUrl("Hi GadgetHub — I have a question from the FAQs.");
+
+const faqs = [
+  {
+    q: "Do you sell refurbished or used phones?",
+    a: "No. We only sell new, sealed devices. Trade-ins are accepted as credit toward a new purchase — they are not sold as inventory on this site.",
+  },
+  {
+    q: "How do I order?",
+    a: `Browse the shop, then WhatsApp or call ${site.phoneDisplay} to confirm stock and place your order. You can also visit us at ${site.address}.`,
+  },
+  {
+    q: "What payment methods do you accept?",
+    a: "M-Pesa, card, and our in-house Lipa Mdogo Mdogo installment plans. Corporate and bulk orders are settled by agreement.",
+  },
+  {
+    q: "What is Lipa Mdogo Mdogo?",
+    a: "An installment plan run by Gadget Hub Investments — no external finance partner. See the Lipa Mdogo Mdogo page for how it works, then WhatsApp us to apply.",
+  },
+  {
+    q: "Which devices can I trade in?",
+    a: "iPhone and Samsung only. Credit applies toward any new device we sell. Final value is set after in-person inspection.",
+  },
+  {
+    q: "What warranty do I get?",
+    a: site.warranty.note,
+  },
+  {
+    q: "Can I return a device?",
+    a: `Faulty, damaged-on-arrival, or not-as-described items may qualify within ${policy.returnWindowDays} days of delivery. Change-of-mind returns on sealed new devices are not offered. See our Return & Refund Policy.`,
+  },
+  {
+    q: "Where are you located?",
+    a: `${site.addressLines.join(", ")}. Hours: ${site.hours.short}.`,
+  },
+] as const;
+---
+
+<BaseLayout
+  title="FAQs — GadgetHub"
+  description="Answers on new-only stock, ordering, Lipa Mdogo Mdogo, trade-in, warranty, and returns."
+>
+  <section class="faqs container">
+    <header class="faqs__intro">
+      <p class="faqs__eyebrow">Help</p>
+      <h1>FAQs</h1>
+      <p class="faqs__lede">
+        Still stuck?{" "}
+        <a href={waHref} target="_blank" rel="noopener noreferrer">
+          WhatsApp {site.phoneDisplay}
+        </a>{" "}
+        or see <a href="/support">Support</a>.
+      </p>
+    </header>
+
+    <div class="faqs__list">
+      {
+        faqs.map((item) => (
+          <details class="faqs__item">
+            <summary>{item.q}</summary>
+            <p>{item.a}</p>
+          </details>
+        ))
+      }
+    </div>
+
+    <p class="faqs__more">
+      Related: <a href="/returns">Returns</a> ·{" "}
+      <a href="/warranty-repairs">Warranty</a> ·{" "}
+      <a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo</a> ·{" "}
+      <a href="/trade-in">Trade-In</a>
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .faqs {
+    padding-block: var(--space-12) calc(var(--space-16) + var(--fab-clearance));
+    max-width: 42rem;
+  }
+
+  .faqs__intro {
+    margin-bottom: var(--space-8);
+  }
+
+  .faqs__eyebrow {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+    margin-bottom: var(--space-3);
+  }
+
+  .faqs h1 {
+    font-size: clamp(1.75rem, 5vw, var(--text-3xl));
+    margin-bottom: var(--space-3);
+  }
+
+  .faqs__lede {
+    color: var(--color-fg-muted);
+  }
+
+  .faqs__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .faqs__item {
+    border-bottom: 1px solid var(--color-border);
+    padding-block: var(--space-4);
+  }
+
+  .faqs__item summary {
+    cursor: pointer;
+    font-weight: var(--font-weight-medium);
+    list-style: none;
+    padding-right: 1.5rem;
+    position: relative;
+  }
+
+  .faqs__item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faqs__item summary::after {
+    content: "+";
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-fg-subtle);
+  }
+
+  .faqs__item[open] summary::after {
+    content: "–";
+  }
+
+  .faqs__item p {
+    margin: var(--space-3) 0 0;
+    color: var(--color-fg-muted);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+  }
+
+  .faqs__more {
+    margin-top: var(--space-8);
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+</style>

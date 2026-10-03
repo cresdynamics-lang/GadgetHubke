@@ -1,0 +1,53 @@
+---
+---
+
+<section class="home-section home-promo home-promo--lipa">
+  <div class="container home-promo__inner">
+    <div class="home-promo__copy">
+      <h2>Lipa Mdogo Mdogo</h2>
+      <p>
+        Pay in smaller amounts on qualifying new devices. Plans are with Gadget Hub
+        Investments — no third-party finance partner.
+      </p>
+    </div>
+    <a class="btn btn--secondary" href="/lipa-mdogo-mdogo">How it works</a>
+  </div>
+</section>
+
+<style>
+  .home-promo--lipa {
+    background: var(--color-bg-subtle);
+    border-block: 1px solid var(--color-border);
+  }
+
+  .home-promo__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    align-items: flex-start;
+  }
+
+  @media (min-width: 48rem) {
+    .home-promo__inner {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-8);
+    }
+  }
+
+  .home-promo__copy {
+    max-width: 36rem;
+  }
+
+  .home-promo__copy h2 {
+    font-size: clamp(1.35rem, 3vw, 1.85rem);
+    margin-bottom: var(--space-3);
+  }
+
+  .home-promo__copy p {
+    color: var(--color-fg-muted);
+    font-size: var(--text-sm);
+    line-height: var(--leading-snug);
+  }
+</style>

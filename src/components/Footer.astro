@@ -1,0 +1,451 @@
+---
+/**
+ * Site footer — five columns + bottom utility bar.
+ * Inverse (black) surface; links match main nav + care/legal trust paths.
+ */
+import { site, whatsappUrl, telUrl } from "../lib/site";
+import SocialIcon from "./SocialIcon.astro";
+
+const year = new Date().getFullYear();
+const waHref = whatsappUrl("Hi GadgetHub — I'd like to get in touch.");
+
+const shop = [
+  { label: "iPhone", href: "/shop/iphone" },
+  { label: "Mac", href: "/shop/mac" },
+  { label: "iPad", href: "/shop/ipad" },
+  { label: "Watch", href: "/shop/watch" },
+  { label: "AirPods", href: "/shop/airpods" },
+  { label: "TV & Home", href: "/shop/tv-home" },
+  { label: "Accessories", href: "/shop/accessories" },
+  { label: "Deals", href: "/deals" },
+  { label: "Compare Devices", href: "/compare" },
+] as const;
+
+const care = [
+  { label: "Trade-In", href: "/trade-in" },
+  { label: "Lipa Mdogo Mdogo", href: "/lipa-mdogo-mdogo" },
+  { label: "Warranty & Repairs", href: "/warranty-repairs" },
+  { label: "Shipping & Delivery", href: "/shipping-delivery" },
+  { label: "Returns & Refunds", href: "/returns" },
+  { label: "Track My Order", href: "/track-order" },
+  { label: "Corporate & Bulk Orders", href: "/corporate-bulk" },
+  { label: "FAQs", href: "/faqs" },
+  { label: "Contact Us", href: "/contact" },
+] as const;
+
+const company = [
+  { label: "About Us", href: "/about" },
+  { label: "Blog", href: "/blog" },
+  { label: "Store Location", href: "/locations" },
+  { label: "Authorized Reseller", href: "/authenticity" },
+  { label: "Careers", href: "/careers" },
+] as const;
+
+const legal = [
+  { label: "Terms of Service", href: "/terms" },
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Return & Refund Policy", href: "/returns" },
+  { label: "Cookie Policy", href: "/cookies" },
+] as const;
+
+const socials = [
+  { label: "Instagram", href: site.social.instagram, icon: "instagram" as const },
+  { label: "TikTok", href: site.social.tiktok, icon: "tiktok" as const },
+  { label: "Facebook", href: site.social.facebook, icon: "facebook" as const },
+  { label: "X", href: site.social.x, icon: "x" as const },
+] as const;
+
+const columns = [
+  { title: "Shop", links: shop },
+  { title: "Customer Care", links: care },
+  { title: "Company", links: company },
+  { title: "Legal", links: legal },
+] as const;
+---
+
+<footer class="site-footer">
+  <div class="site-footer__inner container">
+    <div class="site-footer__grid">
+      {
+        columns.map((col) => (
+          <nav class="site-footer__col" aria-label={col.title}>
+            <h2 class="site-footer__heading">{col.title}</h2>
+            <ul class="site-footer__list">
+              {col.links.map((link) => (
+                <li>
+                  <a class="site-footer__link" href={link.href}>
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))
+      }
+
+      <div class="site-footer__col site-footer__col--contact">
+        <h2 class="site-footer__heading">Get in Touch</h2>
+        <ul class="site-footer__contact">
+          <li>
+            <a class="site-footer__link site-footer__link--strong" href={waHref} target="_blank" rel="noopener noreferrer">
+              WhatsApp {site.phoneDisplay}
+            </a>
+          </li>
+          <li>
+            <a class="site-footer__link" href={telUrl()}>Call {site.phoneDisplay}</a>
+          </li>
+          <li>
+            <a class="site-footer__link" href={`mailto:${site.email}`}>{site.email}</a>
+          </li>
+          <li>
+            <a class="site-footer__link" href="/locations">{site.address}</a>
+          </li>
+          <li>
+            <span class="site-footer__hours">{site.hours.short}</span>
+          </li>
+          <li>
+            <span class="site-footer__entity">{site.legalName}</span>
+          </li>
+        </ul>
+        <ul class="site-footer__social" aria-label="Social media">
+          {
+            socials.map((item) => (
+              <li>
+                <a
+                  class="site-footer__social-btn"
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={item.label}
+                  title={item.label}
+                >
+                  <SocialIcon name={item.icon} />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="site-footer__bar">
+      <form class="site-footer__newsletter" action="/newsletter" method="get">
+        <p class="site-footer__newsletter-label" id="footer-newsletter-label">
+          Get new arrivals and deals first
+        </p>
+        <div class="site-footer__newsletter-row">
+          <label class="sr-only" for="footer-email">Email address</label>
+          <input
+            class="site-footer__input"
+            type="email"
+            id="footer-email"
+            name="email"
+            required
+            autocomplete="email"
+            placeholder="Email address"
+            aria-labelledby="footer-newsletter-label"
+          />
+          <button class="site-footer__submit" type="submit">Subscribe</button>
+        </div>
+      </form>
+
+      <div class="site-footer__payments" aria-label="Accepted payment methods">
+        <span class="site-footer__pay site-footer__pay--mpesa" title="M-Pesa">
+          <svg class="site-footer__pay-svg" viewBox="0 0 52 32" aria-hidden="true" focusable="false">
+            <rect width="52" height="32" rx="4" fill="#00A651" />
+            <text
+              x="26"
+              y="20.5"
+              text-anchor="middle"
+              fill="#FFFFFF"
+              font-size="9.5"
+              font-weight="800"
+              font-family="system-ui, -apple-system, sans-serif"
+              letter-spacing="0.04em"
+            >M-PESA</text>
+          </svg>
+          <span class="sr-only">M-Pesa</span>
+        </span>
+        <span class="site-footer__pay site-footer__pay--visa" title="Visa">
+          <svg class="site-footer__pay-svg" viewBox="0 0 52 32" aria-hidden="true" focusable="false">
+            <rect width="52" height="32" rx="4" fill="#1A1F71" />
+            <text
+              x="26"
+              y="21"
+              text-anchor="middle"
+              fill="#FFFFFF"
+              font-size="14"
+              font-weight="800"
+              font-family="Georgia, 'Times New Roman', serif"
+              font-style="italic"
+              letter-spacing="0.02em"
+            >VISA</text>
+          </svg>
+          <span class="sr-only">Visa</span>
+        </span>
+        <span class="site-footer__pay site-footer__pay--mastercard" title="Mastercard">
+          <svg class="site-footer__pay-svg" viewBox="0 0 52 32" aria-hidden="true" focusable="false">
+            <rect width="52" height="32" rx="4" fill="#000000" />
+            <circle cx="21" cy="16" r="8.5" fill="#EB001B" />
+            <circle cx="31" cy="16" r="8.5" fill="#F79E1B" />
+            <path
+              d="M26 9.2a8.5 8.5 0 0 1 0 13.6 8.5 8.5 0 0 1 0-13.6z"
+              fill="#FF5F00"
+            />
+          </svg>
+          <span class="sr-only">Mastercard</span>
+        </span>
+      </div>
+
+      <div class="site-footer__meta">
+        <p class="site-footer__copy">
+          © {year} {site.name}. All rights reserved.
+        </p>
+        <ul class="site-footer__meta-links">
+          <li><a class="site-footer__link" href="/terms">Terms</a></li>
+          <li><a class="site-footer__link" href="/privacy">Privacy</a></li>
+          <li><a class="site-footer__link" href="/sitemap">Site Map</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--color-bg-inverse);
+    color: var(--color-fg-inverse);
+    margin-top: var(--space-16);
+    padding-block: var(--space-12) calc(var(--space-10) + var(--fab-clearance));
+    border-top: 1px solid var(--color-border-inverse);
+  }
+
+  @media (min-width: 40rem) {
+    .site-footer {
+      padding-block: var(--space-16) calc(var(--space-12) + var(--fab-clearance));
+    }
+  }
+
+  .site-footer__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+
+  .site-footer__grid {
+    display: grid;
+    gap: var(--space-8);
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (min-width: 48rem) {
+    .site-footer__grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-8) var(--space-6);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .site-footer__grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: var(--space-6);
+    }
+  }
+
+  .site-footer__heading {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-grey-400);
+    margin-bottom: var(--space-4);
+  }
+
+  .site-footer__list,
+  .site-footer__contact,
+  .site-footer__social,
+  .site-footer__meta-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .site-footer__list,
+  .site-footer__contact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .site-footer__link {
+    color: var(--color-grey-300);
+    text-decoration: none;
+    font-size: var(--text-sm);
+    line-height: 1.35;
+    transition: color var(--duration-fast) var(--ease);
+  }
+
+  .site-footer__link:hover {
+    color: var(--color-white);
+  }
+
+  .site-footer__link--strong {
+    color: var(--color-white);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .site-footer__hours,
+  .site-footer__entity {
+    display: block;
+    font-size: var(--text-xs);
+    line-height: 1.4;
+    color: var(--color-grey-500);
+  }
+
+  .site-footer__social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: var(--space-5);
+  }
+
+  .site-footer__social-btn {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-grey-700);
+    color: var(--color-white);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition:
+      background-color var(--duration-fast) var(--ease),
+      border-color var(--duration-fast) var(--ease);
+  }
+
+  .site-footer__social-btn:hover {
+    background: var(--color-grey-800);
+    border-color: var(--color-grey-500);
+    color: var(--color-white);
+  }
+
+  .site-footer__bar {
+    display: grid;
+    gap: var(--space-6);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--color-border-inverse);
+  }
+
+  @media (min-width: 64rem) {
+    .site-footer__bar {
+      grid-template-columns: minmax(0, 1.4fr) auto minmax(0, 1fr);
+      align-items: end;
+      gap: var(--space-8);
+    }
+  }
+
+  .site-footer__newsletter-label {
+    font-size: var(--text-sm);
+    color: var(--color-grey-300);
+    margin-bottom: var(--space-3);
+  }
+
+  .site-footer__newsletter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .site-footer__input {
+    flex: 1 1 12rem;
+    min-height: 2.75rem;
+    padding: 0.65rem 0.9rem;
+    border: 1px solid var(--color-grey-700);
+    border-radius: var(--radius-md);
+    background: var(--color-grey-900);
+    color: var(--color-white);
+  }
+
+  .site-footer__input::placeholder {
+    color: var(--color-grey-500);
+  }
+
+  .site-footer__input:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 2px;
+  }
+
+  .site-footer__submit {
+    min-height: 2.75rem;
+    padding: 0.65rem 1.15rem;
+    border: 0;
+    border-radius: var(--radius-md);
+    background: var(--color-white);
+    color: var(--color-black);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--text-sm);
+    transition: background-color var(--duration-fast) var(--ease);
+  }
+
+  .site-footer__submit:hover {
+    background: var(--color-grey-200);
+  }
+
+  .site-footer__payments {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    align-items: center;
+  }
+
+  .site-footer__pay {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+
+  .site-footer__pay-svg {
+    width: 3.15rem;
+    height: 1.95rem;
+    display: block;
+  }
+
+  .site-footer__meta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 64rem) {
+    .site-footer__meta {
+      align-items: flex-end;
+      text-align: right;
+    }
+  }
+
+  .site-footer__copy {
+    font-size: var(--text-xs);
+    color: var(--color-grey-500);
+  }
+
+  .site-footer__meta-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+  }
+
+  @media (min-width: 64rem) {
+    .site-footer__meta-links {
+      justify-content: flex-end;
+    }
+  }
+
+  .site-footer__meta-links .site-footer__link {
+    font-size: var(--text-xs);
+  }
+</style>

@@ -1,24 +1,25 @@
 ---
 import { site, whatsappUrl } from "../lib/site";
+import SocialIcon from "./SocialIcon.astro";
 
 const waHref = whatsappUrl("Hi GadgetHub — I'd like to shop.");
 const socials = [
   {
     label: "Facebook",
     href: site.social.facebook,
-    icon: "fa-brands fa-facebook-f",
+    icon: "facebook" as const,
     className: "float-socials__btn--facebook",
   },
   {
     label: "Instagram",
     href: site.social.instagram,
-    icon: "fa-brands fa-instagram",
+    icon: "instagram" as const,
     className: "float-socials__btn--instagram",
   },
   {
     label: "TikTok",
     href: site.social.tiktok,
-    icon: "fa-brands fa-tiktok",
+    icon: "tiktok" as const,
     className: "float-socials__btn--tiktok",
   },
 ] as const;
@@ -35,7 +36,7 @@ const socials = [
         aria-label={item.label}
         title={item.label}
       >
-        <i class={item.icon} aria-hidden="true"></i>
+        <SocialIcon name={item.icon} class="float-socials__icon" />
       </a>
     ))
   }
@@ -49,7 +50,7 @@ const socials = [
   aria-label={`WhatsApp ${site.phoneDisplay}`}
   title={`WhatsApp ${site.phoneDisplay}`}
 >
-  <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+  <SocialIcon name="whatsapp" class="float-whatsapp__icon" />
 </a>
 
 <style>
@@ -85,11 +86,9 @@ const socials = [
     box-shadow: 0 10px 22px rgb(10 10 10 / 0.22);
   }
 
-  .float-socials__btn i,
-  .float-whatsapp i {
-    font-size: 1.05rem;
-    line-height: 1;
-    width: auto;
+  .float-socials__btn :global(.float-socials__icon) {
+    width: 1.05rem;
+    height: 1.05rem;
   }
 
   .float-socials__btn--facebook {
@@ -120,8 +119,9 @@ const socials = [
     background: #25d366;
   }
 
-  .float-whatsapp i {
-    font-size: 1.45rem;
+  .float-whatsapp :global(.float-whatsapp__icon) {
+    width: 1.45rem;
+    height: 1.45rem;
   }
 
   @media (min-width: 40rem) {
@@ -136,8 +136,9 @@ const socials = [
       height: 2.85rem;
     }
 
-    .float-socials__btn i {
-      font-size: 1.2rem;
+    .float-socials__btn :global(.float-socials__icon) {
+      width: 1.2rem;
+      height: 1.2rem;
     }
 
     .float-whatsapp {
@@ -147,8 +148,9 @@ const socials = [
       height: 3.5rem;
     }
 
-    .float-whatsapp i {
-      font-size: 1.65rem;
+    .float-whatsapp :global(.float-whatsapp__icon) {
+      width: 1.65rem;
+      height: 1.65rem;
     }
   }
 </style>

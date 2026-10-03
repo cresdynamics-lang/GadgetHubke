@@ -1,4 +1,59 @@
 ---
-import StubPage from "../../layouts/StubPage.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { site, whatsappUrl } from "../../lib/site";
+
+const waHref = whatsappUrl("Hi GadgetHub — interested in TV & Home.");
 ---
-<StubPage title="TV & Home" heading="TV & Home" />
+
+<BaseLayout
+  title="TV & Home — GadgetHub"
+  description="Apple TV, HomePod, and home devices — new stock at GadgetHub Kenya."
+>
+  <section class="coming container">
+    <p class="coming__eyebrow">TV &amp; Home</p>
+    <h1>TV &amp; Home</h1>
+    <p class="coming__lede">
+      New sealed home and media devices. Message for what’s available today, or
+      visit {site.address}.
+    </p>
+    <div class="coming__actions">
+      <a class="btn btn--primary" href={waHref} target="_blank" rel="noopener noreferrer">
+        WhatsApp stock check
+      </a>
+      <a class="btn btn--secondary" href="/shop">All categories</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .coming {
+    padding-block: var(--space-12) calc(var(--space-16) + var(--fab-clearance));
+    max-width: 40rem;
+  }
+
+  .coming__eyebrow {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+    margin-bottom: var(--space-3);
+  }
+
+  .coming h1 {
+    font-size: clamp(1.75rem, 5vw, var(--text-3xl));
+    margin-bottom: var(--space-3);
+  }
+
+  .coming__lede {
+    color: var(--color-fg-muted);
+    margin-bottom: var(--space-6);
+    line-height: var(--leading-normal);
+  }
+
+  .coming__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+</style>

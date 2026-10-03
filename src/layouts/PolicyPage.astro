@@ -1,0 +1,219 @@
+---
+/**
+ * Shared layout for legal / policy long-form pages.
+ */
+import BaseLayout from "./BaseLayout.astro";
+import { site, policy, whatsappUrl, telUrl } from "../lib/site";
+
+interface Section {
+  id: string;
+  title: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  heading: string;
+  sections: Section[];
+}
+
+const { title, description, heading, sections } = Astro.props;
+const waHref = whatsappUrl("Hi GadgetHub — I have a question about your policies.");
+---
+
+<BaseLayout title={`${title} — ${site.name}`} description={description}>
+  <article class="policy container">
+    <header class="policy__header">
+      <p class="policy__eyebrow">Legal</p>
+      <h1>{heading}</h1>
+      <p class="policy__updated">Last updated: {policy.lastUpdated}</p>
+      <p class="policy__entity">
+        {site.legalName} · <a href={site.url}>{site.domain}</a>
+      </p>
+    </header>
+
+    {
+      sections.length > 0 && (
+        <nav class="policy__toc" aria-label="On this page">
+          <p class="policy__toc-label">On this page</p>
+          <ol>
+            {sections.map((s) => (
+              <li>
+                <a href={`#${s.id}`}>{s.title}</a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )
+    }
+
+    <div class="policy__body">
+      <slot />
+    </div>
+
+    <aside class="policy__contact" aria-label="Contact">
+      <h2>Contact</h2>
+      <ul>
+        <li>
+          <a href={waHref} target="_blank" rel="noopener noreferrer">
+            WhatsApp {site.phoneDisplay}
+          </a>
+        </li>
+        <li>
+          <a href={telUrl()}>Call {site.phoneDisplay}</a>
+        </li>
+        <li>
+          <a href={`mailto:${site.email}`}>{site.email}</a>
+        </li>
+        <li>
+          <a href="/locations">
+            {site.addressLines.join(", ")}
+          </a>
+        </li>
+      </ul>
+      <p class="policy__hours">{site.hours.short}</p>
+    </aside>
+  </article>
+</BaseLayout>
+
+<style>
+  .policy {
+    padding-block: var(--space-12) calc(var(--space-16) + var(--fab-clearance));
+    max-width: 44rem;
+  }
+
+  @media (min-width: 40rem) {
+    .policy {
+      padding-block: var(--space-16) calc(var(--space-20) + var(--fab-clearance));
+    }
+  }
+
+  .policy__eyebrow {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+    margin-bottom: var(--space-3);
+  }
+
+  .policy h1 {
+    font-size: clamp(1.75rem, 5vw, var(--text-3xl));
+    margin-bottom: var(--space-3);
+  }
+
+  .policy__updated,
+  .policy__entity {
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+    margin-bottom: var(--space-2);
+  }
+
+  .policy__entity a {
+    color: inherit;
+  }
+
+  .policy__toc {
+    margin-block: var(--space-8);
+    padding: var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-subtle);
+  }
+
+  .policy__toc-label {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+    margin-bottom: var(--space-3);
+  }
+
+  .policy__toc ol {
+    margin: 0;
+    padding-left: 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .policy__toc a {
+    font-size: var(--text-sm);
+    color: var(--color-fg);
+    text-decoration: none;
+  }
+
+  .policy__toc a:hover {
+    text-decoration: underline;
+  }
+
+  .policy__body :global(section) {
+    margin-bottom: var(--space-8);
+    scroll-margin-top: calc(var(--header-height) + 1rem);
+  }
+
+  .policy__body :global(h2) {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-3);
+  }
+
+  .policy__body :global(p),
+  .policy__body :global(li) {
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    color: var(--color-fg);
+  }
+
+  .policy__body :global(p) {
+    margin-bottom: var(--space-3);
+  }
+
+  .policy__body :global(ul) {
+    margin: 0 0 var(--space-3);
+    padding-left: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .policy__body :global(a) {
+    color: var(--color-fg);
+    text-underline-offset: 0.15em;
+  }
+
+  .policy__contact {
+    margin-top: var(--space-10);
+    padding: var(--space-6);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .policy__contact h2 {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-3);
+  }
+
+  .policy__contact ul {
+    list-style: none;
+    margin: 0 0 var(--space-3);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .policy__contact a {
+    font-size: var(--text-sm);
+    color: var(--color-fg);
+    text-decoration: none;
+  }
+
+  .policy__contact a:hover {
+    text-decoration: underline;
+  }
+
+  .policy__hours {
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+</style>
