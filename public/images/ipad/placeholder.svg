@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1400" viewBox="0 0 1400 1400" role="img" aria-label="iPad placeholder">
+  <rect width="1400" height="1400" fill="#F5F5F7"/>
+  <rect x="360" y="180" width="680" height="980" rx="48" fill="#E8E8ED" stroke="#D2D2D7"/>
+  <rect x="400" y="240" width="600" height="800" rx="12" fill="#D2D2D7"/>
+  <text x="700" y="680" text-anchor="middle" fill="#6E6E73" font-family="system-ui,sans-serif" font-size="28">Image coming soon</text>
+</svg>

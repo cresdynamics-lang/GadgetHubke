@@ -1,0 +1,35 @@
+folder,file,what it shows,where it came from,how the PDF used it
+01_iPhones,iphone_pro-3cam_blue_angle.jpg,"Three-camera Pro iPhone, blue, rear corner angle",uploaded by you,"Used as ""iPhone 18 Pro"" (sample name)"
+01_iPhones,iphone_pro-3cam_silver_back-and-side.jpg,"Three-camera Pro iPhone, silver, back and side view",uploaded by you,"Used as ""iPhone 18 Pro Max"" (sample name)"
+01_iPhones,iphone_2cam_pink_angle.jpg,"Two-camera iPhone, pink, rear corner angle",uploaded by you,"Used as ""iPhone 16 Pink"""
+01_iPhones,iphone_2cam_teal_back-lower.jpg,"Two-camera iPhone, teal, lower back with side buttons",uploaded by you,"Used as ""iPhone 16 Teal"""
+01_iPhones,iphone_2cam_blue_angle.jpg,"Two-camera iPhone, blue, rear corner angle",uploaded by you,"Used as ""iPhone 16 Blue"""
+01_iPhones,iphone_2cam_green_back-and-side.jpg,"Two-camera iPhone, green, back and side view",uploaded by you,"Used as ""iPhone 16 Green"""
+01_iPhones,iphone_lineup_five-colours.jpg,"Five iPhones in a row, standing",apple.com/iphone (page image),"Used in cover, category circle"
+01_iPhones,iphone_thin-side-view_with-finger.jpg,Very thin iPhone seen from the side,apple.com/iphone-air (page image),Not used in the PDF
+01_iPhones,iphone_fan-of-colours_side.png,"Fan of iPhones in several colours, side view",apple.com/iphone-17 (page image),Not used in the PDF
+01_iPhones,iphone_single-camera_pink-stack.png,"Single-camera iPhone, pink, stacked side view",apple.com/iphone-17e (page image),Not used in the PDF
+02_Cases_and_Accessories,accessory_magsafe-charger_with-wallet-case.jpg,Blue Pro on a MagSafe charger beside a pink case with wallet and strap,uploaded by you,"Used as ""MagSafe Charger"""
+02_Cases_and_Accessories,case_ultramarine-black-clear_magsafe.jpg,"Three cases: ultramarine with wallet, black on charger, clear MagSafe",uploaded by you,"Used as ""Cases & Wallet"""
+02_Cases_and_Accessories,case_cream-green-blue_silicone-strap.jpg,"Cream, green (with wallet) and blue (with strap) silicone cases",uploaded by you,"Used as ""Silicone Case"""
+02_Cases_and_Accessories,accessory_magsafe-battery-pack.jpg,White battery pack attached to a light-blue iPhone,uploaded by you,"Used as ""MagSafe Battery Pack"""
+02_Cases_and_Accessories,accessory_crossbody-strap.jpg,Light-blue case with a long crossbody strap,uploaded by you,"Used as ""Crossbody Strap"""
+02_Cases_and_Accessories,accessory_airtag.png,AirTag,apple.com/airtag (page image),Not used in the PDF
+02_Cases_and_Accessories,accessory_apple-pencil_with-ipads.png,Apple Pencil shown with iPads,apple.com/apple-pencil (page image),Not used in the PDF
+03_iPhone_Duo_foldable,duo_fold-top_library-screen.jpg,"Foldable iPhone, top corner, white back, photo library on screen",uploaded by you,"Duo band, search results"
+03_iPhone_Duo_foldable,duo_open-camera-screen.jpg,"Foldable iPhone open, camera screen with portrait",uploaded by you,"Duo band, cover"
+03_iPhone_Duo_foldable,duo_stand-case_dark-green.jpg,Foldable iPhone in a dark fabric case used as a stand,uploaded by you,Duo band
+04_Mac,macbook-air_open_light-blue.jpg,"MacBook Air, open and closed, on blue stage",apple.com/macbook-air (page image),Mac tile
+04_Mac,macbook-pro_dark.jpg,MacBook Pro on black,apple.com/macbook-pro (page image),Mac tile
+04_Mac,macbook-neo_yellow_in-hand.png,Yellow MacBook held in hand,apple.com/macbook-neo (page image),Not used in the PDF
+04_Mac,imac_colour-range.png,iMac in several colours,apple.com/imac (page image),Not used in the PDF
+04_Mac,mac-mini_in-hand.jpg,Mac mini held in one hand,apple.com/mac-mini (page image),Not used in the PDF
+05_iPad,ipad-air_blue.jpg,"iPad Air, blue, floating",apple.com/ipad-air (page image),iPad tile
+05_iPad,ipad-pro_black.jpg,iPad Pro on black,apple.com/ipad-pro (page image),iPad tile
+05_iPad,ipad-mini_with-pencil_in-hands.png,"iPad mini fan held in hands, with pencil",apple.com/ipad-mini (page image),Not used in the PDF
+06_Watch_and_AirPods,apple-watch_three-styles.jpg,Three Apple Watch styles,apple.com/watch (page image),Category circle
+06_Watch_and_AirPods,airpods-pro.jpg,AirPods Pro,apple.com/airpods-pro (page image),Category circle
+06_Watch_and_AirPods,airpods_family.jpg,AirPods family with AirPods Max,apple.com/airpods (page image),Not used in the PDF
+06_Watch_and_AirPods,airpods-4.png,"AirPods, current generation",apple.com/airpods (page image),Not used in the PDF
+06_Watch_and_AirPods,airpods-max_colourful.png,AirPods Max,apple.com/airpods-max (page image),Not used in the PDF
+07_Logo,gadget-hub-logo_supplied.jpg,Gadget Hub logo as supplied (screenshot with blurred edges),uploaded by you,"Nav bar mark, cover, footer"
