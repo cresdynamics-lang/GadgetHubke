@@ -204,32 +204,8 @@ const accessories = homeMacAccessories();
 </BaseLayout>
 
 <script>
-  const root = document.querySelector("[data-mac-hero]");
-  const end = document.querySelector("[data-hero-end]");
-  if (root && end instanceof HTMLElement) {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const mobile = window.matchMedia("(max-width: 47.99rem)").matches;
-    if (reduce) {
-      end.style.opacity = "1";
-    } else {
-      end.style.opacity = "0";
-      end.animate([{ opacity: 0 }, { opacity: 1 }], {
-        duration: 1400,
-        easing: "cubic-bezier(0.16, 1, 0.3, 1)",
-        fill: "forwards",
-      });
-      if (!mobile) {
-        const onScroll = () => {
-          const rect = root.getBoundingClientRect();
-          const total = root.offsetHeight - window.innerHeight;
-          const progress = total > 0 ? Math.min(1, Math.max(0, -rect.top / total)) : 1;
-          end.style.opacity = String(progress);
-        };
-        window.addEventListener("scroll", onScroll, { passive: true });
-        onScroll();
-      }
-    }
-  }
+  import { initScrollHero } from "../../scripts/scrollHero";
+  initScrollHero({ root: "[data-mac-hero]", copy: ".mac-hero__copy" });
 </script>
 
 <style>
@@ -241,13 +217,6 @@ const accessories = homeMacAccessories();
     display: grid;
     align-items: end;
     padding-block: var(--space-16) var(--space-12);
-  }
-  @media (min-width: 64rem) {
-    .mac-hero {
-      min-height: 160vh;
-      align-items: start;
-      padding-top: 12vh;
-    }
   }
   .mac-hero__copy {
     position: relative;
@@ -284,9 +253,24 @@ const accessories = homeMacAccessories();
     height: auto;
     object-fit: contain;
     mix-blend-mode: multiply;
+    transform-origin: center;
   }
   .mac-hero__frame--end {
     opacity: 0;
+  }
+  @media (min-width: 48rem) {
+    .mac-hero {
+      min-height: 160vh;
+      align-items: start;
+      padding-top: 12vh;
+    }
+    .mac-hero__stage {
+      position: sticky;
+      top: var(--header-height);
+      height: calc(100vh - var(--header-height));
+      inset: auto;
+      width: 100%;
+    }
   }
   .mac-choose,
   .mac-grid-wrap,

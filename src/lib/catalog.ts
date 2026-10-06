@@ -30,7 +30,7 @@ export const iphoneSubcategories: Subcategory[] = [
     href: "/shop/iphone/iphone-duo",
     blurb: "Fold",
     badge: "Pre-order",
-    fromPriceKes: 259999,
+    fromPriceKes: 279999,
     image: {
       src: ghImages.duo.foldTop,
       alt: "iPhone Duo",
@@ -42,7 +42,7 @@ export const iphoneSubcategories: Subcategory[] = [
     href: "/shop/iphone/iphone-pro",
     blurb: "6.3″",
     badge: "New",
-    fromPriceKes: 154999,
+    fromPriceKes: 184999,
     image: {
       src: ghImages.iphone.proBlue,
       alt: "iPhone 18 Pro",
@@ -54,7 +54,7 @@ export const iphoneSubcategories: Subcategory[] = [
     href: "/shop/iphone/iphone-pro-max",
     blurb: "6.9″",
     badge: "New",
-    fromPriceKes: 168999,
+    fromPriceKes: 199999,
     image: {
       src: ghImages.iphone.proSilver,
       alt: "iPhone 18 Pro Max",
@@ -66,7 +66,7 @@ export const iphoneSubcategories: Subcategory[] = [
     href: "/shop/iphone/iphone-air",
     blurb: "Thin",
     badge: "New",
-    fromPriceKes: 142999,
+    fromPriceKes: 154999,
     image: {
       src: ghImages.iphone.thinSide,
       alt: "iPhone Air",
@@ -78,7 +78,7 @@ export const iphoneSubcategories: Subcategory[] = [
     href: "/shop/iphone/iphone-17",
     blurb: "New",
     badge: "New",
-    fromPriceKes: 115999,
+    fromPriceKes: 129999,
     image: {
       src: ghImages.iphone.fanColours,
       alt: "iPhone 17",
@@ -89,7 +89,7 @@ export const iphoneSubcategories: Subcategory[] = [
     label: "iPhone 17e",
     href: "/shop/iphone/iphone-17e",
     blurb: "Value",
-    fromPriceKes: 89999,
+    fromPriceKes: 94999,
     image: {
       src: ghImages.iphone.singleCamPink,
       alt: "iPhone 17e",
@@ -100,7 +100,7 @@ export const iphoneSubcategories: Subcategory[] = [
     label: "iPhone 16",
     href: "/shop/iphone/iphone-16",
     blurb: "A18",
-    fromPriceKes: 102999,
+    fromPriceKes: 99999,
     image: {
       src: ghImages.iphone.cam2Pink,
       alt: "iPhone 16",

@@ -194,44 +194,8 @@ const genChips = ["Series 12", "Series 11", "Series 10", "Series 9", "Series 8",
 </BaseLayout>
 
 <script>
-  const hero = document.querySelector("[data-watch-hero]");
-  const start = document.querySelector("[data-hero-start]");
-  const end = document.querySelector("[data-hero-end]");
-  const cta = document.querySelector("[data-hero-cta]");
-  const copy = document.querySelector(".watch-hero__copy");
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const mobile = window.matchMedia("(max-width: 47.99rem)").matches;
-
-  if (end instanceof HTMLElement) {
-    end.style.opacity = reduce ? "1" : "0";
-    if (!reduce) {
-      end.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 1400, easing: "cubic-bezier(.16,1,.3,1)", fill: "forwards" });
-    }
-  }
-
-  if (!reduce && !mobile && hero && end instanceof HTMLElement && start instanceof HTMLElement) {
-    let ticking = false;
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        const rect = hero.getBoundingClientRect();
-        const total = Math.max(1, hero.offsetHeight - window.innerHeight);
-        const scrolled = Math.min(total, Math.max(0, -rect.top));
-        const p = scrolled / total;
-        end.style.opacity = String(p);
-        start.style.transform = `scale(${0.94 + p * 0.06})`;
-        end.style.transform = `scale(${0.94 + p * 0.06})`;
-        if (copy instanceof HTMLElement) copy.style.opacity = String(Math.max(0, 1 - p * 1.4));
-        if (cta instanceof HTMLElement) cta.style.opacity = String(p > 0.8 ? Math.min(1, (p - 0.8) / 0.2) : 0);
-        ticking = false;
-      });
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-  } else if (cta instanceof HTMLElement) {
-    cta.style.opacity = "1";
-  }
+  import { initScrollHero } from "../../scripts/scrollHero";
+  initScrollHero({ root: "[data-watch-hero]", copy: ".watch-hero__copy" });
 
   document.querySelectorAll("[data-gen]").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -264,15 +228,6 @@ const genChips = ["Series 12", "Series 11", "Series 10", "Series 9", "Series 8",
     background: #f5f5f7;
     display: grid;
     align-items: end;
-    overflow: hidden;
-  }
-  @media (min-width: 48rem) {
-    .watch-hero { min-height: 160vh; }
-    .watch-hero__stage {
-      position: sticky;
-      top: var(--header-height);
-      height: calc(100vh - var(--header-height));
-    }
   }
   .watch-hero__copy {
     position: relative;
@@ -288,10 +243,23 @@ const genChips = ["Series 12", "Series 11", "Series 10", "Series 9", "Series 8",
   }
   .watch-hero__lede { color: #6e6e73; }
   .watch-hero__cta {
-    display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 1.25rem; opacity: 0;
+    display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 1.25rem;
   }
   .watch-hero__stage {
     position: absolute; inset: 0; display: grid; place-items: center;
+  }
+  @media (min-width: 48rem) {
+    .watch-hero {
+      min-height: 160vh;
+      align-items: start;
+    }
+    .watch-hero__stage {
+      position: sticky;
+      top: var(--header-height);
+      height: calc(100vh - var(--header-height));
+      inset: auto;
+      width: 100%;
+    }
   }
   .watch-hero__frame {
     grid-area: 1 / 1;

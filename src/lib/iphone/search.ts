@@ -7,6 +7,7 @@ import { getImage, defaultColourForModel, isOverviewOnly } from "./images";
 import { accessoriesFor } from "./accessories";
 import { lipaMonthly } from "./pricing";
 import { iphoneConfig } from "./config";
+import { listIphones } from "../iphone-list";
 
 export type IphoneSearchHit = {
   id: string;
@@ -26,14 +27,14 @@ export type IphoneSearchHit = {
 };
 
 export const iphonePopularSearches = [
+  "iPhone 18 Pro",
+  "iPhone 17",
+  "iPhone Air",
   "iPhone 16 Pro",
   "iPhone 15 Pro Max",
   "iPhone 14",
   "iPhone 13 mini",
-  "iPhone 12",
   "iPhone 11 Pro",
-  "iPhone 18",
-  "MagSafe case",
 ] as const;
 
 const VOCAB = [
@@ -115,7 +116,7 @@ export function normalizeQuery(raw: string): string {
 }
 
 export function buildIphoneSearchIndex(): IphoneSearchHit[] {
-  return models.map((m) => {
+  const legacy = models.map((m) => {
     const colour = defaultColourForModel(m.id, m.defaultColour ?? undefined);
     const img = getImage(m.id, colour, isOverviewOnly(m.id) ? "overview" : 1, m.name);
     const searchable = [
@@ -148,6 +149,42 @@ export function buildIphoneSearchIndex(): IphoneSearchHit[] {
       port: m.port,
     };
   });
+
+  // Latest shop lineup (17 / 18 / Air / Duo)
+  const newest: IphoneSearchHit[] = listIphones()
+    .filter((i) => i.id !== "iphone-16")
+    .map((i) => {
+      const family = /17e|iphone-17\b/.test(i.id) ? 17 : 18;
+      const tier = /pro-max/.test(i.id)
+        ? "Pro Max"
+        : /pro/.test(i.id)
+          ? "Pro"
+          : /duo/.test(i.id)
+            ? "Duo"
+            : /air/.test(i.id)
+              ? "Air"
+              : /17e/.test(i.id)
+                ? "e"
+                : "Standard";
+      return {
+        id: i.id,
+        name: i.name,
+        href: i.href,
+        priceKes: i.priceKes,
+        imageSrc: i.image.src,
+        imageAlt: i.image.alt,
+        family,
+        tier,
+        chip: "",
+        searchable: `${i.name} ${i.id} ${i.blurb} ${family}`.toLowerCase(),
+        cameras: 0,
+        battery: 0,
+        display: 0,
+        port: "USB-C",
+      };
+    });
+
+  return [...newest, ...legacy];
 }
 
 export type SearchResult = {
@@ -169,10 +206,9 @@ export function searchIphones(query: string, index: IphoneSearchHit[]): SearchRe
   let gen = genMatch ? Number(genMatch[1]) : null;
   let futureNotice: SearchResult["futureNotice"] = null;
 
-  if (gen != null && gen > 16) {
-    futureNotice = { queried: `iPhone ${gen}`, suggestFamily: 16 };
-    // rank as if 16 + same tier words
-    gen = 16;
+  if (gen != null && gen > 18) {
+    futureNotice = { queried: `iPhone ${gen}`, suggestFamily: 18 };
+    gen = 18;
   }
 
   const wantsProMax = /\bpro\s*max\b/.test(q);
@@ -189,7 +225,8 @@ export function searchIphones(query: string, index: IphoneSearchHit[]): SearchRe
         else if (Math.abs(item.family - gen) === 1) score += 25;
         else score += Math.max(0, 8 - Math.abs(item.family - gen) * 2);
       } else if (tokens.includes("iphone") && tokens.length === 1) {
-        if (item.family === 16) score += 80;
+        if (item.family === 18 || item.family === 17) score += 80;
+        else if (item.family === 16) score += 40;
       }
 
       if (wantsProMax && item.tier === "Pro Max") score += 60;

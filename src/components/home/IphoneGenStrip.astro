@@ -1,43 +1,19 @@
 ---
 /**
- * Light home strip into the iPhone 11–16 shop — does not rebuild the home hero.
+ * Home strip — every iPhone generation from 11 to 18.
  */
-import {
-  models,
-  getImage,
-  defaultColourForModel,
-  formatKes,
-  modelsByFamily,
-} from "../../lib/iphone";
+import { iphoneGenStripCards, formatFromKes } from "../../lib/iphone/lineup";
 import ProductStage from "../iphone/ProductStage.astro";
 
-const gens = [16, 15, 14, 13, 12, 11] as const;
-const cards = gens.map((g) => {
-  const family = modelsByFamily(g);
-  const rep =
-    family.find((m) => m.tier === "Pro") ||
-    family.find((m) => m.tier === "Standard") ||
-    family[0];
-  const colour = defaultColourForModel(rep.id, rep.defaultColour ?? undefined);
-  const img = getImage(rep.id, colour, 1, rep.name);
-  const lowest = Math.min(...family.map((m) => m.basePriceKes));
-  return {
-    family: g,
-    count: family.length,
-    lowest,
-    href: `/iphone?family=${g}`,
-    img,
-    label: `iPhone ${g}`,
-  };
-});
+const cards = iphoneGenStripCards();
 ---
 
 <section class="iphone-home-strip fade-up" data-fade-up>
   <div class="container">
     <header class="home-section__head home-section__head--row">
       <div>
-        <h2>iPhone 11 to 16</h2>
-        <p>Shop by generation. Sealed stock. Sample prices until admin is live.</p>
+        <h2>iPhone 11 to 18</h2>
+        <p>Shop every generation. Sealed stock. Sample prices until admin is live.</p>
       </div>
       <a class="home-section__link" href="/iphone">Shop all iPhone ›</a>
     </header>
@@ -46,10 +22,18 @@ const cards = gens.map((g) => {
         cards.map((c) => (
           <li>
             <a class="iphone-home-strip__card" href={c.href}>
-              <ProductStage src={c.img.src} srcWebp={c.img.srcWebp} alt={c.img.alt} width={c.img.width} height={c.img.width} highPriority={c.family === 16} eager={c.family === 16} />
+              <ProductStage
+                src={c.img.src}
+                srcWebp={c.img.srcWebp}
+                alt={c.img.alt}
+                width={c.img.width}
+                height={c.img.width}
+                highPriority={c.highPriority}
+                eager={c.highPriority}
+              />
               <span class="iphone-home-strip__label">{c.label}</span>
               <span class="iphone-home-strip__meta">
-                {c.count} models · from {formatKes(c.lowest)}
+                {c.count} models · {formatFromKes(c.lowest)}
               </span>
             </a>
           </li>
@@ -76,13 +60,19 @@ const cards = gens.map((g) => {
 
   @media (min-width: 48rem) {
     .iphone-home-strip__grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
 
   @media (min-width: 64rem) {
     .iphone-home-strip__grid {
-      grid-template-columns: repeat(6, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 80rem) {
+    .iphone-home-strip__grid {
+      grid-template-columns: repeat(8, minmax(0, 1fr));
     }
   }
 

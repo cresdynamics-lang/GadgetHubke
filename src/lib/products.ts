@@ -205,9 +205,9 @@ export const products: Product[] = [
     })),
     finishesLabel: "Available in 2 finishes",
     storages: [
-      { id: "256", label: "256GB", priceKes: 259999 },
-      { id: "512", label: "512GB", priceKes: 299999 },
-      { id: "1tb", label: "1TB", priceKes: 349999 },
+      { id: "256", label: "256GB", priceKes: 279999 },
+      { id: "512", label: "512GB", priceKes: 319999 },
+      { id: "1tb", label: "1TB", priceKes: 369999 },
     ],
     colors: [
       { id: "star-white", label: "Star White", hex: "#F4F1EA" },
@@ -350,9 +350,9 @@ export const products: Product[] = [
     gallery: [...pro18GalleryShots("iPhone 18 Pro")],
     finishesLabel: "Available in 4 finishes",
     storages: [
-      { id: "256", label: "256GB", priceKes: 154999 },
-      { id: "512", label: "512GB", priceKes: 184999 },
-      { id: "1tb", label: "1TB", priceKes: 214999 },
+      { id: "256", label: "256GB", priceKes: 184999 },
+      { id: "512", label: "512GB", priceKes: 209999 },
+      { id: "1tb", label: "1TB", priceKes: 239999 },
     ],
     colors: pro18Colors,
     lipaMonths: 24,
@@ -561,9 +561,9 @@ export const products: Product[] = [
     gallery: [...pro18GalleryShots("iPhone 18 Pro Max")],
     finishesLabel: "Available in 4 finishes",
     storages: [
-      { id: "256", label: "256GB", priceKes: 168999 },
-      { id: "512", label: "512GB", priceKes: 198999 },
-      { id: "1tb", label: "1TB", priceKes: 228999 },
+      { id: "256", label: "256GB", priceKes: 199999 },
+      { id: "512", label: "512GB", priceKes: 224999 },
+      { id: "1tb", label: "1TB", priceKes: 254999 },
     ],
     colors: pro18Colors,
     lipaMonths: 24,
@@ -836,9 +836,9 @@ export const products: Product[] = [
     ],
     finishesLabel: "Available in 4 finishes",
     storages: [
-      { id: "256", label: "256GB", priceKes: 142999 },
-      { id: "512", label: "512GB", priceKes: 164999 },
-      { id: "1tb", label: "1TB", priceKes: 189999 },
+      { id: "256", label: "256GB", priceKes: 154999 },
+      { id: "512", label: "512GB", priceKes: 174999 },
+      { id: "1tb", label: "1TB", priceKes: 199999 },
     ],
     colors: [
       { id: "sky-blue", label: "Sky Blue", hex: "#A8C8E0" },
@@ -1088,8 +1088,8 @@ export const products: Product[] = [
     ],
     finishesLabel: "Available in 5 finishes",
     storages: [
-      { id: "256", label: "256GB", priceKes: 115999 },
-      { id: "512", label: "512GB", priceKes: 134999 },
+      { id: "256", label: "256GB", priceKes: 129999 },
+      { id: "512", label: "512GB", priceKes: 149999 },
     ],
     colors: [
       { id: "lavender", label: "Lavender", hex: "#C8B8D8" },
@@ -1338,8 +1338,8 @@ export const products: Product[] = [
     ],
     finishesLabel: "Available in 3 finishes",
     storages: [
-      { id: "256", label: "256GB", priceKes: 89999 },
-      { id: "512", label: "512GB", priceKes: 104999 },
+      { id: "256", label: "256GB", priceKes: 94999 },
+      { id: "512", label: "512GB", priceKes: 109999 },
     ],
     colors: [
       { id: "soft-pink", label: "Soft Pink", hex: "#F2D6D8" },
@@ -1571,9 +1571,9 @@ export const products: Product[] = [
     ],
     finishesLabel: "Available in 5 finishes",
     storages: [
-      { id: "128", label: "128GB", priceKes: 102999 },
-      { id: "256", label: "256GB", priceKes: 114999 },
-      { id: "512", label: "512GB", priceKes: 134999 },
+      { id: "128", label: "128GB", priceKes: 99999 },
+      { id: "256", label: "256GB", priceKes: 112999 },
+      { id: "512", label: "512GB", priceKes: 129999 },
     ],
     colors: [
       { id: "ultramarine", label: "Ultramarine", hex: "#3B5CDE" },

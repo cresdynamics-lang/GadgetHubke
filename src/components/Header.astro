@@ -14,6 +14,7 @@ import {
   megaExtras,
 } from "../lib/catalog";
 import { modelsByFamily, formatKes } from "../lib/iphone";
+import { megaNewIphones } from "../lib/iphone/lineup";
 import { macModelsByFamily, formatKes as formatMacKes } from "../lib/mac";
 import { ipadModelsByFamily, formatKes as formatIpadKes } from "../lib/ipad";
 import { watchModelsByFamily, formatKes as formatWatchKes } from "../lib/watch";
@@ -29,6 +30,7 @@ function isActive(href: string): boolean {
 }
 
 const iphoneGens = [16, 15, 14, 13, 12, 11] as const;
+const iphoneNewest = megaNewIphones();
 const macAir = macModelsByFamily("Air");
 const macPro = macModelsByFamily("Pro");
 const ipadPro = ipadModelsByFamily("Pro");
@@ -160,12 +162,6 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
           <path d="M16.5 16.5 20 20" stroke-linecap="round" />
         </svg>
       </button>
-      <button type="button" class="site-header__icon" data-theme-toggle aria-label="Toggle colour theme">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
-          <circle cx="12" cy="12" r="4.25" />
-          <path d="M12 2.5v2.25M12 19.25V21.5M4.5 12H2.25M21.75 12H19.5M5.4 5.4l1.6 1.6M17 17l1.6 1.6M5.4 18.6l1.6-1.6M17 7l1.6-1.6" stroke-linecap="round" />
-        </svg>
-      </button>
       <a class="site-header__icon" href="/account" aria-label="Account">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
           <circle cx="12" cy="8" r="3.25" />
@@ -204,7 +200,20 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
           <details class="mobile-nav__details" open>
             <summary class="mobile-nav__summary">iPhone</summary>
             <ul class="mobile-nav__sub">
-              <li><a href="/iphone">All iPhone</a></li>
+              <li><a href="/iphone">All iPhone 11–18</a></li>
+              <li class="mobile-nav__gen">
+                <p>New</p>
+                <ul>
+                  {iphoneNewest.map((m) => (
+                    <li>
+                      <a href={m.href}>
+                        {m.name}
+                        <span>from {m.price}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
               {
                 iphoneGens.map((g) => (
                   <li class="mobile-nav__gen">
@@ -1153,15 +1162,6 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
         closeAll();
         closeMobile();
       }
-    });
-
-    header.querySelector("[data-theme-toggle]")?.addEventListener("click", () => {
-      const root = document.documentElement;
-      const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
-      root.setAttribute("data-theme", next);
-      try {
-        localStorage.setItem("gh-theme", next);
-      } catch {}
     });
   }
 

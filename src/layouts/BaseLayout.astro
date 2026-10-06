@@ -48,12 +48,6 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
     <meta property="og:image" content={new URL("/images/logo.png", site.url).href} />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
-    <script is:inline>
-      try {
-        const t = localStorage.getItem("gh-theme");
-        if (t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t);
-      } catch (e) {}
-    </script>
   </head>
   <body>
     <a class="sr-only" href="#main">Skip to content</a>

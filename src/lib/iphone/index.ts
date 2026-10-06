@@ -49,3 +49,11 @@ export {
   iphonePopularSearches,
   type IphoneSearchHit,
 } from "./search";
+export {
+  IPHONE_ALL_GENS,
+  IPHONE_LEGACY_GENS,
+  iphoneGenStripCards,
+  latestIphoneLineup,
+  latestByFamily,
+  megaNewIphones,
+} from "./lineup";

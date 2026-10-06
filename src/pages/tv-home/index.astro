@@ -221,42 +221,10 @@ const bundlePayload = tvHomeBundles.map((b) => ({
 </BaseLayout>
 
 <script define:vars={{ modelsJson: JSON.stringify(tvHomeModels.map((m) => ({ id: m.id, name: m.name, base: m.basePriceKes }))) }}>
+  import { initScrollHero } from "../../scripts/scrollHero";
+  initScrollHero({ root: "[data-tvhome-hero]", copy: ".tvhome-hero__copy" });
+
   const models = JSON.parse(modelsJson);
-  const hero = document.querySelector("[data-tvhome-hero]");
-  const end = document.querySelector("[data-hero-end]");
-  const start = document.querySelector("[data-hero-start]");
-  const cta = document.querySelector("[data-hero-cta]");
-  const copy = document.querySelector(".tvhome-hero__copy");
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const mobile = window.matchMedia("(max-width: 47.99rem)").matches;
-
-  if (end instanceof HTMLElement) {
-    end.style.opacity = reduce ? "1" : "0";
-    if (!reduce) end.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 1400, easing: "cubic-bezier(.16,1,.3,1)", fill: "forwards" });
-  }
-
-  if (!reduce && !mobile && hero && end instanceof HTMLElement && start instanceof HTMLElement) {
-    let ticking = false;
-    window.addEventListener(
-      "scroll",
-      () => {
-        if (ticking) return;
-        ticking = true;
-        requestAnimationFrame(() => {
-          const rect = hero.getBoundingClientRect();
-          const total = Math.max(1, hero.offsetHeight - window.innerHeight);
-          const p = Math.min(1, Math.max(0, -rect.top) / total);
-          end.style.opacity = String(p);
-          start.style.transform = `scale(${0.94 + p * 0.06})`;
-          end.style.transform = `scale(${0.94 + p * 0.06})`;
-          if (copy instanceof HTMLElement) copy.style.opacity = String(Math.max(0, 1 - p * 1.4));
-          if (cta instanceof HTMLElement) cta.style.opacity = String(p > 0.8 ? Math.min(1, (p - 0.8) / 0.2) : 0);
-          ticking = false;
-        });
-      },
-      { passive: true },
-    );
-  } else if (cta instanceof HTMLElement) cta.style.opacity = "1";
 
   document.querySelectorAll("[data-bundle-add]").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -292,23 +260,39 @@ const bundlePayload = tvHomeBundles.map((b) => ({
     background: #f5f5f7;
     display: grid;
     align-items: end;
-    overflow: hidden;
     font-family: Inter, system-ui, sans-serif;
-  }
-  @media (min-width: 48rem) {
-    .tvhome-hero { min-height: 160vh; }
-    .tvhome-hero__stage {
-      position: sticky;
-      top: var(--header-height);
-      height: calc(100vh - var(--header-height));
-    }
   }
   .tvhome-hero__copy { position: relative; z-index: 2; padding-block: 4rem 2rem; max-width: 40rem; }
   .tvhome-hero h1 { margin: 0 0 0.75rem; font-size: clamp(2.1rem, 4.5vw, 3.4rem); letter-spacing: -0.03em; font-weight: 700; }
   .tvhome-hero__lede { color: #6e6e73; }
-  .tvhome-hero__cta { display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 1.25rem; opacity: 0; }
-  .tvhome-hero__stage { position: relative; display: grid; place-items: center; }
-  .tvhome-hero__frame { position: absolute; width: min(92vw, 52rem); max-height: 70vh; object-fit: contain; mix-blend-mode: multiply; }
+  .tvhome-hero__cta { display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 1.25rem; }
+  .tvhome-hero__stage {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+  }
+  .tvhome-hero__frame {
+    grid-area: 1 / 1;
+    width: min(92vw, 52rem);
+    max-height: 70vh;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    transform-origin: center;
+  }
+  @media (min-width: 48rem) {
+    .tvhome-hero {
+      min-height: 160vh;
+      align-items: start;
+    }
+    .tvhome-hero__stage {
+      position: sticky;
+      top: var(--header-height);
+      height: calc(100vh - var(--header-height));
+      inset: auto;
+      width: 100%;
+    }
+  }
   .tvhome-choose { padding-block: 3rem; }
   .tvhome-choose__grid { list-style: none; margin: 1.25rem 0 0; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
   .tvhome-choose__card { text-decoration: none; color: inherit; display: grid; gap: 0.5rem; }

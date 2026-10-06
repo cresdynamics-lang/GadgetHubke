@@ -77,23 +77,30 @@ const wa = whatsappUrl("Hello Gadget Hub, I'm interested in the new iPhone.");
     if (reduce) {
       root.classList.add("is-settled");
     } else {
-      requestAnimationFrame(() => root.classList.add("is-playing"));
+      // Double rAF so the gathered pose paints before corner transition
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => root.classList.add("is-playing"));
+      });
       window.setTimeout(() => {
         root.classList.remove("is-playing");
         root.classList.add("is-settled");
       }, 1800);
     }
 
-    // Subtle scroll drift after settle
+    // Subtle scroll drift — keep copy visible; only stage moves
     const stage = root.querySelector("[data-sig-stage]");
     if (stage && !reduce) {
       let ticking = false;
       window.addEventListener(
         "scroll",
         () => {
-          if (ticking || !root.classList.contains("is-settled")) return;
+          if (ticking) return;
           ticking = true;
           requestAnimationFrame(() => {
+            if (!root.classList.contains("is-settled") && !root.classList.contains("is-playing")) {
+              ticking = false;
+              return;
+            }
             const y = Math.min(window.scrollY, 240);
             (stage as HTMLElement).style.setProperty("--drift", `${y * 0.04}px`);
             ticking = false;
@@ -132,9 +139,13 @@ const wa = whatsappUrl("Hello Gadget Hub, I'm interested in the new iPhone.");
     place-items: center;
     pointer-events: auto;
     transition:
+      left var(--duration-hero) var(--ease-out),
+      right var(--duration-hero) var(--ease-out),
+      top var(--duration-hero) var(--ease-out),
+      bottom var(--duration-hero) var(--ease-out),
       transform var(--duration-hero) var(--ease-out),
       opacity 0.6s var(--ease-out);
-    will-change: transform;
+    will-change: transform, left, top;
   }
 
   .sig-hero__phone img {

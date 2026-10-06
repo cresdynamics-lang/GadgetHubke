@@ -55,7 +55,7 @@ export const homeLatestIphones = [
   {
     name: "iPhone 18 Pro",
     href: "/shop/iphone/iphone-pro",
-    priceKes: 154999,
+    priceKes: 184999,
     badge: "New" as const,
     blurb: "Pro camera system",
     image: {
@@ -70,7 +70,7 @@ export const homeLatestIphones = [
   {
     name: "iPhone 18 Pro Max",
     href: "/shop/iphone/iphone-pro-max",
-    priceKes: 168999,
+    priceKes: 199999,
     badge: "New" as const,
     blurb: "Biggest Pro display",
     image: {
@@ -81,7 +81,7 @@ export const homeLatestIphones = [
   {
     name: "iPhone Air",
     href: "/shop/iphone/iphone-air",
-    priceKes: 142999,
+    priceKes: 154999,
     badge: "New" as const,
     blurb: "Ultralight titanium",
     image: {
@@ -92,7 +92,7 @@ export const homeLatestIphones = [
   {
     name: "iPhone 16",
     href: "/shop/iphone/iphone-16",
-    priceKes: 102999,
+    priceKes: 99999,
     blurb: "Camera Control",
     image: {
       src: ghImages.iphone.cam2Pink,
@@ -148,7 +148,7 @@ export const homeDeals: DealItem[] = [
     id: "iphone-duo",
     name: "iPhone Duo",
     href: "/shop/iphone/iphone-duo",
-    priceKes: 259999,
+    priceKes: 279999,
     badge: "New",
     image: {
       src: ghImages.duo.foldTop,
@@ -202,7 +202,7 @@ export const homeDeals: DealItem[] = [
     id: "iphone-17",
     name: "iPhone 17",
     href: "/shop/iphone/iphone-17",
-    priceKes: 115999,
+    priceKes: 129999,
     badge: "New",
     image: {
       src: ghImages.iphone.fanColours,

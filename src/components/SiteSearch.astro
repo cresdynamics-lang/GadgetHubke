@@ -177,7 +177,7 @@ const tvHomeAcc = Object.fromEntries(
         </ul>
         <p class="site-search__label">Shop by generation</p>
         <ul class="site-search__gens">
-          {[16, 15, 14, 13, 12, 11].map((g) => (
+          {[18, 17, 16, 15, 14, 13, 12, 11].map((g) => (
             <li>
               <a href={`/iphone?family=${g}`}>iPhone {g}</a>
             </li>
@@ -463,9 +463,9 @@ const tvHomeAcc = Object.fromEntries(
     const genMatch = q.match(/\b(1[1-9]|[2-9]\d)\b/);
     let gen = genMatch ? Number(genMatch[1]) : null;
     let future = null;
-    if (gen != null && gen > 16) {
-      future = { kind: "iphone", queried: `iPhone ${gen}`, family: 16 };
-      gen = 16;
+    if (gen != null && gen > 18) {
+      future = { kind: "iphone", queried: `iPhone ${gen}`, family: 18 };
+      gen = 18;
     }
     const wantsProMax = /\bpro\s*max\b/.test(q);
     const wantsPro = /\bpro\b/.test(q) && !wantsProMax;
@@ -480,7 +480,8 @@ const tvHomeAcc = Object.fromEntries(
         else if (Math.abs(item.family - gen) === 1) score += 25;
         else score += Math.max(0, 8 - Math.abs(item.family - gen) * 2);
       } else if (tokens.length === 1 && tokens[0] === "iphone") {
-        if (item.family === 16) score += 80;
+        if (item.family === 18 || item.family === 17) score += 80;
+        else if (item.family === 16) score += 40;
       }
       if (wantsProMax && item.tier === "Pro Max") score += 60;
       else if (wantsPro && item.tier === "Pro") score += 60;

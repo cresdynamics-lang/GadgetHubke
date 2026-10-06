@@ -1,11 +1,11 @@
 ---
 /**
- * iPhone 11–16 shop — filters, sort, compare tray.
- * Modular category root; Mac can mirror under /mac later.
+ * iPhone shop — latest (17/18/Air/Duo) + generations 11–16.
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import IphoneCard from "../../components/iphone/IphoneCard.astro";
 import IphoneQuiz from "../../components/iphone/IphoneQuiz.astro";
+import ProductCard from "../../components/ProductCard.astro";
 import {
   models,
   formatKes,
@@ -14,6 +14,10 @@ import {
   modelSubline,
   iphoneConfig,
 } from "../../lib/iphone";
+import {
+  IPHONE_ALL_GENS,
+  latestByFamily,
+} from "../../lib/iphone/lineup";
 import { site } from "../../lib/site";
 
 const list = models;
@@ -39,8 +43,8 @@ const comparePayload = list.map((m) => {
 ---
 
 <BaseLayout
-  title={`iPhone 11 to 16 - ${site.name}`}
-  description="Shop sealed iPhone 11 to iPhone 16 at Gadget Hub Kenya. Sample prices. Lipa Mdogo Mdogo available."
+  title={`iPhone 11 to 18 - ${site.name}`}
+  description="Shop sealed iPhone 11 to iPhone 18 at Gadget Hub Kenya. Sample prices. Lipa Mdogo Mdogo available."
 >
   <section class="ishop">
     <div class="container">
@@ -52,15 +56,53 @@ const comparePayload = list.map((m) => {
       <header class="ishop__intro">
         <h1>iPhone</h1>
         <p>
-          Every generation from 11 to 16, sealed and ready. Prices below are samples until stock is entered.
+          Every generation from 11 to 18 — Duo, 18 Pro, Air, 17, and sealed earlier models. Prices below are samples until stock is entered.
         </p>
       </header>
 
       <div class="ishop__chips" data-filter-family role="group" aria-label="Filter by generation">
         <button type="button" class="is-active" data-family="all">All</button>
-        {[16, 15, 14, 13, 12, 11].map((g) => (
+        {IPHONE_ALL_GENS.map((g) => (
           <button type="button" data-family={String(g)}>iPhone {g}</button>
         ))}
+      </div>
+
+      <div class="ishop__latest" data-latest-block data-family-group="18">
+        <h2 class="ishop__subhead">iPhone 18 lineup</h2>
+        <ul class="ishop__latest-grid">
+          {
+            latestByFamily(18).map((item) => (
+              <li data-latest-card data-family="18">
+                <ProductCard
+                  name={item.name}
+                  href={item.href}
+                  priceKes={item.priceKes}
+                  badge={item.badge}
+                  image={{ src: item.image.src, alt: item.image.alt }}
+                />
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="ishop__latest" data-latest-block data-family-group="17">
+        <h2 class="ishop__subhead">iPhone 17</h2>
+        <ul class="ishop__latest-grid">
+          {
+            latestByFamily(17).map((item) => (
+              <li data-latest-card data-family="17">
+                <ProductCard
+                  name={item.name}
+                  href={item.href}
+                  priceKes={item.priceKes}
+                  badge={item.badge}
+                  image={{ src: item.image.src, alt: item.image.alt }}
+                />
+              </li>
+            ))
+          }
+        </ul>
       </div>
 
       <div class="ishop__chips ishop__chips--secondary" data-filter-size role="group" aria-label="Filter by size">
@@ -85,6 +127,7 @@ const comparePayload = list.map((m) => {
         <p class="ishop__count" data-count></p>
       </div>
 
+      <h2 class="ishop__subhead" data-legacy-head>iPhone 16 and earlier</h2>
       <ul class="ishop__grid" data-grid>
         {
           list.map((model, i) => (
@@ -179,8 +222,31 @@ const comparePayload = list.map((m) => {
       li.hidden = false;
       li.style.order = String(i);
     });
-    if (none) none.hidden = ordered.length > 0;
-    if (countEl) countEl.textContent = `${ordered.length} model${ordered.length === 1 ? "" : "s"}`;
+
+    // Latest 17/18 blocks
+    let latestVisible = 0;
+    document.querySelectorAll("[data-latest-block]").forEach((block) => {
+      if (!(block instanceof HTMLElement)) return;
+      const g = block.getAttribute("data-family-group");
+      const show = family === "all" || family === g;
+      block.hidden = !show;
+      if (show) latestVisible += block.querySelectorAll("[data-latest-card]").length;
+    });
+    const legacyHead = document.querySelector("[data-legacy-head]");
+    if (legacyHead instanceof HTMLElement) {
+      legacyHead.hidden = family === "17" || family === "18";
+    }
+    if (grid instanceof HTMLElement) {
+      grid.hidden = family === "17" || family === "18";
+    }
+    const sizeBar = document.querySelector("[data-filter-size]");
+    if (sizeBar instanceof HTMLElement) {
+      sizeBar.hidden = family === "17" || family === "18";
+    }
+
+    const total = (family === "17" || family === "18" ? latestVisible : ordered.length + (family === "all" ? latestVisible : 0));
+    if (none) none.hidden = total > 0;
+    if (countEl) countEl.textContent = `${total} model${total === 1 ? "" : "s"}`;
   }
 
   document.querySelectorAll("[data-filter-family] button").forEach((btn) => {
@@ -308,10 +374,10 @@ const comparePayload = list.map((m) => {
     if (modal instanceof HTMLDialogElement) modal.close();
   });
 
-  // Read ?family=16 from URL
+  // Read ?family=18 from URL
   const params = new URLSearchParams(location.search);
   const f = params.get("family");
-  if (f && ["11", "12", "13", "14", "15", "16"].includes(f)) {
+  if (f && ["11", "12", "13", "14", "15", "16", "17", "18"].includes(f)) {
     family = f;
     document.querySelectorAll("[data-filter-family] button").forEach((b) => {
       b.classList.toggle("is-active", b.getAttribute("data-family") === f);
@@ -352,6 +418,21 @@ const comparePayload = list.map((m) => {
   .ishop__intro p {
     margin: 0;
     color: var(--color-fg-muted);
+  }
+
+  .ishop__subhead {
+    margin: 2rem 0 1rem;
+    font-size: clamp(1.25rem, 2vw, 1.6rem);
+    letter-spacing: -0.02em;
+  }
+
+  .ishop__latest-grid {
+    list-style: none;
+    margin: 0 0 1.5rem;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
   }
 
   .ishop__chips {
