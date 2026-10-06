@@ -43,8 +43,9 @@ function badgeFor(id: string, subBadge?: string): IphoneListItem["badge"] {
   if (subBadge === "New" || subBadge === "Pre-order" || subBadge === "Coming soon") {
     return subBadge;
   }
-  if (id.includes("duo")) return "Pre-order";
-  if (id.includes("pro") || id.includes("air") || id.includes("17")) return "New";
+  if (id.includes("duo") || id.includes("pro") || id.includes("air") || id.includes("17")) {
+    return "New";
+  }
   return undefined;
 }
 
@@ -73,7 +74,7 @@ export function listIphones(): IphoneListItem[] {
       image: pack ?? { src: p.image.src, alt: p.image.alt },
       colors: p.colors.map((c) => ({ id: c.id, label: c.label, hex: c.hex })),
       storages: p.storages.map((s) => s.label),
-      stock: p.id.includes("duo") ? "preorder" : "in",
+      stock: "in",
       tags: tagsById[p.id] ?? [],
     };
   });

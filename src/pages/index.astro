@@ -2,105 +2,61 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SignatureHero from "../components/SignatureHero.astro";
 import LaunchBand from "../components/LaunchBand.astro";
-import ProductCard from "../components/ProductCard.astro";
-import FeatureBand from "../components/home/FeatureBand.astro";
+import HomeProductRow from "../components/home/HomeProductRow.astro";
 import CategoryStrip from "../components/home/CategoryStrip.astro";
 import TradeInBanner from "../components/home/TradeInBanner.astro";
 import LipaStrip from "../components/home/LipaStrip.astro";
 import TrustRow from "../components/home/TrustRow.astro";
 import BlogTeaser from "../components/home/BlogTeaser.astro";
-import IphoneGenStrip from "../components/home/IphoneGenStrip.astro";
 import { site } from "../lib/site";
 import {
-  homeLatestIphones,
   heroPhones,
-  homeAccessories,
-  homeMacBand,
-  homeIpadBand,
   homeDuoLaunch,
+  homeNewIn,
+  homeCategoryRows,
 } from "../lib/home";
 ---
 
 <BaseLayout
-  title={`${site.name} - New devices in Nairobi`}
-  description="Shop new iPhone, Mac, and iPad at GadgetHub Kenya. Trade-in and Lipa Mdogo Mdogo available."
+  title={`${site.name} - Apple products in Nairobi`}
+  description="Shop iPhone, Mac, iPad, Watch, AirPods, TV & Home, and Accessories at GadgetHub Kenya. Trade-in and Lipa Mdogo Mdogo available."
 >
-  <SignatureHero phones={heroPhones} />
+  <SignatureHero
+    phones={heroPhones}
+    eyebrow="Apple · Nairobi"
+    title="The full lineup."
+    lede="iPhone, Mac, iPad, Watch, AirPods, TV & Home, and Accessories — genuine, sealed, ready to take home. Pay in full or Lipa Mdogo Mdogo."
+    primaryHref="/shop"
+    primaryLabel="Shop Apple"
+    secondaryHref="/lipa-mdogo-mdogo"
+    secondaryLabel="See Lipa Mdogo Mdogo"
+  />
+
+  <CategoryStrip />
+
+  <HomeProductRow
+    title="New In"
+    lede="Fresh across the store — not just phones."
+    href="/shop"
+    linkLabel="Shop all ›"
+    items={homeNewIn}
+  />
 
   <LaunchBand {...homeDuoLaunch} />
 
-  <IphoneGenStrip />
+  {
+    homeCategoryRows.map((row) => (
+      <HomeProductRow
+        title={row.title}
+        lede={row.lede}
+        href={row.href}
+        items={row.items}
+      />
+    ))
+  }
 
-  <section class="home-section home-latest fade-up" data-fade-up>
-    <div class="container">
-      <header class="home-section__head home-section__head--row">
-        <div>
-          <h2>iPhone</h2>
-          <p>The latest, and the ones you can take home today.</p>
-        </div>
-        <a class="home-section__link" href="/shop/iphone">Shop all iPhone ›</a>
-      </header>
-      <ul class="home-latest__grid">
-        {
-          homeLatestIphones.map((item) => (
-            <li>
-              <ProductCard {...item} />
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-  </section>
-
-  <FeatureBand {...homeMacBand} />
-  <FeatureBand {...homeIpadBand} />
-
-  <section class="home-section home-acc fade-up" data-fade-up>
-    <div class="container">
-      <header class="home-section__head home-section__head--row">
-        <div>
-          <h2>Accessories</h2>
-          <p>Cases, MagSafe, and more for the device you already love.</p>
-        </div>
-        <a class="home-section__link" href="/shop/accessories">Shop all ›</a>
-      </header>
-      <ul class="home-latest__grid">
-        {
-          homeAccessories.map((item) => (
-            <li>
-              <ProductCard {...item} />
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-  </section>
-
-  <CategoryStrip />
   <TradeInBanner />
   <LipaStrip />
   <TrustRow />
   <BlogTeaser />
 </BaseLayout>
-
-<style>
-  .home-latest,
-  .home-acc {
-    padding-block: var(--space-12);
-  }
-
-  .home-latest__grid {
-    list-style: none;
-    margin: var(--space-8) 0 0;
-    padding: 0;
-    display: grid;
-    gap: var(--space-8);
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  @media (min-width: 48rem) {
-    .home-latest__grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-  }
-</style>

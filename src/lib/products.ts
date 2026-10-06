@@ -11,6 +11,8 @@ export type ProductColor = {
   label: string;
   /** Greyscale-safe swatch */
   hex: string;
+  /** Product photo for this finish — swaps the main display when selected */
+  imageSrc?: string;
 };
 
 export type ProductHighlight = {
@@ -1774,9 +1776,8 @@ export const products: Product[] = [
     overviewHref: "/shop/mac/macbook-pro",
     specsHref: "/shop/mac/macbook-pro/specs",
     image: {
-      src: "/images/mac/macbook-pro-card.jpg",
-      srcWebp: "/images/mac/macbook-pro-card.webp",
-      alt: "MacBook Pro",
+      src: "/Gadget_Hub_MacBook_1_Products_and_Colours/01_Product_photos/MacBook_Pro/Pro_14in_16in_M4_family_2024/mbp14-spaceblack-select-202410.jpg",
+      alt: "MacBook Pro 14-inch M4 in Space Black",
     },
     storages: [
       { id: "512", label: "512GB", priceKes: 249999 },
@@ -1784,8 +1785,20 @@ export const products: Product[] = [
       { id: "2tb", label: "2TB", priceKes: 349999 },
     ],
     colors: [
-      { id: "space-black", label: "Space Black", hex: "#1D1D1F" },
-      { id: "silver", label: "Silver", hex: "#E3E4E5" },
+      {
+        id: "space-black",
+        label: "Space Black",
+        hex: "#1D1D1F",
+        imageSrc:
+          "/Gadget_Hub_MacBook_1_Products_and_Colours/01_Product_photos/MacBook_Pro/Pro_14in_16in_M4_family_2024/mbp14-spaceblack-select-202410.jpg",
+      },
+      {
+        id: "silver",
+        label: "Silver",
+        hex: "#E3E4E5",
+        imageSrc:
+          "/Gadget_Hub_MacBook_1_Products_and_Colours/01_Product_photos/MacBook_Pro/Pro_14in_16in_M4_family_2024/mbp14-silver-select-202410.jpg",
+      },
     ],
     highlights: [
       { label: "Chip", value: "M-series Pro" },
@@ -1868,9 +1881,8 @@ export const products: Product[] = [
     overviewHref: "/shop/ipad/ipad-pro",
     specsHref: "/shop/ipad/ipad-pro/specs",
     image: {
-      src: "/images/ipad/ipad-pro-card.jpg",
-      srcWebp: "/images/ipad/ipad-pro-card.webp",
-      alt: "iPad Pro",
+      src: "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Pro_11in_and_13in_M4_M5_(same_design)/ipad-pro-11-select-wificell-spaceblack-202405.jpg",
+      alt: "iPad Pro in Space Black",
     },
     storages: [
       { id: "256", label: "256GB", priceKes: 159999 },
@@ -1878,8 +1890,20 @@ export const products: Product[] = [
       { id: "1tb", label: "1TB", priceKes: 229999 },
     ],
     colors: [
-      { id: "space-black", label: "Space Black", hex: "#1D1D1F" },
-      { id: "silver", label: "Silver", hex: "#E3E4E5" },
+      {
+        id: "space-black",
+        label: "Space Black",
+        hex: "#1D1D1F",
+        imageSrc:
+          "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Pro_11in_and_13in_M4_M5_(same_design)/ipad-pro-11-select-wificell-spaceblack-202405.jpg",
+      },
+      {
+        id: "silver",
+        label: "Silver",
+        hex: "#E3E4E5",
+        imageSrc:
+          "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Pro_11in_and_13in_M4_M5_(same_design)/ipad-pro-11-select-wificell-silver-202405.jpg",
+      },
     ],
     highlights: [
       { label: "Chip", value: "M-series" },

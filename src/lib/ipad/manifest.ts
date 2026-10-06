@@ -67,41 +67,55 @@ function pageFamily(model: IpadModel): "Pro" | "Air" | "mini" | "iPad" {
   return model.family;
 }
 
+function sizeToken(modelId: string): "11" | "13" | "" {
+  if (/13|12-9/.test(modelId)) return "13";
+  if (/11/.test(modelId)) return "11";
+  return "";
+}
+
 function productMap(modelId: string): Record<string, string> {
   const folder = PRODUCT_FOLDER[modelId];
   if (!folder) return {};
   const raw = (g.productsByFolder as Record<string, Record<string, unknown>>)[folder] || {};
   const out: Record<string, string> = {};
-  const want11 = /11/.test(modelId) || modelId.includes("mini") || modelId.startsWith("ipad-1") || modelId === "ipad-a16" || modelId === "ipad-8" || modelId === "ipad-9" || modelId === "ipad-10";
-  const want13 = /13|12-9/.test(modelId);
+  const size = sizeToken(modelId);
 
   for (const [slot, src] of Object.entries(raw)) {
     if (slot.startsWith("_") || typeof src !== "string") continue;
-    const path = src;
-    if (folder.includes("Pro") || folder.includes("Air")) {
-      if (want11 && /13in|ipad-pro-13|13-in/.test(path) && !/11/.test(path)) continue;
-      if (want13 && /11in|ipad-pro-11|11-in/.test(path) && !/13/.test(path)) continue;
+    // Prefer size-qualified slots for this model; keep unscoped (mini / swatch) as-is
+    const parts = slot.split(":");
+    if (parts.length === 3) {
+      const [, slotSize] = parts;
+      if (size && slotSize !== size) continue;
+      // Collapse product:11:blue → product:blue for lookup
+      out[`${parts[0]}:${parts[2]}`] = src;
+      out[slot] = src;
+      continue;
     }
-    out[slot] = path;
+    out[slot] = src;
   }
   return out;
 }
 
-export function productSrc(modelId: string, colourKey: string, kind: "product" | "box" | "swatch" = "product"): string | undefined {
+export function productSrc(
+  modelId: string,
+  colourKey: string,
+  kind: "product" | "box" | "swatch" = "product",
+): string | undefined {
   const map = productMap(modelId);
-  const direct = map[`${kind}:${colourKey}`];
-  if (direct) return direct;
-  // aliases
+  const size = sizeToken(modelId);
   const aliases: Record<string, string[]> = {
     "space-gray": ["space-gray", "spacegray"],
     "space-black": ["space-black", "spaceblack"],
   };
-  for (const a of aliases[colourKey] || [colourKey]) {
-    if (map[`${kind}:${a}`]) return map[`${kind}:${a}`];
+  const colourKeys = aliases[colourKey] || [colourKey];
+
+  for (const c of colourKeys) {
+    if (size && map[`${kind}:${size}:${c}`]) return map[`${kind}:${size}:${c}`];
+    if (map[`${kind}:${c}`]) return map[`${kind}:${c}`];
   }
-  // any colour of this kind
-  const any = Object.entries(map).find(([k]) => k.startsWith(`${kind}:`));
-  return any?.[1];
+  // Do NOT fall back to a different colour — that makes swatches look "stuck"
+  return undefined;
 }
 
 export function overviewSrc(modelId: string): string | undefined {

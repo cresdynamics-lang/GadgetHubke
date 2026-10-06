@@ -1,10 +1,12 @@
 {
-  "generatedAt": "2026-10-05T22:59:59.950Z",
+  "generatedAt": "2026-10-06T07:03:04.262Z",
   "productsByFolder": {
     "Compare_headers_and_swatches": {
       "_misc": [
         "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/Compare_headers_and_swatches/ipad-compare-header-air-202405.jpg",
-        "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/Compare_headers_and_swatches/ipad-compare-header-pro-202405.jpg"
+        "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/Compare_headers_and_swatches/ipad-compare-header-air-202405.webp",
+        "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/Compare_headers_and_swatches/ipad-compare-header-pro-202405.jpg",
+        "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/Compare_headers_and_swatches/ipad-compare-header-pro-202405.webp"
       ]
     },
     "iPad_Air_11in_and_13in_M2_M3_M4_(same_design)": {
@@ -14,24 +16,40 @@
       "swatch:starlight": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-finish-starlight-2024.jpg",
       "_gallery": [
         "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-model-unselect-gallery-1-202405.jpg",
+        "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-model-unselect-gallery-1-202405.webp",
         "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-model-unselect-gallery-2-202405.jpg",
+        "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-model-unselect-gallery-2-202405.webp",
         "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-model-unselect-gallery-3-202405.jpg",
-        "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-model-unselect-gallery-4-202405.jpg"
+        "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-model-unselect-gallery-3-202405.webp",
+        "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-model-unselect-gallery-4-202405.jpg",
+        "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-model-unselect-gallery-4-202405.webp"
       ],
-      "product:blue": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-select-13in-wifi-blue-202405.jpg",
-      "product:purple": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-select-13in-wifi-purple-202405.jpg",
-      "product:space-gray": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-select-13in-wifi-spacegray-202405.jpg",
-      "product:starlight": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-select-13in-wifi-starlight-202405.jpg",
-      "box:blue": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-witb-blue-13in-wifi-202405.jpg",
-      "box:purple": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-witb-purple-13in-wifi-202405.jpg",
-      "box:space-gray": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-witb-spacegray-13in-wifi-202405.jpg",
-      "box:starlight": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-witb-starlight-13in-wifi-202405.jpg"
+      "product:11:blue": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-select-11in-wifi-blue-202405.jpg",
+      "product:11:purple": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-select-11in-wifi-purple-202405.jpg",
+      "product:11:space-gray": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-select-11in-wifi-spacegray-202405.jpg",
+      "product:11:starlight": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-select-11in-wifi-starlight-202405.jpg",
+      "product:13:blue": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-select-13in-wifi-blue-202405.jpg",
+      "product:13:purple": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-select-13in-wifi-purple-202405.jpg",
+      "product:13:space-gray": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-select-13in-wifi-spacegray-202405.jpg",
+      "product:13:starlight": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-select-13in-wifi-starlight-202405.jpg",
+      "box:11:blue": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-witb-blue-11in-wifi-202405.jpg",
+      "box:13:blue": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-witb-blue-13in-wifi-202405.jpg",
+      "box:11:purple": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-witb-purple-11in-wifi-202405.jpg",
+      "box:13:purple": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-witb-purple-13in-wifi-202405.jpg",
+      "box:11:space-gray": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-witb-spacegray-11in-wifi-202405.jpg",
+      "box:13:space-gray": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-witb-spacegray-13in-wifi-202405.jpg",
+      "box:11:starlight": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-witb-starlight-11in-wifi-202405.jpg",
+      "box:13:starlight": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-witb-starlight-13in-wifi-202405.jpg"
     },
     "iPad_Pro_11in_and_13in_M4_M5_(same_design)": {
-      "product:silver": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Pro_11in_and_13in_M4_M5_(same_design)/ipad-pro-13-select-wificell-silver-202405.jpg",
-      "product:space-black": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Pro_11in_and_13in_M4_M5_(same_design)/ipad-pro-13-select-wificell-spaceblack-202405.jpg",
-      "box:silver": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Pro_11in_and_13in_M4_M5_(same_design)/ipad-pro-13-witb-silver-wifi-202405.jpg",
-      "box:space-black": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Pro_11in_and_13in_M4_M5_(same_design)/ipad-pro-13-witb-spaceblack-wifi-202405.jpg"
+      "product:11:silver": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Pro_11in_and_13in_M4_M5_(same_design)/ipad-pro-11-select-wificell-silver-202405.jpg",
+      "product:11:space-black": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Pro_11in_and_13in_M4_M5_(same_design)/ipad-pro-11-select-wificell-spaceblack-202405.jpg",
+      "box:11:silver": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Pro_11in_and_13in_M4_M5_(same_design)/ipad-pro-11-witb-silver-wifi-202405.jpg",
+      "box:11:space-black": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Pro_11in_and_13in_M4_M5_(same_design)/ipad-pro-11-witb-spaceblack-wifi-202405.jpg",
+      "product:13:silver": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Pro_11in_and_13in_M4_M5_(same_design)/ipad-pro-13-select-wificell-silver-202405.jpg",
+      "product:13:space-black": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Pro_11in_and_13in_M4_M5_(same_design)/ipad-pro-13-select-wificell-spaceblack-202405.jpg",
+      "box:13:silver": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Pro_11in_and_13in_M4_M5_(same_design)/ipad-pro-13-witb-silver-wifi-202405.jpg",
+      "box:13:space-black": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Pro_11in_and_13in_M4_M5_(same_design)/ipad-pro-13-witb-spaceblack-wifi-202405.jpg"
     },
     "iPad_mini_A17_Pro_2024": {
       "product:blue": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_mini_A17_Pro_2024/ipad-mini-select-wifi-blue-202410.jpg",
@@ -50,36 +68,39 @@
       "product:yellow": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_standard_10th_gen_and_A16_2022-2025/ipad-2022-hero-yellow-wifi-select.jpg",
       "_gallery": [
         "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_standard_10th_gen_and_A16_2022-2025/ipad-model-unselect-gallery-1-202503.jpg",
+        "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_standard_10th_gen_and_A16_2022-2025/ipad-model-unselect-gallery-1-202503.webp",
         "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_standard_10th_gen_and_A16_2022-2025/ipad-model-unselect-gallery-2-202503.jpg",
-        "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_standard_10th_gen_and_A16_2022-2025/ipad-model-unselect-gallery-3-202503.jpg"
+        "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_standard_10th_gen_and_A16_2022-2025/ipad-model-unselect-gallery-2-202503.webp",
+        "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_standard_10th_gen_and_A16_2022-2025/ipad-model-unselect-gallery-3-202503.jpg",
+        "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_standard_10th_gen_and_A16_2022-2025/ipad-model-unselect-gallery-3-202503.webp"
       ]
     }
   },
   "overviews": {
-    "2021-ipad-pro-11-colors": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/2021-ipad-pro-11-colors.png",
-    "2021-ipad-pro-12-9-colors": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/2021-ipad-pro-12-9-colors.png",
-    "fall-2022-10-gen-ipad": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/fall-2022-10-gen-ipad.png",
-    "fall-2022-11-inch-4gen-ipad-pro": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/fall-2022-11-inch-4gen-ipad-pro.png",
-    "fall-2022-12-9-inch-6gen-ipad-pro": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/fall-2022-12-9-inch-6gen-ipad-pro.png",
-    "fall-2025-ipad-pro-m5-11in": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/fall-2025-ipad-pro-m5-11in.png",
-    "fall-2025-ipad-pro-m5-13in": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/fall-2025-ipad-pro-m5-13in.png",
-    "ios13-4-ipad-pro-4gen-11-in": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/ios13-4-ipad-pro-4gen-11-in.png",
-    "ios13-4-ipad-pro-4gen-12-9-in": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/ios13-4-ipad-pro-4gen-12-9-in.png",
-    "ipad-2021-colors": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/ipad-2021-colors.png",
-    "ipad-8th-gen-colors": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/ipad-8th-gen-colors.png",
-    "ipad-air-4th-gen-colors": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/ipad-air-4th-gen-colors.png",
-    "ipad-air-5th-gen-colors": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/ipad-air-5th-gen-colors.png",
-    "ipad-mini-2021-colors": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/ipad-mini-2021-colors.png",
-    "ipad-mini-2024-colors": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/ipad-mini-2024-colors.png",
-    "spring-2024-1": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2024-1.png",
-    "spring-2024-2": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2024-2.png",
-    "spring-2024-3": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2024-3.png",
-    "spring-2024-4": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2024-4.png",
-    "spring-2025-ipad-air-11": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2025-ipad-air-11.png",
-    "spring-2025-ipad-air-13": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2025-ipad-air-13.png",
-    "spring-2025-ipad": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2025-ipad.png",
-    "spring-2026-ipad-air-11": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2026-ipad-air-11.png",
-    "spring-2026-ipad-air-13": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2026-ipad-air-13.png"
+    "2021-ipad-pro-11-colors": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/2021-ipad-pro-11-colors.webp",
+    "2021-ipad-pro-12-9-colors": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/2021-ipad-pro-12-9-colors.webp",
+    "fall-2022-10-gen-ipad": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/fall-2022-10-gen-ipad.webp",
+    "fall-2022-11-inch-4gen-ipad-pro": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/fall-2022-11-inch-4gen-ipad-pro.webp",
+    "fall-2022-12-9-inch-6gen-ipad-pro": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/fall-2022-12-9-inch-6gen-ipad-pro.webp",
+    "fall-2025-ipad-pro-m5-11in": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/fall-2025-ipad-pro-m5-11in.webp",
+    "fall-2025-ipad-pro-m5-13in": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/fall-2025-ipad-pro-m5-13in.webp",
+    "ios13-4-ipad-pro-4gen-11-in": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/ios13-4-ipad-pro-4gen-11-in.webp",
+    "ios13-4-ipad-pro-4gen-12-9-in": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/ios13-4-ipad-pro-4gen-12-9-in.webp",
+    "ipad-2021-colors": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/ipad-2021-colors.webp",
+    "ipad-8th-gen-colors": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/ipad-8th-gen-colors.webp",
+    "ipad-air-4th-gen-colors": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/ipad-air-4th-gen-colors.webp",
+    "ipad-air-5th-gen-colors": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/ipad-air-5th-gen-colors.webp",
+    "ipad-mini-2021-colors": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/ipad-mini-2021-colors.webp",
+    "ipad-mini-2024-colors": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/ipad-mini-2024-colors.webp",
+    "spring-2024-1": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2024-1.webp",
+    "spring-2024-2": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2024-2.webp",
+    "spring-2024-3": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2024-3.webp",
+    "spring-2024-4": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2024-4.webp",
+    "spring-2025-ipad-air-11": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2025-ipad-air-11.webp",
+    "spring-2025-ipad-air-13": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2025-ipad-air-13.webp",
+    "spring-2025-ipad": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2025-ipad.webp",
+    "spring-2026-ipad-air-11": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2026-ipad-air-11.webp",
+    "spring-2026-ipad-air-13": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2026-ipad-air-13.webp"
   },
   "pages": {
     "Pro": {
@@ -466,76 +487,6 @@
       "hero_right": {
         "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/ipados/hero_right__bxdyjv0l5v42_large_2x.png",
         "section": "ipados",
-        "family": "Pro"
-      },
-      "app_wall": {
-        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/ipados/modal/app_wall__d6s47vtqvf6u_large_2x.jpg",
-        "section": "ipados",
-        "family": "Pro"
-      },
-      "final_cut_pro": {
-        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/ipados/modal/final_cut_pro__frk6u8k1un22_large_2x.jpg",
-        "section": "ipados",
-        "family": "Pro"
-      },
-      "logic_pro": {
-        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/ipados/modal/logic_pro__fcf277fjaju6_large_2x.jpg",
-        "section": "ipados",
-        "family": "Pro"
-      },
-      "touch": {
-        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/ipados/modal/touch__fujar27qh9iu_large_2x.jpg",
-        "section": "ipados",
-        "family": "Pro"
-      },
-      "pro_apps": {
-        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/ipados/pro_apps__ooav5rco79ui_large_2x.jpg",
-        "section": "ipados",
-        "family": "Pro"
-      },
-      "productivity": {
-        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/ipados/productivity__fglytbpvc9ua_large_2x.jpg",
-        "section": "ipados",
-        "family": "Pro"
-      },
-      "magic_keyboard_endframe": {
-        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/keyboard/magic_keyboard_endframe__8k6knt9mfwi2_large_2x.jpg",
-        "section": "keyboard",
-        "family": "Pro"
-      },
-      "magic_keyboard_startframe": {
-        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/keyboard/magic_keyboard_startframe__iskz13sllbiq_large_2x.jpg",
-        "section": "keyboard",
-        "family": "Pro"
-      },
-      "magic_keyboard_static": {
-        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/keyboard/magic_keyboard_static__f180tdgvebqm_large_2x.jpg",
-        "section": "keyboard",
-        "family": "Pro"
-      },
-      "function_row": {
-        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/keyboard/modal/function_row__7cnfuwlkitey_large_2x.jpg",
-        "section": "keyboard",
-        "family": "Pro"
-      },
-      "profile": {
-        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/keyboard/modal/profile__fwh5fb02a4ia_large_2x.jpg",
-        "section": "keyboard",
-        "family": "Pro"
-      },
-      "trackpad": {
-        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/keyboard/modal/trackpad__fwrqj2lharqm_large_2x.jpg",
-        "section": "keyboard",
-        "family": "Pro"
-      },
-      "trackpad_endframe": {
-        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/keyboard/modal/trackpad_endframe__gk2254nk4wa6_large_2x.jpg",
-        "section": "keyboard",
-        "family": "Pro"
-      },
-      "trackpad_startframe": {
-        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/keyboard/modal/trackpad_startframe__chx9uhx9m1w2_large_2x.jpg",
-        "section": "keyboard",
         "family": "Pro"
       }
     },

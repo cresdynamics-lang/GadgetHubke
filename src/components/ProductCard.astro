@@ -1,9 +1,11 @@
 ---
 /**
- * Blueprint product card: stage image, New/Pre-order tag, from price, Bag + WhatsApp.
+ * Blueprint product card: stage image, New|XUK price toggle, from price, Bag + WhatsApp.
  */
 import Price from "./Price.astro";
+import StockChannelToggle from "./StockChannelToggle.astro";
 import { whatsappUrl } from "../lib/site";
+import { xukFromNew } from "../lib/stock-channel";
 
 interface Props {
   name: string;
@@ -16,10 +18,19 @@ interface Props {
 }
 
 const { name, href, priceKes, image, blurb, badge, colors = [] } = Astro.props;
+const priceXuk = xukFromNew(priceKes);
+const waBase = whatsappUrl();
 const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${name}.`);
 ---
 
-<article class="pcard" data-pcard>
+<article
+  class="pcard"
+  data-pcard
+  data-channel="new"
+  data-price-new={priceKes}
+  data-price-xuk={priceXuk}
+  data-wa-base={waBase}
+>
   {
     badge ? (
       <span class:list={["badge", "pcard__badge", { "pcard__badge--soft": badge !== "New" }]}>
@@ -42,6 +53,7 @@ const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${name}.`);
     <h3 class="pcard__name">
       <a href={href}>{name}</a>
     </h3>
+    <StockChannelToggle class="pcard__channel" />
     {blurb ? <p class="pcard__blurb">{blurb}</p> : null}
     {
       colors.length > 0 ? (
@@ -60,10 +72,10 @@ const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${name}.`);
         </div>
       ) : null
     }
-    <p class="pcard__price"><Price kes={priceKes} prefix="From" /></p>
+    <p class="pcard__price" data-pcard-price><Price kes={priceKes} prefix="From" /></p>
     <div class="pcard__actions">
       <a class="btn btn--primary btn--sm" href={href}>Add to Bag</a>
-      <a class="btn btn--secondary btn--sm" href={wa} target="_blank" rel="noopener noreferrer">
+      <a class="btn btn--whatsapp btn--sm" href={wa} target="_blank" rel="noopener noreferrer" data-pcard-wa>
         WhatsApp
       </a>
     </div>
@@ -73,6 +85,39 @@ const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${name}.`);
 <script>
   document.querySelectorAll("[data-pcard]").forEach((card) => {
     const img = card.querySelector("[data-pcard-img]") as HTMLImageElement | null;
+    const priceHost = card.querySelector("[data-pcard-price] .price__amount");
+    const wa = card.querySelector("[data-pcard-wa]");
+    const name = card.querySelector(".pcard__name a")?.textContent?.trim() || "this product";
+
+    function syncChannelPrice() {
+      const ch = card.getAttribute("data-channel") || "new";
+      const newKes = Number(card.getAttribute("data-price-new") || 0);
+      const xukKes = Number(card.getAttribute("data-price-xuk") || newKes);
+      const kes = ch === "xuk" ? xukKes : newKes;
+      const label = ch === "xuk" ? "XUK" : "New";
+      if (priceHost) priceHost.textContent = `KSh ${Math.round(kes).toLocaleString("en-KE")}`;
+      card.querySelectorAll("[data-stock-channel] [data-channel]").forEach((b) => {
+        const on = b.getAttribute("data-channel") === ch;
+        b.classList.toggle("is-active", on);
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+      if (wa instanceof HTMLAnchorElement) {
+        const base = card.getAttribute("data-wa-base") || "https://wa.me/";
+        const msg = `Hello Gadget Hub, I'm interested in the ${name} (${label}). Sample from KSh ${Math.round(kes).toLocaleString("en-KE")}.`;
+        const sep = base.includes("?") ? "&" : "?";
+        wa.href = `${base}${sep}text=${encodeURIComponent(msg)}`;
+      }
+    }
+
+    card.querySelectorAll("[data-stock-channel] [data-channel]").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        card.setAttribute("data-channel", btn.getAttribute("data-channel") || "new");
+        syncChannelPrice();
+      });
+    });
+
     card.querySelectorAll("[data-pcard-swatch]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const src = btn.getAttribute("data-src");
@@ -130,6 +175,14 @@ const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${name}.`);
 
   .pcard__name a {
     text-decoration: none;
+  }
+
+  .pcard__channel {
+    margin: 0.2rem 0 0.35rem;
+  }
+
+  .pcard__channel :global(.stock-channel__hint) {
+    display: none;
   }
 
   .pcard__blurb {

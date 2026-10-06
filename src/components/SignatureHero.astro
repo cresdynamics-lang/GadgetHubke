@@ -18,17 +18,17 @@ interface Props {
 }
 
 const {
-  eyebrow = "New · iPhone 18 Pro & Pro Max",
-  title = "The new iPhone.",
-  lede = "Done properly. Genuine, sealed and set up for you. Pay in full or Lipa Mdogo Mdogo.",
-  primaryHref = "/shop/iphone/iphone-pro",
-  primaryLabel = "Shop iPhone 18 Pro",
+  eyebrow = "Apple · Nairobi",
+  title = "The full lineup.",
+  lede = "iPhone, Mac, iPad, Watch, AirPods, and more — genuine, sealed, set up for you. Pay in full or Lipa Mdogo Mdogo.",
+  primaryHref = "/shop",
+  primaryLabel = "Shop Apple",
   secondaryHref = "/lipa-mdogo-mdogo",
   secondaryLabel = "See Lipa Mdogo Mdogo",
   phones,
 } = Astro.props;
 
-const wa = whatsappUrl("Hello Gadget Hub, I'm interested in the new iPhone.");
+const wa = whatsappUrl("Hello Gadget Hub, I'd like to shop Apple products.");
 ---
 
 <section class="sig-hero" data-sig-hero aria-labelledby="sig-hero-title">
@@ -65,7 +65,7 @@ const wa = whatsappUrl("Hello Gadget Hub, I'm interested in the new iPhone.");
     <div class="sig-hero__actions">
       <a class="btn btn--primary" href={primaryHref}>{primaryLabel}</a>
       <a class="btn btn--secondary" href={secondaryHref}>{secondaryLabel}</a>
-      <a class="btn btn--secondary" href={wa} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+      <a class="btn btn--whatsapp" href={wa} target="_blank" rel="noopener noreferrer">WhatsApp</a>
     </div>
   </div>
 </section>

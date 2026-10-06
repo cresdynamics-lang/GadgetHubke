@@ -3,6 +3,8 @@
  * Never returns a broken path; falls back to overview then placeholder.
  */
 
+import fs from "node:fs";
+import path from "node:path";
 import {
   productCases,
   productBands,
@@ -26,8 +28,10 @@ export type ResolvedWatchImage = {
 };
 
 function webpSibling(src: string): string | undefined {
-  if (/\.webp$/i.test(src)) return src;
-  return src.replace(/\.(jpe?g|png)$/i, ".webp");
+  if (!src || /\.webp$/i.test(src)) return src || undefined;
+  const webp = src.replace(/\.(jpe?g|png)$/i, ".webp");
+  const disk = path.join(process.cwd(), "public", webp.replace(/^\//, ""));
+  return fs.existsSync(disk) ? webp : undefined;
 }
 
 function widthForKind(kind: string): number {

@@ -128,14 +128,21 @@ function buildProducts() {
       continue;
     }
 
-    const slotKey = `${kind}:${colour}`;
+    // Size-qualify product/box so 11″ and 13″ don't overwrite each other
+    let size = "";
+    if (/select-11in|ipad-pro-11|ipad-air-select-11|11in-wifi|11in-cell/i.test(base)) size = "11";
+    else if (/select-13in|ipad-pro-13|ipad-air-select-13|13in-wifi|13in-cell|witb-.*-13in/i.test(base))
+      size = "13";
+
+    const slotKey = size ? `${kind}:${size}:${colour}` : `${kind}:${colour}`;
     const isCell = /cell|wificell/i.test(base);
     const isNano = /nano/i.test(base);
-    // Prefer wifi (non-cell) for product; prefer non-nano for default box
+    // Prefer wifi (non-cell) for product; prefer non-nano for default box; prefer .jpg over .webp
     const prev = byFolder[folder][slotKey];
     if (typeof prev === "string") {
       if (kind === "product" && isCell && !/cell|wificell/i.test(prev)) continue;
       if (kind === "box" && isNano && !/nano/i.test(prev)) continue;
+      if (/\.webp$/i.test(base) && /\.jpe?g$/i.test(prev)) continue;
     }
     byFolder[folder][slotKey] = toPublic(f);
   }

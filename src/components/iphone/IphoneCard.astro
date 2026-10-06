@@ -1,8 +1,9 @@
 ---
 /**
- * Shop card for iPhone 11–16 catalog.
+ * Shop card for iPhone 11–16 catalog. New | XUK toggles sample from-price.
  */
 import ProductStage from "./ProductStage.astro";
+import StockChannelToggle from "../StockChannelToggle.astro";
 import {
   type IphoneModel,
   getImage,
@@ -20,6 +21,7 @@ import {
   colourLabel,
 } from "../../lib/iphone";
 import { iphoneConfig } from "../../lib/iphone/config";
+import { xukFromNew } from "../../lib/stock-channel";
 
 interface Props {
   model: IphoneModel;
@@ -32,6 +34,7 @@ const img = getImage(model.id, colour, 1, model.name);
 const colours = availableColours(model.id);
 const overviewOnly = isOverviewOnly(model.id);
 const price = storagePrices(model.basePriceKes, model.storage)[0];
+const priceXuk = xukFromNew(price.kes);
 const lipa = lipaMonthly(price.kes);
 const href = `/iphone/${model.id}`;
 const tag = isLatestTag(model) ? "Latest" : isValueTag(model) ? "Value" : null;
@@ -42,7 +45,19 @@ const colourPayload = colours.map((key) => {
 });
 ---
 
-<article class="icard" data-icard data-model={model.id} data-family={model.family} data-tier={model.tier} data-price={price.kes} data-battery={model.batteryVideoHours} data-size={model.displayInches}>
+<article
+  class="icard"
+  data-icard
+  data-model={model.id}
+  data-family={model.family}
+  data-tier={model.tier}
+  data-price={price.kes}
+  data-price-new={price.kes}
+  data-price-xuk={priceXuk}
+  data-channel="new"
+  data-battery={model.batteryVideoHours}
+  data-size={model.displayInches}
+>
   {
     compare ? (
       <label class="icard__compare">
@@ -58,6 +73,7 @@ const colourPayload = colours.map((key) => {
   </a>
   <div class="icard__body">
     <h3 class="icard__name"><a href={href}>{model.name}</a></h3>
+    <StockChannelToggle class="icard__channel" />
     <p class="icard__sub">{modelSubline(model)}</p>
     {
       overviewOnly ? (
@@ -80,15 +96,24 @@ const colourPayload = colours.map((key) => {
       )
     }
     <p class="icard__price">
-      <span class="icard__from">From {formatKes(price.kes)}</span>
+      <span class="icard__from" data-icard-price>From {formatKes(price.kes)}</span>
       <span class="icard__sample">Sample price</span>
     </p>
-    <p class="icard__lipa">
+    <p class="icard__lipa" data-icard-lipa>
       or {formatKes(lipa.monthlyKes)} a month for {lipa.months} months after a {iphoneConfig.lipa.depositDefaultPct}% deposit
     </p>
     <div class="icard__actions">
       <a class="btn btn--primary btn--sm" href={href}>View</a>
-      <button type="button" class="btn btn--secondary btn--sm" data-add-bag={model.id} data-name={model.name} data-colour={colour ?? ""} data-storage={model.storage[0]} data-kes={price.kes} data-image={img.src}>
+      <button
+        type="button"
+        class="btn btn--secondary btn--sm"
+        data-add-bag={model.id}
+        data-name={model.name}
+        data-colour={colour ?? ""}
+        data-storage={model.storage[0]}
+        data-kes={price.kes}
+        data-image={img.src}
+      >
         Add to bag
       </button>
     </div>
@@ -99,6 +124,46 @@ const colourPayload = colours.map((key) => {
   document.querySelectorAll("[data-icard]").forEach((card) => {
     const img = card.querySelector(".pstage__img") as HTMLImageElement | null;
     const webpSource = card.querySelector(".pstage source") as HTMLSourceElement | null;
+    const priceEl = card.querySelector("[data-icard-price]");
+    const lipaEl = card.querySelector("[data-icard-lipa]");
+    const bag = card.querySelector("[data-add-bag]");
+    const depositPct = 40;
+    const months = 6;
+
+    function channelKes() {
+      const ch = card.getAttribute("data-channel") || "new";
+      const newKes = Number(card.getAttribute("data-price-new") || card.getAttribute("data-price") || 0);
+      const xukKes = Number(card.getAttribute("data-price-xuk") || newKes);
+      return ch === "xuk" ? xukKes : newKes;
+    }
+
+    function syncChannelPrice() {
+      const kes = channelKes();
+      const ch = card.getAttribute("data-channel") || "new";
+      if (priceEl) priceEl.textContent = `From KES ${kes.toLocaleString("en-KE")}`;
+      if (lipaEl) {
+        const deposit = Math.round((kes * depositPct) / 100);
+        const monthly = Math.round((kes - deposit) / months);
+        lipaEl.textContent = `or KES ${monthly.toLocaleString("en-KE")} a month for ${months} months after a ${depositPct}% deposit`;
+      }
+      if (bag) bag.setAttribute("data-kes", String(kes));
+      card.setAttribute("data-price", String(kes));
+      card.querySelectorAll("[data-stock-channel] [data-channel]").forEach((b) => {
+        const on = b.getAttribute("data-channel") === ch;
+        b.classList.toggle("is-active", on);
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+    }
+
+    card.querySelectorAll("[data-stock-channel] [data-channel]").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        card.setAttribute("data-channel", btn.getAttribute("data-channel") || "new");
+        syncChannelPrice();
+      });
+    });
+
     card.querySelectorAll("[data-icard-swatch]").forEach((btn) => {
       btn.addEventListener("click", (e) => {
         e.preventDefault();
@@ -120,7 +185,6 @@ const colourPayload = colours.map((key) => {
         }
         card.querySelectorAll("[data-icard-swatch]").forEach((b) => b.classList.remove("is-active"));
         btn.classList.add("is-active");
-        const bag = card.querySelector("[data-add-bag]");
         if (bag) {
           bag.setAttribute("data-colour", btn.getAttribute("aria-label") || "");
           bag.setAttribute("data-image", src || "");
@@ -128,19 +192,21 @@ const colourPayload = colours.map((key) => {
       });
     });
 
-    card.querySelector("[data-add-bag]")?.addEventListener("click", (e) => {
+    bag?.addEventListener("click", (e) => {
       e.preventDefault();
-      const btn = e.currentTarget;
-      if (!(btn instanceof HTMLElement)) return;
+      if (!(bag instanceof HTMLElement)) return;
+      const ch = card.getAttribute("data-channel") || "new";
+      const channelLabel = ch === "xuk" ? "XUK" : "New";
       window.dispatchEvent(
         new CustomEvent("gh:bag-add", {
           detail: {
-            id: btn.getAttribute("data-add-bag"),
-            name: btn.getAttribute("data-name"),
-            colour: btn.getAttribute("data-colour"),
-            storage: btn.getAttribute("data-storage"),
-            kes: Number(btn.getAttribute("data-kes") || 0),
-            image: btn.getAttribute("data-image"),
+            id: `${bag.getAttribute("data-add-bag")}-${ch}`,
+            name: bag.getAttribute("data-name"),
+            colour: bag.getAttribute("data-colour"),
+            storage: `${bag.getAttribute("data-storage")} · ${channelLabel}`,
+            kes: Number(bag.getAttribute("data-kes") || 0),
+            image: bag.getAttribute("data-image"),
+            channel: channelLabel,
           },
         }),
       );
@@ -232,6 +298,14 @@ const colourPayload = colours.map((key) => {
   .icard__name a {
     color: inherit;
     text-decoration: none;
+  }
+
+  .icard__channel {
+    margin: 0.15rem 0 0.1rem;
+  }
+
+  .icard__channel :global(.stock-channel__hint) {
+    display: none;
   }
 
   .icard__sub {

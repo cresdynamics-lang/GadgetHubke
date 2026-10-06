@@ -88,7 +88,7 @@ const waBase = whatsappUrl();
       li.innerHTML = `
         <div>
           <a href="${line.href || "/shop"}"><strong>${line.name}</strong></a>
-          <p>${line.storage} · ${line.color}</p>
+          <p>${line.channel ? `${line.channel} · ` : ""}${line.storage} · ${line.color}</p>
         </div>
         <div class="cart__item-meta">
           <label>Qty <input type="number" min="1" max="9" value="${line.qty}" data-qty="${line.id}" /></label>
@@ -106,7 +106,7 @@ const waBase = whatsappUrl();
     if (checkout instanceof HTMLAnchorElement) {
       const lines = cart.map(
         (l) =>
-          `• ${l.name} - ${l.storage}, ${l.color} ×${l.qty} (${formatKes(l.priceKes * l.qty)})`,
+          `• ${l.name} - ${l.channel ? `${l.channel}, ` : ""}${l.storage}, ${l.color} ×${l.qty} (${formatKes(l.priceKes * l.qty)})`,
       );
       const msg = ["Hi GadgetHub - Cart checkout", "", ...lines, "", `Total: ${formatKes(total)}`].join(
         "\n",

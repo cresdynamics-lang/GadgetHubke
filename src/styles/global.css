@@ -196,6 +196,17 @@ button {
   border-color: var(--color-grey-400);
 }
 
+.btn--whatsapp {
+  background: var(--color-whatsapp);
+  color: #fff;
+  border-color: transparent;
+}
+
+.btn--whatsapp:hover {
+  background: #1ebe57;
+  color: #fff;
+}
+
 .price {
   font-weight: var(--font-weight-semibold);
   color: var(--color-price);

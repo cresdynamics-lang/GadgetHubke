@@ -1,6 +1,6 @@
 ---
 /**
- * Black launch band - pre-order / event product (Duo).
+ * Dark feature band — in-stock highlight (e.g. iPhone Duo).
  */
 interface Props {
   badge?: string;
@@ -10,36 +10,59 @@ interface Props {
   learnHref?: string;
   imageSrc: string;
   imageAlt: string;
-  /** ISO date for countdown, e.g. 2026-10-23T00:00:00+03:00 */
+  /** Optional ISO date — only shows countdown when set */
   launchAt?: string;
   ctaLabel?: string;
 }
 
 const {
-  badge = "Just announced",
+  badge = "In stock",
   title,
   body,
   href,
   learnHref,
   imageSrc,
   imageAlt,
-  launchAt = "2026-10-23T00:00:00+03:00",
-  ctaLabel = "Reserve yours",
+  launchAt,
+  ctaLabel = "Shop now",
 } = Astro.props;
+
+const showCountdown = Boolean(launchAt);
 ---
 
-<section class="launch fade-up" data-fade-up data-launch data-launch-at={launchAt}>
+<section
+  class="launch fade-up"
+  data-fade-up
+  data-launch
+  data-launch-at={launchAt || undefined}
+>
   <div class="launch__inner container">
     <div class="launch__copy">
       <p class="launch__badge">{badge}</p>
       <h2>{title}</h2>
       <p class="launch__body">{body}</p>
-      <div class="launch__countdown" data-countdown aria-live="polite">
-        <div><span data-d>00</span><small>Days</small></div>
-        <div><span data-h>00</span><small>Hrs</small></div>
-        <div><span data-m>00</span><small>Min</small></div>
-        <div><span data-s>00</span><small>Sec</small></div>
-      </div>
+      {
+        showCountdown ? (
+          <div class="launch__countdown" data-countdown aria-live="polite">
+            <div>
+              <span data-d>00</span>
+              <small>Days</small>
+            </div>
+            <div>
+              <span data-h>00</span>
+              <small>Hrs</small>
+            </div>
+            <div>
+              <span data-m>00</span>
+              <small>Min</small>
+            </div>
+            <div>
+              <span data-s>00</span>
+              <small>Sec</small>
+            </div>
+          </div>
+        ) : null
+      }
       <div class="launch__actions">
         <a class="btn btn--inverse" href={href}>{ctaLabel}</a>
         {learnHref ? <a class="btn btn--ghost-inverse" href={learnHref}>Learn more</a> : null}
@@ -55,30 +78,31 @@ const {
   const root = document.querySelector("[data-launch]");
   if (root) {
     const at = root.getAttribute("data-launch-at");
-    const target = at ? new Date(at).getTime() : NaN;
-    const d = root.querySelector("[data-d]");
-    const h = root.querySelector("[data-h]");
-    const m = root.querySelector("[data-m]");
-    const s = root.querySelector("[data-s]");
+    if (at) {
+      const target = new Date(at).getTime();
+      const d = root.querySelector("[data-d]");
+      const h = root.querySelector("[data-h]");
+      const m = root.querySelector("[data-m]");
+      const s = root.querySelector("[data-s]");
 
-    function tick() {
-      if (!d || !h || !m || !s || Number.isNaN(target)) return;
-      const diff = Math.max(0, target - Date.now());
-      const days = Math.floor(diff / 86400000);
-      const hours = Math.floor((diff % 86400000) / 3600000);
-      const mins = Math.floor((diff % 3600000) / 60000);
-      const secs = Math.floor((diff % 60000) / 1000);
-      d.textContent = String(days).padStart(2, "0");
-      h.textContent = String(hours).padStart(2, "0");
-      m.textContent = String(mins).padStart(2, "0");
-      s.textContent = String(secs).padStart(2, "0");
+      function tick() {
+        if (!d || !h || !m || !s || Number.isNaN(target)) return;
+        const diff = Math.max(0, target - Date.now());
+        const days = Math.floor(diff / 86400000);
+        const hours = Math.floor((diff % 86400000) / 3600000);
+        const mins = Math.floor((diff % 3600000) / 60000);
+        const secs = Math.floor((diff % 60000) / 1000);
+        d.textContent = String(days).padStart(2, "0");
+        h.textContent = String(hours).padStart(2, "0");
+        m.textContent = String(mins).padStart(2, "0");
+        s.textContent = String(secs).padStart(2, "0");
+      }
+
+      tick();
+      window.setInterval(tick, 1000);
     }
-
-    tick();
-    window.setInterval(tick, 1000);
   }
 
-  // fade-up observer shared
   document.querySelectorAll("[data-fade-up]").forEach((el) => {
     if (!("IntersectionObserver" in window)) {
       el.classList.add("is-visible");

@@ -26,8 +26,7 @@ export const popularSearches = [
 export function buildSearchIndex(): SearchHit[] {
   return products.map((p) => {
     const priceKes = p.storage?.[0]?.priceKes ?? 0;
-    let stock: SearchHit["stock"] = "In stock";
-    if (p.id.includes("duo")) stock = "Pre-order";
+    const stock: SearchHit["stock"] = "In stock";
     return {
       id: p.id,
       name: p.name,

@@ -1,7 +1,10 @@
 /**
  * Central Mac image resolver. Every Mac page uses getMacImage() only.
+ * Product select shots under Gadget_Hub_MacBook_1_…/01_Product_photos are .jpg only (no .jpeg / .webp siblings).
  */
 
+import fs from "node:fs";
+import path from "node:path";
 import { colourLabel } from "./colours";
 import {
   overviewSrc,
@@ -24,10 +27,13 @@ export type ResolvedMacImage = {
   width: number;
 };
 
+/** Only advertise WebP when the sibling file actually exists on disk. */
 function webpSibling(src: string): string | undefined {
   if (!src || src === MAC_PLACEHOLDER) return undefined;
   if (/\.webp$/i.test(src)) return src;
-  return src.replace(/\.(jpe?g|png)$/i, ".webp");
+  const webp = src.replace(/\.(jpe?g|png)$/i, ".webp");
+  const disk = path.join(process.cwd(), "public", webp.replace(/^\//, ""));
+  return fs.existsSync(disk) ? webp : undefined;
 }
 
 function widthForKind(kind: string): number {

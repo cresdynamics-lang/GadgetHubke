@@ -1,12 +1,14 @@
 ---
 /**
  * Product Overview - storage + color configurator, stories, buy module + sticky bar.
- * No condition field (new devices only).
+ * New | XUK channel switches sample price (sealed vs ex-UK import).
  */
 import BaseLayout from "./BaseLayout.astro";
 import ProductExperience from "../components/ProductExperience.astro";
+import StockChannelToggle from "../components/StockChannelToggle.astro";
 import type { Product } from "../lib/products";
 import { site, whatsappUrl } from "../lib/site";
+import { xukFromNew } from "../lib/stock-channel";
 
 interface Props {
   product: Product;
@@ -75,13 +77,14 @@ const lipaFrom =
         }
       </div>
 
-      <div class="pdp__buy" id="buy" data-configurator data-lipa-months={lipaMonths || ""}>
+      <div class="pdp__buy" id="buy" data-configurator data-lipa-months={lipaMonths || ""} data-channel="new">
         <nav class="pdp__crumb" aria-label="Breadcrumb">
           <a href="/shop">Shop</a>
           <span aria-hidden="true">/</span>
           <a href={product.categoryHref}>{product.categoryLabel}</a>
         </nav>
         <h1>{product.name}</h1>
+        <StockChannelToggle />
         <p class="pdp__tagline">{product.tagline}</p>
 
         <div class="pdp__pricing">
@@ -118,6 +121,8 @@ const lipaFrom =
                     name="storage"
                     value={s.id}
                     data-price-kes={s.priceKes}
+                    data-price-new={s.priceKes}
+                    data-price-xuk={xukFromNew(s.priceKes)}
                     data-label={s.label}
                     checked={i === 0}
                   />
@@ -139,6 +144,8 @@ const lipaFrom =
                     name="color"
                     value={c.id}
                     data-label={c.label}
+                    data-image-src={c.imageSrc || ""}
+                    data-image-alt={`${product.name} in ${c.label}`}
                     checked={i === 0}
                   />
                   <span
@@ -313,17 +320,22 @@ const lipaFrom =
 
   const CART_KEY = "gh-cart";
   const lipaMonths = Number(root.getAttribute("data-lipa-months") || 0);
+  let channel = root.getAttribute("data-channel") || "new";
 
   function selected() {
     const storage = root.querySelector('input[name="storage"]:checked');
     const color = root.querySelector('input[name="color"]:checked');
-    const priceKes = Number(storage?.getAttribute("data-price-kes") || 0);
+    const newKes = Number(storage?.getAttribute("data-price-new") || storage?.getAttribute("data-price-kes") || 0);
+    const xukKes = Number(storage?.getAttribute("data-price-xuk") || newKes);
+    const priceKes = channel === "xuk" ? xukKes : newKes;
     return {
       storageId: storage?.value || "",
       storageLabel: storage?.getAttribute("data-label") || "",
       colorId: color?.value || "",
       colorLabel: color?.getAttribute("data-label") || "",
       priceKes,
+      channel,
+      channelLabel: channel === "xuk" ? "XUK" : "New",
     };
   }
 
@@ -332,9 +344,10 @@ const lipaFrom =
   }
 
   function syncPrice() {
-    const { priceKes, storageLabel, colorLabel } = selected();
+    const { priceKes, storageLabel, colorLabel, channelLabel } = selected();
     const priceHost = root.querySelector("[data-config-price]");
-    if (priceHost) priceHost.textContent = formatKes(priceKes);
+    const amount = priceHost?.querySelector(".price__amount") || priceHost;
+    if (amount) amount.textContent = formatKes(priceKes);
 
     const lipaEl = root.querySelector("[data-lipa-price]");
     if (lipaEl && lipaMonths > 0) {
@@ -343,13 +356,14 @@ const lipaFrom =
 
     const stickyPrice = document.querySelector("[data-sticky-price]");
     if (stickyPrice) {
-      stickyPrice.textContent = `${storageLabel} · ${colorLabel} · ${formatKes(priceKes)}`;
+      stickyPrice.textContent = `${channelLabel} · ${storageLabel} · ${colorLabel} · ${formatKes(priceKes)}`;
     }
 
     const msg = [
       "Hi GadgetHub - I'd like to buy",
       "",
       `Product: ${productName}`,
+      `Stock: ${channelLabel}`,
       `Storage: ${storageLabel}`,
       `Finish: ${colorLabel}`,
       `Price: ${formatKes(priceKes)}`,
@@ -360,6 +374,20 @@ const lipaFrom =
     });
   }
 
+  root.querySelectorAll("[data-stock-channel] [data-channel]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const next = btn.getAttribute("data-channel") || "new";
+      channel = next;
+      root.setAttribute("data-channel", next);
+      root.querySelectorAll("[data-stock-channel] [data-channel]").forEach((b) => {
+        const on = b === btn;
+        b.classList.toggle("is-active", on);
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+      syncPrice();
+    });
+  });
+
   function addToCart() {
     const cfg = selected();
     let cart = [];
@@ -369,7 +397,7 @@ const lipaFrom =
     } catch {
       cart = [];
     }
-    const lineId = `${productId}-${cfg.storageId}-${cfg.colorId}`;
+    const lineId = `${productId}-${cfg.storageId}-${cfg.colorId}-${cfg.channel}`;
     const existing = cart.find((l) => l.id === lineId);
     if (existing) existing.qty += 1;
     else {
@@ -379,6 +407,7 @@ const lipaFrom =
         name: productName,
         storage: cfg.storageLabel,
         color: cfg.colorLabel,
+        channel: cfg.channelLabel,
         priceKes: cfg.priceKes,
         qty: 1,
         href: location.pathname,
@@ -389,15 +418,29 @@ const lipaFrom =
     window.location.href = "/cart";
   }
 
-  root.addEventListener("change", syncPrice);
+  const gallery = document.querySelector("[data-gallery]");
+  const main = gallery?.querySelector("[data-gallery-main]");
+
+  function syncColorImage() {
+    const color = root.querySelector('input[name="color"]:checked');
+    const src = color?.getAttribute("data-image-src");
+    const alt = color?.getAttribute("data-image-alt") || "";
+    if (!(main instanceof HTMLImageElement) || !src) return;
+    main.src = src;
+    if (alt) main.alt = alt;
+  }
+
+  root.addEventListener("change", () => {
+    syncPrice();
+    syncColorImage();
+  });
   syncPrice();
+  syncColorImage();
 
   document.querySelectorAll("[data-add-cart], [data-add-cart-sticky]").forEach((btn) => {
     btn.addEventListener("click", addToCart);
   });
 
-  const gallery = document.querySelector("[data-gallery]");
-  const main = gallery?.querySelector("[data-gallery-main]");
   gallery?.querySelectorAll("[data-gallery-thumb]").forEach((btn) => {
     btn.addEventListener("click", () => {
       if (!(btn instanceof HTMLButtonElement) || !(main instanceof HTMLImageElement)) return;

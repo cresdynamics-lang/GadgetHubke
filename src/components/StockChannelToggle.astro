@@ -1,0 +1,56 @@
+---
+/**
+ * New | XUK stock-channel toggle — switches sample price only.
+ */
+interface Props {
+  /** Extra class on the root */
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div class:list={["stock-channel", className]} data-stock-channel role="group" aria-label="Stock type">
+  <button type="button" class="stock-channel__btn is-active" data-channel="new" aria-pressed="true">
+    New
+  </button>
+  <button type="button" class="stock-channel__btn" data-channel="xuk" aria-pressed="false">
+    XUK
+  </button>
+</div>
+<p class="stock-channel__hint">{`New = sealed. XUK = ex-UK import.`}</p>
+
+<style>
+  .stock-channel {
+    display: inline-flex;
+    gap: 0.35rem;
+    margin: 0.65rem 0 0.25rem;
+    padding: 0.2rem;
+    border-radius: 999px;
+    background: #e8e8ed;
+  }
+
+  .stock-channel__btn {
+    border: 0;
+    background: transparent;
+    color: #1d1d1f;
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+
+  .stock-channel__btn.is-active {
+    background: #1d1d1f;
+    color: #f5f5f7;
+  }
+
+  .stock-channel__hint {
+    margin: 0 0 0.75rem;
+    font-size: 0.7rem;
+    color: #6e6e73;
+  }
+</style>

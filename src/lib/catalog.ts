@@ -1,6 +1,6 @@
 /** Product catalog - lineups shared by nav hover + category pages */
 
-import { ghImages } from "./images";
+import { ghImages, macProductPhotos } from "./images";
 
 export type Subcategory = {
   id: string;
@@ -29,7 +29,7 @@ export const iphoneSubcategories: Subcategory[] = [
     label: "iPhone Duo",
     href: "/shop/iphone/iphone-duo",
     blurb: "Fold",
-    badge: "Pre-order",
+    badge: "New",
     fromPriceKes: 279999,
     image: {
       src: ghImages.duo.foldTop,
@@ -127,11 +127,11 @@ export const iphoneMegaQuickLinks = [
 
 export const iphoneMegaFeatured = {
   title: "iPhone Duo",
-  body: "Apple's first foldable. Reserve with a deposit.",
+  body: "Apple's foldable — in stock with colours and storage.",
   href: "/shop/iphone/iphone-duo",
   imageSrc: ghImages.duo.openCamera,
   imageAlt: "iPhone Duo",
-  badge: "Pre-order",
+  badge: "New",
 } as const;
 
 /** Mac hover lineup */
@@ -139,24 +139,24 @@ export const macSubcategories: Subcategory[] = [
   {
     id: "macbook-air",
     label: "MacBook Air",
-    href: "/shop/mac/macbook-air",
+    href: "/mac/shop?family=Air",
     blurb: "Everyday",
     badge: "New",
-    fromPriceKes: 164999,
+    fromPriceKes: 135000,
     image: {
-      src: ghImages.mac.air,
-      alt: "MacBook Air",
+      src: macProductPhotos.air13M4.skyBlue,
+      alt: "MacBook Air 13-inch M4 in Sky Blue",
     },
   },
   {
     id: "macbook-pro",
     label: "MacBook Pro",
-    href: "/shop/mac/macbook-pro",
+    href: "/mac/shop?family=Pro",
     blurb: "Pro",
-    fromPriceKes: 249999,
+    fromPriceKes: 190000,
     image: {
-      src: ghImages.mac.pro,
-      alt: "MacBook Pro",
+      src: macProductPhotos.pro14M4.spaceBlack,
+      alt: "MacBook Pro 14-inch M4 in Space Black",
     },
   },
   {
@@ -204,9 +204,9 @@ export const macMegaQuickLinks = [
 export const macMegaFeatured = {
   title: "MacBook Air",
   body: "Light, fast, sealed stock in Nairobi.",
-  href: "/shop/mac/macbook-air",
-  imageSrc: ghImages.mac.air,
-  imageAlt: "MacBook Air",
+  href: "/mac/macbook-air-13-m4",
+  imageSrc: macProductPhotos.air13M4.skyBlue,
+  imageAlt: "MacBook Air 13-inch M4 in Sky Blue",
   badge: "Popular",
 } as const;
 

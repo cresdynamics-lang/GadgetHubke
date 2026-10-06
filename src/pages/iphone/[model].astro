@@ -30,6 +30,8 @@ import {
   type IphoneView,
 } from "../../lib/iphone";
 import { whatsappUrl } from "../../lib/site";
+import StockChannelToggle from "../../components/StockChannelToggle.astro";
+import { xukFromNew } from "../../lib/stock-channel";
 
 export function getStaticPaths() {
   return models.map((m) => ({ params: { model: m.id } }));
@@ -131,6 +133,7 @@ const galleryPayload = {
           <span class="ipdp__pill ipdp__pill--muted">{model.year}</span>
         </div>
         <h1>{model.name}</h1>
+        <StockChannelToggle />
         <p class="ipdp__tagline">{model.tagline}</p>
 
         <div class="ipdp__field">
@@ -177,9 +180,11 @@ const galleryPayload = {
                   class:list={["ipdp__storage-btn", { "is-active": i === 0 }]}
                   data-storage={p.label}
                   data-kes={p.kes}
+                  data-kes-new={p.kes}
+                  data-kes-xuk={xukFromNew(p.kes)}
                 >
                   {p.label}
-                  <span>{formatKes(p.kes)}</span>
+                  <span data-storage-price>{formatKes(p.kes)}</span>
                 </button>
               ))
             }
@@ -368,9 +373,19 @@ const galleryPayload = {
     colour: galleryPayload.initialColour,
     view: 1,
     storage: prices[0]?.label,
-    kes: prices[0]?.kes,
+    kesNew: prices[0]?.kes,
+    kesXuk: prices[0] ? Math.max(999, Math.round((prices[0].kes * 0.88) / 1000) * 1000 - 1) : 0,
+    channel: "new",
     tour: null,
   };
+
+  function activeKes() {
+    return state.channel === "xuk" ? Number(state.kesXuk) || 0 : Number(state.kesNew) || 0;
+  }
+
+  function channelLabel() {
+    return state.channel === "xuk" ? "XUK" : "New";
+  }
 
   const img = document.querySelector("[data-gallery-img]");
   const webpSource = document.querySelector("[data-gallery-webp]");
@@ -465,20 +480,42 @@ const galleryPayload = {
   }
 
   function updatePrice() {
-    const kes = Number(state.kes) || 0;
+    const kes = activeKes();
     const deposit = Math.round((kes * depositPct) / 100);
     const monthly = Math.round((kes - deposit) / months);
     if (priceEl) priceEl.textContent = `From KES ${kes.toLocaleString("en-KE")}`;
     if (monthlyEl)
       monthlyEl.textContent = `or KES ${monthly.toLocaleString("en-KE")} a month for ${months} months after a KES ${deposit.toLocaleString("en-KE")} deposit`;
+
+    document.querySelectorAll("[data-storage]").forEach((btn) => {
+      const newKes = Number(btn.getAttribute("data-kes-new") || btn.getAttribute("data-kes") || 0);
+      const xukKes = Number(btn.getAttribute("data-kes-xuk") || newKes);
+      const shown = state.channel === "xuk" ? xukKes : newKes;
+      const span = btn.querySelector("[data-storage-price]");
+      if (span) span.textContent = `KES ${shown.toLocaleString("en-KE")}`;
+    });
+
     if (wa instanceof HTMLAnchorElement) {
       const c = colourEntry()?.label || "overview";
       const msg = encodeURIComponent(
-        `Hi Gadget Hub, I'm interested in the ${modelName}, ${c}, ${state.storage}.`,
+        `Hi Gadget Hub, I'm interested in the ${modelName} (${channelLabel()}), ${c}, ${state.storage}. Price: KES ${kes.toLocaleString("en-KE")}.`,
       );
       wa.href = `${waBase}${msg}`;
     }
   }
+
+  document.querySelectorAll("[data-stock-channel] [data-channel]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const next = btn.getAttribute("data-channel") || "new";
+      state.channel = next;
+      document.querySelectorAll("[data-stock-channel] [data-channel]").forEach((b) => {
+        const on = b === btn;
+        b.classList.toggle("is-active", on);
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+      updatePrice();
+    });
+  });
 
   function stopTour() {
     if (state.tour) {
@@ -510,7 +547,8 @@ const galleryPayload = {
       document.querySelectorAll("[data-storage]").forEach((b) => b.classList.remove("is-active"));
       btn.classList.add("is-active");
       state.storage = btn.getAttribute("data-storage");
-      state.kes = btn.getAttribute("data-kes");
+      state.kesNew = btn.getAttribute("data-kes-new") || btn.getAttribute("data-kes");
+      state.kesXuk = btn.getAttribute("data-kes-xuk") || state.kesNew;
       updatePrice();
     });
   });
@@ -632,12 +670,13 @@ const galleryPayload = {
     window.dispatchEvent(
       new CustomEvent("gh:bag-add", {
         detail: {
-          id: galleryPayload.modelId,
+          id: `${galleryPayload.modelId}-${state.channel}`,
           name: modelName,
           colour: c?.label || "Overview",
-          storage: state.storage,
-          kes: Number(state.kes) || 0,
+          storage: `${state.storage} · ${channelLabel()}`,
+          kes: activeKes(),
           image: cur.src,
+          channel: channelLabel(),
         },
       }),
     );

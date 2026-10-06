@@ -86,6 +86,7 @@ const colourPayload = model.colours.map((key) => {
               aria-label={c.label}
               data-icard-swatch
               data-src={c.src}
+              data-webp={c.srcWebp}
               data-alt={c.alt}
             />
           ))}
@@ -130,11 +131,17 @@ const colourPayload = model.colours.map((key) => {
         card.querySelectorAll("[data-icard-swatch]").forEach((b) => b.classList.remove("is-active"));
         btn.classList.add("is-active");
         const src = btn.getAttribute("data-src");
+        const webp = btn.getAttribute("data-webp") || "";
         const alt = btn.getAttribute("data-alt");
+        const webpSource = card.querySelector(".istage source");
         if (img instanceof HTMLImageElement && src) {
           img.style.opacity = "0";
           const pre = new Image();
           pre.onload = () => {
+            if (webpSource instanceof HTMLSourceElement) {
+              if (webp) webpSource.srcset = webp;
+              else webpSource.removeAttribute("srcset");
+            }
             img.src = src;
             if (alt) img.alt = alt;
             img.style.opacity = "1";
