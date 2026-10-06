@@ -1,0 +1,150 @@
+---
+/**
+ * Watch compare — side-by-side with show-only-differences.
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import WatchStage from "../../components/watch/WatchStage.astro";
+import {
+  watchModels,
+  getWatchModel,
+  getWatchImage,
+  formatKes,
+} from "../../lib/watch";
+
+const idsParam = Astro.url.searchParams.get("ids") || "";
+const ids = idsParam.split(",").map((s) => s.trim()).filter(Boolean).slice(0, 3);
+const models = ids.map((id) => getWatchModel(id)).filter(Boolean);
+const chosen = models.length ? models : watchModels.filter((m) => m.isNew).slice(0, 3);
+
+function honestDiff(list: typeof chosen): string {
+  if (list.length < 2) return "Pick two or three watches to see what actually changes.";
+  const bits: string[] = [];
+  const families = new Set(list.map((m) => m!.family));
+  if (families.size > 1) bits.push(`Families differ: ${[...families].join(" vs ")}.`);
+  const waters = [...new Set(list.map((m) => m!.waterM))];
+  if (waters.length > 1) bits.push(`Water ratings: ${waters.map((w) => `${w} m`).join(" vs ")}.`);
+  const sizes = [...new Set(list.map((m) => m!.defaultCaseMm))];
+  if (sizes.length > 1) bits.push(`Case sizes: ${sizes.map((s) => `${s} mm`).join(" vs ")}.`);
+  const ecg = list.map((m) => m!.health.ecg);
+  if (ecg.some((v) => v) && ecg.some((v) => v === false)) bits.push("ECG is only on some of these models.");
+  return bits.slice(0, 3).join(" ") || "These models are close — check display, battery and price.";
+}
+
+const rows: { group: string; label: string; values: (string | number | boolean | null)[] }[] = [
+  { group: "Display", label: "Display", values: chosen.map((m) => m!.displayType) },
+  { group: "Display", label: "Always-On", values: chosen.map((m) => m!.alwaysOn) },
+  { group: "Display", label: "Brightness (nits)", values: chosen.map((m) => m!.brightnessNits) },
+  { group: "Health", label: "ECG", values: chosen.map((m) => m!.health.ecg) },
+  { group: "Health", label: "Sleep tracking", values: chosen.map((m) => m!.health.sleepTracking) },
+  { group: "Health", label: "Blood Oxygen", values: chosen.map((m) => m!.health.bloodOxygen) },
+  { group: "Safety", label: "Fall Detection", values: chosen.map((m) => m!.safety.fallDetection) },
+  { group: "Safety", label: "Crash Detection", values: chosen.map((m) => m!.safety.crashDetection) },
+  { group: "Safety", label: "Siren", values: chosen.map((m) => m!.safety.siren) },
+  { group: "Water", label: "Water (m)", values: chosen.map((m) => m!.waterM) },
+  { group: "Water", label: "Depth gauge (m)", values: chosen.map((m) => m!.depthGaugeM) },
+  { group: "Battery", label: "Battery hours", values: chosen.map((m) => m!.batteryHours) },
+  { group: "Battery", label: "Low Power hours", values: chosen.map((m) => m!.lowPowerHours) },
+  { group: "Case and weight", label: "Case (mm)", values: chosen.map((m) => m!.defaultCaseMm) },
+  { group: "Case and weight", label: "Weight (g)", values: chosen.map((m) => m!.weightG) },
+  { group: "Price", label: "From (KES sample)", values: chosen.map((m) => m!.basePriceKes) },
+];
+
+function cell(v: string | number | boolean | null): string {
+  if (v == null) return "—";
+  if (typeof v === "boolean") return v ? "Yes" : "No";
+  if (typeof v === "number") return v.toLocaleString("en-KE");
+  return v;
+}
+---
+
+<BaseLayout title="Compare Apple Watch - GadgetHub" description="Compare Apple Watch models side by side.">
+  <section class="container wcmp">
+    <header>
+      <h1>Compare Watches</h1>
+      <p class="wcmp__honest">{honestDiff(chosen)}</p>
+      <label class="wcmp__toggle">
+        <input type="checkbox" checked data-diff-only /> Show only differences
+      </label>
+    </header>
+
+    <div class="wcmp__table-wrap">
+      <table class="wcmp__table" data-compare-table>
+        <thead>
+          <tr>
+            <th scope="col">Spec</th>
+            {chosen.map((m) => {
+              const img = getWatchImage(m!.id, "main", m!.name);
+              return (
+                <th scope="col">
+                  <WatchStage src={img.src} srcWebp={img.srcWebp} alt={img.alt} width={320} height={240} />
+                  <a href={`/watch/${m!.id}`}>{m!.name}</a>
+                  <em>From {formatKes(m!.basePriceKes)}</em>
+                </th>
+              );
+            })}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => {
+            const same = row.values.every((v) => String(v) === String(row.values[0]));
+            return (
+              <tr data-diff-row data-same={same ? "1" : "0"}>
+                <th scope="row">{row.label}</th>
+                {row.values.map((v) => <td>{cell(v)}</td>)}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+
+    <p class="wcmp__pick">
+      Or pick models:
+      <select data-pick-a>
+        {watchModels.map((m) => <option value={m.id}>{m.name}</option>)}
+      </select>
+      <select data-pick-b>
+        {watchModels.map((m) => <option value={m.id} selected={m.id === "watch-ultra-4"}>{m.name}</option>)}
+      </select>
+      <button type="button" class="btn btn--primary btn--sm" data-pick-go>Compare</button>
+    </p>
+  </section>
+</BaseLayout>
+
+<script>
+  const box = document.querySelector("[data-diff-only]");
+  function apply() {
+    const only = box instanceof HTMLInputElement && box.checked;
+    document.querySelectorAll("[data-diff-row]").forEach((row) => {
+      if (!(row instanceof HTMLElement)) return;
+      row.hidden = only && row.getAttribute("data-same") === "1";
+    });
+  }
+  box?.addEventListener("change", apply);
+  apply();
+
+  document.querySelector("[data-pick-go]")?.addEventListener("click", () => {
+    const a = document.querySelector("[data-pick-a]");
+    const b = document.querySelector("[data-pick-b]");
+    if (a instanceof HTMLSelectElement && b instanceof HTMLSelectElement) {
+      window.location.href = `/watch/compare?ids=${encodeURIComponent(`${a.value},${b.value}`)}`;
+    }
+  });
+</script>
+
+<style>
+  .wcmp { padding-block: 2rem 4rem; }
+  .wcmp h1 { margin: 0 0 0.5rem; letter-spacing: -0.03em; }
+  .wcmp__honest { color: #6e6e73; max-width: 40rem; }
+  .wcmp__toggle { display: inline-flex; gap: 0.4rem; align-items: center; margin: 1rem 0; font-size: var(--text-sm); }
+  .wcmp__table-wrap { overflow-x: auto; }
+  .wcmp__table { width: 100%; border-collapse: collapse; min-width: 36rem; }
+  .wcmp__table th, .wcmp__table td {
+    border-bottom: 1px solid #d2d2d7; padding: 0.75rem; text-align: left; vertical-align: top;
+    font-size: var(--text-sm);
+  }
+  .wcmp__table thead th { min-width: 10rem; }
+  .wcmp__table thead a { display: block; margin-top: 0.5rem; color: inherit; font-weight: 600; text-decoration: none; }
+  .wcmp__table thead em { display: block; font-style: normal; color: #6e6e73; }
+  .wcmp__pick { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+</style>

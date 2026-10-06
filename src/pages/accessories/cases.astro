@@ -1,0 +1,357 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import AccessoryCard from "../../components/accessories/AccessoryCard.astro";
+import CompatibilityFinder from "../../components/accessories/CompatibilityFinder.astro";
+import CasesFeel from "../../components/accessories/CasesFeel.astro";
+import AccessoryLipaCalc from "../../components/accessories/AccessoryLipaCalc.astro";
+import AccessoryTrademark from "../../components/accessories/AccessoryTrademark.astro";
+import {
+  caseProducts,
+  getAccessoryImage,
+  getCaseVariants,
+  accessoryFaq,
+  accessoryBuyingNotes,
+  accessoriesConfig,
+  formatKes,
+  caseFits,
+} from "../../lib/accessories";
+
+const list = caseProducts().filter((c) => c.subgroup !== "strap" || true);
+const silicone = list.filter((c) => c.material === "Silicone");
+const heroIds = silicone.slice(0, 5).map((c) => c.id);
+const heroImgs = heroIds.map((id) => getAccessoryImage(id, "hero"));
+const faq = accessoryFaq();
+const notes = accessoryBuyingNotes(silicone[0] || list[0]);
+const whatsapp = `https://wa.me/${accessoriesConfig.whatsapp}?text=${encodeURIComponent("Hi Gadget Hub — asking about older iPhone cases")}`;
+
+const models = [
+  { id: "iphone-17", label: "iPhone 17" },
+  { id: "iphone-17-pro", label: "iPhone 17 Pro" },
+  { id: "iphone-17-pro-max", label: "iPhone 17 Pro Max" },
+  { id: "iphone-17e", label: "iPhone 17e" },
+  { id: "iphone-air", label: "iPhone Air" },
+  { id: "iphone-18-pro", label: "iPhone 18 Pro" },
+  { id: "iphone-18-pro-max", label: "iPhone 18 Pro Max" },
+  { id: "ipad", label: "I have an iPad" },
+  { id: "older", label: "I have an older iPhone" },
+];
+
+const materials = [
+  { key: "Silicone", ids: list.filter((c) => c.material === "Silicone") },
+  { key: "Clear", ids: list.filter((c) => c.material === "Clear") },
+  { key: "TechWoven", ids: list.filter((c) => c.material === "TechWoven") },
+  { key: "FineWoven Wallet", ids: list.filter((c) => c.material === "FineWoven Wallet") },
+  { key: "Bumper / Air", ids: list.filter((c) => c.material === "Bumper" || c.material === "Air Case") },
+  { key: "Duo", ids: list.filter((c) => /Duo/.test(c.material || "")) },
+  { key: "Straps", ids: list.filter((c) => c.subgroup === "strap") },
+  { key: "Smart Folio", ids: list.filter((c) => c.subgroup === "folio") },
+];
+
+const fitMatrix = Object.fromEntries(
+  list.map((c) => [
+    c.id,
+    Object.fromEntries(models.filter((m) => m.id.startsWith("iphone") || m.id.startsWith("ipad")).map((m) => {
+      if (m.id === "ipad") {
+        return [m.id, c.subgroup === "folio" ? "maybe" : "no"];
+      }
+      return [m.id, caseFits(m.id, c.id).status];
+    })),
+  ]),
+);
+---
+
+<BaseLayout title="Cases - GadgetHub" description="Apple iPhone cases and iPad Smart Folios. Exact model fit in Nairobi.">
+  <section class="xcases-hero">
+    <div class="container">
+      <h1>Made to fit.</h1>
+      <p>Sealed Apple cases, serial on the invoice. Cases are made for one exact model — we check before you pay.</p>
+    </div>
+    <div class="xcases-hero__row" data-hero-colours>
+      {
+        heroImgs.map((img, i) => (
+          <img src={img.src} alt={img.alt} width="280" height="210" fetchpriority={i === 0 ? "high" : "low"} loading={i === 0 ? "eager" : "lazy"} data-hero-case={i} />
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="container xcases-picker" data-case-picker>
+    <h2>Pick your iPhone first</h2>
+    <div class="xcases-picker__models" role="listbox" aria-label="Device model">
+      {
+        models.map((m, i) => (
+          <button type="button" class:list={{ "is-active": i === 0 }} role="option" aria-selected={i === 0 ? "true" : "false"} data-model={m.id}>
+            {m.label}
+          </button>
+        ))
+      }
+    </div>
+    <div class="xcases-older" data-older hidden>
+      <p>We stock cases for the iPhone 17 and 18 families and iPhone Air. Ask us on WhatsApp about older models.</p>
+      <a class="btn btn--primary" href={whatsapp} target="_blank" rel="noopener">Ask on WhatsApp</a>
+    </div>
+  </section>
+
+  <CompatibilityFinder preselectLooking="case" />
+
+  {
+    materials.map((mat) =>
+      mat.ids.length ? (
+        <section class="container xcases-mat" data-material-section data-material={mat.key}>
+          <h2>{mat.key}</h2>
+          <div class="xcases-mat__grid">
+            {mat.ids.map((p) => {
+              const variants = getCaseVariants(p.id);
+              const lead = getAccessoryImage(p.id, "hero");
+              return (
+                <article class="xcases-card" data-case-id={p.id} data-fits={JSON.stringify(fitMatrix[p.id] || {})}>
+                  <a href={`/accessories/${p.id}`}>
+                    <img src={lead.src} alt={lead.alt} width="400" height="300" loading="lazy" />
+                    <h3>{p.name}</h3>
+                    <p>From {formatKes(p.basePriceKes)}</p>
+                  </a>
+                  <div class="xcases-card__swatches" aria-label={`${p.name} colours`}>
+                    {variants.slice(0, 8).map((v) => {
+                      const sw = getAccessoryImage(p.id, `variant-swatch:${v.partNumber}`);
+                      return (
+                        <a href={`/accessories/${p.id}?v=${v.partNumber}`} title={v.colour}>
+                          <img src={sw.src} alt={v.colour} width="36" height="36" loading="lazy" />
+                        </a>
+                      );
+                    })}
+                  </div>
+                  <AccessoryCard product={p} />
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      ) : null,
+    )
+  }
+
+  <section class="container xcases-wall" data-colour-wall>
+    <h2>Colour wall</h2>
+    <p>Every colour of the selected material — hover for the name.</p>
+    <div class="xcases-wall__grid" data-wall-grid>
+      {
+        getCaseVariants("case-iphone-17-pro-silicone").map((v) => {
+          const sw = getAccessoryImage("case-iphone-17-pro-silicone", `variant-swatch:${v.partNumber}`);
+          return (
+            <a class="xcases-wall__swatch" href={`/accessories/case-iphone-17-pro-silicone?v=${v.partNumber}`} title={v.colour} data-colour-name={v.colour}>
+              <img src={sw.src} alt={v.colour} width="72" height="72" loading="lazy" />
+              <span>{v.colour}</span>
+            </a>
+          );
+        })
+      }
+    </div>
+  </section>
+
+  <CasesFeel />
+
+  <section class="container xcases-notes">
+    <h2>Buying notes</h2>
+    {notes.map((n) => (
+      <article>
+        <h3>{n.title}</h3>
+        <p>{n.body}</p>
+      </article>
+    ))}
+    <p class="xcases-flag">{accessoriesConfig.strapCasePairingNote}</p>
+  </section>
+
+  <section class="container xcases-faq">
+    <h2>Questions people ask</h2>
+    {faq.map((f) => (
+      <details>
+        <summary>{f.q}</summary>
+        <p>{f.a}</p>
+      </details>
+    ))}
+  </section>
+
+  <AccessoryLipaCalc productId="case-iphone-17-pro-silicone" />
+  <AccessoryTrademark />
+</BaseLayout>
+
+<script>
+  const picker = document.querySelector("[data-case-picker]");
+  const older = document.querySelector("[data-older]");
+  let model = "iphone-17";
+  function applyFilter() {
+    if (older instanceof HTMLElement) older.hidden = model !== "older";
+    document.querySelectorAll("[data-case-id]").forEach((card) => {
+      if (!(card instanceof HTMLElement)) return;
+      if (model === "older") {
+        card.hidden = true;
+        return;
+      }
+      if (model === "ipad") {
+        const id = card.getAttribute("data-case-id") || "";
+        card.hidden = !id.startsWith("folio-");
+        return;
+      }
+      try {
+        const fits = JSON.parse(card.getAttribute("data-fits") || "{}");
+        card.hidden = fits[model] !== "fits";
+      } catch {
+        card.hidden = false;
+      }
+    });
+  }
+  picker?.querySelectorAll("[data-model]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      model = btn.getAttribute("data-model") || "iphone-17";
+      picker.querySelectorAll("[data-model]").forEach((t) => {
+        t.classList.toggle("is-active", t === btn);
+        t.setAttribute("aria-selected", t === btn ? "true" : "false");
+      });
+      applyFilter();
+    });
+  });
+  applyFilter();
+
+  const hero = document.querySelector("[data-hero-colours]");
+  if (hero) {
+    const imgs = [...hero.querySelectorAll("img")];
+    let i = 0;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const show = () => {
+      imgs.forEach((img, idx) => img.classList.toggle("is-on", idx === i));
+      i = (i + 1) % imgs.length;
+    };
+    show();
+    if (!reduce && imgs.length > 1) {
+      let n = 0;
+      const t = window.setInterval(() => {
+        show();
+        n++;
+        if (n >= imgs.length) window.clearInterval(t);
+      }, 1600);
+    }
+  }
+</script>
+
+<style>
+  .xcases-hero {
+    background: #f5f5f7;
+    padding: 3rem 0 1rem;
+  }
+  .xcases-hero h1 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .xcases-hero p {
+    color: #6e6e73;
+    max-width: 36rem;
+  }
+  .xcases-hero__row {
+    display: flex;
+    gap: 0.75rem;
+    overflow: hidden;
+    max-width: 1100px;
+    margin: 1.5rem auto 0;
+    padding: 0 1rem 2rem;
+    min-height: 200px;
+    position: relative;
+  }
+  .xcases-hero__row img {
+    width: 180px;
+    mix-blend-mode: multiply;
+    opacity: 0.35;
+    transition: opacity 0.4s ease;
+  }
+  .xcases-hero__row img.is-on {
+    opacity: 1;
+  }
+  .xcases-picker,
+  .xcases-mat,
+  .xcases-wall,
+  .xcases-notes,
+  .xcases-faq {
+    padding: 2.5rem 1rem;
+  }
+  .xcases-picker__models {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .xcases-picker__models button {
+    border: 1px solid #d2d2d7;
+    background: #fff;
+    padding: 0.5rem 0.85rem;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .xcases-picker__models button.is-active {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+  }
+  .xcases-picker__models button:focus-visible {
+    outline: 2px solid #000;
+    outline-offset: 2px;
+  }
+  .xcases-older {
+    margin-top: 1rem;
+    background: #f5f5f7;
+    padding: 1rem;
+    border-radius: 0.75rem;
+  }
+  .xcases-mat__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .xcases-card {
+    background: #f5f5f7;
+    border-radius: 1rem;
+    padding: 0.75rem;
+  }
+  .xcases-card a {
+    color: #1d1d1f;
+    text-decoration: none;
+  }
+  .xcases-card img {
+    width: 100%;
+    mix-blend-mode: multiply;
+  }
+  .xcases-card__swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 0.5rem 0;
+  }
+  .xcases-card__swatches img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    mix-blend-mode: normal;
+  }
+  .xcases-wall__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+  .xcases-wall__swatch {
+    text-align: center;
+    text-decoration: none;
+    color: #6e6e73;
+    font-size: 0.7rem;
+  }
+  .xcases-wall__swatch img {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .xcases-flag {
+    font-size: 0.85rem;
+    color: #6e6e73;
+  }
+</style>

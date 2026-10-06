@@ -1,0 +1,153 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import TvHomeStage from "../../components/tv-home/TvHomeStage.astro";
+import TvHomeTrademark from "../../components/tv-home/TvHomeTrademark.astro";
+import {
+  tvHomeModels,
+  getTvHomeModel,
+  getTvHomeImage,
+  formatKes,
+  isSpeaker,
+  isHomeHub,
+  hasDolbyVision,
+} from "../../lib/tv-home";
+
+const idsParam = Astro.url.searchParams.get("ids") || "";
+const ids = idsParam.split(",").map((s) => s.trim()).filter(Boolean).slice(0, 3);
+const models = ids.map((id) => getTvHomeModel(id)).filter(Boolean);
+const chosen = models.length ? models : tvHomeModels.filter((m) => m.isNew).slice(0, 3);
+
+function honestDiff(list: typeof chosen): string {
+  if (list.length < 2) return "Pick two or three models to see what actually changes.";
+  const bits: string[] = [];
+  const families = new Set(list.map((m) => m!.family));
+  if (families.size > 1) bits.push(`Mixed families: ${[...families].join(" vs ")} — TV box vs speaker.`);
+  const hubs = list.map((m) => isHomeHub(m!));
+  if (hubs.some(Boolean) && hubs.some((v) => !v)) bits.push("Home hub support differs — confirm Thread/Matter for Kenya.");
+  const dolby = list.map((m) => hasDolbyVision(m!));
+  if (dolby.some(Boolean) && dolby.some((v) => !v)) bits.push("Dolby Vision is only on Apple TV models that list it.");
+  const stereo = list.map((m) => m!.stereoPairCapable);
+  if (stereo.some(Boolean) && stereo.some((v) => !v)) bits.push("Stereo pair only on listed HomePod models.");
+  return bits.slice(0, 3).join(" ") || "These models are close — check chip, connections and sample price.";
+}
+
+const rows: { label: string; values: (string | number | boolean | null)[] }[] = [
+  { label: "Family", values: chosen.map((m) => m!.family) },
+  { label: "Chip", values: chosen.map((m) => m!.chip) },
+  { label: "Home hub", values: chosen.map((m) => m!.homeHub) },
+  { label: "Dolby Vision", values: chosen.map((m) => hasDolbyVision(m!)) },
+  { label: "Stereo pair", values: chosen.map((m) => m!.stereoPairCapable) },
+  { label: "Intercom", values: chosen.map((m) => m!.intercom) },
+  { label: "Storage / SKU", values: chosen.map((m) => m!.storageOptions.join(", ") || "—") },
+  { label: "Speaker", values: chosen.map((m) => isSpeaker(m!)) },
+  { label: "From (KES sample)", values: chosen.map((m) => m!.basePriceKes) },
+];
+
+function cell(v: string | number | boolean | null): string {
+  if (v == null) return "—";
+  if (typeof v === "boolean") return v ? "Yes" : "No";
+  if (typeof v === "number") return v.toLocaleString("en-KE");
+  return v;
+}
+---
+
+<BaseLayout title="Compare TV & Home - GadgetHub" description="Compare Apple TV and HomePod side by side.">
+  <section class="container thcmp">
+    <header>
+      <h1>Compare TV &amp; Home</h1>
+      <p class="thcmp__honest">{honestDiff(chosen)}</p>
+      <label class="thcmp__toggle">
+        <input type="checkbox" checked data-diff-only /> Show only differences
+      </label>
+    </header>
+
+    <div class="thcmp__table-wrap">
+      <table class="thcmp__table" data-compare-table>
+        <thead>
+          <tr>
+            <th scope="col">Spec</th>
+            {
+              chosen.map((m) => {
+                const img = getTvHomeImage(m!.id, "hero", m!.name);
+                const square = isSpeaker(m!);
+                return (
+                  <th scope="col">
+                    {
+                      m!.noImage ? (
+                        <p class="thcmp__noimg">Image not available</p>
+                      ) : (
+                        <TvHomeStage src={img.src} srcWebp={img.srcWebp} alt={img.alt} width={320} height={320} square={square} />
+                      )
+                    }
+                    <a href={`/tv-home/${m!.id}`}>{m!.name}</a>
+                    <em>From {formatKes(m!.basePriceKes)}</em>
+                  </th>
+                );
+              })
+            }
+          </tr>
+        </thead>
+        <tbody>
+          {
+            rows.map((row) => {
+              const same = row.values.every((v) => String(v) === String(row.values[0]));
+              return (
+                <tr data-diff-row data-same={same ? "1" : "0"}>
+                  <th scope="row">{row.label}</th>
+                  {row.values.map((v) => <td>{cell(v)}</td>)}
+                </tr>
+              );
+            })
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <p class="thcmp__pick">
+      Or pick models:
+      <select data-pick-a>
+        {tvHomeModels.map((m) => <option value={m.id}>{m.name}</option>)}
+      </select>
+      <select data-pick-b>
+        {tvHomeModels.map((m) => <option value={m.id} selected={m.id === "homepod-mini"}>{m.name}</option>)}
+      </select>
+      <button type="button" class="btn btn--primary btn--sm" data-pick-go>Compare</button>
+    </p>
+    <TvHomeTrademark />
+  </section>
+</BaseLayout>
+
+<script>
+  const box = document.querySelector("[data-diff-only]");
+  function apply() {
+    const only = box instanceof HTMLInputElement && box.checked;
+    document.querySelectorAll("[data-diff-row]").forEach((row) => {
+      if (!(row instanceof HTMLElement)) return;
+      row.hidden = only && row.getAttribute("data-same") === "1";
+    });
+  }
+  box?.addEventListener("change", apply);
+  apply();
+
+  document.querySelector("[data-pick-go]")?.addEventListener("click", () => {
+    const a = document.querySelector("[data-pick-a]");
+    const b = document.querySelector("[data-pick-b]");
+    if (a instanceof HTMLSelectElement && b instanceof HTMLSelectElement) {
+      window.location.href = `/tv-home/compare?ids=${encodeURIComponent(a.value)},${encodeURIComponent(b.value)}`;
+    }
+  });
+</script>
+
+<style>
+  .thcmp { padding-block: 2rem 4rem; font-family: Inter, system-ui, sans-serif; }
+  .thcmp__honest { color: #6e6e73; max-width: 42rem; }
+  .thcmp__toggle { display: block; margin: 1rem 0; font-size: var(--text-sm); }
+  .thcmp__table-wrap { overflow-x: auto; }
+  .thcmp__table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+  .thcmp__table th, .thcmp__table td { border-bottom: 1px solid #eee; padding: 0.65rem; vertical-align: top; text-align: left; }
+  .thcmp__table thead th { font-weight: 600; }
+  .thcmp__table thead a { color: inherit; }
+  .thcmp__table em { display: block; color: #6e6e73; font-style: normal; font-size: var(--text-xs); }
+  .thcmp__noimg { background: #f5f5f7; padding: 2rem; border-radius: 1rem; text-align: center; color: #6e6e73; }
+  .thcmp__pick { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+</style>

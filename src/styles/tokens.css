@@ -1,60 +1,68 @@
 /**
- * GadgetHub brand tokens - strictly black & white + greyscale.
- * No accent color. CTAs, prices, and badges use black, white, or grey only.
+ * GadgetHub brand tokens - blueprint 2026.
+ * Black, white, greyscale only. Products carry colour. WhatsApp/stock green stay exceptions.
  */
 
 :root {
-  /* Core */
-  --color-black: #0a0a0a;
+  /* Blueprint core */
+  --color-black: #000000;
+  --color-ink: #1d1d1f;
+  --color-grey: #6e6e73;
+  --color-line: #d2d2d7;
+  --color-stage: #f5f5f7;
   --color-white: #ffffff;
 
-  /* Greyscale */
+  /* Extended greyscale (maps onto blueprint) */
   --color-grey-50: #fafafa;
-  --color-grey-100: #f5f5f5;
-  --color-grey-200: #e5e5e5;
-  --color-grey-300: #d4d4d4;
-  --color-grey-400: #a3a3a3;
-  --color-grey-500: #737373;
-  --color-grey-600: #525252;
-  --color-grey-700: #404040;
-  --color-grey-800: #262626;
-  --color-grey-900: #171717;
+  --color-grey-100: var(--color-stage);
+  --color-grey-200: var(--color-line);
+  --color-grey-300: #c7c7cc;
+  --color-grey-400: #a1a1a6;
+  --color-grey-500: var(--color-grey);
+  --color-grey-600: #515154;
+  --color-grey-700: #424245;
+  --color-grey-800: var(--color-ink);
+  --color-grey-900: #111111;
 
-  /* Semantic aliases */
+  /* Semantic */
   --color-bg: var(--color-white);
-  --color-bg-subtle: var(--color-grey-50);
-  --color-bg-muted: var(--color-grey-100);
+  --color-bg-subtle: var(--color-stage);
+  --color-bg-muted: var(--color-stage);
   --color-fg: var(--color-black);
-  --color-fg-muted: var(--color-grey-600);
-  --color-fg-subtle: var(--color-grey-500);
-  --color-border: var(--color-grey-200);
+  --color-fg-muted: var(--color-grey);
+  --color-fg-subtle: var(--color-grey-400);
+  --color-border: var(--color-line);
   --color-border-strong: var(--color-grey-300);
   --color-disabled: var(--color-grey-300);
   --color-disabled-fg: var(--color-grey-400);
 
-  /* Surfaces for inverted sections (hero, footer) */
   --color-bg-inverse: var(--color-black);
   --color-fg-inverse: var(--color-white);
-  --color-border-inverse: var(--color-grey-800);
+  --color-border-inverse: var(--color-ink);
 
-  /* CTA (strict B&W - primary is solid black) */
+  /* CTAs - solid black primary */
   --color-cta-bg: var(--color-black);
   --color-cta-fg: var(--color-white);
-  --color-cta-hover: var(--color-grey-800);
+  --color-cta-hover: var(--color-ink);
   --color-cta-secondary-bg: transparent;
   --color-cta-secondary-fg: var(--color-black);
   --color-cta-secondary-border: var(--color-black);
 
-  /* Price / badge (same palette - weight via contrast, not hue) */
   --color-price: var(--color-black);
   --color-badge-bg: var(--color-black);
   --color-badge-fg: var(--color-white);
 
-  /* Typography - Inter variable, 2-3 weights */
+  /* In-stock / WhatsApp only (blueprint exception) */
+  --color-stock: #34c759;
+  --color-whatsapp: #25d366;
+
+  /* Typography - Inter Variable; headlines use weight 700 as Display */
   --font-sans: "Inter Variable", Inter, system-ui, sans-serif;
+  --font-display: var(--font-sans);
   --font-weight-regular: 400;
-  --font-weight-medium: 500;
+  --font-weight-medium: 600;
   --font-weight-semibold: 600;
+  --font-weight-display: 700;
 
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
@@ -65,10 +73,10 @@
   --text-3xl: 1.875rem;
   --text-4xl: 2.25rem;
   --text-5xl: 3rem;
-  --text-hero: clamp(2.25rem, 5vw, 3.5rem);
+  --text-hero: clamp(2.5rem, 6vw, 4.5rem);
 
-  --leading-tight: 1.15;
-  --leading-snug: 1.35;
+  --leading-tight: 1.05;
+  --leading-snug: 1.25;
   --leading-normal: 1.5;
 
   /* Spacing */
@@ -88,28 +96,78 @@
   /* Layout */
   --container: 72rem;
   --container-wide: 90rem;
-  --header-height: 4rem;
+  --header-height: 3.5rem; /* 56px sticky nav */
+  --announce-height: 2.25rem;
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
-
-  /* Breakpoints (reference - use in media queries) */
+  --radius-card: 1.5rem; /* 24px product cards */
+  --gutter: 1rem; /* 16px mobile */
   --bp-sm: 40rem;
   --bp-md: 48rem;
   --bp-lg: 64rem;
   --bp-nav: 68rem;
+  --bp-mega: 63.75rem; /* 1020px */
 
-  /* Safe space so FABs don't cover content */
   --fab-clearance: 5.5rem;
 
-  /* Motion */
+  /* Motion - blueprint: menus 200ms, sections fade up */
   --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --duration-fast: 150ms;
-  --duration: 250ms;
+  --duration: 200ms;
+  --duration-hero: 1.8s;
+
+  /* Mac section — calmer, more spacious */
+  --mac-headline: clamp(2.25rem, 5vw, 3.75rem);
+  --mac-section-gap: clamp(4rem, 10vw, 7rem);
+  --mac-feel-bg: #000000;
+
+  /* iPad section — friendlier pace, rounder cards */
+  --ipad-headline: clamp(2.1rem, 4.5vw, 3.4rem);
+  --ipad-section-gap: clamp(3.5rem, 9vw, 6.5rem);
+  --ipad-feel-bg: #000000;
+  --ipad-radius: 1.875rem; /* 30px */
+
+  /* Watch section — small-object, wide stages */
+  --watch-headline: clamp(2.1rem, 4.5vw, 3.4rem);
+  --watch-section-gap: clamp(3.5rem, 9vw, 6.5rem);
+  --watch-feel-bg: #000000;
+  --watch-radius: 1.5rem;
 }
 
 @media (min-width: 40rem) {
   :root {
     --fab-clearance: 4.5rem;
+    --gutter: 1.25rem; /* 20px */
+  }
+}
+
+/* Dark theme — product stages stay light (#F5F5F7) */
+html[data-theme="dark"] {
+  --color-bg: #000000;
+  --color-bg-subtle: #1d1d1f;
+  --color-bg-muted: #1d1d1f;
+  --color-fg: #f5f5f7;
+  --color-fg-muted: #a1a1a6;
+  --color-fg-subtle: #6e6e73;
+  --color-border: #424245;
+  --color-border-strong: #6e6e73;
+  --color-cta-bg: #f5f5f7;
+  --color-cta-fg: #000000;
+  --color-cta-hover: #d2d2d7;
+  --color-cta-secondary-fg: #f5f5f7;
+  --color-cta-secondary-border: #f5f5f7;
+  --color-price: #f5f5f7;
+  --color-badge-bg: #f5f5f7;
+  --color-badge-fg: #000000;
+  color-scheme: dark;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration: 0ms;
+    --duration-hero: 0ms;
   }
 }

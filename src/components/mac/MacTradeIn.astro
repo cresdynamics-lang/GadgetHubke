@@ -1,0 +1,156 @@
+---
+/**
+ * Trade-In estimator extended with Mac list (indicative only).
+ */
+import { macModels, formatKes, tradeInEstimate, macConfig } from "../../lib/mac";
+import { models as iphoneModels } from "../../lib/iphone";
+
+interface Props {
+  modelId?: string;
+}
+
+const { modelId } = Astro.props;
+const macOpts = macModels.map((m) => ({
+  id: m.id,
+  name: m.name,
+  base: m.basePriceKes,
+  kind: "mac",
+}));
+const phoneOpts = iphoneModels.map((m) => ({
+  id: m.id,
+  name: m.name,
+  base: m.basePriceKes,
+  kind: "iphone",
+}));
+const options = [...macOpts, ...phoneOpts];
+const initial = options.find((o) => o.id === modelId) || macOpts[0];
+const start = tradeInEstimate(initial.base, "good");
+const waPhone = macConfig.whatsapp;
+---
+
+<section class="mac-trade" data-mac-trade>
+  <header>
+    <h3>Trade-In estimator</h3>
+    <p>{macConfig.tradeIn.note}</p>
+  </header>
+  <label>
+    Your current device
+    <select data-trade-model>
+      <optgroup label="MacBook">
+        {macOpts.map((o) => (
+          <option value={o.id} data-base={o.base} selected={o.id === initial.id}>
+            {o.name}
+          </option>
+        ))}
+      </optgroup>
+      <optgroup label="iPhone">
+        {phoneOpts.map((o) => (
+          <option value={o.id} data-base={o.base}>
+            {o.name}
+          </option>
+        ))}
+      </optgroup>
+    </select>
+  </label>
+  <div class="mac-trade__cond" role="group" aria-label="Condition">
+    <button type="button" data-cond="likeNew" data-pct={macConfig.tradeIn.conditionPct.likeNew}>Like new</button>
+    <button type="button" class="is-active" data-cond="good" data-pct={macConfig.tradeIn.conditionPct.good}>Good</button>
+    <button type="button" data-cond="worn" data-pct={macConfig.tradeIn.conditionPct.worn}>Worn</button>
+  </div>
+  <p class="mac-trade__estimate">
+    About <strong data-trade-value>{formatKes(start)}</strong>
+  </p>
+  <a
+    class="btn btn--secondary btn--sm"
+    data-trade-wa
+    href={`https://wa.me/${waPhone}?text=${encodeURIComponent(`Hi Gadget Hub — trade-in estimate for ${initial.name}: about ${formatKes(start)} (indicative).`)}`}
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    Send estimate on WhatsApp
+  </a>
+</section>
+
+<script define:vars={{ waPhone }}>
+  document.querySelectorAll("[data-mac-trade]").forEach((root) => {
+    const model = root.querySelector("[data-trade-model]");
+    const valueEl = root.querySelector("[data-trade-value]");
+    const wa = root.querySelector("[data-trade-wa]");
+    let pct = 33;
+
+    function round500(n) {
+      return Math.round(n / 500) * 500;
+    }
+    function run() {
+      if (!(model instanceof HTMLSelectElement)) return;
+      const opt = model.selectedOptions[0];
+      const base = Number(opt?.getAttribute("data-base") || 0);
+      const est = round500((base * pct) / 100);
+      if (valueEl) valueEl.textContent = `KES ${est.toLocaleString("en-KE")}`;
+      if (wa instanceof HTMLAnchorElement) {
+        wa.href = `https://wa.me/${waPhone}?text=${encodeURIComponent(
+          `Hi Gadget Hub — trade-in estimate for ${opt?.textContent?.trim()}: about KES ${est.toLocaleString("en-KE")} (indicative).`,
+        )}`;
+      }
+    }
+
+    model?.addEventListener("change", run);
+    root.querySelectorAll("[data-cond]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        root.querySelectorAll("[data-cond]").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        pct = Number(btn.getAttribute("data-pct") || 33);
+        run();
+      });
+    });
+  });
+</script>
+
+<style>
+  .mac-trade {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 1.25rem;
+    padding: 1.25rem;
+  }
+  .mac-trade header h3 {
+    margin: 0 0 0.25rem;
+  }
+  .mac-trade header p,
+  .mac-trade label {
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+  .mac-trade label {
+    display: grid;
+    gap: 0.35rem;
+    margin-top: 0.85rem;
+    color: var(--color-fg);
+  }
+  .mac-trade select {
+    width: 100%;
+  }
+  .mac-trade__cond {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.85rem;
+  }
+  .mac-trade__cond button {
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
+    border-radius: 999px;
+    padding: 0.35rem 0.7rem;
+    font: inherit;
+    font-size: var(--text-sm);
+    cursor: pointer;
+  }
+  .mac-trade__cond button.is-active {
+    background: var(--color-fg);
+    color: var(--color-bg);
+  }
+  .mac-trade__estimate {
+    margin: 1rem 0;
+    font-size: 1.1rem;
+  }
+</style>

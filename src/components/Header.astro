@@ -1,7 +1,24 @@
 ---
 import Brand from "./Brand.astro";
-import SubcategoryLineup from "./SubcategoryLineup.astro";
-import { productNav, secondaryNav } from "../lib/catalog";
+import MegaFlyout from "./MegaFlyout.astro";
+import IphoneMegaMenu from "./iphone/IphoneMegaMenu.astro";
+import MacMegaMenu from "./mac/MacMegaMenu.astro";
+import IpadMegaMenu from "./ipad/IpadMegaMenu.astro";
+import WatchMegaMenu from "./watch/WatchMegaMenu.astro";
+import AirPodsMegaMenu from "./airpods/AirPodsMegaMenu.astro";
+import TvHomeMegaMenu from "./tv-home/TvHomeMegaMenu.astro";
+import AccessoriesMegaMenu from "./accessories/AccessoriesMegaMenu.astro";
+import {
+  productNav,
+  secondaryNav,
+  megaExtras,
+} from "../lib/catalog";
+import { modelsByFamily, formatKes } from "../lib/iphone";
+import { macModelsByFamily, formatKes as formatMacKes } from "../lib/mac";
+import { ipadModelsByFamily, formatKes as formatIpadKes } from "../lib/ipad";
+import { watchModelsByFamily, formatKes as formatWatchKes } from "../lib/watch";
+import { airpodsModelsByFamily, formatKes as formatAirpodsKes } from "../lib/airpods";
+import { tvHomeModelsByFamily, formatKes as formatTvHomeKes } from "../lib/tv-home";
 import { site, whatsappUrl } from "../lib/site";
 
 const pathname = Astro.url.pathname;
@@ -10,9 +27,26 @@ function isActive(href: string): boolean {
   if (href === "/") return pathname === "/";
   return pathname === href || pathname.startsWith(`${href}/`);
 }
+
+const iphoneGens = [16, 15, 14, 13, 12, 11] as const;
+const macAir = macModelsByFamily("Air");
+const macPro = macModelsByFamily("Pro");
+const ipadPro = ipadModelsByFamily("Pro");
+const ipadAir = ipadModelsByFamily("Air");
+const ipadMini = ipadModelsByFamily("mini");
+const ipadStd = ipadModelsByFamily("iPad");
+const watchSeries = watchModelsByFamily("Series").filter((m) => m.isNew || m.year >= 2025).slice(0, 4);
+const watchUltra = watchModelsByFamily("Ultra").slice(0, 4);
+const watchSe = watchModelsByFamily("SE").slice(0, 4);
+const airpodsPro = airpodsModelsByFamily("Pro").slice(0, 4);
+const airpodsStd = airpodsModelsByFamily("AirPods").slice(0, 4);
+const airpodsMax = airpodsModelsByFamily("Max").slice(0, 4);
+const tvAtv = tvHomeModelsByFamily("Apple TV").slice(0, 4);
+const tvHp = tvHomeModelsByFamily("HomePod").slice(0, 3);
+const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
 ---
 
-<header class="site-header">
+<header class="site-header" data-site-header>
   <div class="site-header__bar">
     <Brand />
 
@@ -36,17 +70,45 @@ function isActive(href: string): boolean {
                   {cat.label}
                 </a>
                 <div
-                  class="flyout"
+                  class:list={[
+                    "flyout",
+                    { "flyout--iphone": cat.id === "iphone" },
+                    { "flyout--mac": cat.id === "mac" },
+                    { "flyout--ipad": cat.id === "ipad" },
+                    { "flyout--watch": cat.id === "watch" },
+                    { "flyout--airpods": cat.id === "airpods" },
+                    { "flyout--tv-home": cat.id === "tv-home" },
+                    { "flyout--accessories": cat.id === "accessories" },
+                  ]}
                   id={`flyout-${cat.id}`}
                   data-flyout={cat.id}
                   hidden
                 >
                   <div class="flyout__inner">
-                    <div class="flyout__head">
-                      <p class="flyout__label">{cat.label}</p>
-                      <a class="flyout__all" href={cat.href}>Explore all {cat.label} →</a>
-                    </div>
-                    <SubcategoryLineup items={cat.children} compact />
+                    {cat.id === "iphone" ? (
+                      <IphoneMegaMenu />
+                    ) : cat.id === "mac" ? (
+                      <MacMegaMenu />
+                    ) : cat.id === "ipad" ? (
+                      <IpadMegaMenu />
+                    ) : cat.id === "watch" ? (
+                      <WatchMegaMenu />
+                    ) : cat.id === "airpods" ? (
+                      <AirPodsMegaMenu />
+                    ) : cat.id === "tv-home" ? (
+                      <TvHomeMegaMenu />
+                    ) : cat.id === "accessories" ? (
+                      <AccessoriesMegaMenu />
+                    ) : (
+                      <MegaFlyout
+                        categoryLabel={cat.label}
+                        categoryHref={cat.href}
+                        items={cat.children}
+                        featured={megaExtras[cat.id]?.featured}
+                        quickLinks={megaExtras[cat.id]?.quickLinks}
+                        colours={megaExtras[cat.id]?.colours}
+                      />
+                    )}
                   </div>
                 </div>
               </li>
@@ -92,19 +154,32 @@ function isActive(href: string): boolean {
     </nav>
 
     <div class="site-header__actions">
+      <button type="button" class="site-header__icon" data-search-open aria-label="Search">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+          <circle cx="11" cy="11" r="6.25" />
+          <path d="M16.5 16.5 20 20" stroke-linecap="round" />
+        </svg>
+      </button>
+      <button type="button" class="site-header__icon" data-theme-toggle aria-label="Toggle colour theme">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.25" />
+          <path d="M12 2.5v2.25M12 19.25V21.5M4.5 12H2.25M21.75 12H19.5M5.4 5.4l1.6 1.6M17 17l1.6 1.6M5.4 18.6l1.6-1.6M17 7l1.6-1.6" stroke-linecap="round" />
+        </svg>
+      </button>
       <a class="site-header__icon" href="/account" aria-label="Account">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
           <circle cx="12" cy="8" r="3.25" />
           <path d="M5.5 19.25c1.6-3 4-4.5 6.5-4.5s4.9 1.5 6.5 4.5" stroke-linecap="round" />
         </svg>
       </a>
-      <a class="site-header__icon" href="/cart" aria-label="Cart">
+      <button type="button" class="site-header__icon site-header__bag" data-bag-open aria-label="Open bag">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
           <path d="M3.5 5h1.6l1.2 11.2a1.5 1.5 0 0 0 1.5 1.3h9.4a1.5 1.5 0 0 0 1.5-1.3L20 8.5H7" stroke-linecap="round" stroke-linejoin="round" />
           <circle cx="9.5" cy="20" r="1.25" fill="currentColor" stroke="none" />
           <circle cx="16.5" cy="20" r="1.25" fill="currentColor" stroke="none" />
         </svg>
-      </a>
+        <span class="site-header__badge" data-bag-badge hidden>0</span>
+      </button>
       <button
         type="button"
         class="site-header__menu-btn"
@@ -119,50 +194,334 @@ function isActive(href: string): boolean {
   </div>
 
   <div id="mobile-nav" class="mobile-nav" data-mobile-nav hidden>
+    <div class="mobile-nav__top">
+      <p>Menu</p>
+      <button type="button" data-mobile-close aria-label="Close menu">Close</button>
+    </div>
     <nav aria-label="Mobile">
       <ul class="mobile-nav__list">
-        {
-          productNav.map((cat) =>
-            cat.children ? (
-              <li class="mobile-nav__item">
-                <details class="mobile-nav__details">
-                  <summary class="mobile-nav__summary">{cat.label}</summary>
-                  <ul class="mobile-nav__sub">
+        <li class="mobile-nav__item">
+          <details class="mobile-nav__details" open>
+            <summary class="mobile-nav__summary">iPhone</summary>
+            <ul class="mobile-nav__sub">
+              <li><a href="/iphone">All iPhone</a></li>
+              {
+                iphoneGens.map((g) => (
+                  <li class="mobile-nav__gen">
+                    <p>iPhone {g}</p>
+                    <ul>
+                      {modelsByFamily(g).map((m) => (
+                        <li>
+                          <a href={`/iphone/${m.id}`}>
+                            {m.name}
+                            <span>from {formatKes(m.basePriceKes)}</span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                ))
+              }
+            </ul>
+          </details>
+        </li>
+        <li class="mobile-nav__item">
+          <details class="mobile-nav__details">
+            <summary class="mobile-nav__summary">Mac</summary>
+            <ul class="mobile-nav__sub">
+              <li><a href="/mac">Mac home</a></li>
+              <li><a href="/mac/shop">Shop all MacBook</a></li>
+              <li class="mobile-nav__gen">
+                <p>MacBook Air</p>
+                <ul>
+                  {macAir.map((m) => (
                     <li>
-                      <a href={cat.href}>All {cat.label}</a>
+                      <a href={`/mac/${m.id}`}>
+                        {m.name}
+                        <span>from {formatMacKes(m.basePriceKes)}</span>
+                      </a>
                     </li>
-                    {cat.children.map((sub) => (
-                      <li>
-                        <a href={sub.href}>{sub.label}</a>
-                      </li>
-                    ))}
-                  </ul>
-                </details>
+                  ))}
+                </ul>
               </li>
-            ) : (
+              <li class="mobile-nav__gen">
+                <p>MacBook Pro</p>
+                <ul>
+                  {macPro.map((m) => (
+                    <li>
+                      <a href={`/mac/${m.id}`}>
+                        {m.name}
+                        <span>from {formatMacKes(m.basePriceKes)}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+              <li><a href="/mac/shop?need=everyday">Shop by need</a></li>
+              <li><a href="/mac/compare">Compare</a></li>
+              <li><a href="/trade-in">Trade-In</a></li>
+              <li><a href="/accessories">Accessories</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="mobile-nav__item">
+          <details class="mobile-nav__details">
+            <summary class="mobile-nav__summary">iPad</summary>
+            <ul class="mobile-nav__sub">
+              <li><a href="/ipad">iPad home</a></li>
+              <li><a href="/ipad/shop">Shop all iPad</a></li>
+              <li class="mobile-nav__gen">
+                <p>iPad Pro</p>
+                <ul>
+                  {ipadPro.slice(0, 6).map((m) => (
+                    <li>
+                      <a href={`/ipad/${m.id}`}>
+                        {m.name}
+                        <span>from {formatIpadKes(m.basePriceKes)}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+              <li class="mobile-nav__gen">
+                <p>iPad Air</p>
+                <ul>
+                  {ipadAir.slice(0, 6).map((m) => (
+                    <li>
+                      <a href={`/ipad/${m.id}`}>
+                        {m.name}
+                        <span>from {formatIpadKes(m.basePriceKes)}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+              <li class="mobile-nav__gen">
+                <p>iPad mini</p>
+                <ul>
+                  {ipadMini.map((m) => (
+                    <li>
+                      <a href={`/ipad/${m.id}`}>
+                        {m.name}
+                        <span>from {formatIpadKes(m.basePriceKes)}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+              <li class="mobile-nav__gen">
+                <p>iPad</p>
+                <ul>
+                  {ipadStd.map((m) => (
+                    <li>
+                      <a href={`/ipad/${m.id}`}>
+                        {m.name}
+                        <span>from {formatIpadKes(m.basePriceKes)}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+              <li><a href="/ipad/shop?need=drawing">Pencil and keyboards</a></li>
+              <li><a href="/ipad/shop?need=school">Shop by need</a></li>
+              <li><a href="/ipad/compare">Compare</a></li>
+              <li><a href="/trade-in">Trade-In</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="mobile-nav__item">
+          <details class="mobile-nav__details">
+            <summary class="mobile-nav__summary">Watch</summary>
+            <ul class="mobile-nav__sub">
+              <li><a href="/watch">Watch home</a></li>
+              <li><a href="/watch/shop">Shop all Watch</a></li>
+              <li class="mobile-nav__gen">
+                <p>Series</p>
+                <ul>
+                  {watchSeries.map((m) => (
+                    <li>
+                      <a href={`/watch/${m.id}`}>
+                        {m.name}
+                        <span>from {formatWatchKes(m.basePriceKes)}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+              <li class="mobile-nav__gen">
+                <p>Ultra</p>
+                <ul>
+                  {watchUltra.map((m) => (
+                    <li>
+                      <a href={`/watch/${m.id}`}>
+                        {m.name}
+                        <span>from {formatWatchKes(m.basePriceKes)}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+              <li class="mobile-nav__gen">
+                <p>SE</p>
+                <ul>
+                  {watchSe.map((m) => (
+                    <li>
+                      <a href={`/watch/${m.id}`}>
+                        {m.name}
+                        <span>from {formatWatchKes(m.basePriceKes)}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+              <li><a href="/watch/shop?band=sport-band">Bands</a></li>
+              <li><a href="/watch/shop?need=fitness">Shop by need</a></li>
+              <li><a href="/watch/compare">Compare</a></li>
+              <li><a href="/trade-in">Trade-In</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="mobile-nav__item">
+          <details class="mobile-nav__details">
+            <summary class="mobile-nav__summary">AirPods</summary>
+            <ul class="mobile-nav__sub">
+              <li><a href="/airpods">AirPods home</a></li>
+              <li><a href="/airpods/shop">Shop all AirPods</a></li>
+              <li class="mobile-nav__gen">
+                <p>Pro</p>
+                <ul>
+                  {airpodsPro.map((m) => (
+                    <li>
+                      <a href={`/airpods/${m.id}`}>
+                        {m.name}
+                        <span>from {formatAirpodsKes(m.basePriceKes)}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+              <li class="mobile-nav__gen">
+                <p>AirPods</p>
+                <ul>
+                  {airpodsStd.map((m) => (
+                    <li>
+                      <a href={`/airpods/${m.id}`}>
+                        {m.name}
+                        <span>from {formatAirpodsKes(m.basePriceKes)}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+              <li class="mobile-nav__gen">
+                <p>Max</p>
+                <ul>
+                  {airpodsMax.map((m) => (
+                    <li>
+                      <a href={`/airpods/${m.id}`}>
+                        {m.name}
+                        <span>from {formatAirpodsKes(m.basePriceKes)}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+              <li><a href="/airpods/shop?need=commute">Shop by need</a></li>
+              <li><a href="/airpods/compare">Compare</a></li>
+              <li><a href="/trade-in">Trade-In</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="mobile-nav__item">
+          <details class="mobile-nav__details">
+            <summary class="mobile-nav__summary">TV &amp; Home</summary>
+            <ul class="mobile-nav__sub">
+              <li><a href="/tv-home">TV &amp; Home home</a></li>
+              <li><a href="/tv-home/shop">Shop all</a></li>
+              <li class="mobile-nav__gen">
+                <p>Apple TV</p>
+                <ul>
+                  {tvAtv.map((m) => (
+                    <li>
+                      <a href={`/tv-home/${m.id}`}>
+                        {m.name}
+                        <span>from {formatTvHomeKes(m.basePriceKes)}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+              <li class="mobile-nav__gen">
+                <p>HomePod</p>
+                <ul>
+                  {tvHp.map((m) => (
+                    <li>
+                      <a href={`/tv-home/${m.id}`}>
+                        {m.name}
+                        <span>from {formatTvHomeKes(m.basePriceKes)}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+              <li class="mobile-nav__gen">
+                <p>HomePod mini</p>
+                <ul>
+                  {tvMini.map((m) => (
+                    <li>
+                      <a href={`/tv-home/${m.id}`}>
+                        {m.name}
+                        <span>from {formatTvHomeKes(m.basePriceKes)}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+              <li><a href="/tv-home/shop?need=movies">Shop by need</a></li>
+              <li><a href="/tv-home/compare">Compare</a></li>
+            </ul>
+          </details>
+        </li>
+        <li class="mobile-nav__item">
+          <details class="mobile-nav__details">
+            <summary class="mobile-nav__summary">Accessories</summary>
+            <ul class="mobile-nav__sub">
+              <li><a href="/accessories">Accessories home</a></li>
+              <li><a href="/accessories/apple-pencil">Apple Pencil</a></li>
+              <li><a href="/accessories/magic-keyboard">Magic Keyboard</a></li>
+              <li><a href="/accessories/magic-mouse">Magic Mouse</a></li>
+              <li><a href="/accessories/magic-trackpad">Magic Trackpad</a></li>
+              <li><a href="/accessories/power">Power</a></li>
+              <li><a href="/accessories/cases">Cases</a></li>
+              <li><a href="/accessories/apple-pencil#finder">Which Pencil fits my iPad?</a></li>
+              <li><a href="/accessories/magic-keyboard#finder">Which keyboard fits?</a></li>
+              <li><a href="/accessories/compare">Compare</a></li>
+            </ul>
+          </details>
+        </li>
+        {
+          productNav
+            .filter((c) => c.id !== "iphone" && c.id !== "mac" && c.id !== "ipad" && c.id !== "watch" && c.id !== "airpods" && c.id !== "tv-home" && c.id !== "accessories")
+            .map((cat) => (
               <li class="mobile-nav__item">
-                <a
-                  class:list={["mobile-nav__link", { "is-active": isActive(cat.href) }]}
-                  href={cat.href}
-                >
+                <a class="mobile-nav__link" href={cat.href}>
                   {cat.label}
                 </a>
               </li>
-            ),
-          )
+            ))
         }
         {
           secondaryNav.map((item) => (
             <li class="mobile-nav__item">
-              <a
-                class:list={["mobile-nav__link", { "is-active": isActive(item.href) }]}
-                href={item.href}
-              >
+              <a class="mobile-nav__link" href={item.href}>
                 {item.label}
               </a>
             </li>
           ))
         }
+        <li class="mobile-nav__item">
+          <a class="mobile-nav__link" href="/support">Support</a>
+        </li>
       </ul>
       <a
         class="btn btn--primary mobile-nav__wa"
@@ -175,14 +534,16 @@ function isActive(href: string): boolean {
     </nav>
   </div>
 </header>
+<div class="nav-dim" data-nav-dim hidden></div>
 
 <style>
   .site-header {
     position: sticky;
     top: 0;
     z-index: 100;
-    background: var(--color-white);
-    border-bottom: 1px solid var(--color-border);
+    background: var(--color-black);
+    color: var(--color-white);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
     overflow: visible;
   }
 
@@ -238,7 +599,7 @@ function isActive(href: string): boolean {
     font-size: 0.8125rem;
     font-weight: var(--font-weight-medium);
     letter-spacing: -0.01em;
-    color: var(--color-fg-muted);
+    color: rgba(255, 255, 255, 0.72);
     text-decoration: none;
     border-radius: var(--radius-sm);
     white-space: nowrap;
@@ -252,8 +613,13 @@ function isActive(href: string): boolean {
   .site-header__link:hover,
   .site-header__link.is-active,
   .site-header__link[aria-expanded="true"] {
-    color: var(--color-black);
-    background: var(--color-grey-100);
+    color: var(--color-white);
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .site-header__link--lipa {
+    color: var(--color-white);
+    font-weight: var(--font-weight-display);
   }
 
   .flyout {
@@ -265,12 +631,92 @@ function isActive(href: string): boolean {
     border-bottom: 1px solid var(--color-border);
     box-shadow: 0 12px 32px rgb(10 10 10 / 0.06);
     padding: var(--space-5) 0 var(--space-6);
-    max-height: min(70dvh, 32rem);
+    max-height: min(78dvh, 40rem);
     overflow-y: auto;
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+    transition:
+      opacity 220ms var(--ease-out),
+      transform 220ms var(--ease-out);
+  }
+
+  .flyout.is-open {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
   }
 
   .flyout[hidden] {
     display: none;
+  }
+
+  .flyout--iphone {
+    padding-top: var(--space-6);
+  }
+
+  .flyout--mac {
+    padding-top: var(--space-6);
+    max-height: min(82dvh, 44rem);
+  }
+
+  .flyout--ipad {
+    padding-top: var(--space-6);
+    max-height: min(82dvh, 44rem);
+  }
+
+  .flyout--watch {
+    padding-top: var(--space-6);
+    max-height: min(82dvh, 44rem);
+  }
+
+  .flyout--airpods {
+    padding-top: var(--space-6);
+    max-height: min(82dvh, 44rem);
+  }
+
+  .flyout--tv-home {
+    padding-top: var(--space-6);
+    max-height: min(82dvh, 44rem);
+  }
+
+  .nav-dim {
+    position: fixed;
+    inset: 0;
+    top: calc(var(--header-height) + var(--announce-height));
+    z-index: 90;
+    background: rgb(0 0 0 / 0.28);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  .nav-dim[hidden] {
+    display: none;
+  }
+
+  html.announce-dismissed .nav-dim {
+    top: var(--header-height);
+  }
+
+  .site-header__bag {
+    position: relative;
+  }
+
+  .site-header__badge {
+    position: absolute;
+    top: 0.2rem;
+    right: 0.15rem;
+    min-width: 1.05rem;
+    height: 1.05rem;
+    padding: 0 0.25rem;
+    border-radius: 999px;
+    background: #fff;
+    color: #000;
+    font-size: 0.65rem;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+    line-height: 1;
   }
 
   .flyout__inner {
@@ -319,14 +765,18 @@ function isActive(href: string): boolean {
     justify-content: center;
     width: 2.5rem;
     height: 2.5rem;
+    border: none;
+    background: transparent;
     border-radius: var(--radius-md);
-    color: var(--color-black);
+    color: var(--color-white);
     text-decoration: none;
+    cursor: pointer;
+    padding: 0;
   }
 
   .site-header__icon:hover {
-    background: var(--color-grey-100);
-    color: var(--color-black);
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-white);
   }
 
   .site-header__menu-btn {
@@ -342,7 +792,7 @@ function isActive(href: string): boolean {
   }
 
   .site-header__menu-btn:hover {
-    background: var(--color-grey-100);
+    background: rgba(255, 255, 255, 0.1);
   }
 
   .site-header__menu-icon,
@@ -351,7 +801,7 @@ function isActive(href: string): boolean {
     display: block;
     width: 1.125rem;
     height: 1.5px;
-    background: var(--color-black);
+    background: var(--color-white);
     border-radius: 1px;
     transition:
       transform var(--duration-fast) var(--ease),
@@ -392,15 +842,91 @@ function isActive(href: string): boolean {
   }
 
   .mobile-nav {
-    border-top: 1px solid var(--color-border);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 120;
+    width: min(88vw, 380px);
+    height: 100dvh;
+    border-top: none;
     background: var(--color-white);
+    color: var(--color-black);
     padding: var(--space-4) var(--space-4) var(--space-8);
-    max-height: calc(100dvh - var(--header-height));
+    max-height: none;
     overflow-y: auto;
+    box-shadow: 12px 0 40px rgb(0 0 0 / 0.2);
+    transform: translateX(-105%);
+    transition: transform 220ms var(--ease-out);
+  }
+
+  .mobile-nav.is-open {
+    transform: translateX(0);
   }
 
   .mobile-nav[hidden] {
-    display: none;
+    display: block;
+    pointer-events: none;
+  }
+
+  .mobile-nav__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .mobile-nav__top p {
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .mobile-nav__top button {
+    border: none;
+    background: transparent;
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .mobile-nav__next {
+    margin-left: 0.45rem;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-grey);
+  }
+
+  .mobile-nav__gen {
+    margin: 0.75rem 0;
+  }
+
+  .mobile-nav__gen > p {
+    margin: 0 0 0.35rem;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-grey);
+  }
+
+  .mobile-nav__gen ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .mobile-nav__gen a {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.4rem 0;
+    color: var(--color-black);
+    text-decoration: none;
+    font-size: var(--text-sm);
+  }
+
+  .mobile-nav__gen a span {
+    color: var(--color-grey);
+    font-size: 0.7rem;
   }
 
   .mobile-nav__list {
@@ -451,7 +977,7 @@ function isActive(href: string): boolean {
     width: 100%;
   }
 
-  @media (min-width: 68rem) {
+  @media (min-width: 63.75rem) {
     .site-header__nav {
       display: flex;
     }
@@ -465,7 +991,13 @@ function isActive(href: string): boolean {
     }
   }
 
-  @media (min-width: 68rem) and (max-width: 82rem) {
+  @media (max-width: 63.749rem) {
+    .flyout {
+      display: none !important;
+    }
+  }
+
+  @media (min-width: 63.75rem) and (max-width: 82rem) {
     .site-header__link {
       padding: 0.4rem 0.35rem;
       font-size: 0.72rem;
@@ -489,30 +1021,58 @@ function isActive(href: string): boolean {
       display: none;
     }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .flyout,
+    .mobile-nav {
+      transition: none;
+    }
+  }
 </style>
 
 <script>
   function setupHeader() {
-    const header = document.querySelector(".site-header");
-    if (!header) return;
+    const header = document.querySelector("[data-site-header]") || document.querySelector(".site-header");
+    if (!header || header.getAttribute("data-bound") === "1") return;
+    header.setAttribute("data-bound", "1");
 
-    const triggers = header.querySelectorAll<HTMLElement>("[data-flyout-trigger]");
-    const panels = header.querySelectorAll<HTMLElement>("[data-flyout]");
+    const triggers = header.querySelectorAll("[data-flyout-trigger]");
+    const panels = header.querySelectorAll("[data-flyout]");
     const mobileTrigger = header.querySelector("[data-mobile-trigger]");
     const mobileNav = header.querySelector("[data-mobile-nav]");
-    let closeTimer: ReturnType<typeof setTimeout> | null = null;
+    const mobileClose = header.querySelector("[data-mobile-close]");
+    const dim = document.querySelector("[data-nav-dim]");
+    let closeTimer = null;
+
+    function setDim(on) {
+      if (!(dim instanceof HTMLElement)) return;
+      dim.hidden = !on;
+    }
 
     function closeAll() {
       triggers.forEach((t) => t.setAttribute("aria-expanded", "false"));
-      panels.forEach((p) => p.setAttribute("hidden", ""));
+      panels.forEach((p) => {
+        p.classList.remove("is-open");
+        p.setAttribute("hidden", "");
+      });
+      setDim(false);
     }
 
-    function openPanel(id: string) {
-      closeAll();
-      const trigger = header.querySelector(`[data-flyout-trigger="${id}"]`);
-      const panel = header.querySelector(`[data-flyout="${id}"]`);
-      trigger?.setAttribute("aria-expanded", "true");
-      panel?.removeAttribute("hidden");
+    function openPanel(id) {
+      if (window.matchMedia("(max-width: 63.749rem)").matches) return;
+      cancelClose();
+      triggers.forEach((t) => t.setAttribute("aria-expanded", t.getAttribute("data-flyout-trigger") === id ? "true" : "false"));
+      panels.forEach((p) => {
+        const match = p.getAttribute("data-flyout") === id;
+        if (match) {
+          p.removeAttribute("hidden");
+          requestAnimationFrame(() => p.classList.add("is-open"));
+        } else {
+          p.classList.remove("is-open");
+          p.setAttribute("hidden", "");
+        }
+      });
+      setDim(true);
     }
 
     function scheduleClose() {
@@ -529,47 +1089,77 @@ function isActive(href: string): boolean {
       const id = trigger.getAttribute("data-flyout-trigger");
       if (!id) return;
       const item = trigger.closest(".site-header__item--flyout");
-
-      trigger.addEventListener("mouseenter", () => {
-        cancelClose();
-        openPanel(id);
-      });
-      trigger.addEventListener("focus", () => {
-        cancelClose();
-        openPanel(id);
-      });
+      trigger.addEventListener("mouseenter", () => openPanel(id));
+      trigger.addEventListener("focus", () => openPanel(id));
       item?.addEventListener("mouseleave", scheduleClose);
-
-      const panel = header.querySelector(`[data-flyout="${id}"]`);
-      panel?.addEventListener("mouseenter", cancelClose);
-      panel?.addEventListener("mouseleave", scheduleClose);
+      item?.addEventListener("mouseenter", cancelClose);
+      trigger.addEventListener(
+        "click",
+        (e) => {
+          if (window.matchMedia("(max-width: 63.749rem)").matches) return;
+          if (trigger.getAttribute("aria-expanded") !== "true") {
+            e.preventDefault();
+            openPanel(id);
+          }
+        },
+        { capture: true },
+      );
     });
 
-    // Close when hovering non-flyout nav links
+    panels.forEach((panel) => {
+      panel.addEventListener("mouseenter", cancelClose);
+      panel.addEventListener("mouseleave", scheduleClose);
+    });
+
     header.querySelectorAll(".site-header__item:not(.site-header__item--flyout)").forEach((el) => {
-      el.addEventListener("mouseenter", closeAll);
+      el.addEventListener("mouseenter", scheduleClose);
     });
+
+    dim?.addEventListener("click", () => {
+      closeAll();
+      closeMobile();
+    });
+
+    function openMobile() {
+      mobileTrigger?.setAttribute("aria-expanded", "true");
+      mobileTrigger?.setAttribute("aria-label", "Close menu");
+      mobileNav?.removeAttribute("hidden");
+      requestAnimationFrame(() => mobileNav?.classList.add("is-open"));
+      setDim(true);
+      closeAll();
+      setDim(true);
+    }
+
+    function closeMobile() {
+      mobileTrigger?.setAttribute("aria-expanded", "false");
+      mobileTrigger?.setAttribute("aria-label", "Open menu");
+      mobileNav?.classList.remove("is-open");
+      setTimeout(() => mobileNav?.setAttribute("hidden", ""), 220);
+      setDim(false);
+    }
 
     mobileTrigger?.addEventListener("click", () => {
       const open = mobileTrigger.getAttribute("aria-expanded") === "true";
-      mobileTrigger.setAttribute("aria-expanded", open ? "false" : "true");
-      mobileTrigger.setAttribute("aria-label", open ? "Open menu" : "Close menu");
-      if (open) mobileNav?.setAttribute("hidden", "");
-      else mobileNav?.removeAttribute("hidden");
-      closeAll();
+      if (open) closeMobile();
+      else openMobile();
     });
-
-    document.addEventListener("click", (e) => {
-      if (!header.contains(e.target as Node)) closeAll();
-    });
+    mobileClose?.addEventListener("click", closeMobile);
+    mobileNav?.querySelectorAll("a").forEach((a) => a.addEventListener("click", closeMobile));
 
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
         closeAll();
-        if (mobileTrigger?.getAttribute("aria-expanded") === "true") {
-          mobileTrigger.click();
-        }
+        closeMobile();
       }
+    });
+
+    header.querySelector("[data-theme-toggle]")?.addEventListener("click", () => {
+      const root = document.documentElement;
+      const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try {
+        localStorage.setItem("gh-theme", next);
+      } catch {}
     });
   }
 

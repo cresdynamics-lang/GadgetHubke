@@ -1,0 +1,316 @@
+---
+/**
+ * Shop card for iPhone 11–16 catalog.
+ */
+import ProductStage from "./ProductStage.astro";
+import {
+  type IphoneModel,
+  getImage,
+  defaultColourForModel,
+  availableColours,
+  isOverviewOnly,
+  isLatestTag,
+  isValueTag,
+  modelSubline,
+  storagePrices,
+  formatKes,
+  lipaMonthly,
+  colourHex,
+  isLightColour,
+  colourLabel,
+} from "../../lib/iphone";
+import { iphoneConfig } from "../../lib/iphone/config";
+
+interface Props {
+  model: IphoneModel;
+  compare?: boolean;
+}
+
+const { model, compare = true } = Astro.props;
+const colour = defaultColourForModel(model.id, model.defaultColour ?? undefined);
+const img = getImage(model.id, colour, 1, model.name);
+const colours = availableColours(model.id);
+const overviewOnly = isOverviewOnly(model.id);
+const price = storagePrices(model.basePriceKes, model.storage)[0];
+const lipa = lipaMonthly(price.kes);
+const href = `/iphone/${model.id}`;
+const tag = isLatestTag(model) ? "Latest" : isValueTag(model) ? "Value" : null;
+
+const colourPayload = colours.map((key) => {
+  const resolved = getImage(model.id, key, 1, model.name);
+  return { key, hex: colourHex(key), label: colourLabel(key), src: resolved.src, srcWebp: resolved.srcWebp ?? "", alt: resolved.alt, light: isLightColour(key) };
+});
+---
+
+<article class="icard" data-icard data-model={model.id} data-family={model.family} data-tier={model.tier} data-price={price.kes} data-battery={model.batteryVideoHours} data-size={model.displayInches}>
+  {
+    compare ? (
+      <label class="icard__compare">
+        <input type="checkbox" data-compare={model.id} aria-label={`Compare ${model.name}`} />
+      </label>
+    ) : null
+  }
+  {
+    tag ? <span class="icard__tag">{tag}</span> : null
+  }
+  <a class="icard__media" href={href}>
+    <ProductStage src={img.src} srcWebp={img.srcWebp} alt={img.alt} width={img.width} height={img.width} />
+  </a>
+  <div class="icard__body">
+    <h3 class="icard__name"><a href={href}>{model.name}</a></h3>
+    <p class="icard__sub">{modelSubline(model)}</p>
+    {
+      overviewOnly ? (
+        <p class="icard__note">Full angle set coming soon</p>
+      ) : (
+        <div class="icard__swatches" role="group" aria-label={`${model.name} colours`}>
+          {colourPayload.map((c, i) => (
+            <button
+              type="button"
+              class:list={["icard__dot", { "is-active": i === 0, "icard__dot--light": c.light }]}
+              style={`--swatch: ${c.hex}`}
+              aria-label={c.label}
+              data-icard-swatch
+              data-src={c.src}
+              data-webp={c.srcWebp}
+              data-alt={c.alt}
+            />
+          ))}
+        </div>
+      )
+    }
+    <p class="icard__price">
+      <span class="icard__from">From {formatKes(price.kes)}</span>
+      <span class="icard__sample">Sample price</span>
+    </p>
+    <p class="icard__lipa">
+      or {formatKes(lipa.monthlyKes)} a month for {lipa.months} months after a {iphoneConfig.lipa.depositDefaultPct}% deposit
+    </p>
+    <div class="icard__actions">
+      <a class="btn btn--primary btn--sm" href={href}>View</a>
+      <button type="button" class="btn btn--secondary btn--sm" data-add-bag={model.id} data-name={model.name} data-colour={colour ?? ""} data-storage={model.storage[0]} data-kes={price.kes} data-image={img.src}>
+        Add to bag
+      </button>
+    </div>
+  </div>
+</article>
+
+<script>
+  document.querySelectorAll("[data-icard]").forEach((card) => {
+    const img = card.querySelector(".pstage__img") as HTMLImageElement | null;
+    const webpSource = card.querySelector(".pstage source") as HTMLSourceElement | null;
+    card.querySelectorAll("[data-icard-swatch]").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const src = btn.getAttribute("data-src");
+        const webp = btn.getAttribute("data-webp");
+        const alt = btn.getAttribute("data-alt");
+        if (img && src) {
+          img.style.opacity = "0";
+          window.setTimeout(() => {
+            img.src = src;
+            if (webpSource) {
+              if (webp) webpSource.srcset = webp;
+              else webpSource.removeAttribute("srcset");
+            }
+            if (alt) img.alt = alt;
+            img.style.opacity = "1";
+          }, 120);
+        }
+        card.querySelectorAll("[data-icard-swatch]").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        const bag = card.querySelector("[data-add-bag]");
+        if (bag) {
+          bag.setAttribute("data-colour", btn.getAttribute("aria-label") || "");
+          bag.setAttribute("data-image", src || "");
+        }
+      });
+    });
+
+    card.querySelector("[data-add-bag]")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      const btn = e.currentTarget;
+      if (!(btn instanceof HTMLElement)) return;
+      window.dispatchEvent(
+        new CustomEvent("gh:bag-add", {
+          detail: {
+            id: btn.getAttribute("data-add-bag"),
+            name: btn.getAttribute("data-name"),
+            colour: btn.getAttribute("data-colour"),
+            storage: btn.getAttribute("data-storage"),
+            kes: Number(btn.getAttribute("data-kes") || 0),
+            image: btn.getAttribute("data-image"),
+          },
+        }),
+      );
+    });
+  });
+</script>
+
+<style>
+  .icard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background: var(--color-bg);
+    overflow: hidden;
+    transition:
+      transform var(--duration) var(--ease-out),
+      border-color var(--duration) var(--ease),
+      box-shadow var(--duration) var(--ease);
+  }
+
+  .icard:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-fg);
+    box-shadow: 0 12px 28px rgb(0 0 0 / 0.08);
+  }
+
+  .icard:hover :global(.pstage__img) {
+    transform: scale(1.06);
+  }
+
+  .icard :global(.pstage) {
+    border-radius: 0;
+    transition: transform var(--duration) var(--ease-out);
+  }
+
+  .icard :global(.pstage__img) {
+    transition:
+      transform var(--duration) var(--ease-out),
+      opacity 120ms linear;
+  }
+
+  .icard__compare {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 2;
+    background: rgb(255 255 255 / 0.9);
+    border-radius: 0.25rem;
+    padding: 0.2rem;
+  }
+
+  .icard__tag {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 2;
+    font-size: 0.65rem;
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.55rem;
+    border-radius: 999px;
+    background: var(--color-black);
+    color: var(--color-white);
+  }
+
+  .icard__media {
+    display: block;
+    text-decoration: none;
+  }
+
+  .icard__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1rem 1.1rem 1.15rem;
+    flex: 1;
+  }
+
+  .icard__name {
+    margin: 0;
+    font-size: 1.05rem;
+    letter-spacing: -0.02em;
+  }
+
+  .icard__name a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .icard__sub {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+
+  .icard__note {
+    margin: 0.25rem 0 0;
+    font-size: 0.75rem;
+    color: var(--color-fg-muted);
+  }
+
+  .icard__swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.35rem;
+  }
+
+  .icard__dot {
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 50%;
+    border: 1px solid rgb(0 0 0 / 0.12);
+    background: var(--swatch);
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .icard__dot--light {
+    box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.15);
+  }
+
+  .icard__dot.is-active {
+    outline: 2px solid var(--color-fg);
+    outline-offset: 2px;
+  }
+
+  .icard__price {
+    margin: 0.5rem 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.4rem;
+  }
+
+  .icard__from {
+    font-weight: var(--font-weight-display);
+    letter-spacing: -0.02em;
+  }
+
+  .icard__sample {
+    font-size: 0.7rem;
+    color: var(--color-fg-muted);
+  }
+
+  .icard__lipa {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--color-fg-muted);
+    line-height: 1.35;
+  }
+
+  .icard__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding-top: 0.75rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .icard,
+    .icard:hover,
+    .icard :global(.pstage__img) {
+      transition: none;
+      transform: none;
+    }
+  }
+</style>

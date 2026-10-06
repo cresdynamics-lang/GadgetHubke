@@ -1,0 +1,39 @@
+{
+  "count03": 236,
+  "expected03": 236,
+  "perFolder": {
+    "03_AirPods_animation_images_AirPods_Pro_page_PART1of2": 51,
+    "03_AirPods_animation_images_AirPods_Pro_page_PART2of2": 20,
+    "03_AirPods_animation_images_AirPods_5_page": 65,
+    "03_AirPods_animation_images_AirPods_Max_page": 81,
+    "03_AirPods_animation_images_AirPods_landing_page": 19
+  },
+  "totalKeys": 201,
+  "singlesPreferred": 176,
+  "keysPerPage": {
+    "pro": 83,
+    "airpods5": 43,
+    "max": 56,
+    "landing": 19
+  },
+  "iconCount": 2,
+  "productKeys": [
+    "airpods-4",
+    "pro-2",
+    "airpods-5",
+    "max",
+    "pro-3"
+  ],
+  "caseCount": 11,
+  "compareCount": 17,
+  "warnings": [],
+  "deletedStale": [
+    "public/03_Animation_and_page_images_apple.com",
+    "public/03_Animation_and_page_images_apple.com 2",
+    "public/03_Animation_and_page_images_apple.com 3"
+  ],
+  "kept": [
+    "public/03_Animation_and_page_images_apple.com 4 (Watch)"
+  ],
+  "animRoot": "public/Airpods3"
+}

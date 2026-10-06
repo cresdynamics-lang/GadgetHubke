@@ -1,0 +1,805 @@
+---
+/**
+ * PDP “feel” sections — thin, display, keyboard, performance, battery, camera, ports, colour.
+ */
+import {
+  type MacModel,
+  getMacImage,
+  defaultMacColour,
+  macConfig,
+  colourLabel,
+  colourHex,
+} from "../../lib/mac";
+
+interface Props {
+  model: MacModel;
+}
+
+const { model } = Astro.props;
+const colour = defaultMacColour(model);
+const thickness = macConfig.thicknessMm[model.thicknessKey];
+const side = getMacImage(model.id, colour, "design_side", model.name);
+const display = getMacImage(model.id, colour, "display", model.name);
+const displayEdr = getMacImage(model.id, colour, "display_edr", model.name);
+const displayNano = getMacImage(model.id, colour, "display_nano_texture", model.name);
+const top = getMacImage(model.id, colour, "design_top", model.name);
+const battery = getMacImage(model.id, colour, "battery", model.name);
+const camStart = getMacImage(model.id, colour, "camera_start", model.name);
+const camEnd = getMacImage(model.id, colour, "camera_end", model.name);
+const desk = getMacImage(model.id, colour, "desk_view", model.name);
+const ports1 = getMacImage(model.id, colour, "ports_1", model.name);
+const ports2 = getMacImage(model.id, colour, "ports_2", model.name);
+const magsafe = getMacImage(model.id, colour, "magsafe", model.name);
+const nitsLabel = model.display.peakHdrNits
+  ? `${model.display.brightnessNits} nits sustained, ${model.display.peakHdrNits} peak HDR`
+  : `${model.display.brightnessNits} nits`;
+const showNano = Boolean(model.display.nanoTextureOptional);
+const showPromotion = Boolean(model.display.promotion);
+const ratios = macConfig.performanceRatios.filter((r) =>
+  model.family === "Air" ? r.id.includes("air") : r.id.includes("pro"),
+);
+const airColours = ["midnight", "starlight", "silver", "sky-blue"] as const;
+---
+
+<nav class="mfeel-nav" data-mfeel-nav aria-label="Feel sections">
+  {
+    ["thin", "display", "keyboard", "performance", "battery", "camera", "ports", "colour"].map((id, i) => (
+      <a href={`#feel-${id}`} data-feel-dot={id} class:list={{ "is-active": i === 0 }} aria-label={id}>
+        <span />
+      </a>
+    ))
+  }
+</nav>
+
+<section class="mfeel mfeel--black" id="feel-thin" data-feel="thin">
+  <div class="container mfeel__inner">
+    <h2>Thin enough to forget.</h2>
+    <p class="mfeel__lede">About {thickness} mm at the thickest point. Owner: confirm before launch.</p>
+    <div class="mfeel__thin">
+      {
+        !side.fallback ? (
+          <img class="mfeel__side" src={side.src} alt={side.alt} width="900" height="400" loading="lazy" data-thin-img />
+        ) : null
+      }
+      <div class="mfeel__measure">
+        <svg viewBox="0 0 40 200" aria-hidden="true">
+          <line x1="20" y1="10" x2="20" y2="190" stroke="#fff" stroke-width="2" stroke-dasharray="180" data-thin-line />
+        </svg>
+        <strong data-thin-num>0</strong>
+        <span>mm</span>
+      </div>
+    </div>
+    <p class="mfeel__caption">Next to a notebook: closed lid is about as thick as a stack of a few sheets — illustration only.</p>
+  </div>
+</section>
+
+<section class="mfeel mfeel--black" id="feel-display" data-feel="display">
+  <div class="container mfeel__inner">
+    <h2>The screen is the reason.</h2>
+    <p class="mfeel__lede">Illustration — not a measurement.</p>
+    <div class="mfeel__display">
+      {
+        !display.fallback ? (
+          <img
+            class="mfeel__screen"
+            src={display.src}
+            alt={display.alt}
+            width="1200"
+            height="750"
+            loading="lazy"
+            data-display-img
+          />
+        ) : null
+      }
+      <label class="mfeel__slider">
+        Sunlight
+        <input type="range" min="0" max="100" value="55" data-nits-slider />
+        <span data-nits-readout>{nitsLabel}</span>
+      </label>
+      {
+        showPromotion ? (
+          <div class="mfeel__hz" aria-label="Refresh rate illustration">
+            <div class="mfeel__hz-track">
+              <span>60 Hz</span>
+              <i data-dot-60 />
+            </div>
+            <div class="mfeel__hz-track">
+              <span>ProMotion up to 120 Hz</span>
+              <i data-dot-120 />
+            </div>
+          </div>
+        ) : null
+      }
+      {
+        showNano && !displayNano.fallback ? (
+          <label class="mfeel__nano">
+            <input type="checkbox" data-nano-toggle />
+            Nano-texture glass (illustration)
+            <img src={displayNano.src} alt={displayNano.alt} hidden data-nano-img width="800" height="500" loading="lazy" />
+          </label>
+        ) : null
+      }
+    </div>
+    <ul class="mfeel__specs">
+      <li>{model.display.diagonal}″</li>
+      <li>{model.display.resolution}</li>
+      <li>{model.display.ppi} ppi</li>
+      <li>{nitsLabel}</li>
+      <li>{model.display.panel}</li>
+      <li>True Tone</li>
+    </ul>
+  </div>
+</section>
+
+<section class="mfeel" id="feel-keyboard" data-feel="keyboard">
+  <div class="container mfeel__inner">
+    <h2>Typing should feel good.</h2>
+    {
+      !top.fallback ? (
+        <img class="mfeel__kb" src={top.src} alt={top.alt} width="1100" height="700" loading="lazy" />
+      ) : null
+    }
+    <div class="mfeel__keys" aria-hidden="true" data-keys>
+      {Array.from({ length: 10 }).map((_, i) => (
+        <span style={`--i:${i}`} />
+      ))}
+      <span class="mfeel__touchid" data-touchid />
+    </div>
+    <p class="mfeel__caption">
+      Backlit keyboard, Touch ID on all of these Macs, large Force Touch trackpad.
+      {model.touchBar
+        ? " This 13″ Pro still has the Touch Bar — later Pros moved to full-height function keys."
+        : " Full-height function keys on modern Pros."}
+    </p>
+  </div>
+</section>
+
+<section class="mfeel mfeel--black" id="feel-performance" data-feel="performance">
+  <div class="container mfeel__inner">
+    <h2>Fast, and quiet.</h2>
+    {
+      ratios.length ? (
+        <ul class="mfeel__bars">
+          {ratios.map((r) => (
+            <li>
+              <span>{r.label}</span>
+              <div class="mfeel__bar"><i style={`--r:${r.ratio}`} /></div>
+              <em>~{r.ratio}× · {r.source} ({r.date}) · {r.note}</em>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="mfeel__lede">No cited Apple ratio for this tier yet — we do not invent bars.</p>
+      )
+    }
+    <p class="mfeel__caption">
+      Unified memory is shared by CPU and GPU. 16 GB is the sensible starting point in 2026.
+      {model.fanless ? " This Air is fanless." : " This Pro has a fan for sustained loads (illustration)."}
+    </p>
+    <ul class="mfeel__handles">
+      <li>Edit 4K video</li>
+      <li>Docker + Xcode</li>
+      <li>20 tabs with Zoom</li>
+      <li>Photoshop / Excel with large files</li>
+    </ul>
+  </div>
+</section>
+
+<section class="mfeel mfeel--black" id="feel-battery" data-feel="battery">
+  <div class="container mfeel__inner">
+    <h2>A full day, then some.</h2>
+    {
+      !battery.fallback ? (
+        <img src={battery.src} alt={battery.alt} width="1000" height="600" loading="lazy" class="mfeel__batt-img" />
+      ) : null
+    }
+    <div class="mfeel__batt" data-batt>
+      <div class="mfeel__batt-icon" aria-hidden="true"><i data-batt-fill /></div>
+      <p>
+        Up to <strong data-batt-hours>0</strong> hours video
+        <span class="mfeel__fine"> — Apple’s claim; depends on use</span>
+      </p>
+    </div>
+    <label class="mfeel__slider">
+      Your day off the wall
+      <input type="range" min="2" max="12" value="8" data-day-slider />
+      <span data-day-result></span>
+    </label>
+    <p class="mfeel__caption">
+      {model.magsafe ? "MagSafe 3 fast charging, plus USB-C." : "Charges over USB-C."}
+      Claim used here: {model.batteryVideoHours} h video.
+    </p>
+  </div>
+</section>
+
+<section class="mfeel" id="feel-camera" data-feel="camera">
+  <div class="container mfeel__inner">
+    <h2>Ready for the meeting.</h2>
+    <p class="mfeel__lede">{model.camera}</p>
+    <div class="mfeel__cam">
+      {
+        !camStart.fallback && !camEnd.fallback ? (
+          <>
+            <img src={camStart.src} alt={camStart.alt} data-cam-start width="900" height="600" loading="lazy" />
+            <img src={camEnd.src} alt={camEnd.alt} data-cam-end width="900" height="600" loading="lazy" />
+          </>
+        ) : null
+      }
+    </div>
+    {
+      !desk.fallback && /12MP|Center Stage/i.test(model.camera) ? (
+        <figure>
+          <img src={desk.src} alt={desk.alt} width="900" height="600" loading="lazy" />
+          <figcaption>Desk View on models with 12MP Center Stage.</figcaption>
+        </figure>
+      ) : (
+        <p class="mfeel__caption">Honest camera note: {model.camera}.</p>
+      )
+    }
+    <p class="mfeel__caption">{model.speakers}. Studio-quality mic array.</p>
+  </div>
+</section>
+
+<section class="mfeel mfeel--black" id="feel-ports" data-feel="ports">
+  <div class="container mfeel__inner">
+    <h2>Plug it in.</h2>
+    <div class="mfeel__ports">
+      {
+        model.family === "Pro" && !ports1.fallback ? (
+          <img src={ports1.src} alt={ports1.alt} width="1000" height="400" loading="lazy" />
+        ) : !magsafe.fallback ? (
+          <img src={magsafe.src} alt={magsafe.alt} width="1000" height="400" loading="lazy" />
+        ) : null
+      }
+      {
+        model.family === "Pro" && !ports2.fallback ? (
+          <img src={ports2.src} alt={ports2.alt} width="1000" height="400" loading="lazy" />
+        ) : null
+      }
+    </div>
+    <ul class="mfeel__port-list">
+      {model.ports.map((p) => (
+        <li>
+          <button type="button">{p}</button>
+        </li>
+      ))}
+    </ul>
+    <p class="mfeel__caption">External displays: {model.externalDisplays}</p>
+  </div>
+</section>
+
+<section class="mfeel" id="feel-colour" data-feel="colour">
+  <div class="container mfeel__inner">
+    <h2>Pick a finish.</h2>
+    {
+      model.family === "Air" ? (
+        <div class="mfeel__colours">
+          {airColours.map((c) => {
+            const img = getMacImage(model.id, c, "design_top", model.name);
+            if (img.fallback && !model.colours.includes(c)) return null;
+            return (
+              <button type="button" data-feel-colour={c} style={`--swatch:${colourHex(c)}`}>
+                {!img.fallback ? <img src={img.src} alt={img.alt} width="280" height="180" loading="lazy" /> : null}
+                <span>{colourLabel(c)}</span>
+              </button>
+            );
+          })}
+        </div>
+      ) : (
+        <div class="mfeel__pro-colours">
+          {model.colours.map((c) => (
+            <button type="button" data-feel-colour={c} class:list={{ "is-active": c === colour }}>
+              {colourLabel(c)}
+            </button>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<script define:vars={{ batteryHours: model.batteryVideoHours, thickness }}>
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Progress dots
+  const sections = [...document.querySelectorAll("[data-feel]")];
+  const dots = [...document.querySelectorAll("[data-feel-dot]")];
+  const onScrollFeel = () => {
+    let active = sections[0]?.getAttribute("data-feel");
+    for (const s of sections) {
+      if (s.getBoundingClientRect().top < window.innerHeight * 0.45) active = s.getAttribute("data-feel");
+    }
+    dots.forEach((d) => d.classList.toggle("is-active", d.getAttribute("data-feel-dot") === active));
+  };
+  window.addEventListener("scroll", onScrollFeel, { passive: true });
+  onScrollFeel();
+
+  // Thin measure
+  const thinSec = document.querySelector("#feel-thin");
+  const thinNum = document.querySelector("[data-thin-num]");
+  const thinLine = document.querySelector("[data-thin-line]");
+  if (thinSec && thinNum) {
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (!e?.isIntersecting) return;
+        if (reduce) {
+          thinNum.textContent = String(thickness);
+          return;
+        }
+        const start = performance.now();
+        const tick = (t) => {
+          const p = Math.min(1, (t - start) / 900);
+          thinNum.textContent = String(Math.round(thickness * p * 10) / 10);
+          if (thinLine instanceof SVGElement) thinLine.style.strokeDashoffset = String(180 * (1 - p));
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+        obs.disconnect();
+      },
+      { threshold: 0.4 },
+    );
+    obs.observe(thinSec);
+  }
+
+  // Display nits slider
+  const slider = document.querySelector("[data-nits-slider]");
+  const screen = document.querySelector("[data-display-img]");
+  const displaySec = document.querySelector("#feel-display");
+  slider?.addEventListener("input", () => {
+    const v = Number(slider.value) / 100;
+    if (screen instanceof HTMLElement) screen.style.filter = `brightness(${0.55 + v * 0.7})`;
+    if (displaySec instanceof HTMLElement) {
+      const g = Math.round(0 + v * 32);
+      displaySec.style.background = `rgb(${g} ${g} ${g + 4})`;
+    }
+  });
+
+  // ProMotion dots
+  const d60 = document.querySelector("[data-dot-60]");
+  const d120 = document.querySelector("[data-dot-120]");
+  if (d60 instanceof HTMLElement && d120 instanceof HTMLElement && !reduce) {
+    let x60 = 0;
+    let x120 = 0;
+    let last = 0;
+    const loop = (t) => {
+      if (!last) last = t;
+      const dt = t - last;
+      last = t;
+      x120 = (x120 + dt * 0.18) % 100;
+      x60 = (x60 + Math.floor(dt / 16.6) * (16.6 * 0.18)) % 100;
+      d120.style.left = `${x120}%`;
+      d60.style.left = `${x60}%`;
+      requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);
+  }
+
+  document.querySelector("[data-nano-toggle]")?.addEventListener("change", (e) => {
+    const img = document.querySelector("[data-nano-img]");
+    if (img instanceof HTMLElement && e.target instanceof HTMLInputElement) img.hidden = !e.target.checked;
+  });
+
+  // Keyboard press
+  const keys = document.querySelector("[data-keys]");
+  if (keys && !reduce) {
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e?.isIntersecting) {
+          keys.classList.add("is-play");
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.35 },
+    );
+    obs.observe(keys);
+  }
+
+  // Battery drain on scroll through section
+  const battSec = document.querySelector("#feel-battery");
+  const fill = document.querySelector("[data-batt-fill]");
+  const hoursEl = document.querySelector("[data-batt-hours]");
+  const daySlider = document.querySelector("[data-day-slider]");
+  const dayResult = document.querySelector("[data-day-result]");
+  function updateDay() {
+    if (!(daySlider instanceof HTMLInputElement) || !dayResult) return;
+    const hrs = Number(daySlider.value);
+    const margin = batteryHours * 0.7;
+    dayResult.textContent =
+      hrs <= margin
+        ? `${hrs} h — this model comfortably covers it (30% safety margin on Apple’s ${batteryHours} h claim).`
+        : `${hrs} h — tight or short of Apple’s ${batteryHours} h claim; plan a charger.`;
+  }
+  daySlider?.addEventListener("input", updateDay);
+  updateDay();
+  if (battSec && fill instanceof HTMLElement && hoursEl) {
+    const onBatt = () => {
+      const rect = battSec.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, (window.innerHeight * 0.7 - rect.top) / (rect.height || 1)));
+      fill.style.height = `${Math.round((1 - p) * 100)}%`;
+      hoursEl.textContent = String(Math.round(batteryHours * p));
+    };
+    window.addEventListener("scroll", onBatt, { passive: true });
+    onBatt();
+  }
+
+  // Center Stage cross-fade
+  const camSec = document.querySelector("#feel-camera");
+  const camEnd = document.querySelector("[data-cam-end]");
+  if (camSec && camEnd instanceof HTMLElement) {
+    camEnd.style.opacity = reduce ? "1" : "0";
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (!e?.isIntersecting) return;
+        if (!reduce) camEnd.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 900, fill: "forwards" });
+        else camEnd.style.opacity = "1";
+        obs.disconnect();
+      },
+      { threshold: 0.35 },
+    );
+    obs.observe(camSec);
+  }
+
+  // Colour buttons nudge buy panel swatches if present
+  document.querySelectorAll("[data-feel-colour]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const key = btn.getAttribute("data-feel-colour");
+      const match = [...document.querySelectorAll("[data-mac-swatch]")].find(
+        (b) => b.getAttribute("data-colour") === key,
+      );
+      if (match instanceof HTMLElement) match.click();
+      document.querySelectorAll("[data-feel-colour]").forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+    });
+  });
+</script>
+
+<style>
+  .mfeel-nav {
+    position: fixed;
+    left: 0.65rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 40;
+    display: none;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+  @media (min-width: 64rem) {
+    .mfeel-nav {
+      display: flex;
+    }
+  }
+  .mfeel-nav a {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    border: 1px solid #6e6e73;
+    display: grid;
+    place-items: center;
+  }
+  .mfeel-nav a span {
+    width: 0.25rem;
+    height: 0.25rem;
+    border-radius: 50%;
+    background: transparent;
+  }
+  .mfeel-nav a.is-active span {
+    background: #000;
+  }
+  .mfeel {
+    padding-block: var(--mac-section-gap);
+    color: var(--color-fg);
+  }
+  .mfeel--black {
+    background: #000;
+    color: #fff;
+  }
+  .mfeel h2 {
+    margin: 0 0 0.5rem;
+    font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+    letter-spacing: -0.03em;
+  }
+  .mfeel__lede,
+  .mfeel__caption,
+  .mfeel__fine {
+    color: #a1a1a6;
+  }
+  .mfeel:not(.mfeel--black) .mfeel__lede,
+  .mfeel:not(.mfeel--black) .mfeel__caption {
+    color: var(--color-fg-muted);
+  }
+  .mfeel__thin {
+    display: grid;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 1.5rem;
+  }
+  @media (min-width: 48rem) {
+    .mfeel__thin {
+      grid-template-columns: 1fr auto;
+    }
+  }
+  .mfeel__side {
+    width: 100%;
+    height: auto;
+    mix-blend-mode: multiply;
+    background: #f5f5f7;
+    border-radius: 1rem;
+  }
+  .mfeel--black .mfeel__side {
+    mix-blend-mode: normal;
+    background: #1d1d1f;
+  }
+  .mfeel__measure {
+    text-align: center;
+  }
+  .mfeel__measure svg {
+    width: 2rem;
+    height: 8rem;
+  }
+  .mfeel__measure strong {
+    display: block;
+    font-size: 2rem;
+  }
+  .mfeel__display {
+    margin-top: 1.25rem;
+  }
+  .mfeel__screen {
+    width: 100%;
+    border-radius: 1rem;
+    display: block;
+  }
+  .mfeel__slider {
+    display: grid;
+    gap: 0.35rem;
+    margin-top: 1rem;
+    font-size: var(--text-sm);
+  }
+  .mfeel__hz {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+  .mfeel__hz-track {
+    position: relative;
+    height: 2rem;
+    background: #1d1d1f;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .mfeel__hz-track span {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.75rem;
+    z-index: 1;
+  }
+  .mfeel__hz-track i {
+    position: absolute;
+    top: 50%;
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: #fff;
+    transform: translate(-50%, -50%);
+  }
+  .mfeel__specs {
+    list-style: none;
+    margin: 1.25rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .mfeel__specs li {
+    border: 1px solid #424245;
+    border-radius: 999px;
+    padding: 0.35rem 0.75rem;
+    font-size: var(--text-sm);
+  }
+  .mfeel__kb {
+    width: 100%;
+    margin-top: 1rem;
+    border-radius: 1rem;
+    mix-blend-mode: multiply;
+    background: #f5f5f7;
+  }
+  .mfeel__keys {
+    display: flex;
+    gap: 0.35rem;
+    margin-top: 1rem;
+  }
+  .mfeel__keys span {
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 0.35rem;
+    background: #d2d2d7;
+    box-shadow: 0 3px 0 #aeaeb2;
+  }
+  .mfeel__keys.is-play span {
+    animation: keypress 0.35s ease forwards;
+    animation-delay: calc(var(--i, 0) * 60ms);
+  }
+  .mfeel__touchid {
+    border-radius: 50% !important;
+    background: #1d1d1f !important;
+  }
+  .mfeel__keys.is-play .mfeel__touchid {
+    animation: pulseTouch 1.2s ease 0.7s 2;
+  }
+  @keyframes keypress {
+    50% {
+      transform: translateY(3px);
+      box-shadow: 0 0 0 #aeaeb2;
+    }
+  }
+  @keyframes pulseTouch {
+    50% {
+      box-shadow: 0 0 0 6px rgb(0 0 0 / 0.15);
+    }
+  }
+  .mfeel__bars {
+    list-style: none;
+    margin: 1.25rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+  }
+  .mfeel__bar {
+    height: 0.55rem;
+    background: #2c2c2e;
+    border-radius: 999px;
+    overflow: hidden;
+    margin: 0.35rem 0;
+  }
+  .mfeel__bar i {
+    display: block;
+    height: 100%;
+    width: calc(var(--r) * 35%);
+    max-width: 100%;
+    background: #fff;
+  }
+  .mfeel__bars em {
+    display: block;
+    font-style: normal;
+    font-size: 0.75rem;
+    color: #a1a1a6;
+  }
+  .mfeel__handles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+  }
+  .mfeel__handles li {
+    border: 1px solid #424245;
+    border-radius: 999px;
+    padding: 0.35rem 0.75rem;
+    font-size: var(--text-sm);
+  }
+  .mfeel__batt-img {
+    width: 100%;
+    border-radius: 1rem;
+    margin-top: 1rem;
+  }
+  .mfeel__batt {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .mfeel__batt-icon {
+    width: 2.5rem;
+    height: 4rem;
+    border: 2px solid #fff;
+    border-radius: 0.4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .mfeel__batt-icon i {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #34c759;
+  }
+  .mfeel__cam {
+    position: relative;
+    margin-top: 1rem;
+    aspect-ratio: 16 / 10;
+    background: #f5f5f7;
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+  .mfeel__cam img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .mfeel figure {
+    margin: 1rem 0 0;
+  }
+  .mfeel figure img {
+    width: 100%;
+    border-radius: 1rem;
+  }
+  .mfeel figcaption {
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+    margin-top: 0.35rem;
+  }
+  .mfeel__ports img {
+    width: 100%;
+    border-radius: 1rem;
+    margin-top: 0.75rem;
+  }
+  .mfeel__port-list {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+  .mfeel__port-list button {
+    border: 1px solid #424245;
+    background: transparent;
+    color: inherit;
+    border-radius: 999px;
+    padding: 0.4rem 0.75rem;
+    font: inherit;
+    font-size: var(--text-sm);
+    cursor: pointer;
+  }
+  .mfeel__colours {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 1rem;
+  }
+  @media (min-width: 48rem) {
+    .mfeel__colours {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .mfeel__colours button {
+    border: 1px solid var(--color-border);
+    background: var(--color-stage);
+    border-radius: 1rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    font: inherit;
+  }
+  .mfeel__colours img {
+    width: 100%;
+    mix-blend-mode: multiply;
+  }
+  .mfeel__pro-colours {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .mfeel__pro-colours button {
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
+    border-radius: 999px;
+    padding: 0.45rem 0.85rem;
+    font: inherit;
+    cursor: pointer;
+  }
+  .mfeel__pro-colours button.is-active {
+    background: #000;
+    color: #fff;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mfeel__keys.is-play span {
+      animation: none;
+    }
+  }
+</style>

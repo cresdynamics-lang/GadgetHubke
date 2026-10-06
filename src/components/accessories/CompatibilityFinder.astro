@@ -1,0 +1,447 @@
+---
+/**
+ * Shared compatibility finder — device + accessory → pencilFits / keyboardFits / pointerFits.
+ */
+import {
+  pencils,
+  keyboards,
+  mice,
+  trackpads,
+  caseProducts,
+  powerProducts,
+  pencilFits,
+  keyboardFits,
+  pointerFits,
+  caseFits,
+  chargerAdvice,
+  getAccessoryImage,
+  formatKes,
+  accessoriesConfig,
+  getAccessory,
+} from "../../lib/accessories";
+import { ipadModels } from "../../lib/ipad";
+import { macModels } from "../../lib/mac";
+
+interface Props {
+  preselectDevice?: string;
+  preselectLooking?: "pencil" | "keyboard" | "mouse" | "trackpad" | "case" | "charger";
+  preselectProduct?: string;
+}
+
+const { preselectDevice = "", preselectLooking = "pencil", preselectProduct = "" } = Astro.props;
+
+const iphoneDevices = [
+  { id: "iphone-17", label: "iPhone 17" },
+  { id: "iphone-17-pro", label: "iPhone 17 Pro" },
+  { id: "iphone-17-pro-max", label: "iPhone 17 Pro Max" },
+  { id: "iphone-17e", label: "iPhone 17e" },
+  { id: "iphone-air", label: "iPhone Air" },
+  { id: "iphone-18-pro", label: "iPhone 18 Pro" },
+  { id: "iphone-18-pro-max", label: "iPhone 18 Pro Max" },
+];
+
+const devices = [
+  ...iphoneDevices.map((m) => ({ ...m, platform: "iphone" as const })),
+  ...ipadModels.map((m) => ({ id: m.id, label: m.name, platform: "ipad" as const })),
+  ...macModels.map((m) => ({ id: m.id, label: m.name, platform: "mac" as const })),
+  { id: "apple-watch", label: "Apple Watch", platform: "watch" as const },
+  { id: "intel-macbook-pro", label: "Intel MacBook Pro (legacy)", platform: "mac" as const },
+  { id: "windows-pc", label: "Windows PC", platform: "other" as const },
+  { id: "android-phone", label: "Android phone", platform: "other" as const },
+];
+
+function productList(group: "pencil" | "keyboard" | "mouse" | "trackpad") {
+  const pool =
+    group === "pencil"
+      ? pencils()
+      : group === "keyboard"
+        ? keyboards()
+        : group === "mouse"
+          ? mice()
+          : trackpads();
+  return pool.map((p) => ({
+    id: p.id,
+    name: p.name,
+    price: p.basePriceKes,
+    href: `/accessories/${p.id}`,
+    img: getAccessoryImage(p.id, "hero").src,
+    connector: p.connector || null,
+  }));
+}
+
+const pencilList = productList("pencil");
+const keyboardList = productList("keyboard");
+const mouseList = productList("mouse");
+const trackpadList = productList("trackpad");
+const caseList = caseProducts()
+  .filter((c) => c.subgroup !== "strap")
+  .map((p) => ({
+    id: p.id,
+    name: p.name,
+    price: p.basePriceKes,
+    href: `/accessories/${p.id}`,
+    img: getAccessoryImage(p.id, "hero").src,
+    connector: null as string | null,
+    partNumber: p.partNumber,
+  }));
+const powerList = powerProducts().map((p) => ({
+  id: p.id,
+  name: p.name,
+  price: p.basePriceKes,
+  href: `/accessories/${p.id}`,
+  img: getAccessoryImage(p.id, "hero").src,
+  connector: null as string | null,
+  partNumber: p.partNumber,
+}));
+
+const fitPayload = {
+  pencils: Object.fromEntries(
+    pencils().flatMap((p) => devices.map((d) => [`${d.id}::${p.id}`, pencilFits(d.id, p.id)])),
+  ),
+  keyboards: Object.fromEntries(
+    keyboards().flatMap((k) => devices.map((d) => [`${d.id}::${k.id}`, keyboardFits(d.id, k.id)])),
+  ),
+  mice: Object.fromEntries(
+    mice().flatMap((m) => devices.map((d) => [`${d.id}::${m.id}`, pointerFits(d.id, m.id)])),
+  ),
+  trackpads: Object.fromEntries(
+    trackpads().flatMap((t) => devices.map((d) => [`${d.id}::${t.id}`, pointerFits(d.id, t.id)])),
+  ),
+  cases: Object.fromEntries(
+    caseProducts()
+      .filter((c) => c.subgroup !== "strap")
+      .flatMap((c) => devices.map((d) => [`${d.id}::${c.id}`, caseFits(d.id, c.id)])),
+  ),
+  chargers: Object.fromEntries(devices.map((d) => [d.id, chargerAdvice(d.id)])),
+};
+---
+
+<section class="xfinder" id="finder" data-xfinder>
+  <div class="xfinder__inner container">
+    <h2>Find what fits</h2>
+    <p class="xfinder__lede">
+      A wrong accessory is the most common regret. Pick your device and we show what fits.
+    </p>
+    <p class="xfinder__note">{accessoriesConfig.appleCompatNote}</p>
+
+    <div class="xfinder__controls">
+      <label>
+        <span>My device</span>
+        <select data-finder-device aria-label="My device">
+          <option value="">Choose a device</option>
+          <optgroup label="iPhone">
+            {devices.filter((d) => d.platform === "iphone").map((d) => (
+              <option value={d.id} selected={d.id === preselectDevice}>{d.label}</option>
+            ))}
+          </optgroup>
+          <optgroup label="iPad">
+            {devices.filter((d) => d.platform === "ipad").map((d) => (
+              <option value={d.id} selected={d.id === preselectDevice}>{d.label}</option>
+            ))}
+          </optgroup>
+          <optgroup label="Mac">
+            {devices.filter((d) => d.platform === "mac").map((d) => (
+              <option value={d.id} selected={d.id === preselectDevice}>{d.label}</option>
+            ))}
+          </optgroup>
+          <optgroup label="Other">
+            {devices.filter((d) => d.platform === "other").map((d) => (
+              <option value={d.id} selected={d.id === preselectDevice}>{d.label}</option>
+            ))}
+          </optgroup>
+        </select>
+      </label>
+      <label>
+        <span>I'm looking for</span>
+        <select data-finder-looking aria-label="Looking for">
+          <option value="pencil" selected={preselectLooking === "pencil"}>Apple Pencil</option>
+          <option value="keyboard" selected={preselectLooking === "keyboard"}>Magic Keyboard</option>
+          <option value="mouse" selected={preselectLooking === "mouse"}>Magic Mouse</option>
+          <option value="trackpad" selected={preselectLooking === "trackpad"}>Magic Trackpad</option>
+          <option value="case" selected={preselectLooking === "case"}>Case / Smart Folio</option>
+          <option value="charger" selected={preselectLooking === "charger"}>What charger do I need?</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="xfinder__results" data-finder-results role="status" aria-live="polite">
+      <p class="xfinder__empty">Choose a device to see which accessories fit.</p>
+    </div>
+  </div>
+</section>
+
+<script
+  define:vars={{
+    fitPayload,
+    pencilList,
+    keyboardList,
+    mouseList,
+    trackpadList,
+    caseList,
+    powerList,
+    preselectProduct,
+  }}
+>
+  const root = document.querySelector("[data-xfinder]");
+  if (!root) throw new Error("finder missing");
+
+  const deviceEl = root.querySelector("[data-finder-device]");
+  const lookingEl = root.querySelector("[data-finder-looking]");
+  const results = root.querySelector("[data-finder-results]");
+
+  function label(status) {
+    if (status === "fits") return "Fits";
+    if (status === "note") return "Fits, but …";
+    return "Does not fit";
+  }
+
+  function getAccessoryHero(id) {
+    const all = [...pencilList, ...keyboardList, ...mouseList, ...trackpadList, ...caseList, ...powerList];
+    const hit = all.find((x) => x.id === id);
+    return hit?.img || "/images/placeholder-accessory.svg";
+  }
+  function prettyPowerName(id) {
+    return id.replace(/-/g, " ");
+  }
+
+  function connectorLine(c) {
+    if (!c) return "";
+    if (c === "usb-c") return "USB-C";
+    if (c === "lightning") return "Lightning";
+    if (c === "owner-confirm") return "Connector — owner to confirm";
+    return c;
+  }
+
+  function render() {
+    const device = deviceEl instanceof HTMLSelectElement ? deviceEl.value : "";
+    const looking = lookingEl instanceof HTMLSelectElement ? lookingEl.value : "pencil";
+    if (!device) {
+      results.innerHTML = `<p class="xfinder__empty">Choose a device to see which accessories fit.</p>`;
+      return;
+    }
+    if (looking === "charger") {
+      const advice = fitPayload.chargers[device] || [];
+      const cards = advice
+        .map((row) => {
+          const prod = (caseList.find((x) => false) || null);
+          const item = [...pencilList, ...keyboardList, ...mouseList, ...trackpadList, ...caseList, ...powerList].find((x) => x.id === row.productId)
+            || { id: row.productId, name: row.productId, price: 0, href: `/accessories/${row.productId}`, img: "/images/placeholder-accessory.svg", connector: null };
+          // rebuild from power via href
+          const roleLabel = row.role === "recommended" ? "Recommended" : row.role === "optional" ? "Optional" : "Note";
+          const cls = row.role === "recommended" ? "is-fits" : row.role === "optional" ? "is-note" : "is-note";
+          return `
+          <article class="xfinder__card ${cls}" data-product="${row.productId}">
+            <img src="${getAccessoryHero(row.productId)}" alt="${row.productId}" width="120" height="120" loading="lazy" />
+            <div>
+              <p class="xfinder__status"><span class="xfinder__badge">${roleLabel}</span></p>
+              <h3><a href="/accessories/${row.productId}">${prettyPowerName(row.productId)}</a></h3>
+              <p class="xfinder__reason">${row.reason}</p>
+              <p class="xfinder__flag">Check final specs</p>
+              <div class="xfinder__actions">
+                <a class="btn btn--secondary btn--sm" href="/accessories/${row.productId}">View</a>
+              </div>
+            </div>
+          </article>`;
+        })
+        .join("");
+      results.innerHTML = cards || `<p class="xfinder__empty">No charger advice for this device — check Apple's list.</p>`;
+      return;
+    }
+    const listMap = {
+      pencil: pencilList,
+      keyboard: keyboardList,
+      mouse: mouseList,
+      trackpad: trackpadList,
+      case: caseList,
+    };
+    const mapMap = {
+      pencil: fitPayload.pencils,
+      keyboard: fitPayload.keyboards,
+      mouse: fitPayload.mice,
+      trackpad: fitPayload.trackpads,
+      case: fitPayload.cases,
+    };
+    const list = listMap[looking] || pencilList;
+    const map = mapMap[looking] || fitPayload.pencils;
+    const cards = list
+      .map((item) => {
+        const fit = map[`${device}::${item.id}`] || { status: "no", reason: "No rule." };
+        const cls =
+          fit.status === "fits" ? "is-fits" : fit.status === "note" ? "is-note" : "is-no";
+        const canBag = fit.status === "fits" || fit.status === "note";
+        const conn = connectorLine(item.connector);
+        return `
+          <article class="xfinder__card ${cls}" data-product="${item.id}">
+            <img src="${item.img}" alt="${item.name}" width="120" height="120" loading="lazy" />
+            <div>
+              <p class="xfinder__status"><span class="xfinder__badge">${label(fit.status)}</span></p>
+              <h3><a href="${item.href}">${item.name}</a></h3>
+              ${conn ? `<p class="xfinder__conn">${conn}</p>` : ""}
+              <p class="xfinder__reason">${fit.reason}</p>
+              <p class="xfinder__price">From KES ${item.price.toLocaleString("en-KE")}</p>
+              <p class="xfinder__flag">Check final specs</p>
+              <div class="xfinder__actions">
+                <a class="btn btn--secondary btn--sm" href="${item.href}">View</a>
+                ${
+                  canBag
+                    ? `<button type="button" class="btn btn--primary btn--sm" data-finder-bag
+                        data-id="${item.id}" data-name="${item.name}" data-kes="${item.price}"
+                        data-image="${item.img}" data-device="${device}" data-connector="${conn}">Add to bag</button>`
+                    : ""
+                }
+              </div>
+            </div>
+          </article>`;
+      })
+      .join("");
+    results.innerHTML = cards || `<p class="xfinder__empty">No matches.</p>`;
+
+    results.querySelectorAll("[data-finder-bag]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const el = btn;
+        window.dispatchEvent(
+          new CustomEvent("gh:bag-add", {
+            detail: {
+              id: el.getAttribute("data-id"),
+              name: el.getAttribute("data-name"),
+              kes: Number(el.getAttribute("data-kes")),
+              image: el.getAttribute("data-image"),
+              kind: "accessory",
+              deviceFor: el.getAttribute("data-device"),
+              connector: el.getAttribute("data-connector") || null,
+              colour: "default",
+            },
+          }),
+        );
+      });
+    });
+
+    if (preselectProduct) {
+      const focus = results.querySelector(`[data-product="${preselectProduct}"]`);
+      if (focus) focus.scrollIntoView({ block: "nearest" });
+    }
+  }
+
+  deviceEl?.addEventListener("change", render);
+  lookingEl?.addEventListener("change", render);
+
+  const params = new URLSearchParams(location.search);
+  if (params.get("device") && deviceEl instanceof HTMLSelectElement) {
+    deviceEl.value = params.get("device");
+  }
+  if (params.get("looking") && lookingEl instanceof HTMLSelectElement) {
+    lookingEl.value = params.get("looking");
+  }
+  render();
+</script>
+
+<style>
+  .xfinder {
+    background: #f5f5f7;
+    padding: 3rem 0;
+  }
+  .xfinder__lede {
+    color: #6e6e73;
+    max-width: 36rem;
+  }
+  .xfinder__note {
+    font-size: 0.8rem;
+    color: #6e6e73;
+    margin-top: 0.5rem;
+  }
+  .xfinder__controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  @media (max-width: 640px) {
+    .xfinder__controls {
+      grid-template-columns: 1fr;
+    }
+  }
+  .xfinder__controls label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .xfinder__controls select {
+    font: inherit;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid #d2d2d7;
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #1d1d1f;
+  }
+  .xfinder__controls select:focus-visible {
+    outline: 2px solid #000;
+    outline-offset: 2px;
+  }
+  .xfinder__card {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 1rem;
+    background: #fff;
+    border: 1px solid #d2d2d7;
+    border-radius: 0.85rem;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  .xfinder__card img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    background: #f5f5f7;
+    border-radius: 0.5rem;
+  }
+  .xfinder__badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.15rem 0.45rem;
+    border-radius: 0.25rem;
+    background: #e8e8ed;
+    color: #1d1d1f;
+  }
+  .xfinder__card.is-fits .xfinder__badge {
+    background: #e3f5e8;
+    color: #1a7f37;
+  }
+  .xfinder__reason,
+  .xfinder__price,
+  .xfinder__flag,
+  .xfinder__conn {
+    margin: 0.25rem 0 0;
+    font-size: 0.85rem;
+    color: #6e6e73;
+  }
+  .xfinder__conn {
+    font-weight: 600;
+    color: #1d1d1f;
+  }
+  .xfinder__flag {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .xfinder__actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.65rem;
+    flex-wrap: wrap;
+  }
+  .xfinder__empty {
+    color: #6e6e73;
+  }
+  .xfinder h3 {
+    margin: 0.25rem 0 0;
+    font-size: 1rem;
+  }
+  .xfinder h3 a {
+    color: inherit;
+    text-decoration: none;
+  }
+</style>

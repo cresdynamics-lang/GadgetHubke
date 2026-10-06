@@ -1,11 +1,568 @@
 ---
-import CategoryPage from "../../../layouts/CategoryPage.astro";
-import { iphoneSubcategories } from "../../../lib/catalog";
+/**
+ * iPhone category: Help me choose, filters, sort, compare (max 3).
+ */
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import ProductCard from "../../../components/ProductCard.astro";
+import { listIphones } from "../../../lib/iphone-list";
+import { site } from "../../../lib/site";
+
+const items = listIphones();
+const payload = items.map((item) => ({
+  id: item.id,
+  name: item.name,
+  href: item.href,
+  priceKes: item.priceKes,
+  badge: item.badge ?? null,
+  storages: item.storages,
+  stock: item.stock,
+  tags: item.tags,
+  colorLabels: item.colors.map((c) => c.label.toLowerCase()),
+}));
 ---
-<CategoryPage
-  title="iPhone"
-  eyebrow="iPhone"
-  heading="Choose your iPhone"
-  lede="New devices only. Duo, 18 Pro, 18 Pro Max, Air, 17, 17e, and 16 - sealed stock."
-  items={iphoneSubcategories}
-/>
+
+<BaseLayout
+  title={`iPhone - ${site.name}`}
+  description="Shop new iPhone at GadgetHub Kenya. Help me choose, filter by model, storage, and stock."
+>
+  <section class="iphone-cat">
+    <div class="container iphone-cat__intro">
+      <p class="iphone-cat__eyebrow">iPhone</p>
+      <h1>Choose your iPhone</h1>
+      <p class="iphone-cat__lede">
+        New devices only. Duo, 18 Pro, 18 Pro Max, Air, 17, 17e, and 16 - sealed stock in Nairobi.
+      </p>
+    </div>
+
+    <div class="container" id="choose">
+      <div class="iphone-choose" data-iphone-choose>
+        <h2>Help me choose</h2>
+        <p class="iphone-choose__hint">Three quick questions. We highlight matches below.</p>
+        <ol class="iphone-choose__qs">
+          <li>
+            <p>What matters most?</p>
+            <div class="iphone-choose__opts" data-q="priority">
+              <button type="button" data-val="camera">Camera</button>
+              <button type="button" data-val="thin">Thin & light</button>
+              <button type="button" data-val="value">Best value</button>
+              <button type="button" data-val="fold">Foldable</button>
+            </div>
+          </li>
+          <li>
+            <p>Screen size?</p>
+            <div class="iphone-choose__opts" data-q="size">
+              <button type="button" data-val="compact">Compact</button>
+              <button type="button" data-val="standard">Standard</button>
+              <button type="button" data-val="large">Large</button>
+              <button type="button" data-val="any">No preference</button>
+            </div>
+          </li>
+          <li>
+            <p>Budget (from)?</p>
+            <div class="iphone-choose__opts" data-q="budget">
+              <button type="button" data-val="100">Under KSh 110,000</button>
+              <button type="button" data-val="150">Under KSh 160,000</button>
+              <button type="button" data-val="any">Any budget</button>
+            </div>
+          </li>
+        </ol>
+        <button type="button" class="iphone-choose__reset" data-choose-reset hidden>Clear answers</button>
+      </div>
+    </div>
+
+    <div class="container iphone-cat__toolbar" data-iphone-filters>
+      <div class="iphone-cat__filters">
+        <label>
+          Stock
+          <select data-filter="stock">
+            <option value="all">All</option>
+            <option value="in">In stock</option>
+            <option value="preorder">Pre-order</option>
+          </select>
+        </label>
+        <label>
+          Storage
+          <select data-filter="storage">
+            <option value="all">All</option>
+            <option value="128GB">128GB</option>
+            <option value="256GB">256GB</option>
+            <option value="512GB">512GB</option>
+            <option value="1TB">1TB</option>
+          </select>
+        </label>
+        <label>
+          Sort
+          <select data-filter="sort">
+            <option value="featured">Featured</option>
+            <option value="price-asc">Price: low to high</option>
+            <option value="price-desc">Price: high to low</option>
+            <option value="name">Name</option>
+          </select>
+        </label>
+      </div>
+      <p class="iphone-cat__count" data-filter-count></p>
+    </div>
+
+    <div class="container">
+      <ul class="iphone-cat__grid" data-iphone-grid>
+        {
+          items.map((item) => (
+            <li data-iphone-card data-id={item.id}>
+              <div class="iphone-cat__card">
+                <ProductCard
+                  name={item.name}
+                  href={item.href}
+                  priceKes={item.priceKes}
+                  image={item.image}
+                  blurb={item.blurb}
+                  badge={item.badge}
+                  colors={item.colors}
+                />
+                <label class="iphone-cat__compare">
+                  <input type="checkbox" data-compare={item.id} />
+                  Compare
+                </label>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="iphone-cat__none" data-iphone-none hidden>No iPhones match those filters.</p>
+    </div>
+  </section>
+
+  <div class="compare-bar" data-compare-bar hidden>
+    <div class="compare-bar__inner container">
+      <p class="compare-bar__label">Compare <span data-compare-n>0</span> / 3</p>
+      <ul class="compare-bar__list" data-compare-list></ul>
+      <div class="compare-bar__actions">
+        <button type="button" class="btn btn--secondary btn--sm" data-compare-clear>Clear</button>
+        <a class="btn btn--primary btn--sm" href="#compare" data-compare-go>Compare</a>
+      </div>
+    </div>
+  </div>
+
+  <section class="container compare-panel" id="compare" data-compare-panel hidden>
+    <h2>Compare</h2>
+    <div class="compare-panel__table" data-compare-table></div>
+  </section>
+</BaseLayout>
+
+<script define:vars={{ payload }}>
+  const byId = Object.fromEntries(payload.map((p) => [p.id, p]));
+  const cards = [...document.querySelectorAll("[data-iphone-card]")];
+  const none = document.querySelector("[data-iphone-none]");
+  const countEl = document.querySelector("[data-filter-count]");
+  const stockSel = document.querySelector('[data-filter="stock"]');
+  const storageSel = document.querySelector('[data-filter="storage"]');
+  const sortSel = document.querySelector('[data-filter="sort"]');
+  const grid = document.querySelector("[data-iphone-grid]");
+  const choose = document.querySelector("[data-iphone-choose]");
+  const resetBtn = document.querySelector("[data-choose-reset]");
+  const answers = { priority: "", size: "", budget: "" };
+
+  function applyChooser(item) {
+    if (answers.priority) {
+      if (answers.priority === "fold" && !item.tags.includes("fold")) return false;
+      if (answers.priority === "thin" && !item.tags.includes("thin")) return false;
+      if (answers.priority === "value" && !item.tags.includes("value")) return false;
+      if (answers.priority === "camera" && !item.tags.includes("camera")) return false;
+    }
+    if (answers.size && answers.size !== "any") {
+      if (answers.size === "large" && !item.id.includes("pro-max") && !item.id.includes("duo")) return false;
+      if (answers.size === "compact" && !(item.id.includes("air") || item.id.includes("17e") || item.id.includes("mini")))
+        return false;
+      if (answers.size === "standard" && (item.id.includes("pro-max") || item.id.includes("duo"))) return false;
+    }
+    if (answers.budget === "100" && item.priceKes >= 110000) return false;
+    if (answers.budget === "150" && item.priceKes >= 160000) return false;
+    return true;
+  }
+
+  function refresh() {
+    const stock = stockSel?.value || "all";
+    const storage = storageSel?.value || "all";
+    const sort = sortSel?.value || "featured";
+
+    let visible = payload.filter((item) => {
+      if (stock !== "all" && item.stock !== stock) return false;
+      if (storage !== "all" && !item.storages.includes(storage)) return false;
+      if (!applyChooser(item)) return false;
+      return true;
+    });
+
+    const ordered = [...visible];
+    if (sort === "price-asc") ordered.sort((a, b) => a.priceKes - b.priceKes);
+    if (sort === "price-desc") ordered.sort((a, b) => b.priceKes - a.priceKes);
+    if (sort === "name") ordered.sort((a, b) => a.name.localeCompare(b.name));
+
+    cards.forEach((li) => {
+      const id = li.getAttribute("data-id");
+      const idx = ordered.findIndex((p) => p.id === id);
+      if (idx === -1) {
+        li.hidden = true;
+      } else {
+        li.hidden = false;
+        li.style.order = String(idx);
+      }
+    });
+    if (grid) grid.style.display = "grid";
+    if (none) none.hidden = ordered.length > 0;
+    if (countEl) countEl.textContent = `${ordered.length} model${ordered.length === 1 ? "" : "s"}`;
+  }
+
+  stockSel?.addEventListener("change", refresh);
+  storageSel?.addEventListener("change", refresh);
+  sortSel?.addEventListener("change", refresh);
+
+  choose?.querySelectorAll("[data-q]").forEach((group) => {
+    const key = group.getAttribute("data-q");
+    group.querySelectorAll("button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        group.querySelectorAll("button").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        answers[key] = btn.getAttribute("data-val") || "";
+        if (resetBtn) resetBtn.hidden = false;
+        refresh();
+      });
+    });
+  });
+
+  resetBtn?.addEventListener("click", () => {
+    answers.priority = "";
+    answers.size = "";
+    answers.budget = "";
+    choose?.querySelectorAll("button.is-active").forEach((b) => b.classList.remove("is-active"));
+    resetBtn.hidden = true;
+    refresh();
+  });
+
+  // Compare (max 3)
+  const bar = document.querySelector("[data-compare-bar]");
+  const list = document.querySelector("[data-compare-list]");
+  const nEl = document.querySelector("[data-compare-n]");
+  const panel = document.querySelector("[data-compare-panel]");
+  const table = document.querySelector("[data-compare-table]");
+  const selected = new Set();
+
+  function renderCompare() {
+    if (!bar || !list || !nEl) return;
+    const ids = [...selected];
+    nEl.textContent = String(ids.length);
+    bar.hidden = ids.length === 0;
+    list.innerHTML = ids
+      .map((id) => {
+        const item = byId[id];
+        return `<li>${item?.name || id} <button type="button" data-compare-remove="${id}" aria-label="Remove">×</button></li>`;
+      })
+      .join("");
+
+    list.querySelectorAll("[data-compare-remove]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-compare-remove");
+        selected.delete(id);
+        const box = document.querySelector(`[data-compare="${id}"]`);
+        if (box instanceof HTMLInputElement) box.checked = false;
+        renderCompare();
+      });
+    });
+
+    if (panel && table) {
+      if (ids.length < 2) {
+        panel.hidden = true;
+        table.innerHTML = "";
+      } else {
+        panel.hidden = false;
+        const cols = ids.map((id) => byId[id]).filter(Boolean);
+        table.innerHTML = `
+          <table>
+            <thead><tr><th></th>${cols.map((c) => `<th>${c.name}</th>`).join("")}</tr></thead>
+            <tbody>
+              <tr><th>From</th>${cols.map((c) => `<td>KSh ${c.priceKes.toLocaleString("en-KE")}</td>`).join("")}</tr>
+              <tr><th>Storage</th>${cols.map((c) => `<td>${c.storages.join(", ")}</td>`).join("")}</tr>
+              <tr><th>Stock</th>${cols.map((c) => `<td>${c.stock === "preorder" ? "Pre-order" : "In stock"}</td>`).join("")}</tr>
+              <tr><th></th>${cols.map((c) => `<td><a href="${c.href}">View</a></td>`).join("")}</tr>
+            </tbody>
+          </table>`;
+      }
+    }
+  }
+
+  document.querySelectorAll("[data-compare]").forEach((box) => {
+    box.addEventListener("change", () => {
+      const id = box.getAttribute("data-compare");
+      if (!(box instanceof HTMLInputElement) || !id) return;
+      if (box.checked) {
+        if (selected.size >= 3) {
+          box.checked = false;
+          return;
+        }
+        selected.add(id);
+      } else {
+        selected.delete(id);
+      }
+      renderCompare();
+    });
+  });
+
+  document.querySelector("[data-compare-clear]")?.addEventListener("click", () => {
+    selected.clear();
+    document.querySelectorAll("[data-compare]").forEach((box) => {
+      if (box instanceof HTMLInputElement) box.checked = false;
+    });
+    renderCompare();
+  });
+
+  refresh();
+</script>
+
+<style>
+  .iphone-cat {
+    padding-block: var(--space-8) calc(var(--space-16) + 5rem);
+  }
+
+  .iphone-cat__intro {
+    margin-bottom: var(--space-8);
+    max-width: 40rem;
+  }
+
+  .iphone-cat__eyebrow {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-grey);
+    margin-bottom: var(--space-3);
+  }
+
+  .iphone-cat h1 {
+    font-size: clamp(1.75rem, 5vw, 2.75rem);
+    margin-bottom: var(--space-3);
+  }
+
+  .iphone-cat__lede {
+    color: var(--color-fg-muted);
+  }
+
+  .iphone-choose {
+    margin-bottom: var(--space-10);
+    padding: var(--space-6);
+    background: var(--color-stage);
+  }
+
+  .iphone-choose h2 {
+    font-size: var(--text-xl);
+    margin: 0 0 var(--space-2);
+  }
+
+  .iphone-choose__hint {
+    margin: 0 0 var(--space-5);
+    color: var(--color-grey);
+    font-size: var(--text-sm);
+  }
+
+  .iphone-choose__qs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .iphone-choose__qs p {
+    margin: 0 0 var(--space-2);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--text-sm);
+  }
+
+  .iphone-choose__opts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .iphone-choose__opts button {
+    border: 1px solid var(--color-line);
+    background: var(--color-white);
+    border-radius: var(--radius-sm);
+    padding: 0.45rem 0.75rem;
+    font: inherit;
+    font-size: var(--text-sm);
+    cursor: pointer;
+  }
+
+  .iphone-choose__opts button.is-active,
+  .iphone-choose__opts button:hover {
+    border-color: var(--color-black);
+    background: var(--color-black);
+    color: var(--color-white);
+  }
+
+  .iphone-choose__reset {
+    margin-top: var(--space-4);
+    border: none;
+    background: none;
+    text-decoration: underline;
+    font: inherit;
+    font-size: var(--text-sm);
+    cursor: pointer;
+    color: var(--color-grey);
+  }
+
+  .iphone-cat__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  .iphone-cat__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .iphone-cat__filters label {
+    display: grid;
+    gap: 0.25rem;
+    font-size: var(--text-xs);
+    color: var(--color-grey);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .iphone-cat__filters select {
+    font: inherit;
+    font-size: var(--text-sm);
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--color-black);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-sm);
+    padding: 0.45rem 0.6rem;
+    background: var(--color-white);
+    min-width: 8rem;
+  }
+
+  .iphone-cat__count {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-grey);
+  }
+
+  .iphone-cat__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-8);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (min-width: 48rem) {
+    .iphone-cat__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .iphone-cat__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .iphone-cat__card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: var(--space-3);
+  }
+
+  .iphone-cat__compare {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: var(--text-sm);
+    color: var(--color-grey);
+    cursor: pointer;
+  }
+
+  .iphone-cat__none {
+    color: var(--color-grey);
+  }
+
+  .compare-bar {
+    position: sticky;
+    bottom: 0;
+    z-index: 40;
+    background: var(--color-black);
+    color: var(--color-white);
+    padding: 0.85rem 0;
+    border-top: 1px solid rgb(255 255 255 / 0.12);
+  }
+
+  .compare-bar__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .compare-bar__label {
+    margin: 0;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .compare-bar__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    flex: 1;
+    font-size: var(--text-sm);
+  }
+
+  .compare-bar__list button {
+    border: none;
+    background: transparent;
+    color: var(--color-grey-400);
+    cursor: pointer;
+    margin-left: 0.25rem;
+  }
+
+  .compare-bar__actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .compare-panel {
+    padding-block: var(--space-10);
+  }
+
+  .compare-panel__table {
+    overflow-x: auto;
+  }
+
+  .compare-panel table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+  }
+
+  .compare-panel th,
+  .compare-panel td {
+    border-bottom: 1px solid var(--color-line);
+    padding: 0.75rem 0.5rem;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .compare-panel thead th {
+    font-weight: var(--font-weight-display);
+  }
+</style>

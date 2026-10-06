@@ -1,0 +1,314 @@
+---
+import {
+  getAccessoryImage,
+  getCaseVariants,
+  caseProducts,
+  accessoriesConfig,
+  formatKes,
+} from "../../lib/accessories";
+
+const silicone = getAccessoryImage("case-iphone-17-pro-silicone", "hero");
+const clear = getAccessoryImage("case-iphone-17-pro-clear", "hero");
+const tech = getAccessoryImage("case-iphone-18-pro-techwoven", "hero");
+const variants = getCaseVariants("case-iphone-17-pro-silicone");
+const strap = getAccessoryImage("strap-wrist", "hero");
+const folios = caseProducts().filter((c) => c.subgroup === "folio").slice(0, 3);
+---
+
+<div class="xfeel-cases" data-cases-feel>
+  <section class="xfeel-cases__colour" data-feel-section="colour">
+    <div class="container">
+      <h2>Colour reveal</h2>
+      <p>Swipe, click or use arrow keys — colours from Apple's file names.</p>
+      <div class="xfeel-cases__viewer">
+        <img data-colour-main src={silicone.src} alt={silicone.alt} width="900" height="675" loading="lazy" />
+        <div class="xfeel-cases__swatches" role="listbox" aria-label="Case colours">
+          {
+            variants.map((v, i) => {
+              const sw = getAccessoryImage("case-iphone-17-pro-silicone", `variant-swatch:${v.partNumber}`);
+              const main = getAccessoryImage("case-iphone-17-pro-silicone", `variant:${v.partNumber}`);
+              return (
+                <button
+                  type="button"
+                  class:list={{ "is-active": i === 0 }}
+                  role="option"
+                  aria-selected={i === 0 ? "true" : "false"}
+                  data-colour
+                  data-src={main.src}
+                  data-label={`${v.colour}`}
+                  title={v.colour}
+                >
+                  <img src={sw.src} alt={v.colour} width="44" height="44" loading="lazy" />
+                </button>
+              );
+            })
+          }
+        </div>
+        <p data-colour-label>{variants[0]?.colour}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="xfeel-cases__materials" data-feel-section="materials">
+    <div class="container">
+      <h2>Silicone. Clear. TechWoven.</h2>
+      <div class="xfeel-cases__mat-grid">
+        <article>
+          <img src={silicone.src} alt="Silicone" width="400" height="300" loading="lazy" />
+          <h3>Silicone</h3>
+          <p>Soft-touch silicone with MagSafe — check.</p>
+          <p>Colours vary by iPhone model.</p>
+          <p>Exact model fit only.</p>
+        </article>
+        <article>
+          <img src={clear.src} alt="Clear" width="400" height="300" loading="lazy" />
+          <h3>Clear</h3>
+          <p>Shows the phone colour.</p>
+          <p>MagSafe — check.</p>
+          <p>Some SKUs have limited angles.</p>
+        </article>
+        <article>
+          <img src={tech.src} alt="TechWoven" width="400" height="300" loading="lazy" />
+          <h3>TechWoven</h3>
+          <p>Woven texture for 18 Pro family.</p>
+          <p>MagSafe — check.</p>
+          <p>Sample prices until stock entered.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="xfeel-cases__builder" data-feel-section="builder" data-style-builder>
+    <div class="container">
+      <h2>Style it</h2>
+      <p>Pick a case colour and optional strap. {accessoriesConfig.strapCasePairingNote}</p>
+      <div class="xfeel-cases__builder-view">
+        <img data-builder-case src={silicone.src} alt="Selected case" width="400" height="300" loading="lazy" />
+        <img data-builder-strap src={strap.src} alt="Selected strap" width="400" height="300" loading="lazy" />
+      </div>
+      <p>
+        Total sample: <strong data-builder-total>{formatKes(7500 + 4500)}</strong>
+      </p>
+      <button type="button" class="btn btn--primary" data-builder-bag>Add all to bag</button>
+    </div>
+  </section>
+
+  <section class="container xfeel-cases__folios">
+    <h2>iPad Smart Folio</h2>
+    <div class="xfeel-cases__folio-row">
+      {
+        folios.map((f) => {
+          const img = getAccessoryImage(f.id, "hero");
+          return (
+            <a href={`/accessories/${f.id}`}>
+              <img src={img.src} alt={f.name} width="220" height="165" loading="lazy" />
+              <span>{f.name}</span>
+            </a>
+          );
+        })
+      }
+    </div>
+  </section>
+</div>
+
+<script>
+  const root = document.querySelector("[data-cases-feel]");
+  if (root) {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const main = root.querySelector("[data-colour-main]");
+    const label = root.querySelector("[data-colour-label]");
+    const buttons = [...root.querySelectorAll("[data-colour]")];
+    let idx = 0;
+    function select(i) {
+      idx = i;
+      const btn = buttons[i];
+      if (!btn) return;
+      buttons.forEach((t, j) => {
+        t.classList.toggle("is-active", j === i);
+        t.setAttribute("aria-selected", j === i ? "true" : "false");
+      });
+      if (main instanceof HTMLImageElement) {
+        main.style.opacity = "0";
+        main.style.transform = "scale(0.97)";
+        const src = btn.getAttribute("data-src") || main.src;
+        window.setTimeout(() => {
+          main.src = src;
+          main.alt = (btn.getAttribute("data-label") || "") + " case";
+          main.style.opacity = "1";
+          main.style.transform = "scale(1)";
+        }, reduce ? 0 : 170);
+      }
+      if (label) label.textContent = btn.getAttribute("data-label");
+    }
+    buttons.forEach((btn, i) => btn.addEventListener("click", () => select(i)));
+    root.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        select((idx + 1) % buttons.length);
+      }
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        select((idx - 1 + buttons.length) % buttons.length);
+      }
+    });
+    if (!reduce && buttons.length > 1) {
+      let n = 0;
+      const t = window.setInterval(() => {
+        select((idx + 1) % buttons.length);
+        n++;
+        if (n >= buttons.length) window.clearInterval(t);
+      }, 1400);
+    }
+
+    root.querySelector("[data-builder-bag]")?.addEventListener("click", () => {
+      document.dispatchEvent(
+        new CustomEvent("gh:bag-add", {
+          detail: {
+            id: "case-iphone-17-pro-silicone",
+            name: "iPhone 17 Pro Silicone Case with MagSafe",
+            colour: label?.textContent || "Black",
+            partNumber: "MGFK4",
+            kes: 7500,
+            group: "cases",
+            kind: "accessory",
+          },
+        }),
+      );
+      document.dispatchEvent(
+        new CustomEvent("gh:bag-add", {
+          detail: {
+            id: "strap-wrist",
+            name: "Wrist Strap",
+            colour: "Black",
+            partNumber: "MKF74",
+            kes: 4500,
+            group: "cases",
+            kind: "accessory",
+          },
+        }),
+      );
+    });
+  }
+</script>
+
+<style>
+  .xfeel-cases__colour {
+    background: #f5f5f7;
+    padding: 3rem 0;
+  }
+  .xfeel-cases__viewer img[data-colour-main] {
+    width: 100%;
+    max-width: 720px;
+    mix-blend-mode: multiply;
+    display: block;
+    margin: 0 auto;
+    transition: opacity 0.17s ease, transform 0.17s ease;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .xfeel-cases__viewer img[data-colour-main] {
+      transition: none;
+    }
+  }
+  .xfeel-cases__swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  .xfeel-cases__swatches button {
+    border: 2px solid transparent;
+    border-radius: 50%;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+  .xfeel-cases__swatches button.is-active {
+    border-color: #000;
+  }
+  .xfeel-cases__swatches button:focus-visible {
+    outline: 2px solid #000;
+    outline-offset: 2px;
+  }
+  .xfeel-cases__swatches img {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: block;
+  }
+  .xfeel-cases__materials {
+    background: #000;
+    color: #f5f5f7;
+    padding: 3rem 0;
+  }
+  .xfeel-cases__mat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 1.25rem;
+  }
+  @media (max-width: 720px) {
+    .xfeel-cases__mat-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .xfeel-cases__mat-grid article {
+    background: #1d1d1f;
+    border-radius: 1rem;
+    padding: 1rem;
+    transition: transform 0.2s ease;
+  }
+  .xfeel-cases__mat-grid article:hover {
+    transform: translateY(-6px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .xfeel-cases__mat-grid article {
+      transition: none;
+    }
+  }
+  .xfeel-cases__mat-grid img {
+    width: 100%;
+    mix-blend-mode: multiply;
+    background: #f5f5f7;
+    border-radius: 0.5rem;
+  }
+  .xfeel-cases__builder {
+    padding: 3rem 0;
+  }
+  .xfeel-cases__builder-view {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  @media (max-width: 640px) {
+    .xfeel-cases__builder-view {
+      grid-template-columns: 1fr;
+    }
+  }
+  .xfeel-cases__builder-view img {
+    width: 100%;
+    mix-blend-mode: multiply;
+    background: #f5f5f7;
+    border-radius: 0.75rem;
+  }
+  .xfeel-cases__folios {
+    padding: 2rem 1rem 3rem;
+  }
+  .xfeel-cases__folio-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+  }
+  .xfeel-cases__folio-row a {
+    text-decoration: none;
+    color: #1d1d1f;
+    font-size: 0.85rem;
+  }
+  .xfeel-cases__folio-row img {
+    width: 100%;
+    mix-blend-mode: multiply;
+    background: #f5f5f7;
+    border-radius: 0.75rem;
+  }
+</style>

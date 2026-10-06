@@ -1,0 +1,86 @@
+---
+import { watchModels, formatKes, lipaMonthly, watchConfig } from "../../lib/watch";
+
+interface Props { modelId?: string; }
+const { modelId } = Astro.props;
+const options = watchModels.map((m) => ({ id: m.id, name: m.name, base: m.basePriceKes }));
+const initial = options.find((o) => o.id === modelId) || options[0];
+const cfg = watchConfig.lipa;
+const start = lipaMonthly(initial.base, cfg.depositDefaultPct, cfg.monthsDefault);
+---
+
+<section class="watch-lipa" data-watch-lipa>
+  <header>
+    <h3>Lipa Mdogo Mdogo</h3>
+    <p>{cfg.note}</p>
+  </header>
+  <label>
+    Model
+    <select data-watch-lipa-model>
+      {options.map((o) => (
+        <option value={o.id} data-base={o.base} selected={o.id === initial.id}>{o.name}</option>
+      ))}
+    </select>
+  </label>
+  <label>
+    Deposit <span data-watch-lipa-dep-label>{cfg.depositDefaultPct}%</span>
+    <input type="range" min={cfg.depositMinPct} max={cfg.depositMaxPct} step={cfg.depositStepPct} value={cfg.depositDefaultPct} data-watch-lipa-deposit />
+  </label>
+  <div class="watch-lipa__months" role="group" aria-label="Months">
+    {cfg.monthOptions.map((m) => (
+      <button type="button" class:list={{ "is-active": m === cfg.monthsDefault }} data-watch-lipa-months={m}>{m} mo</button>
+    ))}
+  </div>
+  <div class="watch-lipa__result">
+    <p><span data-watch-lipa-monthly>{formatKes(start.monthlyKes)}</span> <small>/ month</small></p>
+    <p data-watch-lipa-line>{formatKes(start.depositKes)} deposit · {start.months} payments · sample total {formatKes(initial.base)}</p>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll("[data-watch-lipa]").forEach((root) => {
+    const model = root.querySelector("[data-watch-lipa-model]");
+    const deposit = root.querySelector("[data-watch-lipa-deposit]");
+    const depLabel = root.querySelector("[data-watch-lipa-dep-label]");
+    const monthly = root.querySelector("[data-watch-lipa-monthly]");
+    const line = root.querySelector("[data-watch-lipa-line]");
+    let months = Number(root.querySelector("[data-watch-lipa-months].is-active")?.getAttribute("data-watch-lipa-months") || 6);
+    function run() {
+      if (!(model instanceof HTMLSelectElement) || !(deposit instanceof HTMLInputElement)) return;
+      const opt = model.selectedOptions[0];
+      const base = Number(opt?.getAttribute("data-base") || 0);
+      const depPct = Number(deposit.value);
+      const dep = Math.round((base * depPct) / 100);
+      const mo = Math.round((base - dep) / months);
+      if (depLabel) depLabel.textContent = `${depPct}%`;
+      if (monthly) monthly.textContent = `KES ${mo.toLocaleString("en-KE")}`;
+      if (line) line.textContent = `KES ${dep.toLocaleString("en-KE")} deposit · ${months} payments · sample total KES ${base.toLocaleString("en-KE")}`;
+    }
+    model?.addEventListener("change", run);
+    deposit?.addEventListener("input", run);
+    root.querySelectorAll("[data-watch-lipa-months]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        root.querySelectorAll("[data-watch-lipa-months]").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        months = Number(btn.getAttribute("data-watch-lipa-months") || 6);
+        run();
+      });
+    });
+  });
+</script>
+
+<style>
+  .watch-lipa { border: 1px solid #d2d2d7; border-radius: 1.25rem; padding: 1rem; }
+  .watch-lipa header h3 { margin: 0 0 0.25rem; }
+  .watch-lipa header p { margin: 0 0 1rem; font-size: var(--text-sm); color: #6e6e73; }
+  .watch-lipa label { display: grid; gap: 0.35rem; margin-bottom: 0.85rem; font-size: var(--text-sm); font-weight: 600; }
+  .watch-lipa select, .watch-lipa input[type="range"] { width: 100%; }
+  .watch-lipa__months { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+  .watch-lipa__months button {
+    border: 1px solid #d2d2d7; background: #fff; border-radius: 999px;
+    padding: 0.35rem 0.7rem; font: inherit; font-size: var(--text-sm); cursor: pointer;
+  }
+  .watch-lipa__months button.is-active { background: #000; color: #fff; }
+  .watch-lipa__result span { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.03em; }
+  .watch-lipa__result p[data-watch-lipa-line] { margin-top: 0.35rem; font-size: var(--text-sm); color: #6e6e73; }
+</style>

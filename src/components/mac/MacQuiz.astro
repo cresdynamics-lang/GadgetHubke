@@ -1,0 +1,253 @@
+---
+/**
+ * Which MacBook is for you? — 3 questions → up to 3 matches with reasons.
+ */
+import {
+  macModels,
+  getMacImage,
+  defaultMacColour,
+  formatKes,
+  macSubline,
+} from "../../lib/mac";
+
+const payload = macModels.map((m) => {
+  const colour = defaultMacColour(m);
+  const img = getMacImage(m.id, colour, "product", m.name);
+  return {
+    id: m.id,
+    name: m.name,
+    href: `/mac/${m.id}`,
+    priceKes: m.basePriceKes,
+    family: m.family,
+    chipGen: m.chipGen,
+    screen: m.screenInches,
+    weight: m.weightKg,
+    battery: m.batteryVideoHours,
+    promotion: Boolean(m.display.promotion),
+    check: Boolean(m.checkFinalSpecs),
+    year: m.year,
+    sub: macSubline(m),
+    image: img.src,
+    alt: img.alt,
+  };
+});
+---
+
+<section class="mquiz" id="quiz" data-mquiz>
+  <header>
+    <h2>Which MacBook is for you?</h2>
+    <p>Three questions. We’ll show up to three matches with a short reason each.</p>
+  </header>
+
+  <div class="mquiz__q" data-q="use">
+    <p>What do you mainly do?</p>
+    <div class="mquiz__opts">
+      <button type="button" data-val="everyday">Study and everyday</button>
+      <button type="button" data-val="create">Creators and video</button>
+      <button type="button" data-val="dev">Developers</button>
+      <button type="button" data-val="business">Business</button>
+    </div>
+  </div>
+
+  <div class="mquiz__q" data-q="size">
+    <p>Size preference?</p>
+    <div class="mquiz__opts">
+      <button type="button" data-val="light">Lightest / 13″</button>
+      <button type="button" data-val="balanced">Balanced 14–15″</button>
+      <button type="button" data-val="large">Largest 16″</button>
+      <button type="button" data-val="any">No preference</button>
+    </div>
+  </div>
+
+  <div class="mquiz__q" data-q="budget">
+    <p>Budget band (sample prices)?</p>
+    <div class="mquiz__opts">
+      <button type="button" data-val="tight">Under 120k</button>
+      <button type="button" data-val="mid">120k–220k</button>
+      <button type="button" data-val="open">220k+</button>
+    </div>
+  </div>
+
+  <div class="mquiz__results" data-quiz-results hidden>
+    <h3>Your matches</h3>
+    <ul data-quiz-list></ul>
+  </div>
+</section>
+
+<script define:vars={{ payload }}>
+  const root = document.querySelector("[data-mquiz]");
+  if (root) {
+    const answers = { use: "", size: "", budget: "" };
+    const list = root.querySelector("[data-quiz-list]");
+    const results = root.querySelector("[data-quiz-results]");
+
+    function reason(m, answers) {
+      if (answers.use === "create" && m.family === "Pro") return "Pro screen and cooling for video and heavy apps.";
+      if (answers.use === "dev" && m.family === "Pro") return "Active cooling and ports for long compile sessions.";
+      if (answers.use === "everyday" && m.family === "Air") return "Thin, silent Air for study and everyday work.";
+      if (answers.size === "light") return "Among the lightest options that fit your answers.";
+      if (answers.budget === "tight") return "Lower sample price — check condition on older chips.";
+      if (m.promotion) return "Liquid Retina XDR with ProMotion.";
+      return "Strong fit for how you said you work.";
+    }
+
+    function run() {
+      if (!answers.use || !answers.size || !answers.budget || !list || !results) return;
+      let pool = [...payload];
+
+      if (answers.use === "everyday" || answers.use === "business") {
+        pool = pool.filter((m) => m.family === "Air" || m.chipGen >= "M3");
+      }
+      if (answers.use === "create" || answers.use === "dev") {
+        pool = pool.filter((m) => m.family === "Pro" || (m.family === "Air" && m.chipGen >= "M4"));
+      }
+      if (answers.size === "light") pool = pool.filter((m) => m.screen <= 13.6 || m.screen === 13);
+      if (answers.size === "balanced") pool = pool.filter((m) => m.screen >= 14 && m.screen <= 15);
+      if (answers.size === "large") pool = pool.filter((m) => m.screen >= 16);
+      if (answers.budget === "tight") pool = pool.filter((m) => m.priceKes < 120000);
+      if (answers.budget === "mid") pool = pool.filter((m) => m.priceKes >= 120000 && m.priceKes <= 220000);
+      if (answers.budget === "open") pool = pool.filter((m) => m.priceKes >= 220000);
+
+      if (!pool.length) pool = [...payload];
+
+      pool.sort((a, b) => {
+        let sa = 0, sb = 0;
+        if (answers.use === "create" || answers.use === "dev") {
+          if (a.family === "Pro") sa += 40;
+          if (b.family === "Pro") sb += 40;
+        } else {
+          if (a.family === "Air") sa += 30;
+          if (b.family === "Air") sb += 30;
+        }
+        if (answers.size === "light") {
+          sa += 20 - a.weight * 5;
+          sb += 20 - b.weight * 5;
+        }
+        sa += a.year;
+        sb += b.year;
+        return sb - sa || a.priceKes - b.priceKes;
+      });
+
+      const top = pool.slice(0, 3);
+      results.hidden = false;
+      list.innerHTML = top
+        .map(
+          (m) => `
+        <li>
+          <a href="${m.href}">
+            <img src="${m.image}" alt="${m.alt}" width="96" height="60" loading="lazy" />
+            <span>
+              <strong>${m.name}</strong>
+              <em>${m.sub}</em>
+              <b>From KES ${m.priceKes.toLocaleString("en-KE")}${m.check ? " · check specs" : ""}</b>
+              <i>${reason(m, answers)}</i>
+            </span>
+          </a>
+        </li>`,
+        )
+        .join("");
+    }
+
+    root.querySelectorAll("[data-q]").forEach((group) => {
+      const key = group.getAttribute("data-q");
+      group.querySelectorAll("button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          group.querySelectorAll("button").forEach((b) => b.classList.remove("is-active"));
+          btn.classList.add("is-active");
+          answers[key] = btn.getAttribute("data-val") || "";
+          run();
+        });
+      });
+    });
+  }
+</script>
+
+<style>
+  .mquiz {
+    margin: var(--mac-section-gap) 0;
+    padding: var(--space-8);
+    background: var(--color-stage);
+    color: #1d1d1f;
+    border-radius: 1.5rem;
+  }
+  .mquiz header h2 {
+    margin: 0 0 0.35rem;
+    letter-spacing: -0.02em;
+  }
+  .mquiz header p {
+    margin: 0 0 1.25rem;
+    color: #6e6e73;
+  }
+  .mquiz__q {
+    margin-bottom: 1.1rem;
+  }
+  .mquiz__q p {
+    margin: 0 0 0.5rem;
+    font-weight: 600;
+    font-size: var(--text-sm);
+  }
+  .mquiz__opts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+  .mquiz__opts button {
+    border: 1px solid #d2d2d7;
+    background: #fff;
+    border-radius: 999px;
+    padding: 0.45rem 0.85rem;
+    font: inherit;
+    font-size: var(--text-sm);
+    cursor: pointer;
+  }
+  .mquiz__opts button.is-active,
+  .mquiz__opts button:hover {
+    background: #000;
+    border-color: #000;
+    color: #fff;
+  }
+  .mquiz__results h3 {
+    margin: 1rem 0 0.75rem;
+  }
+  .mquiz__results ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.65rem;
+  }
+  .mquiz__results a {
+    display: grid;
+    grid-template-columns: 6rem 1fr;
+    gap: 0.75rem;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    background: #fff;
+    border-radius: 1rem;
+    padding: 0.65rem;
+  }
+  .mquiz__results img {
+    width: 6rem;
+    height: auto;
+    object-fit: contain;
+    background: #f5f5f7;
+    mix-blend-mode: multiply;
+  }
+  .mquiz__results strong {
+    display: block;
+    letter-spacing: -0.02em;
+  }
+  .mquiz__results em,
+  .mquiz__results i {
+    display: block;
+    font-style: normal;
+    font-size: 0.8rem;
+    color: #6e6e73;
+  }
+  .mquiz__results b {
+    display: block;
+    margin-top: 0.2rem;
+    font-size: 0.85rem;
+  }
+</style>

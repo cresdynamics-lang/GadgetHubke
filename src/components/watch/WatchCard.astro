@@ -1,0 +1,181 @@
+---
+/**
+ * Watch product card — wide stage, colour dots, price, bag + compare.
+ */
+import WatchStage from "./WatchStage.astro";
+import {
+  type WatchModel,
+  getWatchImage,
+  defaultWatchColour,
+  formatKes,
+  lipaMonthly,
+  colourHex,
+  colourLabel,
+  watchSubline,
+} from "../../lib/watch";
+
+interface Props {
+  model: WatchModel;
+  compare?: boolean;
+}
+
+const { model, compare = true } = Astro.props;
+const colour = defaultWatchColour(model);
+const img = getWatchImage(model.id, "main", model.name);
+const lipa = lipaMonthly(model.basePriceKes);
+---
+
+<article class="wcard" data-watch-card data-id={model.id}>
+  <a class="wcard__media" href={`/watch/${model.id}`}>
+    <WatchStage src={img.src} srcWebp={img.srcWebp} alt={img.alt} width={img.width} height={Math.round(img.width * 0.75)} />
+    {
+      model.isNew ? <span class="wcard__tag">New</span> : null
+    }
+    {
+      model.specialBandIncluded ? <span class="wcard__tag wcard__tag--band">Special band included</span> : null
+    }
+  </a>
+  <div class="wcard__body">
+    <h3><a href={`/watch/${model.id}`}>{model.name}</a></h3>
+    <p class="wcard__sub">{watchSubline(model)}</p>
+    {
+      model.batteryHours != null ? (
+        <p class="wcard__meta">Up to {model.batteryHours} h · Apple claim</p>
+      ) : (
+        <p class="wcard__meta">Battery · check final specs</p>
+      )
+    }
+    <div class="wcard__colours" role="list" aria-label="Colours">
+      {
+        model.colours.slice(0, 8).map((c) => (
+          <button
+            type="button"
+            role="listitem"
+            class:list={{ "is-active": c === colour }}
+            style={`--dot:${colourHex(c)}`}
+            title={colourLabel(c)}
+            aria-label={colourLabel(c)}
+            data-wcard-colour={c}
+          />
+        ))
+      }
+    </div>
+    <p class="wcard__price">
+      From {formatKes(model.basePriceKes)}
+      <small>or {formatKes(lipa.monthlyKes)} / mo</small>
+    </p>
+    <p class="wcard__fine">Sample price until stock is entered in the admin.</p>
+    <div class="wcard__actions">
+      <a class="btn btn--primary btn--sm" href={`/watch/${model.id}`}>View</a>
+      <button
+        type="button"
+        class="btn btn--secondary btn--sm"
+        data-watch-bag
+        data-id={model.id}
+        data-name={model.name}
+        data-size={`${model.defaultCaseMm}mm`}
+        data-material={model.materials[0]}
+        data-colour={colourLabel(colour)}
+        data-kes={model.basePriceKes}
+        data-image={img.src}
+      >
+        Add to bag
+      </button>
+      {
+        compare ? (
+          <label class="wcard__compare">
+            <input type="checkbox" data-watch-compare value={model.id} />
+            Compare
+          </label>
+        ) : null
+      }
+    </div>
+  </div>
+</article>
+
+<script>
+  document.querySelectorAll("[data-watch-bag]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (!(btn instanceof HTMLElement)) return;
+      window.dispatchEvent(
+        new CustomEvent("gh:bag-add", {
+          detail: {
+            id: btn.getAttribute("data-id"),
+            name: btn.getAttribute("data-name"),
+            size: btn.getAttribute("data-size"),
+            material: btn.getAttribute("data-material"),
+            colour: btn.getAttribute("data-colour"),
+            kes: Number(btn.getAttribute("data-kes") || 0),
+            image: btn.getAttribute("data-image"),
+          },
+        }),
+      );
+    });
+  });
+</script>
+
+<style>
+  .wcard {
+    display: grid;
+    gap: 0.75rem;
+  }
+  .wcard__media {
+    position: relative;
+    display: block;
+    text-decoration: none;
+    transition: transform 220ms ease;
+  }
+  @media (hover: hover) {
+    .wcard__media:hover { transform: translateY(-6px) scale(1.05); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .wcard__media { transition: none; }
+    .wcard__media:hover { transform: none; }
+  }
+  .wcard__tag {
+    position: absolute;
+    top: 0.65rem;
+    left: 0.65rem;
+    background: #000;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.2rem 0.45rem;
+    border-radius: 0.35rem;
+  }
+  .wcard__tag--band { left: auto; right: 0.65rem; background: #1d1d1f; }
+  .wcard__body h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    letter-spacing: -0.02em;
+  }
+  .wcard__body h3 a { color: inherit; text-decoration: none; }
+  .wcard__sub, .wcard__meta, .wcard__fine {
+    margin: 0.2rem 0 0;
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted, #6e6e73);
+  }
+  .wcard__colours { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.55rem; }
+  .wcard__colours button {
+    width: 0.85rem; height: 0.85rem; border-radius: 50%;
+    border: 1px solid #d2d2d7; background: var(--dot); padding: 0; cursor: pointer;
+  }
+  .wcard__colours button.is-active { outline: 2px solid #000; outline-offset: 2px; }
+  .wcard__price {
+    margin: 0.55rem 0 0;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .wcard__price small {
+    display: block;
+    font-weight: 400;
+    color: var(--color-fg-muted, #6e6e73);
+  }
+  .wcard__actions {
+    display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center; margin-top: 0.65rem;
+  }
+  .wcard__compare {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    font-size: var(--text-sm); cursor: pointer;
+  }
+</style>

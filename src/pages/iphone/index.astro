@@ -1,0 +1,592 @@
+---
+/**
+ * iPhone 11–16 shop — filters, sort, compare tray.
+ * Modular category root; Mac can mirror under /mac later.
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import IphoneCard from "../../components/iphone/IphoneCard.astro";
+import IphoneQuiz from "../../components/iphone/IphoneQuiz.astro";
+import {
+  models,
+  formatKes,
+  getImage,
+  defaultColourForModel,
+  modelSubline,
+  iphoneConfig,
+} from "../../lib/iphone";
+import { site } from "../../lib/site";
+
+const list = models;
+const comparePayload = list.map((m) => {
+  const colour = defaultColourForModel(m.id, m.defaultColour ?? undefined);
+  const img = getImage(m.id, colour, 1, m.name);
+  return {
+    id: m.id,
+    name: m.name,
+    href: `/iphone/${m.id}`,
+    priceKes: m.basePriceKes,
+    image: img.src,
+    sub: modelSubline(m),
+    chip: m.chip,
+    display: `${m.displayInches}″`,
+    battery: `${m.batteryVideoHours} h`,
+    cameras: String(m.rearCameras.length),
+    port: m.port,
+    magsafe: m.magsafe ? "Yes" : "No",
+    family: m.family,
+  };
+});
+---
+
+<BaseLayout
+  title={`iPhone 11 to 16 - ${site.name}`}
+  description="Shop sealed iPhone 11 to iPhone 16 at Gadget Hub Kenya. Sample prices. Lipa Mdogo Mdogo available."
+>
+  <section class="ishop">
+    <div class="container">
+      <nav class="ishop__crumb" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span aria-hidden="true">/</span>
+        <span>iPhone</span>
+      </nav>
+      <header class="ishop__intro">
+        <h1>iPhone</h1>
+        <p>
+          Every generation from 11 to 16, sealed and ready. Prices below are samples until stock is entered.
+        </p>
+      </header>
+
+      <div class="ishop__chips" data-filter-family role="group" aria-label="Filter by generation">
+        <button type="button" class="is-active" data-family="all">All</button>
+        {[16, 15, 14, 13, 12, 11].map((g) => (
+          <button type="button" data-family={String(g)}>iPhone {g}</button>
+        ))}
+      </div>
+
+      <div class="ishop__chips ishop__chips--secondary" data-filter-size role="group" aria-label="Filter by size">
+        <button type="button" class="is-active" data-size="all">Any size</button>
+        <button type="button" data-size="mini">Small (mini)</button>
+        <button type="button" data-size="standard">Standard</button>
+        <button type="button" data-size="plus">Plus</button>
+        <button type="button" data-size="max">Max</button>
+        <button type="button" data-size="pro">Pro</button>
+      </div>
+
+      <div class="ishop__toolbar">
+        <label class="ishop__sort">
+          <span>Sort</span>
+          <select data-sort>
+            <option value="newest">Newest first</option>
+            <option value="price-asc">Price low to high</option>
+            <option value="price-desc">Price high to low</option>
+            <option value="battery">Battery life</option>
+          </select>
+        </label>
+        <p class="ishop__count" data-count></p>
+      </div>
+
+      <ul class="ishop__grid" data-grid>
+        {
+          list.map((model, i) => (
+            <li
+              data-card
+              data-family={model.family}
+              data-tier={model.tier}
+              data-price={model.basePriceKes}
+              data-battery={model.batteryVideoHours}
+              style={`--i: ${Math.min(i, 11)}`}
+            >
+              <IphoneCard model={model} />
+            </li>
+          ))
+        }
+      </ul>
+      <p class="ishop__none" data-none hidden>No models match those filters.</p>
+      <p class="ishop__disclaimer">{iphoneConfig.samplePriceDisclaimer}</p>
+
+      <IphoneQuiz />
+    </div>
+  </section>
+
+  <div class="icompare" data-compare-tray hidden>
+    <div class="icompare__pill">
+      <p data-compare-label>0 selected</p>
+      <button type="button" data-compare-clear>Clear</button>
+      <button type="button" class="btn btn--inverse btn--sm" data-compare-open>Compare</button>
+    </div>
+  </div>
+
+  <dialog class="icompare-modal" data-compare-modal aria-label="Compare iPhones">
+    <div class="icompare-modal__head">
+      <h2>Compare</h2>
+      <button type="button" data-compare-close aria-label="Close">Close</button>
+    </div>
+    <div class="icompare-modal__scroll" data-compare-table></div>
+  </dialog>
+
+  <div class="itoast" data-toast hidden role="status"></div>
+</BaseLayout>
+
+<script define:vars={{ comparePayload }}>
+  const byId = Object.fromEntries(comparePayload.map((p) => [p.id, p]));
+  const cards = [...document.querySelectorAll("[data-card]")];
+  const grid = document.querySelector("[data-grid]");
+  const none = document.querySelector("[data-none]");
+  const countEl = document.querySelector("[data-count]");
+  const sortSel = document.querySelector("[data-sort]");
+  let family = "all";
+  let size = "all";
+
+  function sizeMatch(tier, sizeKey) {
+    if (sizeKey === "all") return true;
+    if (sizeKey === "mini") return tier === "mini";
+    if (sizeKey === "standard") return tier === "Standard" || tier === "e";
+    if (sizeKey === "plus") return tier === "Plus";
+    if (sizeKey === "max") return tier === "Pro Max";
+    if (sizeKey === "pro") return tier === "Pro" || tier === "Pro Max";
+    return true;
+  }
+
+  function refresh() {
+    const sort = sortSel?.value || "newest";
+    const visible = cards.filter((li) => {
+      const f = li.getAttribute("data-family");
+      const tier = li.getAttribute("data-tier");
+      if (family !== "all" && f !== family) return false;
+      if (!sizeMatch(tier, size)) return false;
+      return true;
+    });
+
+    const ordered = [...visible].sort((a, b) => {
+      const pa = Number(a.getAttribute("data-price"));
+      const pb = Number(b.getAttribute("data-price"));
+      const ba = Number(a.getAttribute("data-battery"));
+      const bb = Number(b.getAttribute("data-battery"));
+      const fa = Number(a.getAttribute("data-family"));
+      const fb = Number(b.getAttribute("data-family"));
+      if (sort === "price-asc") return pa - pb;
+      if (sort === "price-desc") return pb - pa;
+      if (sort === "battery") return bb - ba;
+      // newest: family desc, then price desc
+      if (fb !== fa) return fb - fa;
+      return pb - pa;
+    });
+
+    cards.forEach((li) => {
+      li.hidden = true;
+    });
+    ordered.forEach((li, i) => {
+      li.hidden = false;
+      li.style.order = String(i);
+    });
+    if (none) none.hidden = ordered.length > 0;
+    if (countEl) countEl.textContent = `${ordered.length} model${ordered.length === 1 ? "" : "s"}`;
+  }
+
+  document.querySelectorAll("[data-filter-family] button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-filter-family] button").forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      family = btn.getAttribute("data-family") || "all";
+      refresh();
+    });
+  });
+
+  document.querySelectorAll("[data-filter-size] button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-filter-size] button").forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      size = btn.getAttribute("data-size") || "all";
+      refresh();
+    });
+  });
+
+  sortSel?.addEventListener("change", refresh);
+
+  // Compare
+  const selected = [];
+  const tray = document.querySelector("[data-compare-tray]");
+  const label = document.querySelector("[data-compare-label]");
+  const modal = document.querySelector("[data-compare-modal]");
+  const table = document.querySelector("[data-compare-table]");
+  const toast = document.querySelector("[data-toast]");
+
+  function showToast(msg) {
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.hidden = false;
+    window.setTimeout(() => {
+      toast.hidden = true;
+    }, 2200);
+  }
+
+  function renderTray() {
+    if (!tray || !label) return;
+    tray.hidden = selected.length === 0;
+    const names = selected.map((id) => byId[id]?.name || id).join(", ");
+    label.textContent = `${selected.length} selected: ${names}`;
+  }
+
+  function renderModal() {
+    if (!table) return;
+    const cols = selected.map((id) => byId[id]).filter(Boolean);
+    if (!cols.length) {
+      table.innerHTML = "";
+      return;
+    }
+    const rows = [
+      ["Display", (c) => c.display],
+      ["Chip", (c) => c.chip],
+      ["Battery (video)", (c) => c.battery],
+      ["Rear cameras", (c) => c.cameras],
+      ["Port", (c) => c.port],
+      ["MagSafe", (c) => c.magsafe],
+      ["From (sample)", (c) => `KES ${c.priceKes.toLocaleString("en-KE")}`],
+    ];
+    table.innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            ${cols
+              .map(
+                (c) => `<th>
+              <img src="${c.image}" alt="" width="72" height="72" />
+              <div>${c.name}</div>
+              <a href="${c.href}">View</a>
+            </th>`,
+              )
+              .join("")}
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="group"><th colspan="${cols.length + 1}">Highlights</th></tr>
+          ${rows
+            .map(
+              ([label, fn]) =>
+                `<tr><th>${label}</th>${cols.map((c) => `<td>${fn(c)}</td>`).join("")}</tr>`,
+            )
+            .join("")}
+        </tbody>
+      </table>`;
+  }
+
+  document.querySelectorAll("[data-compare]").forEach((box) => {
+    box.addEventListener("change", () => {
+      const id = box.getAttribute("data-compare");
+      if (!(box instanceof HTMLInputElement) || !id) return;
+      if (box.checked) {
+        if (selected.length >= 3) {
+          box.checked = false;
+          showToast("You can compare up to 3 models.");
+          return;
+        }
+        selected.push(id);
+      } else {
+        const i = selected.indexOf(id);
+        if (i >= 0) selected.splice(i, 1);
+      }
+      renderTray();
+    });
+  });
+
+  document.querySelector("[data-compare-clear]")?.addEventListener("click", () => {
+    selected.length = 0;
+    document.querySelectorAll("[data-compare]").forEach((box) => {
+      if (box instanceof HTMLInputElement) box.checked = false;
+    });
+    renderTray();
+    if (modal instanceof HTMLDialogElement) modal.close();
+  });
+
+  document.querySelector("[data-compare-open]")?.addEventListener("click", () => {
+    renderModal();
+    if (modal instanceof HTMLDialogElement) modal.showModal();
+  });
+
+  document.querySelector("[data-compare-close]")?.addEventListener("click", () => {
+    if (modal instanceof HTMLDialogElement) modal.close();
+  });
+
+  // Read ?family=16 from URL
+  const params = new URLSearchParams(location.search);
+  const f = params.get("family");
+  if (f && ["11", "12", "13", "14", "15", "16"].includes(f)) {
+    family = f;
+    document.querySelectorAll("[data-filter-family] button").forEach((b) => {
+      b.classList.toggle("is-active", b.getAttribute("data-family") === f);
+    });
+  }
+
+  refresh();
+</script>
+
+<style>
+  .ishop {
+    padding: var(--space-8) 0 calc(var(--space-16) + 4rem);
+  }
+
+  .ishop__crumb {
+    display: flex;
+    gap: 0.5rem;
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .ishop__crumb a {
+    color: inherit;
+  }
+
+  .ishop__intro {
+    max-width: 36rem;
+    margin-bottom: var(--space-8);
+  }
+
+  .ishop__intro h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    letter-spacing: -0.035em;
+    margin: 0 0 var(--space-3);
+  }
+
+  .ishop__intro p {
+    margin: 0;
+    color: var(--color-fg-muted);
+  }
+
+  .ishop__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: var(--space-3);
+  }
+
+  .ishop__chips--secondary {
+    margin-bottom: var(--space-6);
+  }
+
+  .ishop__chips button {
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
+    color: var(--color-fg);
+    border-radius: 999px;
+    padding: 0.45rem 0.9rem;
+    font: inherit;
+    font-size: var(--text-sm);
+    cursor: pointer;
+  }
+
+  .ishop__chips button.is-active,
+  .ishop__chips button:hover {
+    background: var(--color-black);
+    border-color: var(--color-black);
+    color: var(--color-white);
+  }
+
+  html[data-theme="dark"] .ishop__chips button.is-active,
+  html[data-theme="dark"] .ishop__chips button:hover {
+    background: var(--color-white);
+    border-color: var(--color-white);
+    color: var(--color-black);
+  }
+
+  .ishop__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  .ishop__sort {
+    display: grid;
+    gap: 0.25rem;
+    font-size: var(--text-xs);
+    color: var(--color-fg-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .ishop__sort select {
+    font: inherit;
+    font-size: var(--text-sm);
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--color-fg);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 0.45rem 0.6rem;
+  }
+
+  .ishop__count {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+
+  .ishop__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (min-width: 40rem) {
+    .ishop__grid {
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+  }
+
+  .ishop__grid > li {
+    animation: icard-in 0.5s var(--ease-out) both;
+    animation-delay: calc(var(--i, 0) * 45ms);
+  }
+
+  @keyframes icard-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ishop__grid > li {
+      animation: none;
+    }
+  }
+
+  .ishop__none,
+  .ishop__disclaimer {
+    margin-top: var(--space-6);
+    color: var(--color-fg-muted);
+    font-size: var(--text-sm);
+  }
+
+  .icompare {
+    position: fixed;
+    left: 50%;
+    bottom: 1.25rem;
+    transform: translateX(-50%);
+    z-index: 60;
+    width: min(calc(100% - 2rem), 36rem);
+  }
+
+  .icompare__pill {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    background: #000;
+    color: #fff;
+    border-radius: 999px;
+    padding: 0.65rem 0.85rem 0.65rem 1.1rem;
+    box-shadow: 0 12px 32px rgb(0 0 0 / 0.25);
+  }
+
+  .icompare__pill p {
+    margin: 0;
+    flex: 1;
+    font-size: var(--text-sm);
+    min-width: 8rem;
+  }
+
+  .icompare__pill button[data-compare-clear] {
+    border: none;
+    background: transparent;
+    color: #a1a1a6;
+    font: inherit;
+    font-size: var(--text-sm);
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  .icompare-modal {
+    width: min(100% - 1.5rem, 52rem);
+    max-height: 85dvh;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 0;
+  }
+
+  .icompare-modal::backdrop {
+    background: rgb(0 0 0 / 0.5);
+  }
+
+  .icompare-modal__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .icompare-modal__head h2 {
+    margin: 0;
+    font-size: 1.15rem;
+  }
+
+  .icompare-modal__head button {
+    border: none;
+    background: transparent;
+    font: inherit;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  .icompare-modal__scroll {
+    overflow: auto;
+    padding: 1rem;
+  }
+
+  .icompare-modal__scroll table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+    min-width: 28rem;
+  }
+
+  .icompare-modal__scroll th,
+  .icompare-modal__scroll td {
+    border-bottom: 1px solid var(--color-border);
+    padding: 0.65rem 0.5rem;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .icompare-modal__scroll thead img {
+    width: 4.5rem;
+    height: 4.5rem;
+    object-fit: contain;
+    background: #f5f5f7;
+    mix-blend-mode: multiply;
+  }
+
+  .icompare-modal__scroll tr.group th {
+    background: var(--color-stage);
+    color: var(--color-fg-muted);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .itoast {
+    position: fixed;
+    bottom: 5.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 70;
+    background: #000;
+    color: #fff;
+    padding: 0.65rem 1rem;
+    border-radius: 999px;
+    font-size: var(--text-sm);
+  }
+</style>

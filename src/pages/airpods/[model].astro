@@ -1,0 +1,537 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import AirPodsStage from "../../components/airpods/AirPodsStage.astro";
+import AirPodsFeel from "../../components/airpods/AirPodsFeel.astro";
+import AirPodsLipaCalc from "../../components/airpods/AirPodsLipaCalc.astro";
+import AirPodsTradeIn from "../../components/airpods/AirPodsTradeIn.astro";
+import AirpodsTrademark from "../../components/airpods/AirpodsTrademark.astro";
+import {
+  airpodsModels,
+  getAirpodsModel,
+  getAirpodsImage,
+  resolveAirpodsKey,
+  airpodsViewerTabs,
+  relatedAirpodsModels,
+  formatKes,
+  airpodsConfigurePrice,
+  lipaMonthly,
+  airpodsConfig,
+  colourHex,
+  colourLabel,
+  colourApprox,
+  accessoriesForAirpods,
+  airpodsBuyingNotes,
+  airpodsFaq,
+  defaultAirpodsColour,
+} from "../../lib/airpods";
+
+export function getStaticPaths() {
+  return airpodsModels.map((m) => ({ params: { model: m.id } }));
+}
+
+const model = getAirpodsModel(Astro.params.model!);
+if (!model) return Astro.redirect("/airpods");
+
+const tabs = airpodsViewerTabs(model);
+const img = tabs[0] || getAirpodsImage(model.id, "hero", model.name);
+const price = airpodsConfigurePrice(model);
+const lipa = lipaMonthly(price.kes);
+const notes = airpodsBuyingNotes(model);
+const faq = airpodsFaq();
+const fits = accessoriesForAirpods(model).filter((a) => a.category !== "cross");
+const related = relatedAirpodsModels(model, airpodsModels);
+const defaultColour = defaultAirpodsColour(model);
+const canWireless = model.caseOptions.includes("wireless");
+
+/** C1 — model hero pairs / single-frame fade */
+let heroStartSrc = "";
+let heroEndSrc = "";
+if (model.id === "airpods-pro-3") {
+  const p = resolveAirpodsKey("pair:pro/welcome/hero", model.name);
+  heroStartSrc = p.start || resolveAirpodsKey("pro/welcome/hero_startframe").src;
+  heroEndSrc = p.end || resolveAirpodsKey("pro/welcome/hero_endframe").src || resolveAirpodsKey("pro/welcome/hero").src;
+} else if (model.id.startsWith("airpods-5")) {
+  heroStartSrc = resolveAirpodsKey("airpods5/welcome/hero_airpods_startframe").src;
+  heroEndSrc = getAirpodsImage(model.id, "hero", model.name).src;
+} else if (model.family === "Max" && !model.textOnlyColours) {
+  heroStartSrc = resolveAirpodsKey("max/welcome/max-loop_startframe").src;
+  heroEndSrc = getAirpodsImage(model.id, "hero", model.name).src;
+}
+const showPageHero = Boolean(heroStartSrc && heroEndSrc);
+---
+
+<BaseLayout title={`${model.name} - GadgetHub`} description={model.tagline}>
+  <article class="apdp">
+    {showPageHero ? (
+      <section class="apdp-hero" data-apdp-hero>
+        <div class="apdp-hero__stage" aria-hidden="true">
+          <img class="apdp-hero__frame" data-hero-start src={heroStartSrc} alt="" width="1800" height="1200" fetchpriority="high" />
+          <img class="apdp-hero__frame" data-hero-end src={heroEndSrc} alt="" width="1800" height="1200" fetchpriority="high" />
+        </div>
+        <div class="container apdp-hero__copy">
+          <p class="apdp__pills"><span>{model.year}</span>{model.isNew ? <span>New</span> : null}</p>
+          <h1>{model.name}</h1>
+          <p>{model.tagline}</p>
+        </div>
+      </section>
+    ) : null}
+    <div class="container apdp__top">
+      <div class="apdp__viewer" data-viewer>
+        <div class="apdp__stage" data-stage>
+          <picture>
+            {img.srcWebp ? <source srcset={img.srcWebp} type="image/webp" /> : null}
+            <img data-viewer-img src={img.src} alt={img.alt} width="1200" height="1200" />
+          </picture>
+        </div>
+        <div class="apdp__tabs" role="tablist">
+          {tabs.map((t, i) => (
+            <button
+              type="button"
+              role="tab"
+              class:list={{ "is-active": i === 0 }}
+              data-tab={t.id}
+              data-src={t.src}
+              data-alt={t.alt}
+              data-webp={t.srcWebp || ""}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+        {model.standInImage ? <p class="apdp__stand">Image shows the current design.</p> : null}
+        <p class="apdp__fine">Click tabs to change view. Hover to zoom on desktop.</p>
+        <div class="apdp__scale" aria-label="Size comparison (illustration)">
+          <svg viewBox="0 0 320 100" role="img" aria-label="Earbud next to a coin and finger tip — check final specs for exact size">
+            <rect x="24" y="28" width="36" height="52" rx="12" fill="#d2d2d7" />
+            <circle cx="110" cy="55" r="22" fill="none" stroke="#1d1d1f" stroke-width="2" />
+            <path d="M160 20c18 0 34 20 34 42s-10 30-22 30-18-8-18-22 8-50 6-50z" fill="#f5f5f7" stroke="#6e6e73" stroke-width="1.5" />
+            <text x="24" y="96" font-size="10" fill="#6e6e73">Earbud · coin · finger — check final specs</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="apdp__buy" data-buy>
+        <p class="apdp__pills">
+          <span>{model.year}</span>
+          {model.isNew ? <span>New</span> : <span>Also in stock</span>}
+          {model.checkFinalSpecs ? <span>Check final specs</span> : null}
+        </p>
+        <h1>{model.name}</h1>
+        <p class="apdp__tagline">{model.tagline}</p>
+        <p class="apdp__who">{model.whoItSuits}</p>
+
+        {model.family === "Max" && model.colours.length > 0 ? (
+          <fieldset>
+            <legend>Colour</legend>
+            <div class="apdp__swatches">
+              {model.colours.map((c, i) => (
+                <button
+                  type="button"
+                  class:list={{ "is-active": i === 0 }}
+                  data-airpods-swatch
+                  data-colour={c}
+                  data-label={colourLabel(c)}
+                  data-src={getAirpodsImage(model.id, `colour:${c}`, model.name).src}
+                  style={`--swatch:${colourHex(c)}`}
+                  aria-label={colourLabel(c)}
+                >
+                  <span />
+                  <em>{colourLabel(c)}{colourApprox(c) ? " · approx." : ""}</em>
+                </button>
+              ))}
+            </div>
+          </fieldset>
+        ) : null}
+
+        {canWireless ? (
+          <fieldset>
+            <legend>Case option</legend>
+            <div class="apdp__opts" data-case-opt>
+              <button type="button" class="is-active" data-case="usb-c" data-step="0">USB-C case in pack</button>
+              <button type="button" data-case="wireless" data-step={airpodsConfig.wirelessCaseStepKes}>
+                Wireless charging (+{formatKes(airpodsConfig.wirelessCaseStepKes).replace("KES ", "")})
+              </button>
+            </div>
+          </fieldset>
+        ) : null}
+
+        {fits.length ? (
+          <fieldset>
+            <legend>Add-ons</legend>
+            <div class="apdp__addons">
+              {fits.slice(0, 5).map((a) => (
+                <label>
+                  <input type="checkbox" data-addon data-addon-kes={a.priceKes} data-addon-name={a.name} />
+                  {a.name} · {a.priceKes > 0 ? formatKes(a.priceKes) : "Ask"}
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        ) : null}
+
+        <div class="apdp__price">
+          <p><span data-price>{formatKes(price.kes)}</span></p>
+          <p data-lipa>or {formatKes(lipa.monthlyKes)} / mo</p>
+          <p class="apdp__fine">{airpodsConfig.samplePriceDisclaimer}</p>
+        </div>
+
+        <p class="apdp__stock"><span class="apdp__dot" /> In stock (sample) · Collect today in Nairobi</p>
+
+        <div class="apdp__cta">
+          <button
+            type="button"
+            class="btn btn--primary"
+            data-airpods-bag
+            data-id={model.id}
+            data-name={model.name}
+            data-colour={colourLabel(defaultColour)}
+            data-case-option={model.caseOptions[0] || "usb-c"}
+            data-extras=""
+            data-kes={price.kes}
+            data-image={img.src}
+          >
+            Add to bag
+          </button>
+          <a class="btn btn--whatsapp" data-wa href={`https://wa.me/${airpodsConfig.whatsapp}`} target="_blank" rel="noopener noreferrer">
+            Ask on WhatsApp
+          </a>
+        </div>
+
+        <ul class="apdp__highlights">
+          <li><strong>{model.chip || "Check"}</strong><span>Chip</span></li>
+          <li><strong>{model.noiseModes.includes("anc") ? "ANC" : model.noiseModes.join(", ")}</strong><span>Noise</span></li>
+          <li><strong>{model.batterySingleHours ?? "—"}{model.batterySingleHours ? " h" : ""}</strong><span>Battery{model.batterySingleHours == null ? " · check" : ""}</span></li>
+          <li><strong>{model.weightG ?? "—"}{model.weightG ? " g" : ""}</strong><span>Weight</span></li>
+        </ul>
+
+        <div class="apdp__why">
+          <h2>Why people choose this one</h2>
+          <ul>{model.whyChoose.map((line) => <li>{line}</li>)}</ul>
+        </div>
+      </div>
+    </div>
+
+    <AirPodsFeel model={model} />
+
+    <section class="container apdp__block">
+      <h2>Full specifications</h2>
+      <p class="apdp__fine">{airpodsConfig.appleSpecsFootnote}</p>
+      <details class="apdp__acc" open>
+        <summary>Audio {model.checkFinalSpecs ? "· check final specs" : ""}</summary>
+        <table>
+          <tr><th>Spatial Audio</th><td>{model.spatialAudio == null ? "Check" : model.spatialAudio ? "Yes" : "No"}</td></tr>
+          <tr><th>Lossless</th><td>{model.lossless == null ? "Check" : model.lossless ? "Yes" : "No"}</td></tr>
+          <tr><th>Noise modes</th><td>{model.noiseModes.join(", ")}</td></tr>
+        </table>
+      </details>
+      <details class="apdp__acc">
+        <summary>Hearing</summary>
+        <table>
+          <tr><th>Hearing Test</th><td>{model.hearingTest == null ? "—" : model.hearingTest ? "Yes" : "No"}</td></tr>
+          <tr><th>Hearing Aid</th><td>{model.hearingAid == null ? "—" : model.hearingAid ? "Yes" : "No"}</td></tr>
+          <tr><th>Hearing Protection</th><td>{model.hearingProtection == null ? "—" : model.hearingProtection ? "Yes" : "No"}</td></tr>
+        </table>
+      </details>
+      <details class="apdp__acc">
+        <summary>Battery</summary>
+        <table>
+          <tr><th>Single charge</th><td>{model.batterySingleHours != null ? `${model.batterySingleHours} h` : "Check final specs"}</td></tr>
+          <tr><th>With case</th><td>{model.batteryWithCaseHours != null ? `${model.batteryWithCaseHours} h` : "Check final specs"}</td></tr>
+        </table>
+      </details>
+      <details class="apdp__acc">
+        <summary>Case and durability</summary>
+        <table>
+          <tr><th>Case types</th><td>{model.caseTypes.join(", ")}</td></tr>
+          <tr><th>Water rating</th><td>{model.waterRating || "Check"}</td></tr>
+          <tr><th>Weight</th><td>{model.weightG != null ? `${model.weightG} g` : "Check"}</td></tr>
+        </table>
+      </details>
+    </section>
+
+    <section class="container apdp__block">
+      <h2>Buying notes for this model</h2>
+      <ul class="apdp__notes">
+        {notes.map((n) => (
+          <li><h3>{n.title}</h3><p>{n.body}</p></li>
+        ))}
+      </ul>
+    </section>
+
+    {related.length ? (
+      <section class="container apdp__block">
+        <h2>Compare with</h2>
+        <div class="apdp__related">
+          {related.map((r) => {
+            const rimg = getAirpodsImage(r.id, "earbuds", r.name);
+            return (
+              <a href={`/airpods/compare?ids=${encodeURIComponent(`${model.id},${r.id}`)}`}>
+                <AirPodsStage src={rimg.src} srcWebp={rimg.srcWebp} alt={rimg.alt} width={560} height={560} />
+                <span>{r.name}</span>
+                <em>From {formatKes(r.basePriceKes)}</em>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    ) : null}
+
+    <section class="container apdp__block">
+      <h2>Questions people ask</h2>
+      {faq.map((item) => (
+        <details class="apdp__acc"><summary>{item.q}</summary><p>{item.a}</p></details>
+      ))}
+    </section>
+
+    <section class="container apdp__tools">
+      <AirPodsLipaCalc modelId={model.id} />
+      <AirPodsTradeIn modelId={model.id} />
+    </section>
+
+    <section class="container">
+      <AirpodsTrademark />
+    </section>
+  </article>
+</BaseLayout>
+
+<script define:vars={{
+  base: model.basePriceKes,
+  wirelessStep: airpodsConfig.wirelessCaseStepKes,
+  depositPct: airpodsConfig.lipa.depositDefaultPct,
+  months: airpodsConfig.lipa.monthsDefault,
+  waBase: `https://wa.me/${airpodsConfig.whatsapp}?text=`,
+  modelName: model.name,
+}}>
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const state = { wireless: 0, addonsKes: 0, caseOption: "usb-c", colour: "", extras: "" };
+  const priceEl = document.querySelector("[data-price]");
+  const lipaEl = document.querySelector("[data-lipa]");
+  const bag = document.querySelector("[data-airpods-bag]");
+  const wa = document.querySelector("[data-wa]");
+  const viewerImg = document.querySelector("[data-viewer-img]");
+
+  function total() {
+    return base + state.wireless + state.addonsKes;
+  }
+  function refresh() {
+    const kes = total();
+    const monthly = Math.round((kes * (1 - depositPct / 100)) / months);
+    if (priceEl) priceEl.textContent = `KES ${kes.toLocaleString("en-KE")}`;
+    if (lipaEl) lipaEl.textContent = `or KES ${monthly.toLocaleString("en-KE")} / mo`;
+    if (bag instanceof HTMLElement) {
+      bag.setAttribute("data-kes", String(kes));
+      bag.setAttribute("data-colour", state.colour || bag.getAttribute("data-colour") || "");
+      bag.setAttribute("data-case-option", state.caseOption);
+      bag.setAttribute("data-extras", state.extras);
+    }
+    if (wa instanceof HTMLAnchorElement) {
+      const msg = `Hi Gadget Hub — interested in ${modelName}, colour: ${state.colour || "-"}, case: ${state.caseOption}${state.extras ? `, add-ons: ${state.extras}` : ""}. Sample KES ${kes.toLocaleString("en-KE")}.`;
+      wa.href = waBase + encodeURIComponent(msg);
+    }
+  }
+
+  document.querySelectorAll("[data-tab]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-tab]").forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      if (viewerImg instanceof HTMLImageElement) {
+        viewerImg.src = btn.getAttribute("data-src") || viewerImg.src;
+        viewerImg.alt = btn.getAttribute("data-alt") || viewerImg.alt;
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-case]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-case]").forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      state.wireless = Number(btn.getAttribute("data-step") || 0);
+      state.caseOption = btn.getAttribute("data-case") || "usb-c";
+      refresh();
+    });
+  });
+
+  document.querySelectorAll("[data-addon]").forEach((box) => {
+    box.addEventListener("change", () => {
+      const names = [];
+      let kes = 0;
+      document.querySelectorAll("[data-addon]").forEach((b) => {
+        if (b instanceof HTMLInputElement && b.checked) {
+          kes += Number(b.getAttribute("data-addon-kes") || 0);
+          names.push(b.getAttribute("data-addon-name") || "");
+        }
+      });
+      state.addonsKes = kes;
+      state.extras = names.filter(Boolean).join(", ");
+      refresh();
+    });
+  });
+
+  document.querySelectorAll("[data-airpods-swatch]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-airpods-swatch]").forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      state.colour = btn.getAttribute("data-label") || "";
+      const src = btn.getAttribute("data-src");
+      if (viewerImg instanceof HTMLImageElement && src) {
+        if (!reduce) {
+          viewerImg.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 170, fill: "forwards" });
+          window.setTimeout(() => {
+            viewerImg.src = src;
+            viewerImg.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 170, fill: "forwards" });
+          }, 180);
+        } else viewerImg.src = src;
+      }
+      refresh();
+    });
+  });
+
+  bag?.addEventListener("click", () => {
+    if (!(bag instanceof HTMLElement)) return;
+    window.dispatchEvent(
+      new CustomEvent("gh:bag-add", {
+        detail: {
+          id: bag.getAttribute("data-id"),
+          name: bag.getAttribute("data-name"),
+          colour: bag.getAttribute("data-colour"),
+          caseOption: bag.getAttribute("data-case-option"),
+          extras: bag.getAttribute("data-extras") || "",
+          kes: Number(bag.getAttribute("data-kes") || 0),
+          image: bag.getAttribute("data-image"),
+        },
+      }),
+    );
+  });
+
+  refresh();
+
+  const pageHero = document.querySelector("[data-apdp-hero]");
+  if (pageHero) {
+    const start = pageHero.querySelector("[data-hero-start]");
+    const end = pageHero.querySelector("[data-hero-end]");
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (start instanceof HTMLElement && end instanceof HTMLElement) {
+      end.style.opacity = "0";
+      const play = (p) => {
+        end.style.opacity = String(p);
+        start.style.opacity = String(1 - p);
+        const s = 0.94 + p * 0.06;
+        start.style.transform = `scale(${s})`;
+        end.style.transform = `scale(${s})`;
+      };
+      if (reduce) play(1);
+      else {
+        play(0);
+        const t0 = performance.now();
+        const intro = (now) => {
+          const p = Math.min(1, (now - t0) / 1400);
+          play(p);
+          if (p < 1) requestAnimationFrame(intro);
+        };
+        requestAnimationFrame(intro);
+        if (window.matchMedia("(min-width: 48rem)").matches) {
+          window.addEventListener(
+            "scroll",
+            () => {
+              const r = pageHero.getBoundingClientRect();
+              const total = pageHero.offsetHeight - window.innerHeight;
+              const p = Math.min(1, Math.max(0, -r.top / Math.max(1, total)));
+              play(p);
+            },
+            { passive: true },
+          );
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  .apdp { padding-bottom: 3rem; overflow-x: hidden; }
+  .apdp-hero {
+    position: relative; background: #f5f5f7; min-height: 70vh;
+    display: grid; place-items: end start; overflow: hidden;
+  }
+  @media (min-width: 48rem) { .apdp-hero { min-height: 140vh; } }
+  .apdp-hero__stage {
+    position: absolute; inset: 0; display: grid; place-items: center;
+  }
+  .apdp-hero__frame {
+    grid-area: 1 / 1; width: min(78vw, 40rem); object-fit: contain;
+    mix-blend-mode: multiply; transition: opacity 80ms linear;
+  }
+  .apdp-hero__copy {
+    position: relative; z-index: 2; padding-block: 3rem 2rem; max-width: 36rem;
+  }
+  .apdp__top {
+    display: grid; gap: 2rem; padding-block: 2rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  @media (min-width: 56rem) {
+    .apdp__top { grid-template-columns: 1.1fr 0.9fr; align-items: start; }
+    .apdp__viewer { position: sticky; top: calc(var(--header-height) + 1rem); }
+  }
+  .apdp__stage {
+    background: #f5f5f7; border-radius: 1.5rem; aspect-ratio: 1; display: grid; place-items: center;
+  }
+  .apdp__stage img { width: 88%; height: auto; mix-blend-mode: multiply; }
+  .apdp__tabs { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.75rem; }
+  .apdp__tabs button {
+    border: 1px solid #d2d2d7; background: #fff; border-radius: 999px;
+    padding: 0.35rem 0.65rem; font: inherit; font-size: var(--text-sm); cursor: pointer;
+  }
+  .apdp__tabs button.is-active { background: #000; color: #fff; }
+  .apdp__stand { color: #6e6e73; font-size: var(--text-sm); margin: 0.5rem 0 0; }
+  .apdp__fine { font-size: var(--text-sm); color: #6e6e73; }
+  .apdp__scale { margin-top: 0.75rem; max-width: 22rem; }
+  .apdp__scale svg { width: 100%; height: auto; display: block; }
+  .apdp__pills { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0 0 0.75rem; }
+  .apdp__pills span {
+    font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.45rem; border-radius: 0.35rem;
+    background: #f5f5f7; color: #1d1d1f;
+  }
+  .apdp h1 { margin: 0 0 0.35rem; letter-spacing: -0.03em; }
+  .apdp__tagline { font-weight: 600; margin: 0 0 0.35rem; }
+  .apdp__who { color: #6e6e73; margin: 0 0 1rem; }
+  .apdp fieldset { border: none; margin: 0 0 1rem; padding: 0; }
+  .apdp legend { font-weight: 600; margin-bottom: 0.45rem; }
+  .apdp__opts { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .apdp__opts button {
+    border: 1px solid #d2d2d7; background: #fff; border-radius: 999px;
+    padding: 0.4rem 0.75rem; font: inherit; font-size: var(--text-sm); cursor: pointer;
+  }
+  .apdp__opts button.is-active { background: #000; color: #fff; }
+  .apdp__swatches { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  .apdp__swatches button {
+    border: 1px solid #d2d2d7; background: #fff; border-radius: 1rem; padding: 0.45rem 0.65rem;
+    font: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;
+  }
+  .apdp__swatches button span:first-child {
+    width: 1rem; height: 1rem; border-radius: 50%; background: var(--swatch); border: 1px solid #d2d2d7;
+  }
+  .apdp__swatches em { font-style: normal; font-size: var(--text-sm); }
+  .apdp__swatches button.is-active { outline: 2px solid #000; }
+  .apdp__addons label { display: flex; gap: 0.45rem; font-size: var(--text-sm); margin-bottom: 0.35rem; }
+  .apdp__price span { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.03em; }
+  .apdp__stock { display: flex; align-items: center; gap: 0.45rem; font-size: var(--text-sm); }
+  .apdp__dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: #34c759; }
+  .apdp__cta { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+  .apdp__highlights {
+    list-style: none; margin: 1rem 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;
+  }
+  .apdp__highlights span { display: block; font-size: var(--text-sm); color: #6e6e73; }
+  .apdp__why ul { margin: 0.5rem 0 0; padding-left: 1.1rem; color: #1d1d1f; }
+  .apdp__block { padding-block: 2.5rem; }
+  .apdp__block h2 { margin: 0 0 1rem; letter-spacing: -0.02em; }
+  .apdp__acc { margin-bottom: 0.65rem; border: 1px solid #d2d2d7; border-radius: 0.75rem; padding: 0.65rem 0.85rem; }
+  .apdp__acc table { width: 100%; font-size: var(--text-sm); }
+  .apdp__acc th { text-align: left; padding-right: 1rem; color: #6e6e73; font-weight: 500; }
+  .apdp__notes { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+  .apdp__notes h3 { margin: 0 0 0.25rem; font-size: 1rem; }
+  .apdp__related { display: grid; gap: 1rem; grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 40rem) { .apdp__related { grid-template-columns: 1fr 1fr; } }
+  .apdp__related a { text-decoration: none; color: inherit; display: grid; gap: 0.35rem; }
+  .apdp__related em { font-style: normal; color: #6e6e73; font-size: var(--text-sm); }
+  .apdp__tools { display: grid; gap: 1rem; padding-bottom: 2rem; }
+  @media (min-width: 40rem) { .apdp__tools { grid-template-columns: 1fr 1fr; } }
+</style>

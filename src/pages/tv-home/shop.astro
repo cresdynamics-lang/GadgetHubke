@@ -1,0 +1,182 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import TvHomeCard from "../../components/tv-home/TvHomeCard.astro";
+import TvHomeTrademark from "../../components/tv-home/TvHomeTrademark.astro";
+import {
+  tvHomeModels,
+  hasDolbyVision,
+  isHomeHub,
+  isSpeaker,
+} from "../../lib/tv-home";
+
+const url = Astro.url;
+const familyQ = url.searchParams.get("family") || "";
+const colourQ = url.searchParams.get("colour") || "";
+const needQ = url.searchParams.get("need") || "";
+
+let filtered = [...tvHomeModels];
+if (familyQ) filtered = filtered.filter((m) => m.family === familyQ);
+if (colourQ) filtered = filtered.filter((m) => m.colours.includes(colourQ));
+if (needQ === "movies") filtered = filtered.filter((m) => m.family === "Apple TV");
+if (needQ === "music") filtered = filtered.filter((m) => isSpeaker(m));
+if (needQ === "hub") filtered = filtered.filter((m) => isHomeHub(m));
+if (needQ === "compact") filtered = filtered.filter((m) => m.family === "HomePod mini" || m.id === "apple-tv-hd");
+if (needQ === "stereo") filtered = filtered.filter((m) => m.stereoPairCapable);
+if (needQ === "budget") filtered = filtered.sort((a, b) => a.basePriceKes - b.basePriceKes);
+---
+
+<BaseLayout title="Shop TV & Home - GadgetHub" description="Filter Apple TV and HomePod by family, colour and need. Sample prices.">
+  <section class="container thshop">
+    <header class="thshop__head">
+      <h1>Shop TV &amp; Home</h1>
+      <p>Sample prices. Sealed stock. Compare up to three.</p>
+    </header>
+
+    <div class="thshop__filters" data-thshop>
+      <div class="thshop__chips" role="group" aria-label="Family">
+        <a class:list={{ "is-active": !familyQ }} href="/tv-home/shop">All</a>
+        {["Apple TV", "HomePod", "HomePod mini"].map((f) => (
+          <a class:list={{ "is-active": familyQ === f }} href={`/tv-home/shop?family=${encodeURIComponent(f)}`}>{f}</a>
+        ))}
+      </div>
+      <div class="thshop__chips" role="group" aria-label="Colour">
+        {["midnight", "white", "blue", "orange", "yellow"].map((c) => (
+          <a class:list={{ "is-active": colourQ === c }} href={`/tv-home/shop?colour=${c}`}>{c}</a>
+        ))}
+      </div>
+      <div class="thshop__chips" role="group" aria-label="Need">
+        {[
+          ["movies", "Movies"],
+          ["music", "Music"],
+          ["hub", "Hub"],
+          ["compact", "Compact"],
+          ["stereo", "Stereo"],
+          ["budget", "Budget"],
+        ].map(([id, label]) => (
+          <a class:list={{ "is-active": needQ === id }} href={`/tv-home/shop?need=${id}`}>{label}</a>
+        ))}
+      </div>
+      <div class="thshop__toggles">
+        <label><input type="checkbox" data-filter-hub /> Home hub</label>
+        <label><input type="checkbox" data-filter-dolby /> Dolby Vision</label>
+        <label>
+          Sort
+          <select data-sort>
+            <option value="newest">Newest</option>
+            <option value="price-asc">Price ↑</option>
+            <option value="price-desc">Price ↓</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <ul class="thshop__grid" data-shop-grid>
+      {filtered.map((m) => (
+        <li
+          data-shop-item
+          data-id={m.id}
+          data-hub={isHomeHub(m) ? "1" : "0"}
+          data-dolby={hasDolbyVision(m) ? "1" : "0"}
+          data-year={m.year}
+          data-price={m.basePriceKes}
+        >
+          <TvHomeCard model={m} />
+        </li>
+      ))}
+    </ul>
+    <TvHomeTrademark />
+  </section>
+
+  <div class="thshop-tray" data-compare-tray hidden>
+    <p data-compare-count>0 selected</p>
+    <a class="btn btn--primary btn--sm" data-compare-go href="/tv-home/compare">Compare</a>
+    <button type="button" data-compare-clear>Clear</button>
+  </div>
+</BaseLayout>
+
+<script>
+  const tray = document.querySelector("[data-compare-tray]");
+  const countEl = document.querySelector("[data-compare-count]");
+  const go = document.querySelector("[data-compare-go]");
+  const selected = new Set();
+
+  function refreshTray() {
+    if (!(tray instanceof HTMLElement)) return;
+    tray.hidden = selected.size === 0;
+    if (countEl) countEl.textContent = `${selected.size} selected`;
+    if (go instanceof HTMLAnchorElement) {
+      go.href = `/tv-home/compare?ids=${encodeURIComponent([...selected].join(","))}`;
+    }
+  }
+
+  document.querySelectorAll("[data-tvhome-compare]").forEach((box) => {
+    box.addEventListener("change", () => {
+      if (!(box instanceof HTMLInputElement)) return;
+      if (box.checked) {
+        if (selected.size >= 3) {
+          box.checked = false;
+          return;
+        }
+        selected.add(box.value);
+      } else selected.delete(box.value);
+      refreshTray();
+    });
+  });
+
+  document.querySelector("[data-compare-clear]")?.addEventListener("click", () => {
+    selected.clear();
+    document.querySelectorAll("[data-tvhome-compare]").forEach((b) => {
+      if (b instanceof HTMLInputElement) b.checked = false;
+    });
+    refreshTray();
+  });
+
+  const hub = document.querySelector("[data-filter-hub]");
+  const dolby = document.querySelector("[data-filter-dolby]");
+  const sort = document.querySelector("[data-sort]");
+  const grid = document.querySelector("[data-shop-grid]");
+
+  function applyClientFilters() {
+    const wantHub = hub instanceof HTMLInputElement && hub.checked;
+    const wantDolby = dolby instanceof HTMLInputElement && dolby.checked;
+    const items = [...document.querySelectorAll("[data-shop-item]")];
+    items.forEach((li) => {
+      if (!(li instanceof HTMLElement)) return;
+      let show = true;
+      if (wantHub && li.getAttribute("data-hub") !== "1") show = false;
+      if (wantDolby && li.getAttribute("data-dolby") !== "1") show = false;
+      li.hidden = !show;
+    });
+    const mode = sort instanceof HTMLSelectElement ? sort.value : "newest";
+    const sorted = items.filter((li) => !li.hidden).sort((a, b) => {
+      const pa = Number(a.getAttribute("data-price") || 0);
+      const pb = Number(b.getAttribute("data-price") || 0);
+      const ya = Number(a.getAttribute("data-year") || 0);
+      const yb = Number(b.getAttribute("data-year") || 0);
+      if (mode === "price-asc") return pa - pb;
+      if (mode === "price-desc") return pb - pa;
+      return yb - ya;
+    });
+    if (grid instanceof HTMLElement) sorted.forEach((li) => grid.appendChild(li));
+  }
+
+  hub?.addEventListener("change", applyClientFilters);
+  dolby?.addEventListener("change", applyClientFilters);
+  sort?.addEventListener("change", applyClientFilters);
+</script>
+
+<style>
+  .thshop { padding-block: 2rem 4rem; font-family: Inter, system-ui, sans-serif; }
+  .thshop__chips { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 0.75rem; }
+  .thshop__chips a {
+    padding: 0.35rem 0.75rem; border-radius: 999px; border: 1px solid #d2d2d7; text-decoration: none; color: inherit; font-size: var(--text-sm);
+  }
+  .thshop__chips a.is-active { background: #000; color: #fff; border-color: #000; }
+  .thshop__toggles { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-bottom: 1.5rem; font-size: var(--text-sm); }
+  .thshop__grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); }
+  .thshop-tray {
+    position: fixed; bottom: calc(var(--fab-clearance) + 1rem); left: 50%; transform: translateX(-50%);
+    background: #000; color: #fff; padding: 0.65rem 1rem; border-radius: 999px; display: flex; align-items: center; gap: 0.75rem; z-index: 40;
+  }
+  .thshop-tray button { background: transparent; border: none; color: #fff; cursor: pointer; text-decoration: underline; }
+</style>

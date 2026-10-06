@@ -1,0 +1,245 @@
+---
+/**
+ * AirPods mega menu — Shop / Accessories / Need / live preview.
+ */
+import {
+  airpodsModels,
+  getAirpodsModel,
+  getAirpodsImage,
+  formatKes,
+  type AirpodsModel,
+} from "../../lib/airpods";
+
+function previewFor(m: AirpodsModel) {
+  const img = getAirpodsImage(m.id, "hero", m.name);
+  return {
+    id: m.id,
+    name: m.name,
+    tagline: m.tagline,
+    href: `/airpods/${m.id}`,
+    priceKes: m.basePriceKes,
+    src: img.src,
+    alt: img.alt,
+    isNew: Boolean(m.isNew),
+  };
+}
+
+const previews = Object.fromEntries(airpodsModels.map((m) => [m.id, previewFor(m)]));
+const defaultPreview = previewFor(getAirpodsModel("airpods-pro-3") || airpodsModels[0]);
+
+const featuredIds = [
+  "airpods-pro-3",
+  "airpods-5",
+  "airpods-max-2",
+  "airpods-4",
+  "airpods-pro-2",
+] as const;
+const shopNow = featuredIds.map((id) => getAirpodsModel(id)).filter(Boolean) as AirpodsModel[];
+
+const earlier = airpodsModels
+  .filter((m) => !featuredIds.includes(m.id as (typeof featuredIds)[number]))
+  .sort((a, b) => b.year - a.year || b.basePriceKes - a.basePriceKes)
+  .slice(0, 8);
+
+const accessories = [
+  { label: "Ear tips", href: "/shop/accessories" },
+  { label: "Cases and pouches", href: "/shop/accessories/cases" },
+  { label: "Chargers and cables", href: "/shop/accessories/power" },
+  { label: "MagSafe charger", href: "/shop/accessories/power" },
+  { label: "Smart Case (Max)", href: "/airpods/shop?family=Max" },
+  { label: "Lanyard", href: "/shop/accessories" },
+];
+
+const needs = [
+  { label: "Quiet commute and travel", href: "/airpods/shop?need=commute" },
+  { label: "Gym and workouts", href: "/airpods/shop?need=gym" },
+  { label: "Lowest sample price", href: "/airpods/shop?need=budget" },
+  { label: "Over-ear comfort", href: "/airpods/shop?need=over-ear" },
+  { label: "Calls all day", href: "/airpods/shop?need=calls" },
+  { label: "Hearing features", href: "/airpods/shop?need=hearing" },
+];
+---
+
+<div class="amega" data-amega>
+  <div class="amega__cols">
+    <div class="amega__col">
+      <p class="amega__heading">Shop AirPods</p>
+      <ul>
+        {
+          shopNow.map((m) => (
+            <li>
+              <a class="amega__link" href={`/airpods/${m.id}`} data-mega-preview={m.id}>
+                <span>
+                  {m.name.replace("AirPods ", "")}
+                  {m.isNew ? <span class="amega__tag">New</span> : null}
+                </span>
+                <em>from {formatKes(m.basePriceKes)}</em>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="amega__gen">Earlier models</p>
+      <ul>
+        {
+          earlier.map((m) => (
+            <li>
+              <a class="amega__link" href={`/airpods/${m.id}`} data-mega-preview={m.id}>
+                <span>{m.name.replace("AirPods ", "")}</span>
+                <em>from {formatKes(m.basePriceKes)}</em>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="amega__all" href="/airpods/shop">Shop all AirPods</a>
+    </div>
+
+    <div class="amega__col">
+      <p class="amega__heading">Accessories</p>
+      <ul>
+        {accessories.map((b) => (
+          <li><a class="amega__link" href={b.href}>{b.label}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="amega__col">
+      <p class="amega__heading">Shop by need</p>
+      <ul>
+        {needs.map((n) => (
+          <li><a class="amega__link" href={n.href}>{n.label}</a></li>
+        ))}
+      </ul>
+      <ul class="amega__tools">
+        <li><a href="/airpods/compare">Compare AirPods</a></li>
+        <li><a href="/trade-in">Trade in</a></li>
+        <li><a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo</a></li>
+      </ul>
+    </div>
+
+    <div class="amega__preview" data-mega-card>
+      <div class="amega__stage">
+        <img data-mega-img src={defaultPreview.src} alt={defaultPreview.alt} width="420" height="420" />
+      </div>
+      <p data-mega-name>{defaultPreview.name}</p>
+      <p data-mega-tagline class="amega__muted">{defaultPreview.tagline}</p>
+      <p data-mega-price><strong>From {formatKes(defaultPreview.priceKes)}</strong></p>
+      <a class="btn btn--primary btn--sm" data-mega-view href={defaultPreview.href}>View</a>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ previews, defaultPreview }}>
+  const root = document.querySelector("[data-amega]");
+  if (root) {
+    const img = root.querySelector("[data-mega-img]");
+    const name = root.querySelector("[data-mega-name]");
+    const tagline = root.querySelector("[data-mega-tagline]");
+    const price = root.querySelector("[data-mega-price]");
+    const view = root.querySelector("[data-mega-view]");
+
+    function show(id) {
+      const p = previews[id] || defaultPreview;
+      if (img instanceof HTMLImageElement) {
+        img.style.opacity = "0";
+        img.style.transform = "scale(0.97)";
+        window.setTimeout(() => {
+          img.src = p.src;
+          img.alt = p.alt;
+          img.style.opacity = "1";
+          img.style.transform = "scale(1)";
+        }, 170);
+      }
+      if (name) name.textContent = p.name;
+      if (tagline) tagline.textContent = p.tagline;
+      if (price) price.innerHTML = `<strong>From KES ${p.priceKes.toLocaleString("en-KE")}</strong>`;
+      if (view instanceof HTMLAnchorElement) view.href = p.href;
+    }
+
+    root.querySelectorAll("[data-mega-preview]").forEach((a) => {
+      a.addEventListener("mouseenter", () => show(a.getAttribute("data-mega-preview")));
+      a.addEventListener("focus", () => show(a.getAttribute("data-mega-preview")));
+    });
+  }
+</script>
+
+<style>
+  .amega { padding: 1.25rem 1.5rem 1.5rem; }
+  .amega__cols {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 64rem) {
+    .amega__cols { grid-template-columns: 1.1fr 0.9fr 0.9fr 1.1fr; }
+  }
+  .amega__heading {
+    margin: 0 0 0.65rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #6e6e73;
+  }
+  .amega__gen {
+    margin: 0.85rem 0 0.4rem;
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+  .amega ul { list-style: none; margin: 0; padding: 0; }
+  .amega__link {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.35rem 0;
+    text-decoration: none;
+    color: inherit;
+    font-size: var(--text-sm);
+    transition: transform 160ms ease;
+  }
+  .amega__link:hover, .amega__link:focus-visible { transform: translateX(5px); }
+  .amega__link em { font-style: normal; color: #6e6e73; white-space: nowrap; }
+  .amega__tag {
+    display: inline-block;
+    margin-left: 0.35rem;
+    font-size: 0.65rem;
+    background: #000;
+    color: #fff;
+    padding: 0.1rem 0.35rem;
+    border-radius: 0.25rem;
+    vertical-align: middle;
+  }
+  .amega__all {
+    display: inline-block;
+    margin-top: 0.65rem;
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+  .amega__tools { margin-top: 0.85rem; }
+  .amega__tools a { font-size: var(--text-sm); color: inherit; }
+  .amega__preview {
+    background: #f5f5f7;
+    border-radius: 1.25rem;
+    padding: 1rem;
+  }
+  .amega__stage {
+    aspect-ratio: 1 / 1;
+    display: grid;
+    place-items: center;
+    margin-bottom: 0.75rem;
+  }
+  .amega__stage img {
+    width: 90%;
+    height: auto;
+    mix-blend-mode: multiply;
+    transition: opacity 170ms ease, transform 170ms ease;
+  }
+  .amega__preview p { margin: 0.15rem 0; }
+  .amega__muted { font-size: var(--text-sm); color: #6e6e73; }
+  .amega__preview .btn { margin-top: 0.65rem; }
+  @media (prefers-reduced-motion: reduce) {
+    .amega__link { transition: none; }
+    .amega__link:hover { transform: none; }
+  }
+</style>

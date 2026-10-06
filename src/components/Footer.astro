@@ -12,11 +12,11 @@ const waHref = whatsappUrl("Hi GadgetHub - I'd like to get in touch.");
 const shop = [
   { label: "iPhone", href: "/shop/iphone" },
   { label: "Mac", href: "/shop/mac" },
-  { label: "iPad", href: "/shop/ipad" },
-  { label: "Watch", href: "/shop/watch" },
+  { label: "iPad", href: "/ipad" },
+  { label: "Watch", href: "/watch" },
   { label: "AirPods", href: "/shop/airpods" },
-  { label: "TV & Home", href: "/shop/tv-home" },
-  { label: "Accessories", href: "/shop/accessories" },
+  { label: "TV & Home", href: "/tv-home" },
+  { label: "Accessories", href: "/accessories" },
   { label: "Deals", href: "/deals" },
   { label: "Compare Devices", href: "/compare" },
 ] as const;
@@ -55,8 +55,28 @@ const socials = [
   { label: "X", href: site.social.x, icon: "x" as const },
 ] as const;
 
+const tvHome = [
+  { label: "Apple TV 4K", href: "/tv-home/apple-tv-4k-3" },
+  { label: "HomePod", href: "/tv-home/homepod-2" },
+  { label: "HomePod mini", href: "/tv-home/homepod-mini" },
+  { label: "Compare", href: "/tv-home/compare" },
+  { label: "Shop all", href: "/tv-home/shop" },
+] as const;
+
+const accessoriesCol = [
+  { label: "Apple Pencil", href: "/accessories/apple-pencil" },
+  { label: "Magic Keyboard", href: "/accessories/magic-keyboard" },
+  { label: "Magic Mouse", href: "/accessories/magic-mouse" },
+  { label: "Magic Trackpad", href: "/accessories/magic-trackpad" },
+  { label: "Power", href: "/accessories/power" },
+  { label: "Cases", href: "/accessories/cases" },
+  { label: "Find what fits", href: "/accessories#finder" },
+] as const;
+
 const columns = [
   { title: "Shop", links: shop },
+  { title: "Accessories", links: accessoriesCol },
+  { title: "TV & Home", links: tvHome },
   { title: "Customer Care", links: care },
   { title: "Company", links: company },
   { title: "Legal", links: legal },
@@ -200,6 +220,9 @@ const columns = [
       <div class="site-footer__meta">
         <p class="site-footer__copy">
           © {year} {site.name}. All rights reserved.
+        </p>
+        <p class="site-footer__trademark">
+          Apple, iPhone, MacBook, iPad, Apple Pencil, Apple Watch and the Apple logo are trademarks of Apple Inc. Product images belong to Apple and are used here for a design mock-up. Live use needs permission.
         </p>
         <ul class="site-footer__meta-links">
           <li><a class="site-footer__link" href="/terms">Terms</a></li>
@@ -430,6 +453,14 @@ const columns = [
 
   .site-footer__copy {
     font-size: var(--text-xs);
+    color: var(--color-grey-500);
+  }
+
+  .site-footer__trademark {
+    margin: 0.5rem 0 0;
+    max-width: 42rem;
+    font-size: 0.65rem;
+    line-height: 1.45;
     color: var(--color-grey-500);
   }
 

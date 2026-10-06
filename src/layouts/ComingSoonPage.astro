@@ -1,0 +1,60 @@
+---
+/**
+ * Coming-soon stub for categories after iPhone (MacBook next).
+ */
+import BaseLayout from "./BaseLayout.astro";
+import { site } from "../lib/site";
+
+interface Props {
+  title: string;
+  nextNote?: string;
+}
+
+const { title, nextNote = "MacBook is the next section." } = Astro.props;
+---
+
+<BaseLayout title={`${title} - Coming soon · ${site.name}`} description={`${title} shop coming in the next phase.`}>
+  <section class="coming container">
+    <p class="coming__eyebrow">Next phase</p>
+    <h1>{title}</h1>
+    <p>
+      This section is not built yet. We are finishing iPhone 11 to 16 first.
+      {nextNote}
+    </p>
+    <div class="coming__actions">
+      <a class="btn btn--primary" href="/iphone">Shop iPhone</a>
+      <a class="btn btn--secondary" href="/">Home</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .coming {
+    padding: clamp(3rem, 8vw, 6rem) 0;
+    max-width: 36rem;
+  }
+
+  .coming__eyebrow {
+    margin: 0 0 0.75rem;
+    font-size: var(--text-xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-fg-muted);
+  }
+
+  .coming h1 {
+    margin: 0 0 1rem;
+    letter-spacing: -0.03em;
+  }
+
+  .coming p {
+    margin: 0 0 1.5rem;
+    color: var(--color-fg-muted);
+  }
+
+  .coming__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+</style>

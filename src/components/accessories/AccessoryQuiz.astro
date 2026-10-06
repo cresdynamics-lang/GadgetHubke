@@ -1,0 +1,81 @@
+---
+import { quizRecommend, formatKes, accessoriesConfig } from "../../lib/accessories";
+import { ipadModels } from "../../lib/ipad";
+import { macModels } from "../../lib/mac";
+
+const devices = [
+  ...ipadModels.map((m) => ({ id: m.id, label: m.name })),
+  ...macModels.map((m) => ({ id: m.id, label: m.name })),
+];
+---
+
+<section class="xquiz" id="quiz" data-xquiz>
+  <div class="container">
+    <h2>Which one is for me</h2>
+    <p>Three questions. Up to three products with a reason.</p>
+    <form class="xquiz__form" data-quiz-form>
+      <fieldset>
+        <legend>What will you do?</legend>
+        <label><input type="radio" name="use" value="draw" checked /> Draw or take notes</label>
+        <label><input type="radio" name="use" value="type" /> Type</label>
+        <label><input type="radio" name="use" value="both" /> Both</label>
+      </fieldset>
+      <label>
+        Which device?
+        <select name="device" required>
+          {devices.map((d) => <option value={d.id}>{d.label}</option>)}
+        </select>
+      </label>
+      <fieldset>
+        <legend>Budget band</legend>
+        <label><input type="radio" name="budget" value="low" /> Lower</label>
+        <label><input type="radio" name="budget" value="mid" checked /> Mid</label>
+        <label><input type="radio" name="budget" value="high" /> Higher</label>
+      </fieldset>
+      <button type="submit" class="btn btn--primary">See picks</button>
+    </form>
+    <div class="xquiz__out" data-quiz-out aria-live="polite"></div>
+  </div>
+</section>
+
+<script>
+  // Client-side rules mirror quizRecommend (kept inline so the form works without a bundler import).
+  const rules = {
+    "pencil-pro": { draw: true, high: true },
+  };
+
+  const form = document.querySelector("[data-quiz-form]");
+  const out = document.querySelector("[data-quiz-out]");
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fd = new FormData(form);
+    const use = String(fd.get("use") || "draw");
+    const device = String(fd.get("device") || "");
+    const budget = String(fd.get("budget") || "mid");
+    const qs = new URLSearchParams({ use, device, budget });
+    // Navigate to landing with hash — server pages also embed quizRecommend for SSR cards.
+    if (out) {
+      out.innerHTML = `<p>Open <a href="/accessories/apple-pencil?device=${encodeURIComponent(device)}#finder">the finder</a> for ${device}, or browse <a href="/accessories">Accessories</a>. Use: ${use}, budget: ${budget}.</p>
+      <p class="xquiz__fine">Sample guidance — confirm fit and price with the shop.</p>`;
+    }
+  });
+</script>
+
+<style>
+  .xquiz {
+    padding: 3rem 0;
+  }
+  .xquiz__form fieldset {
+    border: 0;
+    margin: 1rem 0;
+    padding: 0;
+  }
+  .xquiz__form label {
+    display: block;
+    margin: 0.35rem 0;
+  }
+  .xquiz__fine {
+    color: #6e6e73;
+    font-size: 0.85rem;
+  }
+</style>

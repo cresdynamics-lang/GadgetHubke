@@ -1,0 +1,522 @@
+---
+/**
+ * PDP feel sections — display, health, fitness, safety, battery, water, bands, colour + progress.
+ */
+import {
+  type WatchModel,
+  getWatchImage,
+  colourHex,
+  colourLabel,
+  colourMaterial,
+  bandsForWatch,
+  formatKes,
+  watchConfig,
+} from "../../lib/watch";
+
+interface Props { model: WatchModel; }
+const { model } = Astro.props;
+const displayImg = getWatchImage(model.id, "display", model.name);
+const healthImg = getWatchImage(model.id, "health", model.name);
+const fitnessImg = getWatchImage(model.id, "fitness", model.name);
+const fitnessStart = getWatchImage(model.id, "fitness_start", model.name);
+const fitnessEnd = getWatchImage(model.id, "fitness_end", model.name);
+const waterImg = getWatchImage(model.id, "water", model.name);
+const bandsImg = getWatchImage(model.id, "bands", model.name);
+const bands = bandsForWatch(model);
+const hours = model.batteryHours ?? 18;
+const lowPower = model.lowPowerHours ?? Math.round(hours * 2);
+const nits = model.brightnessNits ?? 1000;
+const depth = model.depthGaugeM ?? (model.waterM >= 100 ? 40 : model.waterM >= 50 ? 6 : null);
+const showWaterDeep = model.family === "Ultra" || depth != null;
+
+const healthTiles = [
+  { key: "ecg", label: "ECG app", on: model.health.ecg, body: "Record an electrocardiogram from your wrist." },
+  { key: "irregular", label: "Irregular rhythm", on: model.health.irregularRhythm, body: "Notifications when an irregular rhythm is detected." },
+  { key: "hr", label: "Heart rate alerts", on: model.health.highLowHeartRate, body: "High and low heart rate notifications." },
+  { key: "hyper", label: "Hypertension", on: model.health.hypertension, body: "Hypertension notifications where available." },
+  { key: "sleep", label: "Sleep tracking", on: model.health.sleepTracking, body: "Track sleep stages overnight." },
+  { key: "apnea", label: "Sleep apnea", on: model.health.sleepApnea, body: "Sleep apnea notifications where available." },
+  { key: "vitals", label: "Vitals", on: model.health.vitals, body: "Vitals app overview of overnight trends." },
+  { key: "temp", label: "Wrist temperature", on: model.health.wristTemperature, body: "Overnight wrist temperature changes." },
+  { key: "cycle", label: "Cycle tracking", on: model.health.cycleTracking, body: "Cycle tracking insights." },
+  { key: "spo2", label: "Blood Oxygen", on: model.health.bloodOxygen, body: "Blood Oxygen app where available." },
+].filter((t) => t.on !== null);
+
+const safetyTiles = [
+  { key: "sos", label: "Emergency SOS", on: model.safety.emergencySos, body: "Call for help with side button." },
+  { key: "fall", label: "Fall Detection", on: model.safety.fallDetection, body: "Detects hard falls and can call for help." },
+  { key: "crash", label: "Crash Detection", on: model.safety.crashDetection, body: "Can detect a severe car crash." },
+  { key: "intl", label: "International emergency", on: model.safety.internationalEmergency, body: "Emergency calling while travelling — country dependent." },
+  { key: "siren", label: "Siren", on: model.safety.siren, body: "Loud siren on Ultra to attract attention." },
+  { key: "sat", label: "Satellite SOS", on: model.safety.satelliteSos, body: "Emergency via satellite where supported — confirm for Kenya." },
+].filter((t) => t.on !== null && t.on !== false || t.on === false);
+
+const materialGroups = ["aluminum", "titanium", "ceramic", "stainless"] as const;
+---
+
+<nav class="wfeel-nav" data-wfeel-nav aria-label="Feel sections">
+  {["display", "health", "fitness", "safety", "battery", "water", "bands", "colour"].map((id, i) => (
+    <a href={`#feel-${id}`} data-feel-dot={id} class:list={{ "is-active": i === 0 }} aria-label={id}><span /></a>
+  ))}
+</nav>
+
+<section class="wfeel wfeel--black" id="feel-display" data-feel="display">
+  <div class="container wfeel__inner">
+    <h2>Bright enough for noon.</h2>
+    <p class="wfeel__lede">Illustration — not a measurement. {model.checkFinalSpecs ? "Brightness flagged check final specs." : ""}</p>
+    {!displayImg.fallback ? (
+      <img class="wfeel__img" data-display-img src={displayImg.src} alt={displayImg.alt} width="1200" height="900" loading="lazy" />
+    ) : null}
+    <label class="wfeel__slider">
+      Sunlight
+      <input type="range" min="0" max="100" value="55" data-nits />
+    </label>
+    <p data-nits-label>About {nits} nits · {model.displayType}</p>
+    {model.alwaysOn ? (
+      <label class="wfeel__slider">
+        Wrist raise (Always-On demo)
+        <input type="range" min="0" max="100" value="80" data-aod />
+      </label>
+    ) : model.alwaysOn === null ? (
+      <p class="wfeel__caption">Always-On status — check final specs.</p>
+    ) : (
+      <p class="wfeel__caption">No Always-On on this model.</p>
+    )}
+    <ul class="wfeel__strip">
+      <li><strong>{model.defaultCaseMm} mm</strong><span>Case</span></li>
+      <li><strong>{model.displayType.split(" ")[0]}</strong><span>Display</span></li>
+      <li><strong>{nits}</strong><span>Nits{model.brightnessNits == null ? " · check" : ""}</span></li>
+      <li><strong>{model.waterM} m</strong><span>Water</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="wfeel wfeel--black" id="feel-health" data-feel="health">
+  <div class="container wfeel__inner">
+    <h2>It notices before you do.</h2>
+    {!healthImg.fallback ? (
+      <img class="wfeel__img" src={healthImg.src} alt={healthImg.alt} width="1100" height="700" loading="lazy" />
+    ) : null}
+    <svg class="wfeel__pulse" viewBox="0 0 200 40" aria-hidden="true" data-pulse>
+      <polyline fill="none" stroke="currentColor" stroke-width="2" points="0,20 20,20 30,5 40,35 50,20 80,20 90,8 100,32 110,20 200,20" />
+    </svg>
+    <p class="wfeel__caption">Decorative heartbeat — not a reading.</p>
+    <ul class="wfeel__tiles">
+      {healthTiles.map((t) => (
+        <li class:list={{ "is-off": t.on === false }}>
+          <strong>{t.label}</strong>
+          <p>{t.on === false ? "Not on this model" : t.body}</p>
+        </li>
+      ))}
+    </ul>
+    <p class="wfeel__honesty">{watchConfig.medicalHonesty}</p>
+  </div>
+</section>
+
+<section class="wfeel" id="feel-fitness" data-feel="fitness">
+  <div class="container wfeel__inner">
+    <h2>Every move counts.</h2>
+    <div class="wfeel__rings" data-rings aria-hidden="true">
+      <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" /><circle data-ring="move" cx="60" cy="60" r="52" /></svg>
+      <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="40" /><circle data-ring="ex" cx="60" cy="60" r="40" /></svg>
+      <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="28" /><circle data-ring="stand" cx="60" cy="60" r="28" /></svg>
+    </div>
+    <p class="wfeel__caption">Activity rings — illustration.</p>
+    <div class="wfeel__workouts" role="tablist">
+      {["Run", "Swim", "Walk", "Cycle", "Strength", "Hike"].map((w, i) => (
+        <button type="button" role="tab" class:list={{ "is-active": i === 0 }} data-workout={w}>{w}</button>
+      ))}
+    </div>
+    <p data-workout-copy>Run — heart rate, distance and GPS route where the model supports it.</p>
+    {!fitnessEnd.fallback ? (
+      <div class="wfeel__cam" data-fit-cam>
+        {!fitnessStart.fallback ? <img data-fit-start src={fitnessStart.src} alt={fitnessStart.alt} width="1000" height="700" loading="lazy" /> : null}
+        <img data-fit-end src={fitnessEnd.src} alt={fitnessEnd.alt} width="1000" height="700" loading="lazy" />
+      </div>
+    ) : !fitnessImg.fallback ? (
+      <img class="wfeel__img" src={fitnessImg.src} alt={fitnessImg.alt} width="1000" height="700" loading="lazy" />
+    ) : null}
+    {model.family === "Ultra" ? (
+      <p class="wfeel__callout">
+        Action button + dual-frequency GPS{model.dualFrequencyGps ? "" : " (check)"} — built for trail and open water.
+      </p>
+    ) : null}
+  </div>
+</section>
+
+<section class="wfeel wfeel--black" id="feel-safety" data-feel="safety">
+  <div class="container wfeel__inner">
+    <h2>Help, when you need it.</h2>
+    <ul class="wfeel__tiles">
+      {safetyTiles.map((t) => (
+        <li class:list={{ "is-off": t.on === false }}>
+          <strong>{t.label}</strong>
+          <p>{t.on === false ? "Not on this model" : t.body}</p>
+        </li>
+      ))}
+    </ul>
+    <p class="wfeel__caption">Satellite and some emergency features depend on country and plan — owner to confirm for Kenya.</p>
+    <button type="button" class="wfeel__sos" data-sos aria-describedby="sos-note">
+      <span data-sos-ring />
+      Hold for SOS (illustration)
+    </button>
+    <p id="sos-note" class="wfeel__caption">Purely illustrative — does not place a call.</p>
+  </div>
+</section>
+
+<section class="wfeel" id="feel-battery" data-feel="battery">
+  <div class="container wfeel__inner">
+    <h2>Charge less, wear more.</h2>
+    <div class="wfeel__batt" data-batt>
+      <div class="wfeel__batt-icon"><div class="wfeel__batt-fill" data-batt-fill /></div>
+      <strong data-batt-hours>0</strong><span>hours · Apple claim{model.batteryHours == null ? " · check" : ""}</span>
+    </div>
+    <div class="wfeel__batt">
+      <span>Low Power Mode</span>
+      <strong>{lowPower} h</strong>
+      <span>{model.lowPowerHours == null ? "check" : "claim"}</span>
+    </div>
+    <label class="wfeel__slider">
+      Your day (hours off the charger)
+      <input type="range" min="1" max="48" value="16" data-day-slider />
+    </label>
+    <p data-day-result></p>
+    <p class="wfeel__caption">Magnetic fast charger. Time-to-80% and overnight 15-minute top-up — flag check.</p>
+  </div>
+</section>
+
+{showWaterDeep ? (
+  <section class="wfeel wfeel--black" id="feel-water" data-feel="water">
+    <div class="container wfeel__inner">
+      <h2>Built for the deep end.</h2>
+      {!waterImg.fallback ? (
+        <img class="wfeel__img" src={waterImg.src} alt={waterImg.alt} width="1100" height="700" loading="lazy" />
+      ) : null}
+      <div class="wfeel__depth" data-depth>
+        <div class="wfeel__depth-bar"><i data-depth-fill /></div>
+        <strong data-depth-label>0 m</strong>
+      </div>
+      <p class="wfeel__caption">Depth gauge illustration to {depth ?? model.waterM} m — check final specs.</p>
+      <p>Swim and snorkel within the rating. Hot tubs, saunas and diving beyond the rating are not covered.</p>
+    </div>
+  </section>
+) : (
+  <section class="wfeel" id="feel-water" data-feel="water">
+    <div class="container wfeel__inner">
+      <h2>Swim-proof to {model.waterM} m.</h2>
+      <p>Shower and pool swimming within the rating. Hot water and diving beyond {model.waterM} m are not covered.</p>
+    </div>
+  </section>
+)}
+
+<section class="wfeel" id="feel-bands" data-feel="bands">
+  <div class="container wfeel__inner">
+    <h2>Make it yours.</h2>
+    <p class="wfeel__lede">{watchConfig.bandFitRule}</p>
+    {!bandsImg.fallback ? (
+      <img class="wfeel__img" data-band-img src={bandsImg.src} alt={bandsImg.alt} width="1100" height="700" loading="lazy" />
+    ) : null}
+    <div class="wfeel__bands" data-band-studio>
+      {bands.length ? bands.map((b) => (
+        <button type="button" data-band={b.id} data-band-name={b.name} data-band-price={b.priceKes} data-band-blurb={b.blurb}>
+          <strong>{b.name}</strong>
+          <span>{formatKes(b.priceKes)}</span>
+        </button>
+      )) : <p>No bands listed for this case size family — ask in store.</p>}
+    </div>
+    <p data-band-detail>Select a band to see name, price and description.</p>
+    <p class="wfeel__caption">Match your outfit: black case with Sport Band Black; natural titanium with Milanese Silver; Ultra with Ocean Band Blue — text suggestions only.</p>
+  </div>
+</section>
+
+<section class="wfeel" id="feel-colour" data-feel="colour">
+  <div class="container wfeel__inner">
+    <h2>Finishes</h2>
+    {materialGroups.map((mat) => {
+      const cols = model.colours.filter((c) => colourMaterial(c) === mat);
+      if (!cols.length) return null;
+      return (
+        <div class="wfeel__mat">
+          <h3>{mat[0].toUpperCase() + mat.slice(1)}</h3>
+          <div class="wfeel__colours">
+            {cols.map((c) => (
+              <button type="button" data-feel-colour={c} style={`--swatch:${colourHex(c)}`}>
+                <span class="wfeel__swatch" />
+                <span>{colourLabel(c)}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    })}
+  </div>
+</section>
+
+<script define:vars={{ hours, lowPower, nits, depth, waterM: model.waterM }}>
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const sections = [...document.querySelectorAll("[data-feel]")];
+  const dots = [...document.querySelectorAll("[data-feel-dot]")];
+  const onScrollFeel = () => {
+    let active = sections[0]?.getAttribute("data-feel");
+    for (const s of sections) {
+      if (s.getBoundingClientRect().top < window.innerHeight * 0.45) active = s.getAttribute("data-feel");
+    }
+    dots.forEach((d) => d.classList.toggle("is-active", d.getAttribute("data-feel-dot") === active));
+  };
+  window.addEventListener("scroll", onScrollFeel, { passive: true });
+  onScrollFeel();
+
+  const displayImg = document.querySelector("[data-display-img]");
+  const nitsSlider = document.querySelector("[data-nits]");
+  const nitsLabel = document.querySelector("[data-nits-label]");
+  function nitsUpdate() {
+    const v = nitsSlider instanceof HTMLInputElement ? Number(nitsSlider.value) : 55;
+    if (displayImg instanceof HTMLElement) {
+      const bright = 0.7 + (v / 100) * 0.55;
+      displayImg.style.filter = `brightness(${bright})`;
+    }
+    if (nitsLabel) nitsLabel.textContent = `About ${nits} nits · sunlight ${v}% · illustration`;
+  }
+  nitsSlider?.addEventListener("input", nitsUpdate);
+  nitsUpdate();
+
+  const aod = document.querySelector("[data-aod]");
+  aod?.addEventListener("input", () => {
+    if (!(displayImg instanceof HTMLElement) || !(aod instanceof HTMLInputElement)) return;
+    const v = Number(aod.value);
+    displayImg.style.opacity = String(0.35 + (v / 100) * 0.65);
+  });
+
+  // Rings
+  const ringsSec = document.querySelector("#feel-fitness");
+  if (ringsSec) {
+    const obs = new IntersectionObserver(([e]) => {
+      if (!e?.isIntersecting) return;
+      document.querySelectorAll("[data-ring]").forEach((el, i) => {
+        if (!(el instanceof SVGCircleElement)) return;
+        const len = 2 * Math.PI * Number(el.getAttribute("r"));
+        el.style.strokeDasharray = String(len);
+        el.style.strokeDashoffset = reduce ? "0" : String(len);
+        if (!reduce) {
+          el.animate([{ strokeDashoffset: len }, { strokeDashoffset: len * (0.2 + i * 0.15) }], {
+            duration: 1200, fill: "forwards", easing: "ease-out", delay: i * 120,
+          });
+        } else el.style.strokeDashoffset = String(len * 0.25);
+      });
+      obs.disconnect();
+    }, { threshold: 0.35 });
+    obs.observe(ringsSec);
+  }
+
+  const copies = {
+    Run: "Run — heart rate, distance and GPS route where supported.",
+    Swim: "Swim — pool or open water within the rating.",
+    Walk: "Walk — rings, heart rate and pace.",
+    Cycle: "Cycle — outdoor ride metrics; GPS where supported.",
+    Strength: "Strength — heart rate and effort.",
+    Hike: "Hike — elevation and dual-frequency GPS on Ultra.",
+  };
+  document.querySelectorAll("[data-workout]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-workout]").forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      const el = document.querySelector("[data-workout-copy]");
+      const key = btn.getAttribute("data-workout") || "Run";
+      if (el) el.textContent = copies[key] || copies.Run;
+    });
+  });
+
+  // Fitness cross-fade
+  const fitEnd = document.querySelector("[data-fit-end]");
+  if (fitEnd instanceof HTMLElement) {
+    fitEnd.style.opacity = reduce ? "1" : "0";
+    const cam = document.querySelector("[data-fit-cam]");
+    if (cam) {
+      const obs = new IntersectionObserver(([e]) => {
+        if (!e?.isIntersecting) return;
+        if (!reduce) fitEnd.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 900, fill: "forwards" });
+        obs.disconnect();
+      }, { threshold: 0.35 });
+      obs.observe(cam);
+    }
+  }
+
+  // SOS
+  const sos = document.querySelector("[data-sos]");
+  const sosRing = document.querySelector("[data-sos-ring]");
+  let sosTimer;
+  sos?.addEventListener("pointerdown", () => {
+    if (!(sosRing instanceof HTMLElement)) return;
+    sosRing.style.transform = "scale(1)";
+    if (reduce) return;
+    sosRing.animate([{ transform: "scale(0.2)" }, { transform: "scale(1)" }], { duration: 2000, fill: "forwards" });
+  });
+  sos?.addEventListener("pointerup", () => {
+    if (sosRing instanceof HTMLElement) sosRing.style.transform = "scale(0.2)";
+  });
+
+  // Battery
+  const battSec = document.querySelector("#feel-battery");
+  const fill = document.querySelector("[data-batt-fill]");
+  const hoursEl = document.querySelector("[data-batt-hours]");
+  if (battSec && fill instanceof HTMLElement && hoursEl) {
+    const obs = new IntersectionObserver(([e]) => {
+      if (!e?.isIntersecting) return;
+      if (reduce) { fill.style.width = "0%"; hoursEl.textContent = String(hours); return; }
+      const start = performance.now();
+      const tick = (t) => {
+        const p = Math.min(1, (t - start) / 6000);
+        fill.style.width = `${100 - p * 100}%`;
+        hoursEl.textContent = String(Math.round(hours * p));
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+      obs.disconnect();
+    }, { threshold: 0.35 });
+    obs.observe(battSec);
+  }
+  const daySlider = document.querySelector("[data-day-slider]");
+  const dayResult = document.querySelector("[data-day-result]");
+  function dayLine() {
+    const use = daySlider instanceof HTMLInputElement ? Number(daySlider.value) : 16;
+    const cover = hours * 0.7;
+    if (dayResult) {
+      dayResult.textContent =
+        use <= cover
+          ? `At ${use} hours of use, this model covers a typical day (30% margin on Apple’s ${hours} h claim${hours === 18 && !document.body ? "" : ""}).`
+          : `At ${use} hours, plan a charge — Apple’s claim is up to ${hours} h (Low Power ~${lowPower} h).`;
+    }
+  }
+  daySlider?.addEventListener("input", dayLine);
+  dayLine();
+
+  // Depth
+  const depthSec = document.querySelector("[data-depth]");
+  if (depthSec && depth != null) {
+    const dFill = document.querySelector("[data-depth-fill]");
+    const dLabel = document.querySelector("[data-depth-label]");
+    const obs = new IntersectionObserver(([e]) => {
+      if (!e?.isIntersecting) return;
+      const max = depth;
+      if (reduce) {
+        if (dFill instanceof HTMLElement) dFill.style.height = "100%";
+        if (dLabel) dLabel.textContent = `${max} m`;
+        return;
+      }
+      const start = performance.now();
+      const tick = (t) => {
+        const p = Math.min(1, (t - start) / 2000);
+        if (dFill instanceof HTMLElement) dFill.style.height = `${p * 100}%`;
+        if (dLabel) dLabel.textContent = `${Math.round(max * p)} m`;
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+      obs.disconnect();
+    }, { threshold: 0.35 });
+    obs.observe(depthSec);
+  }
+
+  // Band studio
+  document.querySelectorAll("[data-band]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-band]").forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      const detail = document.querySelector("[data-band-detail]");
+      if (detail) {
+        detail.textContent = `${btn.getAttribute("data-band-name")} — KES ${Number(btn.getAttribute("data-band-price") || 0).toLocaleString("en-KE")}. ${btn.getAttribute("data-band-blurb")}`;
+      }
+      const pdpBand = document.querySelector(`[data-pdp-band="${btn.getAttribute("data-band")}"]`);
+      if (pdpBand instanceof HTMLElement) pdpBand.click();
+    });
+  });
+
+  document.querySelectorAll("[data-feel-colour]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const key = btn.getAttribute("data-feel-colour");
+      const swatch = document.querySelector(`[data-watch-swatch][data-colour="${key}"]`);
+      if (swatch instanceof HTMLElement) swatch.click();
+    });
+  });
+</script>
+
+<style>
+  .wfeel-nav {
+    position: fixed; left: 0.65rem; top: 50%; transform: translateY(-50%);
+    z-index: 40; display: none; flex-direction: column; gap: 0.45rem;
+  }
+  @media (min-width: 64rem) { .wfeel-nav { display: flex; } }
+  .wfeel-nav a {
+    width: 0.55rem; height: 0.55rem; border-radius: 50%; background: #d2d2d7;
+  }
+  .wfeel-nav a.is-active { background: #000; outline: 2px solid #000; outline-offset: 2px; }
+  .wfeel { padding-block: var(--watch-section-gap, 4rem); }
+  .wfeel--black { background: #000; color: #fff; }
+  .wfeel--black .wfeel__lede, .wfeel--black .wfeel__caption, .wfeel--black .wfeel__honesty { color: #a1a1a6; }
+  .wfeel__inner h2 { margin: 0 0 0.5rem; letter-spacing: -0.02em; }
+  .wfeel__lede { margin: 0 0 1.25rem; }
+  .wfeel__img { width: 100%; max-width: 48rem; height: auto; border-radius: 1rem; mix-blend-mode: multiply; background: #f5f5f7; }
+  .wfeel--black .wfeel__img { mix-blend-mode: normal; background: transparent; }
+  .wfeel__slider { display: grid; gap: 0.35rem; max-width: 22rem; margin: 1rem 0; font-size: var(--text-sm); }
+  .wfeel__strip { list-style: none; margin: 1.25rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 1rem; }
+  .wfeel__strip li { display: grid; }
+  .wfeel__strip span { font-size: 0.75rem; opacity: 0.7; }
+  .wfeel__tiles { list-style: none; margin: 1rem 0; padding: 0; display: grid; gap: 0.65rem; grid-template-columns: 1fr; }
+  @media (min-width: 40rem) { .wfeel__tiles { grid-template-columns: 1fr 1fr 1fr; } }
+  .wfeel__tiles li { border: 1px solid #3a3a3c; border-radius: 1rem; padding: 0.85rem; }
+  .wfeel:not(.wfeel--black) .wfeel__tiles li { border-color: #d2d2d7; }
+  .wfeel__tiles li.is-off { opacity: 0.45; }
+  .wfeel__tiles p { margin: 0.35rem 0 0; font-size: var(--text-sm); }
+  .wfeel__honesty { font-size: var(--text-sm); margin-top: 1rem; }
+  .wfeel__pulse { width: min(100%, 20rem); color: #fff; margin: 1rem 0; }
+  .wfeel__rings { display: flex; gap: 0.5rem; align-items: center; margin: 1rem 0; }
+  .wfeel__rings svg { width: 5rem; height: 5rem; }
+  .wfeel__rings circle { fill: none; stroke: #d2d2d7; stroke-width: 6; }
+  .wfeel__rings [data-ring] { stroke: #000; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; }
+  .wfeel__workouts { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 1rem 0; }
+  .wfeel__workouts button {
+    border: 1px solid #d2d2d7; background: #fff; border-radius: 999px;
+    padding: 0.35rem 0.7rem; font: inherit; font-size: var(--text-sm); cursor: pointer;
+  }
+  .wfeel__workouts button.is-active { background: #000; color: #fff; }
+  .wfeel__cam { position: relative; max-width: 48rem; }
+  .wfeel__cam img { width: 100%; height: auto; display: block; border-radius: 1rem; }
+  .wfeel__cam [data-fit-end] { position: absolute; inset: 0; }
+  .wfeel__callout { margin-top: 1rem; font-weight: 600; }
+  .wfeel__sos {
+    position: relative; margin-top: 1rem; border: 1px solid #3a3a3c; background: transparent;
+    color: inherit; border-radius: 999px; padding: 0.75rem 1.25rem; font: inherit; cursor: pointer;
+  }
+  .wfeel__sos [data-sos-ring] {
+    position: absolute; inset: -4px; border: 2px solid #fff; border-radius: 999px;
+    transform: scale(0.2); pointer-events: none;
+  }
+  .wfeel__batt { display: flex; align-items: center; gap: 0.75rem; margin: 0.75rem 0; flex-wrap: wrap; }
+  .wfeel__batt-icon {
+    width: 3.5rem; height: 1.6rem; border: 2px solid currentColor; border-radius: 0.3rem; padding: 2px; position: relative;
+  }
+  .wfeel__batt-icon::after {
+    content: ""; position: absolute; right: -0.35rem; top: 0.35rem; width: 0.25rem; height: 0.7rem;
+    background: currentColor; border-radius: 0 2px 2px 0;
+  }
+  .wfeel__batt-fill { height: 100%; width: 100%; background: #34c759; border-radius: 0.15rem; }
+  .wfeel__depth { display: flex; align-items: flex-end; gap: 1rem; height: 12rem; margin: 1rem 0; }
+  .wfeel__depth-bar {
+    width: 2rem; height: 100%; background: #2c2c2e; border-radius: 999px; overflow: hidden; display: flex; align-items: flex-end;
+  }
+  .wfeel__depth-bar i { display: block; width: 100%; height: 0; background: #5ac8fa; }
+  .wfeel__bands { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+  .wfeel__bands button {
+    border: 1px solid #d2d2d7; background: #fff; border-radius: 1rem; padding: 0.65rem 0.85rem;
+    font: inherit; cursor: pointer; display: grid; gap: 0.2rem; text-align: left;
+  }
+  .wfeel__bands button.is-active { background: #000; color: #fff; border-color: #000; }
+  .wfeel__mat { margin-top: 1.25rem; }
+  .wfeel__mat h3 { margin: 0 0 0.5rem; font-size: 1rem; }
+  .wfeel__colours { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .wfeel__colours button {
+    border: 1px solid #d2d2d7; background: #fff; border-radius: 999px; padding: 0.4rem 0.75rem;
+    font: inherit; font-size: var(--text-sm); cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;
+  }
+  .wfeel__swatch { width: 0.9rem; height: 0.9rem; border-radius: 50%; background: var(--swatch); border: 1px solid #d2d2d7; }
+  .wfeel__caption { font-size: var(--text-sm); color: #6e6e73; }
+</style>

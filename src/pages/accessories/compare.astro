@@ -1,0 +1,212 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import AccessoryTrademark from "../../components/accessories/AccessoryTrademark.astro";
+import {
+  getAccessory,
+  getAccessoryImage,
+  formatKes,
+  pencils,
+  keyboards,
+  mice,
+  trackpads,
+  powerProducts,
+  caseProducts,
+  adapters,
+} from "../../lib/accessories";
+
+const groupParam = Astro.url.searchParams.get("group") || "pencil";
+const idsParam = Astro.url.searchParams.get("ids");
+
+function poolForGroup(group: string) {
+  if (group === "keyboard") return keyboards();
+  if (group === "mouse") return mice();
+  if (group === "trackpad") return trackpads();
+  if (group === "power") return powerProducts();
+  if (group === "adapters") return adapters();
+  if (group === "cases") return caseProducts().filter((c) => c.subgroup === "iphone-case");
+  if (group === "pointer") {
+    return ["mouse-usbc-white", "trackpad-usbc-white"].map((id) => getAccessory(id)).filter(Boolean);
+  }
+  return pencils();
+}
+
+const pool = poolForGroup(groupParam);
+const selectedIds = (idsParam ? idsParam.split(",") : pool.slice(0, 3).map((p) => p!.id)).slice(0, 3);
+const selected = selectedIds.map((id) => getAccessory(id)).filter(Boolean);
+
+const honestByGroup: Record<string, string> = {
+  pencil:
+    "The honest difference: Pencil Pro adds squeeze, barrel roll and Find My. USB-C has no pressure sensitivity. 2nd gen and Pro charge magnetically. 1st gen needs Lightning or an adapter on USB-C iPads.",
+  keyboard:
+    "The honest difference: iPad keyboards only fit their listed iPads. Mac keyboards work over Bluetooth on any Mac; Touch ID needs Apple silicon. Folio is for iPad 10th gen and A16.",
+  mouse:
+    "The honest difference: USB-C models share the same Multi-Touch surface; black may cost more. Earlier Space Gray is a lower sample price when stocked — connector owner-to-confirm. Charging port is on the underside.",
+  trackpad:
+    "The honest difference: USB-C Trackpads add Force Touch and the full Mac gesture set; black may cost more. Earlier generations are budget options when stocked. USB-C port is on the back edge.",
+  pointer:
+    "The honest difference: Magic Mouse is compact — you swipe and scroll on the curved shell, but you cannot use it while charging by cable. Magic Trackpad is a large glass surface with Force Touch and more gestures on Mac; iPad pointer support is limited for both — check Apple's list.",
+  power:
+    "The honest difference: wattage and cable rating matter more than brand look. Match the adapter to the device; do not pair a low-rated cable with a high-wattage brick. MagSafe is for supported iPhones; MagSafe 3 cables are for Macs with that port. No charge-time claims here.",
+  cases:
+    "The honest difference: cases are exact-model only — a 17 Pro case will not fit 17 Pro Max. Materials change feel and MagSafe behaviour; colours come from Apple's part numbers. Straps need owner-confirmed pairing.",
+  adapters:
+    "The honest difference: climb the wattage ladder only as far as your Mac or iPad needs. Dual-port bricks share power. Plug shape in photos may differ from Kenyan stock.",
+};
+
+const honest = honestByGroup[groupParam] || honestByGroup.pencil;
+
+const rows = [
+  { group: "Features", key: "features" },
+  { group: "Compatibility", key: "notes" },
+  { group: "Charging", key: "charging" },
+  { group: "Connection", key: "connection" },
+  { group: "Size and weight", key: "weightG" },
+  { group: "Price", key: "basePriceKes" },
+] as const;
+---
+
+<BaseLayout title="Compare accessories - GadgetHub" description="Compare Apple Pencil, Magic Keyboard, Mouse or Trackpad side by side.">
+  <section class="xcmp container">
+    <h1>Compare</h1>
+    <p class="xcmp__honest">{honest}</p>
+    <nav class="xcmp__groups" aria-label="Compare groups">
+      <a class:list={[{ "is-active": groupParam === "pencil" }]} href="/accessories/compare?group=pencil">Pencil</a>
+      <a class:list={[{ "is-active": groupParam === "keyboard" }]} href="/accessories/compare?group=keyboard">Keyboard</a>
+      <a class:list={[{ "is-active": groupParam === "mouse" }]} href="/accessories/compare?group=mouse">Mouse</a>
+      <a class:list={[{ "is-active": groupParam === "trackpad" }]} href="/accessories/compare?group=trackpad">Trackpad</a>
+      <a class:list={[{ "is-active": groupParam === "pointer" }]} href="/accessories/compare?group=pointer">Mouse vs Trackpad</a>
+    </nav>
+    <label class="xcmp__toggle">
+      <input type="checkbox" data-diff-only checked />
+      Show only differences
+    </label>
+    <div class="xcmp__table-wrap">
+      <table class="xcmp__table" data-compare-table>
+        <thead>
+          <tr>
+            <th scope="col"> </th>
+            {
+              selected.map((p) => {
+                const img = getAccessoryImage(p!.id, "hero");
+                return (
+                  <th scope="col">
+                    <img src={img.src} alt={img.alt} width="160" height="160" loading="lazy" />
+                    <a href={`/accessories/${p!.id}`}>{p!.name}</a>
+                    <p>{formatKes(p!.basePriceKes)}</p>
+                  </th>
+                );
+              })
+            }
+          </tr>
+        </thead>
+        <tbody>
+          {
+            rows.map((row) => {
+              const values = selected.map((p) => {
+                const v = (p as any)[row.key];
+                if (row.key === "features") return (v as string[]).slice(0, 4).join(", ");
+                if (row.key === "basePriceKes") return formatKes(v as number);
+                if (row.key === "weightG") return v != null ? `${v} g` : "—";
+                return v || "—";
+              });
+              const allSame = values.every((v) => v === values[0]);
+              return (
+                <tr data-same={allSame ? "1" : "0"}>
+                  <th scope="row">{row.group}</th>
+                  {values.map((v) => (
+                    <td class:list={{ "is-diff": !allSame }}>{v}</td>
+                  ))}
+                </tr>
+              );
+            })
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="xcmp__pick">Pick up to 3 in the same group from product cards (Compare checkbox).</p>
+  </section>
+  <AccessoryTrademark />
+</BaseLayout>
+
+<script>
+  const toggle = document.querySelector("[data-diff-only]");
+  const table = document.querySelector("[data-compare-table]");
+  function apply() {
+    const only = toggle instanceof HTMLInputElement && toggle.checked;
+    table?.querySelectorAll("tbody tr").forEach((tr) => {
+      const same = tr.getAttribute("data-same") === "1";
+      (tr as HTMLElement).hidden = only && same;
+    });
+  }
+  toggle?.addEventListener("change", apply);
+  apply();
+</script>
+
+<style>
+  .xcmp {
+    padding: 2.5rem 0 3rem;
+  }
+  .xcmp__honest {
+    max-width: 40rem;
+    color: #6e6e73;
+  }
+  .xcmp__groups {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1.25rem 0 0.5rem;
+  }
+  .xcmp__groups a {
+    font-size: 0.85rem;
+    padding: 0.35rem 0.65rem;
+    border: 1px solid #d2d2d7;
+    border-radius: 999px;
+    text-decoration: none;
+    color: #1d1d1f;
+  }
+  .xcmp__groups a.is-active {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+  }
+  .xcmp__toggle {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+  }
+  .xcmp__table-wrap {
+    overflow-x: auto;
+  }
+  .xcmp__table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 640px;
+  }
+  .xcmp__table th,
+  .xcmp__table td {
+    border-bottom: 1px solid #d2d2d7;
+    padding: 0.75rem;
+    text-align: left;
+    vertical-align: top;
+    font-size: 0.9rem;
+  }
+  .xcmp__table thead img {
+    width: 120px;
+    height: auto;
+    mix-blend-mode: multiply;
+    background: #f5f5f7;
+    border-radius: 0.5rem;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .xcmp__table td.is-diff {
+    background: #fafafa;
+  }
+  .xcmp__pick {
+    color: #6e6e73;
+    font-size: 0.85rem;
+    margin-top: 1rem;
+  }
+</style>

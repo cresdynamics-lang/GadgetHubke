@@ -1,0 +1,451 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import TvHomeStage from "../../components/tv-home/TvHomeStage.astro";
+import TvHomeFeel from "../../components/tv-home/TvHomeFeel.astro";
+import TvHomeLipaCalc from "../../components/tv-home/TvHomeLipaCalc.astro";
+import TvHomeTradeIn from "../../components/tv-home/TvHomeTradeIn.astro";
+import TvHomeTrademark from "../../components/tv-home/TvHomeTrademark.astro";
+import {
+  tvHomeModels,
+  getTvHomeModel,
+  getTvHomeImage,
+  tvHomeViewerTabs,
+  relatedTvHomeModels,
+  formatKes,
+  tvHomeConfigurePrice,
+  lipaMonthly,
+  tvHomeConfig,
+  colourHex,
+  colourLabel,
+  accessoriesForTvHome,
+  tvHomeBuyingNotes,
+  tvHomeFaq,
+  defaultTvHomeColour,
+  isSpeaker,
+} from "../../lib/tv-home";
+
+export function getStaticPaths() {
+  return tvHomeModels.map((m) => ({ params: { model: m.id } }));
+}
+
+const model = getTvHomeModel(Astro.params.model!);
+if (!model) return Astro.redirect("/tv-home");
+
+const tabs = tvHomeViewerTabs(model);
+const img = tabs[0] || getTvHomeImage(model.id, "hero", model.name);
+const price = tvHomeConfigurePrice(model);
+const lipa = lipaMonthly(price.kes);
+const notes = tvHomeBuyingNotes(model);
+const faq = tvHomeFaq();
+const fitAcc = accessoriesForTvHome(model).filter((a) => a.category !== "cross");
+const related = relatedTvHomeModels(model, tvHomeModels);
+const defaultColour = defaultTvHomeColour(model);
+const square = isSpeaker(model);
+const ethernetStep = tvHomeConfig.ethernetStorageStepKes;
+const showStorage = model.family === "Apple TV" && model.storageOptions.length > 1;
+const showPair = model.stereoPairCapable;
+---
+
+<BaseLayout title={`${model.name} - GadgetHub`} description={model.tagline}>
+  <article class="thpdp">
+    <div class="container thpdp__top">
+      <div class="thpdp__viewer" data-viewer>
+        {
+          model.noImage ? (
+            <div class="thpdp__noimg">
+              <p>Image not available</p>
+              <p class="thpdp__fine">{model.notes}</p>
+            </div>
+          ) : (
+            <>
+              <div class="thpdp__stage" data-stage>
+                <picture>
+                  {img.srcWebp ? <source srcset={img.srcWebp} type="image/webp" /> : null}
+                  <img data-viewer-img src={img.src} alt={img.alt} width="1200" height="1200" style="mix-blend-mode: multiply;" />
+                </picture>
+              </div>
+              <div class="thpdp__tabs" role="tablist">
+                {tabs.map((t, i) => (
+                  <button
+                    type="button"
+                    role="tab"
+                    class:list={{ "is-active": i === 0 }}
+                    data-tab={t.id}
+                    data-src={t.src}
+                    data-alt={t.alt}
+                    data-webp={t.srcWebp || ""}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+              </div>
+            </>
+          )
+        }
+        {model.overviewOnly ? <p class="thpdp__note">Overview image only — confirm condition on the invoice.</p> : null}
+        <p class="thpdp__fine">Click tabs to change view.</p>
+      </div>
+
+      <div class="thpdp__buy" data-buy>
+        <p class="thpdp__pills">
+          <span>{model.year}</span>
+          {model.isNew ? <span>New</span> : <span>Also in stock</span>}
+          {model.checkFinalSpecs ? <span>Check final specs</span> : null}
+        </p>
+        <h1>{model.name}</h1>
+        <p class="thpdp__tagline">{model.tagline}</p>
+        <p class="thpdp__who">{model.whoItSuits}</p>
+        <p class="thpdp__setup">{tvHomeConfig.setupRequirement}</p>
+
+        {model.colours.length > 1 ? (
+          <fieldset>
+            <legend>Colour</legend>
+            <div class="thpdp__swatches">
+              {model.colours.map((c, i) => (
+                <button
+                  type="button"
+                  class:list={{ "is-active": i === 0 }}
+                  data-tvhome-swatch
+                  data-colour={c}
+                  data-label={colourLabel(c)}
+                  data-src={getTvHomeImage(model.id, `colour:${c}`, model.name).src}
+                  style={`--swatch:${colourHex(c)}`}
+                  aria-label={colourLabel(c)}
+                >
+                  <span />
+                  <em>{colourLabel(c)}</em>
+                </button>
+              ))}
+            </div>
+          </fieldset>
+        ) : null}
+
+        {showStorage ? (
+          <fieldset>
+            <legend>Storage</legend>
+            <div class="thpdp__opts" data-storage-opt>
+              <button type="button" class="is-active" data-storage="wifi" data-step="0">64 GB Wi-Fi</button>
+              <button type="button" data-storage="ethernet" data-step={ethernetStep}>
+                128 GB Wi-Fi + Ethernet (+{formatKes(ethernetStep).replace("KES ", "")})
+              </button>
+            </div>
+          </fieldset>
+        ) : null}
+
+        {showPair ? (
+          <fieldset>
+            <legend>Speakers</legend>
+            <div class="thpdp__opts" data-pair-opt>
+              <button type="button" class="is-active" data-pair="single" data-mult="1">Single</button>
+              <button type="button" data-pair="stereo" data-mult="2">Stereo pair (×2)</button>
+            </div>
+          </fieldset>
+        ) : null}
+
+        {fitAcc.length ? (
+          <fieldset>
+            <legend>Add-ons</legend>
+            <div class="thpdp__addons">
+              {fitAcc.slice(0, 5).map((a) => (
+                <label>
+                  <input type="checkbox" data-addon data-addon-kes={a.priceKes} data-addon-name={a.name} />
+                  {a.name} · {a.priceKes > 0 ? formatKes(a.priceKes) : "Ask"}
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        ) : null}
+
+        <div class="thpdp__price">
+          <p><span data-price>{formatKes(price.kes)}</span></p>
+          <p data-lipa>or {formatKes(lipa.monthlyKes)} / mo</p>
+          <p class="thpdp__fine">{tvHomeConfig.samplePriceDisclaimer}</p>
+        </div>
+
+        <p class="thpdp__stock"><span class="thpdp__dot" /> In stock (sample) · Collect today in Nairobi</p>
+
+        <div class="thpdp__cta">
+          <button
+            type="button"
+            class="btn btn--primary"
+            data-tvhome-bag
+            data-id={model.id}
+            data-name={model.name}
+            data-colour={colourLabel(defaultColour)}
+            data-storage={model.defaultStorage}
+            data-pair=""
+            data-extras=""
+            data-kes={price.kes}
+            data-image={model.noImage ? "" : img.src}
+          >
+            Add to bag
+          </button>
+          <a class="btn btn--whatsapp" data-wa href={`https://wa.me/${tvHomeConfig.whatsapp}`} target="_blank" rel="noopener noreferrer">
+            Ask on WhatsApp
+          </a>
+        </div>
+
+        <ul class="thpdp__highlights">
+          <li><strong>{model.chip || "Check"}</strong><span>Chip</span></li>
+          <li><strong>{model.homeHub ? "Hub" : "—"}</strong><span>Home hub</span></li>
+          <li><strong>{model.siri ? "Siri" : "—"}</strong><span>Voice</span></li>
+          <li><strong>{model.weightG ?? "—"}{model.weightG ? " g" : ""}</strong><span>Weight</span></li>
+        </ul>
+
+        <div class="thpdp__why">
+          <h2>Why people choose this one</h2>
+          <ul>{model.whyChoose.map((line) => <li>{line}</li>)}</ul>
+        </div>
+      </div>
+    </div>
+
+    <TvHomeFeel model={model} />
+
+    <section class="container thpdp__block">
+      <h2>Full specifications</h2>
+      <p class="thpdp__fine">{tvHomeConfig.appleSpecsFootnote}</p>
+      <details class="thpdp__acc" open>
+        <summary>Overview {model.checkFinalSpecs ? "· check final specs" : ""}</summary>
+        <table>
+          <tr><th>Connections</th><td>{model.connections.join(", ") || "—"}</td></tr>
+          <tr><th>Picture</th><td>{model.pictureFormats.join(", ") || "—"}</td></tr>
+          <tr><th>Audio</th><td>{model.audioDetails || "—"}</td></tr>
+          <tr><th>Drivers</th><td>{model.drivers || "—"}</td></tr>
+          <tr><th>Box</th><td>{model.boxContents.join(", ")}</td></tr>
+        </table>
+      </details>
+      <details class="thpdp__acc">
+        <summary>Smart home</summary>
+        <table>
+          <tr><th>Home hub</th><td>{model.homeHub == null ? "Check" : model.homeHub ? "Yes" : "No"}</td></tr>
+          <tr><th>Thread</th><td>{model.thread == null ? "Check" : model.thread ? "Yes" : "No"}</td></tr>
+          <tr><th>Intercom</th><td>{model.intercom == null ? "—" : model.intercom ? "Yes" : "No"}</td></tr>
+        </table>
+      </details>
+    </section>
+
+    {fitAcc.length ? (
+      <section class="container thpdp__block">
+        <h2>Accessories that fit</h2>
+        <ul class="thpdp__fits">
+          {fitAcc.map((a) => (
+            <li>
+              <a href={a.href}>
+                <strong>{a.name}</strong>
+                <span>{a.blurb}</span>
+                <em>{a.priceKes > 0 ? formatKes(a.priceKes) : "Ask"}</em>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ) : null}
+
+    <section class="container thpdp__block">
+      <h2>Buying notes</h2>
+      {notes.map((n) => (
+        <details class="thpdp__acc"><summary>{n.title}</summary><p>{n.body}</p></details>
+      ))}
+    </section>
+
+    <section class="container thpdp__block">
+      <h2>Questions people ask</h2>
+      {faq.map((item) => (
+        <details class="thpdp__acc"><summary>{item.q}</summary><p>{item.a}</p></details>
+      ))}
+    </section>
+
+    <section class="container thpdp__tools">
+      <TvHomeLipaCalc modelId={model.id} />
+      <TvHomeTradeIn modelId={model.id} />
+    </section>
+
+    {related.length ? (
+      <section class="container thpdp__block">
+        <h2>Related</h2>
+        <ul class="thpdp__related">
+          {related.map((m) => (
+            <li><a href={`/tv-home/${m.id}`}>{m.name} · from {formatKes(m.basePriceKes)}</a></li>
+          ))}
+        </ul>
+      </section>
+    ) : null}
+
+    <section class="container"><TvHomeTrademark /></section>
+  </article>
+</BaseLayout>
+
+<script define:vars={{
+  base: model.basePriceKes,
+  ethernetStep,
+  depositPct: tvHomeConfig.lipa.depositDefaultPct,
+  months: tvHomeConfig.lipa.monthsDefault,
+  waBase: `https://wa.me/${tvHomeConfig.whatsapp}?text=`,
+  modelName: model.name,
+  stereoCapable: model.stereoPairCapable,
+}}>
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const state = { ethernet: 0, addonsKes: 0, mult: 1, storage: "", pair: "", colour: "", extras: "" };
+  const priceEl = document.querySelector("[data-price]");
+  const lipaEl = document.querySelector("[data-lipa]");
+  const bag = document.querySelector("[data-tvhome-bag]");
+  const wa = document.querySelector("[data-wa]");
+  const viewerImg = document.querySelector("[data-viewer-img]");
+
+  function total() {
+    return (base + state.ethernet) * state.mult + state.addonsKes;
+  }
+  function refresh() {
+    const kes = total();
+    const monthly = Math.round((kes * (1 - depositPct / 100)) / months);
+    if (priceEl) priceEl.textContent = `KES ${kes.toLocaleString("en-KE")}`;
+    if (lipaEl) lipaEl.textContent = `or KES ${monthly.toLocaleString("en-KE")} / mo`;
+    if (bag instanceof HTMLElement) {
+      bag.setAttribute("data-kes", String(kes));
+      bag.setAttribute("data-colour", state.colour || bag.getAttribute("data-colour") || "");
+      bag.setAttribute("data-storage", state.storage || bag.getAttribute("data-storage") || "");
+      bag.setAttribute("data-pair", state.pair || "");
+      bag.setAttribute("data-extras", state.extras);
+    }
+    if (wa instanceof HTMLAnchorElement) {
+      const msg = `Hi Gadget Hub — interested in ${modelName}, colour: ${state.colour || "-"}, storage: ${state.storage || "-"}${state.pair ? `, ${state.pair}` : ""}${state.extras ? `, add-ons: ${state.extras}` : ""}. Sample KES ${kes.toLocaleString("en-KE")}.`;
+      wa.href = waBase + encodeURIComponent(msg);
+    }
+  }
+
+  document.querySelectorAll("[data-tab]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-tab]").forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      if (viewerImg instanceof HTMLImageElement) {
+        viewerImg.src = btn.getAttribute("data-src") || viewerImg.src;
+        viewerImg.alt = btn.getAttribute("data-alt") || viewerImg.alt;
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-storage]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-storage]").forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      state.ethernet = Number(btn.getAttribute("data-step") || 0);
+      state.storage = btn.getAttribute("data-storage") === "ethernet" ? "128 GB Wi-Fi + Ethernet" : "64 GB Wi-Fi";
+      refresh();
+    });
+  });
+
+  document.querySelectorAll("[data-pair]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-pair]").forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      state.mult = Number(btn.getAttribute("data-mult") || 1);
+      state.pair = btn.getAttribute("data-pair") === "stereo" ? "Stereo pair ×2" : "";
+      refresh();
+    });
+  });
+
+  document.querySelectorAll("[data-addon]").forEach((box) => {
+    box.addEventListener("change", () => {
+      const names = [];
+      let kes = 0;
+      document.querySelectorAll("[data-addon]").forEach((b) => {
+        if (b instanceof HTMLInputElement && b.checked) {
+          kes += Number(b.getAttribute("data-addon-kes") || 0);
+          names.push(b.getAttribute("data-addon-name") || "");
+        }
+      });
+      state.addonsKes = kes;
+      state.extras = names.filter(Boolean).join(", ");
+      refresh();
+    });
+  });
+
+  document.querySelectorAll("[data-tvhome-swatch]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-tvhome-swatch]").forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      state.colour = btn.getAttribute("data-label") || "";
+      const src = btn.getAttribute("data-src");
+      if (viewerImg instanceof HTMLImageElement && src) {
+        if (!reduce) {
+          viewerImg.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 170, fill: "forwards" });
+          window.setTimeout(() => {
+            viewerImg.src = src;
+            viewerImg.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 170, fill: "forwards" });
+          }, 180);
+        } else viewerImg.src = src;
+      }
+      refresh();
+    });
+  });
+
+  bag?.addEventListener("click", () => {
+    if (!(bag instanceof HTMLElement)) return;
+    window.dispatchEvent(
+      new CustomEvent("gh:bag-add", {
+        detail: {
+          id: bag.getAttribute("data-id"),
+          name: bag.getAttribute("data-name"),
+          colour: bag.getAttribute("data-colour"),
+          storage: bag.getAttribute("data-storage"),
+          pair: bag.getAttribute("data-pair") || "",
+          extras: bag.getAttribute("data-extras") || "",
+          kes: Number(bag.getAttribute("data-kes") || 0),
+          image: bag.getAttribute("data-image"),
+        },
+      }),
+    );
+  });
+
+  refresh();
+</script>
+
+<style>
+  .thpdp { font-family: Inter, system-ui, sans-serif; padding-bottom: 3rem; }
+  .thpdp__top {
+    display: grid; gap: 2rem; padding-block: 2rem;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 56rem) {
+    .thpdp__top { grid-template-columns: 1.1fr 0.9fr; align-items: start; }
+    .thpdp__viewer { position: sticky; top: calc(var(--header-height) + 1rem); }
+  }
+  .thpdp__stage { background: #f5f5f7; border-radius: 1.5rem; padding: 1rem; }
+  .thpdp__noimg { background: #f5f5f7; border-radius: 1.5rem; padding: 4rem 1rem; text-align: center; color: #6e6e73; }
+  .thpdp__tabs { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.75rem; }
+  .thpdp__tabs button {
+    border: 1px solid #d2d2d7; background: #fff; padding: 0.35rem 0.65rem; border-radius: 999px; font-size: var(--text-xs); cursor: pointer;
+  }
+  .thpdp__tabs button.is-active { background: #000; color: #fff; border-color: #000; }
+  .thpdp__fine, .thpdp__note { font-size: var(--text-sm); color: #6e6e73; }
+  .thpdp__pills { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .thpdp__pills span { font-size: var(--text-xs); background: #f5f5f7; padding: 0.2rem 0.5rem; border-radius: 999px; }
+  .thpdp__tagline { color: #6e6e73; }
+  .thpdp__setup { font-size: var(--text-sm); color: #6e6e73; border-left: 3px solid #000; padding-left: 0.75rem; }
+  .thpdp__swatches { display: flex; flex-wrap: wrap; gap: 0.65rem; }
+  .thpdp__swatches button { border: none; background: transparent; cursor: pointer; text-align: center; font-size: var(--text-xs); }
+  .thpdp__swatches button span {
+    display: block; width: 2rem; height: 2rem; border-radius: 50%; background: var(--swatch); margin: 0 auto 0.25rem; border: 1px solid #d2d2d7;
+  }
+  .thpdp__swatches button.is-active span { outline: 2px solid #000; outline-offset: 2px; }
+  .thpdp__opts { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  .thpdp__opts button {
+    border: 1px solid #d2d2d7; background: #fff; padding: 0.45rem 0.75rem; border-radius: 0.65rem; cursor: pointer; font-size: var(--text-sm);
+  }
+  .thpdp__opts button.is-active { border-color: #000; background: #000; color: #fff; }
+  .thpdp__addons label { display: block; font-size: var(--text-sm); margin: 0.35rem 0; }
+  .thpdp__price span { font-size: 1.5rem; font-weight: 700; }
+  .thpdp__dot { display: inline-block; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: #34c759; margin-right: 0.35rem; }
+  .thpdp__cta { display: flex; flex-wrap: wrap; gap: 0.65rem; margin: 1rem 0; }
+  .thpdp__highlights { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.5rem; font-size: var(--text-sm); }
+  .thpdp__highlights strong { display: block; }
+  .thpdp__highlights span { color: #6e6e73; }
+  .thpdp__block { padding-block: 2rem; }
+  .thpdp__acc { margin: 0.5rem 0; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
+  .thpdp__acc table { width: 100%; font-size: var(--text-sm); border-collapse: collapse; }
+  .thpdp__acc th { text-align: left; width: 40%; color: #6e6e73; font-weight: 500; }
+  .thpdp__fits { list-style: none; padding: 0; }
+  .thpdp__fits a { display: grid; grid-template-columns: 1fr auto; gap: 0.25rem; text-decoration: none; color: inherit; padding: 0.65rem 0; border-bottom: 1px solid #eee; }
+  .thpdp__fits span { grid-column: 1 / -1; color: #6e6e73; font-size: var(--text-sm); }
+  .thpdp__tools { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); padding-block: 2rem; }
+</style>

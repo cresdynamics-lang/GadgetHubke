@@ -1,0 +1,286 @@
+---
+/**
+ * iPad mega menu — Shop iPad / Pencil+keyboards / Need / live preview.
+ */
+import {
+  ipadModels,
+  ipadModelsByFamily,
+  getIpadImage,
+  defaultIpadColour,
+  formatKes,
+  type IpadFamily,
+  type IpadModel,
+} from "../../lib/ipad";
+
+const families: IpadFamily[] = ["Pro", "Air", "mini", "iPad"];
+
+function newestFirst(list: IpadModel[]) {
+  return [...list].sort((a, b) => b.year - a.year || b.basePriceKes - a.basePriceKes);
+}
+
+function previewFor(m: IpadModel) {
+  const colour = defaultIpadColour(m);
+  const img = getIpadImage(m.id, colour, "product", m.name);
+  return {
+    id: m.id,
+    name: m.name,
+    tagline: m.tagline,
+    chip: m.chip,
+    href: `/ipad/${m.id}`,
+    priceKes: m.basePriceKes,
+    src: img.src,
+    alt: img.alt,
+    isNew: Boolean(m.isNew),
+  };
+}
+
+const previews = Object.fromEntries(ipadModels.map((m) => [m.id, previewFor(m)]));
+const defaultPreview = previewFor(
+  ipadModels.find((m) => m.id === "ipad-air-11-m2") || ipadModels[0],
+);
+
+const pencils = [
+  { label: "Apple Pencil Pro", href: "/ipad/shop?pencil=pro" },
+  { label: "Apple Pencil (USB-C)", href: "/ipad/shop?pencil=usb-c" },
+  { label: "Apple Pencil (2nd gen)", href: "/ipad/shop?pencil=2nd" },
+  { label: "Magic Keyboard", href: "/accessories/magic-keyboard" },
+  { label: "Smart Folio", href: "/shop/accessories/cases" },
+  { label: "Cases & protectors", href: "/shop/accessories/cases" },
+];
+
+const needs = [
+  { label: "For drawing and notes", href: "/ipad/shop?need=drawing" },
+  { label: "For school and study", href: "/ipad/shop?need=school" },
+  { label: "For kids and family", href: "/ipad/shop?need=kids" },
+  { label: "For work and travel", href: "/ipad/shop?need=work" },
+  { label: "Lightest", href: "/ipad/shop?need=lightest" },
+  { label: "Best screen", href: "/ipad/shop?need=screen" },
+  { label: "Lowest price", href: "/ipad/shop?need=price" },
+];
+---
+
+<div class="imega" data-imega>
+  <div class="imega__cols">
+    <div class="imega__col">
+      <p class="imega__heading">Shop iPad</p>
+      {
+        families.map((fam) => {
+          const rows = newestFirst(ipadModelsByFamily(fam)).slice(0, 6);
+          if (!rows.length) return null;
+          return (
+            <div class="imega__group">
+              <p class="imega__gen">iPad {fam === "iPad" ? "" : fam}</p>
+              <ul>
+                {rows.map((m) => (
+                  <li>
+                    <a class="imega__link" href={`/ipad/${m.id}`} data-mega-preview={m.id}>
+                      <span>
+                        {m.name.replace(/^iPad /, "")}
+                        {m.isNew ? <span class="imega__tag">New</span> : null}
+                      </span>
+                      <span class="imega__from">from {formatKes(m.basePriceKes)}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          );
+        })
+      }
+      <a class="imega__all" href="/ipad/shop">Shop all iPad</a>
+    </div>
+
+    <div class="imega__col">
+      <p class="imega__heading">Apple Pencil and keyboards</p>
+      <ul>
+        {
+          pencils.map((p) => (
+            <li>
+              <a class="imega__link" href={p.href}>
+                {p.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="imega__col">
+      <p class="imega__heading">Shop by need</p>
+      <ul>
+        {
+          needs.map((n) => (
+            <li>
+              <a class="imega__link" href={n.href}>
+                {n.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="imega__all" href="/ipad/compare">Compare iPads</a>
+      <a class="imega__all" href="/trade-in">Trade in your old iPad</a>
+      <a class="imega__all" href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo</a>
+    </div>
+
+    <div class="imega__col imega__col--preview">
+      <div class="imega__preview" data-mega-card>
+        <div class="imega__stage">
+          <img
+            data-mega-img
+            src={defaultPreview.src}
+            alt={defaultPreview.alt}
+            width="560"
+            height="560"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <p class="imega__pname" data-mega-name>{defaultPreview.name}</p>
+        <p class="imega__ptag" data-mega-tag>{defaultPreview.tagline}</p>
+        <p class="imega__pchip" data-mega-chip>{defaultPreview.chip}</p>
+        <p class="imega__pprice" data-mega-price>From {formatKes(defaultPreview.priceKes)}</p>
+        <a class="btn btn--primary btn--sm" data-mega-view href={defaultPreview.href}>View</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ previews, defaultPreview }}>
+  const root = document.querySelector("[data-imega]");
+  if (!root) {
+    // no-op
+  } else {
+    const img = root.querySelector("[data-mega-img]");
+    const name = root.querySelector("[data-mega-name]");
+    const tag = root.querySelector("[data-mega-tag]");
+    const chip = root.querySelector("[data-mega-chip]");
+    const price = root.querySelector("[data-mega-price]");
+    const view = root.querySelector("[data-mega-view]");
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function show(id) {
+      const p = previews[id] || defaultPreview;
+      if (!(img instanceof HTMLImageElement)) return;
+      const apply = () => {
+        img.src = p.src;
+        img.alt = p.alt;
+        img.style.opacity = "1";
+      };
+      if (!reduce) {
+        img.style.opacity = "0";
+        const pre = new Image();
+        pre.onload = () => setTimeout(apply, 120);
+        pre.src = p.src;
+      } else apply();
+      if (name) name.textContent = p.name;
+      if (tag) tag.textContent = p.tagline;
+      if (chip) chip.textContent = p.chip;
+      if (price) price.textContent = `From KES ${p.priceKes.toLocaleString("en-KE")}`;
+      if (view instanceof HTMLAnchorElement) view.href = p.href;
+    }
+
+    root.querySelectorAll("[data-mega-preview]").forEach((a) => {
+      a.addEventListener("mouseenter", () => show(a.getAttribute("data-mega-preview")));
+      a.addEventListener("focus", () => show(a.getAttribute("data-mega-preview")));
+    });
+  }
+</script>
+
+<style>
+  .imega {
+    padding: 1.25rem 0 1.5rem;
+  }
+  .imega__cols {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1.2fr 0.9fr 0.9fr 1fr;
+  }
+  .imega__heading {
+    margin: 0 0 0.65rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-fg-muted);
+    font-weight: 600;
+  }
+  .imega__gen {
+    margin: 0.75rem 0 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .imega__group ul,
+  .imega__col > ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .imega__link {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.35rem 0;
+    text-decoration: none;
+    color: inherit;
+    font-size: var(--text-sm);
+    transition: transform 160ms var(--ease-out);
+  }
+  .imega__link:hover,
+  .imega__link:focus-visible {
+    transform: translateX(5px);
+  }
+  .imega__from {
+    color: var(--color-fg-muted);
+    white-space: nowrap;
+  }
+  .imega__tag {
+    margin-left: 0.35rem;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 0.1rem 0.35rem;
+  }
+  .imega__all {
+    display: inline-block;
+    margin-top: 0.65rem;
+    font-size: var(--text-sm);
+    color: inherit;
+  }
+  .imega__stage {
+    background: #f5f5f7;
+    border-radius: var(--ipad-radius);
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+  }
+  .imega__stage img {
+    width: 82%;
+    height: auto;
+    mix-blend-mode: multiply;
+    transition: opacity 160ms ease;
+  }
+  .imega__pname {
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .imega__ptag,
+  .imega__pchip {
+    margin: 0.2rem 0 0;
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+  .imega__pprice {
+    margin: 0.45rem 0 0.75rem;
+    font-weight: 600;
+  }
+  @media (max-width: 63.749rem) {
+    .imega {
+      display: none;
+    }
+  }
+</style>

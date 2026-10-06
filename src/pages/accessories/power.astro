@@ -1,0 +1,317 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import AccessoryCard from "../../components/accessories/AccessoryCard.astro";
+import CompatibilityFinder from "../../components/accessories/CompatibilityFinder.astro";
+import PowerFeel from "../../components/accessories/PowerFeel.astro";
+import AccessoryLipaCalc from "../../components/accessories/AccessoryLipaCalc.astro";
+import AccessoryTrademark from "../../components/accessories/AccessoryTrademark.astro";
+import {
+  adapters,
+  cables,
+  magsafeChargers,
+  powerProducts,
+  getAccessoryImage,
+  accessoryFaq,
+  accessoryBuyingNotes,
+  accessoriesConfig,
+  formatKes,
+} from "../../lib/accessories";
+
+const adaptersList = adapters().sort((a, b) => (a.wattage || 0) - (b.wattage || 0));
+const magsafeList = magsafeChargers();
+const cableList = cables();
+const all = powerProducts();
+const heroAdapter = getAccessoryImage("power-adapter-140w", "hero");
+const heroCable = getAccessoryImage("cable-magsafe3-2m", "hero");
+const faq = accessoryFaq();
+const notes = accessoryBuyingNotes(adaptersList[0]);
+const fromAdapters = Math.min(...adaptersList.map((a) => a.basePriceKes));
+const fromMagsafe = Math.min(...magsafeList.map((a) => a.basePriceKes));
+const fromCables = Math.min(...cableList.map((a) => a.basePriceKes));
+---
+
+<BaseLayout
+  title="Power - GadgetHub"
+  description="Apple USB-C adapters, MagSafe chargers and cables. Matched to your device in Nairobi."
+>
+  <section class="xpower-hero">
+    <div class="container">
+      <h1>Power, the right way round.</h1>
+      <p>
+        Sealed adapters and cables, serial on the invoice, matched to your device before you pay.
+        {accessoriesConfig.powerChargeClaimNote}
+      </p>
+    </div>
+    <div class="xpower-hero__stage" aria-label="140W adapter beside MagSafe 3 cable">
+      <img src={heroAdapter.src} alt={heroAdapter.alt} width="700" height="525" fetchpriority="high" />
+      <img src={heroCable.src} alt={heroCable.alt} width="700" height="525" fetchpriority="high" />
+      {
+        heroAdapter.geoUs || heroCable.geoUs ? (
+          <p class="xpower-plug">{accessoriesConfig.plugCaption}</p>
+        ) : null
+      }
+    </div>
+  </section>
+
+  <section class="container xpower-tiles">
+    <a class="xpower-tile" href="#adapters">
+      <img src={getAccessoryImage("power-adapter-70w", "hero").src} alt="Power adapters" width="400" height="300" loading="lazy" />
+      <h2>Power adapters</h2>
+      <p>From {formatKes(fromAdapters)}</p>
+    </a>
+    <a class="xpower-tile" href="#magsafe">
+      <img src={getAccessoryImage("magsafe-charger-1m", "hero").src} alt="MagSafe" width="400" height="300" loading="lazy" />
+      <h2>MagSafe and wireless</h2>
+      <p>From {formatKes(fromMagsafe)}</p>
+    </a>
+    <a class="xpower-tile" href="#cables">
+      <img src={getAccessoryImage("cable-usbc-60w-1m", "hero").src} alt="Cables" width="400" height="300" loading="lazy" />
+      <h2>Cables</h2>
+      <p>From {formatKes(fromCables)}</p>
+    </a>
+  </section>
+
+  <section class="container xpower-ladder" id="adapters" data-watt-ladder>
+    <h2>Wattage ladder</h2>
+    <p>Pick a wattage — designed-for lines are flagged check-final-specs.</p>
+    <div class="xpower-ladder__row" role="listbox" aria-label="Adapters by wattage">
+      {
+        adaptersList.map((a, i) => {
+          const img = getAccessoryImage(a.id, "hero");
+          return (
+            <button
+              type="button"
+              class:list={{ "xpower-ladder__chip": true, "is-active": i === 0 }}
+              role="option"
+              aria-selected={i === 0 ? "true" : "false"}
+              data-watt={a.wattage}
+              data-name={a.name}
+              data-designed={a.designedFor || ""}
+              data-price={formatKes(a.basePriceKes)}
+              data-src={img.src}
+              data-href={`/accessories/${a.id}`}
+              data-geous={img.geoUs ? "1" : "0"}
+            >
+              {a.wattage}W
+            </button>
+          );
+        })
+      }
+    </div>
+    <div class="xpower-ladder__detail" aria-live="polite">
+      <img data-watt-img src={getAccessoryImage(adaptersList[0].id, "hero").src} alt={adaptersList[0].name} width="640" height="480" />
+      <div>
+        <h3 data-watt-name>{adaptersList[0].name}</h3>
+        <p data-watt-designed>{adaptersList[0].designedFor}</p>
+        <p data-watt-price>{formatKes(adaptersList[0].basePriceKes)}</p>
+        <p class="xpower-plug" data-watt-plug hidden={!getAccessoryImage(adaptersList[0].id, "hero").geoUs}>
+          {accessoriesConfig.plugCaption}
+        </p>
+        <a class="btn btn--primary" data-watt-link href={`/accessories/${adaptersList[0].id}`}>View</a>
+      </div>
+    </div>
+  </section>
+
+  <CompatibilityFinder preselectLooking="charger" />
+
+  <section class="container xpower-cards" id="magsafe">
+    <h2>MagSafe and Watch</h2>
+    <div class="xpower-cards__grid">
+      {magsafeList.map((p) => <AccessoryCard product={p} />)}
+    </div>
+  </section>
+
+  <section class="container xpower-cards" id="cables">
+    <h2>Cables</h2>
+    <div class="xpower-cards__grid">
+      {cableList.map((p) => <AccessoryCard product={p} />)}
+    </div>
+  </section>
+
+  <section class="container xpower-cards">
+    <h2>All power</h2>
+    <div class="xpower-cards__grid">
+      {all.map((p) => <AccessoryCard product={p} />)}
+    </div>
+  </section>
+
+  <PowerFeel />
+
+  <section class="container xpower-notes">
+    <h2>Buying notes</h2>
+    {notes.map((n) => (
+      <article>
+        <h3>{n.title}</h3>
+        <p>{n.body}</p>
+      </article>
+    ))}
+  </section>
+
+  <section class="container xpower-faq">
+    <h2>Questions people ask</h2>
+    {faq.map((f) => (
+      <details>
+        <summary>{f.q}</summary>
+        <p>{f.a}</p>
+      </details>
+    ))}
+  </section>
+
+  <AccessoryLipaCalc productId="power-adapter-20w" />
+  <AccessoryTrademark />
+</BaseLayout>
+
+<script>
+  const root = document.querySelector("[data-watt-ladder]");
+  if (root) {
+    const img = root.querySelector("[data-watt-img]");
+    const name = root.querySelector("[data-watt-name]");
+    const designed = root.querySelector("[data-watt-designed]");
+    const price = root.querySelector("[data-watt-price]");
+    const link = root.querySelector("[data-watt-link]");
+    const plug = root.querySelector("[data-watt-plug]");
+    root.querySelectorAll("[data-watt]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        root.querySelectorAll("[data-watt]").forEach((t) => {
+          t.classList.toggle("is-active", t === btn);
+          t.setAttribute("aria-selected", t === btn ? "true" : "false");
+        });
+        if (img instanceof HTMLImageElement) {
+          img.src = btn.getAttribute("data-src") || img.src;
+          img.alt = btn.getAttribute("data-name") || "";
+        }
+        if (name) name.textContent = btn.getAttribute("data-name");
+        if (designed) designed.textContent = btn.getAttribute("data-designed");
+        if (price) price.textContent = btn.getAttribute("data-price");
+        if (link instanceof HTMLAnchorElement) link.href = btn.getAttribute("data-href") || "#";
+        if (plug instanceof HTMLElement) plug.hidden = btn.getAttribute("data-geous") !== "1";
+      });
+    });
+  }
+</script>
+
+<style>
+  .xpower-hero {
+    background: #f5f5f7;
+    padding: 3rem 0 0;
+  }
+  .xpower-hero h1 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #1d1d1f;
+  }
+  .xpower-hero p {
+    color: #6e6e73;
+    max-width: 40rem;
+  }
+  .xpower-hero__stage {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    max-width: 960px;
+    margin: 1.5rem auto 0;
+    padding: 0 1rem 2rem;
+    aspect-ratio: 4 / 3;
+  }
+  @media (max-width: 640px) {
+    .xpower-hero__stage {
+      grid-template-columns: 1fr;
+      aspect-ratio: auto;
+    }
+  }
+  .xpower-hero__stage img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    background: #fff;
+    border-radius: 0.75rem;
+  }
+  .xpower-plug {
+    grid-column: 1 / -1;
+    font-size: 0.8rem;
+    color: #6e6e73;
+  }
+  .xpower-tiles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    padding: 2.5rem 1rem;
+  }
+  @media (max-width: 720px) {
+    .xpower-tiles {
+      grid-template-columns: 1fr;
+    }
+  }
+  .xpower-tile {
+    background: #f5f5f7;
+    border-radius: 1rem;
+    padding: 1rem;
+    text-decoration: none;
+    color: #1d1d1f;
+    transition: transform 0.2s ease;
+  }
+  .xpower-tile:hover {
+    transform: translateY(-6px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .xpower-tile {
+      transition: none;
+    }
+  }
+  .xpower-tile img {
+    width: 100%;
+    mix-blend-mode: multiply;
+  }
+  .xpower-ladder,
+  .xpower-cards,
+  .xpower-notes,
+  .xpower-faq {
+    padding: 2.5rem 1rem;
+  }
+  .xpower-ladder__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0;
+  }
+  .xpower-ladder__chip {
+    border: 1px solid #d2d2d7;
+    background: #fff;
+    padding: 0.5rem 0.85rem;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .xpower-ladder__chip.is-active {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+  }
+  .xpower-ladder__chip:focus-visible {
+    outline: 2px solid #000;
+    outline-offset: 2px;
+  }
+  .xpower-ladder__detail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    background: #f5f5f7;
+    border-radius: 1rem;
+    padding: 1rem;
+  }
+  @media (max-width: 720px) {
+    .xpower-ladder__detail {
+      grid-template-columns: 1fr;
+    }
+  }
+  .xpower-ladder__detail img {
+    width: 100%;
+    mix-blend-mode: multiply;
+  }
+  .xpower-cards__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+</style>

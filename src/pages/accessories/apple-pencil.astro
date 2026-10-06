@@ -1,0 +1,173 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import AccessoryCard from "../../components/accessories/AccessoryCard.astro";
+import CompatibilityFinder from "../../components/accessories/CompatibilityFinder.astro";
+import PencilFeel from "../../components/accessories/PencilFeel.astro";
+import AccessoryLipaCalc from "../../components/accessories/AccessoryLipaCalc.astro";
+import AccessoryTrademark from "../../components/accessories/AccessoryTrademark.astro";
+import {
+  pencils,
+  getAccessoriesPageImage,
+  accessoryFaq,
+  accessoryBuyingNotes,
+} from "../../lib/accessories";
+
+const hero = getAccessoriesPageImage("pencil/hero/hero", "Apple Pencil");
+const selectors = [
+  ["pencil-pro", "pencil/selector/apple_pencil_pro"],
+  ["pencil-usbc", "pencil/selector/apple_pencil_usb_c"],
+  ["pencil-2", "pencil/selector/apple_pencil_2nd_gen"],
+  ["pencil-1", "pencil/selector/apple_pencil_1st_gen"],
+] as const;
+const list = pencils();
+const faq = accessoryFaq();
+const notes = accessoryBuyingNotes(list[0]);
+---
+
+<BaseLayout title="Apple Pencil - GadgetHub" description="Which Apple Pencil fits your iPad. Sealed stock in Nairobi.">
+  <section class="xpencil-hero">
+    <div class="container">
+      <h1>Apple Pencil</h1>
+      <p>Feel what it does. Confirm it fits. Buy without regret.</p>
+    </div>
+    <div class="xpencil-hero__img">
+      <img src={hero.src} alt={hero.alt} width="1800" height="1200" fetchpriority="high" />
+    </div>
+  </section>
+
+  <section class="container xpencil-select">
+    <h2>Choose a Pencil</h2>
+    <div class="xpencil-select__grid">
+      {
+        selectors.map(([id, key]) => {
+          const img = getAccessoriesPageImage(key, id);
+          const p = list.find((x) => x.id === id)!;
+          return (
+            <a class="xpencil-select__card" href={`/accessories/${id}`}>
+              <img src={img.src} alt={p.name} width="640" height="640" loading="lazy" />
+              <h3>{p.name}</h3>
+              <p>{p.tagline}</p>
+            </a>
+          );
+        })
+      }
+    </div>
+  </section>
+
+  <section class="container xpencil-compare-tease">
+    <h2>Compare Pencils</h2>
+    <p>Side-by-side features, charging and fit.</p>
+    <a class="btn btn--secondary" href="/accessories/compare?group=pencil">Open compare</a>
+  </section>
+
+  <CompatibilityFinder preselectLooking="pencil" />
+
+  <section class="container xpencil-cards">
+    <h2>All Pencils</h2>
+    <div class="xpencil-cards__grid">
+      {list.map((p) => <AccessoryCard product={p} />)}
+    </div>
+  </section>
+
+  <PencilFeel />
+
+  <section class="container xpencil-notes">
+    <h2>Buying notes</h2>
+    {notes.map((n) => (
+      <article>
+        <h3>{n.title}</h3>
+        <p>{n.body}</p>
+      </article>
+    ))}
+  </section>
+
+  <section class="container xpencil-faq">
+    <h2>Questions people ask</h2>
+    {
+      faq.map((f) => (
+        <details>
+          <summary>{f.q}</summary>
+          <p>{f.a}</p>
+        </details>
+      ))
+    }
+  </section>
+
+  <AccessoryLipaCalc productId="pencil-pro" />
+  <AccessoryTrademark />
+</BaseLayout>
+
+<style>
+  .xpencil-hero {
+    background: #f5f5f7;
+    padding: 2.5rem 0 0;
+  }
+  .xpencil-hero h1 {
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+  }
+  .xpencil-hero__img {
+    max-width: 960px;
+    margin: 1.5rem auto 0;
+    padding: 0 1rem 2rem;
+  }
+  .xpencil-hero__img img {
+    width: 100%;
+    mix-blend-mode: multiply;
+    background: #fff;
+    border-radius: 1rem;
+  }
+  .xpencil-select,
+  .xpencil-compare-tease,
+  .xpencil-cards,
+  .xpencil-notes,
+  .xpencil-faq {
+    padding: 2.5rem 0;
+  }
+  .xpencil-select__grid,
+  .xpencil-cards__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .xpencil-select__card {
+    background: #f5f5f7;
+    border-radius: 1rem;
+    padding: 1rem;
+    text-decoration: none;
+    color: inherit;
+  }
+  .xpencil-select__card img {
+    width: 100%;
+    mix-blend-mode: multiply;
+  }
+  .xpencil-select__card h3 {
+    margin: 0.5rem 0 0.25rem;
+    font-size: 1rem;
+  }
+  .xpencil-select__card p {
+    margin: 0;
+    color: #6e6e73;
+    font-size: 0.85rem;
+  }
+  .xpencil-notes article {
+    margin: 1rem 0;
+  }
+  .xpencil-notes p,
+  .xpencil-faq p {
+    color: #6e6e73;
+  }
+  details {
+    border-bottom: 1px solid #d2d2d7;
+    padding: 0.75rem 0;
+  }
+  summary {
+    cursor: pointer;
+    font-weight: 600;
+  }
+  summary:focus-visible {
+    outline: 2px solid #000;
+  }
+</style>

@@ -1,0 +1,371 @@
+---
+/**
+ * Watch landing — hero wake-up, choose cards, quiz, gen chips, grid, band studio, plan, visit.
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import WatchStage from "../../components/watch/WatchStage.astro";
+import WatchCard from "../../components/watch/WatchCard.astro";
+import WatchQuiz from "../../components/watch/WatchQuiz.astro";
+import WatchLipaCalc from "../../components/watch/WatchLipaCalc.astro";
+import WatchTradeIn from "../../components/watch/WatchTradeIn.astro";
+import {
+  watchModels,
+  watchModelsByFamily,
+  getWatchImage,
+  formatKes,
+  lowestWatchPrice,
+  watchConfig,
+  watchBands,
+  homeWatchAccessories,
+  lipaMonthly,
+} from "../../lib/watch";
+import { whatsappUrl } from "../../lib/site";
+
+const series = watchModelsByFamily("Series");
+const ultra = watchModelsByFamily("Ultra");
+const se = watchModelsByFamily("SE");
+const heroStart = getWatchImage("watch-s12-46", "hero_startframe");
+const heroEnd = getWatchImage("watch-s12-46", "hero_endframe");
+const accessories = homeWatchAccessories();
+const newest = [...watchModels].sort((a, b) => b.year - a.year || b.basePriceKes - a.basePriceKes);
+const wa = whatsappUrl("Hi Gadget Hub, I want to visit and try an Apple Watch.");
+const corp = whatsappUrl("Corporate Watch order");
+
+const choose = [
+  {
+    title: "Apple Watch Series",
+    body: "Everyday health, Always-On display, bands for every look.",
+    href: "/watch/shop?family=Series",
+    price: lowestWatchPrice("Series"),
+    model: series.find((m) => m.id === "watch-s12-46") || series[0],
+  },
+  {
+    title: "Apple Watch Ultra",
+    body: "Brightest, toughest, longest battery — for trail, sea and siren.",
+    href: "/watch/shop?family=Ultra",
+    price: lowestWatchPrice("Ultra"),
+    model: ultra.find((m) => m.id === "watch-ultra-4") || ultra[0],
+  },
+  {
+    title: "Apple Watch SE",
+    body: "Essential features at the lowest current sample price.",
+    href: "/watch/shop?family=SE",
+    price: lowestWatchPrice("SE"),
+    model: se.find((m) => m.id === "watch-se3-44") || se[0],
+  },
+];
+
+const genChips = ["Series 12", "Series 11", "Series 10", "Series 9", "Series 8", "Series 7", "Series 6", "SE", "Ultra"] as const;
+---
+
+<BaseLayout
+  title="Apple Watch - GadgetHub"
+  description="Apple Watch Series, Ultra and SE. Sealed stock in Nairobi. Sample prices until admin is live."
+>
+  <section class="watch-hero" data-watch-hero>
+    <div class="watch-hero__copy container">
+      <h1>The watch that looks after you.</h1>
+      <p class="watch-hero__lede">
+        Sealed. Serial number on the invoice. Set up for you before you collect.
+      </p>
+      <div class="watch-hero__cta" data-hero-cta>
+        <a class="btn btn--primary" href="/watch/shop?family=Series&gen=Series+12">Shop Series 12</a>
+        <a class="btn btn--secondary" href="/watch/shop?family=Ultra&gen=Ultra+4">Shop Ultra 4</a>
+      </div>
+    </div>
+    <div class="watch-hero__stage" aria-hidden="true">
+      <img
+        class="watch-hero__frame watch-hero__frame--start"
+        data-hero-start
+        src={heroStart.src}
+        alt=""
+        width={heroStart.width}
+        height={Math.round(heroStart.width * 0.75)}
+        fetchpriority="high"
+      />
+      <img
+        class="watch-hero__frame watch-hero__frame--end"
+        data-hero-end
+        src={heroEnd.src}
+        alt=""
+        width={heroEnd.width}
+        height={Math.round(heroEnd.width * 0.75)}
+        fetchpriority="high"
+      />
+    </div>
+  </section>
+
+  <section class="container watch-choose">
+    <h2>Choose your Watch</h2>
+    <p>Three families. One honest fit for fitness, health or adventure.</p>
+    <ul class="watch-choose__grid">
+      {
+        choose.map((c) => {
+          const img = getWatchImage(c.model.id, "main", c.model.name);
+          return (
+            <li>
+              <a class="watch-choose__card" href={c.href}>
+                <WatchStage src={img.src} srcWebp={img.srcWebp} alt={img.alt} width={760} height={570} />
+                <h3>{c.title}</h3>
+                <p>{c.body}</p>
+                <em>From {formatKes(c.price)}</em>
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </section>
+
+  <section class="container">
+    <WatchQuiz />
+  </section>
+
+  <section class="container watch-grid-sec" data-watch-landing-grid>
+    <div class="watch-grid-sec__head">
+      <h2>Shop Apple Watch</h2>
+      <div class="watch-chips" role="group" aria-label="Generation">
+        <button type="button" class="is-active" data-gen="all">All</button>
+        {genChips.map((g) => (
+          <button type="button" data-gen={g}>{g}</button>
+        ))}
+      </div>
+      <a href="/watch/shop">Open full filters</a>
+    </div>
+    <ul class="watch-grid">
+      {
+        newest.slice(0, 12).map((m) => (
+          <li data-chip-gen={m.family === "Ultra" ? "Ultra" : m.family === "SE" ? "SE" : m.generation}>
+            <WatchCard model={m} />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="container watch-bands-studio" data-landing-bands>
+    <h2>Band studio</h2>
+    <p>Pick a band — name and sample price. Images are gallery shots, not every colour combo.</p>
+    <div class="watch-bands-studio__row">
+      {watchBands.slice(0, 8).map((b) => (
+        <button type="button" data-land-band={b.id} data-name={b.name} data-price={b.priceKes} data-blurb={b.blurb}>
+          {b.name}
+        </button>
+      ))}
+    </div>
+    <p data-land-band-detail>Select a band.</p>
+  </section>
+
+  <section class="container watch-plan">
+    <h2>Plan the purchase</h2>
+    <p>{watchConfig.lipa.note}</p>
+    <div class="watch-plan__grid">
+      <WatchLipaCalc modelId="watch-s12-46" />
+      <WatchTradeIn modelId="watch-se3-44" />
+    </div>
+  </section>
+
+  <section class="container watch-corp">
+    <h2>Gifting a team?</h2>
+    <p>We invoice companies and can prepare devices in bulk.</p>
+    <a class="btn btn--primary" href={corp} target="_blank" rel="noopener noreferrer">Corporate Watch order</a>
+  </section>
+
+  <section class="container watch-acc">
+    <h2>Accessories for your Watch</h2>
+    <ul>
+      {accessories.map((a) => (
+        <li>
+          <a href={a.href}>
+            <strong>{a.name}</strong>
+            <span>{a.priceKes > 0 ? `${formatKes(a.priceKes)} sample` : "See category"}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="container watch-visit">
+    <h2>Visit the shop</h2>
+    <p>{watchConfig.address.line}, {watchConfig.address.city}. Hours: {watchConfig.address.hours}.</p>
+    <p>Come in and try one on.</p>
+    <a class="btn btn--primary" href={wa} target="_blank" rel="noopener noreferrer">Ask on WhatsApp</a>
+  </section>
+</BaseLayout>
+
+<script>
+  const hero = document.querySelector("[data-watch-hero]");
+  const start = document.querySelector("[data-hero-start]");
+  const end = document.querySelector("[data-hero-end]");
+  const cta = document.querySelector("[data-hero-cta]");
+  const copy = document.querySelector(".watch-hero__copy");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const mobile = window.matchMedia("(max-width: 47.99rem)").matches;
+
+  if (end instanceof HTMLElement) {
+    end.style.opacity = reduce ? "1" : "0";
+    if (!reduce) {
+      end.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 1400, easing: "cubic-bezier(.16,1,.3,1)", fill: "forwards" });
+    }
+  }
+
+  if (!reduce && !mobile && hero && end instanceof HTMLElement && start instanceof HTMLElement) {
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const rect = hero.getBoundingClientRect();
+        const total = Math.max(1, hero.offsetHeight - window.innerHeight);
+        const scrolled = Math.min(total, Math.max(0, -rect.top));
+        const p = scrolled / total;
+        end.style.opacity = String(p);
+        start.style.transform = `scale(${0.94 + p * 0.06})`;
+        end.style.transform = `scale(${0.94 + p * 0.06})`;
+        if (copy instanceof HTMLElement) copy.style.opacity = String(Math.max(0, 1 - p * 1.4));
+        if (cta instanceof HTMLElement) cta.style.opacity = String(p > 0.8 ? Math.min(1, (p - 0.8) / 0.2) : 0);
+        ticking = false;
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  } else if (cta instanceof HTMLElement) {
+    cta.style.opacity = "1";
+  }
+
+  document.querySelectorAll("[data-gen]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-gen]").forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      const gen = btn.getAttribute("data-gen");
+      document.querySelectorAll("[data-watch-landing-grid] [data-chip-gen]").forEach((li) => {
+        if (!(li instanceof HTMLElement)) return;
+        li.hidden = gen !== "all" && li.getAttribute("data-chip-gen") !== gen;
+      });
+    });
+  });
+
+  document.querySelectorAll("[data-land-band]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-land-band]").forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      const el = document.querySelector("[data-land-band-detail]");
+      if (el && btn instanceof HTMLElement) {
+        el.textContent = `${btn.getAttribute("data-name")} — KES ${Number(btn.getAttribute("data-price") || 0).toLocaleString("en-KE")}. ${btn.getAttribute("data-blurb")}`;
+      }
+    });
+  });
+</script>
+
+<style>
+  .watch-hero {
+    position: relative;
+    min-height: 720px;
+    background: #f5f5f7;
+    display: grid;
+    align-items: end;
+    overflow: hidden;
+  }
+  @media (min-width: 48rem) {
+    .watch-hero { min-height: 160vh; }
+    .watch-hero__stage {
+      position: sticky;
+      top: var(--header-height);
+      height: calc(100vh - var(--header-height));
+    }
+  }
+  .watch-hero__copy {
+    position: relative;
+    z-index: 2;
+    padding-block: 4rem 2rem;
+    max-width: 40rem;
+  }
+  .watch-hero h1 {
+    margin: 0 0 0.75rem;
+    font-size: var(--watch-headline, clamp(2.1rem, 4.5vw, 3.4rem));
+    letter-spacing: -0.03em;
+    font-weight: 700;
+  }
+  .watch-hero__lede { color: #6e6e73; }
+  .watch-hero__cta {
+    display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 1.25rem; opacity: 0;
+  }
+  .watch-hero__stage {
+    position: absolute; inset: 0; display: grid; place-items: center;
+  }
+  .watch-hero__frame {
+    grid-area: 1 / 1;
+    width: min(78vw, 56rem);
+    height: auto;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    transform-origin: center;
+  }
+  .watch-choose,
+  .watch-grid-sec,
+  .watch-bands-studio,
+  .watch-plan,
+  .watch-corp,
+  .watch-acc,
+  .watch-visit {
+    padding-block: var(--watch-section-gap, 4rem);
+  }
+  .watch-choose h2,
+  .watch-grid-sec h2,
+  .watch-bands-studio h2,
+  .watch-plan h2,
+  .watch-corp h2,
+  .watch-acc h2,
+  .watch-visit h2 {
+    margin: 0 0 0.5rem;
+    letter-spacing: -0.02em;
+  }
+  .watch-choose__grid {
+    list-style: none; margin: 1.5rem 0 0; padding: 0;
+    display: grid; gap: 1rem; grid-template-columns: 1fr;
+  }
+  @media (min-width: 48rem) {
+    .watch-choose__grid { grid-template-columns: 1fr 1fr 1fr; }
+  }
+  .watch-choose__card {
+    display: grid; gap: 0.5rem; text-decoration: none; color: inherit;
+    transition: transform 220ms ease;
+  }
+  @media (hover: hover) {
+    .watch-choose__card:hover { transform: translateY(-6px) scale(1.05); }
+  }
+  .watch-choose__card h3 { margin: 0; }
+  .watch-choose__card p, .watch-choose__card em { margin: 0; color: #6e6e73; font-style: normal; }
+  .watch-grid-sec__head { display: grid; gap: 0.75rem; margin-bottom: 1.25rem; }
+  .watch-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .watch-chips button {
+    border: 1px solid #d2d2d7; background: #fff; border-radius: 999px;
+    padding: 0.35rem 0.7rem; font: inherit; font-size: var(--text-sm); cursor: pointer;
+  }
+  .watch-chips button.is-active { background: #000; color: #fff; }
+  .watch-grid {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; gap: 1.25rem; grid-template-columns: 1fr;
+  }
+  @media (min-width: 40rem) { .watch-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 64rem) { .watch-grid { grid-template-columns: 1fr 1fr 1fr; } }
+  .watch-bands-studio__row { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 1rem 0; }
+  .watch-bands-studio__row button {
+    border: 1px solid #d2d2d7; background: #fff; border-radius: 999px;
+    padding: 0.4rem 0.8rem; font: inherit; font-size: var(--text-sm); cursor: pointer;
+  }
+  .watch-bands-studio__row button.is-active { background: #000; color: #fff; }
+  .watch-plan__grid { display: grid; gap: 1rem; }
+  @media (min-width: 40rem) { .watch-plan__grid { grid-template-columns: 1fr 1fr; } }
+  .watch-acc ul { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: 0.65rem; }
+  @media (min-width: 40rem) { .watch-acc ul { grid-template-columns: 1fr 1fr; } }
+  .watch-acc a {
+    display: flex; justify-content: space-between; gap: 1rem;
+    text-decoration: none; color: inherit; border: 1px solid #d2d2d7;
+    border-radius: 1rem; padding: 0.85rem;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .watch-choose__card { transition: none; }
+    .watch-choose__card:hover { transform: none; }
+  }
+</style>

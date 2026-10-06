@@ -1,0 +1,168 @@
+---
+import AirPodsStage from "./AirPodsStage.astro";
+import {
+  type AirpodsModel,
+  getAirpodsImage,
+  defaultAirpodsColour,
+  formatKes,
+  lipaMonthly,
+  colourHex,
+  colourLabel,
+} from "../../lib/airpods";
+
+interface Props {
+  model: AirpodsModel;
+  compare?: boolean;
+}
+
+const { model, compare = true } = Astro.props;
+const colour = defaultAirpodsColour(model);
+const img = getAirpodsImage(model.id, "earbuds", model.name);
+const lipa = lipaMonthly(model.basePriceKes);
+---
+
+<article class="acard" data-airpods-card data-id={model.id}>
+  <a class="acard__media" href={`/airpods/${model.id}`}>
+    <AirPodsStage src={img.src} srcWebp={img.srcWebp} alt={img.alt} width={img.width} height={img.width} />
+    {model.isNew ? <span class="acard__tag">New</span> : null}
+    {model.standInImage ? <span class="acard__tag acard__tag--stand">Stand-in image</span> : null}
+  </a>
+  <div class="acard__body">
+    <h3><a href={`/airpods/${model.id}`}>{model.name}</a></h3>
+    <p class="acard__sub">{model.tagline}</p>
+    {
+      model.batterySingleHours != null ? (
+        <p class="acard__meta">Up to {model.batterySingleHours} h · Apple claim</p>
+      ) : null
+    }
+    <div class="acard__colours" role="list" aria-label="Colours">
+      {
+        model.colours.slice(0, 8).map((c) => (
+          <button
+            type="button"
+            role="listitem"
+            class:list={{ "is-active": c === colour }}
+            style={`--dot:${colourHex(c)}`}
+            title={colourLabel(c)}
+            aria-label={colourLabel(c)}
+            data-acard-colour={c}
+          />
+        ))
+      }
+    </div>
+    <p class="acard__price">
+      From {formatKes(model.basePriceKes)}
+      <small>or {formatKes(lipa.monthlyKes)} / mo</small>
+    </p>
+    <p class="acard__fine">Sample price until stock is entered in the admin.</p>
+    <div class="acard__actions">
+      <a class="btn btn--primary btn--sm" href={`/airpods/${model.id}`}>View</a>
+      <button
+        type="button"
+        class="btn btn--secondary btn--sm"
+        data-airpods-bag
+        data-id={model.id}
+        data-name={model.name}
+        data-colour={colourLabel(colour)}
+        data-case-option={model.caseOptions[0] || "usb-c"}
+        data-extras=""
+        data-kes={model.basePriceKes}
+        data-image={img.src}
+      >
+        Add to bag
+      </button>
+      {
+        compare ? (
+          <label class="acard__compare">
+            <input type="checkbox" data-airpods-compare value={model.id} />
+            Compare
+          </label>
+        ) : null
+      }
+    </div>
+  </div>
+</article>
+
+<script>
+  document.querySelectorAll("[data-airpods-bag]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (!(btn instanceof HTMLElement)) return;
+      window.dispatchEvent(
+        new CustomEvent("gh:bag-add", {
+          detail: {
+            id: btn.getAttribute("data-id"),
+            name: btn.getAttribute("data-name"),
+            colour: btn.getAttribute("data-colour"),
+            caseOption: btn.getAttribute("data-case-option"),
+            extras: btn.getAttribute("data-extras") || "",
+            kes: Number(btn.getAttribute("data-kes") || 0),
+            image: btn.getAttribute("data-image"),
+          },
+        }),
+      );
+    });
+  });
+</script>
+
+<style>
+  .acard { display: grid; gap: 0.75rem; min-width: 0; }
+  .acard__media {
+    position: relative;
+    display: block;
+    text-decoration: none;
+    transition: transform 220ms ease;
+  }
+  @media (hover: hover) {
+    .acard__media:hover { transform: translateY(-6px) scale(1.03); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .acard__media { transition: none; }
+    .acard__media:hover { transform: none; }
+  }
+  .acard__tag {
+    position: absolute;
+    top: 0.65rem;
+    left: 0.65rem;
+    background: #000;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.2rem 0.45rem;
+    border-radius: 0.35rem;
+  }
+  .acard__tag--stand { left: auto; right: 0.65rem; background: #1d1d1f; max-width: 45%; text-align: right; }
+  .acard__body h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    letter-spacing: -0.02em;
+  }
+  .acard__body h3 a { color: inherit; text-decoration: none; }
+  .acard__sub, .acard__meta, .acard__fine {
+    margin: 0.2rem 0 0;
+    font-size: var(--text-sm);
+    color: #6e6e73;
+  }
+  .acard__colours { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.55rem; }
+  .acard__colours button {
+    width: 0.85rem; height: 0.85rem; border-radius: 50%;
+    border: 1px solid #d2d2d7; background: var(--dot); padding: 0; cursor: pointer;
+  }
+  .acard__colours button.is-active { outline: 2px solid #000; outline-offset: 2px; }
+  .acard__price {
+    margin: 0.55rem 0 0;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .acard__price small {
+    display: block;
+    font-weight: 400;
+    color: #6e6e73;
+  }
+  .acard__actions {
+    display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center; margin-top: 0.65rem;
+  }
+  .acard__compare {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    font-size: var(--text-sm); cursor: pointer;
+  }
+</style>

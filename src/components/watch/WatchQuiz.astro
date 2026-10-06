@@ -1,0 +1,168 @@
+---
+import {
+  watchModels,
+  getWatchImage,
+  formatKes,
+  watchSubline,
+} from "../../lib/watch";
+
+const payload = watchModels.map((m) => {
+  const img = getWatchImage(m.id, "main", m.name);
+  return {
+    id: m.id,
+    name: m.name,
+    href: `/watch/${m.id}`,
+    priceKes: m.basePriceKes,
+    family: m.family,
+    year: m.year,
+    isNew: Boolean(m.isNew),
+    overviewOnly: Boolean(m.overviewOnly),
+    dualGps: Boolean(m.dualFrequencyGps),
+    waterM: m.waterM,
+    brightness: m.brightnessNits,
+    sub: watchSubline(m),
+    image: img.src,
+  };
+});
+---
+
+<section class="wquiz" id="quiz" data-wquiz>
+  <header>
+    <h2>Which Watch is for you?</h2>
+    <p>Three questions. Up to three matches with a short reason each.</p>
+  </header>
+  <div class="wquiz__q" data-q="do">
+    <p>What do you mainly want?</p>
+    <div class="wquiz__opts">
+      <button type="button" data-val="fitness">Running and fitness</button>
+      <button type="button" data-val="health">Health tracking</button>
+      <button type="button" data-val="adventure">Adventure and diving</button>
+      <button type="button" data-val="best">I want the best</button>
+      <button type="button" data-val="look">Premium look</button>
+    </div>
+  </div>
+  <div class="wquiz__q" data-q="who">
+    <p>Who is it for?</p>
+    <div class="wquiz__opts">
+      <button type="button" data-val="me">Mostly me</button>
+      <button type="button" data-val="kids">Kids / first watch</button>
+      <button type="button" data-val="gift">A gift</button>
+      <button type="button" data-val="athlete">Serious athlete</button>
+    </div>
+  </div>
+  <div class="wquiz__q" data-q="budget">
+    <p>Budget band (sample prices)?</p>
+    <div class="wquiz__opts">
+      <button type="button" data-val="tight">Under 35k</button>
+      <button type="button" data-val="mid">35k–70k</button>
+      <button type="button" data-val="open">70k+</button>
+    </div>
+  </div>
+  <div class="wquiz__results" data-quiz-results hidden>
+    <h3>Your matches</h3>
+    <ul data-quiz-list></ul>
+  </div>
+</section>
+
+<script define:vars={{ payload }}>
+  const root = document.querySelector("[data-wquiz]");
+  if (root) {
+    const answers = { do: "", who: "", budget: "" };
+    const list = root.querySelector("[data-quiz-list]");
+    const results = root.querySelector("[data-quiz-results]");
+
+    function reason(m, a) {
+      if (a.do === "adventure" && m.family === "Ultra") return "Ultra for depth, siren and longest battery class.";
+      if (a.do === "best" && m.family === "Ultra") return "Top of the lineup for brightness and adventure.";
+      if (a.do === "health" && m.family === "Series" && m.isNew) return "Newest Series health sensors and display.";
+      if (a.do === "fitness" && (m.family === "Series" || m.family === "Ultra") && m.isNew)
+        return "Strong fitness tracking for runs and workouts.";
+      if (a.do === "look" && (m.family === "Hermès" || /titanium|ceramic/i.test(m.sub)))
+        return "Premium finish — Hermès or titanium/ceramic.";
+      if (a.who === "kids" && m.family === "SE") return "Approachable SE — check condition on older gens.";
+      if (a.budget === "tight") return "Lower sample price — confirm condition if older.";
+      return "Solid fit for how you answered.";
+    }
+
+    function run() {
+      if (!answers.do || !answers.who || !answers.budget || !list || !results) return;
+      let pool = [...payload];
+      if (answers.do === "adventure" || answers.do === "best") pool = pool.filter((m) => m.family === "Ultra" || m.id.includes("ultra"));
+      if (answers.do === "health" || answers.do === "fitness") pool = pool.filter((m) => m.family === "Series" || m.family === "Ultra");
+      if (answers.do === "look") pool = pool.filter((m) => m.family === "Hermès" || m.family === "Series");
+      if (answers.who === "kids") pool = pool.filter((m) => m.family === "SE");
+      if (answers.budget === "tight") pool = pool.filter((m) => m.priceKes < 35000);
+      if (answers.budget === "mid") pool = pool.filter((m) => m.priceKes >= 35000 && m.priceKes <= 70000);
+      if (answers.budget === "open") pool = pool.filter((m) => m.priceKes >= 70000);
+      if (!pool.length) pool = [...payload].sort((a, b) => a.priceKes - b.priceKes).slice(0, 8);
+      pool.sort((a, b) => {
+        let sa = 0, sb = 0;
+        if (a.isNew) sa += 20;
+        if (b.isNew) sb += 20;
+        if (answers.do === "adventure" && a.family === "Ultra") sa += 40;
+        if (answers.do === "adventure" && b.family === "Ultra") sb += 40;
+        return sb - sa || b.year - a.year;
+      });
+      const top = pool.slice(0, 3);
+      results.hidden = false;
+      list.innerHTML = top
+        .map(
+          (m) => `
+        <li>
+          <a href="${m.href}">
+            <img src="${m.image}" alt="" width="72" height="54" loading="lazy" />
+            <span>
+              <strong>${m.name}</strong>
+              <em>${m.sub}</em>
+              <small>${reason(m, answers)}${m.overviewOnly ? " · Check condition." : ""}</small>
+            </span>
+            <b>From KES ${m.priceKes.toLocaleString("en-KE")}</b>
+          </a>
+        </li>`,
+        )
+        .join("");
+    }
+
+    root.querySelectorAll("[data-q]").forEach((block) => {
+      const key = block.getAttribute("data-q");
+      block.querySelectorAll("[data-val]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          block.querySelectorAll("[data-val]").forEach((b) => b.classList.remove("is-active"));
+          btn.classList.add("is-active");
+          answers[key] = btn.getAttribute("data-val") || "";
+          run();
+        });
+      });
+    });
+  }
+</script>
+
+<style>
+  .wquiz {
+    padding: 1.5rem;
+    border: 1px solid var(--color-border, #d2d2d7);
+    border-radius: var(--watch-radius, 1.5rem);
+  }
+  .wquiz header h2 { margin: 0 0 0.35rem; letter-spacing: -0.02em; }
+  .wquiz header p { margin: 0 0 1.25rem; color: #6e6e73; }
+  .wquiz__q { margin-bottom: 1.1rem; }
+  .wquiz__q p { margin: 0 0 0.5rem; font-weight: 600; }
+  .wquiz__opts { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  .wquiz__opts button {
+    border: 1px solid #d2d2d7; background: #fff; border-radius: 999px;
+    padding: 0.45rem 0.85rem; font: inherit; font-size: var(--text-sm); cursor: pointer;
+  }
+  .wquiz__opts button.is-active { background: #000; color: #fff; border-color: #000; }
+  .wquiz__results ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.65rem; }
+  .wquiz__results a {
+    display: grid; grid-template-columns: 4.5rem 1fr auto; gap: 0.75rem; align-items: center;
+    text-decoration: none; color: inherit; border: 1px solid #d2d2d7; border-radius: 1rem; padding: 0.65rem;
+  }
+  .wquiz__results img {
+    width: 4.5rem; height: 3.4rem; object-fit: contain; background: #f5f5f7;
+    border-radius: 0.65rem; mix-blend-mode: multiply;
+  }
+  .wquiz__results em, .wquiz__results small {
+    display: block; font-style: normal; font-size: var(--text-sm); color: #6e6e73;
+  }
+</style>

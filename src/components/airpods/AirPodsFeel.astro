@@ -1,0 +1,584 @@
+---
+/**
+ * AirPods feel sections — wired to exact Airpods3 manifest keys (Part C).
+ */
+import {
+  type AirpodsModel,
+  getAirpodsImage,
+  resolveAirpodsKey,
+  colourHex,
+  colourLabel,
+  colourApprox,
+  hasAnc,
+  airpodsConfig,
+  maxColourSrc,
+} from "../../lib/airpods";
+
+interface Props { model: AirpodsModel; }
+const { model } = Astro.props;
+
+const isPro3 = model.id === "airpods-pro-3";
+const isFive = model.id.startsWith("airpods-5");
+const isMax = model.family === "Max";
+const isLandingFamily = !isPro3 && !isFive && !isMax;
+
+function img(key: string) {
+  return getAirpodsImage(model.id, key, model.name);
+}
+function pair(key: string) {
+  return resolveAirpodsKey(`pair:${key}`, model.name);
+}
+
+const noisePair = isPro3
+  ? pair("pro/noise-control/noise_control")
+  : isMax
+    ? pair("max/media-card/anc")
+    : isFive
+      ? img("airpods5/stories/noise_hero")
+      : null;
+
+const noiseTiles = isPro3
+  ? [
+      img("pro/noise-control/gallery/noise_control_adaptive_audio"),
+      img("pro/noise-control/gallery/noise_control_conversation_awareness"),
+      img("pro/noise-control/gallery/noise_control_voice_isolation"),
+      img("pro/noise-control/gallery/noise_control_low_noise_mic"),
+    ]
+  : isMax
+    ? [
+        img("max/product-stories/anc/anc_airpod_max_close_up"),
+        img("max/product-stories/anc/anc_airpod_max_lifestyle"),
+      ]
+    : [];
+
+const soundMain = isPro3
+  ? img("pro/audio-performance/audio_airpods_pro_pair")
+  : isFive
+    ? img("airpods5/stories/audio_hero")
+    : isMax
+      ? img("max/product-stories/hifi-sound/audio_airpod_max")
+      : null;
+
+const soundExtras = isPro3
+  ? [img("pro/audio-performance/audio_airpods_pro_guts"), pair("pro/audio-performance/design")]
+  : isFive
+    ? [
+        img("airpods5/stories/audio_airpod"),
+        img("airpods5/stories/audio_spatial_audio"),
+        img("airpods5/stories/audio_music"),
+        img("airpods5/stories/audio_voice"),
+      ]
+    : isMax
+      ? [
+          img("max/product-stories/hifi-sound/modal/audio_bc_driver"),
+          img("max/product-stories/hifi-sound/modal/audio_bc_microphone"),
+          img("max/product-stories/hifi-sound/modal/audio_bc_distortionless_playback"),
+          img("max/media-card/hifi_static"),
+        ]
+      : [];
+
+const hearingTiles = isPro3
+  ? [
+      { label: "Hearing Test", img: img("pro/hearing-health/hearing_health_hearing_test"), on: model.hearingTest },
+      { label: "Hearing Aid", img: img("pro/highlights/highlights_hearing_aid"), on: model.hearingAid },
+      { label: "Hearing Protection", img: img("pro/hearing-health/hearing_health_hearing_protection"), on: model.hearingProtection },
+      { label: "Conversation Boost", img: img("pro/hearing-health/hearing_health_conversation_boost"), on: model.hearingAid },
+    ]
+  : [];
+
+const hearingPair = isPro3 ? pair("pro/hearing-health/hearing_health") : null;
+const hearingProtectPair = isPro3 ? pair("pro/hearing-health/hearing_protection") : null;
+
+const callsMain = isPro3
+  ? img("pro/magical/magical_experience_controls")
+  : isFive
+    ? img("airpods5/bento-gallery/bento_force_sensor_startframe")
+    : isMax
+      ? pair("max/media-card/highlights_siri")
+      : null;
+
+const batteryImgs = isPro3
+  ? [img("pro/battery/case"), img("pro/battery/find_my"), pair("pro/hearing-health/battery"), pair("pro/highlights/highlights_battery")]
+  : isFive
+    ? [
+        img("airpods5/stories/battery_case"),
+        img("airpods5/stories/battery_charger"),
+        img("airpods5/stories/battery_usb"),
+        pair("airpods5/media-card/highlights_battery"),
+      ]
+    : isMax
+      ? [
+          img("max/product-stories/battery-magical/battery_long_lasting"),
+          img("max/product-stories/battery-magical/battery_usbc"),
+          img("max/product-stories/battery-magical/battery_case"),
+          img("max/product-stories/battery-magical/battery_listen"),
+          img("max/product-stories/battery-magical/battery_detection"),
+        ]
+      : [];
+
+const casePair = isPro3
+  ? pair("pro/product-viewer/case")
+  : isFive
+    ? img("airpods5/bento-gallery/bento_case_close")
+    : null;
+
+const caseContrast = isFive
+  ? [img("airpods5/contrast/explore_airpods_5_in"), img("airpods5/contrast/explore_airpods_5_out")]
+  : isPro3
+    ? [img("pro/contrast/explore_airpods_pro_3_open"), img("pro/contrast/explore_airpods_5_wcc_open")]
+    : [];
+
+const findMy = isPro3 ? img("pro/battery/find_my") : isFive ? img("airpods5/stories/magic_find_my") : null;
+
+const fitnessPair = isPro3 ? pair("pro/fitness/fitness_hero") : null;
+const fitnessLifestyle = isPro3 ? img("pro/fitness/fitness_workout_buddy_lifestyle") : null;
+const heartPair = isPro3 ? pair("pro/product-viewer/heart_rate") : null;
+
+const highlights = isPro3
+  ? [
+      img("pro/highlights/highlights_noise_cancellation"),
+      img("pro/highlights/highlights_noise_cancellation_hearing_aid"),
+      img("pro/highlights/highlights_acoustic"),
+      img("pro/highlights/highlights_live_translation"),
+      img("pro/highlights/highlights_heart_rate"),
+      img("pro/highlights/highlights_hearing_aid"),
+    ]
+  : [];
+
+const bento5 = isFive
+  ? [
+      img("airpods5/bento-gallery/bento_angle"),
+      img("airpods5/bento-gallery/bento_case_close"),
+      img("airpods5/bento-gallery/bento_force_sensor_startframe"),
+      img("airpods5/bento-gallery/bento_ip57"),
+      img("airpods5/bento-gallery/bento_pair"),
+      img("airpods5/bento-gallery/bento_stem"),
+    ]
+  : [];
+
+const maxColours = isMax && !model.textOnlyColours ? model.colours : [];
+
+const modes = [
+  { id: "off", label: "Off" },
+  { id: "transparency", label: "Transparency", active: model.noiseModes.includes("transparency") },
+  { id: "adaptive", label: "Adaptive", active: model.noiseModes.includes("adaptive") },
+  { id: "anc", label: "Noise Cancellation", active: model.noiseModes.includes("anc") },
+].filter((m) => m.id === "off" || m.active);
+
+const feelIds = ["noise", "sound"];
+if (isPro3) feelIds.push("hearing");
+feelIds.push("calls", "battery", "case");
+if (isPro3) feelIds.push("fitness", "highlights");
+if (isFive) feelIds.push("bento");
+if (isMax) feelIds.push("colour");
+
+const showBatteryHours = model.batterySingleHours != null;
+const ancRatio = airpodsConfig.ancRatios[0];
+---
+
+<nav class="afeel-nav" data-afeel-nav aria-label="Feel sections">
+  {feelIds.map((id, i) => (
+    <a href={`#feel-${id}`} data-feel-dot={id} class:list={{ "is-active": i === 0 }} aria-label={id}><span /></a>
+  ))}
+</nav>
+
+{(noisePair && !noisePair.fallback) || noiseTiles.length ? (
+<section class="afeel afeel--black" id="feel-noise" data-feel="noise">
+  <div class="container afeel__inner">
+    <h2>Turn the world down.</h2>
+    <p class="afeel__lede">Illustration — no audio. {hasAnc(model) ? "Mode switch changes the wave field only." : "Limited noise modes on this model."}</p>
+    {noisePair && !noisePair.fallback ? (
+      <div class="afeel__pair" data-pair>
+        {noisePair.start ? <img class="afeel__pair-start" src={noisePair.start} alt="" width="1400" height="900" loading="lazy" /> : null}
+        <img class="afeel__pair-end" src={noisePair.end || noisePair.src} alt={`${model.name} noise control`} width="1400" height="900" loading="lazy" />
+      </div>
+    ) : null}
+    {noiseTiles.length ? (
+      <ul class="afeel__grid">
+        {noiseTiles.filter((t) => !t.fallback).map((t) => (
+          <li class="afeel__card"><img src={t.src} alt={t.alt} width="600" height="400" loading="lazy" /></li>
+        ))}
+      </ul>
+    ) : null}
+    <div class="afeel__modes" role="tablist" aria-label="Noise control modes">
+      {modes.map((m, i) => (
+        <button type="button" role="tab" class:list={{ "is-active": i === 0 }} data-noise-mode={m.id}>{m.label}</button>
+      ))}
+    </div>
+    <div class="afeel__bars" aria-hidden="true">
+      <div class="afeel__bar"><i data-bar style="height:100%" /></div>
+      <div class="afeel__bar"><i data-bar style="height:80%" /></div>
+      <div class="afeel__bar"><i data-bar style="height:60%" /></div>
+      <div class="afeel__bar"><i data-bar style="height:90%" /></div>
+      <div class="afeel__bar"><i data-bar style="height:70%" /></div>
+    </div>
+    <p class="afeel__caption">Illustration — not a measurement.{isPro3 && ancRatio ? ` ${ancRatio.note}` : ""}</p>
+  </div>
+</section>
+) : null}
+
+{soundMain && !soundMain.fallback ? (
+<section class="afeel afeel--black" id="feel-sound" data-feel="sound">
+  <div class="container afeel__inner">
+    <h2>Sound that sits around you.</h2>
+    <p class="afeel__lede">{model.spatialAudio ? "Personalized Spatial Audio — illustration." : "Sound — check final specs."}</p>
+    <div class="afeel__stage afeel__stage--dark">
+      <img src={soundMain.src} alt={soundMain.alt} width="1400" height="900" loading="lazy" />
+    </div>
+    {soundExtras.length ? (
+      <ul class="afeel__grid">
+        {soundExtras.filter((t) => t && !t.fallback).map((t) => (
+          <li class="afeel__card"><img src={t.end || t.src} alt={t.alt} width="600" height="400" loading="lazy" /></li>
+        ))}
+      </ul>
+    ) : null}
+    <p class="afeel__caption">Diagram / stills only — no audio demo.</p>
+  </div>
+</section>
+) : null}
+
+{isPro3 ? (
+<section class="afeel afeel--black" id="feel-hearing" data-feel="hearing">
+  <div class="container afeel__inner">
+    <h2>Care for your hearing.</h2>
+    {hearingPair && !hearingPair.fallback ? (
+      <div class="afeel__pair" data-pair>
+        {hearingPair.start ? <img class="afeel__pair-start" src={hearingPair.start} alt="" width="1400" height="900" loading="lazy" /> : null}
+        <img class="afeel__pair-end" src={hearingPair.end || hearingPair.src} alt="Hearing health" width="1400" height="900" loading="lazy" />
+      </div>
+    ) : null}
+    <ul class="afeel__tiles">
+      {hearingTiles.map((t) => (
+        <li class:list={{ "is-off": t.on === false }}>
+          {!t.img.fallback ? <img src={t.img.src} alt={t.label} width="400" height="300" loading="lazy" /> : null}
+          <strong>{t.label}</strong>
+          <p>{t.on === false ? "Not on this model" : "Confirm availability in Kenya."}</p>
+        </li>
+      ))}
+    </ul>
+    {hearingProtectPair && !hearingProtectPair.fallback ? (
+      <p class="afeel__caption">Hearing protection frames available for scroll animation.</p>
+    ) : null}
+    <p class="afeel__honesty">{airpodsConfig.medicalHonesty}</p>
+  </div>
+</section>
+) : null}
+
+<section class="afeel" id="feel-calls" data-feel="calls">
+  <div class="container afeel__inner">
+    <h2>Be heard, clearly.</h2>
+    <p>{model.touchControl || "Controls — check final specs."}</p>
+    {callsMain && !callsMain.fallback ? (
+      <div class="afeel__stage">
+        <img src={callsMain.end || callsMain.src} alt={callsMain.alt} width="1200" height="800" loading="lazy" style="mix-blend-mode:multiply" />
+      </div>
+    ) : null}
+    {isPro3 ? (
+      <ul class="afeel__grid">
+        {[img("pro/magical/magical_experience_live_translation"), pair("pro/magical/connectivity"), pair("pro/product-viewer/touch_controls")]
+          .filter((t) => t && !t.fallback)
+          .map((t) => (
+            <li class="afeel__card"><img src={t.end || t.src} alt={t.alt} width="600" height="400" loading="lazy" style="mix-blend-mode:multiply" /></li>
+          ))}
+      </ul>
+    ) : null}
+    {isFive ? (
+      <ul class="afeel__grid">
+        {[img("airpods5/bento-gallery/bento_stem"), img("airpods5/stories/audio_voice"), pair("airpods5/media-card/highlights_siri"), img("airpods5/media-card/media_live_translation")]
+          .filter((t) => t && !t.fallback)
+          .map((t) => (
+            <li class="afeel__card"><img src={t.end || t.src} alt={t.alt} width="600" height="400" loading="lazy" style="mix-blend-mode:multiply" /></li>
+          ))}
+      </ul>
+    ) : null}
+    <p class="afeel__caption">Illustration — controls vary by model.</p>
+  </div>
+</section>
+
+<section class="afeel" id="feel-battery" data-feel="battery">
+  <div class="container afeel__inner">
+    <h2>All day, and the next.</h2>
+    {batteryImgs.filter((t) => t && !t.fallback).length ? (
+      <ul class="afeel__grid">
+        {batteryImgs.filter((t) => t && !t.fallback).map((t) => (
+          <li class="afeel__card"><img src={t.end || t.src} alt={t.alt} width="600" height="400" loading="lazy" style="mix-blend-mode:multiply" /></li>
+        ))}
+      </ul>
+    ) : null}
+    {showBatteryHours ? (
+      <p>Up to {model.batterySingleHours} h single charge · Apple claim</p>
+    ) : (
+      <p>Battery hours flagged check-final-specs — no numbers until confirmed.</p>
+    )}
+    <p class="afeel__caption">ANC and volume drain faster. Replacement through Apple service.</p>
+  </div>
+</section>
+
+<section class="afeel" id="feel-case" data-feel="case">
+  <div class="container afeel__inner">
+    <h2>The case that does more.</h2>
+    <p>Case types: {model.caseTypes.join(", ")}.</p>
+    {casePair && !casePair.fallback ? (
+      <div class="afeel__pair" data-pair>
+        {casePair.start ? <img class="afeel__pair-start" src={casePair.start} alt="" width="1200" height="1200" loading="lazy" style="mix-blend-mode:multiply" /> : null}
+        <img class="afeel__pair-end" src={casePair.end || casePair.src} alt={`${model.name} case`} width="1200" height="1200" loading="lazy" style="mix-blend-mode:multiply" />
+      </div>
+    ) : null}
+    {caseContrast.length ? (
+      <ul class="afeel__grid">
+        {caseContrast.filter((t) => !t.fallback).map((t) => (
+          <li class="afeel__card"><img src={t.src} alt={t.alt} width="600" height="400" loading="lazy" style="mix-blend-mode:multiply" /></li>
+        ))}
+      </ul>
+    ) : null}
+    {(() => {
+      const c = getAirpodsImage(model.id, "case", model.name);
+      return !c.fallback ? (
+        <div class="afeel__stage"><img src={c.src} alt={c.alt} width="800" height="800" loading="lazy" style="mix-blend-mode:multiply" /></div>
+      ) : null;
+    })()}
+    {findMy && !findMy.fallback ? (
+      <p class="afeel__caption"><img src={findMy.src} alt="Find My" width="400" height="300" loading="lazy" style="mix-blend-mode:multiply;max-width:16rem" /> Find My — illustration.</p>
+    ) : null}
+  </div>
+</section>
+
+{isPro3 ? (
+<section class="afeel afeel--black" id="feel-fitness" data-feel="fitness">
+  <div class="container afeel__inner">
+    <h2>Train with it.</h2>
+    {fitnessPair && !fitnessPair.fallback ? (
+      <div class="afeel__pair" data-pair>
+        {fitnessPair.start ? <img class="afeel__pair-start" src={fitnessPair.start} alt="" width="1400" height="900" loading="lazy" /> : null}
+        <img class="afeel__pair-end" src={fitnessPair.end || fitnessPair.src} alt="Fitness" width="1400" height="900" loading="lazy" />
+      </div>
+    ) : null}
+    <ul class="afeel__grid">
+      {[fitnessLifestyle, img("pro/highlights/highlights_heart_rate"), heartPair, img("pro/product-viewer/closer_look_water_resistance")]
+        .filter((t) => t && !t.fallback)
+        .map((t) => (
+          <li class="afeel__card"><img src={t.end || t.src} alt={t.alt} width="600" height="400" loading="lazy" /></li>
+        ))}
+    </ul>
+    <p class="afeel__caption">Heart-rate sensing in workouts — decorative. Not a medical device.</p>
+  </div>
+</section>
+) : null}
+
+{isPro3 && highlights.length ? (
+<section class="afeel" id="feel-highlights" data-feel="highlights">
+  <div class="container afeel__inner">
+    <h2>Highlights</h2>
+    <ul class="afeel__strip-row">
+      {highlights.filter((t) => !t.fallback).map((t) => (
+        <li class="afeel__card"><img src={t.src} alt={t.alt} width="400" height="300" loading="lazy" style="mix-blend-mode:multiply" /></li>
+      ))}
+    </ul>
+  </div>
+</section>
+) : null}
+
+{isFive && bento5.length ? (
+<section class="afeel" id="feel-bento" data-feel="bento">
+  <div class="container afeel__inner">
+    <h2>Inside AirPods 5</h2>
+    <ul class="afeel__bento">
+      {bento5.filter((t) => !t.fallback).map((t) => (
+        <li><img src={t.src} alt={t.alt} width="700" height="700" loading="lazy" style="mix-blend-mode:multiply" /></li>
+      ))}
+    </ul>
+    <ul class="afeel__grid">
+      {[pair("airpods5/media-card/chip"), pair("airpods5/media-card/highlights_xray"), img("airpods5/media-card/media_lifestyle"), img("airpods5/stories/magic_detection"), img("airpods5/stories/magic_listen"), img("airpods5/stories/magic_translate"), pair("airpods5/stories/airpods-connect")]
+        .filter((t) => t && !t.fallback)
+        .map((t) => (
+          <li class="afeel__card"><img src={t.end || t.src} alt={t.alt} width="600" height="400" loading="lazy" style="mix-blend-mode:multiply" /></li>
+        ))}
+    </ul>
+  </div>
+</section>
+) : null}
+
+{isMax && maxColours.length ? (
+<section class="afeel" id="feel-colour" data-feel="colour">
+  <div class="container afeel__inner">
+    <h2>Finishes</h2>
+    <div class="afeel__colours" role="list">
+      {maxColours.map((c) => {
+        const shot = maxColourSrc(c) || img(`colour:${c}`).src;
+        const bentos = [1, 2, 3, 4, 5, 6].map((n) => img(`max/bento/${c}/bento_${n}_airpod_max_${c}`));
+        return (
+          <button
+            type="button"
+            role="listitem"
+            data-feel-colour={c}
+            data-shot={shot}
+            data-bentos={bentos.filter((b) => !b.fallback).map((b) => b.src).join("|")}
+            style={`--swatch:${colourHex(c)}`}
+          >
+            <span class="afeel__swatch" />
+            <span>{colourLabel(c)}{colourApprox(c) ? " · approx." : ""}</span>
+            <img class="afeel__colour-shot" src={shot} alt={`${model.name} ${colourLabel(c)}`} width="320" height="320" loading="lazy" style="mix-blend-mode:multiply" />
+          </button>
+        );
+      })}
+    </div>
+    <div class="afeel__stage" data-colour-stage>
+      <img data-colour-main src={maxColourSrc(maxColours[0]) || ""} alt="" width="900" height="900" style="mix-blend-mode:multiply" />
+    </div>
+    <p class="afeel__caption">Hover or focus a colour to step through bento frames. Store names are the source of truth.</p>
+  </div>
+</section>
+) : null}
+
+{isLandingFamily ? null : null}
+
+<script>
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.querySelectorAll("[data-pair]").forEach((box) => {
+    const start = box.querySelector(".afeel__pair-start");
+    const end = box.querySelector(".afeel__pair-end");
+    if (!(end instanceof HTMLElement)) return;
+    if (reduce) {
+      if (start instanceof HTMLElement) start.style.opacity = "0";
+      end.style.opacity = "1";
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (!e?.isIntersecting) return;
+        if (start instanceof HTMLElement) start.style.opacity = "0";
+        end.style.opacity = "1";
+      },
+      { threshold: 0.4 },
+    );
+    io.observe(box);
+  });
+
+  document.querySelectorAll("[data-noise-mode]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-noise-mode]").forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      const mode = btn.getAttribute("data-noise-mode");
+      const scale = mode === "anc" ? 0.15 : mode === "transparency" ? 0.85 : mode === "adaptive" ? 0.55 : 1;
+      document.querySelectorAll("[data-bar]").forEach((bar) => {
+        if (bar instanceof HTMLElement) bar.style.height = `${Math.round(scale * 100)}%`;
+      });
+    });
+  });
+
+  document.querySelectorAll("[data-feel-colour]").forEach((btn) => {
+    let timer = 0;
+    const activate = () => {
+      const shot = btn.getAttribute("data-shot") || "";
+      const bentos = (btn.getAttribute("data-bentos") || "").split("|").filter(Boolean);
+      const main = document.querySelector("[data-colour-main]");
+      if (!(main instanceof HTMLImageElement)) return;
+      clearInterval(timer);
+      let i = 0;
+      main.src = shot;
+      if (bentos.length && !reduce) {
+        timer = window.setInterval(() => {
+          main.src = bentos[i % bentos.length];
+          i += 1;
+        }, 500);
+      }
+    };
+    btn.addEventListener("mouseenter", activate);
+    btn.addEventListener("focus", activate);
+    btn.addEventListener("mouseleave", () => clearInterval(timer));
+    btn.addEventListener("blur", () => clearInterval(timer));
+  });
+
+  const dots = [...document.querySelectorAll("[data-feel-dot]")];
+  const sections = [...document.querySelectorAll("[data-feel]")];
+  const onScroll = () => {
+    let active = sections[0];
+    for (const s of sections) {
+      if (s.getBoundingClientRect().top < window.innerHeight * 0.45) active = s;
+    }
+    const id = active?.getAttribute("data-feel");
+    dots.forEach((d) => d.classList.toggle("is-active", d.getAttribute("data-feel-dot") === id));
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+</script>
+
+<style>
+  .afeel-nav {
+    position: fixed; left: 0.5rem; top: 40%; z-index: 20;
+    display: none; flex-direction: column; gap: 0.45rem;
+  }
+  @media (min-width: 1020px) { .afeel-nav { display: flex; } }
+  .afeel-nav a {
+    width: 0.55rem; height: 0.55rem; border-radius: 50%;
+    background: #d2d2d7; display: grid; place-items: center;
+  }
+  .afeel-nav a.is-active { background: #000; }
+  .afeel-nav span { display: none; }
+  .afeel { padding: 3.5rem 0; }
+  .afeel--black { background: #000; color: #f5f5f7; }
+  .afeel--black .afeel__lede, .afeel--black .afeel__caption { color: #a1a1a6; }
+  .afeel__inner { display: grid; gap: 1rem; }
+  .afeel h2 { margin: 0; font-size: clamp(1.6rem, 4vw, 2.4rem); letter-spacing: -0.03em; font-weight: 700; }
+  .afeel__lede, .afeel__caption, .afeel__honesty { margin: 0; font-size: var(--text-sm); color: #6e6e73; }
+  .afeel__honesty { border-top: 1px solid #d2d2d7; padding-top: 1rem; margin-top: 0.5rem; }
+  .afeel--black .afeel__honesty { border-color: #424245; }
+  .afeel__stage {
+    background: #f5f5f7; border-radius: 1.25rem; aspect-ratio: 16 / 10;
+    display: grid; place-items: center; overflow: hidden;
+  }
+  .afeel__stage--dark { background: #1d1d1f; }
+  .afeel__stage img, .afeel__pair img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .afeel__pair {
+    position: relative; background: #1d1d1f; border-radius: 1.25rem;
+    aspect-ratio: 16 / 10; overflow: hidden;
+  }
+  .afeel__pair-start, .afeel__pair-end {
+    position: absolute; inset: 0; transition: opacity 600ms ease;
+  }
+  .afeel__pair-start { opacity: 1; }
+  .afeel__pair-end { opacity: 0; }
+  @media (prefers-reduced-motion: reduce) {
+    .afeel__pair-start { opacity: 0; }
+    .afeel__pair-end { opacity: 1; }
+  }
+  .afeel__grid {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem;
+  }
+  @media (min-width: 900px) { .afeel__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .afeel__card {
+    background: #f5f5f7; border-radius: 1rem; overflow: hidden;
+    aspect-ratio: 1; display: grid; place-items: center;
+  }
+  .afeel--black .afeel__card { background: #1d1d1f; }
+  .afeel__card img { width: 100%; height: 100%; object-fit: contain; }
+  .afeel__tiles { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); }
+  .afeel__tiles li { background: #1d1d1f; border-radius: 1rem; padding: 0.75rem; }
+  .afeel__tiles li.is-off { opacity: 0.45; }
+  .afeel__tiles img { width: 100%; border-radius: 0.5rem; margin-bottom: 0.5rem; }
+  .afeel__modes { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .afeel__modes button {
+    border: 1px solid #424245; background: transparent; color: inherit;
+    padding: 0.4rem 0.7rem; border-radius: 0.5rem; cursor: pointer;
+  }
+  .afeel__modes button.is-active { background: #f5f5f7; color: #000; border-color: #f5f5f7; }
+  .afeel__bars { display: flex; align-items: flex-end; gap: 0.35rem; height: 4rem; }
+  .afeel__bar { flex: 1; height: 100%; background: #424245; border-radius: 0.25rem; display: flex; align-items: flex-end; }
+  .afeel__bar i { display: block; width: 100%; background: #f5f5f7; border-radius: 0.25rem; transition: height 600ms ease; }
+  .afeel__strip-row, .afeel__bento {
+    list-style: none; margin: 0; padding: 0; display: flex; gap: 0.75rem;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+  }
+  .afeel__strip-row .afeel__card, .afeel__bento li {
+    flex: 0 0 11rem; background: #f5f5f7; border-radius: 1rem; overflow: hidden; aspect-ratio: 1;
+  }
+  .afeel__bento li img { width: 100%; height: 100%; object-fit: contain; }
+  .afeel__colours { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .afeel__colours button {
+    border: 1px solid #d2d2d7; background: #fff; border-radius: 1rem;
+    padding: 0.5rem; display: grid; gap: 0.35rem; cursor: pointer; min-width: 6.5rem;
+  }
+  .afeel__swatch { width: 1rem; height: 1rem; border-radius: 50%; background: var(--swatch); border: 1px solid #d2d2d7; }
+  .afeel__colour-shot { width: 5rem; height: 5rem; object-fit: contain; }
+</style>

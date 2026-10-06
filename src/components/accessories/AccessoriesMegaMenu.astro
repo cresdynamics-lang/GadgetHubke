@@ -1,0 +1,270 @@
+---
+/**
+ * Accessories mega menu — 4 columns: groups, live products, find what fits, preview.
+ */
+import {
+  getAccessory,
+  getAccessoryImage,
+  formatKes,
+  type Accessory,
+} from "../../lib/accessories";
+
+function previewFor(a: Accessory) {
+  const img = getAccessoryImage(a.id, "hero");
+  return {
+    id: a.id,
+    name: a.name,
+    tagline: a.tagline,
+    href: `/accessories/${a.id}`,
+    priceKes: a.basePriceKes,
+    fits: a.notes,
+    src: img.src,
+    alt: img.alt,
+  };
+}
+
+const liveIds = [
+  "pencil-pro",
+  "keyboard-ipad-pro-13",
+  "mouse-usbc-black",
+  "trackpad-usbc-white",
+  "power-adapter-20w",
+  "magsafe-charger-1m",
+  "case-iphone-17-pro-silicone",
+  "folio-ipad-air-11-m4",
+] as const;
+
+const previews = Object.fromEntries(
+  liveIds.map((id) => {
+    const a = getAccessory(id)!;
+    return [id, previewFor(a)];
+  }),
+);
+const defaultPreview = previews["pencil-pro"];
+
+const groups = [
+  { label: "Apple Pencil", href: "/accessories/apple-pencil", coming: false },
+  { label: "Magic Keyboard", href: "/accessories/magic-keyboard", coming: false },
+  { label: "Pointers", href: "/accessories/magic-mouse", coming: false, sub: [
+    { label: "Magic Mouse", href: "/accessories/magic-mouse" },
+    { label: "Magic Trackpad", href: "/accessories/magic-trackpad" },
+  ]},
+  { label: "Power", href: "/accessories/power", coming: false },
+  { label: "Cases", href: "/accessories/cases", coming: false },
+];
+
+const liveLinks = [
+  { label: "Pencil Pro", id: "pencil-pro" },
+  { label: "Pencil (USB-C)", id: "pencil-usbc" },
+  { label: "Magic Keyboard for iPad Pro", id: "keyboard-ipad-pro-13" },
+  { label: "Magic Keyboard Folio", id: "keyboard-folio" },
+  { label: "Magic Mouse — White", id: "mouse-usbc-white" },
+  { label: "Magic Mouse — Black", id: "mouse-usbc-black" },
+  { label: "Magic Trackpad — White", id: "trackpad-usbc-white" },
+  { label: "Magic Trackpad — Black", id: "trackpad-usbc-black" },
+  { label: "20W USB-C Power Adapter", id: "power-adapter-20w" },
+  { label: "MagSafe Charger (1 m)", id: "magsafe-charger-1m" },
+  { label: "iPhone 17 Pro Silicone", id: "case-iphone-17-pro-silicone" },
+  { label: "Smart Folio iPad Air 11", id: "folio-ipad-air-11-m4" },
+];
+
+const findLinks = [
+  { label: "Which Pencil fits my iPad?", href: "/accessories/apple-pencil#finder" },
+  { label: "Which keyboard fits my iPad?", href: "/accessories/magic-keyboard#finder" },
+  { label: "Which Mouse or Trackpad?", href: "/accessories/magic-mouse#finder" },
+  { label: "What charger do I need?", href: "/accessories/power#finder" },
+  { label: "Which case fits my iPhone?", href: "/accessories/cases#finder" },
+  { label: "Compare Mouse and Trackpad", href: "/accessories/compare?group=pointer" },
+  { label: "Compare adapters", href: "/accessories/compare?group=power" },
+  { label: "Compare cases", href: "/accessories/compare?group=cases" },
+];
+---
+
+<div class="xmega" data-xmega>
+  <div class="xmega__cols">
+    <div class="xmega__col">
+      <p class="xmega__heading">Shop Accessories</p>
+      <ul>
+        {
+          groups.map((g) => (
+            <li>
+              <a class:list={["xmega__link", { "is-coming": g.coming }]} href={g.href}>
+                <span>
+                  {g.label}
+                  {g.coming ? <span class="xmega__tag">Coming next</span> : null}
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="xmega__all" href="/accessories">Shop all Accessories</a>
+    </div>
+
+    <div class="xmega__col">
+      <p class="xmega__heading">Live accessories</p>
+      <ul>
+        {
+          liveLinks.map((l) => (
+            <li>
+              <a class="xmega__link" href={`/accessories/${l.id}`} data-mega-preview={l.id}>
+                <span>{l.label}</span>
+                <em>from {formatKes(getAccessory(l.id)!.basePriceKes)}</em>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="xmega__col">
+      <p class="xmega__heading">Find what fits</p>
+      <ul>
+        {findLinks.map((f) => (
+          <li><a class="xmega__link" href={f.href}>{f.label}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="xmega__preview" data-mega-card>
+      <div class="xmega__stage">
+        <img data-mega-img src={defaultPreview.src} alt={defaultPreview.alt} width="420" height="420" />
+      </div>
+      <p data-mega-name>{defaultPreview.name}</p>
+      <p data-mega-tagline class="xmega__muted">{defaultPreview.tagline}</p>
+      <p data-mega-fits class="xmega__muted">{defaultPreview.fits}</p>
+      <p data-mega-price><strong>From {formatKes(defaultPreview.priceKes)}</strong></p>
+      <a class="btn btn--primary btn--sm" data-mega-view href={defaultPreview.href}>View</a>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ previews, defaultPreview }}>
+  const root = document.querySelector("[data-xmega]");
+  if (root) {
+    const img = root.querySelector("[data-mega-img]");
+    const name = root.querySelector("[data-mega-name]");
+    const tagline = root.querySelector("[data-mega-tagline]");
+    const fits = root.querySelector("[data-mega-fits]");
+    const price = root.querySelector("[data-mega-price]");
+    const view = root.querySelector("[data-mega-view]");
+
+    function show(id) {
+      const p = previews[id] || defaultPreview;
+      if (img instanceof HTMLImageElement) {
+        img.style.opacity = "0";
+        window.setTimeout(() => {
+          img.src = p.src;
+          img.alt = p.alt;
+          img.style.opacity = "1";
+        }, 120);
+      }
+      if (name) name.textContent = p.name;
+      if (tagline) tagline.textContent = p.tagline;
+      if (fits) fits.textContent = p.fits;
+      if (price) price.innerHTML = `<strong>From KES ${p.priceKes.toLocaleString("en-KE")}</strong>`;
+      if (view instanceof HTMLAnchorElement) view.href = p.href;
+    }
+
+    root.querySelectorAll("[data-mega-preview]").forEach((el) => {
+      el.addEventListener("pointerenter", () => show(el.getAttribute("data-mega-preview")));
+      el.addEventListener("focus", () => show(el.getAttribute("data-mega-preview")));
+    });
+  }
+</script>
+
+<style>
+  .xmega {
+    padding: 1.5rem 0 1.75rem;
+  }
+  .xmega__cols {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1fr 1.1fr;
+    gap: 1.5rem 2rem;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+  }
+  .xmega__heading {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #6e6e73;
+    margin: 0 0 0.75rem;
+  }
+  .xmega__col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .xmega__link {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.35rem 0;
+    color: #1d1d1f;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: transform 160ms ease;
+  }
+  .xmega__link:hover,
+  .xmega__link:focus-visible {
+    transform: translateX(5px);
+  }
+  .xmega__link em {
+    font-style: normal;
+    color: #6e6e73;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+  .xmega__tag {
+    display: inline-block;
+    margin-left: 0.4rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #6e6e73;
+    border: 1px solid #d2d2d7;
+    padding: 0.1rem 0.35rem;
+    border-radius: 0.25rem;
+    vertical-align: middle;
+  }
+  .xmega__all {
+    display: inline-block;
+    margin-top: 0.85rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1d1d1f;
+  }
+  .xmega__preview {
+    background: #f5f5f7;
+    border-radius: 1rem;
+    padding: 1rem 1.1rem 1.25rem;
+  }
+  .xmega__stage {
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    margin-bottom: 0.75rem;
+  }
+  .xmega__stage img {
+    width: 85%;
+    height: auto;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    transition: opacity 180ms ease;
+  }
+  .xmega__preview p {
+    margin: 0.2rem 0;
+    font-size: 0.9rem;
+  }
+  .xmega__muted {
+    color: #6e6e73;
+    font-size: 0.8rem !important;
+  }
+  @media (max-width: 1019px) {
+    .xmega {
+      display: none;
+    }
+  }
+</style>

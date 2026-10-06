@@ -1,0 +1,163 @@
+---
+/**
+ * Lipa Mdogo Mdogo for Mac models — same illustration rules as iPhone.
+ */
+import { macModels, formatKes, lipaMonthly, macConfig } from "../../lib/mac";
+
+interface Props {
+  modelId?: string;
+}
+
+const { modelId } = Astro.props;
+const options = macModels.map((m) => ({
+  id: m.id,
+  name: m.name,
+  base: m.basePriceKes,
+}));
+const initial = options.find((o) => o.id === modelId) || options[0];
+const cfg = macConfig.lipa;
+const start = lipaMonthly(initial.base, cfg.depositDefaultPct, cfg.monthsDefault);
+---
+
+<section class="mac-lipa" data-mac-lipa>
+  <header>
+    <h3>Lipa Mdogo Mdogo</h3>
+    <p>{cfg.note}</p>
+  </header>
+  <label>
+    Model
+    <select data-mac-lipa-model>
+      {
+        options.map((o) => (
+          <option value={o.id} data-base={o.base} selected={o.id === initial.id}>
+            {o.name}
+          </option>
+        ))
+      }
+    </select>
+  </label>
+  <label>
+    Deposit <span data-mac-lipa-dep-label>{cfg.depositDefaultPct}%</span>
+    <input
+      type="range"
+      min={cfg.depositMinPct}
+      max={cfg.depositMaxPct}
+      step={cfg.depositStepPct}
+      value={cfg.depositDefaultPct}
+      data-mac-lipa-deposit
+    />
+  </label>
+  <div class="mac-lipa__months" role="group" aria-label="Months">
+    {
+      cfg.monthOptions.map((m) => (
+        <button type="button" class:list={{ "is-active": m === cfg.monthsDefault }} data-mac-lipa-months={m}>
+          {m} mo
+        </button>
+      ))
+    }
+  </div>
+  <div class="mac-lipa__result">
+    <p>
+      <span data-mac-lipa-monthly>{formatKes(start.monthlyKes)}</span>
+      <small>/ month</small>
+    </p>
+    <p data-mac-lipa-line>
+      {formatKes(start.depositKes)} deposit · {start.months} payments · sample total {formatKes(initial.base)}
+    </p>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll("[data-mac-lipa]").forEach((root) => {
+    const model = root.querySelector("[data-mac-lipa-model]");
+    const deposit = root.querySelector("[data-mac-lipa-deposit]");
+    const depLabel = root.querySelector("[data-mac-lipa-dep-label]");
+    const monthly = root.querySelector("[data-mac-lipa-monthly]");
+    const line = root.querySelector("[data-mac-lipa-line]");
+    let months = Number(root.querySelector("[data-mac-lipa-months].is-active")?.getAttribute("data-mac-lipa-months") || 6);
+
+    function run() {
+      if (!(model instanceof HTMLSelectElement) || !(deposit instanceof HTMLInputElement)) return;
+      const opt = model.selectedOptions[0];
+      const base = Number(opt?.getAttribute("data-base") || 0);
+      const depPct = Number(deposit.value);
+      if (depLabel) depLabel.textContent = `${depPct}%`;
+      const depositKes = Math.round((base * depPct) / 100);
+      const monthlyKes = Math.round((base - depositKes) / months);
+      if (monthly) monthly.textContent = `KES ${monthlyKes.toLocaleString("en-KE")}`;
+      if (line) {
+        line.textContent = `KES ${depositKes.toLocaleString("en-KE")} deposit · ${months} payments · sample total KES ${base.toLocaleString("en-KE")}`;
+      }
+    }
+
+    model?.addEventListener("change", run);
+    deposit?.addEventListener("input", run);
+    root.querySelectorAll("[data-mac-lipa-months]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        root.querySelectorAll("[data-mac-lipa-months]").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        months = Number(btn.getAttribute("data-mac-lipa-months") || 6);
+        run();
+      });
+    });
+  });
+</script>
+
+<style>
+  .mac-lipa {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 1.25rem;
+    padding: 1.25rem;
+  }
+  .mac-lipa header h3 {
+    margin: 0 0 0.25rem;
+  }
+  .mac-lipa header p,
+  .mac-lipa label {
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+  .mac-lipa label {
+    display: grid;
+    gap: 0.35rem;
+    margin-top: 0.85rem;
+    color: var(--color-fg);
+  }
+  .mac-lipa select,
+  .mac-lipa input[type="range"] {
+    width: 100%;
+  }
+  .mac-lipa__months {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.85rem;
+  }
+  .mac-lipa__months button {
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
+    border-radius: 999px;
+    padding: 0.35rem 0.7rem;
+    font: inherit;
+    font-size: var(--text-sm);
+    cursor: pointer;
+  }
+  .mac-lipa__months button.is-active {
+    background: var(--color-fg);
+    color: var(--color-bg);
+  }
+  .mac-lipa__result {
+    margin-top: 1rem;
+  }
+  .mac-lipa__result span {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .mac-lipa__result p:last-child {
+    margin: 0.25rem 0 0;
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+</style>

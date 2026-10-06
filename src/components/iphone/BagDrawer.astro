@@ -1,0 +1,358 @@
+---
+/**
+ * Right bag drawer — localStorage, WhatsApp order, next-phase checkout note.
+ */
+import { iphoneConfig } from "../../lib/iphone/config";
+
+const waPhone = iphoneConfig.whatsapp;
+---
+
+<dialog class="bag" data-bag-drawer aria-label="Bag">
+  <div class="bag__panel">
+    <header class="bag__head">
+      <h2>Bag</h2>
+      <button type="button" class="bag__close" data-bag-close aria-label="Close bag">Close</button>
+    </header>
+    <p class="bag__note">Checkout, M-Pesa and delivery come in the next phase. Order on WhatsApp for now.</p>
+    <div class="bag__empty" data-bag-empty>
+      <p>Your bag is empty.</p>
+      <a class="btn btn--primary btn--sm" href="/iphone">Shop iPhone</a>
+      <a class="btn btn--secondary btn--sm" href="/mac">Shop Mac</a>
+      <a class="btn btn--secondary btn--sm" href="/ipad">Shop iPad</a>
+      <a class="btn btn--secondary btn--sm" href="/watch">Shop Watch</a>
+      <a class="btn btn--secondary btn--sm" href="/airpods">Shop AirPods</a>
+      <a class="btn btn--secondary btn--sm" href="/tv-home">Shop TV &amp; Home</a>
+    </div>
+    <ul class="bag__list" data-bag-list hidden></ul>
+    <footer class="bag__foot" data-bag-foot hidden>
+      <p class="bag__total">Total <strong data-bag-total></strong></p>
+      <a class="btn btn--whatsapp" data-bag-wa href="#" target="_blank" rel="noopener noreferrer">
+        Order on WhatsApp
+      </a>
+    </footer>
+  </div>
+</dialog>
+
+<div class="bag-toast" data-bag-toast hidden role="status"></div>
+
+<script define:vars={{ waPhone }}>
+  const KEY = "gh-iphone-bag";
+  const drawer = document.querySelector("[data-bag-drawer]");
+  const list = document.querySelector("[data-bag-list]");
+  const empty = document.querySelector("[data-bag-empty]");
+  const foot = document.querySelector("[data-bag-foot]");
+  const totalEl = document.querySelector("[data-bag-total]");
+  const wa = document.querySelector("[data-bag-wa]");
+  const toast = document.querySelector("[data-bag-toast]");
+  const badge = document.querySelector("[data-bag-badge]");
+
+  function read() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(KEY) || "[]");
+      return Array.isArray(raw) ? raw : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function write(items) {
+    try {
+      localStorage.setItem(KEY, JSON.stringify(items));
+    } catch {
+      /* ignore quota */
+    }
+    window.dispatchEvent(new CustomEvent("gh:bag", { detail: { items } }));
+    render();
+  }
+
+  function formatKes(n) {
+    return `KES ${Math.round(n).toLocaleString("en-KE")}`;
+  }
+
+  function showToast(msg) {
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.hidden = false;
+    window.setTimeout(() => {
+      toast.hidden = true;
+    }, 2000);
+  }
+
+  function render() {
+    const items = read();
+    const count = items.reduce((n, i) => n + (i.qty || 1), 0);
+    if (badge) {
+      badge.hidden = count === 0;
+      badge.textContent = String(count);
+    }
+    if (!list || !empty || !foot) return;
+    if (!items.length) {
+      empty.hidden = false;
+      list.hidden = true;
+      foot.hidden = true;
+      list.innerHTML = "";
+      return;
+    }
+    empty.hidden = true;
+    list.hidden = false;
+    foot.hidden = false;
+    list.innerHTML = items
+      .map(
+        (item, idx) => `
+      <li class="bag__item">
+        <img src="${item.image || ""}" alt="" width="56" height="56" />
+        <div>
+          <p class="bag__name">${item.name}</p>
+          <p class="bag__meta">${[item.chip, item.size, item.material, item.storage, item.connectivity, item.connector, item.partNumber ? `P/N ${item.partNumber}` : null, item.colour, item.caseOption, item.pair, item.band, item.memory, item.extras, item.deviceFor ? `For: ${item.deviceFor}` : null].filter(Boolean).join(" · ")}</p>
+          <div class="bag__qty">
+            <button type="button" data-bag-dec="${idx}" aria-label="Decrease">−</button>
+            <span>${item.qty || 1}</span>
+            <button type="button" data-bag-inc="${idx}" aria-label="Increase">+</button>
+          </div>
+        </div>
+        <p class="bag__line">${formatKes((item.kes || 0) * (item.qty || 1))}</p>
+      </li>`,
+      )
+      .join("");
+
+    const total = items.reduce((n, i) => n + (i.kes || 0) * (i.qty || 1), 0);
+    if (totalEl) totalEl.textContent = formatKes(total);
+
+    const lines = items
+      .map(
+        (i) =>
+          `• ${i.name}${i.chip ? ` / ${i.chip}` : ""}${i.size ? ` / ${i.size}` : ""}${i.material ? ` / ${i.material}` : ""}${i.memory ? ` / ${i.memory}` : ""}${i.connectivity ? ` / ${i.connectivity}` : ""}${i.connector ? ` / ${i.connector}` : ""} / ${i.colour || "-"}${i.caseOption ? ` / case: ${i.caseOption}` : ""}${i.storage ? ` / ${i.storage}` : ""}${i.pair ? ` / ${i.pair}` : ""}${i.band ? ` / ${i.band}` : ""}${i.extras ? ` / ${i.extras}` : ""}${i.deviceFor ? ` / for: ${i.deviceFor}` : ""} ×${i.qty || 1} = ${formatKes((i.kes || 0) * (i.qty || 1))}`,
+      )
+      .join("\n");
+    if (wa instanceof HTMLAnchorElement) {
+      wa.href = `https://wa.me/${waPhone}?text=${encodeURIComponent(
+        `Hi Gadget Hub, I'd like to order:\n${lines}\nTotal: ${formatKes(total)}\n(Sample prices)`,
+      )}`;
+    }
+
+    list.querySelectorAll("[data-bag-inc]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const i = Number(btn.getAttribute("data-bag-inc"));
+        const next = read();
+        if (next[i]) next[i].qty = (next[i].qty || 1) + 1;
+        write(next);
+      });
+    });
+    list.querySelectorAll("[data-bag-dec]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const i = Number(btn.getAttribute("data-bag-dec"));
+        const next = read();
+        if (!next[i]) return;
+        next[i].qty = (next[i].qty || 1) - 1;
+        if (next[i].qty <= 0) next.splice(i, 1);
+        write(next);
+      });
+    });
+  }
+
+  function openBag() {
+    if (drawer instanceof HTMLDialogElement) {
+      render();
+      drawer.showModal();
+    }
+  }
+
+  function closeBag() {
+    if (drawer instanceof HTMLDialogElement) drawer.close();
+  }
+
+  document.querySelectorAll("[data-bag-open]").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      openBag();
+    });
+  });
+
+  document.querySelector("[data-bag-close]")?.addEventListener("click", closeBag);
+  drawer?.addEventListener("click", (e) => {
+    if (e.target === drawer) closeBag();
+  });
+
+  window.addEventListener("gh:bag-add", (e) => {
+    const detail = e.detail || {};
+    const key = `${detail.id}|${detail.colour}|${detail.storage}|${detail.chip || ""}|${detail.memory || ""}|${detail.size || ""}|${detail.material || ""}|${detail.connectivity || ""}|${detail.connector || ""}|${detail.partNumber || ""}|${detail.caseOption || ""}|${detail.pair || ""}|${detail.band || ""}|${detail.extras || ""}|${detail.deviceFor || ""}`;
+    const items = read();
+    const existing = items.find(
+      (i) =>
+        `${i.id}|${i.colour}|${i.storage}|${i.chip || ""}|${i.memory || ""}|${i.size || ""}|${i.material || ""}|${i.connectivity || ""}|${i.connector || ""}|${i.partNumber || ""}|${i.caseOption || ""}|${i.pair || ""}|${i.band || ""}|${i.extras || ""}|${i.deviceFor || ""}` ===
+        key,
+    );
+    if (existing) existing.qty = (existing.qty || 1) + 1;
+    else
+      items.push({
+        id: detail.id,
+        name: detail.name,
+        colour: detail.colour,
+        storage: detail.storage,
+        chip: detail.chip,
+        memory: detail.memory,
+        size: detail.size,
+        material: detail.material,
+        connectivity: detail.connectivity,
+        connector: detail.connector || null,
+        partNumber: detail.partNumber || null,
+        caseOption: detail.caseOption,
+        pair: detail.pair,
+        band: detail.band,
+        extras: detail.extras,
+        deviceFor: detail.deviceFor || null,
+        kind: detail.kind || null,
+        kes: detail.kes,
+        image: detail.image,
+        qty: 1,
+      });
+    write(items);
+    showToast("Added to bag");
+    openBag();
+  });
+
+  render();
+</script>
+
+<style>
+  .bag {
+    margin: 0 0 0 auto;
+    width: min(100%, 26.25rem);
+    height: 100%;
+    max-height: 100dvh;
+    border: none;
+    padding: 0;
+    background: transparent;
+  }
+
+  .bag::backdrop {
+    background: rgb(0 0 0 / 0.45);
+  }
+
+  .bag__panel {
+    height: 100%;
+    background: #fff;
+    color: #1d1d1f;
+    display: flex;
+    flex-direction: column;
+    padding: 1.1rem 1.15rem 1.5rem;
+    box-shadow: -12px 0 40px rgb(0 0 0 / 0.18);
+  }
+
+  .bag__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .bag__head h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+  }
+
+  .bag__close {
+    border: none;
+    background: transparent;
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .bag__note {
+    margin: 0.75rem 0 1rem;
+    font-size: 0.8rem;
+    color: #6e6e73;
+  }
+
+  .bag__empty {
+    display: grid;
+    gap: 0.85rem;
+    justify-items: start;
+  }
+
+  .bag__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+    flex: 1;
+  }
+
+  .bag__item {
+    display: grid;
+    grid-template-columns: 3.5rem 1fr auto;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #d2d2d7;
+    align-items: start;
+  }
+
+  .bag__item img {
+    width: 3.5rem;
+    height: 3.5rem;
+    object-fit: contain;
+    background: #f5f5f7;
+    mix-blend-mode: multiply;
+    border-radius: 0.5rem;
+  }
+
+  .bag__name {
+    margin: 0;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .bag__meta {
+    margin: 0.2rem 0;
+    font-size: 0.75rem;
+    color: #6e6e73;
+  }
+
+  .bag__qty {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .bag__qty button {
+    width: 1.6rem;
+    height: 1.6rem;
+    border: 1px solid #d2d2d7;
+    border-radius: 0.3rem;
+    background: #fff;
+    cursor: pointer;
+  }
+
+  .bag__line {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .bag__foot {
+    display: grid;
+    gap: 0.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid #d2d2d7;
+  }
+
+  .bag__total {
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .bag-toast {
+    position: fixed;
+    bottom: 5.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 80;
+    background: #000;
+    color: #fff;
+    padding: 0.6rem 1rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+  }
+</style>

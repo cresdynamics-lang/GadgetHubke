@@ -1,5 +1,5 @@
 ---
-import { homeCategories } from "../../lib/home";
+import { homeAppleProducts } from "../../lib/home";
 ---
 
 <section class="home-section home-categories">
@@ -10,7 +10,7 @@ import { homeCategories } from "../../lib/home";
     </header>
     <ul class="home-categories__list">
       {
-        homeCategories.map((cat) => (
+        homeAppleProducts.map((cat) => (
           <li>
             <a class="home-categories__tile" href={cat.href}>
               {cat.label}
@@ -32,15 +32,21 @@ import { homeCategories } from "../../lib/home";
     gap: 0.65rem;
   }
 
-  @media (min-width: 40rem) {
+  @media (min-width: 24.375rem) {
     .home-categories__list {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
-  @media (min-width: 64rem) {
+  @media (min-width: 40rem) {
     .home-categories__list {
-      grid-template-columns: repeat(8, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 85rem) {
+    .home-categories__list {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
     }
   }
 

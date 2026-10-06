@@ -1,0 +1,84 @@
+---
+/**
+ * Accessory stage — square (Pencil) or 4:3 (keyboards) on #F5F5F7.
+ * mix-blend-mode: multiply on the <img> only.
+ */
+interface Props {
+  src: string;
+  srcWebp?: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  priority?: boolean;
+  class?: string;
+  /** pencil = 1:1, keyboard = 4:3 */
+  ratio?: "square" | "wide";
+  designOnly?: boolean;
+}
+
+const {
+  src,
+  srcWebp,
+  alt,
+  width = 1400,
+  height = 1400,
+  priority = false,
+  class: className,
+  ratio = "square",
+  designOnly = false,
+} = Astro.props;
+---
+
+<figure class:list={["xstage", className, { "xstage--wide": ratio === "wide" }]}>
+  <picture>
+    {srcWebp ? <source srcset={srcWebp} type="image/webp" /> : null}
+    <img
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      loading={priority ? "eager" : "lazy"}
+      fetchpriority={priority ? "high" : "auto"}
+      decoding="async"
+    />
+  </picture>
+  {
+    designOnly ? (
+      <figcaption class="xstage__note">Image shows the product design.</figcaption>
+    ) : null
+  }
+</figure>
+
+<style>
+  .xstage {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: #f5f5f7;
+    border-radius: 1.25rem;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    margin: 0;
+  }
+  .xstage--wide {
+    aspect-ratio: 4 / 3;
+  }
+  .xstage img {
+    width: 88%;
+    height: auto;
+    max-height: 92%;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    display: block;
+  }
+  .xstage__note {
+    position: absolute;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.5rem;
+    margin: 0;
+    font-size: 0.7rem;
+    color: #6e6e73;
+    text-align: center;
+  }
+</style>

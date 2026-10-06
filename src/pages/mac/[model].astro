@@ -1,0 +1,784 @@
+---
+/**
+ * MacBook PDP — sticky viewer + buy panel + feel sections + specs/FAQ.
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import MacStage from "../../components/mac/MacStage.astro";
+import MacFeel from "../../components/mac/MacFeel.astro";
+import MacLipaCalc from "../../components/mac/MacLipaCalc.astro";
+import MacTradeIn from "../../components/mac/MacTradeIn.astro";
+import {
+  macModels,
+  getMacModel,
+  getMacImage,
+  defaultMacColour,
+  macViewerTabs,
+  macLidFrames,
+  relatedMacModels,
+  formatKes,
+  macConfigurePrice,
+  lipaMonthly,
+  macConfig,
+  colourHex,
+  colourLabel,
+  isLightColour,
+  accessoriesForMac,
+  macBuyingNotes,
+  macFaq,
+} from "../../lib/mac";
+import { whatsappUrl } from "../../lib/site";
+
+export function getStaticPaths() {
+  return macModels.map((m) => ({ params: { model: m.id } }));
+}
+
+const model = getMacModel(Astro.params.model!);
+if (!model) return Astro.redirect("/mac");
+
+const colour = defaultMacColour(model);
+const tabs = macViewerTabs(model, colour);
+const lid = macLidFrames(model);
+const img = tabs[0] || getMacImage(model.id, colour, "product", model.name);
+const price = macConfigurePrice(model, model.memoryOptionsGb[0], model.storageOptions[0]);
+const lipa = lipaMonthly(price.kes);
+const notes = macBuyingNotes(model);
+const faq = macFaq();
+const fits = accessoriesForMac(model).filter((a) => a.category !== "cross");
+const related = relatedMacModels(model, macModels);
+const thickness = macConfig.thicknessMm[model.thicknessKey];
+const colourViews = Object.fromEntries(
+  model.colours.map((c) => [c, macViewerTabs(model, c)]),
+);
+const wa = whatsappUrl(
+  `Hi Gadget Hub, I'm interested in the ${model.name}, ${model.chip}, ${model.memoryOptionsGb[0]} GB, ${model.storageOptions[0]}, ${colourLabel(colour)}.`,
+);
+---
+
+<BaseLayout title={`${model.name} - GadgetHub`} description={model.tagline}>
+  <article class="mpdp" data-mpdp>
+    <div class="container">
+      <nav class="mpdp__crumb" aria-label="Breadcrumb">
+        <a href="/">Home</a> / <a href="/mac">Mac</a> / <a href="/mac/shop">{model.family}</a> / {model.name}
+      </nav>
+
+      <div class="mpdp__grid">
+        <div class="mpdp__viewer">
+          <div
+            class="mpdp__stage"
+            data-viewer-stage
+            data-zoom
+          >
+            <img
+              data-viewer-img
+              src={img.src}
+              alt={img.alt}
+              width="1400"
+              height="875"
+              fetchpriority="high"
+              loading="eager"
+              decoding="async"
+            />
+          </div>
+          <div class="mpdp__tabs" role="tablist" aria-label="Views">
+            {
+              tabs.map((t, i) => (
+                <button
+                  type="button"
+                  role="tab"
+                  class:list={{ "is-active": i === 0 }}
+                  data-view-tab={t.id}
+                  data-src={t.src}
+                  data-alt={t.alt}
+                  aria-selected={i === 0}
+                >
+                  {t.label}
+                </button>
+              ))
+            }
+          </div>
+          <div class="mpdp__viewer-actions">
+            {
+              lid ? (
+                <button type="button" class="btn btn--secondary btn--sm" data-lid-open>
+                  Open the lid
+                </button>
+              ) : null
+            }
+            <button type="button" class="btn btn--secondary btn--sm" data-lightbox-open>
+              Full screen
+            </button>
+          </div>
+          {
+            model.overviewOnly ? (
+              <p class="mpdp__note">Full colour store shots coming soon — showing Apple’s colour overview.</p>
+            ) : null
+          }
+          {
+            model.checkFinalSpecs ? (
+              <p class="mpdp__note mpdp__note--warn">Check final specs — M5 figures are provisional until verified on apple.com.</p>
+            ) : null
+          }
+
+          <div class="mpdp__scale" aria-label="Size in your hands">
+            <h3>See it in your hands</h3>
+            <svg viewBox="0 0 320 140" role="img" aria-label={`About ${model.weightKg} kg, about ${thickness} mm thick`}>
+              <rect x="20" y="30" width="120" height="170" fill="none" stroke="#d2d2d7" stroke-width="2" transform="scale(1 0.55)" />
+              <text x="40" y="110" font-size="10" fill="#6e6e73">A4 sheet</text>
+              <rect x="160" y="40" width="140" height="18" rx="3" fill="#1d1d1f" />
+              <text x="168" y="78" font-size="11" fill="#1d1d1f">{model.screenInches}″ · ~{thickness} mm · {model.weightKg} kg</text>
+              <rect x="180" y="95" width="70" height="28" rx="2" fill="none" stroke="#6e6e73" />
+              <text x="188" y="132" font-size="10" fill="#6e6e73">Paperback</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="mpdp__buy">
+          <div class="mpdp__pills">
+            <span class="mpdp__pill">{model.year}</span>
+            {model.isNew ? <span class="mpdp__pill">New</span> : null}
+            {model.checkFinalSpecs ? <span class="mpdp__pill">Check final specs</span> : null}
+          </div>
+          <h1>{model.name}</h1>
+          <p class="mpdp__tagline">{model.tagline}</p>
+          <p class="mpdp__suits">{model.whoItSuits}</p>
+
+          <p class="mpdp__colour-label">Colour — <strong data-colour-name>{colourLabel(colour)}</strong></p>
+          <div class="mpdp__swatches" role="group" aria-label="Colours">
+            {
+              model.colours.map((c) => (
+                <button
+                  type="button"
+                  class:list={["mpdp__dot", { "is-active": c === colour, "mpdp__dot--light": isLightColour(c) }]}
+                  style={`--swatch: ${colourHex(c)}`}
+                  aria-label={colourLabel(c)}
+                  data-mac-swatch
+                  data-colour={c}
+                />
+              ))
+            }
+          </div>
+
+          <p class="mpdp__cfg-label">Memory</p>
+          <div class="mpdp__opts" data-mac-memory>
+            {
+              model.memoryOptionsGb.map((gb, i) => (
+                <button type="button" class:list={{ "is-active": i === 0 }} data-gb={gb} data-step={i}>
+                  {gb} GB{i > 0 ? ` · +${formatKes(i * macConfig.memoryStepKes)}` : ""}
+                </button>
+              ))
+            }
+          </div>
+
+          <p class="mpdp__cfg-label">Storage</p>
+          <div class="mpdp__opts" data-mac-storage>
+            {
+              model.storageOptions.map((s, i) => (
+                <button type="button" class:list={{ "is-active": i === 0 }} data-storage={s} data-step={i}>
+                  {s}{i > 0 ? ` · +${formatKes(i * macConfig.storageStepKes)}` : ""}
+                </button>
+              ))
+            }
+          </div>
+
+          <p class="mpdp__price">
+            <span data-mac-price>{formatKes(price.kes)}</span>
+            <span class="mpdp__sample">Sample price</span>
+          </p>
+          <p class="mpdp__lipa" data-mac-lipa>
+            or {formatKes(lipa.monthlyKes)} a month for {lipa.months} months after a {macConfig.lipa.depositDefaultPct}% deposit
+          </p>
+          <p class="mpdp__stock"><span class="mpdp__pulse" /> In stock (sample) · Collect today in Nairobi</p>
+
+          <div class="mpdp__actions">
+            <button
+              type="button"
+              class="btn btn--primary"
+              data-add-bag
+              data-id={model.id}
+              data-name={model.name}
+              data-chip={model.chip}
+              data-memory={`${model.memoryOptionsGb[0]}GB`}
+              data-storage={model.storageOptions[0]}
+              data-colour={colourLabel(colour)}
+              data-kes={price.kes}
+              data-image={img.src}
+            >
+              Add to bag
+            </button>
+            <a class="btn btn--secondary" href={wa} target="_blank" rel="noopener noreferrer" data-wa-link>
+              Ask on WhatsApp
+            </a>
+          </div>
+          <p class="mpdp__fine">{macConfig.samplePriceDisclaimer}</p>
+
+          <ul class="mpdp__highlights">
+            <li><strong>{model.display.diagonal}″</strong><span>Display</span></li>
+            <li><strong>{model.chip}</strong><span>Chip</span></li>
+            <li><strong>{model.batteryVideoHours} h</strong><span>Video</span></li>
+            <li><strong>{model.weightKg} kg</strong><span>Weight</span></li>
+          </ul>
+
+          <div class="mpdp__why">
+            <h2>Why people choose this one</h2>
+            <ul>
+              {model.whyChoose.map((line) => <li>{line}</li>)}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <MacFeel model={model} />
+
+    <section class="container mpdp__block">
+      <h2>Buying notes for this model</h2>
+      <ul class="mpdp__notes">
+        {notes.map((n) => (
+          <li>
+            <h3>{n.title}</h3>
+            <p>{n.body}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="container mpdp__block">
+      <h2>Full specifications</h2>
+      <p class="mpdp__fine">{macConfig.appleSpecsFootnote}</p>
+      <details class="mpdp__acc" open>
+        <summary>Chip and performance</summary>
+        <table>
+          <tr><th>Chip</th><td>{model.chip}</td></tr>
+          <tr><th>CPU</th><td>{model.cpuCores}</td></tr>
+          <tr><th>GPU</th><td>{model.gpuCores}</td></tr>
+          <tr><th>Cooling</th><td>{model.fanless ? "Fanless" : "Active fan"}</td></tr>
+        </table>
+      </details>
+      <details class="mpdp__acc">
+        <summary>Memory and storage</summary>
+        <table>
+          <tr><th>Memory</th><td>{model.memoryOptionsGb.join(" / ")} GB</td></tr>
+          <tr><th>Storage</th><td>{model.storageOptions.join(" / ")}</td></tr>
+        </table>
+      </details>
+      <details class="mpdp__acc">
+        <summary>Display</summary>
+        <table>
+          <tr><th>Size</th><td>{model.display.diagonal}″</td></tr>
+          <tr><th>Resolution</th><td>{model.display.resolution} ({model.display.ppi} ppi)</td></tr>
+          <tr><th>Panel</th><td>{model.display.panel}</td></tr>
+          <tr><th>Brightness</th><td>{model.display.brightnessNits} nits{model.display.peakHdrNits ? ` / ${model.display.peakHdrNits} peak HDR` : ""}</td></tr>
+          <tr><th>Refresh</th><td>{model.display.refreshHz}Hz{model.display.promotion ? " ProMotion" : ""}</td></tr>
+        </table>
+      </details>
+      <details class="mpdp__acc">
+        <summary>Battery and charging</summary>
+        <table>
+          <tr><th>Video</th><td>Up to {model.batteryVideoHours} h</td></tr>
+          {model.batteryWebHours ? <tr><th>Web</th><td>Up to {model.batteryWebHours} h</td></tr> : null}
+          <tr><th>Charging</th><td>{model.charging}</td></tr>
+        </table>
+      </details>
+      <details class="mpdp__acc">
+        <summary>Camera and audio</summary>
+        <table>
+          <tr><th>Camera</th><td>{model.camera}</td></tr>
+          <tr><th>Speakers</th><td>{model.speakers}</td></tr>
+        </table>
+      </details>
+      <details class="mpdp__acc">
+        <summary>Ports and connectivity</summary>
+        <table>
+          <tr><th>Ports</th><td>{model.ports.join(", ")}</td></tr>
+          <tr><th>Wi-Fi</th><td>{model.wifi}</td></tr>
+          <tr><th>Bluetooth</th><td>{model.bluetooth}</td></tr>
+          <tr><th>Displays</th><td>{model.externalDisplays}</td></tr>
+        </table>
+      </details>
+      <details class="mpdp__acc">
+        <summary>Design and weight</summary>
+        <table>
+          <tr><th>Weight</th><td>{model.weightKg} kg</td></tr>
+          <tr><th>Thickness (about)</th><td>{thickness} mm</td></tr>
+          <tr><th>Touch Bar</th><td>{model.touchBar ? "Yes" : "No"}</td></tr>
+        </table>
+      </details>
+      <details class="mpdp__acc">
+        <summary>Colours</summary>
+        <table>
+          <tr><th>Finishes</th><td>{model.colours.map(colourLabel).join(", ")}</td></tr>
+        </table>
+      </details>
+    </section>
+
+    {
+      related.length ? (
+        <section class="container mpdp__block">
+          <h2>Compare with</h2>
+          <div class="mpdp__related">
+            {related.map((r) => {
+              const c = defaultMacColour(r);
+              const rimg = getMacImage(r.id, c, "product", r.name);
+              return (
+                <a href={`/mac/compare?ids=${encodeURIComponent(`${model.id},${r.id}`)}`}>
+                  <MacStage src={rimg.src} srcWebp={rimg.srcWebp} alt={rimg.alt} width={760} height={475} />
+                  <span>{r.name}</span>
+                  <em>From {formatKes(r.basePriceKes)}</em>
+                  <b>Compare with {r.name.replace("MacBook ", "")}</b>
+                </a>
+              );
+            })}
+          </div>
+        </section>
+      ) : null
+    }
+
+    {
+      fits.length ? (
+        <section class="container mpdp__block">
+          <h2>Fits this MacBook</h2>
+          <ul class="mpdp__fits">
+            {fits.map((a) => (
+              <li>
+                <h3>{a.name}</h3>
+                <p>{a.blurb}</p>
+                <p>{a.priceKes > 0 ? `${formatKes(a.priceKes)} sample` : "See category"}</p>
+                <a href={a.href}>View</a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null
+    }
+
+    <section class="container mpdp__block">
+      <h2>Questions people ask</h2>
+      {faq.map((item) => (
+        <details class="mpdp__acc">
+          <summary>{item.q}</summary>
+          <p>{item.a}</p>
+        </details>
+      ))}
+    </section>
+
+    <section class="container mpdp__tools">
+      <MacLipaCalc modelId={model.id} />
+      <MacTradeIn modelId={model.id} />
+    </section>
+  </article>
+
+  <dialog class="mpdp-lb" data-lightbox aria-label="Full screen photo">
+    <button type="button" data-lb-close aria-label="Close">Close</button>
+    <button type="button" data-lb-prev aria-label="Previous">‹</button>
+    <img data-lb-img src={img.src} alt={img.alt} />
+    <button type="button" data-lb-next aria-label="Next">›</button>
+  </dialog>
+</BaseLayout>
+
+<script define:vars={{
+  base: model.basePriceKes,
+  memStep: macConfig.memoryStepKes,
+  storStep: macConfig.storageStepKes,
+  depositPct: macConfig.lipa.depositDefaultPct,
+  months: macConfig.lipa.monthsDefault,
+  waBase: `https://wa.me/${macConfig.whatsapp}?text=`,
+  modelName: model.name,
+  chip: model.chip,
+  colourViews,
+  lid: lid ? { start: lid.start.src, end: lid.end.src } : null,
+  initialColour: colour,
+}}>
+  const state = { memory: 0, storage: 0, colour: initialColour, view: "front", kes: base, tabIndex: 0 };
+  const priceEl = document.querySelector("[data-mac-price]");
+  const lipaEl = document.querySelector("[data-mac-lipa]");
+  const viewerImg = document.querySelector("[data-viewer-img]");
+  const stage = document.querySelector("[data-viewer-stage]");
+  const colourName = document.querySelector("[data-colour-name]");
+  const bag = document.querySelector("[data-add-bag]");
+  const wa = document.querySelector("[data-wa-link]");
+  const tabsRoot = document.querySelector(".mpdp__tabs");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function currentTabs() {
+    return colourViews[state.colour] || colourViews[initialColour] || [];
+  }
+
+  function setViewer(src, alt, animate) {
+    if (!(viewerImg instanceof HTMLImageElement)) return;
+    const apply = () => {
+      viewerImg.src = src;
+      if (alt) viewerImg.alt = alt;
+      viewerImg.style.opacity = "1";
+      viewerImg.style.transform = "scale(1)";
+    };
+    if (animate && !reduce) {
+      viewerImg.style.opacity = "0";
+      viewerImg.style.transform = "scale(0.97)";
+      const pre = new Image();
+      pre.onload = () => setTimeout(apply, 170);
+      pre.src = src;
+    } else apply();
+  }
+
+  function rebuildTabs() {
+    const tabs = currentTabs();
+    if (!tabsRoot) return;
+    tabsRoot.innerHTML = tabs
+      .map(
+        (t, i) =>
+          `<button type="button" role="tab" class="${i === 0 ? "is-active" : ""}" data-view-tab="${t.id}" data-src="${t.src}" data-alt="${t.alt}" aria-selected="${i === 0}">${t.label}</button>`,
+      )
+      .join("");
+    wireTabs();
+    if (tabs[0]) {
+      state.view = tabs[0].id;
+      state.tabIndex = 0;
+      setViewer(tabs[0].src, tabs[0].alt, true);
+      bag?.setAttribute("data-image", tabs[0].src);
+    }
+  }
+
+  function wireTabs() {
+    tabsRoot?.querySelectorAll("[data-view-tab]").forEach((btn, i) => {
+      btn.addEventListener("click", () => {
+        tabsRoot.querySelectorAll("[data-view-tab]").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        state.view = btn.getAttribute("data-view-tab") || "front";
+        state.tabIndex = i;
+        setViewer(btn.getAttribute("data-src") || "", btn.getAttribute("data-alt") || "", true);
+        bag?.setAttribute("data-image", btn.getAttribute("data-src") || "");
+      });
+    });
+  }
+  wireTabs();
+
+  function refresh() {
+    state.kes = base + state.memory * memStep + state.storage * storStep;
+    if (priceEl) priceEl.textContent = `KES ${state.kes.toLocaleString("en-KE")}`;
+    const deposit = Math.round((state.kes * depositPct) / 100);
+    const monthly = Math.round((state.kes - deposit) / months);
+    if (lipaEl) {
+      lipaEl.textContent = `or KES ${monthly.toLocaleString("en-KE")} a month for ${months} months after a ${depositPct}% deposit`;
+    }
+    if (bag instanceof HTMLElement) {
+      bag.setAttribute("data-kes", String(state.kes));
+      const memBtn = document.querySelector("[data-mac-memory] .is-active");
+      const storBtn = document.querySelector("[data-mac-storage] .is-active");
+      if (memBtn) bag.setAttribute("data-memory", `${memBtn.getAttribute("data-gb")}GB`);
+      if (storBtn) bag.setAttribute("data-storage", storBtn.getAttribute("data-storage") || "");
+    }
+    if (wa instanceof HTMLAnchorElement) {
+      const mem = bag?.getAttribute("data-memory") || "";
+      const stor = bag?.getAttribute("data-storage") || "";
+      const col = bag?.getAttribute("data-colour") || "";
+      wa.href = `${waBase}${encodeURIComponent(`Hi Gadget Hub, I'm interested in the ${modelName}, ${chip}, ${mem}, ${stor}, ${col}.`)}`;
+    }
+  }
+
+  document.querySelectorAll("[data-mac-swatch]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-mac-swatch]").forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      state.colour = btn.getAttribute("data-colour") || initialColour;
+      const label = btn.getAttribute("aria-label") || "";
+      if (colourName) colourName.textContent = label;
+      bag?.setAttribute("data-colour", label);
+      rebuildTabs();
+      refresh();
+    });
+  });
+
+  function wireGroup(sel, key) {
+    document.querySelectorAll(`${sel} button`).forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(`${sel} button`).forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        state[key] = Number(btn.getAttribute("data-step") || 0);
+        refresh();
+      });
+    });
+  }
+  wireGroup("[data-mac-memory]", "memory");
+  wireGroup("[data-mac-storage]", "storage");
+
+  bag?.addEventListener("click", () => {
+    window.dispatchEvent(
+      new CustomEvent("gh:bag-add", {
+        detail: {
+          id: bag.getAttribute("data-id"),
+          name: bag.getAttribute("data-name"),
+          chip: bag.getAttribute("data-chip"),
+          memory: bag.getAttribute("data-memory"),
+          storage: bag.getAttribute("data-storage"),
+          colour: bag.getAttribute("data-colour"),
+          kes: Number(bag.getAttribute("data-kes") || 0),
+          image: bag.getAttribute("data-image"),
+        },
+      }),
+    );
+  });
+
+  // Hover zoom 2×
+  if (stage instanceof HTMLElement && viewerImg instanceof HTMLImageElement) {
+    stage.addEventListener("mousemove", (e) => {
+      if (window.matchMedia("(max-width: 63.99rem)").matches || reduce) return;
+      const rect = stage.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      viewerImg.style.transformOrigin = `${x}% ${y}%`;
+      viewerImg.style.transform = "scale(2)";
+    });
+    stage.addEventListener("mouseleave", () => {
+      viewerImg.style.transform = "scale(1)";
+    });
+  }
+
+  // Open the lid
+  document.querySelector("[data-lid-open]")?.addEventListener("click", () => {
+    if (!lid || !(viewerImg instanceof HTMLImageElement)) return;
+    if (reduce) {
+      setViewer(lid.end, viewerImg.alt, false);
+      return;
+    }
+    viewerImg.src = lid.start;
+    viewerImg.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 350, fill: "forwards" }).finished.then(() => {
+      viewerImg.src = lid.end;
+      return viewerImg.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 350, fill: "forwards" });
+    });
+  });
+
+  // Lightbox
+  const lb = document.querySelector("[data-lightbox]");
+  const lbImg = document.querySelector("[data-lb-img]");
+  function showLb(i) {
+    const tabs = currentTabs();
+    state.tabIndex = (i + tabs.length) % tabs.length;
+    const t = tabs[state.tabIndex];
+    if (lbImg instanceof HTMLImageElement && t) {
+      lbImg.src = t.src;
+      lbImg.alt = t.alt;
+    }
+  }
+  document.querySelector("[data-lightbox-open]")?.addEventListener("click", () => {
+    if (lb instanceof HTMLDialogElement) {
+      showLb(state.tabIndex);
+      lb.showModal();
+    }
+  });
+  document.querySelector("[data-lb-close]")?.addEventListener("click", () => lb?.close());
+  document.querySelector("[data-lb-prev]")?.addEventListener("click", () => showLb(state.tabIndex - 1));
+  document.querySelector("[data-lb-next]")?.addEventListener("click", () => showLb(state.tabIndex + 1));
+  window.addEventListener("keydown", (e) => {
+    if (!(lb instanceof HTMLDialogElement) || !lb.open) return;
+    if (e.key === "Escape") lb.close();
+    if (e.key === "ArrowLeft") showLb(state.tabIndex - 1);
+    if (e.key === "ArrowRight") showLb(state.tabIndex + 1);
+  });
+
+  // Touch swipe on stage
+  let touchX = 0;
+  stage?.addEventListener("touchstart", (e) => {
+    touchX = e.changedTouches[0]?.clientX || 0;
+  }, { passive: true });
+  stage?.addEventListener("touchend", (e) => {
+    const dx = (e.changedTouches[0]?.clientX || 0) - touchX;
+    if (Math.abs(dx) < 40) return;
+    const tabs = currentTabs();
+    const next = state.tabIndex + (dx < 0 ? 1 : -1);
+    const i = (next + tabs.length) % tabs.length;
+    const btn = tabsRoot?.querySelectorAll("[data-view-tab]")[i];
+    if (btn instanceof HTMLElement) btn.click();
+  }, { passive: true });
+</script>
+
+<style>
+  .mpdp { padding-block: var(--space-8) 0; }
+  .mpdp__crumb { font-size: var(--text-sm); color: var(--color-fg-muted); margin-bottom: 1rem; }
+  .mpdp__crumb a { color: inherit; }
+  .mpdp__grid { display: grid; gap: 2rem; }
+  @media (min-width: 64rem) {
+    .mpdp__grid { grid-template-columns: 1.15fr 0.85fr; align-items: start; }
+    .mpdp__viewer { position: sticky; top: calc(var(--header-height) + 1rem); }
+  }
+  .mpdp__stage {
+    background: #f5f5f7;
+    border-radius: 1.5rem;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    cursor: zoom-in;
+  }
+  .mpdp__stage img {
+    width: 92%;
+    height: auto;
+    max-height: 94%;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    transition: opacity 170ms ease, transform 170ms ease;
+  }
+  .mpdp__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.85rem;
+  }
+  .mpdp__tabs button {
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
+    border-radius: 999px;
+    padding: 0.35rem 0.7rem;
+    font: inherit;
+    font-size: var(--text-sm);
+    cursor: pointer;
+  }
+  .mpdp__tabs button.is-active {
+    background: var(--color-fg);
+    color: var(--color-bg);
+  }
+  .mpdp__viewer-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+  .mpdp__scale {
+    margin-top: 1.25rem;
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+  }
+  .mpdp__scale h3 { margin: 0 0 0.5rem; font-size: 1rem; }
+  .mpdp__scale svg { width: 100%; max-width: 22rem; height: auto; }
+  .mpdp__note { margin-top: 0.75rem; font-size: var(--text-sm); color: var(--color-fg-muted); }
+  .mpdp__note--warn { color: var(--color-fg); }
+  .mpdp__pills { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.75rem; }
+  .mpdp__pill {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em;
+    border: 1px solid var(--color-border); border-radius: 999px; padding: 0.2rem 0.55rem;
+  }
+  .mpdp h1 {
+    margin: 0 0 0.35rem;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    letter-spacing: -0.03em;
+  }
+  .mpdp__tagline { margin: 0; font-weight: 600; }
+  .mpdp__suits { margin: 0.35rem 0 1.25rem; color: var(--color-fg-muted); font-size: var(--text-sm); }
+  .mpdp__colour-label, .mpdp__cfg-label { margin: 1rem 0 0.45rem; font-size: var(--text-sm); font-weight: 600; }
+  .mpdp__swatches { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  .mpdp__dot {
+    width: 1.75rem; height: 1.75rem; border-radius: 50%; border: none;
+    background: var(--swatch); cursor: pointer; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12);
+  }
+  .mpdp__dot.is-active { outline: 2px solid var(--color-fg); outline-offset: 2px; }
+  .mpdp__dot--light { box-shadow: inset 0 0 0 1px #d2d2d7; }
+  .mpdp__opts { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .mpdp__opts button {
+    border: 1px solid var(--color-border); background: var(--color-bg); border-radius: 0.65rem;
+    padding: 0.55rem 0.75rem; font: inherit; font-size: var(--text-sm); cursor: pointer;
+  }
+  .mpdp__opts button.is-active { background: var(--color-fg); color: var(--color-bg); border-color: var(--color-fg); }
+  .mpdp__price { margin: 1.25rem 0 0.25rem; font-size: 1.75rem; font-weight: 700; letter-spacing: -0.03em; }
+  .mpdp__sample { display: block; font-size: 0.75rem; font-weight: 400; color: var(--color-fg-muted); }
+  .mpdp__lipa { margin: 0; font-size: var(--text-sm); color: var(--color-fg-muted); }
+  .mpdp__stock {
+    display: flex; align-items: center; gap: 0.45rem; margin: 0.85rem 0;
+    font-size: var(--text-sm); color: var(--color-stock);
+  }
+  .mpdp__pulse {
+    width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--color-stock);
+    animation: pulse 1.6s ease infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgb(52 199 89 / 0.45); }
+    50% { box-shadow: 0 0 0 6px rgb(52 199 89 / 0); }
+  }
+  .mpdp__actions { display: flex; flex-wrap: wrap; gap: 0.65rem; margin: 1rem 0; }
+  .mpdp__fine { font-size: 0.75rem; color: var(--color-fg-muted); }
+  .mpdp__highlights {
+    list-style: none; margin: 1.5rem 0 0; padding: 0;
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem;
+  }
+  .mpdp__highlights li { background: var(--color-bg-subtle); border-radius: 0.85rem; padding: 0.75rem; }
+  .mpdp__highlights strong { display: block; letter-spacing: -0.02em; }
+  .mpdp__highlights span { font-size: 0.75rem; color: var(--color-fg-muted); }
+  .mpdp__why { margin-top: 1.75rem; }
+  .mpdp__why h2 { margin: 0 0 0.5rem; font-size: 1.1rem; }
+  .mpdp__why ul { margin: 0; padding-left: 1.1rem; color: var(--color-fg-muted); }
+  .mpdp__block { padding-block: var(--mac-section-gap); }
+  .mpdp__block h2 { margin: 0 0 1rem; letter-spacing: -0.02em; }
+  .mpdp__notes {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; gap: 0.85rem;
+  }
+  @media (min-width: 48rem) {
+    .mpdp__notes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  .mpdp__notes li { border: 1px solid var(--color-border); border-radius: 1rem; padding: 1rem; }
+  .mpdp__notes h3 { margin: 0 0 0.35rem; font-size: 1rem; }
+  .mpdp__notes p { margin: 0; color: var(--color-fg-muted); font-size: var(--text-sm); }
+  .mpdp__acc {
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .mpdp__acc summary { cursor: pointer; font-weight: 600; }
+  .mpdp__acc table { width: 100%; margin-top: 0.75rem; border-collapse: collapse; font-size: var(--text-sm); }
+  .mpdp__acc th, .mpdp__acc td { text-align: left; padding: 0.35rem 0; border-bottom: 1px solid var(--color-border); vertical-align: top; }
+  .mpdp__acc th { width: 35%; color: var(--color-fg-muted); font-weight: 500; }
+  .mpdp__related {
+    display: grid; gap: 1rem;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 48rem) {
+    .mpdp__related { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  .mpdp__related a {
+    display: grid; gap: 0.35rem; text-decoration: none; color: inherit;
+    border: 1px solid var(--color-border); border-radius: 1rem; padding: 0.75rem;
+  }
+  .mpdp__related em { font-style: normal; color: var(--color-fg-muted); font-size: var(--text-sm); }
+  .mpdp__related b { font-size: var(--text-sm); }
+  .mpdp__fits {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; gap: 0.75rem;
+  }
+  @media (min-width: 40rem) {
+    .mpdp__fits { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  .mpdp__fits li { border: 1px solid var(--color-border); border-radius: 1rem; padding: 1rem; }
+  .mpdp__fits h3 { margin: 0 0 0.25rem; font-size: 1rem; }
+  .mpdp__fits p { margin: 0; font-size: var(--text-sm); color: var(--color-fg-muted); }
+  .mpdp__tools {
+    display: grid; gap: 1rem; padding-block: var(--mac-section-gap);
+  }
+  @media (min-width: 48rem) {
+    .mpdp__tools { grid-template-columns: 1fr 1fr; }
+  }
+  .mpdp-lb {
+    width: min(96vw, 70rem);
+    max-height: 92vh;
+    border: none;
+    border-radius: 1rem;
+    padding: 0;
+    background: #000;
+  }
+  .mpdp-lb img { width: 100%; height: auto; max-height: 80vh; object-fit: contain; }
+  .mpdp-lb button {
+    position: absolute;
+    background: rgb(255 255 255 / 0.12);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 0.5rem 0.85rem;
+    cursor: pointer;
+  }
+  .mpdp-lb [data-lb-close] { top: 0.75rem; right: 0.75rem; }
+  .mpdp-lb [data-lb-prev] { left: 0.75rem; top: 50%; }
+  .mpdp-lb [data-lb-next] { right: 0.75rem; top: 50%; }
+  @media (prefers-reduced-motion: reduce) {
+    .mpdp__pulse { animation: none; }
+    .mpdp__stage img { transition: none; }
+  }
+</style>

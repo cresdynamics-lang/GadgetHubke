@@ -1,0 +1,1027 @@
+---
+/**
+ * Full-screen search (/ or header). iPhone + MacBook + iPad model-aware ranking.
+ */
+import {
+  buildIphoneSearchIndex,
+  iphonePopularSearches,
+  iphoneConfig,
+  models,
+  accessoriesFor,
+} from "../lib/iphone";
+import {
+  buildMacSearchIndex,
+  macPopularSearches,
+  accessoriesForMac,
+  macModels,
+} from "../lib/mac";
+import {
+  buildIpadSearchIndex,
+  ipadPopularSearches,
+  accessoriesForIpad,
+  ipadModels,
+} from "../lib/ipad";
+import {
+  buildWatchSearchIndex,
+  watchPopularSearches,
+  accessoriesForWatch,
+  watchModels,
+} from "../lib/watch";
+import {
+  buildAirpodsSearchIndex,
+  airpodsPopularSearches,
+  accessoriesForAirpods,
+  airpodsModels,
+} from "../lib/airpods";
+import {
+  buildTvHomeSearchIndex,
+  tvHomePopularSearches,
+  accessoriesForTvHome,
+  tvHomeModels,
+} from "../lib/tv-home";
+import {
+  buildAccessoriesSearchIndex,
+  accessoriesPopularSearches,
+} from "../lib/accessories";
+
+const phoneIndex = buildIphoneSearchIndex();
+const macIndex = buildMacSearchIndex();
+const ipadIndex = buildIpadSearchIndex();
+const watchIndex = buildWatchSearchIndex();
+const airpodsIndex = buildAirpodsSearchIndex();
+const tvHomeIndex = buildTvHomeSearchIndex();
+const accessoriesIndex = buildAccessoriesSearchIndex();
+const waPhone = iphoneConfig.whatsapp;
+const popular = [
+  ...iphonePopularSearches.slice(0, 2),
+  ...macPopularSearches.slice(0, 2),
+  ...ipadPopularSearches.slice(0, 1),
+  ...watchPopularSearches.slice(0, 1),
+  ...airpodsPopularSearches.slice(0, 1),
+  ...tvHomePopularSearches.slice(0, 1),
+  ...accessoriesPopularSearches.slice(0, 2),
+];
+const phoneAcc = Object.fromEntries(
+  models.map((m) => [
+    m.id,
+    accessoriesFor(m).map((a) => ({
+      id: a.id,
+      name: a.name,
+      blurb: a.blurb,
+      priceKes: a.priceKes,
+    })),
+  ]),
+);
+const macAcc = Object.fromEntries(
+  macModels.map((m) => [
+    m.id,
+    accessoriesForMac(m)
+      .filter((a) => a.category !== "cross")
+      .slice(0, 4)
+      .map((a) => ({
+        id: a.id,
+        name: a.name,
+        blurb: a.blurb,
+        priceKes: a.priceKes,
+      })),
+  ]),
+);
+const ipadAcc = Object.fromEntries(
+  ipadModels.map((m) => [
+    m.id,
+    accessoriesForIpad(m)
+      .filter((a) => a.category !== "cross")
+      .slice(0, 4)
+      .map((a) => ({
+        id: a.id,
+        name: a.name,
+        blurb: a.blurb,
+        priceKes: a.priceKes,
+      })),
+  ]),
+);
+const watchAcc = Object.fromEntries(
+  watchModels.map((m) => [
+    m.id,
+    accessoriesForWatch(m)
+      .filter((a) => a.category !== "cross")
+      .slice(0, 4)
+      .map((a) => ({
+        id: a.id,
+        name: a.name,
+        blurb: a.blurb,
+        priceKes: a.priceKes,
+      })),
+  ]),
+);
+const airpodsAcc = Object.fromEntries(
+  airpodsModels.map((m) => [
+    m.id,
+    accessoriesForAirpods(m)
+      .filter((a) => a.category !== "cross")
+      .slice(0, 4)
+      .map((a) => ({
+        id: a.id,
+        name: a.name,
+        blurb: a.blurb,
+        priceKes: a.priceKes,
+      })),
+  ]),
+);
+const tvHomeAcc = Object.fromEntries(
+  tvHomeModels.map((m) => [
+    m.id,
+    accessoriesForTvHome(m)
+      .filter((a) => a.category !== "cross")
+      .slice(0, 4)
+      .map((a) => ({
+        id: a.id,
+        name: a.name,
+        blurb: a.blurb,
+        priceKes: a.priceKes,
+      })),
+  ]),
+);
+---
+
+<dialog class="site-search" data-site-search aria-label="Search products">
+  <div class="site-search__panel">
+    <form class="site-search__form" role="search" onsubmit="return false">
+      <label class="sr-only" for="site-search-input">Search</label>
+      <input
+        id="site-search-input"
+        class="site-search__input"
+        type="search"
+        name="q"
+        placeholder="Search iPhone, MacBook, iPad, Watch, AirPods, TV & Home…"
+        autocomplete="off"
+        data-search-input
+      />
+      <kbd class="site-search__kbd">/</kbd>
+      <button type="button" class="site-search__close" data-search-close aria-label="Close search">Esc</button>
+    </form>
+
+    <div class="site-search__body">
+      <div class="site-search__popular" data-search-popular>
+        <p class="site-search__label">Popular</p>
+        <ul>
+          {
+            popular.map((term) => (
+              <li>
+                <button type="button" data-search-suggest={term}>
+                  {term}
+                </button>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="site-search__label">Shop by generation</p>
+        <ul class="site-search__gens">
+          {[16, 15, 14, 13, 12, 11].map((g) => (
+            <li>
+              <a href={`/iphone?family=${g}`}>iPhone {g}</a>
+            </li>
+          ))}
+        </ul>
+        <p class="site-search__label">MacBook by chip</p>
+        <ul class="site-search__gens">
+          {["M5", "M4", "M3", "M2", "M1"].map((g) => (
+            <li>
+              <a href={`/mac/shop?chip=${g}`}>{g}</a>
+            </li>
+          ))}
+        </ul>
+        <p class="site-search__label">iPad family</p>
+        <ul class="site-search__gens">
+          {[["Pro", "Pro"], ["Air", "Air"], ["mini", "mini"], ["iPad", "iPad"]].map(([label, fam]) => (
+            <li>
+              <a href={`/ipad/shop?family=${fam}`}>{label}</a>
+            </li>
+          ))}
+        </ul>
+        <p class="site-search__label">Apple Watch</p>
+        <ul class="site-search__gens">
+          {[
+            ["Series", "Series"],
+            ["Ultra", "Ultra"],
+            ["SE", "SE"],
+          ].map(([label, fam]) => (
+            <li>
+              <a href={`/watch/shop?family=${fam}`}>{label}</a>
+            </li>
+          ))}
+        </ul>
+        <p class="site-search__label">Quick links</p>
+        <ul class="site-search__quick">
+          <li><a href="/trade-in">Trade-In</a></li>
+          <li><a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo</a></li>
+          <li><a href="/watch/compare">Compare Watches</a></li>
+          <li><a href="/airpods/compare">Compare AirPods</a></li>
+          <li><a href="/accessories/compare">Compare accessories</a></li>
+          <li><a href="/accessories/apple-pencil#finder">Which Pencil fits?</a></li>
+          <li><a href="/tv-home/compare">Compare TV &amp; Home</a></li>
+          <li><a href="/ipad/compare">Compare iPads</a></li>
+          <li><a href="/mac/compare">Compare Macs</a></li>
+          <li><a href="/support">Support</a></li>
+        </ul>
+      </div>
+
+      <div class="site-search__layout" data-search-results hidden>
+        <div data-search-future class="site-search__future" hidden></div>
+        <div class="site-search__cols">
+          <div>
+            <p class="site-search__label" data-search-list-label>Products</p>
+            <ul data-search-list></ul>
+            <div data-search-acc hidden>
+              <p class="site-search__label">Accessories that fit</p>
+              <ul data-search-acc-list></ul>
+            </div>
+          </div>
+          <aside data-search-side>
+            <p class="site-search__label">Services</p>
+            <ul data-search-services></ul>
+            <p class="site-search__label">Buying guides</p>
+            <ul data-search-guides></ul>
+          </aside>
+        </div>
+      </div>
+
+      <div class="site-search__empty" data-search-empty hidden>
+        <p>No products matched. Try “mba m4”, “16pro”, “ipad air 11”, or “series 12”.</p>
+        <a class="btn btn--primary btn--sm" data-search-wa href="#" target="_blank" rel="noopener noreferrer">
+          Ask on WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<script define:vars={{ phoneIndex, macIndex, ipadIndex, watchIndex, airpodsIndex, tvHomeIndex, accessoriesIndex, waPhone, phoneAcc, macAcc, ipadAcc, watchAcc, airpodsAcc, tvHomeAcc }}>
+  const PHONE_VOCAB = [
+    "pro", "max", "plus", "mini", "titanium", "black", "white", "blue", "pink", "teal",
+    "case", "charger", "cable", "magsafe", "screen", "protector", "ultramarine", "desert", "natural",
+  ];
+  const MAC_VOCAB = [
+    "air", "pro", "max", "macbook", "mac", "midnight", "starlight", "silver", "space",
+    "gray", "grey", "black", "sky", "blue", "gold", "case", "sleeve", "charger", "hub", "dock", "magsafe",
+  ];
+  const IPAD_VOCAB = [
+    "ipad", "pro", "air", "mini", "pencil", "keyboard", "magic", "folio", "space", "black",
+    "silver", "blue", "purple", "starlight", "pink", "yellow", "green", "cellular", "wifi",
+  ];
+  const WATCH_VOCAB = [
+    "watch", "series", "ultra", "se", "band", "strap", "sport", "loop", "milanese", "hermes",
+    "nike", "aluminum", "titanium", "ceramic", "midnight", "starlight", "natural", "black",
+  ];
+  const AIRPODS_VOCAB = [
+    "airpods", "pro", "max", "anc", "earbuds", "usbc", "wireless", "magsafe", "tips", "case",
+  ];
+  const TVHOME_VOCAB = [
+    "apple", "tv", "homepod", "mini", "siri", "remote", "ethernet", "4k", "dolby", "thread",
+  ];
+
+  function editDistance1(a, b) {
+    if (Math.abs(a.length - b.length) > 1) return false;
+    let i = 0, j = 0, edits = 0;
+    while (i < a.length && j < b.length) {
+      if (a[i] === b[j]) { i++; j++; continue; }
+      edits++;
+      if (edits > 1) return false;
+      if (a.length > b.length) i++;
+      else if (a.length < b.length) j++;
+      else { i++; j++; }
+    }
+    if (i < a.length || j < b.length) edits++;
+    return edits <= 1;
+  }
+
+  function fixVocab(q, vocab) {
+    return q.split(" ").map((w) => vocab.find((v) => v === w || editDistance1(w, v)) || w).join(" ");
+  }
+
+  function normalizePhone(raw) {
+    let q = raw.toLowerCase().trim().replace(/[^\p{L}\p{N}\s]/gu, " ").replace(/\s+/g, " ").trim();
+    q = q.replace(/\bi\s*phone\b/g, "iphone").replace(/\b(ipone|iphon|ifone|aifon)\b/g, "iphone");
+    q = q.replace(/iphone(\d)/g, "iphone $1").replace(/(\d)pro\b/g, "$1 pro").replace(/promax\b/g, "pro max");
+    q = q.replace(/(\d)plus\b/g, "$1 plus").replace(/(\d)mini\b/g, "$1 mini").replace(/(\d+)\s*gb\b/g, "$1gb");
+    return fixVocab(q, PHONE_VOCAB).replace(/\s+/g, " ").trim();
+  }
+
+  function normalizeMac(raw) {
+    let q = raw.toLowerCase().trim().replace(/[^\p{L}\p{N}\s]/gu, " ").replace(/\s+/g, " ").trim();
+    q = q.replace(/\bmac\s*book\b/g, "macbook").replace(/\b(macbok|mackbook|macbookk)\b/g, "macbook");
+    q = q.replace(/\bmba\b/g, "macbook air").replace(/\bmbp\b/g, "macbook pro");
+    q = q.replace(/\bm([1-9])\s*pro\b/g, "m$1 pro").replace(/\bm([1-9])pro\b/g, "m$1 pro");
+    q = q.replace(/\bm([1-9])\s*max\b/g, "m$1 max").replace(/\bm([1-9])max\b/g, "m$1 max");
+    q = q.replace(/\b(1[3-6])\s*(inch|in|")\b/g, "$1");
+    q = q.replace(/(\d+)\s*gb\b/g, "$1gb");
+    return fixVocab(q, MAC_VOCAB).replace(/\s+/g, " ").trim();
+  }
+
+  function normalizeIpad(raw) {
+    let q = raw.toLowerCase().trim().replace(/[^\p{L}\p{N}\s]/gu, " ").replace(/\s+/g, " ").trim();
+    q = q.replace(/\bi\s*pad\b/g, "ipad").replace(/\b(ipd|ipaad|ipade|aipad)\b/g, "ipad");
+    q = q.replace(/\bipad(\d)/g, "ipad $1").replace(/\bipadpro\b/g, "ipad pro");
+    q = q.replace(/\bipadair\b/g, "ipad air").replace(/\bipadmini\b/g, "ipad mini");
+    q = q.replace(/\bm([1-9])\s*pro\b/g, "m$1 pro").replace(/\bm([1-9])pro\b/g, "m$1 pro");
+    q = q.replace(/\b(1[0-3]|8|9)\s*(inch|in|")\b/g, "$1");
+    q = q.replace(/(\d+)\s*gb\b/g, "$1gb");
+    return fixVocab(q, IPAD_VOCAB).replace(/\s+/g, " ").trim();
+  }
+
+  function looksMac(raw) {
+    const q = normalizeMac(raw);
+    if (/\biphone\b/.test(q) || /\bipad\b/.test(q)) return false;
+    return (
+      /\bmacbook\b/.test(q) ||
+      /\bmac\b/.test(q) ||
+      (/\b(air|pro)\b/.test(q) && /\bm[1-9]\b/.test(q)) ||
+      /\bmba\b|\bmbp\b/.test(raw.toLowerCase()) ||
+      (/\bm[1-9]\b/.test(q) && /\b(13|14|15|16)\b/.test(q))
+    );
+  }
+
+  function looksIpad(raw) {
+    const q = normalizeIpad(raw);
+    if (/\biphone\b/.test(q) || /\bmacbook\b/.test(q) || /\bwatch\b/.test(q)) return false;
+    return (
+      /\bipad\b/.test(q) ||
+      /\bpencil\b/.test(q) ||
+      (/\bmini\b/.test(q) && !/\biphone\b/.test(q)) ||
+      (/\b(air|pro)\b/.test(q) && /\b(m[1-5]|a1[2-7])\b/.test(q) && !/\bmac\b/.test(q))
+    );
+  }
+
+  function normalizeWatch(raw) {
+    let q = raw.toLowerCase().trim().replace(/[^\p{L}\p{N}\s]/gu, " ").replace(/\s+/g, " ").trim();
+    q = q.replace(/\bi\s*watch\b/g, "watch").replace(/\b(iwatch|apple\s*wach|wach)\b/g, "watch");
+    q = q.replace(/\bapple\s*watch\b/g, "watch");
+    q = q.replace(/\bs(\d{1,2})\b/g, "series $1").replace(/\bse(\d)\b/g, "se $1").replace(/\bultra(\d)\b/g, "ultra $1");
+    q = q.replace(/\b(\d{2})\s*mm\b/g, "$1");
+    return fixVocab(q, WATCH_VOCAB).replace(/\s+/g, " ").trim();
+  }
+
+  function looksWatch(raw) {
+    const q = normalizeWatch(raw);
+    if (/\biphone\b/.test(q) || /\bmacbook\b/.test(q) || /\bipad\b/.test(q)) return false;
+    if (/\bairpods\b/.test(q) || (/\bpro\b/.test(q) && /\b(anc|tips|earbuds)\b/.test(q))) return false;
+    return (
+      /\bwatch\b/.test(q) ||
+      /\bseries\b/.test(q) ||
+      /\bultra\b/.test(q) ||
+      (/\bse\b/.test(q) && !/\bipad\b/.test(q)) ||
+      /\bband\b|\bstrap\b/.test(q)
+    );
+  }
+
+  function normalizeAirpods(raw) {
+    let q = raw.toLowerCase().trim().replace(/[^\p{L}\p{N}\s]/gu, " ").replace(/\s+/g, " ").trim();
+    q = q.replace(/\bear\s*pods\b/g, "airpods").replace(/\bair\s*pods\b/g, "airpods").replace(/\bairpod\b/g, "airpods");
+    q = q.replace(/\bpro(\s*)([123])\b/g, "pro $2");
+    q = q.replace(/\bmax(\s*)([12])\b/g, "max $2");
+    q = q.replace(/\bairpods(\s*)([2345])\b/g, "airpods $2");
+    q = q.replace(/\busb\s*c\b/g, "usbc");
+    return fixVocab(q, AIRPODS_VOCAB).replace(/\s+/g, " ").trim();
+  }
+
+  function looksAirpods(raw) {
+    const q = normalizeAirpods(raw);
+    if (/\biphone\b/.test(q) || /\bmacbook\b/.test(q) || /\bipad\b/.test(q) || /\bwatch\b/.test(q)) return false;
+    if (looksTvHome(raw)) return false;
+    return (
+      /\bairpods\b/.test(q) ||
+      /\bearbuds\b/.test(q) ||
+      (/\bpro\b/.test(q) && /\b(anc|noise|tips)\b/.test(q)) ||
+      (/\bmax\b/.test(q) && !/\bpro\s*max\b/.test(q)) ||
+      /\bairpods\s*[2345]\b/.test(q)
+    );
+  }
+
+  function normalizeTvHome(raw) {
+    let q = raw.toLowerCase().trim().replace(/[^\p{L}\p{N}\s]/gu, " ").replace(/\s+/g, " ").trim();
+    q = q.replace(/\bapple\s*tv\b/g, "apple tv").replace(/\batv\b/g, "apple tv");
+    q = q.replace(/\bhome\s*pod\b/g, "homepod").replace(/\bhomepod\s*mini\b/g, "homepod mini");
+    q = q.replace(/\bsiri\s*remote\b/g, "siri remote");
+    return fixVocab(q, TVHOME_VOCAB).replace(/\s+/g, " ").trim();
+  }
+
+  function looksTvHome(raw) {
+    const q = normalizeTvHome(raw);
+    if (/\biphone\b/.test(q) || /\bmacbook\b/.test(q) || /\bipad\b/.test(q) || /\bwatch\b/.test(q)) return false;
+    if (/\bairpods\b/.test(q) || /\bearbuds\b/.test(q)) return false;
+    if (/\bpencil\b/.test(q) || /\bkeyboard\b/.test(q)) return false;
+    return (
+      /\bapple tv\b/.test(q) ||
+      /\bhomepod\b/.test(q) ||
+      /\bsiri remote\b/.test(q) ||
+      (/\b4k\b/.test(q) && /\btv\b/.test(q))
+    );
+  }
+
+  function looksAccessories(raw) {
+    const q = String(raw || "").toLowerCase();
+    if (/\b(siri\s*)?remote\b/.test(q)) return false;
+    if (/\b(band|strap)\b/.test(q) && !/\bpencil\b/.test(q)) return false;
+    return /\b(pencil|magic keyboard|keyboard folio|touch id|numeric keypad|ipad keyboard|mac keyboard)\b/.test(q);
+  }
+
+  function searchAccessoriesClient(query) {
+    const q = String(query || "")
+      .toLowerCase()
+      .replace(/\busb[\s-]?c\b/g, "usbc")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (!q) return { hits: [], future: null, top: null, topScore: 0 };
+    let future = null;
+    if (/\bpencil\s*[4-9]\b/.test(q)) future = { kind: "accessories", queried: "Apple Pencil 4" };
+    if (/\bmagic keyboard\s*m6\b/.test(q)) future = { kind: "accessories", queried: "Magic Keyboard M6" };
+    const wantsPencil = /\bpencil\b/.test(q);
+    const wantsKeyboard = /\bkeyboard\b|\bfolio\b/.test(q);
+    const scored = accessoriesIndex
+      .map((item) => {
+        let score = 0;
+        if (wantsPencil && item.group === "pencil") score += 60;
+        if (wantsKeyboard && item.group === "keyboard") score += 60;
+        if (/\bpro\b/.test(q) && item.id === "pencil-pro") score += 50;
+        if (/\busbc\b/.test(q) && item.id === "pencil-usbc") score += 50;
+        if (/\bfolio\b/.test(q) && item.id === "keyboard-folio") score += 50;
+        for (const t of q.split(" ")) {
+          if (t.length > 2 && item.searchable.includes(t)) score += 10;
+        }
+        return { item, score };
+      })
+      .filter((r) => r.score > 0)
+      .sort((a, b) => b.score - a.score || b.item.year - a.item.year);
+    const hits = scored.slice(0, 8).map((r) => r.item);
+    return { hits, future, top: hits[0] || null, topScore: scored[0]?.score || 0 };
+  }
+
+  function searchPhones(query) {
+    const q = normalizePhone(query);
+    if (!q) return { hits: [], future: null, top: null, topScore: 0 };
+    const tokens = q.split(" ").filter(Boolean);
+    const genMatch = q.match(/\b(1[1-9]|[2-9]\d)\b/);
+    let gen = genMatch ? Number(genMatch[1]) : null;
+    let future = null;
+    if (gen != null && gen > 16) {
+      future = { kind: "iphone", queried: `iPhone ${gen}`, family: 16 };
+      gen = 16;
+    }
+    const wantsProMax = /\bpro\s*max\b/.test(q);
+    const wantsPro = /\bpro\b/.test(q) && !wantsProMax;
+    const wantsPlus = /\bplus\b/.test(q);
+    const wantsMini = /\bmini\b/.test(q);
+    const wantsE = /\be\b/.test(q) || /16e/.test(q);
+
+    const scored = phoneIndex.map((item) => {
+      let score = 0;
+      if (gen != null) {
+        if (item.family === gen) score += 100;
+        else if (Math.abs(item.family - gen) === 1) score += 25;
+        else score += Math.max(0, 8 - Math.abs(item.family - gen) * 2);
+      } else if (tokens.length === 1 && tokens[0] === "iphone") {
+        if (item.family === 16) score += 80;
+      }
+      if (wantsProMax && item.tier === "Pro Max") score += 60;
+      else if (wantsPro && item.tier === "Pro") score += 60;
+      else if (wantsPro && item.tier === "Pro Max") score += 35;
+      else if (wantsPlus && item.tier === "Plus") score += 60;
+      else if (wantsMini && item.tier === "mini") score += 60;
+      else if (wantsE && item.tier === "e") score += 60;
+      for (const t of tokens) {
+        if (t === "iphone" || /^\d+$/.test(t)) continue;
+        if (item.searchable.includes(t)) score += 14;
+      }
+      return { item, score };
+    }).filter((r) => r.score > 0).sort((a, b) => b.score - a.score || b.item.family - a.item.family);
+
+    const hits = scored.slice(0, 8).map((r) => r.item);
+    return { hits, future, top: hits[0] || null, topScore: scored[0]?.score || 0 };
+  }
+
+  function searchMacs(query) {
+    const q = normalizeMac(query);
+    if (!q) return { hits: [], future: null, top: null, topScore: 0 };
+    const tokens = q.split(" ").filter(Boolean);
+    let future = null;
+    const futureChip = q.match(/\bm([6-9]|[1-9]\d)\b/);
+    if (futureChip) future = { kind: "mac", queried: `MacBook with M${futureChip[1]}` };
+
+    const wantsAir = /\bair\b/.test(q) && !/\bpro\b/.test(q);
+    const wantsPro = /\bpro\b/.test(q) && !wantsAir;
+    const wantsMax = /\bmax\b/.test(q);
+    const sizeMatch = q.match(/\b(13|14|15|16)\b/);
+    const size = sizeMatch ? Number(sizeMatch[1]) : null;
+    const chipMatch = q.match(/\bm([1-5])\b/);
+    let chipN = chipMatch ? Number(chipMatch[1]) : null;
+    if (future) chipN = 5;
+
+    const scored = macIndex.map((item) => {
+      let score = 0;
+      const itemChipN = Number(String(item.chipGen).replace(/\D/g, "")) || 0;
+      if (wantsAir && item.family === "Air") score += 70;
+      if (wantsPro && item.family === "Pro") score += 70;
+      if (wantsMax && /max/i.test(item.chip)) score += 40;
+      if (size != null) {
+        if (item.screenInches === size) score += 50;
+        else if (Math.abs(item.screenInches - size) === 1) score += 12;
+      }
+      if (chipN != null) {
+        if (itemChipN === chipN) score += 90;
+        else if (Math.abs(itemChipN - chipN) === 1) score += 28;
+        else score += Math.max(0, 10 - Math.abs(itemChipN - chipN) * 3);
+      } else if (tokens.length === 1 && (tokens[0] === "macbook" || tokens[0] === "mac")) {
+        if (itemChipN >= 4) score += 60;
+      }
+      for (const t of tokens) {
+        if (t === "macbook" || t === "mac" || /^m\d$/.test(t) || /^(13|14|15|16)$/.test(t)) continue;
+        if (t === "air" || t === "pro" || t === "max") continue;
+        if (item.searchable.includes(t)) score += 14;
+      }
+      return { item, score };
+    }).filter((r) => r.score > 0).sort((a, b) => b.score - a.score || b.item.year - a.item.year);
+
+    const hits = scored.slice(0, 8).map((r) => r.item);
+    return { hits, future, top: hits[0] || null, topScore: scored[0]?.score || 0 };
+  }
+
+  function searchIpads(query) {
+    const q = normalizeIpad(query);
+    if (!q) return { hits: [], future: null, top: null, topScore: 0 };
+    const tokens = q.split(" ").filter(Boolean);
+    let future = null;
+    const futureChip = q.match(/\bm([6-9]|[1-9]\d)\b/);
+    if (futureChip) future = { kind: "ipad", queried: `iPad with M${futureChip[1]}` };
+
+    const wantsPro = /\bpro\b/.test(q) && !/\bair\b/.test(q) && !/\bmini\b/.test(q);
+    const wantsAir = /\bair\b/.test(q);
+    const wantsMini = /\bmini\b/.test(q);
+    const sizeMatch = q.match(/\b(13|11|10)\b/);
+    const size = sizeMatch ? Number(sizeMatch[1]) : null;
+    const chipMatch = q.match(/\bm([1-5])\b/);
+    let chipN = chipMatch ? Number(chipMatch[1]) : null;
+    if (future) chipN = 5;
+
+    const scored = ipadIndex.map((item) => {
+      let score = 0;
+      const itemChipN = /^M/i.test(item.chipGen) ? Number(String(item.chipGen).replace(/\D/g, "")) || 0 : 0;
+      if (wantsPro && item.family === "Pro") score += 70;
+      if (wantsAir && item.family === "Air") score += 70;
+      if (wantsMini && item.family === "mini") score += 70;
+      if (size != null) {
+        if (item.screenInches === size) score += 50;
+        else if (Math.abs(item.screenInches - size) <= 1) score += 12;
+      }
+      if (chipN != null) {
+        if (itemChipN === chipN) score += 90;
+        else if (Math.abs(itemChipN - chipN) === 1) score += 28;
+      } else if (tokens.length === 1 && tokens[0] === "ipad") {
+        if (itemChipN >= 4 || item.year >= 2024) score += 60;
+      }
+      for (const t of tokens) {
+        if (t === "ipad" || /^m\d$/.test(t)) continue;
+        if (t === "pro" || t === "air" || t === "mini") continue;
+        if (item.searchable.includes(t)) score += 14;
+      }
+      return { item, score };
+    }).filter((r) => r.score > 0).sort((a, b) => b.score - a.score || b.item.year - a.item.year);
+
+    const hits = scored.slice(0, 8).map((r) => r.item);
+    return { hits, future, top: hits[0] || null, topScore: scored[0]?.score || 0 };
+  }
+
+  function searchWatches(query) {
+    const q = normalizeWatch(query);
+    if (!q) return { hits: [], future: null, top: null, topScore: 0 };
+    const tokens = q.split(" ").filter(Boolean);
+    let future = null;
+    const seriesMatch = q.match(/\bseries\s*(1[3-9]|[2-9]\d)\b/);
+    const ultraMatch = q.match(/\bultra\s*([5-9]|[1-9]\d)\b/);
+    if (seriesMatch) future = { kind: "watch", queried: `Apple Watch Series ${seriesMatch[1]}` };
+    if (ultraMatch) future = { kind: "watch", queried: `Apple Watch Ultra ${ultraMatch[1]}` };
+
+    const wantsSeries = /\bseries\b/.test(q);
+    const wantsUltra = /\bultra\b/.test(q);
+    const wantsSe = /\bse\b/.test(q);
+    const sizeMatch = q.match(/\b(40|41|42|44|45|46|49)\b/);
+    const size = sizeMatch ? Number(sizeMatch[1]) : null;
+
+    const scored = watchIndex.map((item) => {
+      let score = 0;
+      if (wantsSeries && item.family === "Series") score += 70;
+      if (wantsUltra && item.family === "Ultra") score += 70;
+      if (wantsSe && item.family === "SE") score += 70;
+      if (size != null) {
+        if (item.caseMm === size) score += 50;
+        else if (Math.abs(item.caseMm - size) <= 2) score += 12;
+      }
+      if (future && item.year >= 2025) score += 30;
+      for (const t of tokens) {
+        if (["watch", "apple", "series", "ultra", "se"].includes(t)) continue;
+        if (item.searchable.includes(t)) score += 14;
+      }
+      return { item, score };
+    }).filter((r) => r.score > 0).sort((a, b) => b.score - a.score || b.item.year - a.item.year);
+
+    const hits = scored.slice(0, 8).map((r) => r.item);
+    return { hits, future, top: hits[0] || null, topScore: scored[0]?.score || 0 };
+  }
+
+  const airpodsSearchMisses = [];
+
+  function searchAirpods(query) {
+    const q = normalizeAirpods(query);
+    if (!q) return { hits: [], future: null, top: null, topScore: 0 };
+    const tokens = q.split(" ").filter(Boolean);
+    let future = null;
+    const airpodsGenMatch = q.match(/\bairpods\s*([6-9]|[1-9]\d)\b/);
+    const proGenMatch = q.match(/\bpro\s*([4-9]|[1-9]\d)\b/);
+    const maxGenMatch = q.match(/\bmax\s*([3-9]|[1-9]\d)\b/);
+    if (airpodsGenMatch) future = { kind: "airpods", queried: `AirPods ${airpodsGenMatch[1]}` };
+    if (proGenMatch) future = { kind: "airpods", queried: `AirPods Pro ${proGenMatch[1]}` };
+    if (maxGenMatch) future = { kind: "airpods", queried: `AirPods Max ${maxGenMatch[1]}` };
+
+    const wantsPro = /\bpro\b/.test(q);
+    const wantsMax = /\bmax\b/.test(q);
+    const wantsStandard = /\bairpods\s*[2345]\b/.test(q) || (/\bairpods\b/.test(q) && !wantsPro && !wantsMax);
+    const wantsAnc = /\banc\b/.test(q) || /noise/.test(q);
+
+    const scored = airpodsIndex.map((item) => {
+      let score = 0;
+      if (wantsPro && item.family === "Pro") score += 70;
+      if (wantsMax && item.family === "Max") score += 70;
+      if (wantsStandard && item.family === "AirPods") score += 55;
+      if (wantsAnc && item.searchable.includes("anc")) score += 40;
+      if (future && item.year >= 2025) score += 25;
+      for (const t of tokens) {
+        if (["airpods", "apple", "pro", "max", "anc", "usb", "usbc"].includes(t)) continue;
+        if (item.searchable.includes(t)) score += 14;
+      }
+      return { item, score };
+    }).filter((r) => r.score > 0).sort((a, b) => b.score - a.score || b.item.year - a.item.year);
+
+    const hits = scored.slice(0, 8).map((r) => r.item);
+    if (!hits.length && !future && q) {
+      if (!airpodsSearchMisses.includes(query.trim())) airpodsSearchMisses.push(query.trim());
+      window.__ghAirpodsSearchMisses = airpodsSearchMisses;
+    }
+    return { hits, future, top: hits[0] || null, topScore: scored[0]?.score || 0 };
+  }
+
+  function searchTvHome(query) {
+    const q = normalizeTvHome(query);
+    if (!q) return { hits: [], future: null, top: null, topScore: 0 };
+    const tokens = q.split(" ").filter(Boolean);
+    let future = null;
+    const tvGen = q.match(/\bapple tv\s*(5|6|[7-9]|[1-9]\d)\b/);
+    if (tvGen) future = { kind: "tv-home", queried: `Apple TV ${tvGen[1]}` };
+
+    const wantsAtv = /\bapple tv\b/.test(q) || /\b4k\b/.test(q);
+    const wantsHomePod = /\bhomepod\b/.test(q) && !/\bmini\b/.test(q);
+    const wantsMini = /\bmini\b/.test(q);
+    const wantsHub = /\bhub\b/.test(q);
+
+    const scored = tvHomeIndex.map((item) => {
+      let score = 0;
+      if (wantsAtv && item.family === "Apple TV") score += 70;
+      if (wantsHomePod && item.family === "HomePod") score += 70;
+      if (wantsMini && item.family === "HomePod mini") score += 70;
+      if (wantsHub && item.searchable.includes("hub")) score += 25;
+      if (future && item.year >= 2024) score += 15;
+      for (const t of tokens) {
+        if (["apple", "tv", "homepod", "mini", "4k"].includes(t)) continue;
+        if (item.searchable.includes(t)) score += 14;
+      }
+      return { item, score };
+    }).filter((r) => r.score > 0).sort((a, b) => b.score - a.score || b.item.year - a.item.year);
+
+    const hits = scored.slice(0, 8).map((r) => r.item);
+    return { hits, future, top: hits[0] || null, topScore: scored[0]?.score || 0 };
+  }
+
+  function search(query) {
+    const preferAccessories = looksAccessories(query);
+    const preferTvHome = looksTvHome(query);
+    const preferAirpods = looksAirpods(query);
+    const preferWatch = looksWatch(query);
+    const preferIpad = looksIpad(query);
+    const preferMac = looksMac(query);
+    const phones = searchPhones(query);
+    const macs = searchMacs(query);
+    const ipads = searchIpads(query);
+    const watches = searchWatches(query);
+    const airpods = searchAirpods(query);
+    const tvHome = searchTvHome(query);
+    const accessories = searchAccessoriesClient(query);
+
+    if (preferAccessories && (accessories.hits.length || accessories.future)) return { mode: "accessories", ...accessories };
+    if (preferTvHome && (tvHome.hits.length || tvHome.future)) return { mode: "tv-home", ...tvHome };
+    if (preferAirpods && (airpods.hits.length || airpods.future)) return { mode: "airpods", ...airpods };
+    if (preferWatch && (watches.hits.length || watches.future)) return { mode: "watch", ...watches };
+    if (preferIpad && (ipads.hits.length || ipads.future)) return { mode: "ipad", ...ipads };
+    if (preferMac && (macs.hits.length || macs.future)) return { mode: "mac", ...macs };
+    if (!preferMac && !preferIpad && !preferWatch && !preferAirpods && !preferTvHome && !preferAccessories && (phones.hits.length || phones.future)) return { mode: "phone", ...phones };
+
+    const best = [
+      { mode: "accessories", score: accessories.topScore, data: accessories },
+      { mode: "tv-home", score: tvHome.topScore, data: tvHome },
+      { mode: "airpods", score: airpods.topScore, data: airpods },
+      { mode: "watch", score: watches.topScore, data: watches },
+      { mode: "ipad", score: ipads.topScore, data: ipads },
+      { mode: "mac", score: macs.topScore, data: macs },
+      { mode: "phone", score: phones.topScore, data: phones },
+    ].sort((a, b) => b.score - a.score)[0];
+    if (best && (best.data.hits.length || best.data.future)) return { mode: best.mode, ...best.data };
+    return { mode: "phone", ...phones };
+  }
+
+  const dialog = document.querySelector("[data-site-search]");
+  const input = document.querySelector("[data-search-input]");
+  const list = document.querySelector("[data-search-list]");
+  const listLabel = document.querySelector("[data-search-list-label]");
+  const results = document.querySelector("[data-search-results]");
+  const popular = document.querySelector("[data-search-popular]");
+  const empty = document.querySelector("[data-search-empty]");
+  const wa = document.querySelector("[data-search-wa]");
+  const futureEl = document.querySelector("[data-search-future]");
+  const services = document.querySelector("[data-search-services]");
+  const guides = document.querySelector("[data-search-guides]");
+  const accWrap = document.querySelector("[data-search-acc]");
+  const accList = document.querySelector("[data-search-acc-list]");
+  const closeBtn = document.querySelector("[data-search-close]");
+
+  if (dialog instanceof HTMLDialogElement && input instanceof HTMLInputElement && list) {
+    function openSearch(prefill) {
+      dialog.showModal();
+      if (prefill) {
+        input.value = prefill;
+        render(prefill);
+      }
+      input.focus();
+      input.select();
+    }
+    function closeSearch() {
+      dialog.close();
+      input.value = "";
+      render("");
+    }
+    function render(query) {
+      const q = query.trim();
+      if (!q) {
+        popular.hidden = false;
+        results.hidden = true;
+        empty.hidden = true;
+        list.innerHTML = "";
+        return;
+      }
+      popular.hidden = true;
+      const { hits, future, top, mode } = search(q);
+      if (!hits.length && !future) {
+        results.hidden = true;
+        empty.hidden = false;
+        if (wa instanceof HTMLAnchorElement) {
+          wa.href = `https://wa.me/${waPhone}?text=${encodeURIComponent(`Hi GadgetHub - I searched for "${q}" and need help.`)}`;
+        }
+        try {
+          const misses = JSON.parse(sessionStorage.getItem("gh-search-misses") || "[]");
+          misses.push({ q, at: Date.now() });
+          sessionStorage.setItem("gh-search-misses", JSON.stringify(misses.slice(-50)));
+        } catch {}
+        return;
+      }
+      empty.hidden = true;
+      results.hidden = false;
+      if (listLabel) {
+        listLabel.textContent =
+          mode === "mac" ? "MacBooks" :
+          mode === "ipad" ? "iPads" :
+          mode === "watch" ? "Apple Watch" :
+          mode === "airpods" ? "AirPods" :
+          mode === "tv-home" ? "TV & Home" :
+          mode === "accessories" ? "Accessories" :
+          "Phones";
+      }
+
+      if (futureEl) {
+        if (future) {
+          futureEl.hidden = false;
+          futureEl.innerHTML = `
+            <p><strong>${future.queried} is not in the shop yet.</strong> Leave your number and we message you the day it is in stock.</p>
+            <a class="btn btn--primary btn--sm" target="_blank" rel="noopener noreferrer"
+              href="https://wa.me/${waPhone}?text=${encodeURIComponent(`Hi Gadget Hub, please alert me when ${future.queried} is in stock.`)}">
+              Alert me on WhatsApp
+            </a>`;
+        } else {
+          futureEl.hidden = true;
+          futureEl.innerHTML = "";
+        }
+      }
+
+      list.innerHTML = hits.map((hit) => `
+        <li>
+          <a class="site-search__hit" href="${hit.href}">
+            <span class="site-search__thumb"><img src="${hit.imageSrc}" alt="" width="56" height="56" loading="lazy" /></span>
+            <span class="site-search__meta">
+              <span class="site-search__name">${hit.name}</span>
+              <span class="site-search__sub">In stock (sample)</span>
+            </span>
+            <span class="site-search__price">From KES ${hit.priceKes.toLocaleString("en-KE")}</span>
+          </a>
+        </li>`).join("");
+
+      if (accWrap && accList && top) {
+        const acc =
+          mode === "mac" ? (macAcc[top.id] || []) :
+          mode === "ipad" ? (ipadAcc[top.id] || []) :
+          mode === "watch" ? (watchAcc[top.id] || []) :
+          mode === "airpods" ? (airpodsAcc[top.id] || []) :
+          mode === "tv-home" ? (tvHomeAcc[top.id] || []) :
+          (phoneAcc[top.id] || []);
+        if (acc.length) {
+          accWrap.hidden = false;
+          accList.innerHTML = acc
+            .slice(0, 4)
+            .map(
+              (a) =>
+                `<li><span class="site-search__name">${a.name}</span> <span class="site-search__price">KES ${a.priceKes.toLocaleString("en-KE")} sample</span></li>`,
+            )
+            .join("");
+        } else {
+          accWrap.hidden = true;
+          accList.innerHTML = "";
+        }
+      }
+
+      if (services && top) {
+        const monthly = Math.round((top.priceKes * 0.6) / 6);
+        if (mode === "mac") {
+          services.innerHTML = `
+            <li><a href="/trade-in">Trade in your Mac</a></li>
+            <li><a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo · about KES ${monthly.toLocaleString("en-KE")}/mo</a></li>
+            <li><a href="/mac/compare?ids=${encodeURIComponent(top.id)}">Compare MacBooks</a></li>`;
+        } else if (mode === "ipad") {
+          services.innerHTML = `
+            <li><a href="/trade-in">Trade in your iPad</a></li>
+            <li><a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo · about KES ${monthly.toLocaleString("en-KE")}/mo</a></li>
+            <li><a href="/ipad/compare?ids=${encodeURIComponent(top.id)}">Compare iPads</a></li>`;
+        } else if (mode === "watch") {
+          services.innerHTML = `
+            <li><a href="/trade-in">Trade in your Watch</a></li>
+            <li><a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo · about KES ${monthly.toLocaleString("en-KE")}/mo</a></li>
+            <li><a href="/watch/compare?ids=${encodeURIComponent(top.id)}">Compare Watches</a></li>`;
+        } else if (mode === "airpods") {
+          services.innerHTML = `
+            <li><a href="/trade-in">Trade in (owner discretion)</a></li>
+            <li><a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo · about KES ${monthly.toLocaleString("en-KE")}/mo</a></li>
+            <li><a href="/airpods/compare?ids=${encodeURIComponent(top.id)}">Compare AirPods</a></li>`;
+        } else if (mode === "tv-home") {
+          services.innerHTML = `
+            <li><a href="/trade-in">Trade in (owner discretion)</a></li>
+            <li><a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo · about KES ${monthly.toLocaleString("en-KE")}/mo</a></li>
+            <li><a href="/tv-home/compare?ids=${encodeURIComponent(top.id)}">Compare TV & Home</a></li>`;
+        } else if (mode === "accessories") {
+          services.innerHTML = `
+            <li><a href="/accessories/compare?group=${top.group || "pencil"}">Compare accessories</a></li>
+            <li><a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo · about KES ${monthly.toLocaleString("en-KE")}/mo</a></li>
+            <li><a href="/accessories/apple-pencil#finder">Which Pencil fits my iPad?</a></li>`;
+        } else {
+          services.innerHTML = `
+            <li><a href="/trade-in">Trade in your phone</a></li>
+            <li><a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo · about KES ${monthly.toLocaleString("en-KE")}/mo</a></li>
+            <li><a href="/iphone?family=${top.family}">Compare the iPhone ${top.family} family</a></li>`;
+        }
+      }
+      if (guides && top) {
+        if (mode === "mac") {
+          guides.innerHTML = `
+            <li>MacBook Air or Pro?</li>
+            <li>How much memory do I need?</li>
+            <li>${top.family === "Air" ? "Fanless everyday work" : "When Pro cooling matters"}</li>`;
+        } else if (mode === "ipad") {
+          guides.innerHTML = `
+            <li>iPad Pro, Air, mini or iPad?</li>
+            <li>Which Apple Pencil fits?</li>
+            <li>${top.family === "Pro" ? "When OLED and ProMotion matter" : "When Air is enough"}</li>`;
+        } else if (mode === "watch") {
+          guides.innerHTML = `
+            <li>Series or Ultra?</li>
+            <li>Which band fits my watch?</li>
+            <li>${top.family === "Ultra" ? "When Ultra brightness and depth matter" : "When Series is enough"}</li>`;
+        } else if (mode === "airpods") {
+          guides.innerHTML = `
+            <li>Pro, open-fit AirPods, or Max?</li>
+            <li>Which case and charger fit?</li>
+            <li>${top.family === "Max" ? "When over-ear beats in-ear" : top.family === "Pro" ? "When tips and ANC matter" : "When open-fit is enough"}</li>`;
+        } else if (mode === "tv-home") {
+          guides.innerHTML = `
+            <li>Apple TV 4K, HomePod, or mini?</li>
+            <li>Wi-Fi vs Ethernet Apple TV</li>
+            <li>${top.family === "Apple TV" ? "When you need a TV box, not a speaker" : top.family === "HomePod mini" ? "When compact beats full-size" : "When room-filling sound matters"}</li>`;
+        } else if (mode === "accessories") {
+          guides.innerHTML = `
+            <li><a href="/accessories/apple-pencil#finder">Which Pencil fits my iPad?</a></li>
+            <li><a href="/accessories/magic-keyboard#finder">Which Magic Keyboard fits my iPad?</a></li>
+            <li><a href="/accessories/magic-keyboard?looking=keyboard#finder">Which keyboard for my Mac?</a></li>`;
+        } else {
+          const usb = String(top.port).includes("USB-C");
+          guides.innerHTML = `
+            <li>${usb ? "USB-C charging on this model" : "Lightning charging on this model"}</li>
+            <li>${top.family >= 16 ? "iPhone 16 vs 15: what changed" : top.family <= 12 ? "Older iPhone battery and condition checklist" : "Compare generations before you buy"}</li>`;
+        }
+      }
+    }
+
+    document.querySelectorAll("[data-search-open]").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        openSearch(btn.getAttribute("data-search-query") || "");
+      });
+    });
+    closeBtn?.addEventListener("click", closeSearch);
+    dialog.addEventListener("click", (e) => { if (e.target === dialog) closeSearch(); });
+    input.addEventListener("input", () => render(input.value));
+    document.querySelectorAll("[data-search-suggest]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        input.value = btn.getAttribute("data-search-suggest") || "";
+        render(input.value);
+        input.focus();
+      });
+    });
+    window.addEventListener("keydown", (e) => {
+      const el = e.target instanceof HTMLElement ? e.target : null;
+      const typing = el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.isContentEditable || el.closest(".site-search"));
+      if (e.key === "/" && !typing && !dialog.open) { e.preventDefault(); openSearch(""); }
+      if (e.key === "Escape" && dialog.open) closeSearch();
+    });
+  }
+</script>
+
+<style>
+  .site-search {
+    width: min(100% - 1.5rem, 52rem);
+    max-height: min(88dvh, 40rem);
+    margin: 8vh auto auto;
+    padding: 0;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-lg);
+    background: var(--color-white);
+    color: var(--color-black);
+    box-shadow: 0 24px 64px rgb(0 0 0 / 0.28);
+  }
+  .site-search::backdrop { background: rgb(0 0 0 / 0.45); }
+  .site-search__panel { display: flex; flex-direction: column; max-height: inherit; }
+  .site-search__form {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.85rem 1rem; border-bottom: 1px solid var(--color-line);
+  }
+  .site-search__input {
+    flex: 1; border: none; background: transparent; font: inherit; font-size: 1.05rem; outline: none;
+  }
+  .site-search__kbd, .site-search__close {
+    font-size: 0.7rem; color: var(--color-grey); border: 1px solid var(--color-line);
+    border-radius: 0.3rem; padding: 0.2rem 0.4rem; background: var(--color-stage);
+  }
+  .site-search__close { cursor: pointer; font-family: inherit; }
+  .site-search__body { overflow: auto; padding: 1rem; }
+  .site-search__label {
+    margin: 0 0 0.65rem; font-size: var(--text-xs); font-weight: 600;
+    letter-spacing: 0.04em; text-transform: uppercase; color: var(--color-grey);
+  }
+  .site-search__popular ul { list-style: none; margin: 0 0 1rem; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .site-search__popular button, .site-search__gens a, .site-search__quick a {
+    display: inline-block; border: 1px solid var(--color-line); border-radius: 999px;
+    padding: 0.35rem 0.7rem; background: var(--color-stage); color: inherit; text-decoration: none;
+    font: inherit; font-size: var(--text-sm); cursor: pointer;
+  }
+  .site-search__layout { display: grid; gap: 1rem; }
+  .site-search__cols { display: grid; gap: 1.25rem; }
+  @media (min-width: 40rem) {
+    .site-search__cols { grid-template-columns: 1.4fr 0.9fr; }
+  }
+  .site-search__list, [data-search-list], [data-search-acc-list], [data-search-services], [data-search-guides] {
+    list-style: none; margin: 0; padding: 0;
+  }
+  [data-search-list] { display: grid; gap: 0.45rem; }
+  .site-search__hit {
+    display: grid; grid-template-columns: 3.5rem 1fr auto; gap: 0.65rem; align-items: center;
+    text-decoration: none; color: inherit; padding: 0.45rem; border-radius: 0.65rem;
+  }
+  .site-search__hit:hover { background: var(--color-stage); }
+  .site-search__thumb {
+    width: 3.5rem; height: 3.5rem; border-radius: 0.5rem; background: #f5f5f7;
+    display: grid; place-items: center; overflow: hidden;
+  }
+  .site-search__thumb img { width: 90%; height: auto; object-fit: contain; mix-blend-mode: multiply; }
+  .site-search__name { display: block; font-weight: 600; font-size: var(--text-sm); }
+  .site-search__sub { font-size: 0.7rem; color: var(--color-stock, #34c759); }
+  .site-search__price { font-size: var(--text-sm); white-space: nowrap; }
+  .site-search__future {
+    margin-bottom: 1rem; padding: 0.85rem; border-radius: 0.75rem;
+    background: var(--color-stage); font-size: var(--text-sm);
+  }
+  .site-search__muted { color: var(--color-grey); margin: 0.5rem 0 0; }
+  .site-search__empty { text-align: center; padding: 1.5rem 0; }
+  [data-search-services] a, [data-search-guides] li, [data-search-acc-list] li {
+    display: block; font-size: var(--text-sm); margin-bottom: 0.45rem; color: inherit;
+  }
+</style>

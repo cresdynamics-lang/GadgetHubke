@@ -1,0 +1,893 @@
+---
+/**
+ * iPad PDP — sticky viewer + buy panel + feel hooks + specs/FAQ.
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import IpadStage from "../../components/ipad/IpadStage.astro";
+import IpadFeel from "../../components/ipad/IpadFeel.astro";
+import IpadLipaCalc from "../../components/ipad/IpadLipaCalc.astro";
+import IpadTradeIn from "../../components/ipad/IpadTradeIn.astro";
+import {
+  ipadModels,
+  getIpadModel,
+  getIpadImage,
+  defaultIpadColour,
+  ipadViewerTabs,
+  relatedIpadModels,
+  formatKes,
+  ipadConfigurePrice,
+  lipaMonthly,
+  ipadConfig,
+  colourHex,
+  colourLabel,
+  isLightColour,
+  accessoriesForIpad,
+  ipadBuyingNotes,
+  ipadFaq,
+  pencilCatalog,
+  keyboardCatalog,
+  fits,
+} from "../../lib/ipad";
+import { whatsappUrl } from "../../lib/site";
+
+export function getStaticPaths() {
+  return ipadModels.map((m) => ({ params: { model: m.id } }));
+}
+
+const model = getIpadModel(Astro.params.model!);
+if (!model) return Astro.redirect("/ipad");
+
+const colour = defaultIpadColour(model);
+const tabs = ipadViewerTabs(model, colour);
+const img = tabs[0] || getIpadImage(model.id, colour, "product", model.name);
+const price = ipadConfigurePrice(model, model.storageOptions[0]);
+const lipa = lipaMonthly(price.kes);
+const notes = ipadBuyingNotes(model);
+const faq = ipadFaq();
+const fitsList = accessoriesForIpad(model).filter((a) => a.category !== "cross");
+const related = relatedIpadModels(model, ipadModels);
+const thickness = ipadConfig.thicknessMm[model.thicknessKey];
+const pencils = pencilCatalog().filter((a) => fits(model, a));
+const keyboards = keyboardCatalog().filter((a) => fits(model, a));
+const siblings = ipadModels.filter(
+  (m) => m.family === model.family && m.chipGen === model.chipGen && m.id !== model.id,
+);
+const colourViews = Object.fromEntries(model.colours.map((c) => [c, ipadViewerTabs(model, c)]));
+const wa = whatsappUrl(
+  `Hi Gadget Hub, I'm interested in the ${model.name}, ${model.storageOptions[0]}, Wi-Fi, ${colourLabel(colour)}.`,
+);
+---
+
+<BaseLayout title={`${model.name} - GadgetHub`} description={model.tagline}>
+  <article class="ipdp" data-ipdp>
+    <div class="container">
+      <nav class="ipdp__crumb" aria-label="Breadcrumb">
+        <a href="/">Home</a> / <a href="/ipad">iPad</a> / <a href={`/ipad/shop?family=${model.family}`}>{model.family}</a> / {model.name}
+      </nav>
+
+      <div class="ipdp__grid">
+        <div class="ipdp__viewer">
+          <div class="ipdp__stage" data-viewer-stage data-orient="portrait">
+            <img
+              data-viewer-img
+              src={img.src}
+              alt={img.alt}
+              width="1400"
+              height="1400"
+              fetchpriority="high"
+              loading="eager"
+              decoding="async"
+            />
+          </div>
+          <div class="ipdp__tabs" role="tablist" aria-label="Views">
+            {
+              tabs.map((t, i) => (
+                <button
+                  type="button"
+                  role="tab"
+                  class:list={{ "is-active": i === 0 }}
+                  data-view-tab={t.id}
+                  data-src={t.src}
+                  data-alt={t.alt}
+                  aria-selected={i === 0}
+                >
+                  {t.label}
+                </button>
+              ))
+            }
+          </div>
+          <div class="ipdp__viewer-actions">
+            <button type="button" class="btn btn--secondary btn--sm" data-orient-toggle>Rotate</button>
+            <button type="button" class="btn btn--secondary btn--sm" data-lightbox-open>Full screen</button>
+          </div>
+          {
+            model.overviewOnly ? (
+              <p class="ipdp__note">Full colour store shots coming soon — showing Apple’s colour overview. Colour names below as text.</p>
+            ) : null
+          }
+          {
+            model.checkFinalSpecs ? (
+              <p class="ipdp__note ipdp__note--warn">Check final specs — verify on apple.com before launch.</p>
+            ) : null
+          }
+
+          <div class="ipdp__scale" aria-label="Size in your hands">
+            <h3>See it in your hands</h3>
+            <svg viewBox="0 0 320 160" role="img" aria-label={`About ${model.weightG} g, about ${thickness} mm thick`}>
+              <rect x="20" y="20" width="120" height="170" fill="none" stroke="#d2d2d7" stroke-width="2" transform="scale(1 0.55)" />
+              <text x="40" y="100" font-size="10" fill="#6e6e73">A4 sheet</text>
+              <rect x="170" y="35" width="90" height="120" rx="10" fill="#1d1d1f" />
+              <text x="168" y="175" font-size="11" fill="#1d1d1f">{model.screenInches}″ · ~{thickness} mm · {model.weightG} g</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="ipdp__buy">
+          <div class="ipdp__pills">
+            <span class="ipdp__pill">{model.year}</span>
+            {model.isNew ? <span class="ipdp__pill">New</span> : null}
+            {model.appleIntelligence ? <span class="ipdp__pill">Apple Intelligence</span> : <span class="ipdp__pill">No Apple Intelligence</span>}
+            {model.checkFinalSpecs ? <span class="ipdp__pill">Check final specs</span> : null}
+          </div>
+          <h1>{model.name}</h1>
+          <p class="ipdp__tagline">{model.tagline}</p>
+          <p class="ipdp__suits">{model.whoItSuits}</p>
+
+          {
+            siblings.length ? (
+              <div class="ipdp__size-toggle">
+                <p class="ipdp__cfg-label">Size</p>
+                <div class="ipdp__opts">
+                  <a class="is-active" href={`/ipad/${model.id}`}>{model.screenInches}″</a>
+                  {siblings.map((s) => (
+                    <a href={`/ipad/${s.id}`}>{s.screenInches}″</a>
+                  ))}
+                </div>
+              </div>
+            ) : null
+          }
+
+          <p class="ipdp__colour-label">Colour — <strong data-colour-name>{colourLabel(colour)}</strong></p>
+          {
+            model.overviewOnly ? (
+              <p class="ipdp__colours-text">{model.colours.map(colourLabel).join(", ")}</p>
+            ) : (
+              <div class="ipdp__swatches" role="group" aria-label="Colours">
+                {model.colours.map((c) => (
+                  <button
+                    type="button"
+                    class:list={["ipdp__dot", { "is-active": c === colour, "ipdp__dot--light": isLightColour(c) }]}
+                    style={`--swatch: ${colourHex(c)}`}
+                    aria-label={colourLabel(c)}
+                    data-ipad-swatch
+                    data-colour={c}
+                  />
+                ))}
+              </div>
+            )
+          }
+
+          <p class="ipdp__cfg-label">Connectivity</p>
+          <div class="ipdp__opts" data-ipad-conn>
+            <button type="button" class="is-active" data-cellular="0">Wi-Fi</button>
+            {model.cellular ? <button type="button" data-cellular="1">Wi-Fi + Cellular · +{formatKes(ipadConfig.cellularStepKes)}</button> : null}
+          </div>
+
+          <p class="ipdp__cfg-label">Storage</p>
+          <div class="ipdp__opts" data-ipad-storage>
+            {
+              model.storageOptions.map((s, i) => (
+                <button type="button" class:list={{ "is-active": i === 0 }} data-storage={s} data-step={i}>
+                  {s}{i > 0 ? ` · +${formatKes(i * ipadConfig.storageStepKes)}` : ""}
+                </button>
+              ))
+            }
+          </div>
+
+          {
+            model.display.nanoTextureOptional ? (
+              <>
+                <p class="ipdp__cfg-label">Glass</p>
+                <label class="ipdp__check">
+                  <input type="checkbox" data-nano />
+                  Nano-texture (+{formatKes(ipadConfig.nanoTextureStepKes)} on 1 TB / 2 TB)
+                </label>
+              </>
+            ) : null
+          }
+
+          {
+            pencils.length || keyboards.length ? (
+              <div class="ipdp__addons">
+                <p class="ipdp__cfg-label">Add-ons</p>
+                {pencils.map((p) => (
+                  <label class="ipdp__check">
+                    <input type="checkbox" data-addon data-addon-id={p.id} data-addon-name={p.name} data-addon-kes={p.priceKes} />
+                    {p.name} · {formatKes(p.priceKes)}
+                  </label>
+                ))}
+                {keyboards.map((k) => (
+                  <label class="ipdp__check">
+                    <input type="checkbox" data-addon data-addon-id={k.id} data-addon-name={k.name} data-addon-kes={k.priceKes} />
+                    {k.name} · {formatKes(k.priceKes)}
+                  </label>
+                ))}
+              </div>
+            ) : null
+          }
+
+          <p class="ipdp__price">
+            <span data-ipad-price>{formatKes(price.kes)}</span>
+            <span class="ipdp__sample">Sample price</span>
+          </p>
+          <p class="ipdp__lipa" data-ipad-lipa>
+            or {formatKes(lipa.monthlyKes)} a month for {lipa.months} months after a {ipadConfig.lipa.depositDefaultPct}% deposit
+          </p>
+          <p class="ipdp__stock"><span class="ipdp__pulse" /> In stock (sample) · Collect today in Nairobi</p>
+
+          <div class="ipdp__actions">
+            <button
+              type="button"
+              class="btn btn--primary"
+              data-add-bag
+              data-id={model.id}
+              data-name={model.name}
+              data-chip={model.chip}
+              data-size={`${model.screenInches}″`}
+              data-storage={model.storageOptions[0]}
+              data-colour={colourLabel(colour)}
+              data-connectivity="Wi-Fi"
+              data-kes={price.kes}
+              data-image={img.src}
+            >
+              Add to bag
+            </button>
+            <a class="btn btn--secondary" href={wa} target="_blank" rel="noopener noreferrer" data-wa-link>
+              Ask on WhatsApp
+            </a>
+          </div>
+          <p class="ipdp__fine">{ipadConfig.samplePriceDisclaimer}</p>
+
+          <ul class="ipdp__highlights">
+            <li><strong>{model.display.diagonal}″</strong><span>Display</span></li>
+            <li><strong>{model.chip}</strong><span>Chip</span></li>
+            <li><strong>{model.batteryHours} h</strong><span>Battery</span></li>
+            <li><strong>{model.weightG} g</strong><span>Weight</span></li>
+          </ul>
+
+          <div class="ipdp__why">
+            <h2>Why people choose this one</h2>
+            <ul>
+              {model.whyChoose.map((line) => <li>{line}</li>)}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="container ipdp__block" id="feel-thin" data-feel="thin">
+      <h2>Thin enough to forget.</h2>
+      <p>About {thickness} mm. Owner: confirm before launch. {model.weightG} g Wi-Fi.</p>
+      {
+        (() => {
+          const side = getIpadImage(model.id, colour, "design", model.name);
+          return !side.fallback ? (
+            <IpadStage src={side.src} srcWebp={side.srcWebp} alt={side.alt} width={900} height={900} />
+          ) : null;
+        })()
+      }
+    </section>
+
+    <section class="ipdp__feel-black" id="feel-display" data-feel="display">
+      <div class="container">
+        <h2>The screen is the reason.</h2>
+        <p class="ipdp__muted">Illustration — not a measurement.</p>
+        {
+          (() => {
+            const d = getIpadImage(model.id, colour, "display", model.name);
+            return (
+              <div class="ipdp__display">
+                <img data-display-img src={d.src} alt={d.alt} width="1200" height="900" loading="lazy" />
+                <label>
+                  Sunlight
+                  <input type="range" min="0" max="100" value="55" data-nits />
+                </label>
+                <p data-nits-label>
+                  {model.display.peakHdrNits
+                    ? `${model.display.brightnessNits} nits full-screen, ${model.display.peakHdrNits} peak HDR`
+                    : `${model.display.brightnessNits} nits`}
+                </p>
+              </div>
+            );
+          })()
+        }
+      </div>
+    </section>
+
+    <section class="container ipdp__block" id="feel-pencil" data-feel="pencil">
+      <h2>Draw something.</h2>
+      <p>Simple canvas — try the Pencil feel with mouse or finger.</p>
+      <div class="ipdp__canvas-wrap">
+        <canvas data-draw-canvas width="900" height="520" aria-label="Drawing canvas"></canvas>
+        <div class="ipdp__canvas-tools">
+          <button type="button" data-tool="pen" class="is-active">Pen</button>
+          <button type="button" data-tool="highlighter">Highlighter</button>
+          <button type="button" data-tool="eraser">Eraser</button>
+          <label>Size <input type="range" min="2" max="28" value="6" data-brush /></label>
+          <button type="button" data-clear-canvas>Clear</button>
+        </div>
+      </div>
+      <p class="ipdp__fine">Compatible Pencils: {model.pencils.join(", ")}.</p>
+    </section>
+
+    <IpadFeel model={model} />
+
+    <section class="container ipdp__block">
+      <h2>Buying notes for this model</h2>
+      <ul class="ipdp__notes">
+        {notes.map((n) => (
+          <li>
+            <h3>{n.title}</h3>
+            <p>{n.body}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="container ipdp__block">
+      <h2>Full specifications</h2>
+      <p class="ipdp__fine">{ipadConfig.appleSpecsFootnote}</p>
+      <details class="ipdp__acc" open>
+        <summary>Chip and performance</summary>
+        <table>
+          <tr><th>Chip</th><td>{model.chip}</td></tr>
+          <tr><th>CPU</th><td>{model.cpuCores}</td></tr>
+          <tr><th>GPU</th><td>{model.gpuCores}</td></tr>
+          <tr><th>Apple Intelligence</th><td>{model.appleIntelligence ? "Yes" : "No"}</td></tr>
+        </table>
+      </details>
+      <details class="ipdp__acc">
+        <summary>Memory and storage</summary>
+        <table>
+          <tr><th>Memory</th><td>{model.memoryGb.join(" / ")} GB</td></tr>
+          <tr><th>Storage</th><td>{model.storageOptions.join(" / ")}</td></tr>
+        </table>
+      </details>
+      <details class="ipdp__acc">
+        <summary>Display</summary>
+        <table>
+          <tr><th>Size</th><td>{model.display.diagonal}″</td></tr>
+          <tr><th>Resolution</th><td>{model.display.resolution} ({model.display.ppi} ppi)</td></tr>
+          <tr><th>Panel</th><td>{model.display.panel}</td></tr>
+          <tr><th>Brightness</th><td>{model.display.brightnessNits} nits{model.display.peakHdrNits ? ` / ${model.display.peakHdrNits} peak HDR` : ""}</td></tr>
+          <tr><th>Refresh</th><td>{model.display.refreshHz}Hz{model.display.promotion ? " ProMotion" : ""}</td></tr>
+        </table>
+      </details>
+      <details class="ipdp__acc">
+        <summary>Apple Pencil and keyboard support</summary>
+        <table>
+          <tr><th>Pencil</th><td>{model.pencils.join(", ")}</td></tr>
+          <tr><th>Keyboard</th><td>{model.keyboards.join(", ")}</td></tr>
+        </table>
+      </details>
+      <details class="ipdp__acc">
+        <summary>Camera and audio</summary>
+        <table>
+          <tr><th>Front</th><td>{model.frontCamera}</td></tr>
+          <tr><th>Rear</th><td>{model.rearCamera}</td></tr>
+          <tr><th>Biometrics</th><td>{model.biometrics}</td></tr>
+        </table>
+      </details>
+      <details class="ipdp__acc">
+        <summary>Ports and connectivity</summary>
+        <table>
+          <tr><th>Ports</th><td>{model.ports.join(", ")}</td></tr>
+          <tr><th>Wi-Fi</th><td>{model.wifi}</td></tr>
+          <tr><th>Bluetooth</th><td>{model.bluetooth}</td></tr>
+          <tr><th>Cellular</th><td>{model.cellular ? "Available" : "No"}</td></tr>
+        </table>
+      </details>
+      <details class="ipdp__acc">
+        <summary>Design and weight</summary>
+        <table>
+          <tr><th>Weight (Wi-Fi)</th><td>{model.weightG} g</td></tr>
+          <tr><th>Thickness (about)</th><td>{thickness} mm</td></tr>
+          <tr><th>Colours</th><td>{model.colours.map(colourLabel).join(", ")}</td></tr>
+        </table>
+      </details>
+    </section>
+
+    {
+      related.length ? (
+        <section class="container ipdp__block">
+          <h2>Compare with</h2>
+          <div class="ipdp__related">
+            {related.map((r) => {
+              const c = defaultIpadColour(r);
+              const rimg = getIpadImage(r.id, c, "product", r.name);
+              return (
+                <a href={`/ipad/compare?ids=${encodeURIComponent(`${model.id},${r.id}`)}`}>
+                  <IpadStage src={rimg.src} srcWebp={rimg.srcWebp} alt={rimg.alt} width={560} height={560} />
+                  <span>{r.name}</span>
+                  <em>From {formatKes(r.basePriceKes)}</em>
+                  <b>Compare with {r.name.replace("iPad ", "")}</b>
+                </a>
+              );
+            })}
+          </div>
+        </section>
+      ) : null
+    }
+
+    {
+      fitsList.length ? (
+        <section class="container ipdp__block">
+          <h2>Fits this iPad</h2>
+          <ul class="ipdp__fits">
+            {fitsList.map((a) => (
+              <li>
+                <h3>{a.name}</h3>
+                <p>{a.blurb}</p>
+                <p>{a.priceKes > 0 ? `${formatKes(a.priceKes)} sample` : "See category"}</p>
+                <a href={a.href}>View</a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null
+    }
+
+    <section class="container ipdp__block">
+      <h2>Questions people ask</h2>
+      {faq.map((item) => (
+        <details class="ipdp__acc">
+          <summary>{item.q}</summary>
+          <p>{item.a}</p>
+        </details>
+      ))}
+    </section>
+
+    <section class="container ipdp__tools">
+      <IpadLipaCalc modelId={model.id} />
+      <IpadTradeIn modelId={model.id} />
+    </section>
+  </article>
+
+  <dialog class="ipdp-lb" data-lightbox aria-label="Full screen photo">
+    <button type="button" data-lb-close aria-label="Close">Close</button>
+    <button type="button" data-lb-prev aria-label="Previous">‹</button>
+    <img data-lb-img src={img.src} alt={img.alt} />
+    <button type="button" data-lb-next aria-label="Next">›</button>
+  </dialog>
+</BaseLayout>
+
+<script define:vars={{
+  base: model.basePriceKes,
+  storStep: ipadConfig.storageStepKes,
+  cellStep: ipadConfig.cellularStepKes,
+  nanoStep: ipadConfig.nanoTextureStepKes,
+  depositPct: ipadConfig.lipa.depositDefaultPct,
+  months: ipadConfig.lipa.monthsDefault,
+  waBase: `https://wa.me/${ipadConfig.whatsapp}?text=`,
+  modelName: model.name,
+  chip: model.chip,
+  colourViews,
+  initialColour: colour,
+  nanoAllowed: Boolean(model.display.nanoTextureOptional),
+}}>
+  const state = { storage: 0, cellular: 0, nano: false, colour: initialColour, kes: base, tabIndex: 0, addons: 0 };
+  const priceEl = document.querySelector("[data-ipad-price]");
+  const lipaEl = document.querySelector("[data-ipad-lipa]");
+  const viewerImg = document.querySelector("[data-viewer-img]");
+  const stage = document.querySelector("[data-viewer-stage]");
+  const colourName = document.querySelector("[data-colour-name]");
+  const bag = document.querySelector("[data-add-bag]");
+  const wa = document.querySelector("[data-wa-link]");
+  const tabsRoot = document.querySelector(".ipdp__tabs");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function currentTabs() {
+    return colourViews[state.colour] || colourViews[initialColour] || [];
+  }
+
+  function setViewer(src, alt, animate) {
+    if (!(viewerImg instanceof HTMLImageElement)) return;
+    const apply = () => {
+      viewerImg.src = src;
+      if (alt) viewerImg.alt = alt;
+      viewerImg.style.opacity = "1";
+      viewerImg.style.transform = stage?.getAttribute("data-orient") === "landscape" ? "rotate(90deg) scale(1)" : "scale(1)";
+    };
+    if (animate && !reduce) {
+      viewerImg.style.opacity = "0";
+      const pre = new Image();
+      pre.onload = () => setTimeout(apply, 170);
+      pre.src = src;
+    } else apply();
+  }
+
+  function rebuildTabs() {
+    const tabs = currentTabs();
+    if (!tabsRoot) return;
+    tabsRoot.innerHTML = tabs
+      .map(
+        (t, i) =>
+          `<button type="button" role="tab" class="${i === 0 ? "is-active" : ""}" data-view-tab="${t.id}" data-src="${t.src}" data-alt="${t.alt}" aria-selected="${i === 0}">${t.label}</button>`,
+      )
+      .join("");
+    wireTabs();
+    if (tabs[0]) {
+      state.tabIndex = 0;
+      setViewer(tabs[0].src, tabs[0].alt, true);
+      bag?.setAttribute("data-image", tabs[0].src);
+    }
+  }
+
+  function wireTabs() {
+    tabsRoot?.querySelectorAll("[data-view-tab]").forEach((btn, i) => {
+      btn.addEventListener("click", () => {
+        tabsRoot.querySelectorAll("[data-view-tab]").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        state.tabIndex = i;
+        setViewer(btn.getAttribute("data-src") || "", btn.getAttribute("data-alt") || "", true);
+        bag?.setAttribute("data-image", btn.getAttribute("data-src") || "");
+      });
+    });
+  }
+  wireTabs();
+
+  function addonTotal() {
+    let sum = 0;
+    const names = [];
+    document.querySelectorAll("[data-addon]:checked").forEach((el) => {
+      if (!(el instanceof HTMLInputElement)) return;
+      sum += Number(el.getAttribute("data-addon-kes") || 0);
+      names.push(el.getAttribute("data-addon-name") || "");
+    });
+    state.addons = sum;
+    bag?.setAttribute("data-extras", names.filter(Boolean).join(", "));
+  }
+
+  function refresh() {
+    const storBtn = document.querySelector("[data-ipad-storage] .is-active");
+    const storLabel = storBtn?.getAttribute("data-storage") || "";
+    let kes = base + state.storage * storStep + state.cellular * cellStep + state.addons;
+    if (state.nano && nanoAllowed && /1 TB|2 TB/i.test(storLabel)) kes += nanoStep;
+    state.kes = kes;
+    if (priceEl) priceEl.textContent = `KES ${kes.toLocaleString("en-KE")}`;
+    const deposit = Math.round((kes * depositPct) / 100);
+    const monthly = Math.round((kes - deposit) / months);
+    if (lipaEl) lipaEl.textContent = `or KES ${monthly.toLocaleString("en-KE")} a month for ${months} months after a ${depositPct}% deposit`;
+    if (bag instanceof HTMLElement) {
+      bag.setAttribute("data-kes", String(kes));
+      if (storBtn) bag.setAttribute("data-storage", storLabel);
+      bag.setAttribute("data-connectivity", state.cellular ? "Wi-Fi + Cellular" : "Wi-Fi");
+    }
+    if (wa instanceof HTMLAnchorElement) {
+      const stor = bag?.getAttribute("data-storage") || "";
+      const col = bag?.getAttribute("data-colour") || "";
+      const conn = bag?.getAttribute("data-connectivity") || "Wi-Fi";
+      const extras = bag?.getAttribute("data-extras") || "";
+      wa.href = `${waBase}${encodeURIComponent(`Hi Gadget Hub, I'm interested in the ${modelName}, ${chip}, ${stor}, ${conn}, ${col}${extras ? `, add-ons: ${extras}` : ""}.`)}`;
+    }
+  }
+
+  document.querySelectorAll("[data-ipad-swatch]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-ipad-swatch]").forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      state.colour = btn.getAttribute("data-colour") || initialColour;
+      const label = btn.getAttribute("aria-label") || "";
+      if (colourName) colourName.textContent = label;
+      bag?.setAttribute("data-colour", label);
+      rebuildTabs();
+      refresh();
+    });
+  });
+
+  document.querySelectorAll("[data-ipad-storage] button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-ipad-storage] button").forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      state.storage = Number(btn.getAttribute("data-step") || 0);
+      refresh();
+    });
+  });
+
+  document.querySelectorAll("[data-ipad-conn] button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-ipad-conn] button").forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      state.cellular = Number(btn.getAttribute("data-cellular") || 0);
+      refresh();
+    });
+  });
+
+  document.querySelector("[data-nano]")?.addEventListener("change", (e) => {
+    state.nano = e.target instanceof HTMLInputElement ? e.target.checked : false;
+    refresh();
+  });
+
+  document.querySelectorAll("[data-addon]").forEach((el) => {
+    el.addEventListener("change", () => {
+      addonTotal();
+      refresh();
+    });
+  });
+
+  bag?.addEventListener("click", () => {
+    window.dispatchEvent(
+      new CustomEvent("gh:bag-add", {
+        detail: {
+          id: bag.getAttribute("data-id"),
+          name: bag.getAttribute("data-name"),
+          chip: bag.getAttribute("data-chip"),
+          size: bag.getAttribute("data-size"),
+          storage: bag.getAttribute("data-storage"),
+          colour: bag.getAttribute("data-colour"),
+          connectivity: bag.getAttribute("data-connectivity"),
+          extras: bag.getAttribute("data-extras"),
+          kes: Number(bag.getAttribute("data-kes") || 0),
+          image: bag.getAttribute("data-image"),
+        },
+      }),
+    );
+  });
+
+  // Orientation
+  document.querySelector("[data-orient-toggle]")?.addEventListener("click", () => {
+    if (!(stage instanceof HTMLElement) || !(viewerImg instanceof HTMLElement)) return;
+    const next = stage.getAttribute("data-orient") === "portrait" ? "landscape" : "portrait";
+    stage.setAttribute("data-orient", next);
+    viewerImg.style.transition = reduce ? "none" : "transform 400ms ease";
+    viewerImg.style.transform = next === "landscape" ? "rotate(90deg) scale(0.86)" : "rotate(0deg) scale(1)";
+  });
+
+  // Zoom 2.1×
+  if (stage instanceof HTMLElement && viewerImg instanceof HTMLImageElement) {
+    stage.addEventListener("mousemove", (e) => {
+      if (window.matchMedia("(max-width: 63.99rem)").matches || reduce) return;
+      if (stage.getAttribute("data-orient") === "landscape") return;
+      const rect = stage.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      viewerImg.style.transformOrigin = `${x}% ${y}%`;
+      viewerImg.style.transform = "scale(2.1)";
+    });
+    stage.addEventListener("mouseleave", () => {
+      if (stage.getAttribute("data-orient") === "landscape") {
+        viewerImg.style.transform = "rotate(90deg) scale(0.86)";
+      } else viewerImg.style.transform = "scale(1)";
+    });
+  }
+
+  // Lightbox
+  const lb = document.querySelector("[data-lightbox]");
+  const lbImg = document.querySelector("[data-lb-img]");
+  function showLb(i) {
+    const tabs = currentTabs();
+    state.tabIndex = (i + tabs.length) % tabs.length;
+    const t = tabs[state.tabIndex];
+    if (lbImg instanceof HTMLImageElement && t) {
+      lbImg.src = t.src;
+      lbImg.alt = t.alt;
+    }
+  }
+  document.querySelector("[data-lightbox-open]")?.addEventListener("click", () => {
+    if (lb instanceof HTMLDialogElement) {
+      showLb(state.tabIndex);
+      lb.showModal();
+    }
+  });
+  document.querySelector("[data-lb-close]")?.addEventListener("click", () => lb?.close());
+  document.querySelector("[data-lb-prev]")?.addEventListener("click", () => showLb(state.tabIndex - 1));
+  document.querySelector("[data-lb-next]")?.addEventListener("click", () => showLb(state.tabIndex + 1));
+
+  // Display nits
+  const displayImg = document.querySelector("[data-display-img]");
+  document.querySelector("[data-nits]")?.addEventListener("input", (e) => {
+    const v = e.target instanceof HTMLInputElement ? Number(e.target.value) : 55;
+    if (displayImg instanceof HTMLElement) {
+      displayImg.style.filter = `brightness(${0.55 + v / 120})`;
+    }
+  });
+
+  // Drawing canvas
+  const canvas = document.querySelector("[data-draw-canvas]");
+  if (canvas instanceof HTMLCanvasElement) {
+    const ctx = canvas.getContext("2d");
+    let drawing = false;
+    let tool = "pen";
+    let size = 6;
+    let last = null;
+    const color = () => (tool === "eraser" ? "#ffffff" : tool === "highlighter" ? "rgba(255,214,10,0.35)" : "#1d1d1f");
+    function pos(e) {
+      const r = canvas.getBoundingClientRect();
+      const t = "touches" in e ? e.touches[0] : e;
+      return { x: ((t.clientX - r.left) / r.width) * canvas.width, y: ((t.clientY - r.top) / r.height) * canvas.height };
+    }
+    function stroke(e) {
+      if (!drawing || !ctx) return;
+      const p = pos(e);
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = color();
+      ctx.lineWidth = tool === "highlighter" ? size * 2.2 : size;
+      ctx.globalCompositeOperation = tool === "eraser" ? "destination-out" : "source-over";
+      ctx.beginPath();
+      if (last) ctx.moveTo(last.x, last.y);
+      else ctx.moveTo(p.x, p.y);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+      last = p;
+    }
+    canvas.addEventListener("pointerdown", (e) => {
+      drawing = true;
+      last = null;
+      stroke(e);
+    });
+    canvas.addEventListener("pointermove", stroke);
+    window.addEventListener("pointerup", () => {
+      drawing = false;
+      last = null;
+    });
+    document.querySelectorAll("[data-tool]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("[data-tool]").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        tool = btn.getAttribute("data-tool") || "pen";
+      });
+    });
+    document.querySelector("[data-brush]")?.addEventListener("input", (e) => {
+      size = e.target instanceof HTMLInputElement ? Number(e.target.value) : 6;
+    });
+    document.querySelector("[data-clear-canvas]")?.addEventListener("click", () => {
+      ctx?.clearRect(0, 0, canvas.width, canvas.height);
+    });
+  }
+</script>
+
+<style>
+  .ipdp { padding-block: var(--space-8) 0; }
+  .ipdp__crumb { font-size: var(--text-sm); color: var(--color-fg-muted); margin-bottom: 1rem; }
+  .ipdp__crumb a { color: inherit; }
+  .ipdp__grid { display: grid; gap: 2rem; }
+  @media (min-width: 64rem) {
+    .ipdp__grid { grid-template-columns: 1.05fr 0.95fr; align-items: start; }
+    .ipdp__viewer { position: sticky; top: calc(var(--header-height) + 1rem); }
+  }
+  .ipdp__stage {
+    background: #f5f5f7;
+    border-radius: var(--ipad-radius);
+    aspect-ratio: 1;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    cursor: zoom-in;
+  }
+  .ipdp__stage img {
+    width: 82%;
+    height: auto;
+    max-height: 90%;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    transition: opacity 170ms ease, transform 170ms ease;
+  }
+  .ipdp__tabs { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.85rem; }
+  .ipdp__tabs button {
+    border: 1px solid var(--color-border); background: var(--color-bg); border-radius: 999px;
+    padding: 0.35rem 0.7rem; font: inherit; font-size: var(--text-sm); cursor: pointer;
+  }
+  .ipdp__tabs button.is-active { background: #000; color: #fff; }
+  .ipdp__viewer-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+  .ipdp__scale { margin-top: 1.25rem; padding: 1rem; border: 1px solid var(--color-border); border-radius: 1rem; }
+  .ipdp__scale h3 { margin: 0 0 0.5rem; font-size: 1rem; }
+  .ipdp__note { margin-top: 0.75rem; font-size: var(--text-sm); color: var(--color-fg-muted); }
+  .ipdp__note--warn { color: var(--color-fg); }
+  .ipdp__pills { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.75rem; }
+  .ipdp__pill {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em;
+    border: 1px solid var(--color-border); border-radius: 999px; padding: 0.2rem 0.55rem;
+  }
+  .ipdp h1 { margin: 0 0 0.35rem; font-size: clamp(1.75rem, 3vw, 2.5rem); letter-spacing: -0.03em; }
+  .ipdp__tagline { margin: 0; font-weight: 600; }
+  .ipdp__suits { margin: 0.35rem 0 1.25rem; color: var(--color-fg-muted); font-size: var(--text-sm); }
+  .ipdp__colour-label, .ipdp__cfg-label { margin: 1rem 0 0.45rem; font-size: var(--text-sm); font-weight: 600; }
+  .ipdp__colours-text { margin: 0; font-size: var(--text-sm); color: var(--color-fg-muted); }
+  .ipdp__swatches { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  .ipdp__dot {
+    width: 1.75rem; height: 1.75rem; border-radius: 50%; border: none;
+    background: var(--swatch); cursor: pointer; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12);
+  }
+  .ipdp__dot.is-active { outline: 2px solid var(--color-fg); outline-offset: 2px; }
+  .ipdp__dot--light { box-shadow: inset 0 0 0 1px #d2d2d7; }
+  .ipdp__opts { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .ipdp__opts button, .ipdp__opts a {
+    border: 1px solid var(--color-border); background: var(--color-bg); border-radius: 0.65rem;
+    padding: 0.55rem 0.75rem; font: inherit; font-size: var(--text-sm); cursor: pointer;
+    text-decoration: none; color: inherit;
+  }
+  .ipdp__opts button.is-active, .ipdp__opts a.is-active { background: #000; color: #fff; border-color: #000; }
+  .ipdp__check { display: flex; gap: 0.5rem; align-items: flex-start; font-size: var(--text-sm); margin: 0.35rem 0; }
+  .ipdp__price { margin: 1.25rem 0 0.25rem; font-size: 1.75rem; font-weight: 700; letter-spacing: -0.03em; }
+  .ipdp__sample { display: block; font-size: 0.75rem; font-weight: 400; color: var(--color-fg-muted); }
+  .ipdp__lipa { margin: 0; font-size: var(--text-sm); color: var(--color-fg-muted); }
+  .ipdp__stock { display: flex; align-items: center; gap: 0.45rem; margin: 0.85rem 0; font-size: var(--text-sm); color: var(--color-stock); }
+  .ipdp__pulse { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--color-stock); animation: pulse 1.6s ease infinite; }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgb(52 199 89 / 0.45); }
+    50% { box-shadow: 0 0 0 6px rgb(52 199 89 / 0); }
+  }
+  .ipdp__actions { display: flex; flex-wrap: wrap; gap: 0.65rem; margin: 1rem 0; }
+  .ipdp__fine { font-size: 0.75rem; color: var(--color-fg-muted); }
+  .ipdp__highlights {
+    list-style: none; margin: 1.5rem 0 0; padding: 0;
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem;
+  }
+  .ipdp__highlights li { background: var(--color-bg-subtle); border-radius: 0.85rem; padding: 0.75rem; }
+  .ipdp__highlights strong { display: block; }
+  .ipdp__highlights span { font-size: 0.75rem; color: var(--color-fg-muted); }
+  .ipdp__why { margin-top: 1.75rem; }
+  .ipdp__why h2 { margin: 0 0 0.5rem; font-size: 1.1rem; }
+  .ipdp__why ul { margin: 0; padding-left: 1.1rem; color: var(--color-fg-muted); }
+  .ipdp__block { padding-block: var(--ipad-section-gap); }
+  .ipdp__block h2 { margin: 0 0 1rem; letter-spacing: -0.02em; }
+  .ipdp__feel-black {
+    background: #000; color: #fff; padding-block: var(--ipad-section-gap);
+  }
+  .ipdp__feel-black h2 { margin: 0 0 0.5rem; }
+  .ipdp__muted { color: #a1a1a6; }
+  .ipdp__display img { width: 100%; max-width: 52rem; height: auto; border-radius: 1rem; }
+  .ipdp__display label { display: grid; gap: 0.35rem; margin-top: 1rem; max-width: 20rem; }
+  .ipdp__canvas-wrap { border: 1px solid var(--color-border); border-radius: var(--ipad-radius); overflow: hidden; }
+  canvas[data-draw-canvas] { width: 100%; height: auto; display: block; background: #fff; touch-action: none; }
+  .ipdp__canvas-tools { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.75rem; align-items: center; }
+  .ipdp__canvas-tools button {
+    border: 1px solid var(--color-border); background: var(--color-bg); border-radius: 999px;
+    padding: 0.35rem 0.7rem; font: inherit; font-size: var(--text-sm); cursor: pointer;
+  }
+  .ipdp__canvas-tools button.is-active { background: #000; color: #fff; }
+  .ipdp__notes { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.85rem; }
+  @media (min-width: 48rem) { .ipdp__notes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .ipdp__notes li { border: 1px solid var(--color-border); border-radius: 1rem; padding: 1rem; }
+  .ipdp__notes h3 { margin: 0 0 0.35rem; font-size: 1rem; }
+  .ipdp__notes p { margin: 0; color: var(--color-fg-muted); font-size: var(--text-sm); }
+  .ipdp__acc { border: 1px solid var(--color-border); border-radius: 0.75rem; padding: 0.75rem 1rem; margin-bottom: 0.5rem; }
+  .ipdp__acc summary { cursor: pointer; font-weight: 600; }
+  .ipdp__acc table { width: 100%; margin-top: 0.75rem; border-collapse: collapse; font-size: var(--text-sm); }
+  .ipdp__acc th, .ipdp__acc td { text-align: left; padding: 0.35rem 0; border-bottom: 1px solid var(--color-border); vertical-align: top; }
+  .ipdp__acc th { width: 35%; color: var(--color-fg-muted); font-weight: 500; }
+  .ipdp__related { display: grid; gap: 1rem; }
+  @media (min-width: 48rem) { .ipdp__related { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .ipdp__related a {
+    display: grid; gap: 0.35rem; text-decoration: none; color: inherit;
+    border: 1px solid var(--color-border); border-radius: var(--ipad-radius); padding: 0.75rem;
+  }
+  .ipdp__related em { font-style: normal; color: var(--color-fg-muted); font-size: var(--text-sm); }
+  .ipdp__fits { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; }
+  @media (min-width: 40rem) { .ipdp__fits { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .ipdp__fits li { border: 1px solid var(--color-border); border-radius: 1rem; padding: 1rem; }
+  .ipdp__fits h3 { margin: 0 0 0.25rem; font-size: 1rem; }
+  .ipdp__fits p { margin: 0; font-size: var(--text-sm); color: var(--color-fg-muted); }
+  .ipdp__tools { display: grid; gap: 0.75rem; padding-block: var(--ipad-section-gap); }
+  @media (min-width: 40rem) { .ipdp__tools { grid-template-columns: 1fr 1fr; } }
+  .ipdp__tool {
+    border: 1px solid var(--color-border); border-radius: var(--ipad-radius); padding: 1rem;
+    text-decoration: none; color: inherit; font-weight: 600;
+  }
+  .ipdp-lb {
+    width: min(96vw, 50rem); max-height: 92vh; border: none; border-radius: 1rem; padding: 0; background: #000;
+  }
+  .ipdp-lb img { width: 100%; height: auto; max-height: 80vh; object-fit: contain; }
+  .ipdp-lb button {
+    position: absolute; background: rgb(255 255 255 / 0.12); color: #fff; border: none;
+    border-radius: 999px; padding: 0.5rem 0.85rem; cursor: pointer;
+  }
+  .ipdp-lb [data-lb-close] { top: 0.75rem; right: 0.75rem; }
+  .ipdp-lb [data-lb-prev] { left: 0.75rem; top: 50%; }
+  .ipdp-lb [data-lb-next] { right: 0.75rem; top: 50%; }
+  @media (prefers-reduced-motion: reduce) {
+    .ipdp__pulse { animation: none; }
+    .ipdp__stage img { transition: none; }
+  }
+</style>

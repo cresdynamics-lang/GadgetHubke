@@ -1,0 +1,371 @@
+---
+/**
+ * PDP feel sections — performance, camera, battery, ports, colour + progress dots.
+ * Thin/display/pencil already on the PDP; this mounts the remaining story beats.
+ */
+import {
+  type IpadModel,
+  getIpadImage,
+  defaultIpadColour,
+  ipadConfig,
+  colourLabel,
+  colourHex,
+} from "../../lib/ipad";
+
+interface Props {
+  model: IpadModel;
+}
+
+const { model } = Astro.props;
+const colour = defaultIpadColour(model);
+const camStart = getIpadImage(model.id, colour, "camera_start", model.name);
+const camEnd = getIpadImage(model.id, colour, "camera_end", model.name);
+const cam = getIpadImage(model.id, colour, "camera", model.name);
+const ports = getIpadImage(model.id, colour, "connectivity", model.name);
+const ratios = ipadConfig.performanceRatios;
+const hours = model.batteryHours;
+---
+
+<nav class="ifeel-nav" data-ifeel-nav aria-label="Feel sections">
+  {
+    ["thin", "display", "pencil", "performance", "camera", "battery", "ports", "colour"].map((id, i) => (
+      <a href={`#feel-${id}`} data-feel-dot={id} class:list={{ "is-active": i === 0 }} aria-label={id}>
+        <span />
+      </a>
+    ))
+  }
+</nav>
+
+<section class="ifeel ifeel--black" id="feel-performance" data-feel="performance">
+  <div class="container ifeel__inner">
+    <h2>Fast, and quiet.</h2>
+    <p class="ifeel__lede">Only Apple-cited ratios. If a number is not in config, there is no bar.</p>
+    <div class="ifeel__bars" data-perf-bars>
+      {
+        ratios.flatMap((r) => {
+          const rows: { label: string; ratio: number; source: string }[] = [];
+          if ("ratio" in r && r.ratio != null) {
+            rows.push({ label: r.label, ratio: Number(r.ratio), source: r.source });
+          }
+          if ("cpuRatio" in r && r.cpuRatio != null) {
+            rows.push({ label: `${r.label} · CPU`, ratio: Number(r.cpuRatio), source: r.source });
+          }
+          if ("gpuRatio" in r && r.gpuRatio != null) {
+            rows.push({ label: `${r.label} · GPU`, ratio: Number(r.gpuRatio), source: r.source });
+          }
+          return rows.map((row) => (
+            <div class="ifeel__bar" data-ratio={row.ratio}>
+              <span>{row.label}</span>
+              <div class="ifeel__track"><i style={`width: ${Math.min(100, row.ratio * 40)}%`} /></div>
+              <em>~{row.ratio.toFixed(2)}× · {row.source}</em>
+            </div>
+          ));
+        })
+      }
+    </div>
+    <div class="ifeel__memory">
+      <svg viewBox="0 0 200 80" aria-hidden="true">
+        <rect x="20" y="20" width="160" height="40" rx="8" fill="#2c2c2e" />
+        <text x="100" y="45" text-anchor="middle" fill="#fff" font-size="12">Unified memory</text>
+      </svg>
+      <p>
+        {model.memoryGb[0]} GB is the floor on this model.
+        {model.memoryGb[0] >= 12 ? " Extra headroom helps Stage Manager and creative apps." : " 12–16 GB helps Stage Manager when available."}
+      </p>
+    </div>
+    <ul class="ifeel__handles">
+      <li>Drawing in Procreate</li>
+      <li>Editing video</li>
+      <li>Split-screen apps</li>
+      <li>Notes in class</li>
+      <li>Long video calls</li>
+    </ul>
+  </div>
+</section>
+
+<section class="ifeel ifeel--black" id="feel-camera" data-feel="camera">
+  <div class="container ifeel__inner">
+    <h2>Stay in frame.</h2>
+    <p class="ifeel__lede">{model.frontCamera}. Rear: {model.rearCamera}.</p>
+    <div class="ifeel__cam" data-cam>
+      {
+        !camStart.fallback && !camEnd.fallback ? (
+          <>
+            <img data-cam-start src={camStart.src} alt={camStart.alt} width="1000" height="700" loading="lazy" />
+            <img data-cam-end src={camEnd.src} alt={camEnd.alt} width="1000" height="700" loading="lazy" />
+          </>
+        ) : !cam.fallback ? (
+          <img src={cam.src} alt={cam.alt} width="1000" height="700" loading="lazy" />
+        ) : null
+      }
+    </div>
+    <p class="ifeel__caption">Document scanner on the rear camera. AR/LiDAR where the model includes it.</p>
+    <div class="ifeel__wave" aria-hidden="true" data-wave>
+      <span /><span /><span /><span /><span /><span /><span /><span />
+    </div>
+    <p class="ifeel__caption">Speakers and mics — confirm count per model before launch.</p>
+  </div>
+</section>
+
+<section class="ifeel" id="feel-battery" data-feel="battery">
+  <div class="container ifeel__inner">
+    <h2>All day, in your bag.</h2>
+    <p class="ifeel__lede">Apple’s claim: up to {hours} hours web or video. Illustration only.</p>
+    <div class="ifeel__batt" data-batt>
+      <div class="ifeel__batt-icon" aria-hidden="true">
+        <div class="ifeel__batt-fill" data-batt-fill />
+      </div>
+      <strong data-batt-hours>0</strong>
+      <span>hours</span>
+    </div>
+    <label class="ifeel__day">
+      Your day (hours off the wall)
+      <input type="range" min="1" max="10" value="6" data-day-slider />
+    </label>
+    <p data-day-result>At 6 hours of use, this model comfortably covers a typical day (30% safety margin).</p>
+    <p class="ifeel__caption">USB-C charging. Adapter wattage depends on the model — ask in store.</p>
+  </div>
+</section>
+
+<section class="ifeel ifeel--black" id="feel-ports" data-feel="ports">
+  <div class="container ifeel__inner">
+    <h2>Plug it in.</h2>
+    {
+      !ports.fallback ? (
+        <img class="ifeel__ports-img" src={ports.src} alt={ports.alt} width="1100" height="500" loading="lazy" />
+      ) : null
+    }
+    <ul class="ifeel__port-list">
+      {
+        model.ports.map((p) => (
+          <li>
+            <button type="button" data-port-tip={p}>
+              {p}
+            </button>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="ifeel__tip" data-port-msg hidden />
+    <p class="ifeel__caption">
+      {model.wifi} · Bluetooth {model.bluetooth}
+      {model.cellular ? " · Cellular available" : ""}
+    </p>
+  </div>
+</section>
+
+<section class="ifeel" id="feel-colour" data-feel="colour">
+  <div class="container ifeel__inner">
+    <h2>Pick a finish.</h2>
+    <div class="ifeel__colours">
+      {
+        model.colours.map((c) => {
+          const img = getIpadImage(model.id, c, "product", model.name);
+          return (
+            <button type="button" data-feel-colour={c} style={`--swatch:${colourHex(c)}`}>
+              {!img.fallback ? <img src={img.src} alt={img.alt} width="220" height="220" loading="lazy" /> : <span class="ifeel__swatch" />}
+              <span>{colourLabel(c)}</span>
+            </button>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>
+
+<script define:vars={{ hours, ports: model.ports }}>
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const sections = [...document.querySelectorAll("[data-feel]")];
+  const dots = [...document.querySelectorAll("[data-feel-dot]")];
+  const onScrollFeel = () => {
+    let active = sections[0]?.getAttribute("data-feel");
+    for (const s of sections) {
+      if (s.getBoundingClientRect().top < window.innerHeight * 0.45) active = s.getAttribute("data-feel");
+    }
+    dots.forEach((d) => d.classList.toggle("is-active", d.getAttribute("data-feel-dot") === active));
+  };
+  window.addEventListener("scroll", onScrollFeel, { passive: true });
+  onScrollFeel();
+
+  // Camera cross-fade
+  const cam = document.querySelector("[data-cam]");
+  const camEnd = document.querySelector("[data-cam-end]");
+  if (cam && camEnd instanceof HTMLElement) {
+    camEnd.style.opacity = reduce ? "1" : "0";
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (!e?.isIntersecting) return;
+        if (!reduce) {
+          camEnd.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 900, fill: "forwards", easing: "ease" });
+        }
+        obs.disconnect();
+      },
+      { threshold: 0.35 },
+    );
+    obs.observe(cam);
+  }
+
+  // Battery drain
+  const battSec = document.querySelector("#feel-battery");
+  const fill = document.querySelector("[data-batt-fill]");
+  const hoursEl = document.querySelector("[data-batt-hours]");
+  if (battSec && fill instanceof HTMLElement && hoursEl) {
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (!e?.isIntersecting) return;
+        if (reduce) {
+          fill.style.width = "0%";
+          hoursEl.textContent = String(hours);
+          return;
+        }
+        const start = performance.now();
+        const tick = (t) => {
+          const p = Math.min(1, (t - start) / 6000);
+          fill.style.width = `${100 - p * 100}%`;
+          hoursEl.textContent = String(Math.round(hours * p));
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+        obs.disconnect();
+      },
+      { threshold: 0.35 },
+    );
+    obs.observe(battSec);
+  }
+
+  const daySlider = document.querySelector("[data-day-slider]");
+  const dayResult = document.querySelector("[data-day-result]");
+  function dayLine() {
+    const use = daySlider instanceof HTMLInputElement ? Number(daySlider.value) : 6;
+    const cover = hours * 0.7;
+    if (dayResult) {
+      dayResult.textContent =
+        use <= cover
+          ? `At ${use} hours of use, this model comfortably covers a typical day (30% safety margin on Apple’s ${hours} h claim).`
+          : `At ${use} hours, plan a midday charge — Apple’s claim is up to ${hours} h with a 30% safety margin.`;
+    }
+  }
+  daySlider?.addEventListener("input", dayLine);
+  dayLine();
+
+  // Ports tooltips
+  const tip = document.querySelector("[data-port-msg]");
+  const tips = {
+    "USB-C": "USB-C: charge, connect a display, move files.",
+    "Thunderbolt / USB 4": "Thunderbolt / USB 4: charge, displays, fast file transfer.",
+    Lightning: "Lightning: charge and sync. Plan adapters for USB-C accessories.",
+  };
+  document.querySelectorAll("[data-port-tip]").forEach((btn) => {
+    const show = () => {
+      const key = btn.getAttribute("data-port-tip") || "";
+      if (tip instanceof HTMLElement) {
+        tip.hidden = false;
+        tip.textContent = tips[key] || `${key}: see the buying notes for this model.`;
+      }
+    };
+    btn.addEventListener("mouseenter", show);
+    btn.addEventListener("focus", show);
+  });
+
+  // Colour → main viewer
+  document.querySelectorAll("[data-feel-colour]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const key = btn.getAttribute("data-feel-colour");
+      const swatch = document.querySelector(`[data-ipad-swatch][data-colour="${key}"]`);
+      if (swatch instanceof HTMLElement) swatch.click();
+    });
+  });
+
+  // Wave animation
+  if (!reduce) {
+    document.querySelectorAll("[data-wave] span").forEach((el, i) => {
+      if (el instanceof HTMLElement) {
+        el.style.animationDelay = `${i * 80}ms`;
+      }
+    });
+  }
+</script>
+
+<style>
+  .ifeel-nav {
+    position: fixed;
+    left: 0.65rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 40;
+    display: none;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+  @media (min-width: 64rem) {
+    .ifeel-nav { display: flex; }
+  }
+  .ifeel-nav a {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: #d2d2d7;
+    display: grid;
+    place-items: center;
+  }
+  .ifeel-nav a.is-active { background: #000; outline: 2px solid #000; outline-offset: 2px; }
+  .ifeel-nav a span { display: none; }
+
+  .ifeel { padding-block: var(--ipad-section-gap); }
+  .ifeel--black { background: #000; color: #fff; }
+  .ifeel--black .ifeel__lede,
+  .ifeel--black .ifeel__caption { color: #a1a1a6; }
+  .ifeel__inner h2 { margin: 0 0 0.5rem; letter-spacing: -0.02em; }
+  .ifeel__lede { margin: 0 0 1.25rem; }
+  .ifeel__bars { display: grid; gap: 0.85rem; max-width: 36rem; }
+  .ifeel__bar span { display: block; font-size: var(--text-sm); margin-bottom: 0.25rem; }
+  .ifeel__track { height: 0.55rem; background: #2c2c2e; border-radius: 999px; overflow: hidden; }
+  .ifeel__track i { display: block; height: 100%; background: #fff; border-radius: 999px; }
+  .ifeel__bar em { font-style: normal; font-size: 0.75rem; color: #a1a1a6; }
+  .ifeel__memory { display: grid; gap: 0.75rem; margin-top: 1.5rem; max-width: 28rem; }
+  .ifeel__handles { list-style: none; margin: 1.25rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .ifeel__handles li {
+    border: 1px solid #3a3a3c; border-radius: 999px; padding: 0.35rem 0.75rem; font-size: var(--text-sm);
+  }
+  .ifeel__cam { position: relative; max-width: 48rem; margin: 0 auto; }
+  .ifeel__cam img { width: 100%; height: auto; display: block; border-radius: 1rem; }
+  .ifeel__cam [data-cam-end] { position: absolute; inset: 0; }
+  .ifeel__caption { margin-top: 0.75rem; font-size: var(--text-sm); color: var(--color-fg-muted); }
+  .ifeel__wave { display: flex; gap: 0.35rem; align-items: flex-end; height: 2.5rem; margin-top: 1rem; }
+  .ifeel__wave span {
+    width: 0.35rem; background: currentColor; border-radius: 999px; height: 40%;
+    animation: wave 1s ease-in-out infinite alternate;
+  }
+  @keyframes wave { to { height: 100%; } }
+  .ifeel__batt { display: flex; align-items: center; gap: 0.75rem; margin: 1rem 0; }
+  .ifeel__batt-icon {
+    width: 3.5rem; height: 1.6rem; border: 2px solid currentColor; border-radius: 0.3rem; padding: 2px; position: relative;
+  }
+  .ifeel__batt-icon::after {
+    content: ""; position: absolute; right: -0.35rem; top: 0.35rem; width: 0.25rem; height: 0.7rem;
+    background: currentColor; border-radius: 0 2px 2px 0;
+  }
+  .ifeel__batt-fill { height: 100%; width: 100%; background: var(--color-stock, #34c759); border-radius: 0.15rem; }
+  .ifeel__day { display: grid; gap: 0.35rem; max-width: 22rem; font-size: var(--text-sm); }
+  .ifeel__ports-img { width: 100%; max-width: 48rem; height: auto; border-radius: 1rem; }
+  .ifeel__port-list { list-style: none; margin: 1rem 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .ifeel__port-list button {
+    border: 1px solid #3a3a3c; background: transparent; color: inherit; border-radius: 999px;
+    padding: 0.4rem 0.8rem; font: inherit; font-size: var(--text-sm); cursor: pointer;
+  }
+  .ifeel__tip { font-size: var(--text-sm); color: #a1a1a6; }
+  .ifeel__colours {
+    display: grid; gap: 0.75rem;
+    grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+  }
+  .ifeel__colours button {
+    border: 1px solid var(--color-border); background: var(--color-bg); border-radius: var(--ipad-radius);
+    padding: 0.65rem; cursor: pointer; font: inherit; color: inherit; display: grid; gap: 0.35rem; justify-items: center;
+  }
+  .ifeel__colours img { width: 100%; height: auto; mix-blend-mode: multiply; background: #f5f5f7; border-radius: 0.75rem; }
+  .ifeel__swatch { width: 2rem; height: 2rem; border-radius: 50%; background: var(--swatch); }
+  @media (prefers-reduced-motion: reduce) {
+    .ifeel__wave span { animation: none; height: 70%; }
+  }
+</style>

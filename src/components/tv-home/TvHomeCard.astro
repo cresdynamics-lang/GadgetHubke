@@ -1,0 +1,208 @@
+---
+import TvHomeStage from "./TvHomeStage.astro";
+import {
+  type TvHomeModel,
+  getTvHomeImage,
+  defaultTvHomeColour,
+  formatKes,
+  lipaMonthly,
+  colourHex,
+  colourLabel,
+  isSpeaker,
+} from "../../lib/tv-home";
+
+interface Props {
+  model: TvHomeModel;
+  compare?: boolean;
+}
+
+const { model, compare = true } = Astro.props;
+const colour = defaultTvHomeColour(model);
+const img = getTvHomeImage(model.id, model.noImage ? "hero" : `colour:${colour}`, model.name);
+const lipa = lipaMonthly(model.basePriceKes);
+const square = isSpeaker(model);
+---
+
+<article class="thcard" data-tvhome-card data-id={model.id}>
+  <a class="thcard__media" href={`/tv-home/${model.id}`}>
+    {
+      model.noImage ? (
+        <div class="thcard__noimg">
+          <p>Image not available</p>
+        </div>
+      ) : (
+        <TvHomeStage
+          src={img.src}
+          srcWebp={img.srcWebp}
+          alt={img.alt}
+          width={img.width}
+          height={img.width}
+          square={square}
+        />
+      )
+    }
+    {model.isNew ? <span class="thcard__tag">New</span> : null}
+    {model.overviewOnly ? <span class="thcard__tag thcard__tag--alt">Overview image</span> : null}
+  </a>
+  <div class="thcard__body">
+    <h3><a href={`/tv-home/${model.id}`}>{model.name}</a></h3>
+    <p class="thcard__sub">{model.tagline}</p>
+    {
+      model.colours.length > 1 ? (
+        <div class="thcard__colours" role="list" aria-label="Colours">
+          {
+            model.colours.slice(0, 8).map((c) => (
+              <button
+                type="button"
+                role="listitem"
+                class:list={{ "is-active": c === colour }}
+                style={`--dot:${colourHex(c)}`}
+                title={colourLabel(c)}
+                aria-label={colourLabel(c)}
+                data-thcard-colour={c}
+              />
+            ))
+          }
+        </div>
+      ) : null
+    }
+    <p class="thcard__price">
+      From {formatKes(model.basePriceKes)}
+      <small>or {formatKes(lipa.monthlyKes)} / mo</small>
+    </p>
+    <p class="thcard__fine">Sample price until stock is entered in the admin.</p>
+    <div class="thcard__actions">
+      <a class="btn btn--primary btn--sm" href={`/tv-home/${model.id}`}>View</a>
+      <button
+        type="button"
+        class="btn btn--secondary btn--sm"
+        data-tvhome-bag
+        data-id={model.id}
+        data-name={model.name}
+        data-colour={colourLabel(colour)}
+        data-storage=""
+        data-pair=""
+        data-extras=""
+        data-kes={model.basePriceKes}
+        data-image={model.noImage ? "" : img.src}
+      >
+        Add to bag
+      </button>
+      {
+        compare ? (
+          <label class="thcard__compare">
+            <input type="checkbox" data-tvhome-compare value={model.id} />
+            Compare
+          </label>
+        ) : null
+      }
+    </div>
+  </div>
+</article>
+
+<script define:vars={{ modelId: model.id, colourMap: Object.fromEntries(model.colours.map((c) => {
+  const img = getTvHomeImage(model.id, `colour:${c}`, model.name);
+  return [c, { src: img.src, webp: img.srcWebp || "", alt: img.alt, label: colourLabel(c) }];
+})) }}>
+  document.querySelectorAll(`[data-tvhome-card][data-id="${modelId}"]`).forEach((card) => {
+    card.querySelectorAll("[data-thcard-colour]").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const c = btn.getAttribute("data-thcard-colour");
+        if (!c || !colourMap[c]) return;
+        card.querySelectorAll("[data-thcard-colour]").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        const bag = card.querySelector("[data-tvhome-bag]");
+        if (bag instanceof HTMLElement) {
+          bag.setAttribute("data-colour", colourMap[c].label);
+          bag.setAttribute("data-image", colourMap[c].src);
+        }
+        const img = card.querySelector(".thstage img");
+        const source = card.querySelector(".thstage source");
+        if (img instanceof HTMLImageElement) {
+          img.src = colourMap[c].src;
+          img.alt = colourMap[c].alt;
+        }
+        if (source instanceof HTMLSourceElement) {
+          if (colourMap[c].webp) source.srcset = colourMap[c].webp;
+          else source.removeAttribute("srcset");
+        }
+      });
+    });
+  });
+
+  document.querySelectorAll(`[data-tvhome-card][data-id="${modelId}"] [data-tvhome-bag]`).forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (!(btn instanceof HTMLElement)) return;
+      window.dispatchEvent(
+        new CustomEvent("gh:bag-add", {
+          detail: {
+            id: btn.getAttribute("data-id"),
+            name: btn.getAttribute("data-name"),
+            colour: btn.getAttribute("data-colour"),
+            storage: btn.getAttribute("data-storage") || "",
+            pair: btn.getAttribute("data-pair") || "",
+            extras: btn.getAttribute("data-extras") || "",
+            kes: Number(btn.getAttribute("data-kes") || 0),
+            image: btn.getAttribute("data-image"),
+          },
+        }),
+      );
+    });
+  });
+</script>
+
+<style>
+  .thcard { display: grid; gap: 0.75rem; min-width: 0; font-family: Inter, system-ui, sans-serif; }
+  .thcard__media {
+    position: relative;
+    display: block;
+    text-decoration: none;
+    transition: transform 220ms ease;
+  }
+  @media (hover: hover) {
+    .thcard__media:hover { transform: translateY(-6px) scale(1.03); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .thcard__media { transition: none; }
+    .thcard__media:hover { transform: none; }
+  }
+  .thcard__noimg {
+    aspect-ratio: 1 / 1;
+    background: #f5f5f7;
+    border-radius: 1.5rem;
+    display: grid;
+    place-items: center;
+    color: #6e6e73;
+    font-size: var(--text-sm);
+  }
+  .thcard__tag {
+    position: absolute;
+    top: 0.65rem;
+    left: 0.65rem;
+    background: #000;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.2rem 0.45rem;
+    border-radius: 0.35rem;
+  }
+  .thcard__tag--alt { left: auto; right: 0.65rem; background: #1d1d1f; }
+  .thcard__body h3 { margin: 0; font-size: 1.05rem; letter-spacing: -0.02em; }
+  .thcard__body h3 a { color: inherit; text-decoration: none; }
+  .thcard__sub, .thcard__fine {
+    margin: 0.2rem 0 0;
+    font-size: var(--text-sm);
+    color: #6e6e73;
+  }
+  .thcard__colours { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.55rem; }
+  .thcard__colours button {
+    width: 0.85rem; height: 0.85rem; border-radius: 50%;
+    border: 1px solid #d2d2d7; background: var(--dot); padding: 0; cursor: pointer;
+  }
+  .thcard__colours button.is-active { outline: 2px solid #000; outline-offset: 2px; }
+  .thcard__price { margin: 0.55rem 0 0; font-weight: 600; }
+  .thcard__price small { display: block; font-weight: 400; color: #6e6e73; font-size: var(--text-sm); }
+  .thcard__actions { display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center; margin-top: 0.65rem; }
+  .thcard__compare { font-size: var(--text-sm); display: flex; align-items: center; gap: 0.25rem; }
+</style>

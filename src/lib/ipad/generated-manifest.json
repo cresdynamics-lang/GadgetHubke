@@ -1,0 +1,1399 @@
+{
+  "generatedAt": "2026-10-05T22:59:59.950Z",
+  "productsByFolder": {
+    "Compare_headers_and_swatches": {
+      "_misc": [
+        "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/Compare_headers_and_swatches/ipad-compare-header-air-202405.jpg",
+        "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/Compare_headers_and_swatches/ipad-compare-header-pro-202405.jpg"
+      ]
+    },
+    "iPad_Air_11in_and_13in_M2_M3_M4_(same_design)": {
+      "swatch:blue": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-finish-blue-2024.jpg",
+      "swatch:purple": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-finish-purple-2024.jpg",
+      "swatch:space-gray": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-finish-space-gray-2024.jpg",
+      "swatch:starlight": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-finish-starlight-2024.jpg",
+      "_gallery": [
+        "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-model-unselect-gallery-1-202405.jpg",
+        "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-model-unselect-gallery-2-202405.jpg",
+        "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-model-unselect-gallery-3-202405.jpg",
+        "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-model-unselect-gallery-4-202405.jpg"
+      ],
+      "product:blue": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-select-13in-wifi-blue-202405.jpg",
+      "product:purple": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-select-13in-wifi-purple-202405.jpg",
+      "product:space-gray": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-select-13in-wifi-spacegray-202405.jpg",
+      "product:starlight": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-select-13in-wifi-starlight-202405.jpg",
+      "box:blue": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-witb-blue-13in-wifi-202405.jpg",
+      "box:purple": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-witb-purple-13in-wifi-202405.jpg",
+      "box:space-gray": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-witb-spacegray-13in-wifi-202405.jpg",
+      "box:starlight": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-witb-starlight-13in-wifi-202405.jpg"
+    },
+    "iPad_Pro_11in_and_13in_M4_M5_(same_design)": {
+      "product:silver": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Pro_11in_and_13in_M4_M5_(same_design)/ipad-pro-13-select-wificell-silver-202405.jpg",
+      "product:space-black": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Pro_11in_and_13in_M4_M5_(same_design)/ipad-pro-13-select-wificell-spaceblack-202405.jpg",
+      "box:silver": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Pro_11in_and_13in_M4_M5_(same_design)/ipad-pro-13-witb-silver-wifi-202405.jpg",
+      "box:space-black": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Pro_11in_and_13in_M4_M5_(same_design)/ipad-pro-13-witb-spaceblack-wifi-202405.jpg"
+    },
+    "iPad_mini_A17_Pro_2024": {
+      "product:blue": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_mini_A17_Pro_2024/ipad-mini-select-wifi-blue-202410.jpg",
+      "product:purple": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_mini_A17_Pro_2024/ipad-mini-select-wifi-purple-202410.jpg",
+      "product:space-gray": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_mini_A17_Pro_2024/ipad-mini-select-wifi-spacegray-202410.jpg",
+      "product:starlight": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_mini_A17_Pro_2024/ipad-mini-select-wifi-starlight-202410.jpg"
+    },
+    "iPad_standard_10th_gen_and_A16_2022-2025": {
+      "swatch:blue": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_standard_10th_gen_and_A16_2022-2025/ipad-10th-gen-finish-blue-2022.jpg",
+      "swatch:pink": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_standard_10th_gen_and_A16_2022-2025/ipad-10th-gen-finish-pink-2022.jpg",
+      "swatch:silver": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_standard_10th_gen_and_A16_2022-2025/ipad-10th-gen-finish-silver-2022.jpg",
+      "swatch:yellow": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_standard_10th_gen_and_A16_2022-2025/ipad-10th-gen-finish-yellow-2022.jpg",
+      "product:blue": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_standard_10th_gen_and_A16_2022-2025/ipad-2022-hero-blue-wifi-select.jpg",
+      "product:pink": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_standard_10th_gen_and_A16_2022-2025/ipad-2022-hero-pink-wifi-select.jpg",
+      "product:silver": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_standard_10th_gen_and_A16_2022-2025/ipad-2022-hero-silver-wifi-select.jpg",
+      "product:yellow": "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_standard_10th_gen_and_A16_2022-2025/ipad-2022-hero-yellow-wifi-select.jpg",
+      "_gallery": [
+        "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_standard_10th_gen_and_A16_2022-2025/ipad-model-unselect-gallery-1-202503.jpg",
+        "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_standard_10th_gen_and_A16_2022-2025/ipad-model-unselect-gallery-2-202503.jpg",
+        "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_standard_10th_gen_and_A16_2022-2025/ipad-model-unselect-gallery-3-202503.jpg"
+      ]
+    }
+  },
+  "overviews": {
+    "2021-ipad-pro-11-colors": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/2021-ipad-pro-11-colors.png",
+    "2021-ipad-pro-12-9-colors": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/2021-ipad-pro-12-9-colors.png",
+    "fall-2022-10-gen-ipad": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/fall-2022-10-gen-ipad.png",
+    "fall-2022-11-inch-4gen-ipad-pro": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/fall-2022-11-inch-4gen-ipad-pro.png",
+    "fall-2022-12-9-inch-6gen-ipad-pro": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/fall-2022-12-9-inch-6gen-ipad-pro.png",
+    "fall-2025-ipad-pro-m5-11in": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/fall-2025-ipad-pro-m5-11in.png",
+    "fall-2025-ipad-pro-m5-13in": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/fall-2025-ipad-pro-m5-13in.png",
+    "ios13-4-ipad-pro-4gen-11-in": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/ios13-4-ipad-pro-4gen-11-in.png",
+    "ios13-4-ipad-pro-4gen-12-9-in": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/ios13-4-ipad-pro-4gen-12-9-in.png",
+    "ipad-2021-colors": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/ipad-2021-colors.png",
+    "ipad-8th-gen-colors": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/ipad-8th-gen-colors.png",
+    "ipad-air-4th-gen-colors": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/ipad-air-4th-gen-colors.png",
+    "ipad-air-5th-gen-colors": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/ipad-air-5th-gen-colors.png",
+    "ipad-mini-2021-colors": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/ipad-mini-2021-colors.png",
+    "ipad-mini-2024-colors": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/ipad-mini-2024-colors.png",
+    "spring-2024-1": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2024-1.png",
+    "spring-2024-2": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2024-2.png",
+    "spring-2024-3": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2024-3.png",
+    "spring-2024-4": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2024-4.png",
+    "spring-2025-ipad-air-11": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2025-ipad-air-11.png",
+    "spring-2025-ipad-air-13": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2025-ipad-air-13.png",
+    "spring-2025-ipad": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2025-ipad.png",
+    "spring-2026-ipad-air-11": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2026-ipad-air-11.png",
+    "spring-2026-ipad-air-13": "/Gadget_Hub_iPad_2_Colour_overviews/02_Colour_overviews_Apple_support/spring-2026-ipad-air-13.png"
+  },
+  "pages": {
+    "Pro": {
+      "ipad-pro_overview": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/meta/ipad-pro_overview__bu4cql27diaa_og.png",
+        "section": "ipad-pro_overview__bu4cql27diaa_og.png",
+        "family": "Pro"
+      },
+      "barrel_roll_endframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/apple-pencil-pro/modal/barrel_roll_endframe__ezpahldipxqq_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Pro"
+      },
+      "barrel_roll_startframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/apple-pencil-pro/modal/barrel_roll_startframe__e65b7ztp8q6a_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Pro"
+      },
+      "charging": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/apple-pencil-pro/modal/charging__cygq9zuumne6_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Pro"
+      },
+      "double-tap_endframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/apple-pencil-pro/modal/double-tap_endframe__i4yska4xs1ua_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Pro"
+      },
+      "double-tap_startframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/apple-pencil-pro/modal/double-tap_startframe__du5dxkh8ramq_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Pro"
+      },
+      "haptic_endframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/apple-pencil-pro/modal/haptic_endframe__fpmqpytxtmy6_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Pro"
+      },
+      "haptic_startframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/apple-pencil-pro/modal/haptic_startframe__ge9wm9lg5cia_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Pro"
+      },
+      "haptic_static": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/apple-pencil-pro/modal/haptic_static__d4fcc3k3mmqa_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Pro"
+      },
+      "hero": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/apple-pencil-pro/modal/hero__dvebaktighme_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Pro"
+      },
+      "hover_endframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/apple-pencil-pro/modal/hover_endframe__67kfyth5bdee_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Pro"
+      },
+      "hover_startframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/apple-pencil-pro/modal/hover_startframe__fzpzwrobmcae_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Pro"
+      },
+      "pencils": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/apple-pencil-pro/modal/pencils__fjzu1it49wmm_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Pro"
+      },
+      "squeeze": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/apple-pencil-pro/modal/squeeze__ddbt919vz20y_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Pro"
+      },
+      "squeeze_endframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/apple-pencil-pro/modal/squeeze_endframe__dw4xm8x6trcm_large_2x.png",
+        "section": "apple-pencil-pro",
+        "family": "Pro"
+      },
+      "squeeze_startframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/apple-pencil-pro/modal/squeeze_startframe__b9c5i0tsz3py_large_2x.png",
+        "section": "apple-pencil-pro",
+        "family": "Pro"
+      },
+      "pencil_hero": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/apple-pencil-pro/pencil_hero__lg9qkg94jnm2_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Pro"
+      },
+      "ar": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/cameras/modal/ar__f7sda16dt7am_large_2x.jpg",
+        "section": "cameras",
+        "family": "Pro"
+      },
+      "docs": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/cameras/modal/docs__byl32p0gx0k2_large_2x.jpg",
+        "section": "cameras",
+        "family": "Pro"
+      },
+      "front_camera_hw": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/cameras/modal/front_camera_hw__fsygbqtq6yeu_large_2x.png",
+        "section": "cameras",
+        "family": "Pro"
+      },
+      "front_camera_screen": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/cameras/modal/front_camera_screen__dukuvyiupu6a_large_2x.jpg",
+        "section": "cameras",
+        "family": "Pro"
+      },
+      "mics_and_speakers_hw": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/cameras/modal/mics_and_speakers_hw__c28wkaomt8eq_large_2x.png",
+        "section": "cameras",
+        "family": "Pro"
+      },
+      "smart_hdr": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/cameras/modal/smart_hdr__e25072laoxsi_large_2x.jpg",
+        "section": "cameras",
+        "family": "Pro"
+      },
+      "speakers_endframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/cameras/modal/speakers_endframe__btgjse9fbbea_large_2x.jpg",
+        "section": "cameras",
+        "family": "Pro"
+      },
+      "speakers_startframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/cameras/modal/speakers_startframe__c6ydzrim5weq_large_2x.jpg",
+        "section": "cameras",
+        "family": "Pro"
+      },
+      "chip_hero_endframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/chip/chip_hero_endframe__becrgbad20j6_large_2x.jpg",
+        "section": "chip",
+        "family": "Pro"
+      },
+      "chip_hero_startframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/chip/chip_hero_startframe__fwc5zu28xnmi_large_2x.jpg",
+        "section": "chip",
+        "family": "Pro"
+      },
+      "4k_video": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/chip/modal/4k_video__cs5pybzbft0m_large_2x.jpg",
+        "section": "chip",
+        "family": "Pro"
+      },
+      "8k_pro_res": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/chip/modal/8k_pro_res__ewvt6nqswx26_large_2x.jpg",
+        "section": "chip",
+        "family": "Pro"
+      },
+      "caching": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/chip/modal/caching__pdxa0a65kv22_large_2x.jpg",
+        "section": "chip",
+        "family": "Pro"
+      },
+      "hardware_acceleration": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/chip/modal/hardware_acceleration__bb2zuy2edmfm_large_2x.jpg",
+        "section": "chip",
+        "family": "Pro"
+      },
+      "neural_engine": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/chip/modal/neural_engine__egqedckfl2qa_large_2x.jpg",
+        "section": "chip",
+        "family": "Pro"
+      },
+      "performance": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/chip/modal/performance__cbqkgay5nfn6_large_2x.jpg",
+        "section": "chip",
+        "family": "Pro"
+      },
+      "slide_1A": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/closer-look/silver/slide_1A__gnqepv0kr3ee_large_2x.jpg",
+        "section": "closer-look",
+        "family": "Pro"
+      },
+      "slide_1B": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/closer-look/silver/slide_1B__fxu0jie3i0ya_large_2x.jpg",
+        "section": "closer-look",
+        "family": "Pro"
+      },
+      "slide_2A": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/closer-look/silver/slide_2A__dcf0qa7zqb2a_large_2x.jpg",
+        "section": "closer-look",
+        "family": "Pro"
+      },
+      "slide_3A": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/closer-look/silver/slide_3A__fivo8h722niq_large_2x.jpg",
+        "section": "closer-look",
+        "family": "Pro"
+      },
+      "slide_3B": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/closer-look/silver/slide_3B__c2mu25h6nquu_large_2x.jpg",
+        "section": "closer-look",
+        "family": "Pro"
+      },
+      "slide_4A": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/closer-look/silver/slide_4A__ft59q4j63s66_large_2x.jpg",
+        "section": "closer-look",
+        "family": "Pro"
+      },
+      "cellular_hero": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/connectivity/cellular_hero__ea2fpz3yplme_large_2x.jpg",
+        "section": "connectivity",
+        "family": "Pro"
+      },
+      "cellular_wifi_hero": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/connectivity/modal/cellular_wifi_hero__etfzjqdq8awm_large_2x.jpg",
+        "section": "connectivity",
+        "family": "Pro"
+      },
+      "thunderbolt_usb_4": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/connectivity/modal/thunderbolt_usb_4__ekpb7g8llf42_large_2x.jpg",
+        "section": "connectivity",
+        "family": "Pro"
+      },
+      "wireless": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/connectivity/modal/wireless__bbgxpq99my9e_large_2x.jpg",
+        "section": "connectivity",
+        "family": "Pro"
+      },
+      "ipad_air": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/contrast/product-tile/ipad_air__c71n48c7jfsm_large_2x.jpg",
+        "section": "contrast",
+        "family": "Pro"
+      },
+      "ipad_pro": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/contrast/product-tile/ipad_pro__ed9n4fxunkia_large_2x.jpg",
+        "section": "contrast",
+        "family": "Pro"
+      },
+      "design_hero_endframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/design/design_hero_endframe__0uk1xnayimay_large_2x.png",
+        "section": "design",
+        "family": "Pro"
+      },
+      "design_hero_startframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/design/design_hero_startframe__eoh5o859u72a_large_2x.png",
+        "section": "design",
+        "family": "Pro"
+      },
+      "colors": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/design/modal/colors__bl5t08cd9wr6_large_2x.jpg",
+        "section": "design",
+        "family": "Pro"
+      },
+      "materials": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/design/modal/materials__d33o3c5dkp2e_large_2x.jpg",
+        "section": "design",
+        "family": "Pro"
+      },
+      "portability": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/design/modal/portability__f2jv3u3hgkuq_large_2x.jpg",
+        "section": "design",
+        "family": "Pro"
+      },
+      "display_hero_endframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/display/display_hero_endframe__fr1073m9t56y_large_2x.jpg",
+        "section": "display",
+        "family": "Pro"
+      },
+      "display_hero_startframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/display/display_hero_startframe__c0r9lez0jxqq_large_2x.jpg",
+        "section": "display",
+        "family": "Pro"
+      },
+      "anti_glare_endframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/display/modal/anim/anti_glare_endframe__ejbxicmd4ru6_large_2x.jpg",
+        "section": "display",
+        "family": "Pro"
+      },
+      "anti_glare_startframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/display/modal/anim/anti_glare_startframe__xijqapvzyeam_large_2x.jpg",
+        "section": "display",
+        "family": "Pro"
+      },
+      "oled_endframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/display/modal/anim/oled_endframe__ey2jtn688iie_large_2x.jpg",
+        "section": "display",
+        "family": "Pro"
+      },
+      "oled_startframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/display/modal/anim/oled_startframe__edt7evm8lx2e_large_2x.jpg",
+        "section": "display",
+        "family": "Pro"
+      },
+      "oled_static": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/display/modal/anim/oled_static__74d76ayqytue_large_2x.jpg",
+        "section": "display",
+        "family": "Pro"
+      },
+      "brighter": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/display/modal/brighter__cmje34ip4vhy_large_2x.jpg",
+        "section": "display",
+        "family": "Pro"
+      },
+      "contrast": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/display/modal/contrast__dc4a8lphb2ie_large_2x.jpg",
+        "section": "display",
+        "family": "Pro"
+      },
+      "xdr_hw": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/display/modal/xdr_hw__fjoqay5a006e_large_2x.png",
+        "section": "display",
+        "family": "Pro"
+      },
+      "xdr_screen": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/display/modal/xdr_screen__zwfy6m0wnn6q_large_2x.jpg",
+        "section": "display",
+        "family": "Pro"
+      },
+      "hero_endframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/hero/hero_endframe__du5kcy4qnxkm_large_2x.jpg",
+        "section": "hero",
+        "family": "Pro"
+      },
+      "hero_startframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/hero/hero_startframe__eaxt4o8j4d2e_large_2x.jpg",
+        "section": "hero",
+        "family": "Pro"
+      },
+      "ipados_endframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/highlights/anim/ipados_endframe__cn0myrd2mez6_large_2x.jpg",
+        "section": "highlights",
+        "family": "Pro"
+      },
+      "ipados_startframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/highlights/anim/ipados_startframe__bw104h4tzn5y_large_2x.jpg",
+        "section": "highlights",
+        "family": "Pro"
+      },
+      "apple_intelligence": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/highlights/apple_intelligence__f2wdpo1j5biq_large_2x.jpg",
+        "section": "highlights",
+        "family": "Pro"
+      },
+      "chip": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/highlights/chip__fxe2fg13jsy2_large_2x.jpg",
+        "section": "highlights",
+        "family": "Pro"
+      },
+      "design": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/highlights/design__fz9jny9rl722_large_2x.jpg",
+        "section": "highlights",
+        "family": "Pro"
+      },
+      "display": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/highlights/display__cssypjgif58i_large_2x.jpg",
+        "section": "highlights",
+        "family": "Pro"
+      },
+      "pencil": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/highlights/pencil__ef30gehj01yu_large_2x.jpg",
+        "section": "highlights",
+        "family": "Pro"
+      },
+      "chatgpt": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/intelligence/chatgpt__hfcw18i7okuq_large_2x.jpg",
+        "section": "intelligence",
+        "family": "Pro"
+      },
+      "clean_up": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/intelligence/clean_up__cupei2ikd84m_large_2x.jpg",
+        "section": "intelligence",
+        "family": "Pro"
+      },
+      "shortcuts": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/intelligence/shortcuts__ce9n5o4xoq82_large_2x.jpg",
+        "section": "intelligence",
+        "family": "Pro"
+      },
+      "background_tasks": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/ipados/background_tasks__fryfoyba8ua2_large_2x.jpg",
+        "section": "ipados",
+        "family": "Pro"
+      },
+      "hero_center_hw": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/ipados/hero_center_hw__f7g8sd7olfm2_large_2x.png",
+        "section": "ipados",
+        "family": "Pro"
+      },
+      "hero_left": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/ipados/hero_left__deujer7a8uwm_large_2x.png",
+        "section": "ipados",
+        "family": "Pro"
+      },
+      "hero_right": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/ipados/hero_right__bxdyjv0l5v42_large_2x.png",
+        "section": "ipados",
+        "family": "Pro"
+      },
+      "app_wall": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/ipados/modal/app_wall__d6s47vtqvf6u_large_2x.jpg",
+        "section": "ipados",
+        "family": "Pro"
+      },
+      "final_cut_pro": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/ipados/modal/final_cut_pro__frk6u8k1un22_large_2x.jpg",
+        "section": "ipados",
+        "family": "Pro"
+      },
+      "logic_pro": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/ipados/modal/logic_pro__fcf277fjaju6_large_2x.jpg",
+        "section": "ipados",
+        "family": "Pro"
+      },
+      "touch": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/ipados/modal/touch__fujar27qh9iu_large_2x.jpg",
+        "section": "ipados",
+        "family": "Pro"
+      },
+      "pro_apps": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/ipados/pro_apps__ooav5rco79ui_large_2x.jpg",
+        "section": "ipados",
+        "family": "Pro"
+      },
+      "productivity": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/ipados/productivity__fglytbpvc9ua_large_2x.jpg",
+        "section": "ipados",
+        "family": "Pro"
+      },
+      "magic_keyboard_endframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/keyboard/magic_keyboard_endframe__8k6knt9mfwi2_large_2x.jpg",
+        "section": "keyboard",
+        "family": "Pro"
+      },
+      "magic_keyboard_startframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/keyboard/magic_keyboard_startframe__iskz13sllbiq_large_2x.jpg",
+        "section": "keyboard",
+        "family": "Pro"
+      },
+      "magic_keyboard_static": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/keyboard/magic_keyboard_static__f180tdgvebqm_large_2x.jpg",
+        "section": "keyboard",
+        "family": "Pro"
+      },
+      "function_row": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/keyboard/modal/function_row__7cnfuwlkitey_large_2x.jpg",
+        "section": "keyboard",
+        "family": "Pro"
+      },
+      "profile": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/keyboard/modal/profile__fwh5fb02a4ia_large_2x.jpg",
+        "section": "keyboard",
+        "family": "Pro"
+      },
+      "trackpad": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/keyboard/modal/trackpad__fwrqj2lharqm_large_2x.jpg",
+        "section": "keyboard",
+        "family": "Pro"
+      },
+      "trackpad_endframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/keyboard/modal/trackpad_endframe__gk2254nk4wa6_large_2x.jpg",
+        "section": "keyboard",
+        "family": "Pro"
+      },
+      "trackpad_startframe": {
+        "src": "/Gadget_Hub_iPad_3_Pro_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview/keyboard/modal/trackpad_startframe__chx9uhx9m1w2_large_2x.jpg",
+        "section": "keyboard",
+        "family": "Pro"
+      }
+    },
+    "Air": {
+      "ipad-air_overview": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/meta/ipad-air_overview__bc2fd15uec0y_og.png",
+        "section": "ipad-air_overview__bc2fd15uec0y_og.png",
+        "family": "Air"
+      },
+      "cleanup": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/apple-intelligence/cleanup__gd72flwjv4ii_large_2x.png",
+        "section": "apple-intelligence",
+        "family": "Air"
+      },
+      "imagewand": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/apple-intelligence/imagewand__gkllb3mqol6y_large_2x.png",
+        "section": "apple-intelligence",
+        "family": "Air"
+      },
+      "pencil": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/apple-intelligence/pencil__ewqbd065n4ya_large_2x.png",
+        "section": "apple-intelligence",
+        "family": "Air"
+      },
+      "privacy_endframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/apple-intelligence/privacy_endframe__cmahnib2pzxy_large_2x.jpg",
+        "section": "apple-intelligence",
+        "family": "Air"
+      },
+      "privacy_startframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/apple-intelligence/privacy_startframe__b524gvppq9ci_large_2x.jpg",
+        "section": "apple-intelligence",
+        "family": "Air"
+      },
+      "writingtools": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/apple-intelligence/writingtools__ceu22eq1102q_large_2x.png",
+        "section": "apple-intelligence",
+        "family": "Air"
+      },
+      "barrel_roll_endframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/apple-pencil-pro/modal/barrel_roll_endframe__d6cy5ij3s0k2_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Air"
+      },
+      "barrel_roll_startframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/apple-pencil-pro/modal/barrel_roll_startframe__f5zinabw8uye_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Air"
+      },
+      "charging": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/apple-pencil-pro/modal/charging__fkj24ywhsyum_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Air"
+      },
+      "double-tap_endframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/apple-pencil-pro/modal/double-tap_endframe__b5z89onsfqc2_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Air"
+      },
+      "double-tap_startframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/apple-pencil-pro/modal/double-tap_startframe__c096z48395oy_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Air"
+      },
+      "haptic_endframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/apple-pencil-pro/modal/haptic_endframe__ob21yesrh9eu_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Air"
+      },
+      "haptic_startframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/apple-pencil-pro/modal/haptic_startframe__fcnk06hhwaum_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Air"
+      },
+      "haptic_static": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/apple-pencil-pro/modal/haptic_static__d7d3qfuk7ryq_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Air"
+      },
+      "hover_endframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/apple-pencil-pro/modal/hover_endframe__fkkda8kjyne6_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Air"
+      },
+      "hover_startframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/apple-pencil-pro/modal/hover_startframe__ddtgz1i2c5ea_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Air"
+      },
+      "pencils": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/apple-pencil-pro/modal/pencils__fvooe85sxqem_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Air"
+      },
+      "squeeze": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/apple-pencil-pro/modal/squeeze__e89zwj3hxviy_large_2x.jpg",
+        "section": "apple-pencil-pro",
+        "family": "Air"
+      },
+      "squeeze_endframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/apple-pencil-pro/modal/squeeze_endframe__bn3w0ucpy18i_large_2x.png",
+        "section": "apple-pencil-pro",
+        "family": "Air"
+      },
+      "squeeze_startframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/apple-pencil-pro/modal/squeeze_startframe__c0hhxlzn04sy_large_2x.png",
+        "section": "apple-pencil-pro",
+        "family": "Air"
+      },
+      "cameras_endframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/cameras/cameras_endframe__cv0fbgxrv2uu_large_2x.png",
+        "section": "cameras",
+        "family": "Air"
+      },
+      "cameras_startframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/cameras/cameras_startframe__bat785d57g5e_large_2x.png",
+        "section": "cameras",
+        "family": "Air"
+      },
+      "back_camera": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/cameras/modal/back_camera__rpaz3e32zv2u_large_2x.jpg",
+        "section": "cameras",
+        "family": "Air"
+      },
+      "front_landscape_camera_endframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/cameras/modal/front_landscape_camera_endframe__cmrw0h5b3jhy_large_2x.jpg",
+        "section": "cameras",
+        "family": "Air"
+      },
+      "front_landscape_camera_hw": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/cameras/modal/front_landscape_camera_hw__b2jp3opi2az6_large_2x.png",
+        "section": "cameras",
+        "family": "Air"
+      },
+      "front_landscape_camera_screen": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/cameras/modal/front_landscape_camera_screen__det4njjkpzsm_large_2x.jpg",
+        "section": "cameras",
+        "family": "Air"
+      },
+      "front_landscape_camera_startframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/cameras/modal/front_landscape_camera_startframe__gl65yy3r7pua_large_2x.jpg",
+        "section": "cameras",
+        "family": "Air"
+      },
+      "chip_middle_top_endframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/chip/chip_middle_top_endframe__3zu8i1nab6ai_large_2x.png",
+        "section": "chip",
+        "family": "Air"
+      },
+      "chip_middle_top_startframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/chip/chip_middle_top_startframe__d9a45bngqqye_large_2x.png",
+        "section": "chip",
+        "family": "Air"
+      },
+      "chip_top_endframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/chip/chip_top_endframe__bac7em7optua_large_2x.png",
+        "section": "chip",
+        "family": "Air"
+      },
+      "chip_top_startframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/chip/chip_top_startframe__b4iq8s6s0aj6_large_2x.png",
+        "section": "chip",
+        "family": "Air"
+      },
+      "hero_bottom": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/chip/hero_bottom__c8meadizk0cy_large_2x.jpg",
+        "section": "chip",
+        "family": "Air"
+      },
+      "hero_middle_bottom": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/chip/hero_middle_bottom__d6qitjkgtnsm_large_2x.png",
+        "section": "chip",
+        "family": "Air"
+      },
+      "ai_apps": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/chip/modal/ai_apps__czjlizvt1w2u_large_2x.jpg",
+        "section": "chip",
+        "family": "Air"
+      },
+      "gpu": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/chip/modal/gpu__togb296h6lmm_large_2x.jpg",
+        "section": "chip",
+        "family": "Air"
+      },
+      "neural_engine": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/chip/modal/neural_engine__dm6nlab6egae_large_2x.jpg",
+        "section": "chip",
+        "family": "Air"
+      },
+      "slide_1A": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/closer-look/all-colors/slide_1A__u8zw91uc6iaq_large_2x.jpg",
+        "section": "closer-look",
+        "family": "Air"
+      },
+      "slide_2A": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/closer-look/all-colors/slide_2A__p74br7miwoiq_large_2x.jpg",
+        "section": "closer-look",
+        "family": "Air"
+      },
+      "slide_2B": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/closer-look/all-colors/slide_2B__dvqfqwnkj2c2_large_2x.jpg",
+        "section": "closer-look",
+        "family": "Air"
+      },
+      "slide_3A": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/closer-look/all-colors/slide_3A__e9d8j4i6akii_large_2x.jpg",
+        "section": "closer-look",
+        "family": "Air"
+      },
+      "slide_3B": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/closer-look/all-colors/slide_3B__fxurhsazk8i2_large_2x.jpg",
+        "section": "closer-look",
+        "family": "Air"
+      },
+      "wireless": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/connectivity/wireless__dp8hiuo998eq_large_2x.jpg",
+        "section": "connectivity",
+        "family": "Air"
+      },
+      "ipad_air": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/contrast/product-tile/ipad_air__bbsxw9xstope_large_2x.png",
+        "section": "contrast",
+        "family": "Air"
+      },
+      "ipad_pro": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/contrast/product-tile/ipad_pro__gnb5r5r8ec6e_large_2x.png",
+        "section": "contrast",
+        "family": "Air"
+      },
+      "hero_endframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/hero/hero_endframe__6gl84bccyaqi_large_2x.png",
+        "section": "hero",
+        "family": "Air"
+      },
+      "hero_eyebrow_logo": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/hero/hero_eyebrow_logo__dfeba4232rsm_large_2x.png",
+        "section": "hero",
+        "family": "Air"
+      },
+      "hero_intro_logo": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/hero/hero_intro_logo__dhifk4eut8wi_large_2x.png",
+        "section": "hero",
+        "family": "Air"
+      },
+      "highlights_chip_endframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/highlights/anim/highlights_chip_endframe__wyb8kl53b2ae_large_2x.jpg",
+        "section": "highlights",
+        "family": "Air"
+      },
+      "highlights_chip_startframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/highlights/anim/highlights_chip_startframe__ftxm690kp066_large_2x.jpg",
+        "section": "highlights",
+        "family": "Air"
+      },
+      "highlights_chip_static": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/highlights/anim/highlights_chip_static__r572qidazrma_large_2x.jpg",
+        "section": "highlights",
+        "family": "Air"
+      },
+      "ipados": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/highlights/ipados__fsyro8hghueu_large_2x.png",
+        "section": "highlights",
+        "family": "Air"
+      },
+      "overview": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/highlights/overview__h4xt3p31xviy_large_2x.png",
+        "section": "highlights",
+        "family": "Air"
+      },
+      "sizes": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/highlights/sizes__gbjdxwtfmp6q_large_2x.png",
+        "section": "highlights",
+        "family": "Air"
+      },
+      "ipad_air_blue": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/ipados/ipad_air_blue__btrcc5x4t6j6_large_2x.png",
+        "section": "ipados",
+        "family": "Air"
+      },
+      "ipad_air_purple": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/ipados/ipad_air_purple__f8mkphpzreq2_large_2x.png",
+        "section": "ipados",
+        "family": "Air"
+      },
+      "ipad_air_starlight": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/ipados/ipad_air_starlight__bsd3afgeoij6_large_2x.png",
+        "section": "ipados",
+        "family": "Air"
+      },
+      "app_gallery_adobe_acrobat": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/ipados/modal/apps/gallery/screen/app_gallery_adobe_acrobat__tnus8an412aq_large_2x.jpg",
+        "section": "ipados",
+        "family": "Air"
+      },
+      "app_gallery_games": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/ipados/modal/apps/gallery/screen/app_gallery_games__e52w8ds9vfyq_large_2x.jpg",
+        "section": "ipados",
+        "family": "Air"
+      },
+      "app_gallery_goodnotes": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/ipados/modal/apps/gallery/screen/app_gallery_goodnotes__bl1xl7mcik6a_large_2x.jpg",
+        "section": "ipados",
+        "family": "Air"
+      },
+      "app_gallery_luminar": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/ipados/modal/apps/gallery/screen/app_gallery_luminar__ftias99jd0mu_large_2x.jpg",
+        "section": "ipados",
+        "family": "Air"
+      },
+      "app_gallery_procreate": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/ipados/modal/apps/gallery/screen/app_gallery_procreate__f4k4an196a6a_large_2x.jpg",
+        "section": "ipados",
+        "family": "Air"
+      },
+      "app_gallery_zoom": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/ipados/modal/apps/gallery/screen/app_gallery_zoom__flsnato133qm_large_2x.jpg",
+        "section": "ipados",
+        "family": "Air"
+      },
+      "keynote": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/ipados/modal/keynote__pjo7r8tun7ue_large_2x.jpg",
+        "section": "ipados",
+        "family": "Air"
+      },
+      "photos": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/ipados/modal/photos__c61ov9e6aec2_large_2x.jpg",
+        "section": "ipados",
+        "family": "Air"
+      },
+      "magic_keyboard_endframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/keyboard/magic_keyboard_endframe__gbalczm8nfee_large_2x.png",
+        "section": "keyboard",
+        "family": "Air"
+      },
+      "magic_keyboard_startframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/keyboard/magic_keyboard_startframe__d47xcataxlsi_large_2x.png",
+        "section": "keyboard",
+        "family": "Air"
+      },
+      "spin_endframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/two-sizes/gallery-toggle/spin_endframe__fz79pypve9ay_large_2x.png",
+        "section": "two-sizes",
+        "family": "Air"
+      },
+      "spin_reverse_endframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/two-sizes/gallery-toggle/spin_reverse_endframe__crvqft16efue_large_2x.png",
+        "section": "two-sizes",
+        "family": "Air"
+      },
+      "spin_reverse_startframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part2/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/two-sizes/gallery-toggle/spin_reverse_startframe__dreiwn4696ky_large_2x.png",
+        "section": "two-sizes",
+        "family": "Air"
+      },
+      "spin_startframe": {
+        "src": "/Gadget_Hub_iPad_4_Air_page_images_part3/03_Animation_and_page_images_apple.com/iPad_Air_page/overview/two-sizes/gallery-toggle/spin_startframe__dvihdbggm96q_large_2x.png",
+        "section": "two-sizes",
+        "family": "Air"
+      }
+    },
+    "mini": {
+      "ipad-mini_overview": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/meta/ipad-mini_overview__cxipvq7fs1ci_og.png",
+        "section": "ipad-mini_overview__cxipvq7fs1ci_og.png",
+        "family": "mini"
+      },
+      "books": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/apps/books__fshl2x3khn2a_large_2x.png",
+        "section": "apps",
+        "family": "mini"
+      },
+      "calculator": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/apps/calculator__b2ptjf7xgumq_large_2x.png",
+        "section": "apps",
+        "family": "mini"
+      },
+      "foreflight": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/apps/foreflight__fgemzx2o35m6_large_2x.png",
+        "section": "apps",
+        "family": "mini"
+      },
+      "infinity_nikki": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/apps/infinity_nikki__cyzkfy6wouaa_large_2x.png",
+        "section": "apps",
+        "family": "mini"
+      },
+      "ipados_headline": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/apps/ipados_headline__c0ia7e2iyu0y_large_2x.png",
+        "section": "apps",
+        "family": "mini"
+      },
+      "lightroom": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/apps/lightroom__0w059s8risyu_large_2x.png",
+        "section": "apps",
+        "family": "mini"
+      },
+      "logic_pro": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/apps/logic_pro__esmkhvxxroya_large_2x.png",
+        "section": "apps",
+        "family": "mini"
+      },
+      "markup": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/apps/markup__bwmpyj5jw52a_large_2x.png",
+        "section": "apps",
+        "family": "mini"
+      },
+      "multitasking": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/apps/multitasking__bgodev1gcjjm_large_2x.png",
+        "section": "apps",
+        "family": "mini"
+      },
+      "notes": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/apps/notes__euuiklhwgp6q_large_2x.png",
+        "section": "apps",
+        "family": "mini"
+      },
+      "procreate": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/apps/procreate__b01fbifjleya_large_2x.png",
+        "section": "apps",
+        "family": "mini"
+      },
+      "quick_note": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/apps/quick_note__f70bzy88kimy_large_2x.jpg",
+        "section": "apps",
+        "family": "mini"
+      },
+      "widgets": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/apps/widgets__ffowfq64seye_large_2x.png",
+        "section": "apps",
+        "family": "mini"
+      },
+      "zinnia": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/apps/zinnia__d1jv1kbbp402_large_2x.png",
+        "section": "apps",
+        "family": "mini"
+      },
+      "ar_ipad_mini": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/ar/ar_ipad_mini__byudj9axf8ty_large_2x.jpg",
+        "section": "ar",
+        "family": "mini"
+      },
+      "camera_headline": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/camera/camera_headline__e8328uhkokii_large_2x.png",
+        "section": "camera",
+        "family": "mini"
+      },
+      "rear_camera": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/camera/rear_camera__i2x6bn0uxwii_large_2x.png",
+        "section": "camera",
+        "family": "mini"
+      },
+      "scan_documents": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/camera/scan_documents__bt4a0xao1xiq_large_2x.png",
+        "section": "camera",
+        "family": "mini"
+      },
+      "chip_headline": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/chip/chip_headline__fwdrtscejfmi_large_2x.png",
+        "section": "chip",
+        "family": "mini"
+      },
+      "powerful": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/chip/powerful__fs81y3s8dfee_large_2x.jpg",
+        "section": "chip",
+        "family": "mini"
+      },
+      "cellular": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/design/cellular__bn9hqryjphyu_large_2x.jpg",
+        "section": "design",
+        "family": "mini"
+      },
+      "colors": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/design/colors__ed8x8u1yg6uu_large_2x.jpg",
+        "section": "design",
+        "family": "mini"
+      },
+      "design_headline": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/design/design_headline__cvgh51rmzq2q_large_2x.png",
+        "section": "design",
+        "family": "mini"
+      },
+      "download_headline": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/design/download_headline__f9stvamm5pua_large_2x.png",
+        "section": "design",
+        "family": "mini"
+      },
+      "liquid_retina_1": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/design/liquid_retina_1__eh1ihtzkw8wi_large_2x.jpg",
+        "section": "design",
+        "family": "mini"
+      },
+      "liquid_retina_2": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/design/liquid_retina_2__c1svymizzic2_large_2x.png",
+        "section": "design",
+        "family": "mini"
+      },
+      "usb_c": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/design/usb_c__bx9k2cc0hvrm_large_2x.jpg",
+        "section": "design",
+        "family": "mini"
+      },
+      "wifi_update": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/design/wifi_update__fha194v5iay6_large_2x.png",
+        "section": "design",
+        "family": "mini"
+      },
+      "fan": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/hero/fan__mub6p4ua0t2y_large_2x.jpg",
+        "section": "hero",
+        "family": "mini"
+      },
+      "hero_endframe": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/hero/hero_endframe__ck10nf4t7ely_large_2x.png",
+        "section": "hero",
+        "family": "mini"
+      },
+      "hero_startframe": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/hero/hero_startframe__cdj724o7qbde_large_2x.png",
+        "section": "hero",
+        "family": "mini"
+      },
+      "landscape": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/hero/landscape__gxui1v022sae_large_2x.png",
+        "section": "hero",
+        "family": "mini"
+      },
+      "logo": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/hero/logo__fzktusn8bsy2_large_2x.png",
+        "section": "hero",
+        "family": "mini"
+      },
+      "express_hw_alt": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/intelligence/express_hw_alt__d2f4nugzcaky_large_2x.jpg",
+        "section": "intelligence",
+        "family": "mini"
+      },
+      "personal_headline": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/intelligence/personal_headline__f80s63iho8ya_large_2x.png",
+        "section": "intelligence",
+        "family": "mini"
+      },
+      "siri_update": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/intelligence/siri_update__iyortjt24te2_large_2x.jpg",
+        "section": "intelligence",
+        "family": "mini"
+      },
+      "visually": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/intelligence/visually__e50rwjmb46y6_large_2x.jpg",
+        "section": "intelligence",
+        "family": "mini"
+      },
+      "writing_tools": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part1/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/intelligence/writing_tools__b4dnvj6rx1au_large_2x.jpg",
+        "section": "intelligence",
+        "family": "mini"
+      },
+      "apple_pencil_pro": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part2/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/pencil/apple_pencil_pro__zzchsw7w1r6i_large_2x.jpg",
+        "section": "pencil",
+        "family": "mini"
+      },
+      "barrel-roll_startframe": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part2/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/pencil/gallery/barrel-roll_startframe__b55vl9f03do2_large_2x.jpg",
+        "section": "pencil",
+        "family": "mini"
+      },
+      "double_tap_startframe": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part2/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/pencil/gallery/double_tap_startframe__fv95c3pbsmem_large_2x.jpg",
+        "section": "pencil",
+        "family": "mini"
+      },
+      "haptics_startframe": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part2/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/pencil/gallery/haptics_startframe__bd6ap3fkf6wi_large_2x.jpg",
+        "section": "pencil",
+        "family": "mini"
+      },
+      "hover_startframe": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part2/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/pencil/gallery/hover_startframe__gacs20y5z2y6_large_2x.jpg",
+        "section": "pencil",
+        "family": "mini"
+      },
+      "squeeze_startframe": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part2/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/pencil/gallery/squeeze_startframe__e8e4mnlmn1qy_large_2x.jpg",
+        "section": "pencil",
+        "family": "mini"
+      },
+      "pro_headline": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part2/03_Animation_and_page_images_apple.com/iPad_mini_page/overview/pencil/pro_headline__gnafgazys0uq_large_2x.png",
+        "section": "pencil",
+        "family": "mini"
+      },
+      "trade_in": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part2/03_Animation_and_page_images_apple.com/iPad_mini_page/shared-footer/trade_in__2c1rb9g2xqqe_large_2x.jpg",
+        "section": "trade_in__2c1rb9g2xqqe_large_2x.jpg",
+        "family": "mini"
+      },
+      "upgrade_ipad": {
+        "src": "/Gadget_Hub_iPad_5_mini_page_images_part2/03_Animation_and_page_images_apple.com/iPad_mini_page/shared-footer/upgrade_ipad__dzz1o87wx2oi_large_2x.jpg",
+        "section": "upgrade_ipad__dzz1o87wx2oi_large_2x.jpg",
+        "family": "mini"
+      }
+    },
+    "iPad": {
+      "ipad-11_overview": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/meta/ipad-11_overview__brh97xhhd8b6_og.png",
+        "section": "ipad-11_overview__brh97xhhd8b6_og.png",
+        "family": "iPad"
+      },
+      "apps": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/apps/apps__k36ynh6ueoyi_large_2x.jpg",
+        "section": "apps",
+        "family": "iPad"
+      },
+      "ar_ipad_blue": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/ar/ar_ipad_blue__d92pgjt4vnee_large_2x.jpg",
+        "section": "ar",
+        "family": "iPad"
+      },
+      "ar_ipad_pink": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/ar/ar_ipad_pink__b2aojrg2kbsi_large_2x.jpg",
+        "section": "ar",
+        "family": "iPad"
+      },
+      "ar_ipad_silver": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/ar/ar_ipad_silver__fdoed3gunyqa_large_2x.jpg",
+        "section": "ar",
+        "family": "iPad"
+      },
+      "ar_ipad_yellow": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/ar/ar_ipad_yellow__fvf57b0nm526_large_2x.jpg",
+        "section": "ar",
+        "family": "iPad"
+      },
+      "camera_endframe": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/connect/camera_endframe__qioefbh5aoyi_large_2x.jpg",
+        "section": "connect",
+        "family": "iPad"
+      },
+      "camera_startframe": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/connect/camera_startframe__b3ifkvfai3g2_large_2x.jpg",
+        "section": "connect",
+        "family": "iPad"
+      },
+      "center_stage_endframe": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/connect/center_stage_endframe__eu4x3duk262q_large_2x.jpg",
+        "section": "connect",
+        "family": "iPad"
+      },
+      "center_stage_snipe": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/connect/center_stage_snipe__d2upem1gd38m_large_2x.png",
+        "section": "connect",
+        "family": "iPad"
+      },
+      "center_stage_startframe": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/connect/center_stage_startframe__e8rpj12dc06e_large_2x.jpg",
+        "section": "connect",
+        "family": "iPad"
+      },
+      "stream": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/connect/stream__b9rd2zagax1e_large_2x.jpg",
+        "section": "connect",
+        "family": "iPad"
+      },
+      "audio": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/create/audio__dorhhu8bwc66_large_2x.jpg",
+        "section": "create",
+        "family": "iPad"
+      },
+      "camera": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/create/camera__c3ssw0atzvyq_large_2x.jpg",
+        "section": "create",
+        "family": "iPad"
+      },
+      "camera_snipe": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/create/camera_snipe__gk4uuc98riem_large_2x.png",
+        "section": "create",
+        "family": "iPad"
+      },
+      "draw": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/create/draw__cua8vn2566uu_large_2x.jpg",
+        "section": "create",
+        "family": "iPad"
+      },
+      "scanner_endframe": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/create/scanner_endframe__brl6wlfos8ty_large_2x.jpg",
+        "section": "create",
+        "family": "iPad"
+      },
+      "scanner_startframe": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/create/scanner_startframe__vce9bpasxhe2_large_2x.jpg",
+        "section": "create",
+        "family": "iPad"
+      },
+      "fan": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/design/fan__vnl85mt3xzm6_large_2x.jpg",
+        "section": "design",
+        "family": "iPad"
+      },
+      "fan_snipe1": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/design/fan_snipe1__e98fs6p606ie_large_2x.png",
+        "section": "design",
+        "family": "iPad"
+      },
+      "file_locations": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/design/file_locations__f478psdpgtim_large_2x.jpg",
+        "section": "design",
+        "family": "iPad"
+      },
+      "modular_endframe": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/design/modular_endframe__g10w6che28ii_large_2x.jpg",
+        "section": "design",
+        "family": "iPad"
+      },
+      "modular_snipe": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/design/modular_snipe__e7rksp5b5zyy_large_2x.png",
+        "section": "design",
+        "family": "iPad"
+      },
+      "modular_startframe": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/design/modular_startframe__ecmd9ce9dsom_large_2x.jpg",
+        "section": "design",
+        "family": "iPad"
+      },
+      "multiple_apps": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/design/multiple_apps__d2pv4wntb8cy_large_2x.jpg",
+        "section": "design",
+        "family": "iPad"
+      },
+      "multiple_apps_snipe": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/design/multiple_apps_snipe__fz5cv9olv6em_large_2x.png",
+        "section": "design",
+        "family": "iPad"
+      },
+      "snap_endframe": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/design/snap_endframe__ej9e60w545aq_large_2x.jpg",
+        "section": "design",
+        "family": "iPad"
+      },
+      "features": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/features/features__bw1957oktspe_large_2x.jpg",
+        "section": "features",
+        "family": "iPad"
+      },
+      "features_startframe": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/features/features_startframe__f98ndfmkpjam_large_2x.jpg",
+        "section": "features",
+        "family": "iPad"
+      },
+      "accessories": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/get-things-done/accessories__ba9ocut0qg02_large_2x.jpg",
+        "section": "get-things-done",
+        "family": "iPad"
+      },
+      "chip": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/get-things-done/chip__buvu5472f81y_large_2x.jpg",
+        "section": "get-things-done",
+        "family": "iPad"
+      },
+      "collaborate": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/get-things-done/collaborate__e63hvtp79laq_large_2x.jpg",
+        "section": "get-things-done",
+        "family": "iPad"
+      },
+      "collaborate_snipe": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/get-things-done/collaborate_snipe__ukybwg0aiz6a_large_2x.png",
+        "section": "get-things-done",
+        "family": "iPad"
+      },
+      "keyboard_endframe": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/get-things-done/keyboard_endframe__f430b2lvfv2a_large_2x.jpg",
+        "section": "get-things-done",
+        "family": "iPad"
+      },
+      "keyboard_startframe": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/get-things-done/keyboard_startframe__du0ou7bmh0a6_large_2x.jpg",
+        "section": "get-things-done",
+        "family": "iPad"
+      },
+      "hero": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/hero/hero__crzh9misvcuq_large_2x.jpg",
+        "section": "hero",
+        "family": "iPad"
+      },
+      "connect": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/ipad-accessories/connect__dohvhytvr2s2_large_2x.png",
+        "section": "ipad-accessories",
+        "family": "iPad"
+      },
+      "connect_snipe": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/ipad-accessories/connect_snipe__baonyapp3cwy_large_2x.png",
+        "section": "ipad-accessories",
+        "family": "iPad"
+      },
+      "folio_endframe": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/ipad-accessories/folio_endframe__dgy7u4kz7vo2_large_2x.jpg",
+        "section": "ipad-accessories",
+        "family": "iPad"
+      },
+      "folio_fallback": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/ipad-accessories/folio_fallback__bnhrhni9n1au_large_2x.jpg",
+        "section": "ipad-accessories",
+        "family": "iPad"
+      },
+      "folio_startframe": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/ipad-accessories/folio_startframe__by5eu7htjfau_large_2x.jpg",
+        "section": "ipad-accessories",
+        "family": "iPad"
+      },
+      "pencil": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/ipad-accessories/pencil__bdbfkbqf40gi_large_2x.jpg",
+        "section": "ipad-accessories",
+        "family": "iPad"
+      },
+      "pencil_snipe": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/ipad-accessories/pencil_snipe__dgt2jv6ep2mq_large_2x.png",
+        "section": "ipad-accessories",
+        "family": "iPad"
+      },
+      "usb_c_endframe": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/ipad-accessories/usb_c_endframe__bo810y4gzrua_large_2x.jpg",
+        "section": "ipad-accessories",
+        "family": "iPad"
+      },
+      "usb_c_startframe": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/ipad-accessories/usb_c_startframe__ecy2c6uyel4y_large_2x.jpg",
+        "section": "ipad-accessories",
+        "family": "iPad"
+      },
+      "ar": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/watch-learn-play/ar__gjmar9lsusey_large_2x.jpg",
+        "section": "watch-learn-play",
+        "family": "iPad"
+      },
+      "ar_snipe": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/watch-learn-play/ar_snipe__ed85d6mc7k4m_large_2x.png",
+        "section": "watch-learn-play",
+        "family": "iPad"
+      },
+      "display": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/watch-learn-play/display__3qcfrcyxqyaq_large_2x.jpg",
+        "section": "watch-learn-play",
+        "family": "iPad"
+      },
+      "games": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/overview/watch-learn-play/games__b5sidoh0myk2_large_2x.jpg",
+        "section": "watch-learn-play",
+        "family": "iPad"
+      },
+      "education": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/shared/footer/education__bntfcras27qu_large_2x.jpg",
+        "section": "footer",
+        "family": "iPad"
+      },
+      "trade_in": {
+        "src": "/Gadget_Hub_iPad_6_iPad_page_images/03_Animation_and_page_images_apple.com/iPad_standard_page/shared/footer/trade_in__ft7udhpvnfu6_large_2x.jpg",
+        "section": "footer",
+        "family": "iPad"
+      }
+    }
+  }
+}

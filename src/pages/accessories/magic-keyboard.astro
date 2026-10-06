@@ -1,0 +1,158 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import AccessoryCard from "../../components/accessories/AccessoryCard.astro";
+import CompatibilityFinder from "../../components/accessories/CompatibilityFinder.astro";
+import KeyboardFeel from "../../components/accessories/KeyboardFeel.astro";
+import AccessoryLipaCalc from "../../components/accessories/AccessoryLipaCalc.astro";
+import AccessoryTrademark from "../../components/accessories/AccessoryTrademark.astro";
+import {
+  keyboards,
+  getAccessoriesPageImage,
+  accessoryFaq,
+  accessoryBuyingNotes,
+  accessoriesConfig,
+} from "../../lib/accessories";
+
+const hero = getAccessoriesPageImage("keyboard/selector/selector_hero", "Magic Keyboard");
+const families = [
+  { label: "iPad Pro", key: "keyboard/selector/selector_magic_keyboard_ipad_pro", href: "#for-ipad" },
+  { label: "iPad Air", key: "keyboard/selector/selector_magic_keyboard_ipad_air", href: "#for-ipad" },
+  { label: "Folio", key: "keyboard/selector/selector_magic_keyboard_folio", href: "#for-ipad" },
+  { label: "Mac", key: "keyboard/selector/selector_magic_keyboard", href: "#for-mac" },
+];
+const ipadKbs = keyboards().filter((k) => k.platform === "ipad");
+const macKbs = keyboards().filter((k) => k.platform === "mac");
+const faq = accessoryFaq();
+const notes = accessoryBuyingNotes(ipadKbs[0]);
+---
+
+<BaseLayout title="Magic Keyboard - GadgetHub" description="Magic Keyboard for iPad and Mac. Fit checked in Nairobi.">
+  <section class="xkb-hero">
+    <div class="container">
+      <h1>Magic Keyboard</h1>
+      <p>Match the exact iPad — or pick a Mac keyboard with Touch ID where it works.</p>
+    </div>
+    <div class="xkb-hero__img">
+      <img src={hero.src} alt={hero.alt} width="1800" height="1200" fetchpriority="high" />
+    </div>
+  </section>
+
+  <section class="container xkb-select">
+    <h2>Choose a family</h2>
+    <div class="xkb-select__grid">
+      {
+        families.map((f) => {
+          const img = getAccessoriesPageImage(f.key, f.label);
+          return (
+            <a class="xkb-select__card" href={f.href}>
+              <img src={img.src} alt={f.label} width="640" height="480" loading="lazy" />
+              <h3>{f.label}</h3>
+            </a>
+          );
+        })
+      }
+    </div>
+  </section>
+
+  <CompatibilityFinder preselectLooking="keyboard" />
+
+  <section class="container xkb-cards" id="for-ipad">
+    <h2>For iPad</h2>
+    <div class="xkb-cards__grid">
+      {ipadKbs.map((p) => <AccessoryCard product={p} />)}
+    </div>
+  </section>
+
+  <section class="container xkb-cards" id="for-mac">
+    <h2>For Mac</h2>
+    <p>{accessoriesConfig.layoutNote}</p>
+    <div class="xkb-cards__grid">
+      {macKbs.map((p) => <AccessoryCard product={p} />)}
+    </div>
+  </section>
+
+  <KeyboardFeel />
+
+  <section class="container xkb-notes">
+    <h2>Buying notes</h2>
+    {notes.map((n) => (
+      <article>
+        <h3>{n.title}</h3>
+        <p>{n.body}</p>
+      </article>
+    ))}
+  </section>
+
+  <section class="container xkb-faq">
+    <h2>Questions people ask</h2>
+    {
+      faq.map((f) => (
+        <details>
+          <summary>{f.q}</summary>
+          <p>{f.a}</p>
+        </details>
+      ))
+    }
+  </section>
+
+  <AccessoryLipaCalc productId="keyboard-ipad-pro-13" />
+  <AccessoryTrademark />
+</BaseLayout>
+
+<style>
+  .xkb-hero {
+    background: #f5f5f7;
+    padding: 2.5rem 0 0;
+  }
+  .xkb-hero h1 {
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+  }
+  .xkb-hero__img {
+    max-width: 960px;
+    margin: 1.5rem auto 0;
+    padding: 0 1rem 2rem;
+  }
+  .xkb-hero__img img {
+    width: 100%;
+    mix-blend-mode: multiply;
+    background: #fff;
+    border-radius: 1rem;
+  }
+  .xkb-select,
+  .xkb-cards,
+  .xkb-notes,
+  .xkb-faq {
+    padding: 2.5rem 0;
+  }
+  .xkb-select__grid,
+  .xkb-cards__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .xkb-select__card {
+    background: #f5f5f7;
+    border-radius: 1rem;
+    padding: 1rem;
+    text-decoration: none;
+    color: inherit;
+  }
+  .xkb-select__card img {
+    width: 100%;
+    mix-blend-mode: multiply;
+  }
+  details {
+    border-bottom: 1px solid #d2d2d7;
+    padding: 0.75rem 0;
+  }
+  summary {
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .xkb-notes p {
+    color: #6e6e73;
+  }
+</style>

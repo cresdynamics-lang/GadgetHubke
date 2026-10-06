@@ -1,0 +1,114 @@
+---
+import { accessoriesConfig, formatKes, lipaBreakdown, accessories } from "../../lib/accessories";
+
+interface Props {
+  productId?: string;
+}
+
+const { productId } = Astro.props;
+const products = accessories.filter((a) => a.stocked !== false);
+const initial = products.find((p) => p.id === productId) || products[0];
+const lipa = accessoriesConfig.lipa;
+---
+
+<section class="xlipa" id="lipa" data-xlipa>
+  <div class="container">
+    <h2>Lipa Mdogo Mdogo</h2>
+    <p class="xlipa__note">{lipa.note}</p>
+    <label>
+      Product
+      <select data-lipa-product>
+        {
+          products.map((p) => (
+            <option value={p.id} data-kes={p.basePriceKes} selected={p.id === initial.id}>
+              {p.name} — {formatKes(p.basePriceKes)}
+            </option>
+          ))
+        }
+      </select>
+    </label>
+    <label>
+      Deposit {lipa.depositMinPct}–{lipa.depositMaxPct}%
+      <input
+        type="range"
+        data-lipa-deposit
+        min={lipa.depositMinPct}
+        max={lipa.depositMaxPct}
+        step={lipa.depositStepPct}
+        value={lipa.depositDefaultPct}
+      />
+      <span data-lipa-deposit-label>{lipa.depositDefaultPct}%</span>
+    </label>
+    <label>
+      Months
+      <select data-lipa-months>
+        {lipa.monthOptions.map((m) => (
+          <option value={m} selected={m === lipa.monthsDefault}>{m} months</option>
+        ))}
+      </select>
+    </label>
+    <div class="xlipa__out" data-lipa-out aria-live="polite"></div>
+  </div>
+</section>
+
+<script define:vars={{ defaultKes: initial.basePriceKes }}>
+  const root = document.querySelector("[data-xlipa]");
+  if (!root) throw new Error("lipa");
+  const product = root.querySelector("[data-lipa-product]");
+  const deposit = root.querySelector("[data-lipa-deposit]");
+  const depositLabel = root.querySelector("[data-lipa-deposit-label]");
+  const months = root.querySelector("[data-lipa-months]");
+  const out = root.querySelector("[data-lipa-out]");
+
+  function kes(n) {
+    return `KES ${n.toLocaleString("en-KE")}`;
+  }
+
+  function render() {
+    const opt = product?.selectedOptions?.[0];
+    const price = Number(opt?.dataset.kes || defaultKes);
+    const depPct = Number(deposit?.value || 40);
+    const mo = Number(months?.value || 6);
+    const depositKes = Math.round((price * depPct) / 100);
+    const monthly = Math.round((price - depositKes) / mo);
+    if (depositLabel) depositLabel.textContent = `${depPct}%`;
+    if (out) {
+      out.innerHTML = `
+        <p><strong>Deposit</strong> ${kes(depositKes)}</p>
+        <p><strong>Monthly</strong> ${kes(monthly)} × ${mo}</p>
+        <p><strong>Total</strong> ${kes(depositKes + monthly * mo)}</p>
+        <p class="xlipa__fine">Illustration at 0% extra; real terms are set by Gadget Hub.</p>`;
+    }
+  }
+  product?.addEventListener("change", render);
+  deposit?.addEventListener("input", render);
+  months?.addEventListener("change", render);
+  render();
+</script>
+
+<style>
+  .xlipa {
+    padding: 3rem 0;
+    border-top: 1px solid #d2d2d7;
+  }
+  .xlipa label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin: 0.85rem 0;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  .xlipa select,
+  .xlipa input[type="range"] {
+    max-width: 28rem;
+  }
+  .xlipa__note,
+  .xlipa__fine {
+    color: #6e6e73;
+    font-size: 0.85rem;
+  }
+  .xlipa__out p {
+    margin: 0.35rem 0;
+  }
+</style>

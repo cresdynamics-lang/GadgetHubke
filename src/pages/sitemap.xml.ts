@@ -4,6 +4,7 @@ import { homeCategories } from "../lib/home";
 import { productNav } from "../lib/catalog";
 import { blogPosts } from "../lib/blog";
 import { products } from "../lib/products";
+import { tvHomeModels } from "../lib/tv-home";
 
 const staticPaths = [
   "/",
@@ -34,7 +35,9 @@ const staticPaths = [
   "/corporate-bulk",
   "/shop/watch",
   "/shop/airpods",
-  "/shop/tv-home",
+  "/tv-home",
+  "/tv-home/shop",
+  "/tv-home/compare",
 ] as const;
 
 function abs(path: string) {
@@ -55,6 +58,7 @@ export const GET: APIRoute = () => {
     urls.add(abs(product.overviewHref));
     urls.add(abs(product.specsHref));
   }
+  for (const m of tvHomeModels) urls.add(abs(`/tv-home/${m.id}`));
 
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

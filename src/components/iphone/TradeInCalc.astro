@@ -1,0 +1,172 @@
+---
+/**
+ * Trade-In estimator — indicative only.
+ */
+import { models, formatKes, tradeInEstimate, iphoneConfig } from "../../lib/iphone";
+
+interface Props {
+  modelId?: string;
+}
+
+const { modelId } = Astro.props;
+const options = [...models].sort((a, b) => b.family - a.family || b.basePriceKes - a.basePriceKes);
+const initial = options.find((o) => o.id === modelId) || options[0];
+const conditions = [
+  { key: "likeNew", label: "Like new", pct: iphoneConfig.tradeIn.conditionPct.likeNew },
+  { key: "good", label: "Good", pct: iphoneConfig.tradeIn.conditionPct.good },
+  { key: "worn", label: "Worn or cracked", pct: iphoneConfig.tradeIn.conditionPct.worn },
+] as const;
+const start = tradeInEstimate(initial.basePriceKes, "good");
+const waPhone = iphoneConfig.whatsapp;
+---
+
+<section class="trade-calc" data-trade-calc>
+  <header>
+    <h3>Trade-In estimate</h3>
+    <p>{iphoneConfig.tradeIn.note}</p>
+  </header>
+  <label>
+    Your current iPhone
+    <select data-trade-model>
+      {
+        options.map((o) => (
+          <option value={o.id} data-base={o.basePriceKes} selected={o.id === initial.id}>
+            {o.name}
+          </option>
+        ))
+      }
+    </select>
+  </label>
+  <div class="trade-calc__cond" role="group" aria-label="Condition">
+    {
+      conditions.map((c, i) => (
+        <button
+          type="button"
+          class:list={{ "is-active": c.key === "good" }}
+          data-trade-cond={c.key}
+          data-pct={c.pct}
+        >
+          {c.label}
+        </button>
+      ))
+    }
+  </div>
+  <p class="trade-calc__result">
+    About <strong data-trade-result>{formatKes(start)}</strong> credit
+  </p>
+  <a class="btn btn--secondary btn--sm" data-trade-wa href="#" target="_blank" rel="noopener noreferrer">
+    Send estimate on WhatsApp
+  </a>
+</section>
+
+<script define:vars={{ waPhone }}>
+  document.querySelectorAll("[data-trade-calc]").forEach((root) => {
+    const model = root.querySelector("[data-trade-model]");
+    const result = root.querySelector("[data-trade-result]");
+    const wa = root.querySelector("[data-trade-wa]");
+    let pct = 33;
+    let condLabel = "Good";
+
+    function tick() {
+      if (!(model instanceof HTMLSelectElement)) return;
+      const opt = model.selectedOptions[0];
+      const base = Number(opt?.getAttribute("data-base") || 0);
+      const name = opt?.textContent?.trim() || "iPhone";
+      const raw = (base * pct) / 100;
+      const credit = Math.round(raw / 500) * 500;
+      if (result) result.textContent = `KES ${credit.toLocaleString("en-KE")}`;
+      if (wa instanceof HTMLAnchorElement) {
+        wa.href = `https://wa.me/${waPhone}?text=${encodeURIComponent(
+          `Hi Gadget Hub, trade-in estimate request:\nPhone: ${name}\nCondition: ${condLabel}\nIndicative credit: KES ${credit.toLocaleString("en-KE")}`,
+        )}`;
+      }
+    }
+
+    model?.addEventListener("change", tick);
+    root.querySelectorAll("[data-trade-cond]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        root.querySelectorAll("[data-trade-cond]").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        pct = Number(btn.getAttribute("data-pct")) || 33;
+        condLabel = btn.textContent?.trim() || "Good";
+        tick();
+      });
+    });
+    tick();
+  });
+</script>
+
+<style>
+  .trade-calc {
+    background: #000;
+    color: #f5f5f7;
+    border-radius: 1.25rem;
+    padding: 1.25rem;
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .trade-calc header h3 {
+    margin: 0 0 0.35rem;
+  }
+
+  .trade-calc header p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #a1a1a6;
+  }
+
+  .trade-calc label {
+    display: grid;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #a1a1a6;
+  }
+
+  .trade-calc select {
+    font: inherit;
+    text-transform: none;
+    letter-spacing: 0;
+    border: 1px solid #424245;
+    border-radius: 0.5rem;
+    padding: 0.55rem 0.65rem;
+    background: #1d1d1f;
+    color: #f5f5f7;
+  }
+
+  .trade-calc__cond {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .trade-calc__cond button {
+    border: 1px solid #424245;
+    background: transparent;
+    color: #f5f5f7;
+    border-radius: 999px;
+    padding: 0.4rem 0.75rem;
+    font: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+
+  .trade-calc__cond button.is-active {
+    background: #f5f5f7;
+    color: #000;
+    border-color: #f5f5f7;
+  }
+
+  .trade-calc__result {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+
+  .trade-calc :global(.btn--secondary) {
+    border-color: #f5f5f7;
+    color: #f5f5f7;
+  }
+</style>

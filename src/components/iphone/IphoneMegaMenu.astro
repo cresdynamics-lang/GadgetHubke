@@ -1,0 +1,420 @@
+---
+/**
+ * iPhone mega menu — 4 columns + live preview (prompt §5).
+ * Desktop only; hidden below 1020px (drawer handles mobile).
+ */
+import {
+  models,
+  modelsByFamily,
+  getImage,
+  defaultColourForModel,
+  availableColours,
+  colourHex,
+  formatKes,
+  isLatestTag,
+  isOverviewOnly,
+} from "../../lib/iphone";
+
+const family16 = modelsByFamily(16);
+const family15 = modelsByFamily(15);
+const family14 = modelsByFamily(14);
+const family13 = modelsByFamily(13);
+const family12 = modelsByFamily(12);
+const family11 = modelsByFamily(11);
+
+function previewFor(id: string) {
+  const m = models.find((x) => x.id === id)!;
+  const colour = defaultColourForModel(m.id, m.defaultColour ?? undefined);
+  const img = getImage(m.id, colour, isOverviewOnly(m.id) ? "overview" : 1, m.name);
+  const colours = availableColours(m.id).slice(0, 6).map((key) => colourHex(key));
+  return {
+    id: m.id,
+    name: m.name,
+    tagline: m.tagline,
+    href: `/iphone/${m.id}`,
+    priceKes: m.basePriceKes,
+    src: img.src,
+    alt: img.alt,
+    colours,
+    latest: isLatestTag(m),
+  };
+}
+
+const previews = Object.fromEntries(models.map((m) => [m.id, previewFor(m.id)]));
+const defaultPreview = previewFor("iphone-16-pro-max");
+
+function linkRow(m: (typeof models)[0]) {
+  return {
+    id: m.id,
+    name: m.name,
+    href: `/iphone/${m.id}`,
+    price: formatKes(m.basePriceKes),
+    latest: isLatestTag(m),
+  };
+}
+---
+
+<div class="imega" data-imega>
+  <div class="imega__cols">
+    <div class="imega__col">
+      <p class="imega__heading">iPhone 16</p>
+      <ul>
+        {
+          family16.map((m) => (
+            <li>
+              <a
+                class="imega__link"
+                href={`/iphone/${m.id}`}
+                data-mega-preview={m.id}
+              >
+                <span>
+                  {m.name}
+                  {isLatestTag(m) ? <span class="imega__tag">Latest</span> : null}
+                </span>
+                <span class="imega__from">from {formatKes(m.basePriceKes)}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="imega__foot">
+        <a href="/iphone">All iPhone</a>
+        <a href="/iphone" data-search-open data-search-query="iPhone 18">
+          iPhone 18 and next models: get a stock alert
+        </a>
+      </div>
+    </div>
+
+    <div class="imega__col">
+      <p class="imega__heading">iPhone 15</p>
+      <ul>
+        {
+          family15.map((m) => (
+            <li>
+              <a class="imega__link" href={`/iphone/${m.id}`} data-mega-preview={m.id}>
+                <span>{m.name}</span>
+                <span class="imega__from">from {formatKes(m.basePriceKes)}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="imega__heading imega__heading--spaced">iPhone 14</p>
+      <ul>
+        {
+          family14.map((m) => (
+            <li>
+              <a class="imega__link" href={`/iphone/${m.id}`} data-mega-preview={m.id}>
+                <span>{m.name}</span>
+                <span class="imega__from">from {formatKes(m.basePriceKes)}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="imega__col imega__col--older">
+      <p class="imega__heading">iPhone 13</p>
+      <ul>
+        {
+          family13.map((m) => (
+            <li>
+              <a class="imega__link" href={`/iphone/${m.id}`} data-mega-preview={m.id}>
+                <span>{m.name}</span>
+                <span class="imega__from">from {formatKes(m.basePriceKes)}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="imega__heading imega__heading--spaced">iPhone 12</p>
+      <ul>
+        {
+          family12.map((m) => (
+            <li>
+              <a class="imega__link" href={`/iphone/${m.id}`} data-mega-preview={m.id}>
+                <span>{m.name}</span>
+                <span class="imega__from">from {formatKes(m.basePriceKes)}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="imega__heading imega__heading--spaced">iPhone 11</p>
+      <ul>
+        {
+          family11.map((m) => (
+            <li>
+              <a class="imega__link" href={`/iphone/${m.id}`} data-mega-preview={m.id}>
+                <span>{m.name}</span>
+                <span class="imega__from">from {formatKes(m.basePriceKes)}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <aside class="imega__preview" data-mega-card>
+      <div class="imega__stage">
+        <img
+          data-mega-img
+          src={defaultPreview.src}
+          alt={defaultPreview.alt}
+          width="280"
+          height="280"
+          decoding="async"
+        />
+      </div>
+      <p class="imega__pname" data-mega-name>{defaultPreview.name}</p>
+      <p class="imega__ptag" data-mega-tagline>{defaultPreview.tagline}</p>
+      <div class="imega__dots" data-mega-dots aria-hidden="true">
+        {
+          defaultPreview.colours.map((hex) => (
+            <span style={`background:${hex}`} />
+          ))
+        }
+      </div>
+      <p class="imega__pprice" data-mega-price>From {formatKes(defaultPreview.priceKes)}</p>
+      <a class="btn btn--primary btn--sm" data-mega-cta href={defaultPreview.href}>
+        View {defaultPreview.name}
+      </a>
+      <div class="imega__services">
+        <a href="/trade-in">Trade in your old iPhone</a>
+        <a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo</a>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script define:vars={{ previews, defaultPreview }}>
+  const root = document.querySelector("[data-imega]");
+  if (root) {
+    const img = root.querySelector("[data-mega-img]");
+    const name = root.querySelector("[data-mega-name]");
+    const tagline = root.querySelector("[data-mega-tagline]");
+    const price = root.querySelector("[data-mega-price]");
+    const cta = root.querySelector("[data-mega-cta]");
+    const dots = root.querySelector("[data-mega-dots]");
+
+    function show(id) {
+      const p = previews[id] || defaultPreview;
+      if (img instanceof HTMLImageElement) {
+        img.style.opacity = "0";
+        const next = new Image();
+        next.onload = () => {
+          img.src = p.src;
+          img.alt = p.alt;
+          img.style.opacity = "1";
+        };
+        next.onerror = () => {
+          img.src = p.src;
+          img.style.opacity = "1";
+        };
+        next.src = p.src;
+      }
+      if (name) name.textContent = p.name;
+      if (tagline) tagline.textContent = p.tagline;
+      if (price) price.textContent = `From KES ${p.priceKes.toLocaleString("en-KE")}`;
+      if (cta instanceof HTMLAnchorElement) {
+        cta.href = p.href;
+        cta.textContent = `View ${p.name}`;
+      }
+      if (dots) {
+        dots.innerHTML = (p.colours || [])
+          .map((hex) => `<span style="background:${hex}"></span>`)
+          .join("");
+      }
+    }
+
+    root.querySelectorAll("[data-mega-preview]").forEach((link) => {
+      const id = link.getAttribute("data-mega-preview");
+      link.addEventListener("mouseenter", () => show(id));
+      link.addEventListener("focus", () => show(id));
+    });
+  }
+</script>
+
+<style>
+  .imega {
+    color: #1d1d1f;
+  }
+
+  .imega__cols {
+    display: grid;
+    gap: 1.5rem 2rem;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .imega__heading {
+    margin: 0 0 0.65rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #6e6e73;
+  }
+
+  .imega__heading--spaced {
+    margin-top: 1.25rem;
+  }
+
+  .imega__col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .imega__link {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.4rem 0.35rem;
+    margin: 0 -0.35rem;
+    border-radius: 0.4rem;
+    text-decoration: none;
+    color: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    transition: transform 160ms var(--ease-out);
+  }
+
+  .imega__link:hover,
+  .imega__link:focus-visible {
+    transform: translateX(5px);
+    color: inherit;
+    background: #f5f5f7;
+    outline: none;
+  }
+
+  .imega__from {
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: #6e6e73;
+    white-space: nowrap;
+  }
+
+  .imega__tag {
+    display: inline-block;
+    margin-left: 0.35rem;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background: #000;
+    color: #fff;
+    border-radius: 999px;
+    padding: 0.12rem 0.4rem;
+    vertical-align: middle;
+  }
+
+  .imega__col--older .imega__link {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #515154;
+  }
+
+  .imega__foot {
+    display: grid;
+    gap: 0.45rem;
+    margin-top: 1.1rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid #d2d2d7;
+  }
+
+  .imega__foot a {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #1d1d1f;
+    text-decoration: none;
+  }
+
+  .imega__foot a:hover {
+    text-decoration: underline;
+  }
+
+  .imega__preview {
+    background: #f5f5f7;
+    border-radius: 1.25rem;
+    padding: 1rem 1.1rem 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .imega__stage {
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+
+  .imega__stage img {
+    width: 88%;
+    height: auto;
+    mix-blend-mode: multiply;
+    transition: opacity 180ms linear;
+  }
+
+  .imega__pname {
+    margin: 0.35rem 0 0;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .imega__ptag {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #6e6e73;
+    line-height: 1.35;
+  }
+
+  .imega__dots {
+    display: flex;
+    gap: 0.35rem;
+    margin: 0.25rem 0;
+  }
+
+  .imega__dots span {
+    width: 0.65rem;
+    height: 0.65rem;
+    border-radius: 50%;
+    border: 1px solid rgb(0 0 0 / 0.12);
+  }
+
+  .imega__pprice {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .imega__services {
+    display: grid;
+    gap: 0.35rem;
+    margin-top: 0.65rem;
+    padding-top: 0.65rem;
+    border-top: 1px solid #d2d2d7;
+  }
+
+  .imega__services a {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #1d1d1f;
+    text-decoration: none;
+  }
+
+  .imega__services a:hover {
+    text-decoration: underline;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .imega__link,
+    .imega__stage img {
+      transition: none;
+    }
+  }
+</style>

@@ -1,0 +1,198 @@
+---
+/**
+ * Lipa Mdogo Mdogo calculator — config-driven illustration.
+ */
+import { models, formatKes, lipaMonthly, iphoneConfig } from "../../lib/iphone";
+
+interface Props {
+  /** Preselect model id */
+  modelId?: string;
+  compact?: boolean;
+}
+
+const { modelId, compact = false } = Astro.props;
+const options = models.map((m) => ({
+  id: m.id,
+  name: m.name,
+  base: m.basePriceKes,
+}));
+const initial = options.find((o) => o.id === modelId) || options[0];
+const cfg = iphoneConfig.lipa;
+const start = lipaMonthly(initial.base, cfg.depositDefaultPct, cfg.monthsDefault);
+---
+
+<section class="lipa-calc" data-lipa-calc data-compact={compact ? "1" : "0"}>
+  <header>
+    <h3>Lipa Mdogo Mdogo</h3>
+    <p>{cfg.note}</p>
+  </header>
+  <label>
+    Model
+    <select data-lipa-model>
+      {
+        options.map((o) => (
+          <option value={o.id} data-base={o.base} selected={o.id === initial.id}>
+            {o.name}
+          </option>
+        ))
+      }
+    </select>
+  </label>
+  <label>
+    Deposit <span data-lipa-dep-label>{cfg.depositDefaultPct}%</span>
+    <input
+      type="range"
+      min={cfg.depositMinPct}
+      max={cfg.depositMaxPct}
+      step={cfg.depositStepPct}
+      value={cfg.depositDefaultPct}
+      data-lipa-deposit
+    />
+  </label>
+  <div class="lipa-calc__months" role="group" aria-label="Months">
+    {
+      cfg.monthOptions.map((m) => (
+        <button
+          type="button"
+          class:list={{ "is-active": m === cfg.monthsDefault }}
+          data-lipa-months={m}
+        >
+          {m} mo
+        </button>
+      ))
+    }
+  </div>
+  <div class="lipa-calc__result">
+    <p class="lipa-calc__monthly">
+      <span data-lipa-monthly>{formatKes(start.monthlyKes)}</span>
+      <small>/ month</small>
+    </p>
+    <p class="lipa-calc__line" data-lipa-line>
+      {formatKes(start.depositKes)} deposit · {start.months} payments · sample total {formatKes(initial.base)}
+    </p>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll("[data-lipa-calc]").forEach((root) => {
+    const model = root.querySelector("[data-lipa-model]");
+    const deposit = root.querySelector("[data-lipa-deposit]");
+    const depLabel = root.querySelector("[data-lipa-dep-label]");
+    const monthly = root.querySelector("[data-lipa-monthly]");
+    const line = root.querySelector("[data-lipa-line]");
+    let months = Number(root.querySelector(".is-active[data-lipa-months]")?.getAttribute("data-lipa-months")) || 6;
+
+    function tick() {
+      if (!(model instanceof HTMLSelectElement) || !(deposit instanceof HTMLInputElement)) return;
+      const opt = model.selectedOptions[0];
+      const base = Number(opt?.getAttribute("data-base") || 0);
+      const pct = Number(deposit.value);
+      if (depLabel) depLabel.textContent = `${pct}%`;
+      const depositKes = Math.round((base * pct) / 100);
+      const monthlyKes = Math.round((base - depositKes) / months);
+      if (monthly) monthly.textContent = `KES ${monthlyKes.toLocaleString("en-KE")}`;
+      if (line)
+        line.textContent = `KES ${depositKes.toLocaleString("en-KE")} deposit · ${months} payments · sample total KES ${base.toLocaleString("en-KE")}`;
+    }
+
+    model?.addEventListener("change", tick);
+    deposit?.addEventListener("input", tick);
+    root.querySelectorAll("[data-lipa-months]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        root.querySelectorAll("[data-lipa-months]").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        months = Number(btn.getAttribute("data-lipa-months")) || 6;
+        tick();
+      });
+    });
+    tick();
+  });
+</script>
+
+<style>
+  .lipa-calc {
+    background: var(--color-stage);
+    color: #1d1d1f;
+    border-radius: 1.25rem;
+    padding: 1.25rem;
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .lipa-calc header h3 {
+    margin: 0 0 0.35rem;
+    letter-spacing: -0.02em;
+  }
+
+  .lipa-calc header p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #6e6e73;
+  }
+
+  .lipa-calc label {
+    display: grid;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #6e6e73;
+  }
+
+  .lipa-calc select,
+  .lipa-calc input[type="range"] {
+    font: inherit;
+    text-transform: none;
+    letter-spacing: 0;
+    color: #1d1d1f;
+  }
+
+  .lipa-calc select {
+    border: 1px solid #d2d2d7;
+    border-radius: 0.5rem;
+    padding: 0.55rem 0.65rem;
+    background: #fff;
+  }
+
+  .lipa-calc__months {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .lipa-calc__months button {
+    border: 1px solid #d2d2d7;
+    background: #fff;
+    border-radius: 999px;
+    padding: 0.4rem 0.75rem;
+    font: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+
+  .lipa-calc__months button.is-active {
+    background: #000;
+    border-color: #000;
+    color: #fff;
+  }
+
+  .lipa-calc__monthly {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+
+  .lipa-calc__monthly small {
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: #6e6e73;
+  }
+
+  .lipa-calc__line {
+    margin: 0.25rem 0 0;
+    font-size: 0.8rem;
+    color: #6e6e73;
+  }
+</style>

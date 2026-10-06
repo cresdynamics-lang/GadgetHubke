@@ -1,0 +1,681 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import AccessoryStage from "../../components/accessories/AccessoryStage.astro";
+import CompatibilityFinder from "../../components/accessories/CompatibilityFinder.astro";
+import AccessoryLipaCalc from "../../components/accessories/AccessoryLipaCalc.astro";
+import AccessoryTrademark from "../../components/accessories/AccessoryTrademark.astro";
+import AccessoryCard from "../../components/accessories/AccessoryCard.astro";
+import {
+  accessories,
+  getAccessory,
+  getAccessoryImage,
+  formatKes,
+  lipaMonthly,
+  accessoriesConfig,
+  accessoryBuyingNotes,
+  accessoryFaq,
+  accessoriesByGroup,
+  storeGallerySrcs,
+  angleSrcs,
+  swatchSrc,
+  storeInUseSrc,
+  pointerFits,
+  fitsLabel,
+  caseFits,
+  chargerAdvice,
+  getCaseVariants,
+  productGeoUs,
+} from "../../lib/accessories";
+import { ipadModels } from "../../lib/ipad";
+import { macModels } from "../../lib/mac";
+import { whatsappUrl } from "../../lib/site";
+
+function connectorLabel(c: string | null | undefined): string | null {
+  if (!c) return null;
+  if (c === "usb-c") return "USB-C";
+  if (c === "lightning") return "Lightning";
+  if (c === "owner-confirm") return "Connector — owner to confirm";
+  return c;
+}
+
+function finderHub(group: string): string {
+  if (group === "pencil") return "apple-pencil";
+  if (group === "keyboard") return "magic-keyboard";
+  if (group === "mouse") return "magic-mouse";
+  if (group === "trackpad") return "magic-trackpad";
+  if (group === "power") return "power";
+  if (group === "cases") return "cases";
+  return "accessories";
+}
+
+function gestureKindFromFeatureId(fid: string, group: "mouse" | "trackpad"): string {
+  const slug = group === "mouse" ? fid.replace(/_/g, "-") : fid;
+  return `gesture:${slug}`;
+}
+
+export function getStaticPaths() {
+  return accessories.map((a) => ({ params: { id: a.id } }));
+}
+
+const { id } = Astro.params;
+const product = getAccessory(id!);
+if (!product) {
+  return Astro.redirect("/accessories");
+}
+
+const hero = getAccessoryImage(product.id, "hero");
+const angles = angleSrcs(product.id);
+const galleries = storeGallerySrcs(product.id);
+const hasSwatch = Boolean(swatchSrc(product.id));
+const swatch = hasSwatch ? getAccessoryImage(product.id, "swatch") : null;
+const isPencil = product.group === "pencil";
+const isPointer = product.group === "mouse" || product.group === "trackpad";
+const inUseSrc = isPointer ? storeInUseSrc(product.id) : null;
+const connector = connectorLabel(product.connector);
+const worksWithDevices = isPointer
+  ? [
+      ...macModels.slice(0, 3).map((m) => ({ id: m.id, label: m.name })),
+      ...ipadModels.slice(0, 2).map((m) => ({ id: m.id, label: m.name })),
+      { id: "windows-pc", label: "Windows PC" },
+      { id: "android-phone", label: "Android phone" },
+    ].map((d) => ({ ...d, fit: pointerFits(d.id, product.id) }))
+  : product.group === "cases"
+    ? (product.fitsDeviceIds || []).map((id) => ({
+        id,
+        label: product.fitsModels?.find((_, i) => product.fitsDeviceIds?.[i] === id) || id,
+        fit: caseFits(id, product.id),
+      }))
+    : product.group === "power"
+      ? chargerAdvice("iphone-17-pro")
+          .filter((x) => x.productId === product.id)
+          .map((x) => ({ id: "iphone-17-pro", label: "iPhone 17 Pro (sample)", fit: { status: "note" as const, reason: x.reason, checkFinalSpecs: true as const } }))
+      : [];
+const gestureTiles =
+  isPointer &&
+  product.featureIds.map((fid) => {
+    const kind = gestureKindFromFeatureId(fid, product.group as "mouse" | "trackpad");
+    const img = getAccessoryImage(product.id, kind);
+    const label = fid.replace(/_/g, " ").replace(/-/g, " ");
+    return { id: fid, label, img };
+  });
+const lipa = lipaMonthly(product.basePriceKes);
+const finderLooking =
+  product.group === "pencil"
+    ? "pencil"
+    : product.group === "keyboard"
+      ? "keyboard"
+      : product.group === "mouse"
+        ? "mouse"
+        : product.group === "trackpad"
+          ? "trackpad"
+          : product.group === "cases"
+            ? "case"
+            : product.group === "power"
+              ? "charger"
+              : "pencil";
+const caseVariants = product.group === "cases" ? getCaseVariants(product.id) : [];
+const variantParam = Astro.url.searchParams.get("v");
+const activeVariant =
+  caseVariants.find((v) => v.partNumber.toUpperCase() === (variantParam || "").toUpperCase()) ||
+  caseVariants[0] ||
+  null;
+const activeHero =
+  activeVariant != null
+    ? getAccessoryImage(product.id, `variant:${activeVariant.partNumber}`)
+    : hero;
+const showGeoCaption = Boolean(product.geoUs || productGeoUs(product.id) || activeHero.geoUs);
+const siblings = accessoriesByGroup(product.group).filter((a) => a.id !== product.id);
+const notes = accessoryBuyingNotes(product);
+const faq = accessoryFaq();
+const wa = whatsappUrl(
+  `Hi Gadget Hub, I want ${product.name} in ${product.defaultColour}. Device: (tell us your iPad or Mac).`,
+);
+const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.designOnly);
+---
+
+<BaseLayout title={`${product.name} - GadgetHub`} description={product.tagline}>
+  <section class="xpdp container">
+    <div class="xpdp__viewer">
+      {
+        product.earlierGeneration ? (
+          <p class="xpdp__design">Earlier generation. Image shows the product design.</p>
+        ) : null
+      }
+      <AccessoryStage
+        src={activeHero.src}
+        srcWebp={activeHero.srcWebp}
+        alt={activeHero.alt}
+        priority
+        ratio={isPencil ? "square" : "wide"}
+        designOnly={designOnly}
+      />
+      {
+        showGeoCaption ? (
+          <p class="xpdp__plug">{accessoriesConfig.plugCaption}</p>
+        ) : null
+      }
+      {
+        caseVariants.length ? (
+          <div class="xpdp__variants" role="listbox" aria-label="Colours">
+            {caseVariants.map((v) => {
+              const sw = getAccessoryImage(product.id, `variant-swatch:${v.partNumber}`);
+              const main = getAccessoryImage(product.id, `variant:${v.partNumber}`);
+              const on = activeVariant?.partNumber === v.partNumber;
+              return (
+                <a
+                  class:list={{ "xpdp__variant": true, "is-active": on }}
+                  href={`/accessories/${product.id}?v=${v.partNumber}`}
+                  role="option"
+                  aria-selected={on ? "true" : "false"}
+                  title={v.colour}
+                  data-variant-src={main.src}
+                  data-variant-part={v.partNumber}
+                  data-variant-colour={v.colour}
+                >
+                  <img src={sw.src} alt={v.colour} width="40" height="40" loading="lazy" />
+                </a>
+              );
+            })}
+          </div>
+        ) : null
+      }
+      <div class="xpdp__thumbs" role="tablist" aria-label="Views">
+        <button type="button" class="is-active" data-view={activeHero.src} data-alt={activeHero.alt}>Product</button>
+        {
+          angles.map((src, i) => (
+            <button type="button" data-view={src} data-alt={`${product.name}, angle ${i + 1}`}>
+              Angle {i + 1}
+            </button>
+          ))
+        }
+        {
+          galleries.slice(0, 3).map((src, i) => (
+            <button type="button" data-view={src} data-alt={`${product.name}, in use ${i + 1}`}>
+              In use {i + 1}
+            </button>
+          ))
+        }
+        {
+          inUseSrc && galleries.length === 0 ? (
+            <button type="button" data-view={inUseSrc} data-alt={`${product.name}, in use`}>
+              In use
+            </button>
+          ) : null
+        }
+        {
+          swatch && !swatch.fallback ? (
+            <button type="button" data-view={swatch.src} data-alt={`${product.name}, colour`}>
+              Colour
+            </button>
+          ) : null
+        }
+      </div>
+    </div>
+
+    <div class="xpdp__buy">
+      <p class="xpdp__pills">
+        <span>{product.year}</span>
+        <span>{product.generation}</span>
+        {product.checkFinalSpecs ? <span>Check final specs</span> : null}
+      </p>
+      <p class="xpdp__fits"><strong>Fits</strong> — {product.notes}</p>
+      <a class="btn btn--secondary btn--sm" href={`/accessories/${finderHub(product.group)}?looking=${finderLooking}#finder`}>
+        Check my device
+      </a>
+      <h1>{product.name}</h1>
+      <p class="xpdp__tag">{product.tagline}</p>
+      <p class="xpdp__who">{product.whoItSuits}</p>
+      <p class="xpdp__colour">Colour: {activeVariant?.colour || product.defaultColour}</p>
+      {activeVariant ? <p class="xpdp__part"><strong>Part number</strong> — {activeVariant.partNumber}</p> : null}
+      {connector ? <p class="xpdp__connector"><strong>Connector</strong> — {connector}</p> : null}
+      {
+        product.id === "pencil-pro" ? (
+          <p class="xpdp__engrave">{accessoriesConfig.engravingNote}</p>
+        ) : null
+      }
+      <p class="xpdp__price">
+        From {formatKes(product.basePriceKes)}
+        <small>or {formatKes(lipa.monthlyKes)} / mo</small>
+      </p>
+      <p class="xpdp__fine">{accessoriesConfig.samplePriceDisclaimer}</p>
+      <p class="xpdp__stock"><span class="dot" aria-hidden="true" /> In stock (sample) · Collect today in Nairobi</p>
+      <div class="xpdp__actions">
+        <button
+          type="button"
+          class="btn btn--primary"
+          data-accessory-bag
+          data-id={product.id}
+          data-name={product.name}
+          data-colour={activeVariant?.colour || product.defaultColour}
+          data-kes={product.basePriceKes}
+          data-image={activeHero.src}
+          data-group={product.group}
+          data-connector={connector || ""}
+          data-part={activeVariant?.partNumber || product.partNumber || ""}
+        >
+          Add to bag
+        </button>
+        <a class="btn btn--secondary" href={wa} rel="noopener">Ask on WhatsApp</a>
+      </div>
+      <div class="xpdp__tiles">
+        <div><strong>Connection</strong><span>{product.connection}</span></div>
+        <div><strong>Charging</strong><span>{product.charging || "—"}</span></div>
+        <div><strong>Key feature</strong><span>{product.features[0]}</span></div>
+        <div><strong>Weight</strong><span>{product.weightG != null ? `${product.weightG} g` : "—"}</span></div>
+      </div>
+      <div class="xpdp__why">
+        <h2>Why people choose this one</h2>
+        <ul>
+          {product.whyChoose.map((w) => <li>{w}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="container xpdp-specs">
+    <h2>Specifications</h2>
+    <details open={!isPointer}>
+      <summary>Features</summary>
+      <ul>{product.features.map((f) => <li>{f}</li>)}</ul>
+      <p class="flag">Check final specs</p>
+    </details>
+    {
+      gestureTiles ? (
+        <details open>
+          <summary>Gestures</summary>
+          <div class="xpdp-gestures">
+            {gestureTiles.map((g) => (
+              <figure>
+                <img src={g.img.src} alt={g.label} width="200" height="200" loading="lazy" />
+                <figcaption>{g.label}</figcaption>
+              </figure>
+            ))}
+          </div>
+          <p class="flag">Check final specs — full set on Mac; limited on iPad.</p>
+        </details>
+      ) : null
+    }
+    <details>
+      <summary>Compatibility</summary>
+      <p>{product.notes}</p>
+      <p class="flag">Check final specs</p>
+    </details>
+    <details>
+      <summary>Charging and battery</summary>
+      <p>{product.charging || "—"}</p>
+    </details>
+    <details>
+      <summary>Connection</summary>
+      <p>{product.connection}</p>
+    </details>
+    <details>
+      <summary>Size and weight</summary>
+      <p>{product.weightG != null ? `${product.weightG} g` : "Not listed here — check Apple."}</p>
+    </details>
+    <details>
+      <summary>Colours</summary>
+      <p>{product.colours.join(", ")}</p>
+    </details>
+    <details>
+      <summary>In the box</summary>
+      <p>Sealed accessory as shipped by Apple. Confirm contents with the shop.</p>
+    </details>
+    {
+      isPointer ? (
+        <details open>
+          <summary>Works with (sample devices)</summary>
+          <ul class="xpdp-works">
+            {
+              worksWithDevices.map((d) => (
+                <li>
+                  <span>{d.label}</span>
+                  <span class:list={["xpdp-works__badge", `is-${d.fit.status}`]}>{fitsLabel(d.fit)}</span>
+                  <span class="xpdp-works__reason">{d.fit.reason}</span>
+                </li>
+              ))
+            }
+          </ul>
+          <p class="flag">Check final specs</p>
+        </details>
+      ) : null
+    }
+  </section>
+
+  <section class="container xpdp-notes">
+    <h2>Buying notes</h2>
+    {notes.map((n) => (
+      <article>
+        <h3>{n.title}</h3>
+        <p>{n.body}</p>
+      </article>
+    ))}
+  </section>
+
+  <section class="container xpdp-sibs">
+    <h2>Compare with</h2>
+    <div class="xpdp-sibs__grid">
+      {siblings.slice(0, 3).map((s) => <AccessoryCard product={s} compare={false} />)}
+    </div>
+    <a class="btn btn--secondary" href={`/accessories/compare?group=${product.group}&ids=${product.id}`}>
+      Open compare
+    </a>
+  </section>
+
+  <CompatibilityFinder preselectLooking={finderLooking} preselectProduct={product.id} />
+
+  <section class="container xpdp-faq">
+    <h2>Questions people ask</h2>
+    {faq.map((f) => (
+      <details>
+        <summary>{f.q}</summary>
+        <p>{f.a}</p>
+      </details>
+    ))}
+  </section>
+
+  <AccessoryLipaCalc productId={product.id} />
+  <AccessoryTrademark />
+</BaseLayout>
+
+<script>
+  const viewer = document.querySelector(".xpdp__viewer");
+  const stageImg = viewer?.querySelector(".xstage img");
+  viewer?.querySelectorAll("[data-view]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      viewer.querySelectorAll("[data-view]").forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      if (stageImg instanceof HTMLImageElement) {
+        stageImg.src = btn.getAttribute("data-view") || stageImg.src;
+        stageImg.alt = btn.getAttribute("data-alt") || stageImg.alt;
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-accessory-bag]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const el = btn as HTMLElement;
+      window.dispatchEvent(
+        new CustomEvent("gh:bag-add", {
+          detail: {
+            id: el.dataset.id,
+            name: el.dataset.name,
+            colour: el.dataset.colour,
+            kes: Number(el.dataset.kes),
+            image: el.dataset.image,
+            group: el.dataset.group,
+            connector: el.dataset.connector || null,
+            partNumber: el.dataset.part || null,
+            kind: "accessory",
+          },
+        }),
+      );
+    });
+  });
+
+  // Static hosting: honour ?v=partNumber on the client
+  const params = new URLSearchParams(window.location.search);
+  const v = params.get("v");
+  if (v) {
+    const link = document.querySelector(`[data-variant-part="${v}"]`);
+    if (link instanceof HTMLElement) {
+      const src = link.getAttribute("data-variant-src");
+      const colour = link.getAttribute("data-variant-colour");
+      const stageImg = document.querySelector(".xpdp__viewer img");
+      if (src && stageImg instanceof HTMLImageElement) {
+        stageImg.src = src;
+        if (colour) stageImg.alt = `${stageImg.alt.split(",")[0]}, ${colour}`;
+      }
+      document.querySelectorAll("[data-variant-part]").forEach((a) => {
+        a.classList.toggle("is-active", a.getAttribute("data-variant-part") === v);
+      });
+      const bag = document.querySelector("[data-accessory-bag]");
+      if (bag instanceof HTMLElement) {
+        bag.dataset.part = v;
+        if (colour) bag.dataset.colour = colour;
+        if (src) bag.dataset.image = src;
+      }
+      const colourLine = document.querySelector(".xpdp__colour");
+      if (colourLine && colour) colourLine.textContent = `Colour: ${colour}`;
+      const partLine = document.querySelector(".xpdp__part");
+      if (partLine) partLine.innerHTML = `<strong>Part number</strong> — ${v}`;
+    }
+  }
+</script>
+
+<style>
+  .xpdp {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 2rem;
+    padding: 2rem 1.25rem 3rem;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .xpdp {
+      grid-template-columns: 1fr;
+    }
+  }
+  .xpdp__viewer {
+    position: sticky;
+    top: 5rem;
+  }
+  @media (max-width: 900px) {
+    .xpdp__viewer {
+      position: static;
+    }
+  }
+  .xpdp__thumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+  }
+  .xpdp__thumbs button {
+    border: 1px solid #d2d2d7;
+    background: #fff;
+    padding: 0.35rem 0.55rem;
+    border-radius: 0.35rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+  }
+  .xpdp__thumbs button.is-active {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+  }
+  .xpdp__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+  .xpdp__pills span {
+    font-size: 0.7rem;
+    border: 1px solid #d2d2d7;
+    padding: 0.15rem 0.4rem;
+    border-radius: 999px;
+    color: #6e6e73;
+  }
+  .xpdp__fits {
+    margin: 0.75rem 0;
+  }
+  .xpdp h1 {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin: 0.75rem 0 0.35rem;
+  }
+  .xpdp__design {
+    font-size: 0.85rem;
+    color: #6e6e73;
+    margin: 0 0 0.75rem;
+  }
+  .xpdp__plug {
+    font-size: 0.8rem;
+    color: #6e6e73;
+    margin: 0.5rem 0 0;
+  }
+  .xpdp__variants {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.75rem 0;
+  }
+  .xpdp__variant {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    overflow: hidden;
+    display: block;
+  }
+  .xpdp__variant.is-active {
+    border-color: #000;
+  }
+  .xpdp__variant img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .xpdp__part {
+    font-size: 0.9rem;
+  }
+  .xpdp__tag,
+  .xpdp__who,
+  .xpdp__colour,
+  .xpdp__connector,
+  .xpdp__engrave,
+  .xpdp__fine {
+    color: #6e6e73;
+    margin: 0.35rem 0;
+  }
+  .xpdp-gestures {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem;
+    margin: 0.75rem 0;
+  }
+  .xpdp-gestures figure {
+    margin: 0;
+    background: #f5f5f7;
+    border-radius: 0.65rem;
+    padding: 0.5rem;
+    text-align: center;
+  }
+  .xpdp-gestures img {
+    width: 100%;
+    mix-blend-mode: multiply;
+  }
+  .xpdp-gestures figcaption {
+    font-size: 0.75rem;
+    margin-top: 0.35rem;
+    text-transform: capitalize;
+  }
+  .xpdp-works {
+    list-style: none;
+    margin: 0.75rem 0 0;
+    padding: 0;
+  }
+  .xpdp-works li {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.25rem 0.75rem;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid #d2d2d7;
+    font-size: 0.9rem;
+  }
+  .xpdp-works__badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.1rem 0.4rem;
+    border-radius: 0.25rem;
+    background: #e8e8ed;
+  }
+  .xpdp-works__badge.is-fits {
+    background: #e3f5e8;
+    color: #1a7f37;
+  }
+  .xpdp-works__reason {
+    grid-column: 1 / -1;
+    color: #6e6e73;
+    font-size: 0.85rem;
+  }
+  .xpdp__price {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 1rem 0 0.25rem;
+  }
+  .xpdp__price small {
+    display: block;
+    font-weight: 400;
+    color: #6e6e73;
+    font-size: 0.9rem;
+  }
+  .xpdp__stock {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: #1a7f37;
+    font-size: 0.9rem;
+  }
+  .xpdp__stock .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #1a7f37;
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    50% { opacity: 0.35; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .xpdp__stock .dot {
+      animation: none;
+    }
+  }
+  .xpdp__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin: 1rem 0;
+  }
+  .xpdp__tiles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.65rem;
+    margin: 1.25rem 0;
+  }
+  .xpdp__tiles div {
+    background: #f5f5f7;
+    border-radius: 0.65rem;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.85rem;
+  }
+  .xpdp-specs,
+  .xpdp-notes,
+  .xpdp-sibs,
+  .xpdp-faq {
+    padding: 2rem 0;
+  }
+  .xpdp-sibs__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  .flag {
+    font-size: 0.7rem;
+    color: #6e6e73;
+    text-transform: uppercase;
+  }
+  details {
+    border-bottom: 1px solid #d2d2d7;
+    padding: 0.75rem 0;
+  }
+  summary {
+    cursor: pointer;
+    font-weight: 600;
+  }
+</style>

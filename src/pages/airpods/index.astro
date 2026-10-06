@@ -1,0 +1,444 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import AirPodsStage from "../../components/airpods/AirPodsStage.astro";
+import AirPodsCard from "../../components/airpods/AirPodsCard.astro";
+import AirPodsQuiz from "../../components/airpods/AirPodsQuiz.astro";
+import AirPodsLipaCalc from "../../components/airpods/AirPodsLipaCalc.astro";
+import AirPodsTradeIn from "../../components/airpods/AirPodsTradeIn.astro";
+import AirpodsTrademark from "../../components/airpods/AirpodsTrademark.astro";
+import {
+  airpodsModels,
+  airpodsModelsByFamily,
+  getAirpodsImage,
+  resolveAirpodsKey,
+  formatKes,
+  lowestAirpodsPrice,
+  airpodsConfig,
+  homeAirpodsAccessories,
+} from "../../lib/airpods";
+import { whatsappUrl } from "../../lib/site";
+
+const pro = airpodsModelsByFamily("Pro");
+const std = airpodsModelsByFamily("AirPods");
+const max = airpodsModelsByFamily("Max");
+const heroPair = resolveAirpodsKey("pair:landing/hero", "AirPods");
+const heroStart = resolveAirpodsKey("landing/hero_startframe", "AirPods");
+const heroEnd = resolveAirpodsKey("landing/hero_endframe", "AirPods");
+const heroStatic = resolveAirpodsKey("landing/hero", "AirPods");
+const accessories = homeAirpodsAccessories();
+const newest = [...airpodsModels].sort((a, b) => b.year - a.year || b.basePriceKes - a.basePriceKes);
+const wa = whatsappUrl("Hi Gadget Hub, I want to visit and try AirPods.");
+const corp = whatsappUrl("Corporate AirPods order");
+
+const considerKeys = [
+  ["landing/consider/card_noise_cancellation", "Noise cancellation"],
+  ["landing/consider/card_hearing_health", "Hearing health"],
+  ["landing/consider/card_heart_rate_sensing", "Heart rate"],
+  ["landing/consider/card_live_translation", "Live Translation"],
+  ["landing/consider/card_personalized_spatial_audio", "Spatial Audio"],
+] as const;
+const consider = considerKeys.map(([key, label]) => ({
+  label,
+  img: getAirpodsImage("airpods-pro-3", key, label),
+}));
+
+const musicHero = getAirpodsImage("airpods-pro-3", "landing/music/music_album_hero", "Music");
+const musicStack = getAirpodsImage("airpods-pro-3", "landing/music/music_album_stack", "Music");
+
+const choose = [
+  {
+    title: "AirPods Pro",
+    body: "In-ear seal, strongest noise control, hearing features where available.",
+    href: "/airpods/shop?family=Pro",
+    price: lowestAirpodsPrice("Pro"),
+    model: pro.find((m) => m.id === "airpods-pro-3") || pro[0],
+    considerKey: "landing/consider/card_noise_cancellation",
+  },
+  {
+    title: "AirPods",
+    body: "Open-fit everyday listening and calls.",
+    href: "/airpods/shop?family=AirPods",
+    price: lowestAirpodsPrice("AirPods"),
+    model: std.find((m) => m.id === "airpods-5") || std[0],
+    considerKey: "landing/consider/card_personalized_spatial_audio",
+  },
+  {
+    title: "AirPods Max",
+    body: "Over-ear comfort for long sessions and travel.",
+    href: "/airpods/shop?family=Max",
+    price: lowestAirpodsPrice("Max"),
+    model: max.find((m) => m.id === "airpods-max-2") || max[0],
+    considerKey: "landing/consider/card_live_translation",
+  },
+];
+
+const genChips = ["Pro 3", "5", "Max 2", "4", "Pro 2", "Earlier"] as const;
+
+const caseGuide = airpodsModels
+  .filter((m) => !m.id.includes("wireless"))
+  .slice(0, 8)
+  .map((m) => ({
+    name: m.name,
+    types: m.caseTypes.join(", "),
+    options: m.caseOptions.length ? m.caseOptions.join(", ") : "—",
+  }));
+---
+
+<BaseLayout
+  title="AirPods - GadgetHub"
+  description="AirPods Pro, AirPods and Max. Sealed stock in Nairobi. Sample prices until admin is live."
+>
+  <section class="airpods-hero" data-airpods-hero>
+    <div class="airpods-hero__copy container">
+      <h1>Hear what you came for.</h1>
+      <p class="airpods-hero__lede">{airpodsConfig.announce}</p>
+      <div class="airpods-hero__cta" data-hero-cta>
+        <a class="btn btn--primary" href="/airpods/airpods-pro-3">Shop AirPods Pro 3</a>
+        <a class="btn btn--secondary" href="/airpods/shop?family=Max">Shop AirPods Max</a>
+      </div>
+    </div>
+    <div class="airpods-hero__stage" aria-hidden="true">
+      <img
+        class="airpods-hero__frame airpods-hero__frame--start"
+        data-hero-start
+        src={heroPair.start || heroStart.src || heroStatic.src}
+        alt=""
+        width={1800}
+        height={1200}
+        fetchpriority="high"
+      />
+      <img
+        class="airpods-hero__frame airpods-hero__frame--end"
+        data-hero-end
+        src={heroPair.end || heroEnd.src || heroStatic.src}
+        alt=""
+        width={1800}
+        height={1200}
+        fetchpriority="high"
+      />
+    </div>
+  </section>
+
+  <section class="container airpods-choose">
+    <h2>Choose your AirPods</h2>
+    <p>Pro, open-fit AirPods, or over-ear Max.</p>
+    <ul class="airpods-choose__grid">
+      {
+        choose.map((c) => {
+          const considerImg = getAirpodsImage(c.model.id, c.considerKey, c.title);
+          const img = !considerImg.fallback ? considerImg : getAirpodsImage(c.model.id, "hero", c.model.name);
+          return (
+            <li>
+              <a class="airpods-choose__card" href={c.href}>
+                <AirPodsStage src={img.src} srcWebp={img.srcWebp} alt={img.alt} width={760} height={760} />
+                <h3>{c.title}</h3>
+                <p>{c.body}</p>
+                <em>From {formatKes(c.price)}</em>
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </section>
+
+  <section class="container airpods-consider">
+    <h2>What matters to you</h2>
+    <ul class="airpods-consider__grid">
+      {consider.filter((c) => !c.img.fallback).map((c) => (
+        <li>
+          <img src={c.img.src} alt={c.label} width="600" height="400" loading="lazy" />
+          <strong>{c.label}</strong>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  {(!musicHero.fallback || !musicStack.fallback) ? (
+    <section class="container airpods-music">
+      <h2>Music that fills the room</h2>
+      <div class="airpods-music__row">
+        {!musicHero.fallback ? <img src={musicHero.src} alt={musicHero.alt} width="900" height="600" loading="lazy" /> : null}
+        {!musicStack.fallback ? <img src={musicStack.src} alt={musicStack.alt} width="600" height="600" loading="lazy" /> : null}
+      </div>
+    </section>
+  ) : null}
+
+  <section class="container">
+    <AirPodsQuiz />
+  </section>
+
+  <section class="container airpods-grid-sec" data-airpods-landing-grid>
+    <div class="airpods-grid-sec__head">
+      <h2>Shop AirPods</h2>
+      <div class="airpods-chips" role="group" aria-label="Generation">
+        <button type="button" class="is-active" data-gen="all">All</button>
+        {genChips.map((g) => (
+          <button type="button" data-gen={g}>{g}</button>
+        ))}
+      </div>
+      <a href="/airpods/shop">Open full filters</a>
+    </div>
+    <ul class="airpods-grid">
+      {
+        newest.slice(0, 12).map((m) => {
+          let chip = "Earlier";
+          if (m.generation.includes("Pro 3")) chip = "Pro 3";
+          else if (m.generation === "5") chip = "5";
+          else if (m.id.includes("max-2")) chip = "Max 2";
+          else if (m.generation.startsWith("4")) chip = "4";
+          else if (m.generation.includes("Pro 2")) chip = "Pro 2";
+          return (
+            <li data-chip-gen={chip}>
+              <AirPodsCard model={m} />
+            </li>
+          );
+        })
+      }
+    </ul>
+  </section>
+
+  <section class="container airpods-case-guide">
+    <h2>Case guide</h2>
+    <p>Which charger fits which case — confirm SKU before you buy wireless add-ons.</p>
+    <div class="airpods-case-guide__wrap">
+      <table>
+        <thead>
+          <tr><th>Model</th><th>Case types</th><th>Configure</th></tr>
+        </thead>
+        <tbody>
+          {caseGuide.map((row) => (
+            <tr><td>{row.name}</td><td>{row.types}</td><td>{row.options}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="container airpods-plan">
+    <h2>Plan the purchase</h2>
+    <p>{airpodsConfig.lipa.note}</p>
+    <div class="airpods-plan__grid">
+      <AirPodsLipaCalc modelId="airpods-pro-3" />
+      <AirPodsTradeIn modelId="airpods-pro-2" />
+    </div>
+  </section>
+
+  <section class="container airpods-corp">
+    <h2>Gifting a team?</h2>
+    <p>We invoice companies and can prepare sealed AirPods in bulk.</p>
+    <a class="btn btn--primary" href={corp} target="_blank" rel="noopener noreferrer">Corporate AirPods order</a>
+  </section>
+
+  <section class="container airpods-acc">
+    <h2>Accessories for your AirPods</h2>
+    <ul>
+      {accessories.map((a) => (
+        <li>
+          <a href={a.href}>
+            <strong>{a.name}</strong>
+            <span>{a.priceKes > 0 ? `${formatKes(a.priceKes)} sample` : "See category"}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="container airpods-visit">
+    <h2>Visit the shop</h2>
+    <p>{airpodsConfig.address.line}, {airpodsConfig.address.city}. Hours: {airpodsConfig.address.hours}.</p>
+    <p>Try tips and Max fit in store.</p>
+    <a class="btn btn--primary" href={wa} target="_blank" rel="noopener noreferrer">Ask on WhatsApp</a>
+  </section>
+
+  <section class="container">
+    <AirpodsTrademark />
+  </section>
+</BaseLayout>
+
+<script>
+  const hero = document.querySelector("[data-airpods-hero]");
+  const start = document.querySelector("[data-hero-start]");
+  const end = document.querySelector("[data-hero-end]");
+  const cta = document.querySelector("[data-hero-cta]");
+  const copy = document.querySelector(".airpods-hero__copy");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const mobile = window.matchMedia("(max-width: 47.99rem)").matches;
+
+  if (end instanceof HTMLElement) {
+    end.style.opacity = reduce ? "1" : "0";
+    if (!reduce) {
+      end.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 1400, easing: "cubic-bezier(.16,1,.3,1)", fill: "forwards" });
+    }
+  }
+
+  if (!reduce && !mobile && hero && end instanceof HTMLElement && start instanceof HTMLElement) {
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const rect = hero.getBoundingClientRect();
+        const total = Math.max(1, hero.offsetHeight - window.innerHeight);
+        const scrolled = Math.min(total, Math.max(0, -rect.top));
+        const p = scrolled / total;
+        end.style.opacity = String(p);
+        start.style.transform = `scale(${0.94 + p * 0.06})`;
+        end.style.transform = `scale(${0.94 + p * 0.06})`;
+        if (copy instanceof HTMLElement) copy.style.opacity = String(Math.max(0, 1 - p * 1.4));
+        if (cta instanceof HTMLElement) cta.style.opacity = String(p > 0.8 ? Math.min(1, (p - 0.8) / 0.2) : 0);
+        ticking = false;
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  } else if (cta instanceof HTMLElement) {
+    cta.style.opacity = "1";
+  }
+
+  document.querySelectorAll("[data-gen]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-gen]").forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      const gen = btn.getAttribute("data-gen");
+      document.querySelectorAll("[data-airpods-landing-grid] [data-chip-gen]").forEach((li) => {
+        if (!(li instanceof HTMLElement)) return;
+        li.hidden = gen !== "all" && li.getAttribute("data-chip-gen") !== gen;
+      });
+    });
+  });
+</script>
+
+<style>
+  .airpods-hero {
+    position: relative;
+    min-height: 720px;
+    background: #f5f5f7;
+    display: grid;
+    align-items: end;
+    overflow: hidden;
+  }
+  @media (min-width: 48rem) {
+    .airpods-hero { min-height: 160vh; }
+    .airpods-hero__stage {
+      position: sticky;
+      top: var(--header-height);
+      height: calc(100vh - var(--header-height));
+    }
+  }
+  .airpods-hero__copy {
+    position: relative;
+    z-index: 2;
+    padding-block: 4rem 2rem;
+    max-width: 40rem;
+  }
+  .airpods-hero h1 {
+    margin: 0 0 0.75rem;
+    font-size: clamp(2.1rem, 4.5vw, 3.4rem);
+    letter-spacing: -0.03em;
+    font-weight: 700;
+  }
+  .airpods-hero__lede { color: #6e6e73; }
+  .airpods-hero__cta {
+    display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 1.25rem; opacity: 0;
+  }
+  .airpods-hero__stage {
+    position: absolute; inset: 0; display: grid; place-items: center;
+  }
+  .airpods-hero__frame {
+    grid-area: 1 / 1;
+    width: min(78vw, 42rem);
+    height: auto;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    transform-origin: center;
+  }
+  .airpods-choose,
+  .airpods-consider,
+  .airpods-music,
+  .airpods-grid-sec,
+  .airpods-case-guide,
+  .airpods-plan,
+  .airpods-corp,
+  .airpods-acc,
+  .airpods-visit {
+    padding-block: 4rem;
+  }
+  .airpods-consider__grid {
+    list-style: none; margin: 1.25rem 0 0; padding: 0;
+    display: grid; gap: 0.75rem; grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (min-width: 48rem) {
+    .airpods-consider__grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  }
+  .airpods-consider__grid li {
+    background: #f5f5f7; border-radius: 1rem; overflow: hidden; display: grid; gap: 0.35rem;
+  }
+  .airpods-consider__grid img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
+  .airpods-consider__grid strong { padding: 0 0.65rem 0.65rem; font-size: var(--text-sm); }
+  .airpods-music__row {
+    display: grid; gap: 0.75rem; grid-template-columns: minmax(0, 1fr);
+  }
+  @media (min-width: 48rem) {
+    .airpods-music__row { grid-template-columns: 1.4fr 1fr; }
+  }
+  .airpods-music__row img {
+    width: 100%; border-radius: 1.25rem; background: #f5f5f7; object-fit: contain;
+    mix-blend-mode: multiply; aspect-ratio: 4/3;
+  }
+  .airpods-choose h2,
+  .airpods-grid-sec h2,
+  .airpods-case-guide h2,
+  .airpods-plan h2,
+  .airpods-corp h2,
+  .airpods-acc h2,
+  .airpods-visit h2 {
+    margin: 0 0 0.5rem;
+    letter-spacing: -0.02em;
+  }
+  .airpods-choose__grid {
+    list-style: none; margin: 1.5rem 0 0; padding: 0;
+    display: grid; gap: 1rem; grid-template-columns: minmax(0, 1fr);
+  }
+  @media (min-width: 48rem) {
+    .airpods-choose__grid { grid-template-columns: 1fr 1fr 1fr; }
+  }
+  .airpods-choose__card {
+    display: grid; gap: 0.5rem; text-decoration: none; color: inherit;
+    transition: transform 220ms ease;
+  }
+  @media (hover: hover) {
+    .airpods-choose__card:hover { transform: translateY(-6px) scale(1.03); }
+  }
+  .airpods-choose__card h3 { margin: 0; }
+  .airpods-choose__card p, .airpods-choose__card em { margin: 0; color: #6e6e73; font-style: normal; }
+  .airpods-grid-sec__head { display: grid; gap: 0.75rem; margin-bottom: 1.25rem; }
+  .airpods-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .airpods-chips button {
+    border: 1px solid #d2d2d7; background: #fff; border-radius: 999px;
+    padding: 0.35rem 0.7rem; font: inherit; font-size: var(--text-sm); cursor: pointer;
+  }
+  .airpods-chips button.is-active { background: #000; color: #fff; }
+  .airpods-grid {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; gap: 1.25rem; grid-template-columns: minmax(0, 1fr);
+  }
+  @media (min-width: 40rem) { .airpods-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 64rem) { .airpods-grid { grid-template-columns: 1fr 1fr 1fr; } }
+  .airpods-case-guide__wrap { overflow-x: auto; margin-top: 1rem; }
+  .airpods-case-guide table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); min-width: 20rem; }
+  .airpods-case-guide th, .airpods-case-guide td { border-bottom: 1px solid #d2d2d7; padding: 0.65rem; text-align: left; }
+  .airpods-plan__grid { display: grid; gap: 1rem; }
+  @media (min-width: 40rem) { .airpods-plan__grid { grid-template-columns: 1fr 1fr; } }
+  .airpods-acc ul { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: 0.65rem; }
+  @media (min-width: 40rem) { .airpods-acc ul { grid-template-columns: 1fr 1fr; } }
+  .airpods-acc a {
+    display: flex; justify-content: space-between; gap: 1rem;
+    text-decoration: none; color: inherit; border: 1px solid #d2d2d7;
+    border-radius: 1rem; padding: 0.85rem;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .airpods-choose__card { transition: none; }
+    .airpods-choose__card:hover { transform: none; }
+  }
+</style>

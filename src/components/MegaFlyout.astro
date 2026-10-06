@@ -1,0 +1,387 @@
+---
+/**
+ * Blueprint mega menu panel: lineup + from prices + tags, featured, quick links, colours.
+ */
+import type { Subcategory } from "../lib/catalog";
+import Price from "./Price.astro";
+
+export type MegaQuickLink = { label: string; href: string };
+export type MegaColour = { label: string; hex: string; href: string };
+export type MegaFeatured = {
+  title: string;
+  body: string;
+  href: string;
+  imageSrc: string;
+  imageAlt: string;
+  badge?: string;
+};
+
+interface Props {
+  categoryLabel: string;
+  categoryHref: string;
+  items: Subcategory[];
+  featured?: MegaFeatured;
+  quickLinks?: MegaQuickLink[];
+  colours?: MegaColour[];
+}
+
+const {
+  categoryLabel,
+  categoryHref,
+  items,
+  featured,
+  quickLinks = [],
+  colours = [],
+} = Astro.props;
+---
+
+<div class="mega">
+  <div class="mega__main">
+    <div class="mega__head">
+      <p class="mega__label">{categoryLabel}</p>
+      <a class="mega__all" href={categoryHref}>Shop all {categoryLabel}</a>
+    </div>
+    <ul class="mega__lineup">
+      {
+        items.map((item) => (
+          <li>
+            <a class="mega__item" href={item.href}>
+              <span class="mega__media product-stage">
+                {item.image ? (
+                  <img
+                    src={item.image.src}
+                    alt={item.image.alt}
+                    width="96"
+                    height="96"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ) : (
+                  <span class="mega__glyph" aria-hidden="true">
+                    {item.label.charAt(0)}
+                  </span>
+                )}
+              </span>
+              <span class="mega__meta">
+                <span class="mega__name">
+                  {item.label}
+                  {item.badge ? <span class="mega__tag">{item.badge}</span> : null}
+                </span>
+                {item.fromPriceKes != null ? (
+                  <span class="mega__price">
+                    <Price kes={item.fromPriceKes} prefix="From" />
+                  </span>
+                ) : item.blurb ? (
+                  <span class="mega__blurb">{item.blurb}</span>
+                ) : null}
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    {
+      colours.length > 0 ? (
+        <div class="mega__colours">
+          <p class="mega__subhead">Shop by colour</p>
+          <ul class="mega__swatches">
+            {colours.map((c) => (
+              <li>
+                <a
+                  class="mega__swatch"
+                  href={c.href}
+                  style={`--swatch: ${c.hex}`}
+                  aria-label={c.label}
+                  title={c.label}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null
+    }
+
+    {
+      quickLinks.length > 0 ? (
+        <ul class="mega__quick">
+          {quickLinks.map((link) => (
+            <li>
+              <a href={link.href}>{link.label}</a>
+            </li>
+          ))}
+        </ul>
+      ) : null
+    }
+  </div>
+
+  {
+    featured ? (
+      <aside class="mega__featured">
+        <a class="mega__featured-link" href={featured.href}>
+          {featured.badge ? <span class="mega__featured-badge">{featured.badge}</span> : null}
+          <span class="mega__featured-media product-stage">
+            <img
+              src={featured.imageSrc}
+              alt={featured.imageAlt}
+              width="280"
+              height="220"
+              loading="lazy"
+              decoding="async"
+            />
+          </span>
+          <span class="mega__featured-title">{featured.title}</span>
+          <span class="mega__featured-body">{featured.body}</span>
+        </a>
+      </aside>
+    ) : null
+  }
+</div>
+
+<style>
+  .mega {
+    display: grid;
+    gap: var(--space-8);
+    padding: var(--space-6) 0 var(--space-8);
+  }
+
+  @media (min-width: 64rem) {
+    .mega {
+      grid-template-columns: 1fr minmax(14rem, 18rem);
+      align-items: start;
+    }
+  }
+
+  .mega__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+
+  .mega__label {
+    margin: 0;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-display);
+    letter-spacing: -0.02em;
+  }
+
+  .mega__all {
+    font-size: var(--text-sm);
+    color: var(--color-grey);
+    text-decoration: none;
+  }
+
+  .mega__all:hover {
+    color: var(--color-black);
+  }
+
+  .mega__lineup {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2);
+  }
+
+  @media (min-width: 48rem) {
+    .mega__lineup {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 72rem) {
+    .mega__lineup {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .mega__item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.55rem 0.65rem;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .mega__item:hover {
+    background: var(--color-stage);
+    color: inherit;
+  }
+
+  .mega__media {
+    flex-shrink: 0;
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+
+  .mega__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .mega__glyph {
+    font-weight: 700;
+    color: var(--color-grey);
+  }
+
+  .mega__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+
+  .mega__name {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: -0.02em;
+  }
+
+  .mega__tag {
+    display: inline-block;
+    padding: 0.1rem 0.35rem;
+    border-radius: 0.2rem;
+    background: var(--color-black);
+    color: var(--color-white);
+    font-size: 0.625rem;
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .mega__price {
+    font-size: 0.6875rem;
+    color: var(--color-grey);
+  }
+
+  .mega__price :global(.price__prefix),
+  .mega__price :global(.price__amount) {
+    font-size: inherit;
+    font-weight: 400;
+    color: inherit;
+  }
+
+  .mega__blurb {
+    font-size: 0.6875rem;
+    color: var(--color-grey);
+  }
+
+  .mega__subhead {
+    margin: var(--space-5) 0 var(--space-2);
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-grey);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .mega__swatches {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .mega__swatch {
+    display: block;
+    width: 1.35rem;
+    height: 1.35rem;
+    border-radius: 50%;
+    background: var(--swatch);
+    border: 1px solid rgb(0 0 0 / 0.12);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.35);
+  }
+
+  .mega__swatch:hover {
+    outline: 2px solid var(--color-black);
+    outline-offset: 2px;
+  }
+
+  .mega__quick {
+    list-style: none;
+    margin: var(--space-5) 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+  }
+
+  .mega__quick a {
+    font-size: var(--text-sm);
+    color: var(--color-ink);
+    text-decoration: none;
+    font-weight: var(--font-weight-medium);
+  }
+
+  .mega__quick a:hover {
+    text-decoration: underline;
+  }
+
+  .mega__featured-link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    background: var(--color-stage);
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+  }
+
+  .mega__featured-link:hover {
+    color: inherit;
+  }
+
+  .mega__featured-badge {
+    align-self: flex-start;
+    font-size: 0.625rem;
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.45rem;
+    background: var(--color-black);
+    color: var(--color-white);
+    border-radius: 0.2rem;
+  }
+
+  .mega__featured-media {
+    aspect-ratio: 5 / 4;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .mega__featured-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .mega__featured-title {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-display);
+    letter-spacing: -0.02em;
+  }
+
+  .mega__featured-body {
+    font-size: var(--text-sm);
+    color: var(--color-grey);
+    line-height: var(--leading-snug);
+  }
+</style>

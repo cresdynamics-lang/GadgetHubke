@@ -1,0 +1,153 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import AccessoryCard from "../../components/accessories/AccessoryCard.astro";
+import CompatibilityFinder from "../../components/accessories/CompatibilityFinder.astro";
+import MouseFeel from "../../components/accessories/MouseFeel.astro";
+import AccessoryLipaCalc from "../../components/accessories/AccessoryLipaCalc.astro";
+import AccessoryTrademark from "../../components/accessories/AccessoryTrademark.astro";
+import {
+  mice,
+  getAccessoryImage,
+  accessoryFaq,
+  accessoryBuyingNotes,
+  accessoriesConfig,
+} from "../../lib/accessories";
+
+const list = mice();
+const heroWhite = getAccessoryImage("mouse-usbc-white", "hero");
+const heroBlack = getAccessoryImage("mouse-usbc-black", "hero");
+const faq = accessoryFaq();
+const notes = accessoryBuyingNotes(list[0]);
+---
+
+<BaseLayout title="Magic Mouse - GadgetHub" description="Magic Mouse with Multi-Touch surface. Fit checked in Nairobi.">
+  <section class="xmouse-hero">
+    <div class="container">
+      <h1>A mouse you can swipe.</h1>
+      <p>Scroll and swipe on the shell — no wheel. Works with Mac and supported iPads over Bluetooth.</p>
+      <div class="xmouse-hero__toggle" role="group" aria-label="Hero colour">
+        <button type="button" class="is-active" data-hero-colour="white">White</button>
+        <button type="button" data-hero-colour="black">Black</button>
+      </div>
+    </div>
+    <div class="xmouse-hero__img">
+      <img data-hero-img src={heroWhite.src} alt={heroWhite.alt} width="1400" height="1050" fetchpriority="high" />
+    </div>
+  </section>
+
+  <CompatibilityFinder preselectLooking="mouse" />
+
+  <section class="container xmouse-cards">
+    <h2>All Magic Mouse</h2>
+    <p>{accessoriesConfig.blackPremiumNote}</p>
+    <div class="xmouse-cards__grid">
+      {list.map((p) => <AccessoryCard product={p} />)}
+    </div>
+  </section>
+
+  <MouseFeel />
+
+  <section class="container xmouse-notes">
+    <h2>Buying notes</h2>
+    {notes.map((n) => (
+      <article>
+        <h3>{n.title}</h3>
+        <p>{n.body}</p>
+      </article>
+    ))}
+  </section>
+
+  <section class="container xmouse-faq">
+    <h2>Questions people ask</h2>
+    {
+      faq.map((f) => (
+        <details>
+          <summary>{f.q}</summary>
+          <p>{f.a}</p>
+        </details>
+      ))
+    }
+  </section>
+
+  <AccessoryLipaCalc productId="mouse-usbc-white" />
+  <AccessoryTrademark />
+</BaseLayout>
+
+<script define:vars={{ whiteSrc: heroWhite.src, blackSrc: heroBlack.src, whiteAlt: heroWhite.alt, blackAlt: heroBlack.alt }}>
+  const img = document.querySelector("[data-hero-img]");
+  document.querySelectorAll("[data-hero-colour]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const c = btn.getAttribute("data-hero-colour");
+      document.querySelectorAll("[data-hero-colour]").forEach((t) => t.classList.toggle("is-active", t === btn));
+      if (img instanceof HTMLImageElement) {
+        img.src = c === "black" ? blackSrc : whiteSrc;
+        img.alt = c === "black" ? blackAlt : whiteAlt;
+      }
+    });
+  });
+</script>
+
+<style>
+  .xmouse-hero {
+    background: #f5f5f7;
+    padding: 2.5rem 0 0;
+  }
+  .xmouse-hero h1 {
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+  }
+  .xmouse-hero__toggle {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .xmouse-hero__toggle button {
+    border: 1px solid #d2d2d7;
+    background: #fff;
+    padding: 0.45rem 0.85rem;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .xmouse-hero__toggle button.is-active {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+  }
+  .xmouse-hero__img {
+    max-width: 960px;
+    margin: 1.5rem auto 0;
+    padding: 0 1rem 2rem;
+  }
+  .xmouse-hero__img img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    background: #fff;
+    border-radius: 1rem;
+  }
+  .xmouse-cards,
+  .xmouse-notes,
+  .xmouse-faq {
+    padding: 2.5rem 0;
+  }
+  .xmouse-cards__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .xmouse-notes p,
+  .xmouse-faq p {
+    color: #6e6e73;
+  }
+  details {
+    border-bottom: 1px solid #d2d2d7;
+    padding: 0.75rem 0;
+  }
+  summary {
+    cursor: pointer;
+    font-weight: 600;
+  }
+</style>

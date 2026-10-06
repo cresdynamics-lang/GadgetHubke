@@ -1,0 +1,143 @@
+---
+import { tvHomeModels, getTvHomeImage, formatKes, tvHomeSubline } from "../../lib/tv-home";
+
+const payload = tvHomeModels.map((m) => {
+  const img = getTvHomeImage(m.id, "hero", m.name);
+  return {
+    id: m.id,
+    name: m.name,
+    href: `/tv-home/${m.id}`,
+    priceKes: m.basePriceKes,
+    family: m.family,
+    year: m.year,
+    isNew: Boolean(m.isNew),
+    stereo: m.stereoPairCapable,
+    hub: Boolean(m.homeHub),
+    dolby: Boolean(m.dolbyVision),
+    sub: tvHomeSubline(m),
+    image: m.noImage ? "" : img.src,
+    noImage: Boolean(m.noImage),
+  };
+});
+---
+
+<section class="thquiz" id="quiz" data-thquiz>
+  <header>
+    <h2>Which TV &amp; Home device fits you?</h2>
+    <p>Three questions. Up to three matches with a short reason each.</p>
+  </header>
+  <div class="thquiz__q" data-q="room">
+    <p>What is the main job?</p>
+    <div class="thquiz__opts">
+      <button type="button" data-val="movies">Movies on the TV</button>
+      <button type="button" data-val="music">Music in the room</button>
+      <button type="button" data-val="voice">Voice in every room</button>
+    </div>
+  </div>
+  <div class="thquiz__q" data-q="size">
+    <p>How big is the space?</p>
+    <div class="thquiz__opts">
+      <button type="button" data-val="living">Living room / TV area</button>
+      <button type="button" data-val="small">Kitchen, bedroom or desk</button>
+      <button type="button" data-val="any">Either — I will move it</button>
+    </div>
+  </div>
+  <div class="thquiz__q" data-q="budget">
+    <p>Budget band (sample prices)?</p>
+    <div class="thquiz__opts">
+      <button type="button" data-val="tight">Under 20k</button>
+      <button type="button" data-val="mid">20k–40k</button>
+      <button type="button" data-val="open">40k+</button>
+    </div>
+  </div>
+  <div class="thquiz__results" data-quiz-results hidden>
+    <h3>Your matches</h3>
+    <ul data-quiz-list></ul>
+    <p class="thquiz__note">Apple TV needs your own TV with HDMI. HomePod needs iPhone or iPad to set up.</p>
+  </div>
+</section>
+
+<script define:vars={{ payload }}>
+  const root = document.querySelector("[data-thquiz]");
+  if (root) {
+    const answers = { room: "", size: "", budget: "" };
+    const list = root.querySelector("[data-quiz-list]");
+    const results = root.querySelector("[data-quiz-results]");
+
+    function reason(m, a) {
+      if (a.room === "movies" && m.family === "Apple TV") return "4K HDR apps on the TV you already own.";
+      if (a.room === "music" && m.family === "HomePod") return "Full-size speaker for bigger rooms.";
+      if (a.room === "voice" && m.family === "HomePod mini") return "Compact Siri and Intercom in more rooms.";
+      if (a.size === "small" && m.id === "homepod-mini") return "Fits a counter or bedside table.";
+      if (a.budget === "tight" && m.priceKes < 20000) return "Lower sample price in the lineup.";
+      if (a.room === "movies" && m.hub) return "Can act as a home hub where supported — confirm for Kenya.";
+      return "Solid fit for how you answered.";
+    }
+
+    function run() {
+      if (!answers.room || !answers.size || !answers.budget || !list || !results) return;
+      let pool = [...payload];
+      if (answers.room === "movies") pool = pool.filter((m) => m.family === "Apple TV");
+      if (answers.room === "music") pool = pool.filter((m) => m.family === "HomePod" || m.family === "HomePod mini");
+      if (answers.room === "voice") pool = pool.filter((m) => m.family.includes("HomePod"));
+      if (answers.size === "small") pool = pool.filter((m) => m.id === "homepod-mini" || m.family === "Apple TV");
+      if (answers.size === "living") pool = pool.filter((m) => m.family !== "HomePod mini" || m.id === "homepod-2");
+      if (answers.budget === "tight") pool = pool.filter((m) => m.priceKes < 20000);
+      if (answers.budget === "mid") pool = pool.filter((m) => m.priceKes >= 20000 && m.priceKes <= 40000);
+      if (answers.budget === "open") pool = pool.filter((m) => m.priceKes >= 40000);
+      if (!pool.length) pool = [...payload].sort((a, b) => a.priceKes - b.priceKes).slice(0, 6);
+      pool.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0) || b.year - a.year);
+      const top = pool.slice(0, 3);
+      list.innerHTML = top
+        .map(
+          (m) => `
+        <li>
+          <a href="${m.href}">
+            ${m.noImage ? "" : `<img src="${m.image}" alt="" width="72" height="72" />`}
+            <span>
+              <strong>${m.name}</strong>
+              <em>${reason(m, answers)}</em>
+              <small>From KES ${m.priceKes.toLocaleString("en-KE")} · ${m.sub}</small>
+            </span>
+          </a>
+        </li>`,
+        )
+        .join("");
+      results.hidden = false;
+    }
+
+    root.querySelectorAll(".thquiz__opts button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const q = btn.closest("[data-q]")?.getAttribute("data-q");
+        const val = btn.getAttribute("data-val");
+        if (!q || !val) return;
+        answers[q] = val;
+        btn.closest(".thquiz__opts")?.querySelectorAll("button").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        run();
+      });
+    });
+  }
+</script>
+
+<style>
+  .thquiz { font-family: Inter, system-ui, sans-serif; padding-block: 2rem; }
+  .thquiz header h2 { margin: 0 0 0.35rem; letter-spacing: -0.02em; }
+  .thquiz header p { margin: 0 0 1.25rem; color: #6e6e73; }
+  .thquiz__q { margin-bottom: 1rem; }
+  .thquiz__q > p { font-weight: 600; margin: 0 0 0.5rem; }
+  .thquiz__opts { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  .thquiz__opts button {
+    border: 1px solid #d2d2d7; background: #fff; padding: 0.45rem 0.85rem; border-radius: 999px; cursor: pointer; font-size: var(--text-sm);
+  }
+  .thquiz__opts button.is-active { background: #000; color: #fff; border-color: #000; }
+  .thquiz__results ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; }
+  .thquiz__results a {
+    display: grid; grid-template-columns: auto 1fr; gap: 0.75rem; align-items: center;
+    text-decoration: none; color: inherit; padding: 0.75rem; background: #f5f5f7; border-radius: 1rem;
+  }
+  .thquiz__results img { mix-blend-mode: multiply; border-radius: 0.5rem; background: #fff; }
+  .thquiz__results em { display: block; font-style: normal; color: #6e6e73; font-size: var(--text-sm); }
+  .thquiz__results small { color: #6e6e73; font-size: var(--text-xs); }
+  .thquiz__note { font-size: var(--text-sm); color: #6e6e73; margin-top: 1rem; }
+</style>

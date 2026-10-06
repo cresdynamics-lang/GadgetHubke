@@ -1,0 +1,184 @@
+---
+/**
+ * Blueprint product card: stage image, New/Pre-order tag, from price, Bag + WhatsApp.
+ */
+import Price from "./Price.astro";
+import { whatsappUrl } from "../lib/site";
+
+interface Props {
+  name: string;
+  href: string;
+  priceKes: number;
+  image: { src: string; alt: string };
+  blurb?: string;
+  badge?: "New" | "Pre-order" | "Coming soon";
+  colors?: { id: string; label: string; hex: string; imageSrc?: string }[];
+}
+
+const { name, href, priceKes, image, blurb, badge, colors = [] } = Astro.props;
+const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${name}.`);
+---
+
+<article class="pcard" data-pcard>
+  {
+    badge ? (
+      <span class:list={["badge", "pcard__badge", { "pcard__badge--soft": badge !== "New" }]}>
+        {badge}
+      </span>
+    ) : null
+  }
+  <a class="pcard__media product-stage" href={href}>
+    <img
+      data-pcard-img
+      src={image.src}
+      alt={image.alt}
+      width="440"
+      height="400"
+      loading="lazy"
+      decoding="async"
+    />
+  </a>
+  <div class="pcard__body">
+    <h3 class="pcard__name">
+      <a href={href}>{name}</a>
+    </h3>
+    {blurb ? <p class="pcard__blurb">{blurb}</p> : null}
+    {
+      colors.length > 0 ? (
+        <div class="pcard__colors" role="group" aria-label={`${name} finishes`}>
+          {colors.map((c, i) => (
+            <button
+              type="button"
+              class:list={["pcard__swatch", { "is-active": i === 0 }]}
+              style={`--swatch: ${c.hex}`}
+              aria-label={c.label}
+              data-pcard-swatch
+              data-src={c.imageSrc || image.src}
+              data-alt={`${name} in ${c.label}`}
+            />
+          ))}
+        </div>
+      ) : null
+    }
+    <p class="pcard__price"><Price kes={priceKes} prefix="From" /></p>
+    <div class="pcard__actions">
+      <a class="btn btn--primary btn--sm" href={href}>Add to Bag</a>
+      <a class="btn btn--secondary btn--sm" href={wa} target="_blank" rel="noopener noreferrer">
+        WhatsApp
+      </a>
+    </div>
+  </div>
+</article>
+
+<script>
+  document.querySelectorAll("[data-pcard]").forEach((card) => {
+    const img = card.querySelector("[data-pcard-img]") as HTMLImageElement | null;
+    card.querySelectorAll("[data-pcard-swatch]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const src = btn.getAttribute("data-src");
+        const alt = btn.getAttribute("data-alt");
+        if (img && src) {
+          img.src = src;
+          if (alt) img.alt = alt;
+        }
+        card.querySelectorAll("[data-pcard-swatch]").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+      });
+    });
+  });
+</script>
+
+<style>
+  .pcard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .pcard__badge {
+    position: absolute;
+    top: var(--space-3);
+    left: var(--space-3);
+    z-index: 1;
+  }
+
+  .pcard__badge--soft {
+    background: var(--color-ink);
+  }
+
+  .pcard__media {
+    aspect-ratio: 1.1 / 1;
+    margin-bottom: var(--space-4);
+    text-decoration: none;
+  }
+
+  .pcard__media img {
+    padding: var(--space-5);
+    transition: transform 0.45s var(--ease-out);
+  }
+
+  .pcard__media:hover img {
+    transform: scale(1.03);
+  }
+
+  .pcard__name {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-display);
+    margin-bottom: var(--space-1);
+  }
+
+  .pcard__name a {
+    text-decoration: none;
+  }
+
+  .pcard__blurb {
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+    margin-bottom: var(--space-3);
+  }
+
+  .pcard__colors {
+    display: flex;
+    gap: 0.4rem;
+    margin-bottom: var(--space-3);
+  }
+
+  .pcard__swatch {
+    width: 0.85rem;
+    height: 0.85rem;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    background: var(--swatch, #ccc);
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .pcard__swatch.is-active {
+    outline: 2px solid var(--color-black);
+    outline-offset: 2px;
+  }
+
+  .pcard__price {
+    margin-bottom: var(--space-4);
+  }
+
+  .pcard__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: auto;
+  }
+
+  :global(.btn--sm) {
+    min-height: 2.35rem;
+    padding: 0.45rem 0.9rem;
+    font-size: var(--text-sm);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pcard__media img {
+      transition: none;
+    }
+  }
+</style>

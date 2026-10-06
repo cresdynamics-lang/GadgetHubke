@@ -1,0 +1,87 @@
+---
+import { airpodsModels, formatKes, tradeInEstimate, airpodsConfig } from "../../lib/airpods";
+
+interface Props { modelId?: string; }
+const { modelId } = Astro.props;
+const opts = airpodsModels.map((m) => ({ id: m.id, name: m.name, base: m.basePriceKes }));
+const initial = opts.find((o) => o.id === modelId) || opts[0];
+const start = tradeInEstimate(initial.base, "good");
+const waPhone = airpodsConfig.whatsapp;
+const pct = airpodsConfig.tradeIn.conditionPct;
+---
+
+<section class="airpods-trade" data-airpods-trade>
+  <header>
+    <h3>Trade-In estimator</h3>
+    <p>{airpodsConfig.tradeIn.note}</p>
+  </header>
+  <label>
+    Your current AirPods
+    <select data-trade-model>
+      {opts.map((o) => (
+        <option value={o.id} data-base={o.base} selected={o.id === initial.id}>{o.name}</option>
+      ))}
+    </select>
+  </label>
+  <div class="airpods-trade__cond" role="group" aria-label="Condition">
+    <button type="button" data-cond="likeNew" data-pct={pct.likeNew}>Like new</button>
+    <button type="button" class="is-active" data-cond="good" data-pct={pct.good}>Good</button>
+    <button type="button" data-cond="worn" data-pct={pct.worn}>Worn</button>
+  </div>
+  <p class="airpods-trade__estimate">About <strong data-trade-value>{formatKes(start)}</strong></p>
+  <a
+    class="btn btn--secondary btn--sm"
+    data-trade-wa
+    href={`https://wa.me/${waPhone}?text=${encodeURIComponent(`Hi Gadget Hub — AirPods trade-in estimate for ${initial.name}: about ${formatKes(start)} (indicative, owner discretion).`)}`}
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    Send estimate on WhatsApp
+  </a>
+</section>
+
+<script define:vars={{ waPhone }}>
+  document.querySelectorAll("[data-airpods-trade]").forEach((root) => {
+    const model = root.querySelector("[data-trade-model]");
+    const valueEl = root.querySelector("[data-trade-value]");
+    const wa = root.querySelector("[data-trade-wa]");
+    let pctVal = 25;
+    function round500(n) { return Math.round(n / 500) * 500; }
+    function run() {
+      if (!(model instanceof HTMLSelectElement)) return;
+      const opt = model.selectedOptions[0];
+      const base = Number(opt?.getAttribute("data-base") || 0);
+      const value = round500((base * pctVal) / 100);
+      if (valueEl) valueEl.textContent = `KES ${value.toLocaleString("en-KE")}`;
+      if (wa instanceof HTMLAnchorElement) {
+        wa.href = `https://wa.me/${waPhone}?text=${encodeURIComponent(
+          `Hi Gadget Hub — AirPods trade-in estimate for ${opt?.textContent?.trim()}: about KES ${value.toLocaleString("en-KE")} (indicative, owner discretion).`,
+        )}`;
+      }
+    }
+    model?.addEventListener("change", run);
+    root.querySelectorAll("[data-cond]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        root.querySelectorAll("[data-cond]").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        pctVal = Number(btn.getAttribute("data-pct") || 25);
+        run();
+      });
+    });
+  });
+</script>
+
+<style>
+  .airpods-trade { border: 1px solid #d2d2d7; border-radius: 1.25rem; padding: 1rem; }
+  .airpods-trade header h3 { margin: 0 0 0.25rem; }
+  .airpods-trade header p { margin: 0 0 1rem; font-size: var(--text-sm); color: #6e6e73; }
+  .airpods-trade label { display: grid; gap: 0.35rem; margin-bottom: 0.85rem; font-size: var(--text-sm); font-weight: 600; }
+  .airpods-trade select { width: 100%; font: inherit; padding: 0.5rem; border-radius: 0.5rem; border: 1px solid #d2d2d7; }
+  .airpods-trade__cond { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.85rem; }
+  .airpods-trade__cond button {
+    border: 1px solid #d2d2d7; background: #fff; border-radius: 999px;
+    padding: 0.35rem 0.7rem; font: inherit; font-size: var(--text-sm); cursor: pointer;
+  }
+  .airpods-trade__cond button.is-active { background: #000; color: #fff; }
+  .airpods-trade__estimate { margin: 0 0 0.85rem; }
+</style>

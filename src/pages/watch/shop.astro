@@ -1,0 +1,205 @@
+---
+/**
+ * Watch shop — filters, ECG/Cellular toggles, cards, compare tray.
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import WatchCard from "../../components/watch/WatchCard.astro";
+import { watchModels, formatKes } from "../../lib/watch";
+
+const url = Astro.url;
+const familyQ = url.searchParams.get("family") || "";
+const genQ = url.searchParams.get("gen") || "";
+const needQ = url.searchParams.get("need") || "";
+const sizeQ = url.searchParams.get("size") || "";
+const materialQ = url.searchParams.get("material") || "";
+
+let filtered = [...watchModels];
+if (familyQ) filtered = filtered.filter((m) => m.family === familyQ);
+if (genQ) filtered = filtered.filter((m) => m.generation === genQ || m.generation.includes(genQ.replace(/\+/g, " ")));
+if (sizeQ) filtered = filtered.filter((m) => m.caseSizesMm.includes(Number(sizeQ)));
+if (materialQ) filtered = filtered.filter((m) => m.materials.includes(materialQ as any));
+if (needQ === "fitness") filtered = filtered.filter((m) => m.family === "Series" || m.family === "Ultra" || m.family === "Nike");
+if (needQ === "health") filtered = filtered.filter((m) => m.health.ecg === true || m.family === "Series");
+if (needQ === "adventure") filtered = filtered.filter((m) => m.family === "Ultra");
+if (needQ === "kids") filtered = filtered.filter((m) => m.family === "SE");
+if (needQ === "price") filtered = filtered.sort((a, b) => a.basePriceKes - b.basePriceKes);
+if (needQ === "bright") filtered = filtered.filter((m) => (m.brightnessNits || 0) >= 2000 || m.family === "Ultra");
+
+const payload = filtered.map((m) => ({
+  id: m.id,
+  family: m.family,
+  generation: m.generation,
+  size: m.defaultCaseMm,
+  materials: m.materials,
+  year: m.year,
+  price: m.basePriceKes,
+  ecg: m.health.ecg === true,
+  cellular: m.cellularAvailable,
+}));
+---
+
+<BaseLayout title="Shop Apple Watch - GadgetHub" description="Filter Apple Watch by family, size, material and need.">
+  <section class="container wshop">
+    <header class="wshop__head">
+      <h1>Shop Apple Watch</h1>
+      <p>Sample prices. Sealed stock. Compare up to three.</p>
+    </header>
+
+    <div class="wshop__filters" data-wshop>
+      <div class="wshop__chips" role="group" aria-label="Family">
+        <a class:list={{ "is-active": !familyQ }} href="/watch/shop">All</a>
+        {["Series", "SE", "Ultra", "Hermès", "Nike"].map((f) => (
+          <a class:list={{ "is-active": familyQ === f }} href={`/watch/shop?family=${f}`}>{f}</a>
+        ))}
+      </div>
+      <div class="wshop__chips" role="group" aria-label="Case size">
+        {[40, 41, 42, 44, 45, 46, 49].map((s) => (
+          <a class:list={{ "is-active": sizeQ === String(s) }} href={`/watch/shop?size=${s}`}>{s} mm</a>
+        ))}
+      </div>
+      <div class="wshop__chips" role="group" aria-label="Material">
+        {["aluminum", "titanium", "ceramic", "stainless"].map((m) => (
+          <a class:list={{ "is-active": materialQ === m }} href={`/watch/shop?material=${m}`}>{m}</a>
+        ))}
+      </div>
+      <div class="wshop__toggles">
+        <label><input type="checkbox" data-filter-ecg /> Has ECG</label>
+        <label><input type="checkbox" data-filter-cell /> Cellular available</label>
+        <label>
+          Sort
+          <select data-sort>
+            <option value="newest">Newest</option>
+            <option value="price-asc">Price ↑</option>
+            <option value="price-desc">Price ↓</option>
+            <option value="weight">Weight</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <ul class="wshop__grid" data-shop-grid>
+      {filtered.map((m) => (
+        <li
+          data-shop-item
+          data-id={m.id}
+          data-ecg={m.health.ecg === true ? "1" : "0"}
+          data-cell={m.cellularAvailable ? "1" : "0"}
+          data-year={m.year}
+          data-price={m.basePriceKes}
+          data-weight={m.weightG || 999}
+        >
+          <WatchCard model={m} />
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <div class="wshop-tray" data-compare-tray hidden>
+    <p data-compare-count>0 selected</p>
+    <a class="btn btn--primary btn--sm" data-compare-go href="/watch/compare">Compare</a>
+    <button type="button" data-compare-clear>Clear</button>
+  </div>
+</BaseLayout>
+
+<script define:vars={{ payload }}>
+  const tray = document.querySelector("[data-compare-tray]");
+  const countEl = document.querySelector("[data-compare-count]");
+  const go = document.querySelector("[data-compare-go]");
+  const selected = new Set();
+
+  function refreshTray() {
+    if (!(tray instanceof HTMLElement)) return;
+    tray.hidden = selected.size === 0;
+    if (countEl) countEl.textContent = `${selected.size} selected`;
+    if (go instanceof HTMLAnchorElement) {
+      go.href = `/watch/compare?ids=${encodeURIComponent([...selected].join(","))}`;
+    }
+  }
+
+  document.querySelectorAll("[data-watch-compare]").forEach((box) => {
+    box.addEventListener("change", () => {
+      if (!(box instanceof HTMLInputElement)) return;
+      if (box.checked) {
+        if (selected.size >= 3) {
+          box.checked = false;
+          return;
+        }
+        selected.add(box.value);
+      } else selected.delete(box.value);
+      refreshTray();
+    });
+  });
+
+  document.querySelector("[data-compare-clear]")?.addEventListener("click", () => {
+    selected.clear();
+    document.querySelectorAll("[data-watch-compare]").forEach((b) => {
+      if (b instanceof HTMLInputElement) b.checked = false;
+    });
+    refreshTray();
+  });
+
+  const ecg = document.querySelector("[data-filter-ecg]");
+  const cell = document.querySelector("[data-filter-cell]");
+  const sort = document.querySelector("[data-sort]");
+  const grid = document.querySelector("[data-shop-grid]");
+
+  function applyClientFilters() {
+    const wantEcg = ecg instanceof HTMLInputElement && ecg.checked;
+    const wantCell = cell instanceof HTMLInputElement && cell.checked;
+    const items = [...document.querySelectorAll("[data-shop-item]")];
+    items.forEach((li) => {
+      if (!(li instanceof HTMLElement)) return;
+      let show = true;
+      if (wantEcg && li.getAttribute("data-ecg") !== "1") show = false;
+      if (wantCell && li.getAttribute("data-cell") !== "1") show = false;
+      li.hidden = !show;
+    });
+    const mode = sort instanceof HTMLSelectElement ? sort.value : "newest";
+    const visible = items.filter((li) => li instanceof HTMLElement && !li.hidden);
+    visible.sort((a, b) => {
+      const ae = a instanceof HTMLElement ? a : null;
+      const be = b instanceof HTMLElement ? b : null;
+      if (!ae || !be) return 0;
+      if (mode === "price-asc") return Number(ae.dataset.price) - Number(be.dataset.price);
+      if (mode === "price-desc") return Number(be.dataset.price) - Number(ae.dataset.price);
+      if (mode === "weight") return Number(ae.dataset.weight) - Number(be.dataset.weight);
+      return Number(be.dataset.year) - Number(ae.dataset.year);
+    });
+    if (grid) visible.forEach((li) => grid.appendChild(li));
+  }
+  ecg?.addEventListener("change", applyClientFilters);
+  cell?.addEventListener("change", applyClientFilters);
+  sort?.addEventListener("change", applyClientFilters);
+</script>
+
+<style>
+  .wshop { padding-block: 2rem 4rem; }
+  .wshop__head h1 { margin: 0 0 0.35rem; letter-spacing: -0.03em; }
+  .wshop__head p { margin: 0 0 1.5rem; color: #6e6e73; }
+  .wshop__chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
+  .wshop__chips a {
+    border: 1px solid #d2d2d7; border-radius: 999px; padding: 0.35rem 0.7rem;
+    text-decoration: none; color: inherit; font-size: var(--text-sm);
+  }
+  .wshop__chips a.is-active { background: #000; color: #fff; border-color: #000; }
+  .wshop__toggles {
+    display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;
+    margin: 0.75rem 0 1.5rem; font-size: var(--text-sm);
+  }
+  .wshop__grid {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; gap: 1.25rem; grid-template-columns: 1fr;
+  }
+  @media (min-width: 40rem) { .wshop__grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 64rem) { .wshop__grid { grid-template-columns: 1fr 1fr 1fr; } }
+  .wshop-tray {
+    position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%);
+    z-index: 50; background: #000; color: #fff; border-radius: 999px;
+    padding: 0.65rem 1rem; display: flex; gap: 0.75rem; align-items: center;
+    box-shadow: 0 12px 40px rgb(0 0 0 / 0.25);
+  }
+  .wshop-tray button {
+    border: none; background: transparent; color: #fff; text-decoration: underline;
+    font: inherit; cursor: pointer;
+  }
+</style>

@@ -1,0 +1,278 @@
+---
+/**
+ * Power feel sections — pairing, cables, MagSafe snap.
+ * Reduced-motion: final frames, no autoplay.
+ */
+import {
+  adapters,
+  cables,
+  getAccessoryImage,
+  accessoriesConfig,
+} from "../../lib/accessories";
+
+const adapter140 = getAccessoryImage("power-adapter-140w", "hero");
+const magsafe3 = getAccessoryImage("cable-magsafe3-2m", "hero");
+const magsafe = getAccessoryImage("magsafe-charger-1m", "hero");
+const cableRows = cables();
+const adapterLadder = adapters().sort((a, b) => (a.wattage || 0) - (b.wattage || 0));
+---
+
+<div class="xfeel-power" data-power-feel>
+  <section class="xfeel-power__pair" data-feel-section="pair">
+    <div class="container">
+      <h2>Adapter + cable</h2>
+      <p>They belong together — match wattage to the device.</p>
+    </div>
+    <div class="xfeel-power__pair-stage" data-pair-stage>
+      <img data-pair-a src={adapter140.src} alt={adapter140.alt} width="700" height="525" loading="lazy" />
+      <img data-pair-b src={magsafe3.src} alt={magsafe3.alt} width="700" height="525" loading="lazy" />
+    </div>
+  </section>
+
+  <section class="xfeel-power__cables" data-feel-section="cables">
+    <div class="container">
+      <h2>Same plug. Different cable.</h2>
+      <p>Select a cable — ratings flagged check-final-specs. {accessoriesConfig.powerChargeClaimNote}</p>
+      <div class="xfeel-power__cable-row" role="listbox" aria-label="Cables">
+        {
+          cableRows.map((c, i) => {
+            const img = getAccessoryImage(c.id, "hero");
+            return (
+              <button
+                type="button"
+                class:list={{ "is-active": i === 0 }}
+                role="option"
+                aria-selected={i === 0 ? "true" : "false"}
+                data-cable
+                data-src={img.src}
+                data-name={c.name}
+                data-note={c.whyChoose[0]}
+              >
+                <img src={img.src} alt={c.name} width="200" height="150" loading="lazy" />
+                <span>{c.name.replace(" (USB-C) Pro Cable", "").replace("USB-C Charge Cable", "USB-C")}</span>
+              </button>
+            );
+          })
+        }
+      </div>
+      <div class="xfeel-power__cable-detail" aria-live="polite">
+        <img data-cable-img src={getAccessoryImage(cableRows[0].id, "hero").src} alt={cableRows[0].name} width="640" height="480" loading="lazy" />
+        <div>
+          <h3 data-cable-name>{cableRows[0].name}</h3>
+          <p data-cable-note>{cableRows[0].whyChoose[0]}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="xfeel-power__magsafe" data-feel-section="magsafe">
+    <div class="container">
+      <h2>MagSafe snap</h2>
+      <p>A demo; the real charger aligns itself by magnets.</p>
+      <div class="xfeel-power__snap" data-magsafe-demo>
+        <div class="xfeel-power__phone" aria-hidden="true"></div>
+        <img data-snap-charger src={magsafe.src} alt="MagSafe Charger" width="200" height="200" loading="lazy" />
+      </div>
+      <button type="button" class="btn btn--primary" data-snap-btn>Snap</button>
+    </div>
+  </section>
+
+  <nav class="xfeel-power__story" aria-label="Feel sections">
+    <button type="button" data-story="pair" aria-label="Pairing"></button>
+    <button type="button" data-story="cables" aria-label="Cables"></button>
+    <button type="button" data-story="magsafe" aria-label="MagSafe"></button>
+  </nav>
+</div>
+
+<script>
+  const root = document.querySelector("[data-power-feel]");
+  if (root) {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const stage = root.querySelector("[data-pair-stage]");
+    const a = root.querySelector("[data-pair-a]");
+    const b = root.querySelector("[data-pair-b]");
+    if (!reduce && stage && a instanceof HTMLElement && b instanceof HTMLElement) {
+      const onScroll = () => {
+        const rect = stage.getBoundingClientRect();
+        const vh = window.innerHeight || 1;
+        const p = Math.min(1, Math.max(0, 1 - rect.top / vh));
+        a.style.transform = `translateX(${(1 - p) * -24}px)`;
+        b.style.transform = `translateX(${(1 - p) * 24}px)`;
+      };
+      window.addEventListener("scroll", () => requestAnimationFrame(onScroll), { passive: true });
+      onScroll();
+    }
+
+    const cImg = root.querySelector("[data-cable-img]");
+    const cName = root.querySelector("[data-cable-name]");
+    const cNote = root.querySelector("[data-cable-note]");
+    root.querySelectorAll("[data-cable]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        root.querySelectorAll("[data-cable]").forEach((t) => {
+          t.classList.toggle("is-active", t === btn);
+          t.setAttribute("aria-selected", t === btn ? "true" : "false");
+        });
+        if (cImg instanceof HTMLImageElement) {
+          cImg.src = btn.getAttribute("data-src") || cImg.src;
+          cImg.alt = btn.getAttribute("data-name") || "";
+        }
+        if (cName) cName.textContent = btn.getAttribute("data-name");
+        if (cNote) cNote.textContent = btn.getAttribute("data-note");
+      });
+    });
+
+    const snap = root.querySelector("[data-magsafe-demo]");
+    const snapBtn = root.querySelector("[data-snap-btn]");
+    const doSnap = () => snap?.classList.toggle("is-snapped");
+    snapBtn?.addEventListener("click", doSnap);
+
+    root.querySelectorAll("[data-story]").forEach((dot) => {
+      dot.addEventListener("click", () => {
+        const id = dot.getAttribute("data-story");
+        root.querySelector(`[data-feel-section="${id}"]`)?.scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
+      });
+    });
+  }
+</script>
+
+<style>
+  .xfeel-power__pair {
+    background: #f5f5f7;
+    padding: 3rem 0;
+  }
+  .xfeel-power__pair-stage {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    max-width: 900px;
+    margin: 1.5rem auto;
+    padding: 0 1rem;
+  }
+  .xfeel-power__pair-stage img {
+    width: 100%;
+    mix-blend-mode: multiply;
+    background: #fff;
+    border-radius: 0.75rem;
+  }
+  .xfeel-power__cables {
+    background: #000;
+    color: #f5f5f7;
+    padding: 3rem 0;
+  }
+  .xfeel-power__cable-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem;
+    margin: 1rem 0;
+  }
+  .xfeel-power__cable-row button {
+    background: #1d1d1f;
+    border: 1px solid #424245;
+    border-radius: 0.75rem;
+    color: #f5f5f7;
+    padding: 0.5rem;
+    cursor: pointer;
+    text-align: left;
+  }
+  .xfeel-power__cable-row button.is-active {
+    border-color: #fff;
+  }
+  .xfeel-power__cable-row button:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+  .xfeel-power__cable-row img {
+    width: 100%;
+    mix-blend-mode: multiply;
+    background: #f5f5f7;
+    border-radius: 0.35rem;
+  }
+  .xfeel-power__cable-row span {
+    display: block;
+    font-size: 0.7rem;
+    margin-top: 0.35rem;
+  }
+  .xfeel-power__cable-detail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  @media (max-width: 720px) {
+    .xfeel-power__cable-detail {
+      grid-template-columns: 1fr;
+    }
+  }
+  .xfeel-power__cable-detail img {
+    width: 100%;
+    mix-blend-mode: multiply;
+    background: #f5f5f7;
+    border-radius: 0.75rem;
+  }
+  .xfeel-power__magsafe {
+    background: #000;
+    color: #f5f5f7;
+    padding: 3rem 0;
+  }
+  .xfeel-power__snap {
+    position: relative;
+    width: min(320px, 100%);
+    aspect-ratio: 1;
+    margin: 1.5rem 0;
+    background: #1d1d1f;
+    border-radius: 1rem;
+  }
+  .xfeel-power__phone {
+    position: absolute;
+    inset: 18% 28%;
+    border: 2px solid #6e6e73;
+    border-radius: 1.25rem;
+  }
+  .xfeel-power__snap img {
+    position: absolute;
+    width: 40%;
+    left: 30%;
+    top: 8%;
+    mix-blend-mode: multiply;
+    background: #f5f5f7;
+    border-radius: 50%;
+    transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .xfeel-power__snap.is-snapped img {
+    transform: translateY(70%);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .xfeel-power__snap img {
+      transition: none;
+    }
+    .xfeel-power__snap.is-snapped img {
+      transform: translateY(70%);
+    }
+  }
+  .xfeel-power__story {
+    position: fixed;
+    left: 8px;
+    top: 40%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 5;
+  }
+  .xfeel-power__story button {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1px solid #d2d2d7;
+    background: #fff;
+    padding: 0;
+    cursor: pointer;
+  }
+  .xfeel-power__story button:focus-visible {
+    outline: 2px solid #000;
+  }
+  @media (max-width: 720px) {
+    .xfeel-power__story {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,239 @@
+---
+import {
+  tvHomeModels,
+  getTvHomeModel,
+  getTvHomeImage,
+  formatKes,
+  type TvHomeModel,
+} from "../../lib/tv-home";
+
+function previewFor(m: TvHomeModel) {
+  const img = getTvHomeImage(m.id, "hero", m.name);
+  return {
+    id: m.id,
+    name: m.name,
+    tagline: m.tagline,
+    href: `/tv-home/${m.id}`,
+    priceKes: m.basePriceKes,
+    src: img.src,
+    alt: img.alt,
+    isNew: Boolean(m.isNew),
+  };
+}
+
+const previews = Object.fromEntries(tvHomeModels.map((m) => [m.id, previewFor(m)]));
+const defaultPreview =
+  previewFor(getTvHomeModel("apple-tv-4k-3") || tvHomeModels[0]);
+
+const shopNow = ["apple-tv-4k-3", "homepod-2", "homepod-mini"].map((id) =>
+  getTvHomeModel(id),
+).filter(Boolean) as TvHomeModel[];
+
+const earlier = tvHomeModels
+  .filter((m) => !shopNow.some((s) => s.id === m.id))
+  .sort((a, b) => b.year - a.year || b.basePriceKes - a.basePriceKes)
+  .slice(0, 8);
+
+const accessories = [
+  { label: "Siri Remote", href: "/tv-home/shop" },
+  { label: "HDMI 2.1 cable", href: "/shop/accessories" },
+  { label: "Ethernet cable", href: "/shop/accessories" },
+  { label: "HomePod stand", href: "/tv-home/shop" },
+  { label: "Power cables", href: "/tv-home/shop" },
+  { label: "All accessories", href: "/shop/accessories" },
+];
+
+const needs = [
+  { label: "Movies and 4K HDR", href: "/tv-home/shop?need=movies" },
+  { label: "Big-room music", href: "/tv-home/shop?need=music" },
+  { label: "Smart home hub", href: "/tv-home/shop?need=hub" },
+  { label: "Kitchen or bedroom", href: "/tv-home/shop?need=compact" },
+  { label: "Stereo pair", href: "/tv-home/shop?need=stereo" },
+  { label: "Lowest sample price", href: "/tv-home/shop?need=budget" },
+];
+---
+
+<div class="thmega" data-thmega>
+  <div class="thmega__cols">
+    <div class="thmega__col">
+      <p class="thmega__heading">Shop</p>
+      <ul>
+        {
+          shopNow.map((m) => (
+            <li>
+              <a class="thmega__link" href={`/tv-home/${m.id}`} data-mega-preview={m.id}>
+                <span>
+                  {m.name.replace("Apple TV ", "Apple TV ").replace("HomePod ", "")}
+                  {m.isNew ? <span class="thmega__tag">New</span> : null}
+                </span>
+                <em>from {formatKes(m.basePriceKes)}</em>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="thmega__gen">Earlier models</p>
+      <ul>
+        {
+          earlier.map((m) => (
+            <li>
+              <a class="thmega__link" href={`/tv-home/${m.id}`} data-mega-preview={m.id}>
+                <span>{m.name}</span>
+                <em>from {formatKes(m.basePriceKes)}</em>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="thmega__all" href="/tv-home/shop">Shop all TV &amp; Home</a>
+    </div>
+
+    <div class="thmega__col">
+      <p class="thmega__heading">Home accessories</p>
+      <ul>
+        {accessories.map((b) => (
+          <li><a class="thmega__link" href={b.href}>{b.label}</a></li>
+        ))}
+      </ul>
+      <a class="thmega__all" href="/shop/accessories">All accessories</a>
+    </div>
+
+    <div class="thmega__col">
+      <p class="thmega__heading">Shop by need</p>
+      <ul>
+        {needs.map((n) => (
+          <li><a class="thmega__link" href={n.href}>{n.label}</a></li>
+        ))}
+      </ul>
+      <ul class="thmega__tools">
+        <li><a href="/tv-home/compare">Compare</a></li>
+        <li><a href="/trade-in">Trade in</a></li>
+        <li><a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo</a></li>
+      </ul>
+    </div>
+
+    <div class="thmega__preview" data-mega-card>
+      <div class="thmega__stage">
+        <img data-mega-img src={defaultPreview.src} alt={defaultPreview.alt} width="420" height="420" />
+      </div>
+      <p data-mega-name>{defaultPreview.name}</p>
+      <p data-mega-tagline class="thmega__muted">{defaultPreview.tagline}</p>
+      <p data-mega-price><strong>From {formatKes(defaultPreview.priceKes)}</strong></p>
+      <a class="btn btn--primary btn--sm" data-mega-view href={defaultPreview.href}>View</a>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ previews, defaultPreview }}>
+  const root = document.querySelector("[data-thmega]");
+  if (root) {
+    const img = root.querySelector("[data-mega-img]");
+    const name = root.querySelector("[data-mega-name]");
+    const tagline = root.querySelector("[data-mega-tagline]");
+    const price = root.querySelector("[data-mega-price]");
+    const view = root.querySelector("[data-mega-view]");
+
+    function show(id) {
+      const p = previews[id] || defaultPreview;
+      if (img instanceof HTMLImageElement) {
+        img.style.opacity = "0";
+        img.style.transform = "scale(0.97)";
+        window.setTimeout(() => {
+          img.src = p.src;
+          img.alt = p.alt;
+          img.style.opacity = "1";
+          img.style.transform = "scale(1)";
+        }, 170);
+      }
+      if (name) name.textContent = p.name;
+      if (tagline) tagline.textContent = p.tagline;
+      if (price) price.innerHTML = `<strong>From KES ${p.priceKes.toLocaleString("en-KE")}</strong>`;
+      if (view instanceof HTMLAnchorElement) view.href = p.href;
+    }
+
+    root.querySelectorAll("[data-mega-preview]").forEach((a) => {
+      a.addEventListener("mouseenter", () => show(a.getAttribute("data-mega-preview")));
+      a.addEventListener("focus", () => show(a.getAttribute("data-mega-preview")));
+    });
+  }
+</script>
+
+<style>
+  .thmega { padding: 1.25rem 1.5rem 1.5rem; font-family: Inter, system-ui, sans-serif; }
+  .thmega__cols {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 64rem) {
+    .thmega__cols { grid-template-columns: 1.1fr 0.9fr 0.9fr 1.1fr; }
+  }
+  .thmega__heading {
+    margin: 0 0 0.65rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #6e6e73;
+  }
+  .thmega__gen {
+    margin: 0.85rem 0 0.4rem;
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+  .thmega ul { list-style: none; margin: 0; padding: 0; }
+  .thmega__link {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.35rem 0;
+    text-decoration: none;
+    color: inherit;
+    font-size: var(--text-sm);
+    transition: transform 160ms ease;
+  }
+  .thmega__link:hover, .thmega__link:focus-visible { transform: translateX(5px); }
+  .thmega__link em { font-style: normal; color: #6e6e73; white-space: nowrap; }
+  .thmega__tag {
+    display: inline-block;
+    margin-left: 0.35rem;
+    font-size: 0.65rem;
+    background: #000;
+    color: #fff;
+    padding: 0.1rem 0.35rem;
+    border-radius: 0.25rem;
+    vertical-align: middle;
+  }
+  .thmega__all {
+    display: inline-block;
+    margin-top: 0.65rem;
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+  .thmega__tools { margin-top: 0.85rem; }
+  .thmega__tools a { font-size: var(--text-sm); color: inherit; }
+  .thmega__preview {
+    background: #f5f5f7;
+    border-radius: 1.25rem;
+    padding: 1rem;
+  }
+  .thmega__stage {
+    aspect-ratio: 1 / 1;
+    display: grid;
+    place-items: center;
+    margin-bottom: 0.75rem;
+  }
+  .thmega__stage img {
+    width: 90%;
+    height: auto;
+    mix-blend-mode: multiply;
+    transition: opacity 170ms ease, transform 170ms ease;
+  }
+  .thmega__preview p { margin: 0.15rem 0; }
+  .thmega__muted { font-size: var(--text-sm); color: #6e6e73; }
+  .thmega__preview .btn { margin-top: 0.65rem; }
+  @media (prefers-reduced-motion: reduce) {
+    .thmega__link { transition: none; }
+    .thmega__link:hover { transform: none; }
+  }
+</style>

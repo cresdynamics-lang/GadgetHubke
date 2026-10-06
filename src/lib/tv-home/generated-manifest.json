@@ -1,0 +1,990 @@
+{
+  "generatedAt": "2026-10-05T23:56:23.272Z",
+  "products": {
+    "apple-tv-4k": {
+      "gallery": [
+        "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/Apple_TV_4K/apple-tv-4k-gallery1-202210.jpg",
+        "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/Apple_TV_4K/apple-tv-4k-gallery2-202210.jpg",
+        "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/Apple_TV_4K/apple-tv-4k-gallery3-202210.jpg",
+        "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/Apple_TV_4K/apple-tv-4k-gallery4-202210.jpg",
+        "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/Apple_TV_4K/apple-tv-4k-gallery5-202210.jpg"
+      ],
+      "hero": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/Apple_TV_4K/apple-tv-4k-hero-select-202210.jpg",
+      "remote": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/Apple_TV_4K/appletv-witb-remote-202104.jpg",
+      "box": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/Apple_TV_4K/appletv-witb-tv-202210.jpg"
+    },
+    "homepod-2": {
+      "gallery": [
+        "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/HomePod_2nd_gen/homepod-202210-gallery-1.jpg",
+        "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/HomePod_2nd_gen/homepod-202210-gallery-2.jpg",
+        "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/HomePod_2nd_gen/homepod-202210-gallery-3.jpg",
+        "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/HomePod_2nd_gen/homepod-202210-gallery-4.jpg",
+        "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/HomePod_2nd_gen/homepod-202210-gallery-5.jpg"
+      ],
+      "colours": {
+        "midnight": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/HomePod_2nd_gen/homepod-select-midnight-202210.jpg",
+        "white": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/HomePod_2nd_gen/homepod-select-white-202210.jpg"
+      },
+      "hero": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/HomePod_2nd_gen/homepod-select-202210.jpg"
+    },
+    "homepod-mini": {
+      "gallery": [
+        "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/HomePod_mini/homepod-mini-202110-gallery-1.jpg",
+        "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/HomePod_mini/homepod-mini-202110-gallery-2.jpg",
+        "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/HomePod_mini/homepod-mini-202110-gallery-3.jpg",
+        "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/HomePod_mini/homepod-mini-202110-gallery-4.jpg",
+        "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/HomePod_mini/homepod-mini-202110-gallery-5.jpg"
+      ],
+      "colours": {
+        "blue": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/HomePod_mini/homepod-mini-select-blue-202110_FV1.jpg",
+        "midnight": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/HomePod_mini/homepod-mini-select-midnight-202407_FV1.jpg",
+        "orange": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/HomePod_mini/homepod-mini-select-orange-202110_FV1.jpg",
+        "white": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/HomePod_mini/homepod-mini-select-white-202110_FV1.jpg",
+        "yellow": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/HomePod_mini/homepod-mini-select-yellow-202110.jpg"
+      },
+      "hero": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/HomePod_mini/homepod-mini-select-202210.jpg"
+    }
+  },
+  "swatches": {
+    "midnight": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/02_Colour_finish_swatches/homepod-mini-finish-midnight-202407.jpg",
+    "white": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/02_Colour_finish_swatches/homepod-mini-finish-white-202110.jpg",
+    "blue": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/02_Colour_finish_swatches/homepod-mini-finish-blue-202110.jpg",
+    "orange": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/02_Colour_finish_swatches/homepod-mini-finish-orange-202110.jpg",
+    "yellow": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/02_Colour_finish_swatches/homepod-mini-finish-yellow-202110.jpg"
+  },
+  "overviews": {
+    "hd": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/05_Model_overviews_Apple_support/apple-tv-4gen-hd.png",
+    "1gen": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/05_Model_overviews_Apple_support/apple-tv-4k-1gen.png",
+    "2gen": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/05_Model_overviews_Apple_support/apple-tv-4k-2gen.png",
+    "3gen": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/05_Model_overviews_Apple_support/apple-tv-4k-3gen.png"
+  },
+  "compare": {
+    "homepod": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/04_Compare_images/homepod-compare-homepod-202210.jpg",
+    "mini": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/04_Compare_images/homepod-compare-homepod-mini-202210.jpg"
+  },
+  "pages": {
+    "AppleTV": {
+      "phone": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/ar/phone__fgbajnptevqu_large_2x.jpg",
+        "section": "ar",
+        "score": 500
+      },
+      "airpods": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/better-together/airpods__fdufq9ypecya_large_2x.jpg",
+        "section": "better-together",
+        "score": 500
+      },
+      "calibration_apple_tv": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/better-together/calibration_apple_tv__bw6f32t8opma_large_2x.jpg",
+        "section": "better-together",
+        "score": 500
+      },
+      "iphone_control": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/better-together/iphone_control__gneibommwl2e_large_2x.jpg",
+        "section": "better-together",
+        "score": 500
+      },
+      "siri_airpods": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/better-together/siri_airpods__d5rm5idggxyu_large_2x.jpg",
+        "section": "better-together",
+        "score": 500
+      },
+      "apple_4k_ethernet": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/compare/apple_4k_ethernet__dbqrjd7wvsuq_large_2x.jpg",
+        "section": "compare",
+        "score": 500
+      },
+      "apple_4k_wifi": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/compare/apple_4k_wifi__fpjm9mmlrzyy_large_2x.jpg",
+        "section": "compare",
+        "score": 500
+      },
+      "apple_tv_app": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/apple_tv_app__d6nd1841aiie_large_2x.png",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_bjork": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_bjork__ennyh4r9w0qe_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_camilla_cabello": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_camilla_cabello__bkfmoe3mrd42_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_central_cee": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_central_cee__d3drjcp044mu_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_crossy_road": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_crossy_road__f46jdr1gvliu_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_dragon": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_dragon__fit8bssfu4y2_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_fitness-01": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_fitness-01__euu0pdyutgae_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_fitness-02": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_fitness-02__bsnju4h2ykk2_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_fitness-03": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_fitness-03__dspjxbz3b02u_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_fitness-04": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_fitness-04__e2kqqjvucbee_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_fountain_of_youth": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_fountain_of_youth__blq6ig7mjwgi_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_friends_neighbors": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_friends_neighbors__ftftcs4t9tea_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_hello_kitty": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_hello_kitty__dyzvkpd4jiqa_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_hijack": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_hijack__bljlnk9xkynm_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_jennifer_lopez": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_jennifer_lopez__fh4ox66uvfmi_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_jurassic": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_jurassic__c4113q824ck2_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_kacey_musgraves": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_kacey_musgraves__czfo4t9eqa82_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_lasso": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_lasso__dectx3ui90ae_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_mickey17": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_mickey17__d76texr1is6e_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_minecraft": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_minecraft__glopxniar5yu_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_pitt": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_pitt__bs7vfnnz2vxy_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_severance": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_severance__ft50fk44erqm_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_silo": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_silo__c4flnjcqpgcy_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_spongebob": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_spongebob__gjhzrhzzpqem_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_stick": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_stick__otro4cdgh2y6_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_superman": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_superman__ekpjpe3zh26a_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_what_the_car": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_what_the_car__keqacd9zsh26_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "river_wild_robot": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/entertainment/river_wild_robot__cdkobmhz4liq_large_2x.jpg",
+        "section": "entertainment",
+        "score": 500
+      },
+      "facetime": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/facetime/facetime__exrio2z3zuie_large_2x.jpg",
+        "section": "facetime",
+        "score": 500
+      },
+      "hero_tv_hw": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/hero/hero_tv_hw__e1vadywlvcmu_large_2x.jpg",
+        "section": "hero",
+        "score": 500
+      },
+      "hero_tv_remote": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/hero/hero_tv_remote__da02803g5doy_large_2x.png",
+        "section": "hero",
+        "score": 500
+      },
+      "hero_tv_shadow_color": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/hero/hero_tv_shadow_color__h0jua2c6nwi2_large_2x.png",
+        "section": "hero",
+        "score": 500
+      },
+      "smart_home_hub": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/home-control/smart_home_hub__cz2n3396ujsm_large_2x.jpg",
+        "section": "home-control",
+        "score": 500
+      },
+      "dolby_endframe_alt": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/performance/dolby_endframe_alt__gek6vcwacwuy_large_2x.jpg",
+        "section": "performance",
+        "score": 500
+      },
+      "dolby_startframe_alt": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/performance/dolby_startframe_alt__css9oo7k3rgy_large_2x.jpg",
+        "section": "performance",
+        "score": 500
+      },
+      "dolby_staticframe_alt": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/performance/dolby_staticframe_alt__dks6n5m9n1si_large_2x.jpg",
+        "section": "performance",
+        "score": 500
+      },
+      "dolby_staticframe_alt_reduced_motion": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/performance/dolby_staticframe_alt_reduced_motion__f94rpcdeo2a2_large_2x.jpg",
+        "section": "performance",
+        "score": 500
+      },
+      "home_pod": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/performance/home_pod__ds0gcvpbly4i_large_2x.jpg",
+        "section": "performance",
+        "score": 500
+      },
+      "apple_arcade_app": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/rooms/apple_arcade_app__bpy1osgcepv6_large_2x.png",
+        "section": "rooms",
+        "score": 500
+      },
+      "apple_fitness_app": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/rooms/apple_fitness_app__f9n54te6kw2m_large_2x.png",
+        "section": "rooms",
+        "score": 500
+      },
+      "apple_music_app": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/rooms/apple_music_app__dq9y5etz3zcm_large_2x.png",
+        "section": "rooms",
+        "score": 500
+      },
+      "photos_app": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/rooms/photos_app__b3olup33x76u_large_2x.png",
+        "section": "rooms",
+        "score": 500
+      },
+      "screen_arcade": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/rooms/screen_arcade__ep47apforssy_large_2x.jpg",
+        "section": "rooms",
+        "score": 500
+      },
+      "screen_fitness": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/rooms/screen_fitness__ca871c3jbsya_large_2x.jpg",
+        "section": "rooms",
+        "score": 500
+      },
+      "screen_insight": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/rooms/screen_insight__gltkr8q637iq_large_2x.jpg",
+        "section": "rooms",
+        "score": 500
+      },
+      "screen_music": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/rooms/screen_music__ggo4ihn7xka6_large_2x.jpg",
+        "section": "rooms",
+        "score": 500
+      },
+      "screen_photos": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/rooms/screen_photos__e7t2xddk2dei_large_2x.jpg",
+        "section": "rooms",
+        "score": 500
+      },
+      "screen_tv_app": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/rooms/screen_tv_app__dm7wdenhzb0i_large_2x.jpg",
+        "section": "rooms",
+        "score": 500
+      },
+      "screensavers_startframe": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/rooms/screensavers_startframe__srfjat2a5fu6_large_2x.jpg",
+        "section": "rooms",
+        "score": 500
+      },
+      "tv-plus_startframe": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/rooms/tv-plus_startframe__bl4d4kyyf4nm_large_2x.jpg",
+        "section": "rooms",
+        "score": 500
+      },
+      "apple_tv_app_new": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/router/apple_tv_app_new__d96grv6awv8m_large_2x.jpg",
+        "section": "router",
+        "score": 500
+      },
+      "tv_hardware": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/shared/tv_hardware__fblhzdebxg6e_large_2x.png",
+        "section": "shared",
+        "score": 500
+      },
+      "remote_endframe": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/siri-remote/remote_endframe__howmfkpxkaeu_large_2x.jpg",
+        "section": "siri-remote",
+        "score": 500
+      },
+      "remote_hand": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/siri-remote/remote_hand__en5b500nzagm_large_2x.jpg",
+        "section": "siri-remote",
+        "score": 500
+      },
+      "remote_startframe": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/siri-remote/remote_startframe__b4o9j8iha5yq_large_2x.jpg",
+        "section": "siri-remote",
+        "score": 500
+      },
+      "hero_startframe": {
+        "src": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/Apple_TV_4K/apple-tv-4k-hero-select-202210.jpg",
+        "section": "fallback",
+        "score": 50
+      }
+    },
+    "HomePod": {
+      "apps_amazon": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/apps_amazon__dqtnd4yxcca6_large_2x.png",
+        "section": "apps_amazon__dqtnd4yxcca6_large_2x.png",
+        "score": 500
+      },
+      "apps_music": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/apps_music__bpzwb9dxzsdy_large_2x.png",
+        "section": "apps_music__bpzwb9dxzsdy_large_2x.png",
+        "score": 500
+      },
+      "apps_news": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/apps_news__vias1bwyc9uq_large_2x.png",
+        "section": "apps_news__vias1bwyc9uq_large_2x.png",
+        "score": 500
+      },
+      "apps_pandora": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/apps_pandora__d9740z9670ya_large_2x.png",
+        "section": "apps_pandora__d9740z9670ya_large_2x.png",
+        "score": 500
+      },
+      "apps_podcasts": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/apps_podcasts__kb1xh89hgp2m_large_2x.png",
+        "section": "apps_podcasts__kb1xh89hgp2m_large_2x.png",
+        "score": 500
+      },
+      "apps_tunein": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/apps_tunein__f47r4zyjabau_large_2x.png",
+        "section": "apps_tunein__f47r4zyjabau_large_2x.png",
+        "score": 500
+      },
+      "apps_ytmusic": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/apps_ytmusic__bvch3x64fsj6_large_2x.png",
+        "section": "apps_ytmusic__bvch3x64fsj6_large_2x.png",
+        "score": 500
+      },
+      "ar_2024": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/ar_2024__ew02c6fctksy_large_2x.jpg",
+        "section": "ar_2024__ew02c6fctksy_large_2x.jpg",
+        "score": 500
+      },
+      "ar_midnight": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/ar_midnight__e150wjtv62mq_large_2x.jpg",
+        "section": "ar_midnight__e150wjtv62mq_large_2x.jpg",
+        "score": 500
+      },
+      "ar_white": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/ar_white__bplgl5ea779e_large_2x.jpg",
+        "section": "ar_white__bplgl5ea779e_large_2x.jpg",
+        "score": 500
+      },
+      "homepod": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/compare/homepod__f07iekemvy62_large_2x.jpg",
+        "section": "compare",
+        "score": 500
+      },
+      "homepodmini": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/compare/homepodmini__b3h6nqh448dy_large_2x.jpg",
+        "section": "compare",
+        "score": 500
+      },
+      "floorplan": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/floorplan__b6profbaplki_large_2x.jpg",
+        "section": "floorplan__b6profbaplki_large_2x.jpg",
+        "score": 500
+      },
+      "handoff_2024": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/handoff_2024__dz02aeidapg2_large_2x.jpg",
+        "section": "handoff_2024__dz02aeidapg2_large_2x.jpg",
+        "score": 500
+      },
+      "hero_homepod": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/hero_homepod__f002zouobzyy_large_2x.jpg",
+        "section": "hero_homepod__f002zouobzyy_large_2x.jpg",
+        "score": 500
+      },
+      "hero_startframe": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/hero_startframe__fu3addbfuqaa_large_2x.jpg",
+        "section": "hero_startframe__fu3addbfuqaa_large_2x.jpg",
+        "score": 500
+      },
+      "home_theater": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/home_theater__bfqpfanbyss2_large_2x.jpg",
+        "section": "home_theater__bfqpfanbyss2_large_2x.jpg",
+        "score": 500
+      },
+      "homekit_2024": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/homekit_2024__b1y0lm8f2682_large_2x.jpg",
+        "section": "homekit_2024__b1y0lm8f2682_large_2x.jpg",
+        "score": 500
+      },
+      "homepod_twins": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/homepod_twins__gi5qodweaqie_large_2x.jpg",
+        "section": "homepod_twins__gi5qodweaqie_large_2x.jpg",
+        "score": 500
+      },
+      "hp_internals": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/hp_internals__4yelw7g5p9uy_large_2x.jpg",
+        "section": "hp_internals__4yelw7g5p9uy_large_2x.jpg",
+        "score": 500
+      },
+      "hp_shell": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/hp_shell__cyo07fb10lqq_large_2x.jpg",
+        "section": "hp_shell__cyo07fb10lqq_large_2x.jpg",
+        "score": 500
+      },
+      "music_album_hero": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/music_album_hero__m6ydqg9iyb6q_large_2x.jpg",
+        "section": "music_album_hero__m6ydqg9iyb6q_large_2x.jpg",
+        "score": 500
+      },
+      "music_hp": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/music_hp__zupq75v7fpey_large_2x.jpg",
+        "section": "music_hp__zupq75v7fpey_large_2x.jpg",
+        "score": 500
+      },
+      "siri_off": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/siri_off__c2s6jr0hh4a6_large_2x.png",
+        "section": "siri_off__c2s6jr0hh4a6_large_2x.png",
+        "score": 500
+      },
+      "siri_on": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/siri_on__ei3lr03wxa2q_large_2x.png",
+        "section": "siri_on__ei3lr03wxa2q_large_2x.png",
+        "score": 500
+      },
+      "spatial_audio_startframe": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/spatial_audio_startframe__ehhy9t2ijn42_large_2x.jpg",
+        "section": "spatial_audio_startframe__ehhy9t2ijn42_large_2x.jpg",
+        "score": 500
+      },
+      "spatial_audio_static": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/spatial_audio_static__bdepm86yumvm_large_2x.jpg",
+        "section": "spatial_audio_static__bdepm86yumvm_large_2x.jpg",
+        "score": 500
+      },
+      "spatial_awareness_startframe": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/spatial_awareness_startframe__eok9spu8pceq_large_2x.jpg",
+        "section": "spatial_awareness_startframe__eok9spu8pceq_large_2x.jpg",
+        "score": 500
+      },
+      "spatial_awareness_static": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/spatial_awareness_static__fv321efa9uy6_large_2x.jpg",
+        "section": "spatial_awareness_static__fv321efa9uy6_large_2x.jpg",
+        "score": 500
+      },
+      "hero": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page_alt/overview/hero__ernd10zm1dsi_large_2x.jpg",
+        "section": "hero__ernd10zm1dsi_large_2x.jpg",
+        "score": 500
+      },
+      "homepod_mini": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page_alt/overview/homepod_mini__nchbvkgrl1me_small.jpg",
+        "section": "homepod_mini__nchbvkgrl1me_small.jpg",
+        "score": 100
+      }
+    },
+    "HomePodMini": {
+      "private_homekit_2024": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_mini_page/overview/private_homekit_2024__cb912wx19nde_large_2x.jpg",
+        "section": "private_homekit_2024__cb912wx19nde_large_2x.jpg",
+        "score": 500
+      },
+      "private_homepod": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_mini_page/overview/private_homepod__eglboz8esy0y_large_2x.jpg",
+        "section": "private_homepod__eglboz8esy0y_large_2x.jpg",
+        "score": 500
+      },
+      "private_privacy_lock": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_mini_page/overview/private_privacy_lock__liqhgz6hr5e2_large_2x.jpg",
+        "section": "private_privacy_lock__liqhgz6hr5e2_large_2x.jpg",
+        "score": 500
+      },
+      "router_ar_blue": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_mini_page/overview/router_ar_blue__b6sxhh0mx0z6_large_2x.jpg",
+        "section": "router_ar_blue__b6sxhh0mx0z6_large_2x.jpg",
+        "score": 500
+      },
+      "router_ar_midnight": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_mini_page/overview/router_ar_midnight__fch2jnu86ium_large_2x.jpg",
+        "section": "router_ar_midnight__fch2jnu86ium_large_2x.jpg",
+        "score": 500
+      },
+      "router_ar_orange": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_mini_page/overview/router_ar_orange__cjc4yzhgwj6u_large_2x.jpg",
+        "section": "router_ar_orange__cjc4yzhgwj6u_large_2x.jpg",
+        "score": 500
+      },
+      "router_ar_white": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_mini_page/overview/router_ar_white__d001pfecve4i_large_2x.jpg",
+        "section": "router_ar_white__d001pfecve4i_large_2x.jpg",
+        "score": 500
+      },
+      "router_ar_yellow": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_mini_page/overview/router_ar_yellow__b4i0tnzvhw2q_large_2x.jpg",
+        "section": "router_ar_yellow__b4i0tnzvhw2q_large_2x.jpg",
+        "score": 500
+      },
+      "siri_endframe": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_mini_page/overview/siri_endframe__cu3d5wjuqcae_large_2x.jpg",
+        "section": "siri_endframe__cu3d5wjuqcae_large_2x.jpg",
+        "score": 500
+      },
+      "siri_startframe": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_mini_page/overview/siri_startframe__e7dzxpwozwq6_large_2x.jpg",
+        "section": "siri_startframe__e7dzxpwozwq6_large_2x.jpg",
+        "score": 500
+      },
+      "sound_components": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_mini_page/overview/sound_components__mlsjxdga78qy_large_2x.jpg",
+        "section": "sound_components__mlsjxdga78qy_large_2x.jpg",
+        "score": 500
+      },
+      "sound_connectivity_2024": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_mini_page/overview/sound_connectivity_2024__fk9q8ua85oey_large_2x.jpg",
+        "section": "sound_connectivity_2024__fk9q8ua85oey_large_2x.jpg",
+        "score": 500
+      },
+      "sound_handoff_2024": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_mini_page/overview/sound_handoff_2024__br0l41u4e3o2_large_2x.jpg",
+        "section": "sound_handoff_2024__br0l41u4e3o2_large_2x.jpg",
+        "score": 500
+      },
+      "sound_hero": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_mini_page/overview/sound_hero__ci4zlbhkbauu_large_2x.png",
+        "section": "sound_hero__ci4zlbhkbauu_large_2x.png",
+        "score": 500
+      },
+      "sound_homepod_blue": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_mini_page/overview/sound_homepod_blue__bn2b0rl2tseq_large_2x.png",
+        "section": "sound_homepod_blue__bn2b0rl2tseq_large_2x.png",
+        "score": 500
+      },
+      "sound_homepod_white": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_mini_page/overview/sound_homepod_white__e5a2pshb9l26_large_2x.png",
+        "section": "sound_homepod_white__e5a2pshb9l26_large_2x.png",
+        "score": 500
+      },
+      "sound_homepod_yellow": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_mini_page/overview/sound_homepod_yellow__fmrvacxdc4qe_large_2x.png",
+        "section": "sound_homepod_yellow__fmrvacxdc4qe_large_2x.png",
+        "score": 500
+      },
+      "static_sound_components": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_mini_page/overview/static_sound_components__b0mamg9l7nki_large_2x.png",
+        "section": "static_sound_components__b0mamg9l7nki_large_2x.png",
+        "score": 500
+      },
+      "static_sound_end": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_mini_page/overview/static_sound_end__c921y5hqs7ki_large_2x.jpg",
+        "section": "static_sound_end__c921y5hqs7ki_large_2x.jpg",
+        "score": 500
+      },
+      "ar_logo": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/ar_logo__fzdmqwsfyfe6_large_2x.png",
+        "section": "ar_logo__fzdmqwsfyfe6_large_2x.png",
+        "score": 500
+      },
+      "homepod": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/compare/homepod__f07iekemvy62_large_2x.jpg",
+        "section": "compare",
+        "score": 500
+      },
+      "homepodmini": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/compare/homepodmini__b3h6nqh448dy_large_2x.jpg",
+        "section": "compare",
+        "score": 500
+      },
+      "hero_endframe": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/hero_endframe__rjbtqpwenoii_large_2x.jpg",
+        "section": "hero_endframe__rjbtqpwenoii_large_2x.jpg",
+        "score": 500
+      },
+      "hero_homepod": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/hero_homepod__cnpc7icpf1aq_large_2x.png",
+        "section": "hero_homepod__cnpc7icpf1aq_large_2x.png",
+        "score": 500
+      },
+      "hero_homepod_blue": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/hero_homepod_blue__eobtqej8h9me_large_2x.png",
+        "section": "hero_homepod_blue__eobtqej8h9me_large_2x.png",
+        "score": 500
+      },
+      "hero_homepod_midnight": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/hero_homepod_midnight__bh6tqvcaucqa_large_2x.png",
+        "section": "hero_homepod_midnight__bh6tqvcaucqa_large_2x.png",
+        "score": 500
+      },
+      "hero_homepod_white": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/hero_homepod_white__fbci8wwv3oi2_large_2x.png",
+        "section": "hero_homepod_white__fbci8wwv3oi2_large_2x.png",
+        "score": 500
+      },
+      "hero_homepod_yellow": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/hero_homepod_yellow__7wty1lruowyi_large_2x.png",
+        "section": "hero_homepod_yellow__7wty1lruowyi_large_2x.png",
+        "score": 500
+      },
+      "hero_startframe": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/hero_startframe__f1cxk4874qaa_large_2x.jpg",
+        "section": "hero_startframe__f1cxk4874qaa_large_2x.jpg",
+        "score": 500
+      },
+      "hub_discover_2024": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/hub_discover_2024__fgpis7goczee_large_2x.png",
+        "section": "hub_discover_2024__fgpis7goczee_large_2x.png",
+        "score": 500
+      },
+      "hub_homeapp_2024": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/hub_homeapp_2024__eqe5zgh86lua_large_2x.png",
+        "section": "hub_homeapp_2024__eqe5zgh86lua_large_2x.png",
+        "score": 500
+      },
+      "hub_homekit_2024": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/hub_homekit_2024__fvohc0ebxl26_large_2x.png",
+        "section": "hub_homekit_2024__fvohc0ebxl26_large_2x.png",
+        "score": 500
+      },
+      "hub_homepod": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/hub_homepod__bzmqzh5bhthy_large_2x.png",
+        "section": "hub_homepod__bzmqzh5bhthy_large_2x.png",
+        "score": 500
+      },
+      "intelligent_hero": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/intelligent_hero__gbc9sf8uvuum_large_2x.jpg",
+        "section": "intelligent_hero__gbc9sf8uvuum_large_2x.jpg",
+        "score": 500
+      },
+      "intercom_bedroom": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/intercom_bedroom__gkcdw5p3n36u_large_2x.png",
+        "section": "intercom_bedroom__gkcdw5p3n36u_large_2x.png",
+        "score": 500
+      },
+      "intercom_den": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/intercom_den__dwhr3i7o99g2_large_2x.png",
+        "section": "intercom_den__dwhr3i7o99g2_large_2x.png",
+        "score": 500
+      },
+      "intercom_devices_2024": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/intercom_devices_2024__e5pwmk89eb6u_large_2x.jpg",
+        "section": "intercom_devices_2024__e5pwmk89eb6u_large_2x.jpg",
+        "score": 500
+      },
+      "intercom_echo_black_front": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/intercom_echo_black_front__rfpb9avbvt2m_large_2x.png",
+        "section": "intercom_echo_black_front__rfpb9avbvt2m_large_2x.png",
+        "score": 500
+      },
+      "intercom_echo_black_rear": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/intercom_echo_black_rear__d9bejdf4ixg2_large_2x.png",
+        "section": "intercom_echo_black_rear__d9bejdf4ixg2_large_2x.png",
+        "score": 500
+      },
+      "intercom_echo_blue": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/intercom_echo_blue__ey9b1bknhtoy_large_2x.png",
+        "section": "intercom_echo_blue__ey9b1bknhtoy_large_2x.png",
+        "score": 500
+      },
+      "intercom_echo_orange": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/intercom_echo_orange__bjljobmxblua_large_2x.png",
+        "section": "intercom_echo_orange__bjljobmxblua_large_2x.png",
+        "score": 500
+      },
+      "intercom_echo_white": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/intercom_echo_white__d7fm2mrh8zcm_large_2x.png",
+        "section": "intercom_echo_white__d7fm2mrh8zcm_large_2x.png",
+        "score": 500
+      },
+      "intercom_echo_yellow": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/intercom_echo_yellow__gmrpp95w7u2q_large_2x.png",
+        "section": "intercom_echo_yellow__gmrpp95w7u2q_large_2x.png",
+        "score": 500
+      },
+      "intercom_fallback": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/intercom_fallback__blsgli0zw0dy_large_2x.jpg",
+        "section": "intercom_fallback__blsgli0zw0dy_large_2x.jpg",
+        "score": 500
+      },
+      "intercom_floorplan": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/intercom_floorplan__ew5a2gkbalci_large_2x.jpg",
+        "section": "intercom_floorplan__ew5a2gkbalci_large_2x.jpg",
+        "score": 500
+      },
+      "intercom_grandma": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/intercom_grandma__6coer1261mq2_large_2x.png",
+        "section": "intercom_grandma__6coer1261mq2_large_2x.png",
+        "score": 500
+      },
+      "intercom_kidsroom": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/intercom_kidsroom__ftkzvno665ym_large_2x.png",
+        "section": "intercom_kidsroom__ftkzvno665ym_large_2x.png",
+        "score": 500
+      },
+      "intercom_kitchen": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/intercom_kitchen__b53rjg8rggk2_large_2x.png",
+        "section": "intercom_kitchen__b53rjg8rggk2_large_2x.png",
+        "score": 500
+      },
+      "intercom_livingroom": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/intercom_livingroom__fc0x6wa60e2y_large_2x.png",
+        "section": "intercom_livingroom__fc0x6wa60e2y_large_2x.png",
+        "score": 500
+      },
+      "intercom_son": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/intercom_son__fja8lctlwbyq_large_2x.png",
+        "section": "intercom_son__fja8lctlwbyq_large_2x.png",
+        "score": 500
+      },
+      "mini_sounds": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/mini_sounds__fdqbnbfrxbyy_large_2x.jpg",
+        "section": "mini_sounds__fdqbnbfrxbyy_large_2x.jpg",
+        "score": 500
+      },
+      "multiuser": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/multiuser__fukpo96zgziy_large_2x.jpg",
+        "section": "multiuser__fukpo96zgziy_large_2x.jpg",
+        "score": 500
+      },
+      "multiuser_bubble_left": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/multiuser_bubble_left__emrwbc1yzriq_large_2x.png",
+        "section": "multiuser_bubble_left__emrwbc1yzriq_large_2x.png",
+        "score": 500
+      },
+      "multiuser_bubble_right": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/multiuser_bubble_right__c4ba3utdioa6_large_2x.png",
+        "section": "multiuser_bubble_right__c4ba3utdioa6_large_2x.png",
+        "score": 500
+      },
+      "multiuser_fallback": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/multiuser_fallback__f27qoc9zfyqa_large_2x.jpg",
+        "section": "multiuser_fallback__f27qoc9zfyqa_large_2x.jpg",
+        "score": 500
+      },
+      "music_album_hero": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/music_album_hero__e71m7412a6ie_large_2x.jpg",
+        "section": "music_album_hero__e71m7412a6ie_large_2x.jpg",
+        "score": 500
+      },
+      "music_homepod": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/music_homepod__t151hl21thua_large_2x.jpg",
+        "section": "music_homepod__t151hl21thua_large_2x.jpg",
+        "score": 500
+      },
+      "private_heysiri": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/private_heysiri__fmnckbf7plme_large_2x.jpg",
+        "section": "private_heysiri__fmnckbf7plme_large_2x.jpg",
+        "score": 500
+      },
+      "hero": {
+        "src": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/HomePod_mini/homepod-mini-select-202210.jpg",
+        "section": "fallback",
+        "score": 50
+      }
+    },
+    "Landing": {
+      "room_filling_sound": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com/TV_and_Home_landing_page/overview/room_filling_sound__zagu3551kwyi_large_2x.jpg",
+        "section": "room_filling_sound__zagu3551kwyi_large_2x.jpg",
+        "score": 500
+      },
+      "security": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com/TV_and_Home_landing_page/overview/security__dbctk5zp4gcy_large_2x.jpg",
+        "section": "security__dbctk5zp4gcy_large_2x.jpg",
+        "score": 500
+      },
+      "security_and_privacy": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com/TV_and_Home_landing_page/overview/security_and_privacy__bzlguj2x29jm_large_2x.jpg",
+        "section": "security_and_privacy__bzlguj2x29jm_large_2x.jpg",
+        "score": 500
+      },
+      "services_startframe": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com/TV_and_Home_landing_page/overview/services_startframe__dj0y3c3mwxea_large_2x.jpg",
+        "section": "services_startframe__dj0y3c3mwxea_large_2x.jpg",
+        "score": 500
+      },
+      "smart_connect": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com/TV_and_Home_landing_page/overview/smart_connect__d8o6agoqfh0m_large_2x.jpg",
+        "section": "smart_connect__d8o6agoqfh0m_large_2x.jpg",
+        "score": 500
+      },
+      "smart_control": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com/TV_and_Home_landing_page/overview/smart_control__dsa6v8m1pp0m_large_2x.jpg",
+        "section": "smart_control__dsa6v8m1pp0m_large_2x.jpg",
+        "score": 500
+      },
+      "apple_arcade_logo": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/TV_and_Home_landing_page/overview/apple_arcade_logo__fkj0u4ziuguy_large_2x.png",
+        "section": "apple_arcade_logo__fkj0u4ziuguy_large_2x.png",
+        "score": 500
+      },
+      "apple_experience_full_arcade_new": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/TV_and_Home_landing_page/overview/apple_experience_full_arcade_new__emjurac0ptiu_small.png",
+        "section": "apple_experience_full_arcade_new__emjurac0ptiu_small.png",
+        "score": 100
+      },
+      "apple_experience_full_fitness_new": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/TV_and_Home_landing_page/overview/apple_experience_full_fitness_new__ftbqbnhkyoia_small.png",
+        "section": "apple_experience_full_fitness_new__ftbqbnhkyoia_small.png",
+        "score": 100
+      },
+      "apple_experience_full_music_new": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/TV_and_Home_landing_page/overview/apple_experience_full_music_new__eagu8vpv27qu_small.png",
+        "section": "apple_experience_full_music_new__eagu8vpv27qu_small.png",
+        "score": 100
+      },
+      "apple_experience_full_tv_new": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/TV_and_Home_landing_page/overview/apple_experience_full_tv_new__59hf5e3ge9ue_small.png",
+        "section": "apple_experience_full_tv_new__59hf5e3ge9ue_small.png",
+        "score": 100
+      },
+      "apple_experience_hardware": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/TV_and_Home_landing_page/overview/apple_experience_hardware__bk2gaiiovh7m_large_2x.png",
+        "section": "apple_experience_hardware__bk2gaiiovh7m_large_2x.png",
+        "score": 500
+      },
+      "apple_experience_screen": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/TV_and_Home_landing_page/overview/apple_experience_screen__cdy675zpp2uq_large_2x.jpg",
+        "section": "apple_experience_screen__cdy675zpp2uq_large_2x.jpg",
+        "score": 500
+      },
+      "apple_music_logo": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/TV_and_Home_landing_page/overview/apple_music_logo__fysswdp9i4yi_large_2x.png",
+        "section": "apple_music_logo__fysswdp9i4yi_large_2x.png",
+        "score": 500
+      },
+      "apple_tv_4k": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/TV_and_Home_landing_page/overview/apple_tv_4k__b30wcqp0pdle_large_2x.jpg",
+        "section": "apple_tv_4k__b30wcqp0pdle_large_2x.jpg",
+        "score": 500
+      },
+      "apple_tv_4k_logo": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/TV_and_Home_landing_page/overview/apple_tv_4k_logo__vyjj7uki3tui_large_2x.png",
+        "section": "apple_tv_4k_logo__vyjj7uki3tui_large_2x.png",
+        "score": 500
+      },
+      "comfort": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/TV_and_Home_landing_page/overview/comfort__bnwbuouyz10i_large_2x.jpg",
+        "section": "comfort__bnwbuouyz10i_large_2x.jpg",
+        "score": 500
+      },
+      "entry": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/TV_and_Home_landing_page/overview/entry__bfom4g78kbg2_large_2x.jpg",
+        "section": "entry__bfom4g78kbg2_large_2x.jpg",
+        "score": 500
+      },
+      "fitness_plus_logo": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/TV_and_Home_landing_page/overview/fitness_plus_logo__ejje682nywae_large_2x.png",
+        "section": "fitness_plus_logo__ejje682nywae_large_2x.png",
+        "score": 500
+      },
+      "home_icon": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/TV_and_Home_landing_page/overview/home_icon__9u57pp0qahea_large_2x.png",
+        "section": "home_icon__9u57pp0qahea_large_2x.png",
+        "score": 500
+      },
+      "homeapp": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/TV_and_Home_landing_page/overview/homeapp__cpc1k972xys2_large_2x.jpg",
+        "section": "homeapp__cpc1k972xys2_large_2x.jpg",
+        "score": 500
+      },
+      "homepod": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/TV_and_Home_landing_page/overview/homepod__eam53jjm772a_large_2x.jpg",
+        "section": "homepod__eam53jjm772a_large_2x.jpg",
+        "score": 500
+      },
+      "lighting": {
+        "src": "/TV&Home/03_Animation_and_page_images_apple.com 2/TV_and_Home_landing_page/overview/lighting__bwpnaru6q1w2_large_2x.jpg",
+        "section": "lighting__bwpnaru6q1w2_large_2x.jpg",
+        "score": 500
+      },
+      "hero": {
+        "src": "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos/Apple_TV_4K/apple-tv-4k-hero-select-202210.jpg",
+        "section": "fallback",
+        "score": 50
+      }
+    }
+  },
+  "icons": {
+    "icon_automation": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/icon_automation__f8i4l6i0deqi_large_2x.png",
+    "icon_clock": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/icon_clock__4w9ji7ey8nma_large_2x.png",
+    "icon_find": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/icon_find__esc6zgsbw9qq_large_2x.png",
+    "icon_home": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/icon_home__ctkuas16hy4i_large_2x.png",
+    "icon_matter": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/icon_matter__e94nwq29r2eu_large_2x.png",
+    "icon_podcast": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/icon_podcast__cmmvionq98ia_large_2x.png",
+    "icon_privacy": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/icon_privacy__fifca54hgfma_large_2x.png",
+    "icon_red_music": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/icon_red_music__d4b9mb7ln8om_large_2x.png",
+    "icon_remoteaccess": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/icon_remoteaccess__fncstn89q8mm_large_2x.png",
+    "icon_sound": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/icon_sound__eg37wideom0y_large_2x.png",
+    "icon_temp": "/TV&Home/03_Animation_and_page_images_apple.com 2/HomePod_page/overview/icon_temp__dat7aor5na82_large_2x.png",
+    "logo": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/ar/logo__fk8cq1bxztu2_large_2x.png",
+    "icon_shareplay": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/better-together/icon_shareplay__bqv0lsyol9te_large_2x.png",
+    "icon_security_and_privacy": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/home-control/icon_security_and_privacy__b0aatjj7xape_large_2x.png",
+    "logo_dolby_atmos": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/performance/logo_dolby_atmos__dx0nqk8nprue_large_2x.png",
+    "logo_dolby_vision": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/performance/logo_dolby_vision__bt50dt37f1ea_large_2x.png",
+    "logo_hdr": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_4K_page/overview/performance/logo_hdr__f4f8nfwd73yq_large_2x.png",
+    "logo_f1_apple_tv": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_overview_page/overview/logo_f1_apple_tv__de8ogyoi60wi_large_2x.jpg",
+    "logo_fnb_apple_tv": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_overview_page/overview/logo_fnb_apple_tv__c6yc84ofv0gi_large_2x.png",
+    "logo_mls_apple_tv": "/TV&Home/03_Animation_and_page_images_apple.com 3/Apple_TV_overview_page/overview/logo_mls_apple_tv__cwlim55zoyky_large_2x.jpg",
+    "icon_calculator": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/icon_calculator__eiacbqaw7vcm_large_2x.png",
+    "icon_findmy": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/icon_findmy__ez4dadl81z8m_large_2x.png",
+    "icon_homeapp": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/icon_homeapp__fyn4y730rpei_large_2x.png",
+    "icon_maps": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/icon_maps__d0njd7e90tyu_large_2x.png",
+    "icon_messages": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/icon_messages__cpbo6i6j4ryq_large_2x.png",
+    "icon_music": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/icon_music__fmrfh8282fma_large_2x.png",
+    "icon_notes": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/icon_notes__gljdbiq2xaye_large_2x.png",
+    "icon_ytmusic": "/TV&Home/03_Animation_and_page_images_apple.com 3/HomePod_mini_page/overview/icon_ytmusic__bp1f9ffnefxy_large_2x.png"
+  }
+}

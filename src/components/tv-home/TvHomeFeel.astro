@@ -1,0 +1,270 @@
+---
+import {
+  type TvHomeModel,
+  getTvHomeImage,
+  colourHex,
+  colourLabel,
+  tvHomeConfig,
+  isSpeaker,
+} from "../../lib/tv-home";
+
+interface Props { model: TvHomeModel; }
+const { model } = Astro.props;
+
+const pictureImg = getTvHomeImage(model.id, "picture", model.name);
+const soundImg = getTvHomeImage(model.id, "sound", model.name);
+const remoteImg = getTvHomeImage(model.id, "remote", model.name);
+const smartImg = getTvHomeImage(model.id, "smarthome", model.name);
+const intercomImg = getTvHomeImage(model.id, "intercom", model.name);
+const phoneImg = getTvHomeImage(model.id, "continuity", model.name);
+
+const feelIds: string[] = [];
+if (model.family === "Apple TV") feelIds.push("picture", "remote");
+if (isSpeaker(model)) feelIds.push("sound");
+feelIds.push("smarthome", "intercom", "continuity");
+if (model.colours.length > 1) feelIds.push("colour");
+---
+
+<nav class="thfeel-nav" data-thfeel-nav aria-label="Feel sections">
+  {feelIds.map((id, i) => (
+    <a href={`#feel-${id}`} data-feel-dot={id} class:list={{ "is-active": i === 0 }} aria-label={id}><span /></a>
+  ))}
+</nav>
+
+{
+  model.family === "Apple TV" ? (
+    <section class="thfeel thfeel--black" id="feel-picture" data-feel="picture">
+      <div class="container thfeel__inner">
+        <h2>Every pixel, in its place.</h2>
+        <p class="thfeel__lede">Illustration — no audio. {model.checkFinalSpecs ? "Picture formats flagged check final specs." : ""}</p>
+        {!pictureImg.fallback ? (
+          <img class="thfeel__img" src={pictureImg.src} alt={pictureImg.alt} width="1200" height="900" loading="lazy" />
+        ) : null}
+        <p class="thfeel__label">4K · HDR10+ · Dolby Vision — when your TV and content support them.</p>
+        <ul class="thfeel__strip">
+          <li><strong>{model.chip || "Check"}</strong><span>Chip</span></li>
+          <li><strong>{model.pictureFormats.slice(0, 2).join(", ") || "—"}</strong><span>Formats</span></li>
+          <li><strong>{model.dolbyVision ? "Yes" : "No"}</strong><span>Dolby Vision</span></li>
+        </ul>
+      </div>
+    </section>
+  ) : null
+}
+
+{
+  isSpeaker(model) ? (
+    <section class="thfeel" id="feel-sound" data-feel="sound">
+      <div class="container thfeel__inner">
+        <h2>Sound that fills the room.</h2>
+        <p class="thfeel__lede">{model.audioDetails || "360-degree audio — check final specs."}</p>
+        {!soundImg.fallback ? (
+          <img class="thfeel__img" src={soundImg.src} alt={soundImg.alt} width="1100" height="700" loading="lazy" />
+        ) : (
+          <svg class="thfeel__waves" viewBox="0 0 320 120" aria-hidden="true">
+            <path d="M20 60 Q80 20 140 60 T260 60" fill="none" stroke="#1d1d1f" stroke-width="2" />
+            <path d="M20 60 Q80 100 140 60 T260 60" fill="none" stroke="#6e6e73" stroke-width="1.5" opacity="0.6" />
+          </svg>
+        )}
+        <p class="thfeel__caption">Diagram only — no audio demo.</p>
+        {model.stereoPairCapable ? (
+          <p class="thfeel__label">Stereo pair: two of the same model in one room.</p>
+        ) : null}
+      </div>
+    </section>
+  ) : null
+}
+
+{
+  model.family === "Apple TV" ? (
+    <section class="thfeel thfeel--black" id="feel-remote" data-feel="remote">
+      <div class="container thfeel__inner">
+        <h2>A remote that disappears into your hand.</h2>
+        {!remoteImg.fallback ? (
+          <img class="thfeel__img" src={remoteImg.src} alt={remoteImg.alt} width="1000" height="700" loading="lazy" />
+        ) : null}
+        <p class="thfeel__caption">Siri Remote in box — USB-C on 3rd gen; check invoice for earlier stock.</p>
+      </div>
+    </section>
+  ) : null
+}
+
+<section class="thfeel" id="feel-smarthome" data-feel="smarthome">
+  <div class="container thfeel__inner">
+    <h2>One home, one voice.</h2>
+    <p class="thfeel__lede">Siri and Home app — availability varies by country.</p>
+    {!smartImg.fallback ? (
+      <img class="thfeel__img" src={smartImg.src} alt={smartImg.alt} width="1100" height="700" loading="lazy" />
+    ) : null}
+    <p class="thfeel__honesty">{tvHomeConfig.kenyaAvailability}</p>
+  </div>
+</section>
+
+<section class="thfeel thfeel--black" id="feel-intercom" data-feel="intercom">
+  <div class="container thfeel__inner">
+    <h2>Every room, one conversation.</h2>
+    {model.intercom ? (
+      <>
+        {!intercomImg.fallback ? (
+          <img class="thfeel__img" src={intercomImg.src} alt={intercomImg.alt} width="1000" height="650" loading="lazy" />
+        ) : null}
+        <p class="thfeel__label">Intercom between HomePod speakers — illustration.</p>
+      </>
+    ) : (
+      <p class="thfeel__lede">Intercom is on HomePod models — Apple TV focuses on the big screen.</p>
+    )}
+  </div>
+</section>
+
+<section class="thfeel" id="feel-continuity" data-feel="continuity">
+  <div class="container thfeel__inner">
+    <h2>Pick up where you left off.</h2>
+    {!phoneImg.fallback ? (
+      <img class="thfeel__img" src={phoneImg.src} alt={phoneImg.alt} width="1100" height="700" loading="lazy" />
+    ) : null}
+    <p class="thfeel__caption">Handoff and AirPlay — works best with iPhone and Apple services.</p>
+  </div>
+</section>
+
+{
+  model.colours.length > 1 ? (
+    <section class="thfeel thfeel--black" id="feel-colour" data-feel="colour">
+      <div class="container thfeel__inner">
+        <h2>Choose your finish.</h2>
+        <div class="thfeel__swatches" data-feel-colours>
+          {
+            model.colours.map((c, i) => {
+              const col = getTvHomeImage(model.id, `colour:${c}`, model.name);
+              return (
+                <button
+                  type="button"
+                  class:list={{ "is-active": i === 0 }}
+                  data-feel-colour={c}
+                  data-src={col.src}
+                  style={`--sw:${colourHex(c)}`}
+                  aria-label={colourLabel(c)}
+                >
+                  <span />
+                  <em>{colourLabel(c)}</em>
+                </button>
+              );
+            })
+          }
+        </div>
+        <img
+          class="thfeel__img thfeel__img--colour"
+          data-feel-colour-img
+          src={getTvHomeImage(model.id, `colour:${model.defaultColour}`, model.name).src}
+          alt={`${model.name}, ${colourLabel(model.defaultColour)}`}
+          width="900"
+          height="900"
+          loading="lazy"
+        />
+      </div>
+    </section>
+  ) : null
+}
+
+<script>
+  const nav = document.querySelector("[data-thfeel-nav]");
+  if (nav) {
+    const dots = nav.querySelectorAll("[data-feel-dot]");
+    const sections = [...document.querySelectorAll("[data-feel]")];
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reduce && "IntersectionObserver" in window) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (!e.isIntersecting) return;
+            const id = e.target.getAttribute("data-feel");
+            dots.forEach((d) => d.classList.toggle("is-active", d.getAttribute("data-feel-dot") === id));
+          });
+        },
+        { rootMargin: "-40% 0px -40% 0px", threshold: 0 },
+      );
+      sections.forEach((s) => io.observe(s));
+    }
+  }
+
+  document.querySelectorAll("[data-feel-colours]").forEach((wrap) => {
+    const img = wrap.closest("section")?.querySelector("[data-feel-colour-img]");
+    wrap.querySelectorAll("[data-feel-colour]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        wrap.querySelectorAll("[data-feel-colour]").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        const src = btn.getAttribute("data-src");
+        if (img instanceof HTMLImageElement && src) img.src = src;
+      });
+    });
+  });
+</script>
+
+<style>
+  .thfeel-nav {
+    position: sticky;
+    top: calc(var(--header-height) + 0.5rem);
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.65rem;
+    background: rgb(245 245 247 / 0.92);
+    backdrop-filter: blur(8px);
+    font-family: Inter, system-ui, sans-serif;
+  }
+  .thfeel-nav a {
+    width: 0.55rem; height: 0.55rem; border-radius: 50%; background: #d2d2d7; text-decoration: none;
+  }
+  .thfeel-nav a.is-active { background: #000; transform: scale(1.15); }
+  .thfeel-nav span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+  .thfeel {
+    padding: 4rem 0;
+    font-family: Inter, system-ui, sans-serif;
+  }
+  .thfeel--black {
+    background: #000;
+    color: #f5f5f7;
+  }
+  .thfeel--black .thfeel__lede, .thfeel--black .thfeel__caption, .thfeel--black .thfeel__honesty, .thfeel--black .thfeel__label {
+    color: #a1a1a6;
+  }
+  .thfeel__inner h2 {
+    margin: 0 0 0.75rem;
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    letter-spacing: -0.03em;
+  }
+  .thfeel__lede, .thfeel__caption, .thfeel__honesty, .thfeel__label {
+    color: #6e6e73;
+    font-size: var(--text-sm);
+    max-width: 40rem;
+  }
+  .thfeel__img {
+    width: min(100%, 56rem);
+    height: auto;
+    display: block;
+    margin: 1.5rem auto 0;
+    mix-blend-mode: multiply;
+  }
+  .thfeel--black .thfeel__img { mix-blend-mode: normal; border-radius: 1rem; }
+  .thfeel__img--colour { background: #f5f5f7; border-radius: 1.25rem; padding: 1rem; }
+  .thfeel__strip {
+    list-style: none; margin: 1.5rem 0 0; padding: 0;
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; max-width: 36rem;
+  }
+  .thfeel__strip li { font-size: var(--text-sm); }
+  .thfeel__strip strong { display: block; font-size: 1rem; }
+  .thfeel__strip span { color: #6e6e73; }
+  .thfeel--black .thfeel__strip span { color: #a1a1a6; }
+  .thfeel__swatches { display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 1rem; }
+  .thfeel__swatches button {
+    border: none; background: transparent; cursor: pointer; text-align: center; font-size: var(--text-xs);
+  }
+  .thfeel__swatches button span {
+    display: block; width: 1.75rem; height: 1.75rem; border-radius: 50%; background: var(--sw); margin: 0 auto 0.25rem;
+    border: 1px solid #d2d2d7;
+  }
+  .thfeel__swatches button.is-active span { outline: 2px solid #fff; outline-offset: 2px; }
+  .thfeel__waves { display: block; margin: 1.5rem auto 0; max-width: 20rem; }
+  @media (prefers-reduced-motion: reduce) {
+    .thfeel-nav a.is-active { transform: none; }
+  }
+</style>

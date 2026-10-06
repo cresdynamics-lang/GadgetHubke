@@ -1,0 +1,311 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import AccessoryCard from "../../components/accessories/AccessoryCard.astro";
+import CompatibilityFinder from "../../components/accessories/CompatibilityFinder.astro";
+import AccessoryLipaCalc from "../../components/accessories/AccessoryLipaCalc.astro";
+import AccessoryQuiz from "../../components/accessories/AccessoryQuiz.astro";
+import AccessoryTradeIn from "../../components/accessories/AccessoryTradeIn.astro";
+import AccessoryTrademark from "../../components/accessories/AccessoryTrademark.astro";
+import {
+  accessoriesConfig,
+  getAccessory,
+  getAccessoryImage,
+  getAccessoriesPageImage,
+  formatKes,
+  lipaMonthly,
+  liveAccessoryGroups,
+  lowestAccessoryPrice,
+} from "../../lib/accessories";
+import { whatsappUrl } from "../../lib/site";
+
+const hero = getAccessoriesPageImage("pencil/hero/hero", "Apple Pencil");
+const heroKb = getAccessoriesPageImage("keyboard/selector/selector_hero", "Magic Keyboard");
+const heroMouse = getAccessoryImage("mouse-usbc-black", "hero");
+const heroTrackpad = getAccessoryImage("trackpad-usbc-white", "hero");
+const featured = ["pencil-pro", "keyboard-ipad-pro-13", "mouse-usbc-black", "trackpad-usbc-white"].map(
+  (id) => getAccessory(id)!,
+);
+const heroPower = getAccessoryImage("power-adapter-70w", "hero");
+const heroCases = getAccessoryImage("case-iphone-17-pro-silicone", "hero");
+const liveBlurbs: Record<string, string> = {
+  pencil: "Four Pencils. One fit check.",
+  keyboard: "For iPad and Mac.",
+  mouse: "Swipe on the shell.",
+  trackpad: "Force Touch surface.",
+  power: "Adapters, MagSafe and cables.",
+  cases: "Made for one exact model.",
+};
+const groupImg: Record<string, typeof hero> = {
+  pencil: hero,
+  keyboard: heroKb,
+  mouse: heroMouse,
+  trackpad: heroTrackpad,
+  power: heroPower,
+  cases: heroCases,
+};
+const groups = liveAccessoryGroups.map((g) => ({
+  label: g.label,
+  href: g.href,
+  coming: false,
+  blurb: liveBlurbs[g.id] || "Shop now",
+  fromKes: lowestAccessoryPrice(g.id),
+  img: groupImg[g.id] || hero,
+}));
+
+const bundlePro = {
+  name: "iPad Pro + Pencil Pro + Magic Keyboard",
+  parts: ["pencil-pro", "keyboard-ipad-pro-13"],
+  note: "Add your iPad separately — only offered when the keyboard and Pencil fit.",
+};
+const bundleAir = {
+  name: "iPad Air + Pencil Pro + Magic Keyboard",
+  parts: ["pencil-pro", "keyboard-ipad-air-13"],
+  note: "Compatible bundle for Air 13-inch M2 and later (check).",
+};
+const bundleMacAirMouse = {
+  name: "MacBook Air + Magic Mouse",
+  parts: ["mouse-usbc-black"],
+  note: "Add your MacBook Air separately — pointer pairs over Bluetooth (check).",
+};
+const bundleImacDesk = {
+  name: "iMac desk — Keyboard + Trackpad",
+  parts: ["keyboard-mac-touchid", "trackpad-usbc-white"],
+  note: "Compatible Mac pointer bundle — Touch ID needs Apple silicon.",
+};
+
+function bundleKes(ids: string[]) {
+  return ids.reduce((s, id) => s + (getAccessory(id)?.basePriceKes || 0), 0);
+}
+
+const wa = whatsappUrl("Hi Gadget Hub, I want to visit and try accessories.");
+const corp = whatsappUrl("Corporate accessories order");
+---
+
+<BaseLayout
+  title="Accessories - GadgetHub"
+  description="Apple Pencil, Magic Keyboard, Mouse and Trackpad in Nairobi. Compatibility checked before you pay."
+>
+  <section class="xland-hero">
+    <div class="xland-hero__copy container">
+      <h1>Made to fit.</h1>
+      <p>{accessoriesConfig.announce}</p>
+      <div class="xland-hero__cta">
+        <a class="btn btn--primary" href="/accessories/apple-pencil">Shop Apple Pencil</a>
+        <a class="btn btn--secondary" href="/accessories/magic-keyboard">Shop Magic Keyboard</a>
+        <a class="btn btn--secondary" href="/accessories/magic-mouse">Shop Magic Mouse</a>
+        <a class="btn btn--secondary" href="/accessories/magic-trackpad">Shop Magic Trackpad</a>
+      </div>
+    </div>
+    <div class="xland-hero__stage">
+      <img src={hero.src} alt={hero.alt} width="1800" height="1200" fetchpriority="high" />
+      <img src={heroKb.src} alt={heroKb.alt} width="1800" height="1200" fetchpriority="high" />
+    </div>
+  </section>
+
+  <section class="xland-groups container">
+    <h2>Shop by group</h2>
+    <div class="xland-groups__grid">
+      {
+        groups.map((g) => (
+          <a class:list={["xland-group", { "is-coming": g.coming }]} href={g.href}>
+            {g.img ? (
+              <img src={g.img.src} alt={g.label} width="320" height="240" loading="lazy" />
+            ) : null}
+            <h3>
+              {g.label}
+              {g.coming ? <span class="tag">Coming next</span> : null}
+            </h3>
+            <p>{g.blurb}</p>
+            {g.fromKes != null ? <p class="xland-from">From {formatKes(g.fromKes)}</p> : null}
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <CompatibilityFinder />
+
+  <section class="container xland-featured">
+    <h2>Featured</h2>
+    <div class="xland-grid">
+      {featured.map((p) => <AccessoryCard product={p} />)}
+    </div>
+  </section>
+
+  <section class="container xland-bundles">
+    <h2>Bundles</h2>
+    <p>Only compatible combinations. Add all parts to the bag.</p>
+    {
+      [bundleAir, bundlePro, bundleMacAirMouse, bundleImacDesk].map((b) => {
+        const kes = bundleKes(b.parts);
+        const monthly = lipaMonthly(kes).monthlyKes;
+        return (
+          <article class="xland-bundle">
+            <h3>{b.name}</h3>
+            <p>{b.note}</p>
+            <p>
+              <strong>{formatKes(kes)}</strong> · or {formatKes(monthly)} / mo
+            </p>
+            <p class="fine">Sample price until stock is entered in the admin.</p>
+            <button
+              type="button"
+              class="btn btn--primary btn--sm"
+              data-bundle-add={b.parts.join(",")}
+            >
+              Add bundle to bag
+            </button>
+          </article>
+        );
+      })
+    }
+  </section>
+
+  <AccessoryQuiz />
+  <AccessoryLipaCalc />
+  <AccessoryTradeIn />
+
+  <section class="container xland-visit">
+    <h2>Visit the shop</h2>
+    <p>
+      {accessoriesConfig.address.line}, {accessoriesConfig.address.city}. Hours:{" "}
+      {accessoriesConfig.address.hours}.
+    </p>
+    <p>Come in and try the Pencil, keyboard, Mouse and Trackpad.</p>
+    <div class="xland-hero__cta">
+      <a class="btn btn--primary" href={wa} rel="noopener">WhatsApp</a>
+      <a class="btn btn--secondary" href={corp} rel="noopener">Corporate and schools</a>
+    </div>
+  </section>
+
+  <AccessoryTrademark />
+</BaseLayout>
+
+<script>
+  document.querySelectorAll("[data-bundle-add]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const ids = (btn.getAttribute("data-bundle-add") || "").split(",");
+      ids.forEach((id) => {
+        window.dispatchEvent(
+          new CustomEvent("gh:bag-add", {
+            detail: { id, kind: "accessory", name: id, kes: 0, colour: "default" },
+          }),
+        );
+      });
+    });
+  });
+</script>
+
+<style>
+  .xland-hero {
+    background: #f5f5f7;
+    padding: 3rem 0 0;
+  }
+  .xland-hero h1 {
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin: 0 0 0.75rem;
+  }
+  .xland-hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-top: 1.25rem;
+  }
+  .xland-hero__stage {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    max-width: 1100px;
+    margin: 2rem auto 0;
+    padding: 0 1rem 2rem;
+  }
+  @media (max-width: 640px) {
+    .xland-hero__stage {
+      grid-template-columns: 1fr;
+    }
+  }
+  .xland-hero__stage img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: contain;
+    background: #fff;
+    border-radius: 1rem;
+    mix-blend-mode: multiply;
+  }
+  .xland-groups,
+  .xland-featured,
+  .xland-bundles,
+  .xland-visit {
+    padding: 3rem 0;
+  }
+  .xland-groups__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+  .xland-group {
+    background: #fff;
+    border: 1px solid #d2d2d7;
+    border-radius: 0.85rem;
+    padding: 1.1rem;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 200ms ease;
+  }
+  .xland-group:not(.is-coming):hover {
+    transform: translateY(-6px);
+  }
+  .xland-group.is-coming {
+    opacity: 0.85;
+  }
+  .xland-group .tag {
+    font-size: 0.65rem;
+    margin-left: 0.35rem;
+    border: 1px solid #d2d2d7;
+    padding: 0.1rem 0.35rem;
+    border-radius: 0.25rem;
+    color: #6e6e73;
+  }
+  .xland-group img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    background: #f5f5f7;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .xland-group p {
+    color: #6e6e73;
+    margin: 0.35rem 0 0;
+    font-size: 0.85rem;
+  }
+  .xland-from {
+    font-weight: 600;
+    color: #1d1d1f !important;
+    margin-top: 0.5rem !important;
+  }
+  .xland-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.25rem;
+    margin-top: 1.25rem;
+  }
+  .xland-bundle {
+    border: 1px solid #d2d2d7;
+    border-radius: 0.85rem;
+    padding: 1.1rem;
+    margin: 0.75rem 0;
+  }
+  .fine {
+    color: #6e6e73;
+    font-size: 0.8rem;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .xland-group {
+      transition: none;
+    }
+  }
+</style>

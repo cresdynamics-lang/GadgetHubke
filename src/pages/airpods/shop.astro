@@ -1,0 +1,196 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import AirPodsCard from "../../components/airpods/AirPodsCard.astro";
+import AirpodsTrademark from "../../components/airpods/AirpodsTrademark.astro";
+import { airpodsModels, hasAnc, hasHearing } from "../../lib/airpods";
+
+const url = Astro.url;
+const familyQ = url.searchParams.get("family") || "";
+const typeQ = url.searchParams.get("type") || "";
+const caseQ = url.searchParams.get("case") || "";
+const needQ = url.searchParams.get("need") || "";
+
+let filtered = [...airpodsModels];
+if (familyQ) filtered = filtered.filter((m) => m.family === familyQ);
+if (typeQ) filtered = filtered.filter((m) => m.type === typeQ);
+if (caseQ) filtered = filtered.filter((m) => m.caseTypes.includes(caseQ as any));
+if (needQ === "commute") filtered = filtered.filter((m) => m.family === "Pro" || m.family === "Max");
+if (needQ === "gym") filtered = filtered.filter((m) => m.family === "Pro");
+if (needQ === "budget") filtered = filtered.sort((a, b) => a.basePriceKes - b.basePriceKes);
+if (needQ === "over-ear") filtered = filtered.filter((m) => m.type === "over-ear");
+if (needQ === "calls") filtered = filtered.filter((m) => m.type === "in-ear");
+if (needQ === "hearing") filtered = filtered.filter((m) => hasHearing(m));
+---
+
+<BaseLayout title="Shop AirPods - GadgetHub" description="Filter AirPods by family, ANC, case and need. Sample prices.">
+  <section class="container ashop">
+    <header class="ashop__head">
+      <h1>Shop AirPods</h1>
+      <p>Sample prices. Sealed stock. Compare up to three.</p>
+    </header>
+
+    <div class="ashop__filters" data-ashop>
+      <div class="ashop__chips" role="group" aria-label="Family">
+        <a class:list={{ "is-active": !familyQ }} href="/airpods/shop">All</a>
+        {["Pro", "AirPods", "Max"].map((f) => (
+          <a class:list={{ "is-active": familyQ === f }} href={`/airpods/shop?family=${encodeURIComponent(f)}`}>{f}</a>
+        ))}
+      </div>
+      <div class="ashop__chips" role="group" aria-label="Type">
+        {["in-ear", "over-ear"].map((t) => (
+          <a class:list={{ "is-active": typeQ === t }} href={`/airpods/shop?type=${t}`}>{t}</a>
+        ))}
+      </div>
+      <div class="ashop__chips" role="group" aria-label="Case">
+        {["usb-c", "wireless", "magsafe", "lightning"].map((c) => (
+          <a class:list={{ "is-active": caseQ === c }} href={`/airpods/shop?case=${c}`}>{c}</a>
+        ))}
+      </div>
+      <div class="ashop__chips" role="group" aria-label="Need">
+        {[
+          ["commute", "Commute"],
+          ["gym", "Gym"],
+          ["budget", "Budget"],
+          ["over-ear", "Over-ear"],
+          ["hearing", "Hearing"],
+        ].map(([id, label]) => (
+          <a class:list={{ "is-active": needQ === id }} href={`/airpods/shop?need=${id}`}>{label}</a>
+        ))}
+      </div>
+      <div class="ashop__toggles">
+        <label><input type="checkbox" data-filter-anc /> Noise cancelling</label>
+        <label><input type="checkbox" data-filter-hearing /> Has hearing</label>
+        <label>
+          Sort
+          <select data-sort>
+            <option value="newest">Newest</option>
+            <option value="price-asc">Price ↑</option>
+            <option value="price-desc">Price ↓</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <ul class="ashop__grid" data-shop-grid>
+      {filtered.map((m) => (
+        <li
+          data-shop-item
+          data-id={m.id}
+          data-anc={hasAnc(m) ? "1" : "0"}
+          data-hearing={hasHearing(m) ? "1" : "0"}
+          data-year={m.year}
+          data-price={m.basePriceKes}
+        >
+          <AirPodsCard model={m} />
+        </li>
+      ))}
+    </ul>
+    <AirpodsTrademark />
+  </section>
+
+  <div class="ashop-tray" data-compare-tray hidden>
+    <p data-compare-count>0 selected</p>
+    <a class="btn btn--primary btn--sm" data-compare-go href="/airpods/compare">Compare</a>
+    <button type="button" data-compare-clear>Clear</button>
+  </div>
+</BaseLayout>
+
+<script>
+  const tray = document.querySelector("[data-compare-tray]");
+  const countEl = document.querySelector("[data-compare-count]");
+  const go = document.querySelector("[data-compare-go]");
+  const selected = new Set();
+
+  function refreshTray() {
+    if (!(tray instanceof HTMLElement)) return;
+    tray.hidden = selected.size === 0;
+    if (countEl) countEl.textContent = `${selected.size} selected`;
+    if (go instanceof HTMLAnchorElement) {
+      go.href = `/airpods/compare?ids=${encodeURIComponent([...selected].join(","))}`;
+    }
+  }
+
+  document.querySelectorAll("[data-airpods-compare]").forEach((box) => {
+    box.addEventListener("change", () => {
+      if (!(box instanceof HTMLInputElement)) return;
+      if (box.checked) {
+        if (selected.size >= 3) {
+          box.checked = false;
+          return;
+        }
+        selected.add(box.value);
+      } else selected.delete(box.value);
+      refreshTray();
+    });
+  });
+
+  document.querySelector("[data-compare-clear]")?.addEventListener("click", () => {
+    selected.clear();
+    document.querySelectorAll("[data-airpods-compare]").forEach((b) => {
+      if (b instanceof HTMLInputElement) b.checked = false;
+    });
+    refreshTray();
+  });
+
+  const anc = document.querySelector("[data-filter-anc]");
+  const hearing = document.querySelector("[data-filter-hearing]");
+  const sort = document.querySelector("[data-sort]");
+  const grid = document.querySelector("[data-shop-grid]");
+
+  function applyClientFilters() {
+    const wantAnc = anc instanceof HTMLInputElement && anc.checked;
+    const wantHearing = hearing instanceof HTMLInputElement && hearing.checked;
+    const items = [...document.querySelectorAll("[data-shop-item]")];
+    items.forEach((li) => {
+      if (!(li instanceof HTMLElement)) return;
+      let show = true;
+      if (wantAnc && li.getAttribute("data-anc") !== "1") show = false;
+      if (wantHearing && li.getAttribute("data-hearing") !== "1") show = false;
+      li.hidden = !show;
+    });
+    const mode = sort instanceof HTMLSelectElement ? sort.value : "newest";
+    const visible = items.filter((li) => li instanceof HTMLElement && !li.hidden);
+    visible.sort((a, b) => {
+      const ae = a instanceof HTMLElement ? a : null;
+      const be = b instanceof HTMLElement ? b : null;
+      if (!ae || !be) return 0;
+      if (mode === "price-asc") return Number(ae.dataset.price) - Number(be.dataset.price);
+      if (mode === "price-desc") return Number(be.dataset.price) - Number(ae.dataset.price);
+      return Number(be.dataset.year) - Number(ae.dataset.year);
+    });
+    if (grid) visible.forEach((li) => grid.appendChild(li));
+  }
+  anc?.addEventListener("change", applyClientFilters);
+  hearing?.addEventListener("change", applyClientFilters);
+  sort?.addEventListener("change", applyClientFilters);
+</script>
+
+<style>
+  .ashop { padding-block: 2rem 4rem; overflow-x: hidden; }
+  .ashop__head h1 { margin: 0 0 0.35rem; letter-spacing: -0.03em; }
+  .ashop__head p { margin: 0 0 1.5rem; color: #6e6e73; }
+  .ashop__chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
+  .ashop__chips a {
+    border: 1px solid #d2d2d7; border-radius: 999px; padding: 0.35rem 0.7rem;
+    text-decoration: none; color: inherit; font-size: var(--text-sm);
+  }
+  .ashop__chips a.is-active { background: #000; color: #fff; border-color: #000; }
+  .ashop__toggles {
+    display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;
+    margin: 0.75rem 0 1.5rem; font-size: var(--text-sm);
+  }
+  .ashop__grid {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; gap: 1.25rem; grid-template-columns: minmax(0, 1fr);
+  }
+  @media (min-width: 40rem) { .ashop__grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 64rem) { .ashop__grid { grid-template-columns: 1fr 1fr 1fr; } }
+  .ashop-tray {
+    position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%);
+    z-index: 50; background: #000; color: #fff; border-radius: 999px;
+    padding: 0.65rem 1rem; display: flex; gap: 0.75rem; align-items: center;
+    box-shadow: 0 12px 40px rgb(0 0 0 / 0.25);
+    max-width: calc(100% - 1.5rem);
+  }
+  .ashop-tray button { background: transparent; border: none; color: inherit; font: inherit; cursor: pointer; }
+</style>

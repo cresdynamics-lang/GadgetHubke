@@ -1,0 +1,297 @@
+---
+/**
+ * MacBook shop card — 16:10 stage, colour dots, Lipa line, bag + compare.
+ */
+import MacStage from "./MacStage.astro";
+import {
+  type MacModel,
+  getMacImage,
+  defaultMacColour,
+  macSubline,
+  formatKes,
+  lipaMonthly,
+  colourHex,
+  colourLabel,
+  isLightColour,
+  macConfig,
+} from "../../lib/mac";
+
+interface Props {
+  model: MacModel;
+  compare?: boolean;
+}
+
+const { model, compare = true } = Astro.props;
+const colour = defaultMacColour(model);
+const img = getMacImage(model.id, colour, "product", model.name);
+const lipa = lipaMonthly(model.basePriceKes);
+const href = `/mac/${model.id}`;
+
+const colourPayload = model.colours.map((key) => {
+  const resolved = getMacImage(model.id, key, "product", model.name);
+  return {
+    key,
+    hex: colourHex(key),
+    label: colourLabel(key),
+    src: resolved.src,
+    srcWebp: resolved.srcWebp ?? "",
+    alt: resolved.alt,
+    light: isLightColour(key),
+  };
+});
+---
+
+<article
+  class="mcard"
+  data-mcard
+  data-model={model.id}
+  data-family={model.family}
+  data-chip={model.chipGen}
+  data-size={model.screenInches}
+  data-price={model.basePriceKes}
+  data-battery={model.batteryVideoHours}
+  data-weight={model.weightKg}
+  data-year={model.year}
+  data-mem={model.memoryOptionsGb[0]}
+>
+  {
+    compare ? (
+      <label class="mcard__compare">
+        <input type="checkbox" data-compare={model.id} aria-label={`Compare ${model.name}`} />
+      </label>
+    ) : null
+  }
+  {model.isNew ? <span class="mcard__tag">New</span> : null}
+  {model.checkFinalSpecs ? <span class="mcard__tag mcard__tag--warn">Check specs</span> : null}
+
+  <a class="mcard__media" href={href}>
+    <MacStage src={img.src} srcWebp={img.srcWebp} alt={img.alt} width={img.width} height={Math.round(img.width * 0.625)} />
+  </a>
+
+  <div class="mcard__body">
+    <h3 class="mcard__name"><a href={href}>{model.name}</a></h3>
+    <p class="mcard__sub">{macSubline(model)}</p>
+    <p class="mcard__meta">{model.batteryVideoHours} h video · {model.weightKg} kg</p>
+
+    {
+      model.overviewOnly ? (
+        <p class="mcard__note">Colour overview until store shots arrive</p>
+      ) : (
+        <div class="mcard__swatches" role="group" aria-label={`${model.name} colours`}>
+          {colourPayload.map((c, i) => (
+            <button
+              type="button"
+              class:list={["mcard__dot", { "is-active": i === 0, "mcard__dot--light": c.light }]}
+              style={`--swatch: ${c.hex}`}
+              aria-label={c.label}
+              data-mcard-swatch
+              data-src={c.src}
+              data-webp={c.srcWebp}
+              data-alt={c.alt}
+            />
+          ))}
+        </div>
+      )
+    }
+
+    <p class="mcard__price">
+      <span>From {formatKes(model.basePriceKes)}</span>
+      <span class="mcard__sample">Sample price</span>
+    </p>
+    <p class="mcard__lipa">
+      or {formatKes(lipa.monthlyKes)} a month for {lipa.months} months after a {macConfig.lipa.depositDefaultPct}% deposit
+    </p>
+    <div class="mcard__actions">
+      <a class="btn btn--primary btn--sm" href={href}>View</a>
+      <button
+        type="button"
+        class="btn btn--secondary btn--sm"
+        data-add-bag
+        data-id={model.id}
+        data-name={model.name}
+        data-chip={model.chip}
+        data-memory={`${model.memoryOptionsGb[0]}GB`}
+        data-storage={model.storageOptions[0]}
+        data-colour={colourLabel(colour)}
+        data-kes={model.basePriceKes}
+        data-image={img.src}
+      >
+        Add to bag
+      </button>
+    </div>
+  </div>
+</article>
+
+<script>
+  document.querySelectorAll("[data-mcard]").forEach((card) => {
+    const img = card.querySelector(".mstage__img") as HTMLImageElement | null;
+    const webpSource = card.querySelector(".mstage source") as HTMLSourceElement | null;
+    card.querySelectorAll("[data-mcard-swatch]").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const src = btn.getAttribute("data-src");
+        const webp = btn.getAttribute("data-webp");
+        const alt = btn.getAttribute("data-alt");
+        if (img && src) {
+          img.style.opacity = "0";
+          window.setTimeout(() => {
+            img.src = src;
+            if (webpSource) {
+              if (webp) webpSource.srcset = webp;
+              else webpSource.removeAttribute("srcset");
+            }
+            if (alt) img.alt = alt;
+            img.style.opacity = "1";
+          }, 120);
+        }
+        card.querySelectorAll("[data-mcard-swatch]").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        const bag = card.querySelector("[data-add-bag]");
+        if (bag) {
+          bag.setAttribute("data-colour", btn.getAttribute("aria-label") || "");
+          bag.setAttribute("data-image", src || "");
+        }
+      });
+    });
+
+    card.querySelector("[data-add-bag]")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      const btn = e.currentTarget;
+      if (!(btn instanceof HTMLElement)) return;
+      window.dispatchEvent(
+        new CustomEvent("gh:bag-add", {
+          detail: {
+            id: btn.getAttribute("data-id"),
+            name: btn.getAttribute("data-name"),
+            chip: btn.getAttribute("data-chip"),
+            memory: btn.getAttribute("data-memory"),
+            storage: btn.getAttribute("data-storage"),
+            colour: btn.getAttribute("data-colour"),
+            kes: Number(btn.getAttribute("data-kes") || 0),
+            image: btn.getAttribute("data-image"),
+          },
+        }),
+      );
+    });
+  });
+</script>
+
+<style>
+  .mcard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: 1.5rem;
+    background: var(--color-bg);
+    overflow: hidden;
+    transition:
+      transform var(--duration) var(--ease-out),
+      border-color var(--duration) var(--ease);
+  }
+  .mcard:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-fg);
+  }
+  .mcard__compare {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    z-index: 2;
+    background: rgb(255 255 255 / 0.9);
+    border-radius: 0.35rem;
+    padding: 0.2rem;
+  }
+  .mcard__tag {
+    position: absolute;
+    top: 0.85rem;
+    left: 0.85rem;
+    z-index: 2;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background: #000;
+    color: #fff;
+    padding: 0.25rem 0.5rem;
+    border-radius: 999px;
+  }
+  .mcard__tag--warn {
+    left: auto;
+    right: 2.75rem;
+    background: #1d1d1f;
+  }
+  .mcard__media {
+    display: block;
+    text-decoration: none;
+  }
+  .mcard__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.85rem 1rem 1rem;
+    flex: 1;
+  }
+  .mcard__name {
+    margin: 0;
+    font-size: 1.05rem;
+    letter-spacing: -0.02em;
+  }
+  .mcard__name a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .mcard__sub,
+  .mcard__meta,
+  .mcard__note,
+  .mcard__lipa {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--color-fg-muted);
+  }
+  .mcard__swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 0.35rem 0;
+  }
+  .mcard__dot {
+    width: 1.15rem;
+    height: 1.15rem;
+    border-radius: 50%;
+    border: none;
+    background: var(--swatch);
+    cursor: pointer;
+    box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.15);
+  }
+  .mcard__dot.is-active {
+    outline: 2px solid var(--color-fg);
+    outline-offset: 2px;
+  }
+  .mcard__dot--light {
+    box-shadow: inset 0 0 0 1px #d2d2d7;
+  }
+  .mcard__price {
+    margin: 0.35rem 0 0;
+    font-weight: 600;
+  }
+  .mcard__sample {
+    display: block;
+    font-weight: 400;
+    font-size: 0.7rem;
+    color: var(--color-fg-muted);
+  }
+  .mcard__actions {
+    margin-top: auto;
+    padding-top: 0.75rem;
+    display: flex;
+    gap: 0.45rem;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mcard:hover {
+      transform: none;
+    }
+  }
+</style>

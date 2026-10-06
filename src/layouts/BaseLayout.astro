@@ -4,6 +4,9 @@ import Footer from "../components/Footer.astro";
 import FloatingActions from "../components/FloatingActions.astro";
 import CookieBanner from "../components/CookieBanner.astro";
 import Analytics from "../components/Analytics.astro";
+import AnnouncementBar from "../components/AnnouncementBar.astro";
+import SiteSearch from "../components/SiteSearch.astro";
+import BagDrawer from "../components/iphone/BagDrawer.astro";
 import interLatin from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
 import "../styles/global.css";
 import { site } from "../lib/site";
@@ -27,7 +30,7 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#0A0A0A" />
+    <meta name="theme-color" content="#000000" />
     <link rel="canonical" href={canonical} />
     <link
       rel="preload"
@@ -45,14 +48,23 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
     <meta property="og:image" content={new URL("/images/logo.png", site.url).href} />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <script is:inline>
+      try {
+        const t = localStorage.getItem("gh-theme");
+        if (t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <a class="sr-only" href="#main">Skip to content</a>
+    <AnnouncementBar />
     <Header />
     <main id="main">
       <slot />
     </main>
     <Footer />
+    <SiteSearch />
+    <BagDrawer />
     <FloatingActions />
     <CookieBanner />
     <Analytics />

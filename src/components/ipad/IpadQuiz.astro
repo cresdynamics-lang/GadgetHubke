@@ -1,0 +1,195 @@
+---
+/**
+ * Which iPad is for you? — 3 questions → up to 3 matches with reasons.
+ */
+import {
+  ipadModels,
+  getIpadImage,
+  defaultIpadColour,
+  ipadSubline,
+} from "../../lib/ipad";
+
+const payload = ipadModels.map((m) => {
+  const colour = defaultIpadColour(m);
+  const img = getIpadImage(m.id, colour, "product", m.name);
+  return {
+    id: m.id,
+    name: m.name,
+    href: `/ipad/${m.id}`,
+    priceKes: m.basePriceKes,
+    family: m.family,
+    chipGen: m.chipGen,
+    screen: m.screenInches,
+    weight: m.weightG,
+    pencilPro: m.pencils.includes("pro"),
+    ai: m.appleIntelligence,
+    promotion: Boolean(m.display.promotion),
+    check: Boolean(m.checkFinalSpecs),
+    year: m.year,
+    sub: ipadSubline(m),
+    image: img.src,
+    alt: img.alt,
+  };
+});
+---
+
+<section class="iquiz" id="quiz" data-iquiz>
+  <header>
+    <h2>Which iPad is for you?</h2>
+    <p>Three questions. Up to three matches with a short reason each.</p>
+  </header>
+
+  <div class="iquiz__q" data-q="do">
+    <p>What will you mainly do?</p>
+    <div class="iquiz__opts">
+      <button type="button" data-val="draw">Drawing and creative</button>
+      <button type="button" data-val="notes">Notes and study</button>
+      <button type="button" data-val="kids">Kids and family</button>
+      <button type="button" data-val="laptop">Replace a laptop</button>
+      <button type="button" data-val="travel">Reading and travel</button>
+    </div>
+  </div>
+
+  <div class="iquiz__q" data-q="who">
+    <p>Who is it for?</p>
+    <div class="iquiz__opts">
+      <button type="button" data-val="me">Mostly me</button>
+      <button type="button" data-val="student">A student</button>
+      <button type="button" data-val="family">Shared family tablet</button>
+      <button type="button" data-val="work">Work on the road</button>
+    </div>
+  </div>
+
+  <div class="iquiz__q" data-q="budget">
+    <p>Budget band (sample prices)?</p>
+    <div class="iquiz__opts">
+      <button type="button" data-val="tight">Under 70k</button>
+      <button type="button" data-val="mid">70k–140k</button>
+      <button type="button" data-val="open">140k+</button>
+    </div>
+  </div>
+
+  <div class="iquiz__results" data-quiz-results hidden>
+    <h3>Your matches</h3>
+    <ul data-quiz-list></ul>
+  </div>
+</section>
+
+<script define:vars={{ payload }}>
+  const root = document.querySelector("[data-iquiz]");
+  if (root) {
+    const answers = { do: "", who: "", budget: "" };
+    const list = root.querySelector("[data-quiz-list]");
+    const results = root.querySelector("[data-quiz-results]");
+
+    function reason(m, a) {
+      if (a.do === "draw" && (m.family === "Pro" || m.pencilPro)) return "Strong canvas and Pencil Pro support for drawing.";
+      if (a.do === "travel" && m.family === "mini") return "Lightest everyday companion for bags and travel.";
+      if (a.do === "kids" && m.family === "iPad") return "Approachable family tablet — add a case.";
+      if (a.do === "laptop" && (m.family === "Air" || m.family === "Pro")) return "Pairs well with a Magic Keyboard for light laptop work.";
+      if (a.budget === "tight") return "Lower sample price — check condition on older chips.";
+      if (m.ai) return "Supports Apple Intelligence.";
+      return "Solid fit for how you answered.";
+    }
+
+    function run() {
+      if (!answers.do || !answers.who || !answers.budget || !list || !results) return;
+      let pool = [...payload];
+
+      if (answers.do === "draw") pool = pool.filter((m) => m.family === "Pro" || m.pencilPro || m.family === "Air");
+      if (answers.do === "notes") pool = pool.filter((m) => m.family === "Air" || m.family === "iPad" || m.family === "mini");
+      if (answers.do === "kids") pool = pool.filter((m) => m.family === "iPad" || m.id.includes("air"));
+      if (answers.do === "laptop") pool = pool.filter((m) => m.family === "Air" || m.family === "Pro");
+      if (answers.do === "travel") pool = pool.filter((m) => m.family === "mini" || m.screen <= 11);
+
+      if (answers.budget === "tight") pool = pool.filter((m) => m.priceKes < 70000);
+      if (answers.budget === "mid") pool = pool.filter((m) => m.priceKes >= 70000 && m.priceKes <= 140000);
+      if (answers.budget === "open") pool = pool.filter((m) => m.priceKes >= 140000);
+
+      if (!pool.length) pool = [...payload].sort((a, b) => a.priceKes - b.priceKes).slice(0, 6);
+
+      pool.sort((a, b) => {
+        let sa = 0;
+        let sb = 0;
+        if (answers.do === "draw") {
+          if (a.family === "Pro") sa += 30;
+          if (b.family === "Pro") sb += 30;
+          if (a.pencilPro) sa += 20;
+          if (b.pencilPro) sb += 20;
+        }
+        if (answers.do === "travel") {
+          sa += 400 - a.weight;
+          sb += 400 - b.weight;
+        }
+        if (answers.who === "student" && a.family === "Air") sa += 15;
+        if (answers.who === "student" && b.family === "Air") sb += 15;
+        return sb - sa || b.year - a.year;
+      });
+
+      const top = pool.slice(0, 3);
+      results.hidden = false;
+      list.innerHTML = top
+        .map(
+          (m) => `
+        <li>
+          <a href="${m.href}">
+            <img src="${m.image}" alt="" width="72" height="72" loading="lazy" />
+            <span>
+              <strong>${m.name}</strong>
+              <em>${m.sub}</em>
+              <small>${reason(m, answers)}</small>
+            </span>
+            <b>From KES ${m.priceKes.toLocaleString("en-KE")}</b>
+          </a>
+        </li>`,
+        )
+        .join("");
+    }
+
+    root.querySelectorAll("[data-q]").forEach((block) => {
+      const key = block.getAttribute("data-q");
+      block.querySelectorAll("[data-val]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          block.querySelectorAll("[data-val]").forEach((b) => b.classList.remove("is-active"));
+          btn.classList.add("is-active");
+          answers[key] = btn.getAttribute("data-val") || "";
+          run();
+        });
+      });
+    });
+  }
+</script>
+
+<style>
+  .iquiz {
+    padding: 1.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--ipad-radius);
+    margin: var(--ipad-section-gap) 0;
+  }
+  .iquiz header h2 { margin: 0 0 0.35rem; letter-spacing: -0.02em; }
+  .iquiz header p { margin: 0 0 1.25rem; color: var(--color-fg-muted); }
+  .iquiz__q { margin-bottom: 1.1rem; }
+  .iquiz__q p { margin: 0 0 0.5rem; font-weight: 600; }
+  .iquiz__opts { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  .iquiz__opts button {
+    border: 1px solid var(--color-border); background: var(--color-bg); border-radius: 999px;
+    padding: 0.45rem 0.85rem; font: inherit; font-size: var(--text-sm); cursor: pointer;
+  }
+  .iquiz__opts button.is-active { background: #000; color: #fff; border-color: #000; }
+  .iquiz__results h3 { margin: 1rem 0 0.65rem; }
+  .iquiz__results ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.65rem; }
+  .iquiz__results a {
+    display: grid; grid-template-columns: 4.5rem 1fr auto; gap: 0.75rem; align-items: center;
+    text-decoration: none; color: inherit; border: 1px solid var(--color-border);
+    border-radius: 1rem; padding: 0.65rem;
+  }
+  .iquiz__results img {
+    width: 4.5rem; height: 4.5rem; object-fit: contain; background: #f5f5f7;
+    border-radius: 0.65rem; mix-blend-mode: multiply;
+  }
+  .iquiz__results strong { display: block; }
+  .iquiz__results em, .iquiz__results small {
+    display: block; font-style: normal; font-size: var(--text-sm); color: var(--color-fg-muted);
+  }
+</style>

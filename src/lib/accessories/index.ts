@@ -1,0 +1,96 @@
+/** Accessories module — Pencil, Keyboard, Mouse, Trackpad, Power, Cases. */
+
+export { accessoriesConfig, accessoryBasePricesKes, type AccessoryPriceId } from "./config";
+export {
+  accessories,
+  getAccessory,
+  accessoriesByGroup,
+  pencils,
+  keyboards,
+  mice,
+  trackpads,
+  powerProducts,
+  caseProducts,
+  adapters,
+  cables,
+  magsafeChargers,
+  lowestAccessoryPrice,
+  comingNextGroups,
+  liveAccessoryGroups,
+  type Accessory,
+  type AccessoryGroup,
+} from "./models";
+export {
+  getCaseVariants,
+  getCaseVariant,
+  getCaseFamilyManifest,
+  allCaseFamilySummaries,
+  caseFamilyColourCount,
+  caseDeviceLabels,
+  allPowerCaseProducts,
+  type CaseVariant,
+  type AccessoryVariantFields,
+} from "./power-cases-data";
+export { formatKes, accessoryConfigurePrice, lipaMonthly, monthlyFromPrice, lipaBreakdown } from "./pricing";
+export {
+  pencilFits,
+  keyboardFits,
+  pointerFits,
+  caseFits,
+  chargerAdvice,
+  pairingNote,
+  fitsLabel,
+  fitsLabelExtended,
+  accessoriesThatFitDevice,
+  type FitResult,
+  type ChargerAdviceItem,
+} from "./fits";
+export {
+  accessoryBuyingNotes,
+  accessoryFaq,
+  quizRecommend,
+} from "./notes";
+export {
+  getAccessoryImage,
+  resolveAccessoryKey,
+  getAccessoriesPageImage,
+  ACCESSORY_PLACEHOLDER,
+  type ResolvedAccessoryImage,
+} from "./images";
+export {
+  accessoriesManifest,
+  productManifestEntry,
+  heroSrc,
+  angleSrcs,
+  swatchSrc,
+  overviewSrc,
+  featureSrc,
+  gestureSrc,
+  productGestureSrc,
+  storeGallerySrcs,
+  storeInUseSrc,
+  storeSplitterSrc,
+  pageKey,
+  manifestCounts,
+  productGeoUs,
+  caseVariantsIndex,
+  type AccessoriesManifest,
+  type AccessoryProductManifestKey,
+} from "./manifest";
+export {
+  buildAccessoriesSearchIndex,
+  accessoriesPopularSearches,
+  normalizeAccessoriesQuery,
+  normalizePencilQuery,
+  normalizeKeyboardQuery,
+  routeAccessoriesDomain,
+  looksLikeAccessoriesQuery,
+  searchAccessories,
+  searchMisses,
+  logAccessoriesSearchMiss,
+  accessoriesMatchingDevice,
+  accessoriesSearchRoute,
+  accessoriesFutureAlert,
+  accessoriesThirdPartyMessage,
+  type AccessorySearchHit,
+} from "./search";

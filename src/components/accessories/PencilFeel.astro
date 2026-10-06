@@ -1,0 +1,448 @@
+---
+/**
+ * Pencil feel sections: hero land, draw canvas, feature explorer, attach/charge.
+ */
+import {
+  getAccessoriesPageImage,
+  getAccessoryImage,
+  pencils,
+  accessoriesConfig,
+} from "../../lib/accessories";
+
+const hero = getAccessoriesPageImage("pencil/hero/hero", "Apple Pencil hero");
+const heroIpad = getAccessoriesPageImage("pencil/hero/ipad_pro_pencil_pro", "iPad Pro with Pencil Pro");
+const featureNames = [
+  ["precision", "Pixel-level precision"],
+  ["latency", "Low latency"],
+  ["tilt", "Tilt sensitivity"],
+  ["pressure", "Pressure sensitivity"],
+  ["magnetic", "Magnetic attach"],
+  ["charging", "Charges while attached"],
+  ["hover", "Hover preview"],
+  ["doubletap", "Double-tap"],
+  ["barrelroll", "Barrel roll"],
+  ["squeeze", "Squeeze"],
+  ["haptic", "Haptic feedback"],
+  ["findmy", "Find My"],
+  ["engraving", "Engraving"],
+] as const;
+
+const proFrames = [
+  ["hover", "pencil/pro/gallery/hover_startframe", "Hover"],
+  ["squeeze", "pencil/pro/gallery/squeeze_startframe", "Squeeze"],
+  ["barrelroll", "pencil/pro/gallery/barrel-roll_startframe", "Barrel roll"],
+  ["doubletap", "pencil/pro/gallery/double_tap_startframe", "Double-tap"],
+  ["haptic", "pencil/pro/gallery/haptics_startframe", "Haptics"],
+] as const;
+
+const pencilTabs = pencils();
+---
+
+<div class="xfeel-pencil" data-pencil-feel>
+  <section class="xfeel-pencil__hero" data-pencil-hero>
+    <div class="container">
+      <h2>The pen lands.</h2>
+      <p>Scroll to fade from the Pencil to the iPad moment.</p>
+    </div>
+    <div class="xfeel-pencil__stage" data-pencil-hero-stage>
+      <img data-hero-a src={hero.src} alt={hero.alt} width="1800" height="1200" fetchpriority="high" />
+      <img data-hero-b src={heroIpad.src} alt={heroIpad.alt} width="1800" height="1200" />
+    </div>
+  </section>
+
+  <section class="xfeel-pencil__draw">
+    <div class="container xfeel-pencil__draw-grid">
+      <div>
+        <h2>Draw something.</h2>
+        <p class="xfeel-pencil__hint">
+          A demo with your finger or mouse; the real Pencil adds pressure and tilt.
+        </p>
+        <div class="xfeel-pencil__tools">
+          <button type="button" data-tool="pen" class="is-active">Pen</button>
+          <button type="button" data-tool="highlighter">Highlighter</button>
+          <button type="button" data-tool="eraser">Eraser</button>
+          <label>Size <input type="range" min="2" max="28" value="6" data-size /></label>
+          <button type="button" data-clear>Clear</button>
+        </div>
+        <canvas data-draw-canvas width="720" height="420" aria-label="Drawing canvas"></canvas>
+      </div>
+      <div>
+        <img
+          data-draw-feature
+          src={getAccessoryImage("pencil-pro", "feature:precision").src}
+          alt="Pencil feature"
+          width="640"
+          height="640"
+          loading="lazy"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="xfeel-pencil__features" data-feature-explorer>
+    <div class="container">
+      <h2>Feature explorer</h2>
+      <div class="xfeel-pencil__tabs" role="tablist">
+        {
+          pencilTabs.map((p, i) => (
+            <button type="button" role="tab" data-pencil-tab={p.id} class:list={{ "is-active": i === 0 }} aria-selected={i === 0}>
+              {p.generation}
+            </button>
+          ))
+        }
+      </div>
+      <div class="xfeel-pencil__grid" data-feature-grid>
+        {
+          featureNames.map(([id, label]) => {
+            const img = getAccessoryImage("pencil-pro", `feature:${id}`);
+            return (
+              <article class="xfeel-pencil__tile" data-feat={id}>
+                <img src={img.src} alt={label} width="400" height="400" loading="lazy" />
+                <h3>{label}</h3>
+                <p data-feat-state>On this Pencil</p>
+              </article>
+            );
+          })
+        }
+      </div>
+      <div class="xfeel-pencil__pro">
+        {
+          proFrames.map(([id, key, label]) => {
+            const img = getAccessoriesPageImage(key, label);
+            return (
+              <article class={`xfeel-pencil__pro-card xfeel-pencil__pro-card--${id}`}>
+                <img src={img.src} alt={label} width="640" height="480" loading="lazy" />
+                <p>{label}</p>
+                <span class="xfeel-pencil__hint-ring" aria-hidden="true" />
+              </article>
+            );
+          })
+        }
+      </div>
+      <p class="xfeel-pencil__flag">Check final specs — {accessoriesConfig.appleCompatNote}</p>
+    </div>
+  </section>
+
+  <section class="xfeel-pencil__attach">
+    <div class="container">
+      <h2>It clicks on and charges.</h2>
+      <div class="xfeel-pencil__attach-vis" data-attach>
+        <img
+          src={getAccessoryImage("pencil-pro", "gallery:0").src}
+          alt="Pencil attaching to iPad"
+          width="900"
+          height="600"
+          loading="lazy"
+          data-attach-img
+        />
+      </div>
+      <table class="xfeel-pencil__table">
+        <thead>
+          <tr><th>Pencil</th><th>Charges</th><th>Pairs</th></tr>
+        </thead>
+        <tbody>
+          {
+            pencilTabs.map((p) => (
+              <tr>
+                <td>{p.name}</td>
+                <td>{p.charging || "—"} <span class="flag">check</span></td>
+                <td>{p.connection} <span class="flag">check</span></td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<script define:vars={{ featureMap: Object.fromEntries(pencilTabs.map((p) => [p.id, p.featureIds])) }}>
+  const root = document.querySelector("[data-pencil-feel]");
+  if (!root) throw new Error("pencil feel");
+
+  // Hero cross-fade (desktop pin simplified to scroll opacity)
+  const stage = root.querySelector("[data-pencil-hero-stage]");
+  const a = root.querySelector("[data-hero-a]");
+  const b = root.querySelector("[data-hero-b]");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduce && stage && a instanceof HTMLElement && b instanceof HTMLElement) {
+    a.style.opacity = "1";
+    b.style.opacity = "0";
+    a.style.transform = "scale(0.94)";
+    const onScroll = () => {
+      const rect = stage.getBoundingClientRect();
+      const vh = window.innerHeight || 1;
+      const progress = Math.min(1, Math.max(0, 1 - rect.top / vh));
+      a.style.opacity = String(1 - progress);
+      b.style.opacity = String(progress);
+      a.style.transform = `scale(${0.94 + progress * 0.06})`;
+      b.style.transform = `scale(${0.94 + progress * 0.06})`;
+    };
+    window.addEventListener("scroll", () => requestAnimationFrame(onScroll), { passive: true });
+    onScroll();
+  } else if (a instanceof HTMLElement && b instanceof HTMLElement) {
+    a.style.opacity = "0";
+    b.style.opacity = "1";
+  }
+
+  // Canvas draw
+  const canvas = root.querySelector("[data-draw-canvas]");
+  if (canvas instanceof HTMLCanvasElement) {
+    const ctx = canvas.getContext("2d");
+    let tool = "pen";
+    let size = 6;
+    let drawing = false;
+    let last = null;
+    const colors = { pen: "#1d1d1f", highlighter: "rgba(255,214,10,0.35)", eraser: "#ffffff" };
+    function pointer(e) {
+      const r = canvas.getBoundingClientRect();
+      const t = e.touches ? e.touches[0] : e;
+      return { x: ((t.clientX - r.left) / r.width) * canvas.width, y: ((t.clientY - r.top) / r.height) * canvas.height };
+    }
+    function stroke(p) {
+      if (!ctx || !last) return;
+      const dx = p.x - last.x;
+      const dy = p.y - last.y;
+      const speed = Math.hypot(dx, dy);
+      ctx.lineWidth = tool === "eraser" ? size * 2 : Math.max(1, size * (1 - Math.min(speed, 40) / 80));
+      ctx.strokeStyle = colors[tool];
+      ctx.lineCap = "round";
+      ctx.globalCompositeOperation = tool === "eraser" ? "destination-out" : "source-over";
+      ctx.beginPath();
+      ctx.moveTo(last.x, last.y);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+      last = p;
+    }
+    canvas.addEventListener("pointerdown", (e) => {
+      drawing = true;
+      last = pointer(e);
+      canvas.setPointerCapture(e.pointerId);
+    });
+    canvas.addEventListener("pointermove", (e) => {
+      if (!drawing) return;
+      stroke(pointer(e));
+    });
+    canvas.addEventListener("pointerup", () => {
+      drawing = false;
+      last = null;
+    });
+    root.querySelectorAll("[data-tool]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        tool = btn.getAttribute("data-tool") || "pen";
+        root.querySelectorAll("[data-tool]").forEach((b) => b.classList.toggle("is-active", b === btn));
+      });
+    });
+    root.querySelector("[data-size]")?.addEventListener("input", (e) => {
+      size = Number(e.target.value);
+    });
+    root.querySelector("[data-clear]")?.addEventListener("click", () => {
+      ctx?.clearRect(0, 0, canvas.width, canvas.height);
+    });
+  }
+
+  // Feature tabs
+  root.querySelectorAll("[data-pencil-tab]").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const id = tab.getAttribute("data-pencil-tab");
+      root.querySelectorAll("[data-pencil-tab]").forEach((t) => {
+        t.classList.toggle("is-active", t === tab);
+        t.setAttribute("aria-selected", t === tab ? "true" : "false");
+      });
+      const feats = new Set(featureMap[id] || []);
+      root.querySelectorAll("[data-feat]").forEach((tile) => {
+        const fid = tile.getAttribute("data-feat");
+        const on = feats.has(fid);
+        tile.classList.toggle("is-off", !on);
+        const state = tile.querySelector("[data-feat-state]");
+        if (state) state.textContent = on ? "On this Pencil" : "Not on this Pencil";
+      });
+    });
+  });
+</script>
+
+<style>
+  .xfeel-pencil__hero {
+    background: #000;
+    color: #f5f5f7;
+    padding: 3rem 0 0;
+  }
+  .xfeel-pencil__stage {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    max-width: 1100px;
+    margin: 1.5rem auto 0;
+    overflow: hidden;
+  }
+  .xfeel-pencil__stage img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .xfeel-pencil__draw {
+    background: #000;
+    color: #f5f5f7;
+    padding: 3rem 0;
+  }
+  .xfeel-pencil__draw-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 1.5rem;
+  }
+  @media (max-width: 800px) {
+    .xfeel-pencil__draw-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .xfeel-pencil__hint {
+    color: #a1a1a6;
+  }
+  .xfeel-pencil__tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0;
+  }
+  .xfeel-pencil__tools button {
+    background: #1d1d1f;
+    color: #fff;
+    border: 1px solid #424245;
+    padding: 0.4rem 0.7rem;
+    border-radius: 0.35rem;
+    cursor: pointer;
+  }
+  .xfeel-pencil__tools button.is-active {
+    background: #fff;
+    color: #000;
+  }
+  canvas {
+    width: 100%;
+    max-width: 100%;
+    background: #fff;
+    border-radius: 0.75rem;
+    touch-action: none;
+  }
+  .xfeel-pencil__features,
+  .xfeel-pencil__attach {
+    padding: 3rem 0;
+  }
+  .xfeel-pencil__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0 1.5rem;
+  }
+  .xfeel-pencil__tabs button {
+    border: 1px solid #d2d2d7;
+    background: #fff;
+    padding: 0.45rem 0.75rem;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .xfeel-pencil__tabs button.is-active {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+  }
+  .xfeel-pencil__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.75rem;
+  }
+  .xfeel-pencil__tile {
+    background: #f5f5f7;
+    border-radius: 0.75rem;
+    padding: 0.65rem;
+  }
+  .xfeel-pencil__tile.is-off {
+    opacity: 0.45;
+  }
+  .xfeel-pencil__tile.is-off [data-feat-state] {
+    color: #6e6e73;
+  }
+  .xfeel-pencil__tile img {
+    width: 100%;
+    mix-blend-mode: multiply;
+  }
+  .xfeel-pencil__tile h3 {
+    font-size: 0.85rem;
+    margin: 0.35rem 0 0;
+  }
+  .xfeel-pencil__pro {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+  .xfeel-pencil__pro-card {
+    position: relative;
+    background: #000;
+    color: #fff;
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+  .xfeel-pencil__pro-card img {
+    width: 100%;
+    display: block;
+  }
+  .xfeel-pencil__pro-card p {
+    padding: 0.5rem 0.75rem;
+    margin: 0;
+    font-size: 0.85rem;
+  }
+  .xfeel-pencil__hint-ring {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    width: 28px;
+    height: 28px;
+    margin: -14px 0 0 -14px;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    animation: pulse 1.6s ease-out infinite;
+  }
+  @keyframes pulse {
+    0% { transform: scale(0.7); opacity: 1; }
+    100% { transform: scale(1.6); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .xfeel-pencil__hint-ring {
+      animation: none;
+      opacity: 0.6;
+    }
+  }
+  .xfeel-pencil__table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.25rem;
+    font-size: 0.9rem;
+  }
+  .xfeel-pencil__table th,
+  .xfeel-pencil__table td {
+    border-bottom: 1px solid #d2d2d7;
+    text-align: left;
+    padding: 0.65rem 0.35rem;
+  }
+  .flag {
+    font-size: 0.65rem;
+    color: #6e6e73;
+    text-transform: uppercase;
+  }
+  .xfeel-pencil__flag {
+    font-size: 0.8rem;
+    color: #6e6e73;
+    margin-top: 1rem;
+  }
+  .xfeel-pencil__attach-vis {
+    background: #f5f5f7;
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+  .xfeel-pencil__attach-vis img {
+    width: 100%;
+    mix-blend-mode: multiply;
+    display: block;
+  }
+</style>

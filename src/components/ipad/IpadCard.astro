@@ -1,0 +1,287 @@
+---
+/**
+ * iPad shop card — square stage, colour dots, Lipa line, bag + compare.
+ */
+import IpadStage from "./IpadStage.astro";
+import {
+  type IpadModel,
+  getIpadImage,
+  defaultIpadColour,
+  ipadSubline,
+  formatKes,
+  lipaMonthly,
+  colourHex,
+  colourLabel,
+  isLightColour,
+  ipadConfig,
+} from "../../lib/ipad";
+
+interface Props {
+  model: IpadModel;
+  compare?: boolean;
+}
+
+const { model, compare = true } = Astro.props;
+const colour = defaultIpadColour(model);
+const img = getIpadImage(model.id, colour, "product", model.name);
+const lipa = lipaMonthly(model.basePriceKes);
+const href = `/ipad/${model.id}`;
+
+const colourPayload = model.colours.map((key) => {
+  const resolved = getIpadImage(model.id, key, "product", model.name);
+  return {
+    key,
+    hex: colourHex(key),
+    label: colourLabel(key),
+    src: resolved.src,
+    srcWebp: resolved.srcWebp ?? "",
+    alt: resolved.alt,
+    light: isLightColour(key),
+  };
+});
+---
+
+<article
+  class="icard"
+  data-icard
+  data-model={model.id}
+  data-family={model.family}
+  data-chip={model.chipGen}
+  data-size={model.screenInches}
+  data-price={model.basePriceKes}
+  data-weight={model.weightG}
+  data-year={model.year}
+  data-pencil-pro={model.pencils.includes("pro") ? "1" : "0"}
+  data-ai={model.appleIntelligence ? "1" : "0"}
+>
+  {
+    compare ? (
+      <label class="icard__compare">
+        <input type="checkbox" data-compare={model.id} aria-label={`Compare ${model.name}`} />
+      </label>
+    ) : null
+  }
+  {model.isNew ? <span class="icard__tag">New</span> : null}
+  {model.checkFinalSpecs ? <span class="icard__tag icard__tag--warn">Check specs</span> : null}
+
+  <a class="icard__media" href={href}>
+    <IpadStage src={img.src} srcWebp={img.srcWebp} alt={img.alt} width={img.width} height={img.width} />
+  </a>
+
+  <div class="icard__body">
+    <h3 class="icard__name"><a href={href}>{model.name}</a></h3>
+    <p class="icard__sub">{ipadSubline(model)}</p>
+    <p class="icard__meta">{model.batteryHours} h · {model.weightG} g</p>
+
+    {
+      model.overviewOnly ? (
+        <p class="icard__note">Colour overview until store shots arrive</p>
+      ) : (
+        <div class="icard__swatches" role="group" aria-label={`${model.name} colours`}>
+          {colourPayload.map((c, i) => (
+            <button
+              type="button"
+              class:list={["icard__dot", { "is-active": i === 0, "icard__dot--light": c.light }]}
+              style={`--swatch: ${c.hex}`}
+              aria-label={c.label}
+              data-icard-swatch
+              data-src={c.src}
+              data-alt={c.alt}
+            />
+          ))}
+        </div>
+      )
+    }
+
+    <p class="icard__price">
+      From {formatKes(model.basePriceKes)}
+      <span>or {formatKes(lipa.monthlyKes)} / mo sample</span>
+    </p>
+    <p class="icard__fine">{ipadConfig.samplePriceDisclaimer}</p>
+
+    <div class="icard__actions">
+      <a class="btn btn--secondary btn--sm" href={href}>View</a>
+      <button
+        type="button"
+        class="btn btn--primary btn--sm"
+        data-add-bag
+        data-id={model.id}
+        data-name={model.name}
+        data-chip={model.chip}
+        data-size={`${model.screenInches}″`}
+        data-storage={model.storageOptions[0]}
+        data-colour={colourLabel(colour)}
+        data-kes={model.basePriceKes}
+        data-image={img.src}
+      >
+        Add to bag
+      </button>
+    </div>
+  </div>
+</article>
+
+<script>
+  document.querySelectorAll("[data-icard]").forEach((card) => {
+    if (!(card instanceof HTMLElement) || card.dataset.bound === "1") return;
+    card.dataset.bound = "1";
+    const img = card.querySelector(".istage__img");
+    card.querySelectorAll("[data-icard-swatch]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        card.querySelectorAll("[data-icard-swatch]").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        const src = btn.getAttribute("data-src");
+        const alt = btn.getAttribute("data-alt");
+        if (img instanceof HTMLImageElement && src) {
+          img.style.opacity = "0";
+          const pre = new Image();
+          pre.onload = () => {
+            img.src = src;
+            if (alt) img.alt = alt;
+            img.style.opacity = "1";
+          };
+          pre.src = src;
+        }
+        const bag = card.querySelector("[data-add-bag]");
+        bag?.setAttribute("data-colour", btn.getAttribute("aria-label") || "");
+        bag?.setAttribute("data-image", src || "");
+      });
+    });
+    card.querySelector("[data-add-bag]")?.addEventListener("click", (e) => {
+      const btn = e.currentTarget;
+      if (!(btn instanceof HTMLElement)) return;
+      window.dispatchEvent(
+        new CustomEvent("gh:bag-add", {
+          detail: {
+            id: btn.getAttribute("data-id"),
+            name: btn.getAttribute("data-name"),
+            chip: btn.getAttribute("data-chip"),
+            size: btn.getAttribute("data-size"),
+            storage: btn.getAttribute("data-storage"),
+            colour: btn.getAttribute("data-colour"),
+            kes: Number(btn.getAttribute("data-kes") || 0),
+            image: btn.getAttribute("data-image"),
+          },
+        }),
+      );
+    });
+  });
+</script>
+
+<style>
+  .icard {
+    position: relative;
+    border: 1px solid var(--color-border);
+    border-radius: var(--ipad-radius);
+    overflow: hidden;
+    background: var(--color-bg);
+    transition: transform 180ms var(--ease-out), border-color 180ms ease;
+  }
+  .icard:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-fg);
+  }
+  .icard__compare {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 2;
+    background: rgb(255 255 255 / 0.9);
+    border-radius: 999px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+  }
+  .icard__tag {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 2;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: #000;
+    color: #fff;
+    border-radius: 999px;
+    padding: 0.2rem 0.5rem;
+  }
+  .icard__tag--warn {
+    top: 2.4rem;
+    background: #1d1d1f;
+  }
+  .icard__media {
+    display: block;
+  }
+  .icard__media :global(.istage__img) {
+    transition: transform 220ms var(--ease-out), opacity 160ms ease;
+  }
+  .icard:hover .icard__media :global(.istage__img) {
+    transform: scale(1.06);
+  }
+  .icard__body {
+    padding: 1rem 1.1rem 1.15rem;
+  }
+  .icard__name {
+    margin: 0;
+    font-size: 1.05rem;
+    letter-spacing: -0.02em;
+  }
+  .icard__name a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .icard__sub,
+  .icard__meta,
+  .icard__note,
+  .icard__fine {
+    margin: 0.25rem 0 0;
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+  .icard__swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.65rem;
+  }
+  .icard__dot {
+    width: 1.15rem;
+    height: 1.15rem;
+    border-radius: 50%;
+    border: none;
+    background: var(--swatch);
+    cursor: pointer;
+    box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12);
+  }
+  .icard__dot.is-active {
+    outline: 2px solid var(--color-fg);
+    outline-offset: 2px;
+  }
+  .icard__dot--light {
+    box-shadow: inset 0 0 0 1px #d2d2d7;
+  }
+  .icard__price {
+    margin: 0.85rem 0 0;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .icard__price span {
+    display: block;
+    font-weight: 400;
+    font-size: 0.8rem;
+    color: var(--color-fg-muted);
+  }
+  .icard__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: 0.85rem;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .icard,
+    .icard__media :global(.istage__img) {
+      transition: none;
+    }
+    .icard:hover {
+      transform: none;
+    }
+  }
+</style>

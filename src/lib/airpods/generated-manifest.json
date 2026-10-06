@@ -1,0 +1,974 @@
+{
+  "version": 2,
+  "generatedAt": "2026-10-06T00:04:49.934Z",
+  "count03": 236,
+  "products": {
+    "airpods-4": {
+      "gallery": [
+        "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_4_and_Pro_2_(2024)/airpods-4-202409-gallery-1.jpg",
+        "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_4_and_Pro_2_(2024)/airpods-4-202409-gallery-2.jpg",
+        "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_4_and_Pro_2_(2024)/airpods-4-202409-gallery-3.jpg",
+        "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_4_and_Pro_2_(2024)/airpods-4-202409-gallery-4.jpg",
+        "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_4_and_Pro_2_(2024)/airpods-4-202409-gallery-5.jpg"
+      ],
+      "colours": {},
+      "hero": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_4_and_Pro_2_(2024)/airpods-4-hero-select-202409.jpg",
+      "earbuds": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_4_and_Pro_2_(2024)/airpods-4-select-202409.jpg"
+    },
+    "pro-2": {
+      "gallery": [
+        "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_4_and_Pro_2_(2024)/airpods-pro-2-202409-gallery-1.jpg",
+        "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_4_and_Pro_2_(2024)/airpods-pro-2-202409-gallery-2.jpg",
+        "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_4_and_Pro_2_(2024)/airpods-pro-2-202409-gallery-3.jpg",
+        "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_4_and_Pro_2_(2024)/airpods-pro-2-202409-gallery-4.jpg",
+        "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_4_and_Pro_2_(2024)/airpods-pro-2-202409-gallery-5.jpg"
+      ],
+      "colours": {},
+      "hero": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_4_and_Pro_2_(2024)/airpods-pro-2-hero-select-202409.jpg"
+    },
+    "airpods-5": {
+      "gallery": [
+        "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_5_(newest_standard)/airpods-5-202609-gallery-1.jpg",
+        "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_5_(newest_standard)/airpods-5-202609-gallery-2.jpg",
+        "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_5_(newest_standard)/airpods-5-202609-gallery-3.jpg",
+        "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_5_(newest_standard)/airpods-5-202609-gallery-4.jpg",
+        "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_5_(newest_standard)/airpods-5-202609-gallery-5.jpg"
+      ],
+      "colours": {},
+      "hero": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_5_(newest_standard)/airpods-5-hero-select-202609.jpg",
+      "earbuds": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_5_(newest_standard)/airpods-5-select-202609_FV1.jpg",
+      "caseWireless": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_5_(newest_standard)/airpods-5-wcc-select-202609_FV1.jpg"
+    },
+    "max": {
+      "gallery": [
+        "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_Max_(USB-C_2024_and_newer)/airpods-max-202409-gallery-1.jpg",
+        "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_Max_(USB-C_2024_and_newer)/airpods-max-202409-gallery-2.jpg",
+        "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_Max_(USB-C_2024_and_newer)/airpods-max-202409-gallery-3.jpg",
+        "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_Max_(USB-C_2024_and_newer)/airpods-max-202409-gallery-4.jpg",
+        "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_Max_(USB-C_2024_and_newer)/airpods-max-202409-gallery-5.jpg"
+      ],
+      "colours": {
+        "blue": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_Max_(USB-C_2024_and_newer)/airpods-max-select-202409-blue_FV1.jpg",
+        "midnight": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_Max_(USB-C_2024_and_newer)/airpods-max-select-202409-midnight_FV1.jpg",
+        "orange": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_Max_(USB-C_2024_and_newer)/airpods-max-select-202409-orange_FV1.jpg",
+        "purple": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_Max_(USB-C_2024_and_newer)/airpods-max-select-202409-purple_FV1.jpg",
+        "starlight": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_Max_(USB-C_2024_and_newer)/airpods-max-select-202409-starlight_FV1.jpg"
+      },
+      "hero": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_Max_(USB-C_2024_and_newer)/airpods-max-hero-select-202409.jpg"
+    },
+    "pro-3": {
+      "gallery": [
+        "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_Pro_3/airpods-pro-3-gallery-1-202509.jpg",
+        "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_Pro_3/airpods-pro-3-gallery-2-202509.jpg",
+        "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_Pro_3/airpods-pro-3-gallery-3-202509.jpg",
+        "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_Pro_3/airpods-pro-3-gallery-4-202509.jpg",
+        "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_Pro_3/airpods-pro-3-gallery-5-202509.jpg"
+      ],
+      "colours": {},
+      "hero": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_Pro_3/airpods-pro-3-hero-select-202509.jpg"
+    }
+  },
+  "swatches": {
+    "blue": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/02_Colour_swatches/store-pdp-dimensioncolor-two-tone-blue.jpg",
+    "midnight": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/02_Colour_swatches/store-pdp-dimensioncolor-two-tone-midnight.jpg",
+    "orange": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/02_Colour_swatches/store-pdp-dimensioncolor-two-tone-orange.jpg"
+  },
+  "cases": {
+    "airpods-lightning-charging-case-magsafe-charging-case-3rd-generation": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/05_Case_and_model_overviews_Apple_support/airpods-lightning-charging-case-magsafe-charging-case-3rd-generation.png",
+    "airpods-lightning-charging-case": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/05_Case_and_model_overviews_Apple_support/airpods-lightning-charging-case.png",
+    "airpods-pro-charging-case-magsafe-charging-case": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/05_Case_and_model_overviews_Apple_support/airpods-pro-charging-case-magsafe-charging-case.png",
+    "airpods-pro-magsafe-charging-case-2nd-generation": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/05_Case_and_model_overviews_Apple_support/airpods-pro-magsafe-charging-case-2nd-generation.png",
+    "airpods-pro-magsafe-charging-case-usb-c": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/05_Case_and_model_overviews_Apple_support/airpods-pro-magsafe-charging-case-usb-c.png",
+    "airpods-wireless-charging-case": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/05_Case_and_model_overviews_Apple_support/airpods-wireless-charging-case.png",
+    "charging-case-for-airpods-4": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/05_Case_and_model_overviews_Apple_support/charging-case-for-airpods-4.png",
+    "charging-case-for-airpods-5": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/05_Case_and_model_overviews_Apple_support/charging-case-for-airpods-5.png",
+    "charging-case-for-airpods-pro-3": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/05_Case_and_model_overviews_Apple_support/charging-case-for-airpods-pro-3.png",
+    "wireless-charging-case-for-airpods-4": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/05_Case_and_model_overviews_Apple_support/wireless-charging-case-for-airpods-4.png",
+    "wireless-charging-case-for-airpods-5": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/05_Case_and_model_overviews_Apple_support/wireless-charging-case-for-airpods-5.png"
+  },
+  "compare": {
+    "airpods-5-down-compare": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/04_Compare_and_feature_images/airpods-5-down-compare-202509.jpg",
+    "airpods-5-up-compare": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/04_Compare_and_feature_images/airpods-5-up-compare-202509.jpg",
+    "airpods-compare-adaptive-audio": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/04_Compare_and_feature_images/airpods-compare-adaptive-audio-202603.jpg",
+    "airpods-compare-anc": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/04_Compare_and_feature_images/airpods-compare-anc-202509.jpg",
+    "airpods-compare-case-airpods": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/04_Compare_and_feature_images/airpods-compare-case-airpods-202409.jpg",
+    "airpods-compare-case-airpodsmax": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/04_Compare_and_feature_images/airpods-compare-case-airpodsmax-202509.jpg",
+    "airpods-compare-case-airpodspro": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/04_Compare_and_feature_images/airpods-compare-case-airpodspro-202409.jpg",
+    "airpods-compare-chip-h2": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/04_Compare_and_feature_images/airpods-compare-chip-h2-202409.jpg",
+    "airpods-compare-hearingaid": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/04_Compare_and_feature_images/airpods-compare-hearingaid-202603.jpg",
+    "airpods-compare-heartrate": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/04_Compare_and_feature_images/airpods-compare-heartrate-202509.jpg",
+    "airpods-compare-livetranslation": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/04_Compare_and_feature_images/airpods-compare-livetranslation-202603.jpg",
+    "airpods-compare-losslessaudio": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/04_Compare_and_feature_images/airpods-compare-losslessaudio-202503.jpg",
+    "airpods-compare-spatialaudio": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/04_Compare_and_feature_images/airpods-compare-spatialaudio-202409.jpg",
+    "airpods-compare-swatch": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/04_Compare_and_feature_images/airpods-compare-swatch-202409.jpg",
+    "airpods-max-compare": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/04_Compare_and_feature_images/airpods-max-compare-202409.jpg",
+    "airpods-max-compare-swatch": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/04_Compare_and_feature_images/airpods-max-compare-swatch-202409.jpg",
+    "airpods-pro-compare": "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/04_Compare_and_feature_images/airpods-pro-compare-202509.jpg"
+  },
+  "pages": {
+    "pro/audio-performance/audio_airpods_pro_guts": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/audio-performance/audio_airpods_pro_guts__gbhfrhkjpjyy_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/audio-performance/audio_airpods_pro_guts__gbhfrhkjpjyy_large_2x.webp"
+    },
+    "pro/audio-performance/audio_airpods_pro_pair": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/audio-performance/audio_airpods_pro_pair__v28g95nj97mq_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/audio-performance/audio_airpods_pro_pair__v28g95nj97mq_large_2x.webp"
+    },
+    "pro/audio-performance/design": {
+      "end": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/audio-performance/design_endframe__gc2e2e5qz7ue_large_2x.png",
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/audio-performance/design_startframe__cy9tz9to92oi_large_2x.png",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/audio-performance/design_startframe__cy9tz9to92oi_large_2x.webp",
+      "endWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/audio-performance/design_endframe__gc2e2e5qz7ue_large_2x.webp"
+    },
+    "pro/audio-performance/design_endframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/audio-performance/design_endframe__gc2e2e5qz7ue_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/audio-performance/design_endframe__gc2e2e5qz7ue_large_2x.webp"
+    },
+    "pro/audio-performance/design_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/audio-performance/design_startframe__cy9tz9to92oi_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/audio-performance/design_startframe__cy9tz9to92oi_large_2x.webp"
+    },
+    "pro/battery/case": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/battery/case__b87ou7jna9de_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/battery/case__b87ou7jna9de_large_2x.webp"
+    },
+    "pro/battery/find_my": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/battery/find_my__cvjw4c07da2q_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/battery/find_my__cvjw4c07da2q_large_2x.webp"
+    },
+    "pro/contrast/explore_airpods_5_wcc_open": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/contrast/explore_airpods_5_wcc_open__gh79h5ud4jau_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/contrast/explore_airpods_5_wcc_open__gh79h5ud4jau_large_2x.webp"
+    },
+    "pro/contrast/explore_airpods_pro_3_open": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/contrast/explore_airpods_pro_3_open__e4dxk8zpalkm_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/contrast/explore_airpods_pro_3_open__e4dxk8zpalkm_large_2x.webp"
+    },
+    "pro/fitness/fitness_hero": {
+      "end": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/fitness/fitness_hero_endframe__cbbu1uukdjyq_large_2x.png",
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/fitness/fitness_hero_startframe__bkez1lr95bde_large_2x.png",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/fitness/fitness_hero_startframe__bkez1lr95bde_large_2x.webp",
+      "endWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/fitness/fitness_hero_endframe__cbbu1uukdjyq_large_2x.webp"
+    },
+    "pro/fitness/fitness_hero_endframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/fitness/fitness_hero_endframe__cbbu1uukdjyq_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/fitness/fitness_hero_endframe__cbbu1uukdjyq_large_2x.webp"
+    },
+    "pro/fitness/fitness_hero_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/fitness/fitness_hero_startframe__bkez1lr95bde_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/fitness/fitness_hero_startframe__bkez1lr95bde_large_2x.webp"
+    },
+    "pro/fitness/fitness_workout_buddy_lifestyle": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/fitness/fitness_workout_buddy_lifestyle__eavcyne0aaoi_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/fitness/fitness_workout_buddy_lifestyle__eavcyne0aaoi_large_2x.webp"
+    },
+    "pro/hearing-health/battery": {
+      "end": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/battery_endframe__dvog65lc87yq_large_2x.jpg",
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/battery_startframe__gd2rd0dmx866_large_2x.jpg",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/battery_startframe__gd2rd0dmx866_large_2x.webp",
+      "endWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/battery_endframe__dvog65lc87yq_large_2x.webp"
+    },
+    "pro/hearing-health/battery_endframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/battery_endframe__dvog65lc87yq_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/battery_endframe__dvog65lc87yq_large_2x.webp"
+    },
+    "pro/hearing-health/battery_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/battery_startframe__gd2rd0dmx866_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/battery_startframe__gd2rd0dmx866_large_2x.webp"
+    },
+    "pro/hearing-health/hearing_health_conversation_boost": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_health_conversation_boost__cn2jd958nnde_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_health_conversation_boost__cn2jd958nnde_large_2x.webp"
+    },
+    "pro/hearing-health/hearing_health": {
+      "end": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_health_endframe__fddd0pwvl3u6_large_2x.png",
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_health_startframe__b55bsu6g3ok2_large_2x.png",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_health_startframe__b55bsu6g3ok2_large_2x.webp",
+      "endWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_health_endframe__fddd0pwvl3u6_large_2x.webp"
+    },
+    "pro/hearing-health/hearing_health_endframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_health_endframe__fddd0pwvl3u6_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_health_endframe__fddd0pwvl3u6_large_2x.webp"
+    },
+    "pro/hearing-health/hearing_health_hearing_protection": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_health_hearing_protection__d4fo4gj3b9ci_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_health_hearing_protection__d4fo4gj3b9ci_large_2x.webp"
+    },
+    "pro/hearing-health/hearing_health_hearing_test": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_health_hearing_test__dk85fxy6khci_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_health_hearing_test__dk85fxy6khci_large_2x.webp"
+    },
+    "pro/hearing-health/hearing_health_lifestyle": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_health_lifestyle__cj3yilvm69ea_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_health_lifestyle__cj3yilvm69ea_large_2x.webp"
+    },
+    "pro/hearing-health/hearing_health_lifestyle_enhanced": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_health_lifestyle_enhanced__fkdyyeq20bau_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_health_lifestyle_enhanced__fkdyyeq20bau_large_2x.webp"
+    },
+    "pro/hearing-health/hearing_health_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_health_startframe__b55bsu6g3ok2_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_health_startframe__b55bsu6g3ok2_large_2x.webp"
+    },
+    "pro/hearing-health/hearing_protection": {
+      "end": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_protection_endframe__brxbh07cpmk2_large_2x.jpg",
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_protection_startframe__g1m7gdh21iye_large_2x.jpg",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_protection_startframe__g1m7gdh21iye_large_2x.webp",
+      "endWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_protection_endframe__brxbh07cpmk2_large_2x.webp"
+    },
+    "pro/hearing-health/hearing_protection_endframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_protection_endframe__brxbh07cpmk2_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_protection_endframe__brxbh07cpmk2_large_2x.webp"
+    },
+    "pro/hearing-health/hearing_protection_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_protection_startframe__g1m7gdh21iye_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/hearing-health/hearing_protection_startframe__g1m7gdh21iye_large_2x.webp"
+    },
+    "pro/highlights/highlights_acoustic": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_acoustic__fiq4ppflft6q_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_acoustic__fiq4ppflft6q_large_2x.webp"
+    },
+    "pro/highlights/highlights_battery": {
+      "end": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_battery_endframe__f5ljqvliqpym_large_2x.jpg",
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_battery_startframe__djmk5ebqjs8y_large_2x.jpg",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_battery_startframe__djmk5ebqjs8y_large_2x.webp",
+      "endWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_battery_endframe__f5ljqvliqpym_large_2x.webp"
+    },
+    "pro/highlights/highlights_battery_endframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_battery_endframe__f5ljqvliqpym_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_battery_endframe__f5ljqvliqpym_large_2x.webp"
+    },
+    "pro/highlights/highlights_battery_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_battery_startframe__djmk5ebqjs8y_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_battery_startframe__djmk5ebqjs8y_large_2x.webp"
+    },
+    "pro/highlights/highlights_hearing_aid": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_hearing_aid__dh5og4rjwcq6_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_hearing_aid__dh5og4rjwcq6_large_2x.webp"
+    },
+    "pro/highlights/highlights_hearing": {
+      "end": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_hearing_endframe__ehzacudia2ie_large_2x.jpg",
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_hearing_startframe__eoiwt7oiirsm_large_2x.jpg",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_hearing_startframe__eoiwt7oiirsm_large_2x.webp",
+      "endWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_hearing_endframe__ehzacudia2ie_large_2x.webp"
+    },
+    "pro/highlights/highlights_hearing_endframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_hearing_endframe__ehzacudia2ie_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_hearing_endframe__ehzacudia2ie_large_2x.webp"
+    },
+    "pro/highlights/highlights_hearing_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_hearing_startframe__eoiwt7oiirsm_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_hearing_startframe__eoiwt7oiirsm_large_2x.webp"
+    },
+    "pro/highlights/highlights_heart_rate": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_heart_rate__emqj469iyfsm_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_heart_rate__emqj469iyfsm_large_2x.webp"
+    },
+    "pro/highlights/highlights_live_translation": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_live_translation__ga7nep85dr6m_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_live_translation__ga7nep85dr6m_large_2x.webp"
+    },
+    "pro/highlights/highlights_noise_cancellation": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_noise_cancellation__cxd50c0etw4m_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_noise_cancellation__cxd50c0etw4m_large_2x.webp"
+    },
+    "pro/highlights/highlights_noise_cancellation_hearing_aid": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_noise_cancellation_hearing_aid__eni46zr12ogi_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/highlights/highlights_noise_cancellation_hearing_aid__eni46zr12ogi_large_2x.webp"
+    },
+    "pro/incentive/apple_card_short": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/incentive/apple_card_short__frvlox42m6ie_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/incentive/apple_card_short__frvlox42m6ie_large_2x.webp"
+    },
+    "pro/incentive/apple_store_app_short": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/incentive/apple_store_app_short__fe85q9auybu6_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/incentive/apple_store_app_short__fe85q9auybu6_large_2x.webp"
+    },
+    "pro/incentive/delivery_pickup_short": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/incentive/delivery_pickup_short__cbpkg4axy99e_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/incentive/delivery_pickup_short__cbpkg4axy99e_large_2x.webp"
+    },
+    "pro/incentive/iphone_specialist_short": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/incentive/iphone_specialist_short__eved87stcp26_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/incentive/iphone_specialist_short__eved87stcp26_large_2x.webp"
+    },
+    "pro/incentive/watch_personalize_short": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/incentive/watch_personalize_short__e504hsifgd2e_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/incentive/watch_personalize_short__e504hsifgd2e_large_2x.webp"
+    },
+    "pro/incentive/why-appleid_qr": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/incentive/why-appleid_qr__dxrcrrjvdtw2_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/incentive/why-appleid_qr__dxrcrrjvdtw2_large_2x.webp"
+    },
+    "pro/magical/connectivity": {
+      "end": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/magical/connectivity_endframe__c1c58umoj7au_large_2x.jpg",
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/magical/connectivity_startframe__bxoyv9avrimu_large_2x.jpg",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/magical/connectivity_startframe__bxoyv9avrimu_large_2x.webp",
+      "endWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/magical/connectivity_endframe__c1c58umoj7au_large_2x.webp"
+    },
+    "pro/magical/connectivity_endframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/magical/connectivity_endframe__c1c58umoj7au_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/magical/connectivity_endframe__c1c58umoj7au_large_2x.webp"
+    },
+    "pro/magical/connectivity_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/magical/connectivity_startframe__bxoyv9avrimu_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/magical/connectivity_startframe__bxoyv9avrimu_large_2x.webp"
+    },
+    "pro/magical/magical_experience_controls": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/magical/magical_experience_controls__bfwb869bitbm_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/magical/magical_experience_controls__bfwb869bitbm_large_2x.webp"
+    },
+    "pro/magical/magical_experience_live_translation": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/magical/magical_experience_live_translation__gjk070yu926a_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/magical/magical_experience_live_translation__gjk070yu926a_large_2x.webp"
+    },
+    "pro/noise-control/gallery/noise_control_adaptive_audio": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/noise-control/gallery/noise_control_adaptive_audio__gcfn46ubu82u_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/noise-control/gallery/noise_control_adaptive_audio__gcfn46ubu82u_large_2x.webp"
+    },
+    "pro/noise-control/gallery/noise_control_conversation_awareness": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/noise-control/gallery/noise_control_conversation_awareness__fl1nx541suye_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/noise-control/gallery/noise_control_conversation_awareness__fl1nx541suye_large_2x.webp"
+    },
+    "pro/noise-control/gallery/noise_control_low_noise_mic": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/noise-control/gallery/noise_control_low_noise_mic__kb6kvtgc5aa2_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/noise-control/gallery/noise_control_low_noise_mic__kb6kvtgc5aa2_large_2x.webp"
+    },
+    "pro/noise-control/gallery/noise_control_voice_isolation": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/noise-control/gallery/noise_control_voice_isolation__c6b9qlmdbx4y_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/noise-control/gallery/noise_control_voice_isolation__c6b9qlmdbx4y_large_2x.webp"
+    },
+    "pro/noise-control/noise_control": {
+      "end": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/noise-control/noise_control_endframe__c9nekquzw4q6_large_2x.png",
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/noise-control/noise_control_startframe__fea2j3ie71ea_large_2x.png",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/noise-control/noise_control_startframe__fea2j3ie71ea_large_2x.webp",
+      "endWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/noise-control/noise_control_endframe__c9nekquzw4q6_large_2x.webp"
+    },
+    "pro/noise-control/noise_control_endframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/noise-control/noise_control_endframe__c9nekquzw4q6_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/noise-control/noise_control_endframe__c9nekquzw4q6_large_2x.webp"
+    },
+    "pro/noise-control/noise_control_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/noise-control/noise_control_startframe__fea2j3ie71ea_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/noise-control/noise_control_startframe__fea2j3ie71ea_large_2x.webp"
+    },
+    "pro/personalized-listening/personalized_listening": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/personalized-listening/personalized_listening__geshsqt82yeu_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/personalized-listening/personalized_listening__geshsqt82yeu_large_2x.webp"
+    },
+    "pro/product-viewer/case": {
+      "end": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/case_endframe__ca40ub2l8sgi_large_2x.jpg",
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/case_startframe__c33qulg9r1aq_large_2x.jpg",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/case_startframe__c33qulg9r1aq_large_2x.webp",
+      "endWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/case_endframe__ca40ub2l8sgi_large_2x.webp"
+    },
+    "pro/product-viewer/case_endframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/case_endframe__ca40ub2l8sgi_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/case_endframe__ca40ub2l8sgi_large_2x.webp"
+    },
+    "pro/product-viewer/case_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/case_startframe__c33qulg9r1aq_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/case_startframe__c33qulg9r1aq_large_2x.webp"
+    },
+    "pro/product-viewer/closer_look_acoustic_a": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/closer_look_acoustic_a__dz4nc2yr9aqa_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/closer_look_acoustic_a__dz4nc2yr9aqa_large_2x.webp"
+    },
+    "pro/product-viewer/closer_look_case": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/closer_look_case__bjx2hp0oo16u_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/closer_look_case__bjx2hp0oo16u_large_2x.webp"
+    },
+    "pro/product-viewer/closer_look_fit_feel": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/closer_look_fit_feel__blsfw2dgyj6q_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/closer_look_fit_feel__blsfw2dgyj6q_large_2x.webp"
+    },
+    "pro/product-viewer/closer_look_heart_rate": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/closer_look_heart_rate__bt709o8p7t5y_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/closer_look_heart_rate__bt709o8p7t5y_large_2x.webp"
+    },
+    "pro/product-viewer/closer_look_initial": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/closer_look_initial__cksqga5hm77m_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/closer_look_initial__cksqga5hm77m_large_2x.webp"
+    },
+    "pro/product-viewer/closer_look_touch_control": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/closer_look_touch_control__dqo4p6ue36gm_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/closer_look_touch_control__dqo4p6ue36gm_large_2x.webp"
+    },
+    "pro/product-viewer/closer_look_water_resistance": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/closer_look_water_resistance__btut3m43on36_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/closer_look_water_resistance__btut3m43on36_large_2x.webp"
+    },
+    "pro/product-viewer/fit_feel": {
+      "end": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/fit_feel_endframe__bqbkjxfouqwi_large_2x.jpg",
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/fit_feel_startframe__bfigdnyb1m82_large_2x.jpg",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/fit_feel_startframe__bfigdnyb1m82_large_2x.webp",
+      "endWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/fit_feel_endframe__bqbkjxfouqwi_large_2x.webp"
+    },
+    "pro/product-viewer/fit_feel_endframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/fit_feel_endframe__bqbkjxfouqwi_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/fit_feel_endframe__bqbkjxfouqwi_large_2x.webp"
+    },
+    "pro/product-viewer/fit_feel_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/fit_feel_startframe__bfigdnyb1m82_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/fit_feel_startframe__bfigdnyb1m82_large_2x.webp"
+    },
+    "pro/product-viewer/heart_rate": {
+      "end": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/heart_rate_endframe__dn7s077qapiu_large_2x.jpg",
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/heart_rate_startframe__b1kg179snv2a_large_2x.jpg",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/heart_rate_startframe__b1kg179snv2a_large_2x.webp",
+      "endWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/heart_rate_endframe__dn7s077qapiu_large_2x.webp"
+    },
+    "pro/product-viewer/heart_rate_endframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/heart_rate_endframe__dn7s077qapiu_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/heart_rate_endframe__dn7s077qapiu_large_2x.webp"
+    },
+    "pro/product-viewer/heart_rate_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/heart_rate_startframe__b1kg179snv2a_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/heart_rate_startframe__b1kg179snv2a_large_2x.webp"
+    },
+    "pro/product-viewer/initial": {
+      "end": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/initial_endframe__erf54wvsplsi_large_2x.jpg",
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/initial_startframe__fq77bi4qvkqe_large_2x.jpg",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/initial_startframe__fq77bi4qvkqe_large_2x.webp",
+      "endWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/initial_endframe__erf54wvsplsi_large_2x.webp"
+    },
+    "pro/product-viewer/initial_endframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/initial_endframe__erf54wvsplsi_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/initial_endframe__erf54wvsplsi_large_2x.webp"
+    },
+    "pro/product-viewer/initial_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/initial_startframe__fq77bi4qvkqe_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/initial_startframe__fq77bi4qvkqe_large_2x.webp"
+    },
+    "pro/product-viewer/touch_controls": {
+      "end": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/touch_controls_endframe__ghnn20vb33mi_large_2x.jpg",
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/touch_controls_startframe__bmz3jtzwh37m_large_2x.jpg",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/touch_controls_startframe__bmz3jtzwh37m_large_2x.webp",
+      "endWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/touch_controls_endframe__ghnn20vb33mi_large_2x.webp"
+    },
+    "pro/product-viewer/touch_controls_endframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/touch_controls_endframe__ghnn20vb33mi_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/touch_controls_endframe__ghnn20vb33mi_large_2x.webp"
+    },
+    "pro/product-viewer/touch_controls_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/touch_controls_startframe__bmz3jtzwh37m_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/product-viewer/touch_controls_startframe__bmz3jtzwh37m_large_2x.webp"
+    },
+    "pro/welcome/hero": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/welcome/hero__b0eal3mn03ua_large_2x.jpg",
+      "end": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/welcome/hero_endframe__vzawkxxoc72u_large_2x.jpg",
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/welcome/hero_startframe__bfinf01b59si_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/welcome/hero__b0eal3mn03ua_large_2x.webp",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/welcome/hero_startframe__bfinf01b59si_large_2x.webp",
+      "endWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/welcome/hero_endframe__vzawkxxoc72u_large_2x.webp"
+    },
+    "pro/welcome/hero_endframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/welcome/hero_endframe__vzawkxxoc72u_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/welcome/hero_endframe__vzawkxxoc72u_large_2x.webp"
+    },
+    "pro/welcome/hero_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/welcome/hero_startframe__bfinf01b59si_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART2of2/overview/welcome/hero_startframe__bfinf01b59si_large_2x.webp"
+    },
+    "airpods5/bento-gallery/bento_angle": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/bento-gallery/bento_angle__c74f9wrga8mu_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/bento-gallery/bento_angle__c74f9wrga8mu_large_2x.webp"
+    },
+    "airpods5/bento-gallery/bento_case_close": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/bento-gallery/bento_case_close__dlwgev4muxkm_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/bento-gallery/bento_case_close__dlwgev4muxkm_large_2x.webp"
+    },
+    "airpods5/bento-gallery/bento_force_sensor": {
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/bento-gallery/bento_force_sensor_startframe__fxd8fk29z7ue_large_2x.jpg",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/bento-gallery/bento_force_sensor_startframe__fxd8fk29z7ue_large_2x.webp"
+    },
+    "airpods5/bento-gallery/bento_force_sensor_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/bento-gallery/bento_force_sensor_startframe__fxd8fk29z7ue_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/bento-gallery/bento_force_sensor_startframe__fxd8fk29z7ue_large_2x.webp"
+    },
+    "airpods5/bento-gallery/bento_ip57": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/bento-gallery/bento_ip57__baf7q9n6ewqq_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/bento-gallery/bento_ip57__baf7q9n6ewqq_large_2x.webp"
+    },
+    "airpods5/bento-gallery/bento_pair": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/bento-gallery/bento_pair__c7i9mu5k2zee_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/bento-gallery/bento_pair__c7i9mu5k2zee_large_2x.webp"
+    },
+    "airpods5/bento-gallery/bento_stem": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/bento-gallery/bento_stem__cjkebywjfs02_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/bento-gallery/bento_stem__cjkebywjfs02_large_2x.webp"
+    },
+    "airpods5/contrast/explore_airpods_5_in": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/contrast/explore_airpods_5_in__gadkl3bf562y_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/contrast/explore_airpods_5_in__gadkl3bf562y_large_2x.webp"
+    },
+    "airpods5/contrast/explore_airpods_5_out": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/contrast/explore_airpods_5_out__elly16h5teie_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/contrast/explore_airpods_5_out__elly16h5teie_large_2x.webp"
+    },
+    "airpods5/icon-card/boc_qr_code": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/icon-card/boc_qr_code__bwsxz7hqcjn6_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/icon-card/boc_qr_code__bwsxz7hqcjn6_large_2x.webp"
+    },
+    "airpods5/media-card/chip": {
+      "end": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/chip_endframe__geqlqww7qwy2_large_2x.jpg",
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/chip_startframe__ect0rfrqkz2a_large_2x.jpg",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/chip_startframe__ect0rfrqkz2a_large_2x.webp",
+      "endWebp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/chip_endframe__geqlqww7qwy2_large_2x.webp"
+    },
+    "airpods5/media-card/chip_endframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/chip_endframe__geqlqww7qwy2_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/chip_endframe__geqlqww7qwy2_large_2x.webp"
+    },
+    "airpods5/media-card/chip_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/chip_startframe__ect0rfrqkz2a_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/chip_startframe__ect0rfrqkz2a_large_2x.webp"
+    },
+    "airpods5/media-card/highlights_battery": {
+      "end": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/highlights_battery_endframe__d4ld30fn104m_large_2x.jpg",
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/highlights_battery_startframe__bvg3lwzfdpiq_large_2x.jpg",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/highlights_battery_startframe__bvg3lwzfdpiq_large_2x.webp",
+      "endWebp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/highlights_battery_endframe__d4ld30fn104m_large_2x.webp"
+    },
+    "airpods5/media-card/highlights_battery_endframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/highlights_battery_endframe__d4ld30fn104m_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/highlights_battery_endframe__d4ld30fn104m_large_2x.webp"
+    },
+    "airpods5/media-card/highlights_battery_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/highlights_battery_startframe__bvg3lwzfdpiq_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/highlights_battery_startframe__bvg3lwzfdpiq_large_2x.webp"
+    },
+    "airpods5/media-card/highlights_siri": {
+      "end": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/highlights_siri_endframe__emhoskg0o9aq_large_2x.jpg",
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/highlights_siri_startframe__cgivg9ifhnau_large_2x.jpg",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/highlights_siri_startframe__cgivg9ifhnau_large_2x.webp",
+      "endWebp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/highlights_siri_endframe__emhoskg0o9aq_large_2x.webp"
+    },
+    "airpods5/media-card/highlights_siri_endframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/highlights_siri_endframe__emhoskg0o9aq_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/highlights_siri_endframe__emhoskg0o9aq_large_2x.webp"
+    },
+    "airpods5/media-card/highlights_siri_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/highlights_siri_startframe__cgivg9ifhnau_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/highlights_siri_startframe__cgivg9ifhnau_large_2x.webp"
+    },
+    "airpods5/media-card/highlights_xray": {
+      "end": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/highlights_xray_endframe__c5vg1gj24r8m_large_2x.jpg",
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/highlights_xray_startframe__ev65skprntsi_large_2x.jpg",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/highlights_xray_startframe__ev65skprntsi_large_2x.webp",
+      "endWebp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/highlights_xray_endframe__c5vg1gj24r8m_large_2x.webp"
+    },
+    "airpods5/media-card/highlights_xray_endframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/highlights_xray_endframe__c5vg1gj24r8m_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/highlights_xray_endframe__c5vg1gj24r8m_large_2x.webp"
+    },
+    "airpods5/media-card/highlights_xray_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/highlights_xray_startframe__ev65skprntsi_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/highlights_xray_startframe__ev65skprntsi_large_2x.webp"
+    },
+    "airpods5/media-card/media_lifestyle": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/media_lifestyle__db6bxidpxyqa_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/media_lifestyle__db6bxidpxyqa_large_2x.webp"
+    },
+    "airpods5/media-card/media_live_translation": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/media_live_translation__c2v83gyd9m82_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/media-card/media_live_translation__c2v83gyd9m82_large_2x.webp"
+    },
+    "airpods5/stories/airpods-connect": {
+      "end": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/airpods-connect_endframe__ffgc3ed2h0mu_large_2x.png",
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/airpods-connect_startframe__eh9mkhx5ecq6_large_2x.png",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/airpods-connect_startframe__eh9mkhx5ecq6_large_2x.webp",
+      "endWebp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/airpods-connect_endframe__ffgc3ed2h0mu_large_2x.webp"
+    },
+    "airpods5/stories/airpods-connect_endframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/airpods-connect_endframe__ffgc3ed2h0mu_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/airpods-connect_endframe__ffgc3ed2h0mu_large_2x.webp"
+    },
+    "airpods5/stories/airpods-connect_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/airpods-connect_startframe__eh9mkhx5ecq6_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/airpods-connect_startframe__eh9mkhx5ecq6_large_2x.webp"
+    },
+    "airpods5/stories/audio_airpod": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/audio_airpod__f0iq3d10796q_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/audio_airpod__f0iq3d10796q_large_2x.webp"
+    },
+    "airpods5/stories/audio_hero": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/audio_hero__b17gbvmjmgya_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/audio_hero__b17gbvmjmgya_large_2x.webp"
+    },
+    "airpods5/stories/audio_music": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/audio_music__cdvjqbp57kmu_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/audio_music__cdvjqbp57kmu_large_2x.webp"
+    },
+    "airpods5/stories/audio_spatial_audio": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/audio_spatial_audio__c9j5r4bjslqq_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/audio_spatial_audio__c9j5r4bjslqq_large_2x.webp"
+    },
+    "airpods5/stories/audio_voice": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/audio_voice__dic4klpejxw2_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/audio_voice__dic4klpejxw2_large_2x.webp"
+    },
+    "airpods5/stories/battery_case": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/battery_case__e74v6o9y3mie_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/battery_case__e74v6o9y3mie_large_2x.webp"
+    },
+    "airpods5/stories/battery_charger": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/battery_charger__c1hrt7to6s66_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/battery_charger__c1hrt7to6s66_large_2x.webp"
+    },
+    "airpods5/stories/battery_usb": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/battery_usb__ebu5cdjoieie_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/battery_usb__ebu5cdjoieie_large_2x.webp"
+    },
+    "airpods5/stories/magic_detection": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/magic_detection__dngjffwh8k02_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/magic_detection__dngjffwh8k02_large_2x.webp"
+    },
+    "airpods5/stories/magic_find_my": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/magic_find_my__eno30hpoku6a_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/magic_find_my__eno30hpoku6a_large_2x.webp"
+    },
+    "airpods5/stories/magic_listen": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/magic_listen__craen9f1vuwm_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/magic_listen__craen9f1vuwm_large_2x.webp"
+    },
+    "airpods5/stories/magic_translate": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/magic_translate__gi1lmnytna62_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/magic_translate__gi1lmnytna62_large_2x.webp"
+    },
+    "airpods5/stories/noise_hero": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/noise_hero__gcc6s9bgl56y_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/stories/noise_hero__gcc6s9bgl56y_large_2x.webp"
+    },
+    "airpods5/welcome/hero": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/welcome/hero__b73eeaa6ps9y_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/welcome/hero__b73eeaa6ps9y_large_2x.webp"
+    },
+    "airpods5/welcome/hero_airpods": {
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/welcome/hero_airpods_startframe__ebnozerz0f6u_large_2x.jpg",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/welcome/hero_airpods_startframe__ebnozerz0f6u_large_2x.webp"
+    },
+    "airpods5/welcome/hero_airpods_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/welcome/hero_airpods_startframe__ebnozerz0f6u_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_5_page/overview/welcome/hero_airpods_startframe__ebnozerz0f6u_large_2x.webp"
+    },
+    "max/bento/blue/bento_1_airpod_max_blue": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/blue/bento_1_airpod_max_blue__blqgkfdancya_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/blue/bento_1_airpod_max_blue__blqgkfdancya_large_2x.webp"
+    },
+    "max/bento/blue/bento_2_airpod_max_blue": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/blue/bento_2_airpod_max_blue__f5acfya6r5e2_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/blue/bento_2_airpod_max_blue__f5acfya6r5e2_large_2x.webp"
+    },
+    "max/bento/blue/bento_3_airpod_max_blue": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/blue/bento_3_airpod_max_blue__z6fv5c2qemqa_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/blue/bento_3_airpod_max_blue__z6fv5c2qemqa_large_2x.webp"
+    },
+    "max/bento/blue/bento_4_airpod_max_blue": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/blue/bento_4_airpod_max_blue__cfidljp9xd7m_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/blue/bento_4_airpod_max_blue__cfidljp9xd7m_large_2x.webp"
+    },
+    "max/bento/blue/bento_5_airpod_max_blue": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/blue/bento_5_airpod_max_blue__galot3dk9nyq_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/blue/bento_5_airpod_max_blue__galot3dk9nyq_large_2x.webp"
+    },
+    "max/bento/blue/bento_6_airpod_max_blue": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/blue/bento_6_airpod_max_blue__el5e6ez9xcsy_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/blue/bento_6_airpod_max_blue__el5e6ez9xcsy_large_2x.webp"
+    },
+    "max/bento/midnight/bento_1_airpod_max_midnight": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/midnight/bento_1_airpod_max_midnight__4jy1tkqh9qay_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/midnight/bento_1_airpod_max_midnight__4jy1tkqh9qay_large_2x.webp"
+    },
+    "max/bento/midnight/bento_2_airpod_max_midnight": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/midnight/bento_2_airpod_max_midnight__c4h88dvygxkm_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/midnight/bento_2_airpod_max_midnight__c4h88dvygxkm_large_2x.webp"
+    },
+    "max/bento/midnight/bento_3_airpod_max_midnight": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/midnight/bento_3_airpod_max_midnight__csvor4qqjyi6_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/midnight/bento_3_airpod_max_midnight__csvor4qqjyi6_large_2x.webp"
+    },
+    "max/bento/midnight/bento_4_airpod_max_midnight": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/midnight/bento_4_airpod_max_midnight__d38igje6phm6_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/midnight/bento_4_airpod_max_midnight__d38igje6phm6_large_2x.webp"
+    },
+    "max/bento/midnight/bento_5_airpod_max_midnight": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/midnight/bento_5_airpod_max_midnight__fhwni7pkavma_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/midnight/bento_5_airpod_max_midnight__fhwni7pkavma_large_2x.webp"
+    },
+    "max/bento/midnight/bento_6_airpod_max_midnight": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/midnight/bento_6_airpod_max_midnight__c4holic2rmeu_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/midnight/bento_6_airpod_max_midnight__c4holic2rmeu_large_2x.webp"
+    },
+    "max/bento/orange/bento_1_airpod_max_orange": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/orange/bento_1_airpod_max_orange__btmsk5kl9q3m_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/orange/bento_1_airpod_max_orange__btmsk5kl9q3m_large_2x.webp"
+    },
+    "max/bento/orange/bento_2_airpod_max_orange": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/orange/bento_2_airpod_max_orange__vu53zik05f2e_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/orange/bento_2_airpod_max_orange__vu53zik05f2e_large_2x.webp"
+    },
+    "max/bento/orange/bento_3_airpod_max_orange": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/orange/bento_3_airpod_max_orange__ckr1n59ibq1y_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/orange/bento_3_airpod_max_orange__ckr1n59ibq1y_large_2x.webp"
+    },
+    "max/bento/orange/bento_4_airpod_max_orange": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/orange/bento_4_airpod_max_orange__fzf8s5fv45ea_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/orange/bento_4_airpod_max_orange__fzf8s5fv45ea_large_2x.webp"
+    },
+    "max/bento/orange/bento_5_airpod_max_orange": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/orange/bento_5_airpod_max_orange__sr8wgkrex7uy_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/orange/bento_5_airpod_max_orange__sr8wgkrex7uy_large_2x.webp"
+    },
+    "max/bento/orange/bento_6_airpod_max_orange": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/orange/bento_6_airpod_max_orange__bkid68e9o9ma_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/orange/bento_6_airpod_max_orange__bkid68e9o9ma_large_2x.webp"
+    },
+    "max/bento/purple/bento_1_airpod_max_purple": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/purple/bento_1_airpod_max_purple__2udwesqoiyq2_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/purple/bento_1_airpod_max_purple__2udwesqoiyq2_large_2x.webp"
+    },
+    "max/bento/purple/bento_2_airpod_max_purple": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/purple/bento_2_airpod_max_purple__gj7lois7cq6a_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/purple/bento_2_airpod_max_purple__gj7lois7cq6a_large_2x.webp"
+    },
+    "max/bento/purple/bento_3_airpod_max_purple": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/purple/bento_3_airpod_max_purple__c3njc7k6equu_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/purple/bento_3_airpod_max_purple__c3njc7k6equu_large_2x.webp"
+    },
+    "max/bento/purple/bento_4_airpod_max_purple": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/purple/bento_4_airpod_max_purple__d6l96cp8wbau_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/purple/bento_4_airpod_max_purple__d6l96cp8wbau_large_2x.webp"
+    },
+    "max/bento/purple/bento_5_airpod_max_purple": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/purple/bento_5_airpod_max_purple__fzyi8qccv7e6_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/purple/bento_5_airpod_max_purple__fzyi8qccv7e6_large_2x.webp"
+    },
+    "max/bento/purple/bento_6_airpod_max_purple": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/purple/bento_6_airpod_max_purple__c5c9vn7aircm_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/purple/bento_6_airpod_max_purple__c5c9vn7aircm_large_2x.webp"
+    },
+    "max/bento/starlight/bento_1_airpod_max_starlight": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/starlight/bento_1_airpod_max_starlight__f7v0k5blkzqm_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/starlight/bento_1_airpod_max_starlight__f7v0k5blkzqm_large_2x.webp"
+    },
+    "max/bento/starlight/bento_2_airpod_max_starlight": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/starlight/bento_2_airpod_max_starlight__dw9z9ovnwt26_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/starlight/bento_2_airpod_max_starlight__dw9z9ovnwt26_large_2x.webp"
+    },
+    "max/bento/starlight/bento_3_airpod_max_starlight": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/starlight/bento_3_airpod_max_starlight__f1r3r9yyebu6_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/starlight/bento_3_airpod_max_starlight__f1r3r9yyebu6_large_2x.webp"
+    },
+    "max/bento/starlight/bento_4_airpod_max_starlight": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/starlight/bento_4_airpod_max_starlight__ebnv443uzms2_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/starlight/bento_4_airpod_max_starlight__ebnv443uzms2_large_2x.webp"
+    },
+    "max/bento/starlight/bento_5_airpod_max_starlight": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/starlight/bento_5_airpod_max_starlight__ehkae276i342_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/starlight/bento_5_airpod_max_starlight__ehkae276i342_large_2x.webp"
+    },
+    "max/bento/starlight/bento_6_airpod_max_starlight": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/starlight/bento_6_airpod_max_starlight__f6g7v5nftii6_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/bento/starlight/bento_6_airpod_max_starlight__f6g7v5nftii6_large_2x.webp"
+    },
+    "max/contrast/airpods_max_midnight": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/contrast/airpods_max_midnight__ddy8oa1y3y4i_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/contrast/airpods_max_midnight__ddy8oa1y3y4i_large_2x.webp"
+    },
+    "max/contrast/explore_airpods_pro_3_open": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/contrast/explore_airpods_pro_3_open__chtz88q4uymq_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/contrast/explore_airpods_pro_3_open__chtz88q4uymq_large_2x.webp"
+    },
+    "max/icon-card/boc_qr_code": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/icon-card/boc_qr_code__jz08j4cu9j6m_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/icon-card/boc_qr_code__jz08j4cu9j6m_large_2x.webp"
+    },
+    "max/media-card/anc": {
+      "end": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/media-card/anc_endframe__c4dezlznnsmu_large_2x.jpg",
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/media-card/anc_startframe__gc8z375m3gmm_large_2x.jpg",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/media-card/anc_startframe__gc8z375m3gmm_large_2x.webp",
+      "endWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/media-card/anc_endframe__c4dezlznnsmu_large_2x.webp"
+    },
+    "max/media-card/anc_endframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/media-card/anc_endframe__c4dezlznnsmu_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/media-card/anc_endframe__c4dezlznnsmu_large_2x.webp"
+    },
+    "max/media-card/anc_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/media-card/anc_startframe__gc8z375m3gmm_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/media-card/anc_startframe__gc8z375m3gmm_large_2x.webp"
+    },
+    "max/media-card/colors_static": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/media-card/colors_static__vc9xxywyt4ya_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/media-card/colors_static__vc9xxywyt4ya_large_2x.webp"
+    },
+    "max/media-card/design_static": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/media-card/design_static__dph7m26odtg2_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/media-card/design_static__dph7m26odtg2_large_2x.webp"
+    },
+    "max/media-card/hifi_static": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/media-card/hifi_static__fbsq0dr3be2q_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/media-card/hifi_static__fbsq0dr3be2q_large_2x.webp"
+    },
+    "max/media-card/highlights_siri": {
+      "end": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/media-card/highlights_siri_endframe__dorlihk36zma_large_2x.jpg",
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/media-card/highlights_siri_startframe__eivuadru5zgy_large_2x.jpg",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/media-card/highlights_siri_startframe__eivuadru5zgy_large_2x.webp",
+      "endWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/media-card/highlights_siri_endframe__dorlihk36zma_large_2x.webp"
+    },
+    "max/media-card/highlights_siri_endframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/media-card/highlights_siri_endframe__dorlihk36zma_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/media-card/highlights_siri_endframe__dorlihk36zma_large_2x.webp"
+    },
+    "max/media-card/highlights_siri_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/media-card/highlights_siri_startframe__eivuadru5zgy_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/media-card/highlights_siri_startframe__eivuadru5zgy_large_2x.webp"
+    },
+    "max/media-card/intelligent_features_static": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/media-card/intelligent_features_static__d8bllbro7xyu_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/media-card/intelligent_features_static__d8bllbro7xyu_large_2x.webp"
+    },
+    "max/product-stories/anc/anc_airpod_max_close_up": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/product-stories/anc/anc_airpod_max_close_up__gavc4fgecei6_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/product-stories/anc/anc_airpod_max_close_up__gavc4fgecei6_large_2x.webp"
+    },
+    "max/product-stories/anc/anc_airpod_max_lifestyle": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/product-stories/anc/anc_airpod_max_lifestyle__duzobvqwpz42_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/product-stories/anc/anc_airpod_max_lifestyle__duzobvqwpz42_large_2x.webp"
+    },
+    "max/product-stories/battery-magical/battery_case": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/product-stories/battery-magical/battery_case__ceo7cvqcdmvm_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/product-stories/battery-magical/battery_case__ceo7cvqcdmvm_large_2x.webp"
+    },
+    "max/product-stories/battery-magical/battery_detection": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/product-stories/battery-magical/battery_detection__dkh147ag158i_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/product-stories/battery-magical/battery_detection__dkh147ag158i_large_2x.webp"
+    },
+    "max/product-stories/battery-magical/battery_listen": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/product-stories/battery-magical/battery_listen__dn1y8rezfhme_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/product-stories/battery-magical/battery_listen__dn1y8rezfhme_large_2x.webp"
+    },
+    "max/product-stories/battery-magical/battery_long_lasting": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/product-stories/battery-magical/battery_long_lasting__caqezpw4kc6a_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/product-stories/battery-magical/battery_long_lasting__caqezpw4kc6a_large_2x.webp"
+    },
+    "max/product-stories/battery-magical/battery_usbc": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/product-stories/battery-magical/battery_usbc__cerb8838rzqq_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/product-stories/battery-magical/battery_usbc__cerb8838rzqq_large_2x.webp"
+    },
+    "max/product-stories/hifi-sound/audio_airpod_max": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/product-stories/hifi-sound/audio_airpod_max__filcqiddcmye_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/product-stories/hifi-sound/audio_airpod_max__filcqiddcmye_large_2x.webp"
+    },
+    "max/product-stories/hifi-sound/modal/audio_bc_distortionless_playback": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/product-stories/hifi-sound/modal/audio_bc_distortionless_playback__bupsn9el6tde_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/product-stories/hifi-sound/modal/audio_bc_distortionless_playback__bupsn9el6tde_large_2x.webp"
+    },
+    "max/product-stories/hifi-sound/modal/audio_bc_driver": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/product-stories/hifi-sound/modal/audio_bc_driver__fsdo6q8fwk2u_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/product-stories/hifi-sound/modal/audio_bc_driver__fsdo6q8fwk2u_large_2x.webp"
+    },
+    "max/product-stories/hifi-sound/modal/audio_bc_microphone": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/product-stories/hifi-sound/modal/audio_bc_microphone__c4kgd4pga3cm_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/product-stories/hifi-sound/modal/audio_bc_microphone__c4kgd4pga3cm_large_2x.webp"
+    },
+    "max/welcome/max-loop": {
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/welcome/max-loop_startframe__c0vn1ukmh7ma_large_2x.jpg",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/welcome/max-loop_startframe__c0vn1ukmh7ma_large_2x.webp"
+    },
+    "max/welcome/max-loop_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/welcome/max-loop_startframe__c0vn1ukmh7ma_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/welcome/max-loop_startframe__c0vn1ukmh7ma_large_2x.webp"
+    },
+    "landing/airpods_max_2_logo": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/airpods_max_2_logo__w3jt2qe6682e_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/airpods_max_2_logo__w3jt2qe6682e_large_2x.webp"
+    },
+    "landing/airpods_max_black": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/airpods_max_black__x3byrd2venmu_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/airpods_max_black__x3byrd2venmu_large_2x.webp"
+    },
+    "landing/airpods_max_blue": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/airpods_max_blue__fsfaleh1smuu_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/airpods_max_blue__fsfaleh1smuu_large_2x.webp"
+    },
+    "landing/airpods_max_orange": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/airpods_max_orange__gln3ifz5o9ei_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/airpods_max_orange__gln3ifz5o9ei_large_2x.webp"
+    },
+    "landing/airpods_max_purple": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/airpods_max_purple__d9y3g3n7cnyq_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/airpods_max_purple__d9y3g3n7cnyq_large_2x.webp"
+    },
+    "landing/airpods_max_stardust": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/airpods_max_stardust__l9lr6719rmaa_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/airpods_max_stardust__l9lr6719rmaa_large_2x.webp"
+    },
+    "landing/airpods_max_tunnel": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/airpods_max_tunnel__emtt9kn0vq82_small_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/airpods_max_tunnel__emtt9kn0vq82_small_2x.webp"
+    },
+    "landing/airpods": {
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/airpods_startframe__fesgym4ta7u6_large.jpg",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/airpods_startframe__fesgym4ta7u6_large.webp"
+    },
+    "landing/airpods_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/airpods_startframe__fesgym4ta7u6_large.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/airpods_startframe__fesgym4ta7u6_large.webp"
+    },
+    "landing/consider/card_hearing_health": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/consider/card_hearing_health__ss2uxyv3j5m6_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/consider/card_hearing_health__ss2uxyv3j5m6_large_2x.webp"
+    },
+    "landing/consider/card_heart_rate_sensing": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/consider/card_heart_rate_sensing__exas9s71qo4m_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/consider/card_heart_rate_sensing__exas9s71qo4m_large_2x.webp"
+    },
+    "landing/consider/card_live_translation": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/consider/card_live_translation__ep68h9wscbee_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/consider/card_live_translation__ep68h9wscbee_large_2x.webp"
+    },
+    "landing/consider/card_noise_cancellation": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/consider/card_noise_cancellation__bcl69t06noci_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/consider/card_noise_cancellation__bcl69t06noci_large_2x.webp"
+    },
+    "landing/consider/card_personalized_spatial_audio": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/consider/card_personalized_spatial_audio__d9ghs2utja82_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/consider/card_personalized_spatial_audio__d9ghs2utja82_large_2x.webp"
+    },
+    "landing/hero": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/hero__gb4d3fd8jnu6_large_2x.jpg",
+      "end": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/hero_endframe__calpooy4ucr6_large_2x.jpg",
+      "start": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/hero_startframe__f6btrn4bhpyu_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/hero__gb4d3fd8jnu6_large_2x.webp",
+      "startWebp": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/hero_startframe__f6btrn4bhpyu_large_2x.webp",
+      "endWebp": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/hero_endframe__calpooy4ucr6_large_2x.webp"
+    },
+    "landing/hero_endframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/hero_endframe__calpooy4ucr6_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/hero_endframe__calpooy4ucr6_large_2x.webp"
+    },
+    "landing/hero_startframe": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/hero_startframe__f6btrn4bhpyu_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/hero_startframe__f6btrn4bhpyu_large_2x.webp"
+    },
+    "landing/music/music_album_hero": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/music/music_album_hero__gme6dccldf6u_large_2x.jpg",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/music/music_album_hero__gme6dccldf6u_large_2x.webp"
+    },
+    "landing/music/music_album_stack": {
+      "src": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/music/music_album_stack__bi4gk5n0vwb6_large_2x.png",
+      "webp": "/Airpods3/03_AirPods_animation_images_AirPods_landing_page/overview/music/music_album_stack__bi4gk5n0vwb6_large_2x.webp"
+    }
+  },
+  "icons": {
+    "pro/icon_active_noise_cancellation": "/Airpods3/03_AirPods_animation_images_AirPods_Pro_page_PART1of2/overview/contrast/icon_active_noise_cancellation__cu3ni5umcw6e_large_2x.png",
+    "max/icon_active_noise_cancellation": "/Airpods3/03_AirPods_animation_images_AirPods_Max_page/overview/contrast/icon_active_noise_cancellation__c9x4lhxarnma_large_2x.png"
+  },
+  "marketing": {
+    "pro": "/Gadget_Hub_Images/06_Watch_and_AirPods/airpods-pro.jpg",
+    "airpods4": "/Gadget_Hub_Images/06_Watch_and_AirPods/airpods-4.png",
+    "max": "/Gadget_Hub_Images/06_Watch_and_AirPods/airpods-max_colourful.png",
+    "family": "/Gadget_Hub_Images/06_Watch_and_AirPods/airpods_family.jpg"
+  }
+}

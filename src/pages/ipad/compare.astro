@@ -1,0 +1,235 @@
+---
+/**
+ * iPad compare page — photos, grouped specs, differences toggle, honest summary.
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import {
+  ipadModels,
+  ipadConfig,
+  getIpadImage,
+  defaultIpadColour,
+  formatKes,
+} from "../../lib/ipad";
+
+const raw = Astro.url.searchParams.get("ids") || "";
+const ids = raw
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean)
+  .slice(0, 3);
+
+let models = ids
+  .map((id) => ipadModels.find((m) => m.id === id))
+  .filter((m): m is (typeof ipadModels)[number] => Boolean(m));
+
+if (models.length < 2) {
+  models = [
+    ipadModels.find((m) => m.id === "ipad-air-11-m2")!,
+    ipadModels.find((m) => m.id === "ipad-pro-11-m4")!,
+  ].filter(Boolean);
+}
+
+const cards = models.map((m) => {
+  const c = defaultIpadColour(m);
+  const img = getIpadImage(m.id, c, "product", m.name);
+  return {
+    id: m.id,
+    name: m.name,
+    href: `/ipad/${m.id}`,
+    priceLabel: formatKes(m.basePriceKes),
+    imageSrc: img.src,
+    imageAlt: img.alt,
+    chip: m.chip,
+    display: `${m.display.diagonal}″ ${m.display.panel}`,
+    pencil: m.pencils.join(", "),
+    keyboard: m.keyboards.join(", "),
+    camera: m.frontCamera,
+    battery: `${m.batteryHours} h`,
+    size: `${m.screenInches}″`,
+    weight: `${m.weightG} g`,
+    ai: m.appleIntelligence ? "Yes" : "No",
+    price: m.basePriceKes,
+  };
+});
+
+const rows = [
+  { group: "Chip", label: "Chip", values: cards.map((c) => c.chip) },
+  { group: "Display", label: "Display", values: cards.map((c) => c.display) },
+  { group: "Apple Pencil", label: "Pencil", values: cards.map((c) => c.pencil) },
+  { group: "Keyboard", label: "Keyboard", values: cards.map((c) => c.keyboard) },
+  { group: "Camera", label: "Front camera", values: cards.map((c) => c.camera) },
+  { group: "Battery", label: "Battery", values: cards.map((c) => c.battery) },
+  { group: "Size and weight", label: "Size", values: cards.map((c) => c.size) },
+  { group: "Size and weight", label: "Weight", values: cards.map((c) => c.weight) },
+  { group: "Software", label: "Apple Intelligence", values: cards.map((c) => c.ai) },
+  { group: "Price", label: "From (sample)", values: cards.map((c) => c.priceLabel) },
+];
+
+const chips = new Set(cards.map((c) => c.chip));
+const pencils = new Set(cards.map((c) => c.pencil));
+const ais = new Set(cards.map((c) => c.ai));
+const honestParts = [
+  chips.size > 1 ? `Chip differs: ${[...chips].join(" vs ")}.` : "",
+  pencils.size > 1 ? "Apple Pencil support is not the same — check before you buy." : "",
+  ais.size > 1 ? "Apple Intelligence support differs." : "",
+].filter(Boolean);
+const honest =
+  honestParts.slice(0, 3).join(" ") ||
+  "These iPads are close — compare Pencil and keyboard fit carefully.";
+
+const pickList = ipadModels.filter((m) => m.year >= 2022 || m.isNew);
+---
+
+<BaseLayout title="Compare iPads - GadgetHub" description="Side-by-side iPad comparison.">
+  <section class="container ipad-cmp" data-ipad-cmp>
+    <nav class="ipad-cmp__crumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> / <a href="/ipad">iPad</a> / Compare
+    </nav>
+    <h1>Compare iPads</h1>
+    <p class="ipad-cmp__intro">{ipadConfig.samplePriceDisclaimer}</p>
+
+    <form class="ipad-cmp__pick" method="get" action="/ipad/compare">
+      <p>Choose up to 3 models</p>
+      <div class="ipad-cmp__selects">
+        {[0, 1, 2].map((i) => (
+          <label>
+            <span class="sr-only">Model {i + 1}</span>
+            <select name={`id${i}`}>
+              <option value="">—</option>
+              {pickList.map((m) => (
+                <option value={m.id} selected={models[i]?.id === m.id}>
+                  {m.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        ))}
+      </div>
+      <button type="submit" class="btn btn--primary btn--sm">Update compare</button>
+    </form>
+
+    <p class="ipad-cmp__honest"><strong>The honest difference.</strong> {honest}</p>
+    <label class="ipad-cmp__toggle">
+      <input type="checkbox" data-ipad-cmp-diff checked />
+      Show only differences
+    </label>
+
+    <div class="ipad-cmp__scroll">
+      <table data-ipad-cmp-table>
+        <thead>
+          <tr>
+            <th></th>
+            {
+              cards.map((c) => (
+                <th>
+                  <a href={c.href}>
+                    <img src={c.imageSrc} alt={c.imageAlt} width="160" height="160" loading="lazy" />
+                    <span>{c.name}</span>
+                  </a>
+                  <small>From {c.priceLabel}</small>
+                </th>
+              ))
+            }
+          </tr>
+        </thead>
+        <tbody>
+          {
+            (() => {
+              let last = "";
+              return rows.flatMap((r) => {
+                const diff = new Set(r.values).size > 1;
+                const out = [];
+                if (r.group !== last) {
+                  out.push(
+                    <tr class="ipad-cmp__group">
+                      <th colspan={cards.length + 1}>{r.group}</th>
+                    </tr>,
+                  );
+                  last = r.group;
+                }
+                out.push(
+                  <tr data-diff={diff ? "1" : "0"}>
+                    <th>{r.label}</th>
+                    {r.values.map((v) => (
+                      <td>{v}</td>
+                    ))}
+                  </tr>,
+                );
+                return out;
+              });
+            })()
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="ipad-cmp__back"><a href="/ipad/shop">Back to shop</a></p>
+  </section>
+</BaseLayout>
+
+<script>
+  const form = document.querySelector(".ipad-cmp__pick");
+  form?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const selects = [...form.querySelectorAll("select")];
+    const ids = selects
+      .map((s) => (s instanceof HTMLSelectElement ? s.value : ""))
+      .filter(Boolean)
+      .slice(0, 3);
+    const uniq = [...new Set(ids)];
+    location.href = uniq.length ? `/ipad/compare?ids=${encodeURIComponent(uniq.join(","))}` : "/ipad/compare";
+  });
+
+  const toggle = document.querySelector("[data-ipad-cmp-diff]");
+  const table = document.querySelector("[data-ipad-cmp-table]");
+  function applyDiff() {
+    const only = toggle instanceof HTMLInputElement ? toggle.checked : true;
+    table?.querySelectorAll("tbody tr[data-diff]").forEach((tr) => {
+      if (!(tr instanceof HTMLElement)) return;
+      tr.hidden = only && tr.getAttribute("data-diff") === "0";
+    });
+    table?.querySelectorAll("tbody tr.ipad-cmp__group").forEach((g) => {
+      if (!(g instanceof HTMLElement)) return;
+      let next = g.nextElementSibling;
+      let any = false;
+      while (next && !next.classList.contains("ipad-cmp__group")) {
+        if (next instanceof HTMLElement && !next.hidden) any = true;
+        next = next.nextElementSibling;
+      }
+      g.hidden = only && !any;
+    });
+  }
+  toggle?.addEventListener("change", applyDiff);
+  applyDiff();
+</script>
+
+<style>
+  .ipad-cmp { padding-block: var(--space-10) var(--ipad-section-gap); }
+  .ipad-cmp__crumb { font-size: var(--text-sm); color: var(--color-fg-muted); margin-bottom: 0.75rem; }
+  .ipad-cmp h1 { margin: 0 0 0.5rem; font-size: var(--ipad-headline); letter-spacing: -0.03em; }
+  .ipad-cmp__intro { color: var(--color-fg-muted); max-width: 40rem; }
+  .ipad-cmp__pick { margin: 1.25rem 0; padding: 1rem; border: 1px solid var(--color-border); border-radius: var(--ipad-radius); }
+  .ipad-cmp__pick p { margin: 0 0 0.65rem; font-weight: 600; }
+  .ipad-cmp__selects { display: grid; gap: 0.5rem; margin-bottom: 0.75rem; }
+  @media (min-width: 48rem) { .ipad-cmp__selects { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .ipad-cmp__selects select {
+    width: 100%; font: inherit; padding: 0.55rem 0.65rem; border-radius: 0.65rem;
+    border: 1px solid var(--color-border); background: var(--color-bg);
+  }
+  .ipad-cmp__honest { margin: 1rem 0; font-size: var(--text-sm); line-height: 1.5; color: var(--color-fg-muted); }
+  .ipad-cmp__honest strong { color: var(--color-fg); }
+  .ipad-cmp__toggle { display: inline-flex; align-items: center; gap: 0.4rem; font-size: var(--text-sm); margin-bottom: 0.85rem; }
+  .ipad-cmp__scroll { overflow-x: auto; }
+  .ipad-cmp table { width: 100%; min-width: 36rem; border-collapse: collapse; font-size: var(--text-sm); }
+  .ipad-cmp th, .ipad-cmp td { border-bottom: 1px solid var(--color-border); padding: 0.6rem; text-align: left; vertical-align: top; }
+  .ipad-cmp thead th a { display: grid; gap: 0.35rem; text-decoration: none; color: inherit; }
+  .ipad-cmp thead img {
+    width: 7rem; height: 7rem; object-fit: contain; background: #f5f5f7;
+    border-radius: 0.85rem; mix-blend-mode: multiply;
+  }
+  .ipad-cmp thead small { display: block; color: var(--color-fg-muted); font-weight: 400; }
+  .ipad-cmp__group th {
+    background: var(--color-bg-subtle); font-size: 0.7rem; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--color-fg-muted);
+  }
+  .ipad-cmp__back { margin-top: 1.25rem; font-size: var(--text-sm); }
+</style>

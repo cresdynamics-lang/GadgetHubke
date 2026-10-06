@@ -1,0 +1,567 @@
+---
+import {
+  getAccessoryImage,
+  accessoriesConfig,
+  trackpads,
+} from "../../lib/accessories";
+
+const white = getAccessoryImage("trackpad-usbc-white", "hero");
+const black = getAccessoryImage("trackpad-usbc-black", "hero");
+const forceImg = getAccessoryImage("trackpad-usbc-white", "gesture:force-click");
+const mouseHero = getAccessoryImage("mouse-usbc-black", "hero");
+
+const gestureMeta = [
+  {
+    id: "secondary-click",
+    label: "Secondary click",
+    cat: "point",
+    how: "Click with two fingers, or click in the bottom-right corner.",
+    blurb: "Opens contextual menus.",
+    ipad: true,
+  },
+  {
+    id: "force-click",
+    label: "Force click",
+    cat: "point",
+    how: "Click, then press a little deeper until you feel a deeper click.",
+    blurb: "Pressure-sensitive click with haptic feedback on Mac.",
+    ipad: false,
+  },
+  {
+    id: "look-up",
+    label: "Look up",
+    cat: "point",
+    how: "Force click a word to look it up or preview a link.",
+    blurb: "Quick definitions and previews.",
+    ipad: false,
+  },
+  {
+    id: "two-finger",
+    label: "Two-finger scroll",
+    cat: "scroll",
+    how: "Slide two fingers up or down to scroll.",
+    blurb: "Natural scrolling on the glass surface.",
+    ipad: true,
+  },
+  {
+    id: "pinch-to-zoom",
+    label: "Pinch to zoom",
+    cat: "scroll",
+    how: "Pinch with two fingers to zoom in or out.",
+    blurb: "Maps, photos and documents.",
+    ipad: true,
+  },
+  {
+    id: "smart-zoom",
+    label: "Smart zoom",
+    cat: "scroll",
+    how: "Double-tap with two fingers to zoom a column or object.",
+    blurb: "Fast zoom without pinching.",
+    ipad: true,
+  },
+  {
+    id: "swipe-between-pages",
+    label: "Swipe between pages",
+    cat: "swipe",
+    how: "Swipe left or right with two fingers.",
+    blurb: "Move through browser history and documents.",
+    ipad: true,
+  },
+  {
+    id: "swipe-full-screen-apps",
+    label: "Swipe full-screen apps",
+    cat: "swipe",
+    how: "Swipe left or right with three or four fingers.",
+    blurb: "Switch between full-screen apps and spaces.",
+    ipad: false,
+  },
+  {
+    id: "mission-control",
+    label: "Mission Control",
+    cat: "mac",
+    how: "Swipe up with three or four fingers.",
+    blurb: "See every open window on Mac.",
+    ipad: false,
+  },
+  {
+    id: "app-expose",
+    label: "App Exposé",
+    cat: "mac",
+    how: "Swipe down with three or four fingers.",
+    blurb: "Show all windows for the front app.",
+    ipad: false,
+  },
+  {
+    id: "launchpad",
+    label: "Launchpad",
+    cat: "mac",
+    how: "Pinch with thumb and three fingers.",
+    blurb: "Open the app launcher.",
+    ipad: false,
+  },
+  {
+    id: "show-desktop",
+    label: "Show desktop",
+    cat: "mac",
+    how: "Spread with thumb and three fingers.",
+    blurb: "Clear windows to see the desktop.",
+    ipad: false,
+  },
+  {
+    id: "open-notification-center",
+    label: "Notification Center",
+    cat: "mac",
+    how: "Swipe left from the right edge with two fingers.",
+    blurb: "Open Notification Center.",
+    ipad: false,
+  },
+  {
+    id: "three-finger-drag",
+    label: "Three-finger drag",
+    cat: "drag",
+    how: "Drag items with three fingers (enable in System Settings).",
+    blurb: "Move windows and selections without clicking.",
+    ipad: false,
+  },
+] as const;
+
+const tabs = [
+  { id: "all", label: "All" },
+  { id: "point", label: "Point and click" },
+  { id: "scroll", label: "Scroll and zoom" },
+  { id: "swipe", label: "Swipe" },
+  { id: "mac", label: "Mac controls" },
+  { id: "drag", label: "Drag" },
+] as const;
+
+const firstG = gestureMeta[0];
+const firstGImg = getAccessoryImage("trackpad-usbc-white", `gesture:${firstG.id}`);
+const sizes = trackpads().filter((t) => t.connector === "usb-c");
+---
+
+<div class="xfeel-tpad" data-trackpad-feel>
+  <section class="xfeel-tpad__hero">
+    <div class="container">
+      <h2>A glass surface.</h2>
+      <p>Toggle white or black — same Force Touch gestures on Mac.</p>
+      <div class="xfeel-tpad__toggle" role="group" aria-label="Trackpad colour">
+        <button type="button" class="is-active" data-tpad-colour="white">White</button>
+        <button type="button" data-tpad-colour="black">Black</button>
+      </div>
+    </div>
+    <div class="xfeel-tpad__stage">
+      <img data-tpad-hero src={white.src} alt={white.alt} width="1400" height="1050" fetchpriority="high" />
+    </div>
+  </section>
+
+  <section class="xfeel-tpad__gestures" data-gesture-explorer>
+    <div class="container">
+      <h2>Every gesture, at your fingertips.</h2>
+      <div class="xfeel-tpad__tabs" role="tablist" aria-label="Gesture categories">
+        {tabs.map((t, i) => (
+          <button type="button" role="tab" data-gesture-tab={t.id} class:list={{ "is-active": i === 0 }} aria-selected={i === 0}>
+            {t.label}
+          </button>
+        ))}
+      </div>
+      <div class="xfeel-tpad__explorer">
+        <div class="xfeel-tpad__grid" role="listbox" aria-label="Magic Trackpad gestures">
+          {
+            gestureMeta.map((g, i) => {
+              const img = getAccessoryImage("trackpad-usbc-white", `gesture:${g.id}`);
+              return (
+                <button
+                  type="button"
+                  class:list={{ "xfeel-tpad__tile": true, "is-active": i === 0 }}
+                  role="option"
+                  aria-selected={i === 0 ? "true" : "false"}
+                  data-gesture-cat={g.cat}
+                  data-gesture-id={g.id}
+                  data-src={img.src}
+                  data-label={g.label}
+                  data-how={g.how}
+                  data-blurb={g.blurb}
+                  data-ipad={g.ipad ? "1" : "0"}
+                >
+                  <img src={img.src} alt={`${g.label} gesture`} width="400" height="400" loading="lazy" />
+                  <span>{g.label}</span>
+                </button>
+              );
+            })
+          }
+        </div>
+        <div class="xfeel-tpad__detail" aria-live="polite">
+          <img data-tpad-g-img src={firstGImg.src} alt={`${firstG.label} gesture`} width="640" height="480" loading="lazy" />
+          <h3 data-tpad-g-title>{firstG.label}</h3>
+          <p data-tpad-g-blurb>{firstG.blurb}</p>
+          <p class="xfeel-tpad__how"><strong>How:</strong> <span data-tpad-g-how>{firstG.how}</span></p>
+          <p class="xfeel-tpad__badges">
+            <span class="badge">Works on Mac</span>
+            <span class="badge badge--muted" data-tpad-g-ipad>{firstG.ipad ? "Limited on iPad" : "Mac only — check"}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="xfeel-tpad__force">
+    <div class="container xfeel-tpad__force-grid">
+      <div>
+        <h2>Force Touch</h2>
+        <p>Press deeper for a click — illustration only, no haptics in the browser.</p>
+        <button type="button" class="xfeel-tpad__press" data-force-demo aria-pressed="false">
+          <span class="xfeel-tpad__press-ring" aria-hidden="true"></span>
+          <span data-force-label>Press</span>
+        </button>
+      </div>
+      <img src={forceImg.src} alt="Force click gesture" width="640" height="480" loading="lazy" />
+    </div>
+  </section>
+
+  <section class="xfeel-tpad__size">
+    <div class="container">
+      <h2>Large surface</h2>
+      <p>USB-C models share the same footprint — black may cost more (owner to confirm).</p>
+      <div class="xfeel-tpad__size-strip">
+        {sizes.map((t) => {
+          const img = getAccessoryImage(t.id, "hero");
+          return (
+            <figure>
+              <img src={img.src} alt={t.name} width="280" height="210" loading="lazy" />
+              <figcaption>{t.defaultColour}</figcaption>
+            </figure>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <section class="xfeel-tpad__vs">
+    <div class="container">
+      <h2>Mouse or Trackpad?</h2>
+      <div class="xfeel-tpad__vs-card">
+        <img src={mouseHero.src} alt="Magic Mouse" width="200" height="150" loading="lazy" />
+        <img src={white.src} alt="Magic Trackpad" width="200" height="150" loading="lazy" />
+        <p>
+          The Mouse is compact with swipe on top; the Trackpad gives Force Touch and the fullest gesture set on Mac.
+          iPad support is limited for both — check Apple's list.
+        </p>
+        <a class="btn btn--secondary" href="/accessories/compare?group=pointer">Compare Mouse and Trackpad</a>
+      </div>
+      <p class="xfeel-tpad__charge">{accessoriesConfig.trackpadChargeNote}</p>
+    </div>
+  </section>
+</div>
+
+<script define:vars={{ whiteSrc: white.src, blackSrc: black.src }}>
+  const root = document.querySelector("[data-trackpad-feel]");
+  if (!root) throw new Error("trackpad feel");
+
+  const hero = root.querySelector("[data-tpad-hero]");
+  root.querySelectorAll("[data-tpad-colour]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const c = btn.getAttribute("data-tpad-colour");
+      root.querySelectorAll("[data-tpad-colour]").forEach((t) => t.classList.toggle("is-active", t === btn));
+      if (hero instanceof HTMLImageElement) hero.src = c === "black" ? blackSrc : whiteSrc;
+    });
+  });
+
+  root.querySelectorAll("[data-gesture-tab]").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const cat = tab.getAttribute("data-gesture-tab");
+      root.querySelectorAll("[data-gesture-tab]").forEach((t) => {
+        t.classList.toggle("is-active", t === tab);
+        t.setAttribute("aria-selected", t === tab ? "true" : "false");
+      });
+      root.querySelectorAll("[data-gesture-cat]").forEach((tile) => {
+        const tc = tile.getAttribute("data-gesture-cat");
+        const show = cat === "all" || tc === cat;
+        tile.classList.toggle("is-hidden", !show);
+      });
+    });
+  });
+
+  const explorer = root.querySelector("[data-gesture-explorer]");
+  if (explorer) {
+    const gImg = explorer.querySelector("[data-tpad-g-img]");
+    const gTitle = explorer.querySelector("[data-tpad-g-title]");
+    const gBlurb = explorer.querySelector("[data-tpad-g-blurb]");
+    const gHow = explorer.querySelector("[data-tpad-g-how]");
+    const gIpad = explorer.querySelector("[data-tpad-g-ipad]");
+    function selectTile(btn) {
+      explorer.querySelectorAll("[data-gesture-id]").forEach((t) => {
+        const on = t === btn;
+        t.classList.toggle("is-active", on);
+        t.setAttribute("aria-selected", on ? "true" : "false");
+      });
+      if (gImg instanceof HTMLImageElement) {
+        gImg.src = btn.getAttribute("data-src") || gImg.src;
+        gImg.alt = (btn.getAttribute("data-label") || "") + " gesture";
+      }
+      if (gTitle) gTitle.textContent = btn.getAttribute("data-label") || "";
+      if (gBlurb) gBlurb.textContent = btn.getAttribute("data-blurb") || "";
+      if (gHow) gHow.textContent = btn.getAttribute("data-how") || "";
+      if (gIpad) gIpad.textContent = btn.getAttribute("data-ipad") === "1" ? "Limited on iPad" : "Mac only — check";
+    }
+    explorer.querySelectorAll("[data-gesture-id]").forEach((btn) => {
+      btn.addEventListener("click", () => selectTile(btn));
+    });
+  }
+
+  const force = root.querySelector("[data-force-demo]");
+  force?.addEventListener("click", () => {
+    force.classList.toggle("is-deep");
+    const pressed = force.classList.contains("is-deep");
+    force.setAttribute("aria-pressed", pressed ? "true" : "false");
+    const label = force.querySelector("[data-force-label]");
+    if (label) label.textContent = pressed ? "Force click" : "Click";
+  });
+  force?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      force.click();
+    }
+  });
+</script>
+
+<style>
+  .xfeel-tpad__hero {
+    background: #f5f5f7;
+    padding: 3rem 0 0;
+  }
+  .xfeel-tpad__toggle {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .xfeel-tpad__toggle button {
+    border: 1px solid #d2d2d7;
+    background: #fff;
+    padding: 0.45rem 0.75rem;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .xfeel-tpad__toggle button.is-active {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+  }
+  .xfeel-tpad__stage {
+    max-width: 960px;
+    margin: 1.5rem auto 0;
+    padding: 0 1rem 2rem;
+    aspect-ratio: 4 / 3;
+  }
+  .xfeel-tpad__stage img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    background: #fff;
+    border-radius: 1rem;
+  }
+  .xfeel-tpad__gestures {
+    background: #000;
+    color: #f5f5f7;
+    padding: 3rem 0;
+  }
+  .xfeel-tpad__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0 1.25rem;
+  }
+  .xfeel-tpad__tabs button {
+    border: 1px solid #424245;
+    background: #1d1d1f;
+    color: #f5f5f7;
+    padding: 0.45rem 0.75rem;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .xfeel-tpad__tabs button:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+  .xfeel-tpad__tabs button.is-active {
+    background: #fff;
+    color: #000;
+    border-color: #fff;
+  }
+  .xfeel-tpad__explorer {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 1.25rem;
+    align-items: start;
+  }
+  @media (max-width: 720px) {
+    .xfeel-tpad__explorer {
+      grid-template-columns: 1fr;
+    }
+  }
+  .xfeel-tpad__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem;
+  }
+  .xfeel-tpad__tile.is-hidden {
+    display: none;
+  }
+  .xfeel-tpad__tile {
+    background: #1d1d1f;
+    border: 1px solid #424245;
+    border-radius: 0.75rem;
+    padding: 0.65rem;
+    color: #f5f5f7;
+    text-align: left;
+    cursor: pointer;
+  }
+  .xfeel-tpad__tile:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+  .xfeel-tpad__tile.is-active {
+    border-color: #fff;
+  }
+  .xfeel-tpad__tile img {
+    width: 100%;
+    mix-blend-mode: multiply;
+    background: #f5f5f7;
+    border-radius: 0.35rem;
+  }
+  .xfeel-tpad__tile span {
+    display: block;
+    font-size: 0.75rem;
+    margin-top: 0.35rem;
+  }
+  .xfeel-tpad__detail {
+    background: #1d1d1f;
+    border-radius: 1rem;
+    padding: 1rem;
+  }
+  .xfeel-tpad__detail img {
+    width: 100%;
+    mix-blend-mode: multiply;
+    background: #f5f5f7;
+    border-radius: 0.75rem;
+  }
+  .xfeel-tpad__detail h3 {
+    margin: 0.75rem 0 0.35rem;
+  }
+  .xfeel-tpad__how {
+    font-size: 0.9rem;
+    color: #a1a1a6;
+  }
+  .xfeel-tpad__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+  }
+  .xfeel-tpad__badges .badge {
+    font-size: 0.7rem;
+    border: 1px solid #424245;
+    border-radius: 999px;
+    padding: 0.2rem 0.55rem;
+  }
+  .xfeel-tpad__badges .badge--muted {
+    color: #a1a1a6;
+  }
+  .xfeel-tpad__force,
+  .xfeel-tpad__size,
+  .xfeel-tpad__vs {
+    padding: 3rem 0;
+  }
+  .xfeel-tpad__force-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  @media (max-width: 720px) {
+    .xfeel-tpad__force-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .xfeel-tpad__force-grid img {
+    width: 100%;
+    mix-blend-mode: multiply;
+    background: #f5f5f7;
+    border-radius: 1rem;
+  }
+  .xfeel-tpad__press {
+    width: 100%;
+    max-width: 280px;
+    aspect-ratio: 4 / 3;
+    border: 1px solid #d2d2d7;
+    background: #f5f5f7;
+    border-radius: 1rem;
+    position: relative;
+    cursor: pointer;
+    margin-top: 1rem;
+  }
+  .xfeel-tpad__press-ring {
+    position: absolute;
+    inset: 20%;
+    border: 2px solid #d2d2d7;
+    border-radius: 0.75rem;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .xfeel-tpad__press.is-deep .xfeel-tpad__press-ring {
+    transform: scale(0.92);
+    border-color: #000;
+    border-width: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .xfeel-tpad__press-ring {
+      transition: none;
+    }
+  }
+  .xfeel-tpad__size-strip {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .xfeel-tpad__size-strip figure {
+    flex: 1;
+    margin: 0;
+    background: #f5f5f7;
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    text-align: center;
+  }
+  .xfeel-tpad__size-strip img {
+    width: 100%;
+    mix-blend-mode: multiply;
+  }
+  .xfeel-tpad__size-strip figcaption {
+    font-size: 0.8rem;
+    color: #6e6e73;
+    margin-top: 0.35rem;
+    text-transform: capitalize;
+  }
+  .xfeel-tpad__vs-card {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    gap: 1rem;
+    align-items: center;
+    background: #f5f5f7;
+    border-radius: 1rem;
+    padding: 1.25rem;
+    margin-top: 1rem;
+  }
+  @media (max-width: 640px) {
+    .xfeel-tpad__vs-card {
+      grid-template-columns: 1fr;
+    }
+  }
+  .xfeel-tpad__vs-card img {
+    width: 120px;
+    mix-blend-mode: multiply;
+  }
+  .xfeel-tpad__charge {
+    font-size: 0.85rem;
+    color: #6e6e73;
+    margin-top: 1rem;
+  }
+</style>

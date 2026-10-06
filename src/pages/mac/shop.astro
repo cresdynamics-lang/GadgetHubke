@@ -1,0 +1,474 @@
+---
+/**
+ * Mac shop — Family / Size / Gen / Need filters + 16GB toggle + compare tray.
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import MacCard from "../../components/mac/MacCard.astro";
+import {
+  macModels,
+  macConfig,
+  macCompareCard,
+  type MacChipGen,
+  type MacFamily,
+} from "../../lib/mac";
+
+const params = Astro.url.searchParams;
+const family = params.get("family") as MacFamily | null;
+const chip = params.get("chip") as MacChipGen | null;
+const size = params.get("size");
+const need = params.get("need");
+const only16 = params.get("mem16") === "1";
+const hideOlder = params.get("hideOlder") === "1";
+const sort = params.get("sort") || "newest";
+
+let list = [...macModels];
+if (family === "Air" || family === "Pro") list = list.filter((m) => m.family === family);
+if (chip) list = list.filter((m) => m.chipGen === chip);
+if (size === "13" || size === "14" || size === "15" || size === "16") {
+  const s = Number(size);
+  list = list.filter((m) => m.screenInches === s);
+}
+if (only16) list = list.filter((m) => m.memoryOptionsGb[0] >= 16);
+if (hideOlder) list = list.filter((m) => m.year >= 2023);
+
+if (need === "lightest") list = [...list].sort((a, b) => a.weightKg - b.weightKg).slice(0, 8);
+else if (need === "battery") list = [...list].sort((a, b) => b.batteryVideoHours - a.batteryVideoHours).slice(0, 8);
+else if (need === "screen") list = list.filter((m) => m.display.promotion || m.screenInches >= 15);
+else if (need === "creators" || need === "developers") list = list.filter((m) => m.family === "Pro");
+else if (need === "everyday" || need === "business") list = list.filter((m) => m.family === "Air" || m.chipGen >= "M3");
+
+if (need !== "lightest" && need !== "battery") {
+  if (sort === "price") list.sort((a, b) => a.basePriceKes - b.basePriceKes);
+  else if (sort === "battery") list.sort((a, b) => b.batteryVideoHours - a.batteryVideoHours);
+  else if (sort === "weight") list.sort((a, b) => a.weightKg - b.weightKg);
+  else list.sort((a, b) => b.year - a.year || b.basePriceKes - a.basePriceKes);
+}
+
+const qs = (extra: Record<string, string | null>) => {
+  const p = new URLSearchParams(params);
+  for (const [k, v] of Object.entries(extra)) {
+    if (v === null || v === "") p.delete(k);
+    else p.set(k, v);
+  }
+  const s = p.toString();
+  return s ? `/mac/shop?${s}` : "/mac/shop";
+};
+
+const compareCards = Object.fromEntries(macModels.map((m) => [m.id, macCompareCard(m)]));
+---
+
+<BaseLayout title="Shop MacBook - GadgetHub" description="Filter MacBook Air and Pro by family, chip, size, and need.">
+  <section class="container mac-shop" data-mac-shop>
+    <nav class="mac-shop__crumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> / <a href="/mac">Mac</a> / Shop
+    </nav>
+    <h1>Shop MacBook</h1>
+    <p class="mac-shop__intro">{macConfig.samplePriceDisclaimer}</p>
+
+    <div class="mac-shop__filters" role="group" aria-label="Family">
+      <a class:list={["mac-chip", { "is-active": !family }]} href={qs({ family: null })}>All</a>
+      <a class:list={["mac-chip", { "is-active": family === "Air" }]} href={qs({ family: "Air" })}>Air</a>
+      <a class:list={["mac-chip", { "is-active": family === "Pro" }]} href={qs({ family: "Pro" })}>Pro</a>
+    </div>
+    <div class="mac-shop__filters" role="group" aria-label="Size">
+      {["13", "14", "15", "16"].map((s) => (
+        <a class:list={["mac-chip", { "is-active": size === s }]} href={qs({ size: size === s ? null : s })}>
+          {s}″
+        </a>
+      ))}
+    </div>
+    <div class="mac-shop__filters" role="group" aria-label="Generation">
+      {(["M5", "M4", "M3", "M2", "M1"] as const).map((g) => (
+        <a class:list={["mac-chip", { "is-active": chip === g }]} href={qs({ chip: chip === g ? null : g })}>
+          {g}
+        </a>
+      ))}
+    </div>
+    <div class="mac-shop__filters" role="group" aria-label="Need">
+      <a class:list={["mac-chip", { "is-active": need === "everyday" }]} href={qs({ need: "everyday" })}>Students / everyday</a>
+      <a class:list={["mac-chip", { "is-active": need === "creators" }]} href={qs({ need: "creators" })}>Creators</a>
+      <a class:list={["mac-chip", { "is-active": need === "developers" }]} href={qs({ need: "developers" })}>Developers</a>
+      <a class:list={["mac-chip", { "is-active": need === "lightest" }]} href={qs({ need: "lightest" })}>Lightest</a>
+      <a class:list={["mac-chip", { "is-active": need === "battery" }]} href={qs({ need: "battery" })}>Longest battery</a>
+      <a class:list={["mac-chip", { "is-active": need === "screen" }]} href={qs({ need: "screen" })}>Best screen</a>
+    </div>
+    <div class="mac-shop__toggles">
+      <a class:list={["mac-chip", { "is-active": only16 }]} href={qs({ mem16: only16 ? null : "1" })}>Show only 16 GB or more</a>
+      <a class:list={["mac-chip", { "is-active": hideOlder }]} href={qs({ hideOlder: hideOlder ? null : "1" })}>Hide older than 2023</a>
+      <label class="mac-shop__sort">
+        Sort
+        <select onchange="location.href=this.value">
+          <option value={qs({ sort: "newest" })} selected={sort === "newest"}>Newest</option>
+          <option value={qs({ sort: "price" })} selected={sort === "price"}>Price</option>
+          <option value={qs({ sort: "battery" })} selected={sort === "battery"}>Battery</option>
+          <option value={qs({ sort: "weight" })} selected={sort === "weight"}>Weight</option>
+        </select>
+      </label>
+    </div>
+
+    <p class="mac-shop__count">{list.length} models</p>
+
+    <ul class="mac-shop__grid">
+      {list.map((m) => (
+        <li>
+          <MacCard model={m} />
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <div class="mac-compare-tray" data-mac-compare-tray hidden>
+    <p><span data-mac-compare-count>0</span> selected · max 3</p>
+    <button type="button" class="btn btn--primary btn--sm" data-mac-compare-open>Compare</button>
+    <a class="btn btn--secondary btn--sm" data-mac-compare-page href="/mac/compare">Open page</a>
+    <button type="button" class="btn btn--secondary btn--sm" data-mac-compare-clear>Clear</button>
+  </div>
+
+  <dialog class="mac-compare-modal" data-mac-compare-modal aria-label="Compare MacBooks">
+    <div class="mac-compare-modal__panel">
+      <header>
+        <h2>Compare</h2>
+        <button type="button" data-mac-compare-close>Close</button>
+      </header>
+      <div data-mac-compare-body></div>
+    </div>
+  </dialog>
+</BaseLayout>
+
+<script define:vars={{ compareCards }}>
+  const selected = new Set();
+  const tray = document.querySelector("[data-mac-compare-tray]");
+  const countEl = document.querySelector("[data-mac-compare-count]");
+  const modal = document.querySelector("[data-mac-compare-modal]");
+  const body = document.querySelector("[data-mac-compare-body]");
+  const pageLink = document.querySelector("[data-mac-compare-page]");
+  let diffsOnly = true;
+
+  const toast = (msg) => {
+    let t = document.querySelector("[data-mac-toast]");
+    if (!t) {
+      t = document.createElement("div");
+      t.setAttribute("data-mac-toast");
+      t.className = "mac-toast";
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.hidden = false;
+    setTimeout(() => (t.hidden = true), 1800);
+  };
+
+  function sync() {
+    if (tray) tray.hidden = selected.size === 0;
+    if (countEl) countEl.textContent = String(selected.size);
+    if (pageLink instanceof HTMLAnchorElement) {
+      const ids = [...selected].join(",");
+      pageLink.href = ids ? `/mac/compare?ids=${encodeURIComponent(ids)}` : "/mac/compare";
+    }
+  }
+
+  function honestBlurb(cards) {
+    const points = [];
+    const families = new Set(cards.map((c) => c.family));
+    const chips = new Set(cards.map((c) => c.chip));
+    const sizes = new Set(cards.map((c) => c.screen));
+    if (families.size > 1) {
+      points.push("Air is fanless and lighter; Pro adds cooling, more ports, and (on 14″/16″) an XDR display.");
+    }
+    if (chips.size > 1) points.push(`Chip tiers differ: ${[...chips].join(" vs ")}.`);
+    if (sizes.size > 1) points.push(`Screen size: ${[...sizes].join(" vs ")}.`);
+    const prices = cards.map((c) => c.price);
+    if (Math.max(...prices) - Math.min(...prices) >= 30000) {
+      points.push(`Sample price gap is about KES ${(Math.max(...prices) - Math.min(...prices)).toLocaleString("en-KE")}.`);
+    }
+    return points.slice(0, 3).join(" ") || "These MacBooks are close — check memory, storage, and try both in the shop.";
+  }
+
+  function buildRows(cards) {
+    const col = (key) => cards.map((c) => String(c[key]));
+    return [
+      { group: "Chip", label: "Chip", values: col("chip") },
+      { group: "Chip", label: "Cooling", values: col("cooling") },
+      { group: "Memory", label: "Memory options", values: col("memory") },
+      { group: "Memory", label: "Storage options", values: col("storage") },
+      { group: "Display", label: "Screen", values: col("display") },
+      { group: "Display", label: "Brightness", values: col("brightness") },
+      { group: "Display", label: "Refresh", values: col("refresh") },
+      { group: "Battery", label: "Video playback", values: col("battery") },
+      { group: "Ports", label: "Ports", values: col("ports") },
+      { group: "Ports", label: "External displays", values: col("externalDisplays") },
+      { group: "Camera", label: "Camera", values: col("camera") },
+      { group: "Camera", label: "Speakers", values: col("speakers") },
+      { group: "Size and weight", label: "Size", values: col("screen") },
+      { group: "Size and weight", label: "Weight", values: col("weight") },
+      { group: "Size and weight", label: "Thickness", values: col("thickness") },
+      { group: "Price", label: "From (sample)", values: col("priceLabel") },
+    ];
+  }
+
+  function renderModal() {
+    if (!(modal instanceof HTMLDialogElement) || !body) return;
+    const cards = [...selected].map((id) => compareCards[id]).filter(Boolean);
+    if (!cards.length) return;
+    const rows = buildRows(cards);
+    const visible = diffsOnly ? rows.filter((r) => new Set(r.values).size > 1) : rows;
+    let lastGroup = "";
+    const tbody = visible
+      .map((r) => {
+        const groupRow =
+          r.group !== lastGroup
+            ? `<tr class="mac-compare-group"><th colspan="${cards.length + 1}">${r.group}</th></tr>`
+            : "";
+        lastGroup = r.group;
+        return `${groupRow}<tr><th>${r.label}</th>${r.values.map((v) => `<td>${v}</td>`).join("")}</tr>`;
+      })
+      .join("");
+
+    body.innerHTML = `
+      <p class="mac-compare-honest"><strong>The honest difference.</strong> ${honestBlurb(cards)}</p>
+      <label class="mac-compare-toggle">
+        <input type="checkbox" data-mac-diff-only ${diffsOnly ? "checked" : ""} />
+        Show only differences
+      </label>
+      <div class="mac-compare-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              ${cards
+                .map(
+                  (c) => `<th>
+                    <a href="${c.href}">
+                      <img src="${c.imageSrc}" alt="" width="160" height="100" loading="lazy" />
+                      <span>${c.name}</span>
+                    </a>
+                    <small>From ${c.priceLabel}</small>
+                  </th>`,
+                )
+                .join("")}
+            </tr>
+          </thead>
+          <tbody>${tbody || `<tr><td colspan="${cards.length + 1}">Everything matches on the rows we show.</td></tr>`}</tbody>
+        </table>
+      </div>
+      <p class="mac-compare-page-link"><a href="/mac/compare?ids=${encodeURIComponent([...selected].join(","))}">Open full compare page</a></p>`;
+
+    body.querySelector("[data-mac-diff-only]")?.addEventListener("change", (e) => {
+      diffsOnly = e.target instanceof HTMLInputElement ? e.target.checked : true;
+      renderModal();
+    });
+    modal.showModal();
+  }
+
+  document.querySelectorAll("[data-compare]").forEach((input) => {
+    input.addEventListener("change", () => {
+      const id = input.getAttribute("data-compare");
+      if (!(input instanceof HTMLInputElement) || !id) return;
+      if (input.checked) {
+        if (selected.size >= 3) {
+          input.checked = false;
+          toast("Compare up to 3 MacBooks");
+          return;
+        }
+        selected.add(id);
+      } else selected.delete(id);
+      sync();
+    });
+  });
+
+  document.querySelector("[data-mac-compare-clear]")?.addEventListener("click", () => {
+    selected.clear();
+    document.querySelectorAll("[data-compare]").forEach((i) => {
+      if (i instanceof HTMLInputElement) i.checked = false;
+    });
+    sync();
+  });
+
+  document.querySelector("[data-mac-compare-open]")?.addEventListener("click", renderModal);
+  document.querySelector("[data-mac-compare-close]")?.addEventListener("click", () => {
+    if (modal instanceof HTMLDialogElement) modal.close();
+  });
+</script>
+
+<style>
+  .mac-shop {
+    padding-block: var(--space-10) var(--mac-section-gap);
+  }
+  .mac-shop__crumb {
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+    margin-bottom: 0.75rem;
+  }
+  .mac-shop__crumb a {
+    color: inherit;
+  }
+  .mac-shop h1 {
+    margin: 0 0 0.5rem;
+    font-size: var(--mac-headline);
+    letter-spacing: -0.03em;
+  }
+  .mac-shop__intro {
+    color: var(--color-fg-muted);
+    max-width: 40rem;
+  }
+  .mac-shop__filters,
+  .mac-shop__toggles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin: 0.85rem 0;
+    align-items: center;
+  }
+  .mac-chip {
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 0.4rem 0.8rem;
+    text-decoration: none;
+    color: inherit;
+    font-size: var(--text-sm);
+  }
+  .mac-chip.is-active,
+  .mac-chip:hover {
+    background: var(--color-fg);
+    color: var(--color-bg);
+    border-color: var(--color-fg);
+  }
+  .mac-shop__sort {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: var(--text-sm);
+  }
+  .mac-shop__count {
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+  .mac-shop__grid {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 40rem) {
+    .mac-shop__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64rem) {
+    .mac-shop__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .mac-compare-tray {
+    position: fixed;
+    left: 50%;
+    bottom: 1.25rem;
+    transform: translateX(-50%);
+    z-index: 80;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: #000;
+    color: #fff;
+    padding: 0.65rem 1rem;
+    border-radius: 999px;
+    box-shadow: 0 12px 32px rgb(0 0 0 / 0.28);
+  }
+  .mac-compare-tray p {
+    margin: 0;
+    font-size: var(--text-sm);
+  }
+  .mac-compare-modal {
+    width: min(100% - 1.5rem, 56rem);
+    max-height: 90vh;
+    border: none;
+    border-radius: 1rem;
+    padding: 0;
+  }
+  .mac-compare-modal__panel {
+    padding: 1rem;
+  }
+  .mac-compare-modal header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .mac-compare-honest {
+    margin: 0.75rem 0;
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+    line-height: 1.45;
+  }
+  .mac-compare-honest strong {
+    color: var(--color-fg);
+  }
+  .mac-compare-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: var(--text-sm);
+    margin-bottom: 0.75rem;
+  }
+  .mac-compare-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .mac-compare-modal table {
+    width: 100%;
+    min-width: 28rem;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+  }
+  .mac-compare-modal th,
+  .mac-compare-modal td {
+    border-bottom: 1px solid var(--color-border);
+    padding: 0.55rem;
+    text-align: left;
+    vertical-align: top;
+  }
+  .mac-compare-modal thead th a {
+    display: grid;
+    gap: 0.35rem;
+    text-decoration: none;
+    color: inherit;
+  }
+  .mac-compare-modal thead img {
+    width: 100%;
+    max-width: 10rem;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: contain;
+    background: #f5f5f7;
+    border-radius: 0.65rem;
+    mix-blend-mode: multiply;
+  }
+  .mac-compare-modal thead small {
+    display: block;
+    color: var(--color-fg-muted);
+    font-weight: 400;
+  }
+  :global(.mac-compare-group th) {
+    background: var(--color-bg-subtle);
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-fg-muted);
+  }
+  .mac-compare-page-link {
+    margin: 0.85rem 0 0;
+    font-size: var(--text-sm);
+  }
+  :global(.mac-toast) {
+    position: fixed;
+    bottom: 5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1d1d1f;
+    color: #fff;
+    padding: 0.55rem 0.9rem;
+    border-radius: 999px;
+    z-index: 90;
+    font-size: var(--text-sm);
+  }
+</style>

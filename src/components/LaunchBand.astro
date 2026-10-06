@@ -1,0 +1,182 @@
+---
+/**
+ * Black launch band - pre-order / event product (Duo).
+ */
+interface Props {
+  badge?: string;
+  title: string;
+  body: string;
+  href: string;
+  learnHref?: string;
+  imageSrc: string;
+  imageAlt: string;
+  /** ISO date for countdown, e.g. 2026-10-23T00:00:00+03:00 */
+  launchAt?: string;
+  ctaLabel?: string;
+}
+
+const {
+  badge = "Just announced",
+  title,
+  body,
+  href,
+  learnHref,
+  imageSrc,
+  imageAlt,
+  launchAt = "2026-10-23T00:00:00+03:00",
+  ctaLabel = "Reserve yours",
+} = Astro.props;
+---
+
+<section class="launch fade-up" data-fade-up data-launch data-launch-at={launchAt}>
+  <div class="launch__inner container">
+    <div class="launch__copy">
+      <p class="launch__badge">{badge}</p>
+      <h2>{title}</h2>
+      <p class="launch__body">{body}</p>
+      <div class="launch__countdown" data-countdown aria-live="polite">
+        <div><span data-d>00</span><small>Days</small></div>
+        <div><span data-h>00</span><small>Hrs</small></div>
+        <div><span data-m>00</span><small>Min</small></div>
+        <div><span data-s>00</span><small>Sec</small></div>
+      </div>
+      <div class="launch__actions">
+        <a class="btn btn--inverse" href={href}>{ctaLabel}</a>
+        {learnHref ? <a class="btn btn--ghost-inverse" href={learnHref}>Learn more</a> : null}
+      </div>
+    </div>
+    <div class="launch__media product-stage">
+      <img src={imageSrc} alt={imageAlt} width="640" height="560" loading="lazy" decoding="async" />
+    </div>
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector("[data-launch]");
+  if (root) {
+    const at = root.getAttribute("data-launch-at");
+    const target = at ? new Date(at).getTime() : NaN;
+    const d = root.querySelector("[data-d]");
+    const h = root.querySelector("[data-h]");
+    const m = root.querySelector("[data-m]");
+    const s = root.querySelector("[data-s]");
+
+    function tick() {
+      if (!d || !h || !m || !s || Number.isNaN(target)) return;
+      const diff = Math.max(0, target - Date.now());
+      const days = Math.floor(diff / 86400000);
+      const hours = Math.floor((diff % 86400000) / 3600000);
+      const mins = Math.floor((diff % 3600000) / 60000);
+      const secs = Math.floor((diff % 60000) / 1000);
+      d.textContent = String(days).padStart(2, "0");
+      h.textContent = String(hours).padStart(2, "0");
+      m.textContent = String(mins).padStart(2, "0");
+      s.textContent = String(secs).padStart(2, "0");
+    }
+
+    tick();
+    window.setInterval(tick, 1000);
+  }
+
+  // fade-up observer shared
+  document.querySelectorAll("[data-fade-up]").forEach((el) => {
+    if (!("IntersectionObserver" in window)) {
+      el.classList.add("is-visible");
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add("is-visible");
+            io.unobserve(e.target);
+          }
+        }
+      },
+      { threshold: 0.15 },
+    );
+    io.observe(el);
+  });
+</script>
+
+<style>
+  .launch {
+    background: var(--color-black);
+    color: var(--color-white);
+    padding-block: var(--space-12);
+  }
+
+  .launch__inner {
+    display: grid;
+    gap: var(--space-8);
+    align-items: center;
+  }
+
+  @media (min-width: 48rem) {
+    .launch__inner {
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: var(--space-12);
+    }
+  }
+
+  .launch__badge {
+    font-size: var(--text-xs);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-grey-400);
+    margin-bottom: var(--space-3);
+  }
+
+  .launch h2 {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    margin-bottom: var(--space-3);
+  }
+
+  .launch__body {
+    color: var(--color-grey-300);
+    margin-bottom: var(--space-6);
+    max-width: 32rem;
+    line-height: var(--leading-normal);
+  }
+
+  .launch__countdown {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 4.5rem));
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+  }
+
+  .launch__countdown div {
+    text-align: center;
+  }
+
+  .launch__countdown span {
+    display: block;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: var(--font-weight-display);
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .launch__countdown small {
+    font-size: var(--text-xs);
+    color: var(--color-grey-400);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .launch__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .launch__media {
+    min-height: 16rem;
+    border-radius: var(--radius-lg);
+  }
+
+  .launch__media img {
+    padding: var(--space-6);
+  }
+</style>

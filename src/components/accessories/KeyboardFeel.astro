@@ -1,0 +1,313 @@
+---
+/**
+ * Magic Keyboard feel: hero tilt, attach, typing test, hotspots, Touch ID demo, layout note.
+ */
+import {
+  getAccessoriesPageImage,
+  getAccessoryImage,
+  accessoriesConfig,
+} from "../../lib/accessories";
+
+const hero = getAccessoriesPageImage("keyboard/selector/selector_hero", "Magic Keyboard hero");
+const product = getAccessoryImage("keyboard-ipad-pro-13", "hero");
+const proGal = getAccessoryImage("keyboard-ipad-pro-13", "gallery:0");
+const airGal = getAccessoryImage("keyboard-ipad-air-13", "gallery:0");
+---
+
+<div class="xfeel-kb" data-keyboard-feel>
+  <section class="xfeel-kb__hero" data-kb-hero>
+    <div class="container">
+      <h2>The laptop moment.</h2>
+      <p>Scroll — the keyboard tilts into the typing angle.</p>
+    </div>
+    <div class="xfeel-kb__stage" data-kb-stage>
+      <img data-kb-a src={hero.src} alt={hero.alt} width="1800" height="1200" fetchpriority="high" />
+      <img data-kb-b src={product.src} alt={product.alt} width="1400" height="1050" />
+    </div>
+  </section>
+
+  <section class="xfeel-kb__attach">
+    <div class="container">
+      <h2>Snaps on. Stays put.</h2>
+      <div class="xfeel-kb__tabs" role="tablist">
+        <button type="button" data-kb-tab="pro" class="is-active">iPad Pro</button>
+        <button type="button" data-kb-tab="air">iPad Air</button>
+        <button type="button" data-kb-tab="folio">Folio</button>
+        <button type="button" data-kb-tab="mac">Mac</button>
+      </div>
+      <div class="xfeel-kb__attach-vis" data-kb-attach>
+        <img data-kb-attach-img src={proGal.src} alt="Magic Keyboard attach" width="900" height="600" loading="lazy" />
+      </div>
+      <p data-kb-attach-copy>Floating cantilever stand and aluminium palm rest for iPad Pro. <span class="flag">check</span></p>
+    </div>
+  </section>
+
+  <section class="xfeel-kb__type">
+    <div class="container xfeel-kb__type-grid">
+      <div>
+        <h2>Typing test</h2>
+        <p>30 seconds. Playful — nothing is saved.</p>
+        <p class="xfeel-kb__prompt" data-type-prompt>The quick brown fox jumps over the lazy dog near Nairobi.</p>
+        <textarea data-type-input rows="4" aria-label="Typing test" placeholder="Start typing…"></textarea>
+        <p data-type-stats>WPM: — · Time: 30s</p>
+        <button type="button" class="btn btn--secondary btn--sm" data-type-reset>Reset</button>
+      </div>
+      <div class="xfeel-kb__hotspots" data-hotspots>
+        <h2>Keys and trackpad</h2>
+        <div class="xfeel-kb__hotspot-stage">
+          <img src={product.src} alt="Magic Keyboard parts" width="900" height="675" loading="lazy" />
+          <button type="button" class="hotspot" style="left:20%;top:18%" data-tip="Function row — brightness, media, and more (check).">Function row</button>
+          <button type="button" class="hotspot" style="left:55%;top:70%" data-tip="Large Multi-Touch trackpad (check).">Trackpad</button>
+          <button type="button" class="hotspot" style="left:8%;top:55%" data-tip="USB-C pass-through charging (check).">USB-C</button>
+          <button type="button" class="hotspot" style="left:50%;top:40%" data-tip="Floating cantilever hinge (check).">Hinge</button>
+        </div>
+        <p class="xfeel-kb__tip" data-hotspot-tip role="status">Hover or focus a hotspot.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="xfeel-kb__touch">
+    <div class="container">
+      <h2>Touch ID</h2>
+      <p>Illustration only — no real biometrics. Touch ID needs Apple silicon.</p>
+      <button type="button" class="xfeel-kb__keycap" data-touchid aria-pressed="false">
+        <span class="ring" aria-hidden="true"></span>
+        <span data-touch-label>Press</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="xfeel-kb__layout">
+    <div class="container">
+      <h2>Choose your layout</h2>
+      <p>{accessoriesConfig.layoutNote}</p>
+    </div>
+  </section>
+</div>
+
+<script define:vars={{ airSrc: airGal.src, proSrc: proGal.src, macSrc: product.src }}>
+  const root = document.querySelector("[data-keyboard-feel]");
+  if (!root) throw new Error("kb feel");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const stage = root.querySelector("[data-kb-stage]");
+  const a = root.querySelector("[data-kb-a]");
+  const b = root.querySelector("[data-kb-b]");
+
+  if (!reduce && stage && a instanceof HTMLElement && b instanceof HTMLElement) {
+    b.style.opacity = "0";
+    b.style.transform = "perspective(900px) rotateX(28deg)";
+    const onScroll = () => {
+      const rect = stage.getBoundingClientRect();
+      const vh = window.innerHeight || 1;
+      const p = Math.min(1, Math.max(0, 1 - rect.top / vh));
+      a.style.opacity = String(1 - p);
+      b.style.opacity = String(p);
+      b.style.transform = `perspective(900px) rotateX(${28 - p * 28}deg)`;
+    };
+    window.addEventListener("scroll", () => requestAnimationFrame(onScroll), { passive: true });
+    onScroll();
+  } else if (b instanceof HTMLElement) {
+    b.style.opacity = "1";
+    b.style.transform = "none";
+    if (a instanceof HTMLElement) a.style.opacity = "0";
+  }
+
+  const copy = {
+    pro: { src: proSrc, text: "Floating cantilever stand and aluminium palm rest for iPad Pro." },
+    air: { src: airSrc, text: "Magnetic attach and function row for iPad Air." },
+    folio: { src: airSrc, text: "Two-piece Folio with kickstand for iPad 10th gen and A16." },
+    mac: { src: macSrc, text: "Bluetooth Magic Keyboard for Mac — Touch ID needs Apple silicon." },
+  };
+  root.querySelectorAll("[data-kb-tab]").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const id = tab.getAttribute("data-kb-tab");
+      root.querySelectorAll("[data-kb-tab]").forEach((t) => t.classList.toggle("is-active", t === tab));
+      const cfg = copy[id] || copy.pro;
+      const img = root.querySelector("[data-kb-attach-img]");
+      const text = root.querySelector("[data-kb-attach-copy]");
+      if (img instanceof HTMLImageElement) img.src = cfg.src;
+      if (text) text.textContent = cfg.text + " (check)";
+    });
+  });
+
+  // Typing test
+  const input = root.querySelector("[data-type-input]");
+  const stats = root.querySelector("[data-type-stats]");
+  const prompt = root.querySelector("[data-type-prompt]")?.textContent || "";
+  let start = null;
+  let timer = null;
+  function updateStats() {
+    if (!(input instanceof HTMLTextAreaElement) || !stats) return;
+    const elapsed = start ? (Date.now() - start) / 1000 : 0;
+    const left = Math.max(0, 30 - elapsed);
+    const words = input.value.trim().split(/\s+/).filter(Boolean).length;
+    const wpm = elapsed > 0 ? Math.round((words / elapsed) * 60) : 0;
+    stats.textContent = `WPM: ${wpm} · Time: ${left.toFixed(0)}s`;
+    if (left <= 0 && timer) {
+      clearInterval(timer);
+      timer = null;
+      input.setAttribute("readonly", "true");
+    }
+  }
+  input?.addEventListener("input", () => {
+    if (!start) {
+      start = Date.now();
+      timer = setInterval(updateStats, 250);
+    }
+    updateStats();
+  });
+  root.querySelector("[data-type-reset]")?.addEventListener("click", () => {
+    if (input instanceof HTMLTextAreaElement) {
+      input.value = "";
+      input.removeAttribute("readonly");
+    }
+    start = null;
+    if (timer) clearInterval(timer);
+    timer = null;
+    if (stats) stats.textContent = "WPM: — · Time: 30s";
+  });
+
+  const tip = root.querySelector("[data-hotspot-tip]");
+  root.querySelectorAll(".hotspot").forEach((btn) => {
+    const show = () => {
+      if (tip) tip.textContent = btn.getAttribute("data-tip") || "";
+    };
+    btn.addEventListener("pointerenter", show);
+    btn.addEventListener("focus", show);
+  });
+
+  const touch = root.querySelector("[data-touchid]");
+  touch?.addEventListener("click", () => {
+    touch.classList.add("is-unlocked");
+    touch.setAttribute("aria-pressed", "true");
+    const label = touch.querySelector("[data-touch-label]");
+    if (label) label.textContent = "Unlocked";
+  });
+</script>
+
+<style>
+  .xfeel-kb__hero {
+    background: #000;
+    color: #f5f5f7;
+    padding: 3rem 0 0;
+  }
+  .xfeel-kb__stage {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    max-width: 1000px;
+    margin: 1.5rem auto 0;
+    perspective: 900px;
+  }
+  .xfeel-kb__stage img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    background: #f5f5f7;
+  }
+  .xfeel-kb__attach,
+  .xfeel-kb__type,
+  .xfeel-kb__touch,
+  .xfeel-kb__layout {
+    padding: 3rem 0;
+  }
+  .xfeel-kb__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0;
+  }
+  .xfeel-kb__tabs button {
+    border: 1px solid #d2d2d7;
+    background: #fff;
+    padding: 0.45rem 0.75rem;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .xfeel-kb__tabs button.is-active {
+    background: #000;
+    color: #fff;
+  }
+  .xfeel-kb__attach-vis {
+    background: #f5f5f7;
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+  .xfeel-kb__attach-vis img {
+    width: 100%;
+    mix-blend-mode: multiply;
+    display: block;
+  }
+  .xfeel-kb__type-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  @media (max-width: 800px) {
+    .xfeel-kb__type-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  textarea {
+    width: 100%;
+    font: inherit;
+    padding: 0.75rem;
+    border: 1px solid #d2d2d7;
+    border-radius: 0.5rem;
+  }
+  .xfeel-kb__hotspot-stage {
+    position: relative;
+    background: #f5f5f7;
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+  .xfeel-kb__hotspot-stage img {
+    width: 100%;
+    mix-blend-mode: multiply;
+    display: block;
+  }
+  .hotspot {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid #000;
+    background: rgba(255, 255, 255, 0.85);
+    font-size: 0;
+    cursor: pointer;
+  }
+  .hotspot:focus-visible {
+    outline: 2px solid #000;
+    outline-offset: 3px;
+  }
+  .xfeel-kb__tip {
+    color: #6e6e73;
+    font-size: 0.9rem;
+  }
+  .xfeel-kb__keycap {
+    width: 88px;
+    height: 88px;
+    border-radius: 1rem;
+    border: 1px solid #d2d2d7;
+    background: #f5f5f7;
+    position: relative;
+    cursor: pointer;
+  }
+  .xfeel-kb__keycap .ring {
+    position: absolute;
+    inset: 18px;
+    border-radius: 50%;
+    border: 3px solid #d2d2d7;
+  }
+  .xfeel-kb__keycap.is-unlocked .ring {
+    border-color: #1a7f37;
+    background: rgba(26, 127, 55, 0.15);
+  }
+  .flag {
+    font-size: 0.65rem;
+    color: #6e6e73;
+  }
+</style>

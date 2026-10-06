@@ -1,0 +1,168 @@
+---
+import {
+  airpodsModels,
+  getAirpodsImage,
+  formatKes,
+  airpodsSubline,
+} from "../../lib/airpods";
+
+const payload = airpodsModels.map((m) => {
+  const img = getAirpodsImage(m.id, "earbuds", m.name);
+  return {
+    id: m.id,
+    name: m.name,
+    href: `/airpods/${m.id}`,
+    priceKes: m.basePriceKes,
+    family: m.family,
+    type: m.type,
+    year: m.year,
+    isNew: Boolean(m.isNew),
+    sub: airpodsSubline(m),
+    image: img.src,
+  };
+});
+---
+
+<section class="aquiz" id="quiz" data-aquiz>
+  <header>
+    <h2>Which AirPods fit you?</h2>
+    <p>Three questions. Up to three matches with a short reason each.</p>
+  </header>
+  <div class="aquiz__q" data-q="use">
+    <p>Where will you use them most?</p>
+    <div class="aquiz__opts">
+      <button type="button" data-val="commute">Commute and travel</button>
+      <button type="button" data-val="gym">Gym and runs</button>
+      <button type="button" data-val="calls">Calls and meetings</button>
+      <button type="button" data-val="music">Music at home</button>
+    </div>
+  </div>
+  <div class="aquiz__q" data-q="fit">
+    <p>How should they fit?</p>
+    <div class="aquiz__opts">
+      <button type="button" data-val="in-ear-seal">In-ear seal (tips)</button>
+      <button type="button" data-val="open">Open-fit, no tips</button>
+      <button type="button" data-val="over-ear">Over-ear</button>
+    </div>
+  </div>
+  <div class="aquiz__q" data-q="budget">
+    <p>Budget band (sample prices)?</p>
+    <div class="aquiz__opts">
+      <button type="button" data-val="tight">Under 25k</button>
+      <button type="button" data-val="mid">25k–45k</button>
+      <button type="button" data-val="open">45k+</button>
+    </div>
+  </div>
+  <div class="aquiz__results" data-quiz-results hidden>
+    <h3>Your matches</h3>
+    <ul data-quiz-list></ul>
+    <p class="aquiz__android">On Android they work as Bluetooth headphones — fewer Apple-only features.</p>
+  </div>
+</section>
+
+<script define:vars={{ payload }}>
+  const root = document.querySelector("[data-aquiz]");
+  if (root) {
+    const answers = { use: "", fit: "", budget: "" };
+    const list = root.querySelector("[data-quiz-list]");
+    const results = root.querySelector("[data-quiz-results]");
+
+    function reason(m, a) {
+      if (a.use === "commute" && (m.id === "airpods-pro-3" || m.family === "Max"))
+        return "Strong noise control for buses, matatus and flights.";
+      if (a.use === "gym" && m.family === "Pro") return "Secure tips and sweat resistance where rated — check IP on the model page.";
+      if (a.use === "budget" && (m.id === "airpods-4" || m.id === "airpods-5"))
+        return "Lower sample price in the open-fit line.";
+      if (a.fit === "over-ear" && m.family === "Max") return "Max 2 for over-ear comfort and ANC.";
+      if (a.fit === "open" && m.family === "AirPods") return "Open-fit AirPods without silicone tips.";
+      if (a.budget === "tight") return "Lower sample price — confirm condition on older gens.";
+      return "Solid fit for how you answered.";
+    }
+
+    function run() {
+      if (!answers.use || !answers.fit || !answers.budget || !list || !results) return;
+      let pool = [...payload];
+      if (answers.use === "commute") pool = pool.filter((m) => m.family === "Pro" || m.family === "Max");
+      if (answers.use === "gym") pool = pool.filter((m) => m.family === "Pro" || m.type === "in-ear");
+      if (answers.use === "calls") pool = pool.filter((m) => m.type === "in-ear" || m.family === "Pro");
+      if (answers.fit === "over-ear") pool = pool.filter((m) => m.family === "Max");
+      if (answers.fit === "open") pool = pool.filter((m) => m.family === "AirPods");
+      if (answers.fit === "in-ear-seal") pool = pool.filter((m) => m.family === "Pro");
+      if (answers.budget === "tight") pool = pool.filter((m) => m.priceKes < 25000);
+      if (answers.budget === "mid") pool = pool.filter((m) => m.priceKes >= 25000 && m.priceKes <= 45000);
+      if (answers.budget === "open") pool = pool.filter((m) => m.priceKes >= 45000);
+      if (!pool.length) pool = [...payload].sort((a, b) => a.priceKes - b.priceKes).slice(0, 8);
+      pool.sort((a, b) => {
+        let sa = 0, sb = 0;
+        if (a.isNew) sa += 20;
+        if (b.isNew) sb += 20;
+        if (answers.use === "commute" && a.id === "airpods-pro-3") sa += 40;
+        if (answers.use === "commute" && b.id === "airpods-pro-3") sb += 40;
+        if (answers.fit === "over-ear" && a.family === "Max") sa += 50;
+        if (answers.fit === "over-ear" && b.family === "Max") sb += 50;
+        return sb - sa || b.year - a.year;
+      });
+      const top = pool.slice(0, 3);
+      results.hidden = false;
+      list.innerHTML = top
+        .map(
+          (m) => `
+        <li>
+          <a href="${m.href}">
+            <img src="${m.image}" alt="" width="72" height="72" loading="lazy" />
+            <span>
+              <strong>${m.name}</strong>
+              <em>${m.sub}</em>
+              <small>${reason(m, answers)}</small>
+            </span>
+            <b>From KES ${m.priceKes.toLocaleString("en-KE")}</b>
+          </a>
+        </li>`,
+        )
+        .join("");
+    }
+
+    root.querySelectorAll("[data-q]").forEach((block) => {
+      const key = block.getAttribute("data-q");
+      block.querySelectorAll("[data-val]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          block.querySelectorAll("[data-val]").forEach((b) => b.classList.remove("is-active"));
+          btn.classList.add("is-active");
+          answers[key] = btn.getAttribute("data-val") || "";
+          run();
+        });
+      });
+    });
+  }
+</script>
+
+<style>
+  .aquiz {
+    padding: 1.5rem;
+    border: 1px solid #d2d2d7;
+    border-radius: var(--airpods-radius, 1.5rem);
+  }
+  .aquiz header h2 { margin: 0 0 0.35rem; letter-spacing: -0.02em; }
+  .aquiz header p { margin: 0 0 1.25rem; color: #6e6e73; }
+  .aquiz__q { margin-bottom: 1.1rem; }
+  .aquiz__q p { margin: 0 0 0.5rem; font-weight: 600; }
+  .aquiz__opts { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  .aquiz__opts button {
+    border: 1px solid #d2d2d7; background: #fff; border-radius: 999px;
+    padding: 0.45rem 0.85rem; font: inherit; font-size: var(--text-sm); cursor: pointer;
+  }
+  .aquiz__opts button.is-active { background: #000; color: #fff; border-color: #000; }
+  .aquiz__results ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.65rem; }
+  .aquiz__results a {
+    display: grid; grid-template-columns: 4.5rem 1fr auto; gap: 0.75rem; align-items: center;
+    text-decoration: none; color: inherit; border: 1px solid #d2d2d7; border-radius: 1rem; padding: 0.65rem;
+  }
+  .aquiz__results img {
+    width: 4.5rem; height: 4.5rem; object-fit: contain; background: #f5f5f7;
+    border-radius: 0.65rem; mix-blend-mode: multiply;
+  }
+  .aquiz__results em, .aquiz__results small {
+    display: block; font-style: normal; font-size: var(--text-sm); color: #6e6e73;
+  }
+  .aquiz__android { margin-top: 1rem; font-size: var(--text-sm); color: #6e6e73; }
+</style>

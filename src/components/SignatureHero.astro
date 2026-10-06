@@ -1,0 +1,287 @@
+---
+/**
+ * Signature home hero - four phones gather, then settle to corners (1.8s once).
+ * Mobile: 2×2 grid. Respects prefers-reduced-motion.
+ */
+import { whatsappUrl } from "../lib/site";
+import type { HeroPhone } from "../lib/home";
+
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  lede?: string;
+  primaryHref?: string;
+  primaryLabel?: string;
+  secondaryHref?: string;
+  secondaryLabel?: string;
+  phones: [HeroPhone, HeroPhone, HeroPhone, HeroPhone];
+}
+
+const {
+  eyebrow = "New · iPhone 18 Pro & Pro Max",
+  title = "The new iPhone.",
+  lede = "Done properly. Genuine, sealed and set up for you. Pay in full or Lipa Mdogo Mdogo.",
+  primaryHref = "/shop/iphone/iphone-pro",
+  primaryLabel = "Shop iPhone 18 Pro",
+  secondaryHref = "/lipa-mdogo-mdogo",
+  secondaryLabel = "See Lipa Mdogo Mdogo",
+  phones,
+} = Astro.props;
+
+const wa = whatsappUrl("Hello Gadget Hub, I'm interested in the new iPhone.");
+---
+
+<section class="sig-hero" data-sig-hero aria-labelledby="sig-hero-title">
+  <div class="sig-hero__stage" data-sig-stage aria-hidden="true">
+    {
+      phones.map((phone, i) => (
+        <a
+          class={`sig-hero__phone sig-hero__phone--${i + 1}`}
+          href={phone.href}
+          tabindex="-1"
+          data-sig-phone
+        >
+          <img
+            src={phone.src}
+            alt=""
+            width="480"
+            height="480"
+            loading={i === 0 ? "eager" : "lazy"}
+            decoding="async"
+            fetchpriority={i === 0 ? "high" : "auto"}
+          />
+        </a>
+      ))
+    }
+  </div>
+
+  <div class="sig-hero__copy container">
+    <p class="sig-hero__eyebrow">{eyebrow}</p>
+    <h1 id="sig-hero-title">
+      {title}
+      <span class="sig-hero__title-line">Done properly.</span>
+    </h1>
+    <p class="sig-hero__lede">{lede}</p>
+    <div class="sig-hero__actions">
+      <a class="btn btn--primary" href={primaryHref}>{primaryLabel}</a>
+      <a class="btn btn--secondary" href={secondaryHref}>{secondaryLabel}</a>
+      <a class="btn btn--secondary" href={wa} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector("[data-sig-hero]");
+  if (root) {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      root.classList.add("is-settled");
+    } else {
+      requestAnimationFrame(() => root.classList.add("is-playing"));
+      window.setTimeout(() => {
+        root.classList.remove("is-playing");
+        root.classList.add("is-settled");
+      }, 1800);
+    }
+
+    // Subtle scroll drift after settle
+    const stage = root.querySelector("[data-sig-stage]");
+    if (stage && !reduce) {
+      let ticking = false;
+      window.addEventListener(
+        "scroll",
+        () => {
+          if (ticking || !root.classList.contains("is-settled")) return;
+          ticking = true;
+          requestAnimationFrame(() => {
+            const y = Math.min(window.scrollY, 240);
+            (stage as HTMLElement).style.setProperty("--drift", `${y * 0.04}px`);
+            ticking = false;
+          });
+        },
+        { passive: true },
+      );
+    }
+  }
+</script>
+
+<style>
+  .sig-hero {
+    position: relative;
+    isolation: isolate;
+    min-height: min(92dvh, 52rem);
+    display: grid;
+    align-items: end;
+    padding-block: var(--space-16) var(--space-12);
+    background: var(--color-stage);
+    overflow: clip;
+  }
+
+  .sig-hero__stage {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    --drift: 0px;
+  }
+
+  .sig-hero__phone {
+    position: absolute;
+    width: min(42vw, 16rem);
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    pointer-events: auto;
+    transition:
+      transform var(--duration-hero) var(--ease-out),
+      opacity 0.6s var(--ease-out);
+    will-change: transform;
+  }
+
+  .sig-hero__phone img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.12));
+  }
+
+  /* Gathered (start) */
+  .sig-hero__phone--1,
+  .sig-hero__phone--2,
+  .sig-hero__phone--3,
+  .sig-hero__phone--4 {
+    left: 50%;
+    top: 38%;
+    transform: translate(-50%, -50%) scale(0.72);
+    opacity: 0.85;
+  }
+
+  /* Settled corners - desktop */
+  .sig-hero.is-settled .sig-hero__phone--1,
+  .sig-hero.is-playing .sig-hero__phone--1 {
+    left: 4%;
+    top: 8%;
+    transform: translate(0, var(--drift, 0px)) scale(1);
+    opacity: 1;
+  }
+
+  .sig-hero.is-settled .sig-hero__phone--2,
+  .sig-hero.is-playing .sig-hero__phone--2 {
+    right: 4%;
+    left: auto;
+    top: 10%;
+    transform: translate(0, calc(var(--drift, 0px) * -0.6)) scale(1);
+    opacity: 1;
+  }
+
+  .sig-hero.is-settled .sig-hero__phone--3,
+  .sig-hero.is-playing .sig-hero__phone--3 {
+    left: 6%;
+    top: auto;
+    bottom: 12%;
+    transform: translate(0, calc(var(--drift, 0px) * 0.5)) scale(1);
+    opacity: 1;
+  }
+
+  .sig-hero.is-settled .sig-hero__phone--4,
+  .sig-hero.is-playing .sig-hero__phone--4 {
+    right: 5%;
+    left: auto;
+    top: auto;
+    bottom: 14%;
+    transform: translate(0, calc(var(--drift, 0px) * -0.4)) scale(1);
+    opacity: 1;
+  }
+
+  .sig-hero__copy {
+    position: relative;
+    z-index: 2;
+    max-width: 36rem;
+    text-align: center;
+    margin-inline: auto;
+    opacity: 0;
+    transform: translateY(0.75rem);
+    transition:
+      opacity 0.7s var(--ease-out) 0.55s,
+      transform 0.7s var(--ease-out) 0.55s;
+  }
+
+  .sig-hero.is-playing .sig-hero__copy,
+  .sig-hero.is-settled .sig-hero__copy {
+    opacity: 1;
+    transform: none;
+  }
+
+  .sig-hero__eyebrow {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-fg-muted);
+    margin-bottom: var(--space-3);
+  }
+
+  .sig-hero h1 {
+    font-size: var(--text-hero);
+    margin-bottom: var(--space-4);
+  }
+
+  .sig-hero__title-line {
+    display: block;
+  }
+
+  .sig-hero__lede {
+    color: var(--color-fg-muted);
+    margin-bottom: var(--space-6);
+    line-height: var(--leading-normal);
+  }
+
+  .sig-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    justify-content: center;
+  }
+
+  /* Mobile: 2×2 above copy */
+  @media (max-width: 47.99rem) {
+    .sig-hero {
+      align-items: start;
+      padding-top: var(--space-6);
+      min-height: auto;
+    }
+
+    .sig-hero__stage {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3);
+      padding: var(--space-4);
+      inset: auto;
+      margin-bottom: var(--space-6);
+    }
+
+    .sig-hero__phone {
+      position: relative;
+      left: auto !important;
+      right: auto !important;
+      top: auto !important;
+      bottom: auto !important;
+      width: 100%;
+      transform: none !important;
+      opacity: 1;
+    }
+
+    .sig-hero__copy {
+      opacity: 1;
+      transform: none;
+      padding-bottom: var(--space-10);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sig-hero__phone,
+    .sig-hero__copy {
+      transition: none;
+    }
+  }
+</style>

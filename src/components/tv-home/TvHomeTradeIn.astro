@@ -1,0 +1,76 @@
+---
+import { tvHomeModels, formatKes, tradeInEstimate, tvHomeConfig } from "../../lib/tv-home";
+
+interface Props { modelId?: string; }
+const { modelId } = Astro.props;
+const options = tvHomeModels.map((m) => ({ id: m.id, name: m.name, base: m.basePriceKes }));
+const initial = options.find((o) => o.id === modelId) || options[0];
+const likeNew = tradeInEstimate(initial.base, "likeNew");
+const cfg = tvHomeConfig.tradeIn;
+---
+
+<section class="tvhome-trade" data-tvhome-trade>
+  <header>
+    <h3>Trade-in (illustration)</h3>
+    <p>{cfg.note}</p>
+  </header>
+  <label>
+    Model
+    <select data-tvhome-trade-model>
+      {options.map((o) => (
+        <option value={o.id} data-base={o.base} selected={o.id === initial.id}>{o.name}</option>
+      ))}
+    </select>
+  </label>
+  <fieldset>
+    <legend>Condition</legend>
+    <div class="tvhome-trade__conds">
+      {(["likeNew", "good", "worn"] as const).map((c, i) => (
+        <button type="button" class:list={{ "is-active": i === 0 }} data-tvhome-trade-cond={c}>
+          {c === "likeNew" ? "Like new" : c === "good" ? "Good" : "Worn"}
+        </button>
+      ))}
+    </div>
+  </fieldset>
+  <p class="tvhome-trade__est">Up to <strong data-tvhome-trade-val>{formatKes(likeNew)}</strong> off your next device</p>
+</section>
+
+<script>
+  document.querySelectorAll("[data-tvhome-trade]").forEach((root) => {
+    const model = root.querySelector("[data-tvhome-trade-model]");
+    const val = root.querySelector("[data-tvhome-trade-val]");
+    let cond = "likeNew";
+    const pct = { likeNew: 30, good: 20, worn: 10 };
+    function run() {
+      if (!(model instanceof HTMLSelectElement)) return;
+      const base = Number(model.selectedOptions[0]?.getAttribute("data-base") || 0);
+      const est = Math.round((base * (pct[cond] || 10)) / 100 / 500) * 500;
+      if (val) val.textContent = `KES ${est.toLocaleString("en-KE")}`;
+    }
+    model?.addEventListener("change", run);
+    root.querySelectorAll("[data-tvhome-trade-cond]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        root.querySelectorAll("[data-tvhome-trade-cond]").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        cond = btn.getAttribute("data-tvhome-trade-cond") || "likeNew";
+        run();
+      });
+    });
+    run();
+  });
+</script>
+
+<style>
+  .tvhome-trade { display: grid; gap: 0.75rem; padding: 1.25rem; border: 1px solid #d2d2d7; border-radius: 1rem; }
+  .tvhome-trade header h3 { margin: 0 0 0.25rem; font-size: 1.1rem; }
+  .tvhome-trade header p { margin: 0; font-size: var(--text-sm); color: #6e6e73; }
+  .tvhome-trade label { display: grid; gap: 0.35rem; font-size: var(--text-sm); font-weight: 600; }
+  .tvhome-trade select { width: 100%; }
+  .tvhome-trade fieldset { border: none; margin: 0; padding: 0; }
+  .tvhome-trade__conds { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.35rem; }
+  .tvhome-trade__conds button {
+    border: 1px solid #d2d2d7; background: #fff; padding: 0.35rem 0.65rem; border-radius: 999px; cursor: pointer; font-size: var(--text-sm);
+  }
+  .tvhome-trade__conds button.is-active { background: #000; color: #fff; border-color: #000; }
+  .tvhome-trade__est { margin: 0; font-size: var(--text-sm); }
+</style>

@@ -1,0 +1,137 @@
+---
+/**
+ * Light home strip into the iPhone 11–16 shop — does not rebuild the home hero.
+ */
+import {
+  models,
+  getImage,
+  defaultColourForModel,
+  formatKes,
+  modelsByFamily,
+} from "../../lib/iphone";
+import ProductStage from "../iphone/ProductStage.astro";
+
+const gens = [16, 15, 14, 13, 12, 11] as const;
+const cards = gens.map((g) => {
+  const family = modelsByFamily(g);
+  const rep =
+    family.find((m) => m.tier === "Pro") ||
+    family.find((m) => m.tier === "Standard") ||
+    family[0];
+  const colour = defaultColourForModel(rep.id, rep.defaultColour ?? undefined);
+  const img = getImage(rep.id, colour, 1, rep.name);
+  const lowest = Math.min(...family.map((m) => m.basePriceKes));
+  return {
+    family: g,
+    count: family.length,
+    lowest,
+    href: `/iphone?family=${g}`,
+    img,
+    label: `iPhone ${g}`,
+  };
+});
+---
+
+<section class="iphone-home-strip fade-up" data-fade-up>
+  <div class="container">
+    <header class="home-section__head home-section__head--row">
+      <div>
+        <h2>iPhone 11 to 16</h2>
+        <p>Shop by generation. Sealed stock. Sample prices until admin is live.</p>
+      </div>
+      <a class="home-section__link" href="/iphone">Shop all iPhone ›</a>
+    </header>
+    <ul class="iphone-home-strip__grid">
+      {
+        cards.map((c) => (
+          <li>
+            <a class="iphone-home-strip__card" href={c.href}>
+              <ProductStage src={c.img.src} srcWebp={c.img.srcWebp} alt={c.img.alt} width={c.img.width} height={c.img.width} highPriority={c.family === 16} eager={c.family === 16} />
+              <span class="iphone-home-strip__label">{c.label}</span>
+              <span class="iphone-home-strip__meta">
+                {c.count} models · from {formatKes(c.lowest)}
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .iphone-home-strip {
+    padding-block: var(--space-12);
+    background: var(--color-stage);
+  }
+
+  .iphone-home-strip__grid {
+    list-style: none;
+    margin: var(--space-8) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (min-width: 48rem) {
+    .iphone-home-strip__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .iphone-home-strip__grid {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+  }
+
+  .iphone-home-strip__card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: inherit;
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    transition: transform var(--duration) var(--ease-out);
+  }
+
+  .iphone-home-strip__card:hover {
+    transform: translateY(-6px);
+    color: inherit;
+  }
+
+  .iphone-home-strip__card:hover :global(.pstage__img) {
+    transform: scale(1.07) rotate(-2deg);
+  }
+
+  .iphone-home-strip__card :global(.pstage) {
+    border-radius: var(--radius-card);
+  }
+
+  .iphone-home-strip__card :global(.pstage__img) {
+    transition: transform var(--duration) var(--ease-out);
+  }
+
+  .iphone-home-strip__label {
+    font-weight: var(--font-weight-display);
+    letter-spacing: -0.02em;
+    padding-inline: 0.15rem;
+  }
+
+  .iphone-home-strip__meta {
+    font-size: var(--text-xs);
+    color: var(--color-fg-muted);
+    padding-inline: 0.15rem;
+    padding-bottom: 0.35rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .iphone-home-strip__card,
+    .iphone-home-strip__card :global(.pstage__img) {
+      transition: none;
+      transform: none;
+    }
+  }
+</style>

@@ -1,0 +1,223 @@
+---
+/**
+ * Which iPhone suits you? — 2-question quiz → top 3 matches.
+ */
+import {
+  models,
+  getImage,
+  defaultColourForModel,
+  isOverviewOnly,
+  modelSubline,
+} from "../../lib/iphone";
+
+const payload = models.map((m) => {
+  const colour = defaultColourForModel(m.id, m.defaultColour ?? undefined);
+  const img = getImage(m.id, colour, isOverviewOnly(m.id) ? "overview" : 1, m.name);
+  return {
+    id: m.id,
+    name: m.name,
+    href: `/iphone/${m.id}`,
+    priceKes: m.basePriceKes,
+    display: m.displayInches,
+    cameras: m.rearCameras.length,
+    battery: m.batteryVideoHours,
+    family: m.family,
+    year: m.year,
+    sub: modelSubline(m),
+    image: img.src,
+    alt: img.alt,
+  };
+});
+---
+
+<section class="iquiz" id="quiz" data-iquiz>
+  <header>
+    <h2>Which iPhone suits you?</h2>
+    <p>Two questions. We’ll show three matches.</p>
+  </header>
+
+  <div class="iquiz__q" data-q="size">
+    <p>Screen size?</p>
+    <div class="iquiz__opts">
+      <button type="button" data-val="small">Small and light</button>
+      <button type="button" data-val="standard">Standard</button>
+      <button type="button" data-val="large">Large</button>
+    </div>
+  </div>
+
+  <div class="iquiz__q" data-q="priority">
+    <p>What matters most?</p>
+    <div class="iquiz__opts">
+      <button type="button" data-val="price">Lowest price</button>
+      <button type="button" data-val="camera">Best camera</button>
+      <button type="button" data-val="battery">Longest battery</button>
+    </div>
+  </div>
+
+  <div class="iquiz__results" data-quiz-results hidden>
+    <h3>Your matches</h3>
+    <ul data-quiz-list></ul>
+  </div>
+</section>
+
+<script define:vars={{ payload }}>
+  const root = document.querySelector("[data-iquiz]");
+  if (root) {
+    const answers = { size: "", priority: "" };
+    const list = root.querySelector("[data-quiz-list]");
+    const results = root.querySelector("[data-quiz-results]");
+
+    function sizeBucket(inches) {
+      if (inches < 5.9) return "small";
+      if (inches < 6.5) return "standard";
+      return "large";
+    }
+
+    function run() {
+      if (!answers.size || !answers.priority || !list || !results) return;
+      let pool = payload.filter((m) => sizeBucket(m.display) === answers.size);
+      if (!pool.length) pool = [...payload];
+
+      if (answers.priority === "price") {
+        pool.sort((a, b) => a.priceKes - b.priceKes || b.family - a.family);
+      } else if (answers.priority === "camera") {
+        pool.sort((a, b) => b.cameras - a.cameras || b.family - a.family || b.year - a.year);
+      } else {
+        pool.sort((a, b) => b.battery - a.battery || b.family - a.family);
+      }
+
+      const top = pool.slice(0, 3);
+      results.hidden = false;
+      list.innerHTML = top
+        .map(
+          (m) => `
+        <li>
+          <a href="${m.href}">
+            <img src="${m.image}" alt="${m.alt}" width="72" height="72" loading="lazy" />
+            <span>
+              <strong>${m.name}</strong>
+              <em>${m.sub}</em>
+              <b>From KES ${m.priceKes.toLocaleString("en-KE")}</b>
+            </span>
+          </a>
+        </li>`,
+        )
+        .join("");
+    }
+
+    root.querySelectorAll("[data-q]").forEach((group) => {
+      const key = group.getAttribute("data-q");
+      group.querySelectorAll("button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          group.querySelectorAll("button").forEach((b) => b.classList.remove("is-active"));
+          btn.classList.add("is-active");
+          answers[key] = btn.getAttribute("data-val") || "";
+          run();
+        });
+      });
+    });
+  }
+</script>
+
+<style>
+  .iquiz {
+    margin: var(--space-12) 0;
+    padding: var(--space-8);
+    background: var(--color-stage);
+    color: #1d1d1f;
+    border-radius: 1.5rem;
+  }
+
+  .iquiz header h2 {
+    margin: 0 0 0.35rem;
+    letter-spacing: -0.02em;
+  }
+
+  .iquiz header p {
+    margin: 0 0 1.25rem;
+    color: #6e6e73;
+  }
+
+  .iquiz__q {
+    margin-bottom: 1.1rem;
+  }
+
+  .iquiz__q p {
+    margin: 0 0 0.5rem;
+    font-weight: 600;
+    font-size: var(--text-sm);
+  }
+
+  .iquiz__opts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .iquiz__opts button {
+    border: 1px solid #d2d2d7;
+    background: #fff;
+    border-radius: 999px;
+    padding: 0.45rem 0.85rem;
+    font: inherit;
+    font-size: var(--text-sm);
+    cursor: pointer;
+  }
+
+  .iquiz__opts button.is-active,
+  .iquiz__opts button:hover {
+    background: #000;
+    border-color: #000;
+    color: #fff;
+  }
+
+  .iquiz__results h3 {
+    margin: 1rem 0 0.75rem;
+  }
+
+  .iquiz__results ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .iquiz__results a {
+    display: grid;
+    grid-template-columns: 4.5rem 1fr;
+    gap: 0.75rem;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    background: #fff;
+    border-radius: 1rem;
+    padding: 0.65rem;
+  }
+
+  .iquiz__results img {
+    width: 4.5rem;
+    height: 4.5rem;
+    object-fit: contain;
+    background: #f5f5f7;
+    mix-blend-mode: multiply;
+  }
+
+  .iquiz__results strong {
+    display: block;
+    letter-spacing: -0.02em;
+  }
+
+  .iquiz__results em {
+    display: block;
+    font-style: normal;
+    font-size: 0.8rem;
+    color: #6e6e73;
+  }
+
+  .iquiz__results b {
+    display: block;
+    margin-top: 0.2rem;
+    font-size: 0.85rem;
+  }
+</style>

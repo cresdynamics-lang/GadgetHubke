@@ -1,0 +1,460 @@
+---
+/**
+ * iPad shop — Family / Size / Gen / Need + Pencil Pro & Apple Intelligence toggles.
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import IpadCard from "../../components/ipad/IpadCard.astro";
+import {
+  ipadModels,
+  ipadConfig,
+  getIpadImage,
+  defaultIpadColour,
+  formatKes,
+  type IpadFamily,
+  type IpadChipGen,
+} from "../../lib/ipad";
+
+const params = Astro.url.searchParams;
+const family = params.get("family") as IpadFamily | null;
+const chip = params.get("chip") as IpadChipGen | null;
+const size = params.get("size");
+const need = params.get("need");
+const pencilPro = params.get("pencil") === "pro" || params.get("pencilPro") === "1";
+const aiOnly = params.get("ai") === "1";
+const sort = params.get("sort") || "newest";
+
+let list = [...ipadModels];
+if (family === "Pro" || family === "Air" || family === "mini" || family === "iPad") {
+  list = list.filter((m) => m.family === family);
+}
+if (chip) list = list.filter((m) => m.chipGen === chip);
+if (size) {
+  const s = Number(size);
+  if (!Number.isNaN(s)) list = list.filter((m) => Math.abs(m.screenInches - s) < 0.2 || (s === 13 && m.screenInches === 12.9));
+}
+if (pencilPro) list = list.filter((m) => m.pencils.includes("pro"));
+if (aiOnly) list = list.filter((m) => m.appleIntelligence);
+
+if (need === "drawing") list = list.filter((m) => m.family === "Pro" || (m.family === "Air" && m.pencils.includes("pro")));
+else if (need === "school") list = list.filter((m) => m.family === "Air" || m.family === "iPad" || m.family === "mini");
+else if (need === "kids") list = list.filter((m) => m.family === "iPad");
+else if (need === "work") list = list.filter((m) => m.family === "Pro" || m.family === "Air" || m.family === "mini");
+else if (need === "lightest") list = [...list].sort((a, b) => a.weightG - b.weightG).slice(0, 8);
+else if (need === "screen") list = list.filter((m) => m.display.promotion || m.family === "Pro");
+else if (need === "price") list = [...list].sort((a, b) => a.basePriceKes - b.basePriceKes).slice(0, 8);
+
+if (need !== "lightest" && need !== "price") {
+  if (sort === "price") list.sort((a, b) => a.basePriceKes - b.basePriceKes);
+  else if (sort === "weight") list.sort((a, b) => a.weightG - b.weightG);
+  else list.sort((a, b) => b.year - a.year || b.basePriceKes - a.basePriceKes);
+}
+
+const qs = (extra: Record<string, string | null>) => {
+  const p = new URLSearchParams(params);
+  for (const [k, v] of Object.entries(extra)) {
+    if (v === null || v === "") p.delete(k);
+    else p.set(k, v);
+  }
+  const s = p.toString();
+  return s ? `/ipad/shop?${s}` : "/ipad/shop";
+};
+
+const compareCards = Object.fromEntries(
+  ipadModels.map((m) => {
+    const c = defaultIpadColour(m);
+    const img = getIpadImage(m.id, c, "product", m.name);
+    return [
+      m.id,
+      {
+        id: m.id,
+        name: m.name,
+        href: `/ipad/${m.id}`,
+        price: m.basePriceKes,
+        priceLabel: formatKes(m.basePriceKes),
+        imageSrc: img.src,
+        chip: m.chip,
+        display: `${m.display.diagonal}″ ${m.display.panel}`,
+        pencil: m.pencils.join(", "),
+        keyboard: m.keyboards.join(", "),
+        camera: m.frontCamera,
+        battery: `${m.batteryHours} h`,
+        weight: `${m.weightG} g`,
+        size: `${m.screenInches}″`,
+        ai: m.appleIntelligence ? "Yes" : "No",
+      },
+    ];
+  }),
+);
+---
+
+<BaseLayout title="Shop iPad - GadgetHub" description="Filter iPad Pro, Air, mini and iPad by size, chip and need.">
+  <section class="container ipad-shop">
+    <nav class="ipad-shop__crumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> / <a href="/ipad">iPad</a> / Shop
+    </nav>
+    <h1>Shop iPad</h1>
+    <p class="ipad-shop__intro">{ipadConfig.samplePriceDisclaimer}</p>
+
+    <div class="ipad-shop__filters" role="group" aria-label="Family">
+      <a class:list={["ipad-chip", { "is-active": !family }]} href={qs({ family: null })}>All</a>
+      {(["Pro", "Air", "mini", "iPad"] as const).map((f) => (
+        <a class:list={["ipad-chip", { "is-active": family === f }]} href={qs({ family: f })}>
+          {f === "iPad" ? "iPad" : `iPad ${f}`}
+        </a>
+      ))}
+    </div>
+    <div class="ipad-shop__filters" role="group" aria-label="Size">
+      {["8.3", "10.9", "11", "12.9", "13"].map((s) => (
+        <a class:list={["ipad-chip", { "is-active": size === s }]} href={qs({ size: size === s ? null : s })}>
+          {s}″
+        </a>
+      ))}
+    </div>
+    <div class="ipad-shop__filters" role="group" aria-label="Generation">
+      {(["M5", "M4", "M3", "M2", "M1"] as const).map((g) => (
+        <a class:list={["ipad-chip", { "is-active": chip === g }]} href={qs({ chip: chip === g ? null : g })}>
+          {g}
+        </a>
+      ))}
+    </div>
+    <div class="ipad-shop__filters" role="group" aria-label="Need">
+      <a class:list={["ipad-chip", { "is-active": need === "drawing" }]} href={qs({ need: "drawing" })}>Drawing</a>
+      <a class:list={["ipad-chip", { "is-active": need === "school" }]} href={qs({ need: "school" })}>School</a>
+      <a class:list={["ipad-chip", { "is-active": need === "kids" }]} href={qs({ need: "kids" })}>Kids</a>
+      <a class:list={["ipad-chip", { "is-active": need === "work" }]} href={qs({ need: "work" })}>Work & travel</a>
+      <a class:list={["ipad-chip", { "is-active": need === "lightest" }]} href={qs({ need: "lightest" })}>Lightest</a>
+      <a class:list={["ipad-chip", { "is-active": need === "screen" }]} href={qs({ need: "screen" })}>Best screen</a>
+      <a class:list={["ipad-chip", { "is-active": need === "price" }]} href={qs({ need: "price" })}>Lowest price</a>
+    </div>
+    <div class="ipad-shop__toggles">
+      <a class:list={["ipad-chip", { "is-active": pencilPro }]} href={qs({ pencilPro: pencilPro ? null : "1", pencil: null })}>
+        Works with Apple Pencil Pro
+      </a>
+      <a class:list={["ipad-chip", { "is-active": aiOnly }]} href={qs({ ai: aiOnly ? null : "1" })}>
+        Supports Apple Intelligence
+      </a>
+      <label class="ipad-shop__sort">
+        Sort
+        <select onchange="location.href=this.value">
+          <option value={qs({ sort: "newest" })} selected={sort === "newest"}>Newest</option>
+          <option value={qs({ sort: "price" })} selected={sort === "price"}>Price</option>
+          <option value={qs({ sort: "weight" })} selected={sort === "weight"}>Weight</option>
+        </select>
+      </label>
+    </div>
+
+    <p class="ipad-shop__count">{list.length} models</p>
+    <ul class="ipad-shop__grid">
+      {list.map((m) => (
+        <li>
+          <IpadCard model={m} />
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <div class="ipad-compare-tray" data-ipad-compare-tray hidden>
+    <p><span data-ipad-compare-count>0</span> selected · max 3</p>
+    <button type="button" class="btn btn--primary btn--sm" data-ipad-compare-open>Compare</button>
+    <a class="btn btn--secondary btn--sm" data-ipad-compare-page href="/ipad/compare">Open page</a>
+    <button type="button" class="btn btn--secondary btn--sm" data-ipad-compare-clear>Clear</button>
+  </div>
+
+  <dialog class="ipad-compare-modal" data-ipad-compare-modal aria-label="Compare iPads">
+    <div class="ipad-compare-modal__panel">
+      <header>
+        <h2>Compare</h2>
+        <button type="button" data-ipad-compare-close>Close</button>
+      </header>
+      <div data-ipad-compare-body></div>
+    </div>
+  </dialog>
+</BaseLayout>
+
+<script define:vars={{ compareCards }}>
+  const selected = new Set();
+  const tray = document.querySelector("[data-ipad-compare-tray]");
+  const countEl = document.querySelector("[data-ipad-compare-count]");
+  const modal = document.querySelector("[data-ipad-compare-modal]");
+  const body = document.querySelector("[data-ipad-compare-body]");
+  const pageLink = document.querySelector("[data-ipad-compare-page]");
+  let diffsOnly = true;
+
+  const toast = (msg) => {
+    let t = document.querySelector("[data-ipad-toast]");
+    if (!t) {
+      t = document.createElement("div");
+      t.setAttribute("data-ipad-toast");
+      t.className = "ipad-toast";
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.hidden = false;
+    setTimeout(() => (t.hidden = true), 1800);
+  };
+
+  function sync() {
+    if (tray) tray.hidden = selected.size === 0;
+    if (countEl) countEl.textContent = String(selected.size);
+    if (pageLink instanceof HTMLAnchorElement) {
+      const ids = [...selected].join(",");
+      pageLink.href = ids ? `/ipad/compare?ids=${encodeURIComponent(ids)}` : "/ipad/compare";
+    }
+  }
+
+  function honest(cards) {
+    const points = [];
+    const families = new Set(cards.map((c) => c.name.split(" ")[1] || c.name));
+    const chips = new Set(cards.map((c) => c.chip));
+    if (chips.size > 1) points.push(`Chip differs: ${[...chips].join(" vs ")}.`);
+    const pencils = new Set(cards.map((c) => c.pencil));
+    if (pencils.size > 1) points.push("Apple Pencil support is not the same — check before you buy.");
+    const ais = new Set(cards.map((c) => c.ai));
+    if (ais.size > 1) points.push("Apple Intelligence support differs across these models.");
+    const prices = cards.map((c) => c.price);
+    if (Math.max(...prices) - Math.min(...prices) >= 20000) {
+      points.push(`Sample price gap about KES ${(Math.max(...prices) - Math.min(...prices)).toLocaleString("en-KE")}.`);
+    }
+    return points.slice(0, 3).join(" ") || "These iPads are close — compare Pencil and keyboard fit carefully.";
+  }
+
+  function renderModal() {
+    if (!(modal instanceof HTMLDialogElement) || !body) return;
+    const cards = [...selected].map((id) => compareCards[id]).filter(Boolean);
+    if (!cards.length) return;
+    const rows = [
+      { group: "Chip", label: "Chip", values: cards.map((c) => c.chip) },
+      { group: "Display", label: "Display", values: cards.map((c) => c.display) },
+      { group: "Apple Pencil", label: "Pencil", values: cards.map((c) => c.pencil) },
+      { group: "Keyboard", label: "Keyboard", values: cards.map((c) => c.keyboard) },
+      { group: "Camera", label: "Front camera", values: cards.map((c) => c.camera) },
+      { group: "Battery", label: "Battery", values: cards.map((c) => c.battery) },
+      { group: "Size and weight", label: "Size", values: cards.map((c) => c.size) },
+      { group: "Size and weight", label: "Weight", values: cards.map((c) => c.weight) },
+      { group: "Software", label: "Apple Intelligence", values: cards.map((c) => c.ai) },
+      { group: "Price", label: "From (sample)", values: cards.map((c) => c.priceLabel) },
+    ];
+    const visible = diffsOnly ? rows.filter((r) => new Set(r.values).size > 1) : rows;
+    let last = "";
+    const tbody = visible
+      .map((r) => {
+        const group =
+          r.group !== last
+            ? `<tr class="ipad-compare-group"><th colspan="${cards.length + 1}">${r.group}</th></tr>`
+            : "";
+        last = r.group;
+        return `${group}<tr><th>${r.label}</th>${r.values.map((v) => `<td>${v}</td>`).join("")}</tr>`;
+      })
+      .join("");
+
+    body.innerHTML = `
+      <p class="ipad-compare-honest"><strong>The honest difference.</strong> ${honest(cards)}</p>
+      <label class="ipad-compare-toggle"><input type="checkbox" data-ipad-diff-only ${diffsOnly ? "checked" : ""} /> Show only differences</label>
+      <div class="ipad-compare-scroll">
+        <table>
+          <thead><tr><th></th>${cards
+            .map(
+              (c) => `<th><a href="${c.href}"><img src="${c.imageSrc}" alt="" width="120" height="120" loading="lazy" /><span>${c.name}</span></a><small>From ${c.priceLabel}</small></th>`,
+            )
+            .join("")}</tr></thead>
+          <tbody>${tbody}</tbody>
+        </table>
+      </div>`;
+    body.querySelector("[data-ipad-diff-only]")?.addEventListener("change", (e) => {
+      diffsOnly = e.target instanceof HTMLInputElement ? e.target.checked : true;
+      renderModal();
+    });
+    modal.showModal();
+  }
+
+  document.querySelectorAll("[data-compare]").forEach((input) => {
+    input.addEventListener("change", () => {
+      const id = input.getAttribute("data-compare");
+      if (!(input instanceof HTMLInputElement) || !id) return;
+      if (input.checked) {
+        if (selected.size >= 3) {
+          input.checked = false;
+          toast("Compare up to 3 iPads");
+          return;
+        }
+        selected.add(id);
+      } else selected.delete(id);
+      sync();
+    });
+  });
+
+  document.querySelector("[data-ipad-compare-clear]")?.addEventListener("click", () => {
+    selected.clear();
+    document.querySelectorAll("[data-compare]").forEach((i) => {
+      if (i instanceof HTMLInputElement) i.checked = false;
+    });
+    sync();
+  });
+  document.querySelector("[data-ipad-compare-open]")?.addEventListener("click", renderModal);
+  document.querySelector("[data-ipad-compare-close]")?.addEventListener("click", () => {
+    if (modal instanceof HTMLDialogElement) modal.close();
+  });
+</script>
+
+<style>
+  .ipad-shop {
+    padding-block: var(--space-10) var(--ipad-section-gap);
+  }
+  .ipad-shop__crumb {
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+    margin-bottom: 0.75rem;
+  }
+  .ipad-shop h1 {
+    margin: 0 0 0.5rem;
+    font-size: var(--ipad-headline);
+    letter-spacing: -0.03em;
+  }
+  .ipad-shop__intro {
+    color: var(--color-fg-muted);
+    max-width: 40rem;
+  }
+  .ipad-shop__filters,
+  .ipad-shop__toggles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin: 0.85rem 0;
+    align-items: center;
+  }
+  .ipad-chip {
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 0.4rem 0.8rem;
+    text-decoration: none;
+    color: inherit;
+    font-size: var(--text-sm);
+  }
+  .ipad-chip.is-active,
+  .ipad-chip:hover {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+  }
+  .ipad-shop__sort {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: var(--text-sm);
+  }
+  .ipad-shop__count {
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+  .ipad-shop__grid {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 40rem) {
+    .ipad-shop__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64rem) {
+    .ipad-shop__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .ipad-compare-tray {
+    position: fixed;
+    left: 50%;
+    bottom: 1.25rem;
+    transform: translateX(-50%);
+    z-index: 80;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: #000;
+    color: #fff;
+    padding: 0.65rem 1rem;
+    border-radius: 999px;
+  }
+  .ipad-compare-tray p {
+    margin: 0;
+    font-size: var(--text-sm);
+  }
+  .ipad-compare-modal {
+    width: min(100% - 1.5rem, 56rem);
+    max-height: 90vh;
+    border: none;
+    border-radius: 1rem;
+    padding: 0;
+  }
+  .ipad-compare-modal__panel {
+    padding: 1rem;
+  }
+  .ipad-compare-modal header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .ipad-compare-honest {
+    margin: 0.75rem 0;
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+  .ipad-compare-toggle {
+    display: inline-flex;
+    gap: 0.4rem;
+    font-size: var(--text-sm);
+    margin-bottom: 0.75rem;
+  }
+  .ipad-compare-scroll {
+    overflow-x: auto;
+  }
+  .ipad-compare-modal table {
+    width: 100%;
+    min-width: 28rem;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+  }
+  .ipad-compare-modal th,
+  .ipad-compare-modal td {
+    border-bottom: 1px solid var(--color-border);
+    padding: 0.55rem;
+    text-align: left;
+    vertical-align: top;
+  }
+  .ipad-compare-modal thead img {
+    width: 5.5rem;
+    height: 5.5rem;
+    object-fit: contain;
+    background: #f5f5f7;
+    border-radius: 0.75rem;
+    mix-blend-mode: multiply;
+  }
+  .ipad-compare-modal thead a {
+    display: grid;
+    gap: 0.35rem;
+    text-decoration: none;
+    color: inherit;
+  }
+  :global(.ipad-compare-group th) {
+    background: var(--color-bg-subtle);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-fg-muted);
+  }
+  :global(.ipad-toast) {
+    position: fixed;
+    bottom: 5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1d1d1f;
+    color: #fff;
+    padding: 0.55rem 0.9rem;
+    border-radius: 999px;
+    z-index: 90;
+    font-size: var(--text-sm);
+  }
+</style>
