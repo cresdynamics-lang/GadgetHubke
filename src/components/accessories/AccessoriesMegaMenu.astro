@@ -1,6 +1,6 @@
 ---
 /**
- * Accessories mega menu — 4 columns: groups, live products, find what fits, preview.
+ * Accessories mega menu — five live groups: Pencil, Keyboard, Pointers, Power, Cases.
  */
 import {
   getAccessory,
@@ -28,7 +28,7 @@ const liveIds = [
   "keyboard-ipad-pro-13",
   "mouse-usbc-black",
   "trackpad-usbc-white",
-  "power-adapter-20w",
+  "power-adapter-70w",
   "magsafe-charger-1m",
   "case-iphone-17-pro-silicone",
   "folio-ipad-air-11-m4",
@@ -43,28 +43,31 @@ const previews = Object.fromEntries(
 const defaultPreview = previews["pencil-pro"];
 
 const groups = [
-  { label: "Apple Pencil", href: "/accessories/apple-pencil", coming: false },
-  { label: "Magic Keyboard", href: "/accessories/magic-keyboard", coming: false },
-  { label: "Pointers", href: "/accessories/magic-mouse", coming: false, sub: [
-    { label: "Magic Mouse", href: "/accessories/magic-mouse" },
-    { label: "Magic Trackpad", href: "/accessories/magic-trackpad" },
-  ]},
-  { label: "Power", href: "/accessories/power", coming: false },
-  { label: "Cases", href: "/accessories/cases", coming: false },
+  { label: "Apple Pencil", href: "/accessories/apple-pencil" },
+  { label: "Magic Keyboard", href: "/accessories/magic-keyboard" },
+  {
+    label: "Pointers",
+    href: "/accessories/magic-mouse",
+    sub: [
+      { label: "Magic Mouse", href: "/accessories/magic-mouse" },
+      { label: "Magic Trackpad", href: "/accessories/magic-trackpad" },
+    ],
+  },
+  { label: "Power", href: "/accessories/power" },
+  { label: "Cases", href: "/accessories/cases" },
 ];
 
-const liveLinks = [
-  { label: "Pencil Pro", id: "pencil-pro" },
-  { label: "Pencil (USB-C)", id: "pencil-usbc" },
-  { label: "Magic Keyboard for iPad Pro", id: "keyboard-ipad-pro-13" },
-  { label: "Magic Keyboard Folio", id: "keyboard-folio" },
-  { label: "Magic Mouse — White", id: "mouse-usbc-white" },
-  { label: "Magic Mouse — Black", id: "mouse-usbc-black" },
-  { label: "Magic Trackpad — White", id: "trackpad-usbc-white" },
-  { label: "Magic Trackpad — Black", id: "trackpad-usbc-black" },
-  { label: "20W USB-C Power Adapter", id: "power-adapter-20w" },
+const powerLinks = [
+  { label: "20W USB-C Adapter", id: "power-adapter-20w" },
+  { label: "70W USB-C Adapter", id: "power-adapter-70w" },
   { label: "MagSafe Charger (1 m)", id: "magsafe-charger-1m" },
+  { label: "240W USB-C Cable (2 m)", id: "cable-usbc-240w-2m" },
+];
+
+const caseLinks = [
   { label: "iPhone 17 Pro Silicone", id: "case-iphone-17-pro-silicone" },
+  { label: "iPhone 17 Clear", id: "case-iphone-17-clear" },
+  { label: "iPhone 18 Pro TechWoven", id: "case-iphone-18-pro-techwoven" },
   { label: "Smart Folio iPad Air 11", id: "folio-ipad-air-11-m4" },
 ];
 
@@ -74,7 +77,6 @@ const findLinks = [
   { label: "Which Mouse or Trackpad?", href: "/accessories/magic-mouse#finder" },
   { label: "What charger do I need?", href: "/accessories/power#finder" },
   { label: "Which case fits my iPhone?", href: "/accessories/cases#finder" },
-  { label: "Compare Mouse and Trackpad", href: "/accessories/compare?group=pointer" },
   { label: "Compare adapters", href: "/accessories/compare?group=power" },
   { label: "Compare cases", href: "/accessories/compare?group=cases" },
 ];
@@ -88,12 +90,18 @@ const findLinks = [
         {
           groups.map((g) => (
             <li>
-              <a class:list={["xmega__link", { "is-coming": g.coming }]} href={g.href}>
-                <span>
-                  {g.label}
-                  {g.coming ? <span class="xmega__tag">Coming next</span> : null}
-                </span>
+              <a class="xmega__link" href={g.href}>
+                <span>{g.label}</span>
               </a>
+              {"sub" in g && g.sub ? (
+                <ul class="xmega__sub">
+                  {g.sub.map((s) => (
+                    <li>
+                      <a class="xmega__link xmega__link--sub" href={s.href}>{s.label}</a>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
             </li>
           ))
         }
@@ -102,10 +110,10 @@ const findLinks = [
     </div>
 
     <div class="xmega__col">
-      <p class="xmega__heading">Live accessories</p>
+      <p class="xmega__heading">Power</p>
       <ul>
         {
-          liveLinks.map((l) => (
+          powerLinks.map((l) => (
             <li>
               <a class="xmega__link" href={`/accessories/${l.id}`} data-mega-preview={l.id}>
                 <span>{l.label}</span>
@@ -115,6 +123,22 @@ const findLinks = [
           ))
         }
       </ul>
+      <a class="xmega__all" href="/accessories/power#finder">What charger do I need?</a>
+
+      <p class="xmega__heading xmega__heading--spaced">Cases</p>
+      <ul>
+        {
+          caseLinks.map((l) => (
+            <li>
+              <a class="xmega__link" href={`/accessories/${l.id}`} data-mega-preview={l.id}>
+                <span>{l.label}</span>
+                <em>from {formatKes(getAccessory(l.id)!.basePriceKes)}</em>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="xmega__all" href="/accessories/cases#finder">Which case fits?</a>
     </div>
 
     <div class="xmega__col">
@@ -193,10 +217,16 @@ const findLinks = [
     color: #6e6e73;
     margin: 0 0 0.75rem;
   }
+  .xmega__heading--spaced {
+    margin-top: 1.25rem;
+  }
   .xmega__col ul {
     list-style: none;
     margin: 0;
     padding: 0;
+  }
+  .xmega__sub {
+    margin: 0 0 0.35rem 0.75rem !important;
   }
   .xmega__link {
     display: flex;
@@ -208,6 +238,10 @@ const findLinks = [
     font-size: 0.95rem;
     transition: transform 160ms ease;
   }
+  .xmega__link--sub {
+    font-size: 0.85rem;
+    color: #6e6e73;
+  }
   .xmega__link:hover,
   .xmega__link:focus-visible {
     transform: translateX(5px);
@@ -217,17 +251,6 @@ const findLinks = [
     color: #6e6e73;
     font-size: 0.8rem;
     white-space: nowrap;
-  }
-  .xmega__tag {
-    display: inline-block;
-    margin-left: 0.4rem;
-    font-size: 0.65rem;
-    font-weight: 700;
-    color: #6e6e73;
-    border: 1px solid #d2d2d7;
-    padding: 0.1rem 0.35rem;
-    border-radius: 0.25rem;
-    vertical-align: middle;
   }
   .xmega__all {
     display: inline-block;
@@ -265,6 +288,14 @@ const findLinks = [
   @media (max-width: 1019px) {
     .xmega {
       display: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .xmega__link {
+      transition: none;
+    }
+    .xmega__stage img {
+      transition: none;
     }
   }
 </style>

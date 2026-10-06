@@ -7,50 +7,63 @@ import AccessoryQuiz from "../../components/accessories/AccessoryQuiz.astro";
 import AccessoryTradeIn from "../../components/accessories/AccessoryTradeIn.astro";
 import AccessoryTrademark from "../../components/accessories/AccessoryTrademark.astro";
 import {
-  accessoriesConfig,
+  lipaMonthly,
+  formatKes,
   getAccessory,
   getAccessoryImage,
   getAccessoriesPageImage,
-  formatKes,
-  lipaMonthly,
-  liveAccessoryGroups,
+  accessoriesConfig,
   lowestAccessoryPrice,
 } from "../../lib/accessories";
 import { whatsappUrl } from "../../lib/site";
 
+// liveAccessoryGroups kept for other surfaces; landing uses five shop cards below.
 const hero = getAccessoriesPageImage("pencil/hero/hero", "Apple Pencil");
 const heroKb = getAccessoriesPageImage("keyboard/selector/selector_hero", "Magic Keyboard");
 const heroMouse = getAccessoryImage("mouse-usbc-black", "hero");
-const heroTrackpad = getAccessoryImage("trackpad-usbc-white", "hero");
-const featured = ["pencil-pro", "keyboard-ipad-pro-13", "mouse-usbc-black", "trackpad-usbc-white"].map(
-  (id) => getAccessory(id)!,
-);
 const heroPower = getAccessoryImage("power-adapter-70w", "hero");
 const heroCases = getAccessoryImage("case-iphone-17-pro-silicone", "hero");
-const liveBlurbs: Record<string, string> = {
-  pencil: "Four Pencils. One fit check.",
-  keyboard: "For iPad and Mac.",
-  mouse: "Swipe on the shell.",
-  trackpad: "Force Touch surface.",
-  power: "Adapters, MagSafe and cables.",
-  cases: "Made for one exact model.",
-};
-const groupImg: Record<string, typeof hero> = {
-  pencil: hero,
-  keyboard: heroKb,
-  mouse: heroMouse,
-  trackpad: heroTrackpad,
-  power: heroPower,
-  cases: heroCases,
-};
-const groups = liveAccessoryGroups.map((g) => ({
-  label: g.label,
-  href: g.href,
-  coming: false,
-  blurb: liveBlurbs[g.id] || "Shop now",
-  fromKes: lowestAccessoryPrice(g.id),
-  img: groupImg[g.id] || hero,
-}));
+const featured = ["pencil-pro", "power-adapter-70w", "mouse-usbc-black", "case-iphone-17-pro-silicone"].map(
+  (id) => getAccessory(id)!,
+);
+
+const groups = [
+  {
+    label: "Apple Pencil",
+    href: "/accessories/apple-pencil",
+    blurb: "Four Pencils. One fit check.",
+    fromKes: lowestAccessoryPrice("pencil"),
+    img: hero,
+  },
+  {
+    label: "Magic Keyboard",
+    href: "/accessories/magic-keyboard",
+    blurb: "For iPad and Mac.",
+    fromKes: lowestAccessoryPrice("keyboard"),
+    img: heroKb,
+  },
+  {
+    label: "Pointers",
+    href: "/accessories/magic-mouse",
+    blurb: "Magic Mouse and Magic Trackpad.",
+    fromKes: Math.min(lowestAccessoryPrice("mouse"), lowestAccessoryPrice("trackpad")),
+    img: heroMouse,
+  },
+  {
+    label: "Power",
+    href: "/accessories/power",
+    blurb: "Adapters, MagSafe and cables.",
+    fromKes: lowestAccessoryPrice("power"),
+    img: heroPower,
+  },
+  {
+    label: "Cases",
+    href: "/accessories/cases",
+    blurb: "Made for one exact model.",
+    fromKes: lowestAccessoryPrice("cases"),
+    img: heroCases,
+  },
+];
 
 const bundlePro = {
   name: "iPad Pro + Pencil Pro + Magic Keyboard",
@@ -83,7 +96,7 @@ const corp = whatsappUrl("Corporate accessories order");
 
 <BaseLayout
   title="Accessories - GadgetHub"
-  description="Apple Pencil, Magic Keyboard, Mouse and Trackpad in Nairobi. Compatibility checked before you pay."
+  description="Apple Pencil, Magic Keyboard, Pointers, Power and Cases in Nairobi. Compatibility checked before you pay."
 >
   <section class="xland-hero">
     <div class="xland-hero__copy container">
@@ -91,9 +104,9 @@ const corp = whatsappUrl("Corporate accessories order");
       <p>{accessoriesConfig.announce}</p>
       <div class="xland-hero__cta">
         <a class="btn btn--primary" href="/accessories/apple-pencil">Shop Apple Pencil</a>
-        <a class="btn btn--secondary" href="/accessories/magic-keyboard">Shop Magic Keyboard</a>
-        <a class="btn btn--secondary" href="/accessories/magic-mouse">Shop Magic Mouse</a>
-        <a class="btn btn--secondary" href="/accessories/magic-trackpad">Shop Magic Trackpad</a>
+        <a class="btn btn--secondary" href="/accessories/power">Shop Power</a>
+        <a class="btn btn--secondary" href="/accessories/cases">Shop Cases</a>
+        <a class="btn btn--secondary" href="/accessories/magic-mouse">Shop Pointers</a>
       </div>
     </div>
     <div class="xland-hero__stage">
@@ -107,14 +120,11 @@ const corp = whatsappUrl("Corporate accessories order");
     <div class="xland-groups__grid">
       {
         groups.map((g) => (
-          <a class:list={["xland-group", { "is-coming": g.coming }]} href={g.href}>
+          <a class="xland-group" href={g.href}>
             {g.img ? (
               <img src={g.img.src} alt={g.label} width="320" height="240" loading="lazy" />
             ) : null}
-            <h3>
-              {g.label}
-              {g.coming ? <span class="tag">Coming next</span> : null}
-            </h3>
+            <h3>{g.label}</h3>
             <p>{g.blurb}</p>
             {g.fromKes != null ? <p class="xland-from">From {formatKes(g.fromKes)}</p> : null}
           </a>
@@ -170,7 +180,7 @@ const corp = whatsappUrl("Corporate accessories order");
       {accessoriesConfig.address.line}, {accessoriesConfig.address.city}. Hours:{" "}
       {accessoriesConfig.address.hours}.
     </p>
-    <p>Come in and try the Pencil, keyboard, Mouse and Trackpad.</p>
+    <p>Come in and try Pencil, keyboards, pointers, power and cases.</p>
     <div class="xland-hero__cta">
       <a class="btn btn--primary" href={wa} rel="noopener">WhatsApp</a>
       <a class="btn btn--secondary" href={corp} rel="noopener">Corporate and schools</a>

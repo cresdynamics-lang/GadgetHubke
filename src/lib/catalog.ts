@@ -409,21 +409,26 @@ export const accessoriesSubcategories: Subcategory[] = [
     fromPriceKes: 14000,
   },
   {
-    id: "mouse",
-    label: "Mouse",
+    id: "pointers",
+    label: "Pointers",
     href: "/accessories/magic-mouse",
-    blurb: "Multi-Touch surface",
+    blurb: "Mouse and Trackpad",
     fromPriceKes: 12000,
   },
   {
-    id: "trackpad",
-    label: "Trackpad",
-    href: "/accessories/magic-trackpad",
-    blurb: "Force Touch",
-    fromPriceKes: 14000,
+    id: "power",
+    label: "Power",
+    href: "/accessories/power",
+    blurb: "Adapters, MagSafe and cables",
+    fromPriceKes: 2500,
   },
-  { id: "power", label: "Power", href: "/accessories/power", blurb: "Adapters, MagSafe and cables" },
-  { id: "cases", label: "Cases", href: "/accessories/cases", blurb: "iPhone cases and Smart Folio" },
+  {
+    id: "cases",
+    label: "Cases",
+    href: "/accessories/cases",
+    blurb: "iPhone cases and Smart Folio",
+    fromPriceKes: 4500,
+  },
 ];
 
 export const accessoriesMegaQuickLinks = [

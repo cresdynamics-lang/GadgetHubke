@@ -75,6 +75,8 @@ const rows = [
       <a class:list={[{ "is-active": groupParam === "mouse" }]} href="/accessories/compare?group=mouse">Mouse</a>
       <a class:list={[{ "is-active": groupParam === "trackpad" }]} href="/accessories/compare?group=trackpad">Trackpad</a>
       <a class:list={[{ "is-active": groupParam === "pointer" }]} href="/accessories/compare?group=pointer">Mouse vs Trackpad</a>
+      <a class:list={[{ "is-active": groupParam === "power" || groupParam === "adapters" }]} href="/accessories/compare?group=power">Power</a>
+      <a class:list={[{ "is-active": groupParam === "cases" }]} href="/accessories/compare?group=cases">Cases</a>
     </nav>
     <label class="xcmp__toggle">
       <input type="checkbox" data-diff-only checked />

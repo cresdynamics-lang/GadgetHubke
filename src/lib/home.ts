@@ -229,7 +229,7 @@ export const homeBlog: BlogTeaser[] = latestPosts(3).map((post) => ({
   dateLabel: post.tags[0] ?? post.dateLabel,
 }));
 
-/** Accessories strip — Pencil/Keyboard, Pointers, Power, Cases */
+/** Accessories strip — Pencil or Keyboard, Pointers, Power, Cases */
 export const homeAccessories = [
   {
     name: "Apple Pencil Pro",
@@ -242,13 +242,13 @@ export const homeAccessories = [
     },
   },
   {
-    name: "Magic Keyboard for iPad Pro 13″",
-    href: "/accessories/keyboard-ipad-pro-13",
-    priceKes: 45000,
-    blurb: "Function row, trackpad, floating design",
+    name: "Pointers",
+    href: "/accessories/magic-mouse",
+    priceKes: 14000,
+    blurb: "Magic Mouse and Magic Trackpad",
     image: {
-      src: "/Accesories/ACC_Magic_Keyboard_images/02_Product_photos_by_part_number/Magic_Keyboard_iPad_Pro_13/MWR53.jpg",
-      alt: "Magic Keyboard for iPad Pro 13-inch",
+      src: "/Accesories/ACC_Magic_Mouse_images/01_Product_photos_by_part_number/Magic_Mouse_USB-C_black/MXK63.jpg",
+      alt: "Magic Mouse USB-C black",
     },
   },
   {

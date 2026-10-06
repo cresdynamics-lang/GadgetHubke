@@ -144,6 +144,11 @@ const fitPayload = {
               <option value={d.id} selected={d.id === preselectDevice}>{d.label}</option>
             ))}
           </optgroup>
+          <optgroup label="Watch">
+            {devices.filter((d) => d.platform === "watch").map((d) => (
+              <option value={d.id} selected={d.id === preselectDevice}>{d.label}</option>
+            ))}
+          </optgroup>
           <optgroup label="Other">
             {devices.filter((d) => d.platform === "other").map((d) => (
               <option value={d.id} selected={d.id === preselectDevice}>{d.label}</option>
@@ -223,22 +228,29 @@ const fitPayload = {
       const advice = fitPayload.chargers[device] || [];
       const cards = advice
         .map((row) => {
-          const prod = (caseList.find((x) => false) || null);
-          const item = [...pencilList, ...keyboardList, ...mouseList, ...trackpadList, ...caseList, ...powerList].find((x) => x.id === row.productId)
-            || { id: row.productId, name: row.productId, price: 0, href: `/accessories/${row.productId}`, img: "/images/placeholder-accessory.svg", connector: null };
-          // rebuild from power via href
-          const roleLabel = row.role === "recommended" ? "Recommended" : row.role === "optional" ? "Optional" : "Note";
-          const cls = row.role === "recommended" ? "is-fits" : row.role === "optional" ? "is-note" : "is-note";
+          const item =
+            powerList.find((x) => x.id === row.productId) ||
+            [...pencilList, ...keyboardList, ...mouseList, ...trackpadList, ...caseList].find(
+              (x) => x.id === row.productId,
+            );
+          const name = item?.name || prettyPowerName(row.productId);
+          const href = item?.href || `/accessories/${row.productId}`;
+          const img = item?.img || getAccessoryHero(row.productId);
+          const price = item?.price;
+          const roleLabel =
+            row.role === "recommended" ? "Recommended" : row.role === "optional" ? "Optional" : "Note";
+          const cls = row.role === "recommended" ? "is-fits" : "is-note";
           return `
           <article class="xfinder__card ${cls}" data-product="${row.productId}">
-            <img src="${getAccessoryHero(row.productId)}" alt="${row.productId}" width="120" height="120" loading="lazy" />
+            <img src="${img}" alt="${name}" width="120" height="120" loading="lazy" />
             <div>
               <p class="xfinder__status"><span class="xfinder__badge">${roleLabel}</span></p>
-              <h3><a href="/accessories/${row.productId}">${prettyPowerName(row.productId)}</a></h3>
+              <h3><a href="${href}">${name}</a></h3>
               <p class="xfinder__reason">${row.reason}</p>
+              ${price != null ? `<p class="xfinder__price">From KES ${Number(price).toLocaleString("en-KE")}</p>` : ""}
               <p class="xfinder__flag">Check final specs</p>
               <div class="xfinder__actions">
-                <a class="btn btn--secondary btn--sm" href="/accessories/${row.productId}">View</a>
+                <a class="btn btn--secondary btn--sm" href="${href}">View</a>
               </div>
             </div>
           </article>`;

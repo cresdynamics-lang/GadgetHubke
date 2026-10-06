@@ -17,7 +17,7 @@ Replace every sample / placeholder before going live.
 11. **Battery / short-charge claim** — only show if confirmed.
 12. **Set-up and warranty wording** — pairing fee and who honours cover.
 13. **Older white Magic Mouse 2** — no separate photo; USB-C white is the stand-in look — label if used.
-14. **Power and cases** — still “Coming next” with no products or prices.
+14. **Power and cases** — live at `/accessories/power` and `/accessories/cases`.
 15. **Apple image permission** — footer trademark line; live use needs permission.
 
 ## Scripts
