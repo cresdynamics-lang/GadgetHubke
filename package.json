@@ -23,11 +23,10 @@
     "tvhome:manifest": "node scripts/build-tv-home-manifest.mjs",
     "images:tvhome-webp": "node scripts/process-tv-home-webp.mjs",
     "accessories:manifest": "node scripts/build-accessories-manifest.mjs",
-    "images:accessories-webp": "node scripts/process-accessories-webp.mjs",
-    "accessories:manifest": "node scripts/build-accessories-manifest.mjs",
     "images:accessories-webp": "node scripts/process-accessories-webp.mjs"
   },
   "dependencies": {
+    "@astrojs/vercel": "^11.0.12",
     "@fontsource-variable/inter": "^5.2.8",
     "astro": "^7.3.5",
     "sharp": "^0.35.5"

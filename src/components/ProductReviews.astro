@@ -1,0 +1,412 @@
+---
+/**
+ * Customer reviews block: list + submit form.
+ * Loads/saves via /api/reviews so reviews persist across visitors (Upstash or local .data).
+ */
+interface Props {
+  productId: string;
+  productName: string;
+}
+
+const { productId, productName } = Astro.props;
+---
+
+<section
+  class="reviews"
+  data-reviews
+  data-product-id={productId}
+  data-product-name={productName}
+  aria-labelledby={`reviews-heading-${productId}`}
+>
+  <div class="reviews__head">
+    <div>
+      <h2 id={`reviews-heading-${productId}`}>Customer reviews</h2>
+      <p class="reviews__lede" data-reviews-lede>What buyers say about {productName}.</p>
+    </div>
+    <div class="reviews__summary" data-reviews-summary hidden>
+      <p class="reviews__avg" data-reviews-avg>0.0</p>
+      <p class="reviews__stars" data-reviews-stars aria-hidden="true">★★★★★</p>
+      <p class="reviews__count" data-reviews-count>0 reviews</p>
+    </div>
+  </div>
+
+  <div class="reviews__grid">
+    <div class="reviews__list-wrap">
+      <p class="reviews__status" data-reviews-status>Loading reviews…</p>
+      <ul class="reviews__list" data-reviews-list role="list"></ul>
+    </div>
+
+    <form class="reviews__form" data-reviews-form novalidate>
+      <h3>Write a review</h3>
+      <p class="reviews__form-lede">Share your experience. Other shoppers will see it here.</p>
+
+      <label>
+        <span>Your name</span>
+        <input type="text" name="author" maxlength="40" required autocomplete="nickname" placeholder="e.g. Amina K." />
+      </label>
+
+      <label>
+        <span>City (optional)</span>
+        <input type="text" name="city" maxlength="40" autocomplete="address-level2" placeholder="Nairobi" />
+      </label>
+
+      <fieldset class="reviews__rating">
+        <legend>Rating</legend>
+        <div class="reviews__rating-row">
+          {[5, 4, 3, 2, 1].map((n) => (
+            <label>
+              <input type="radio" name="rating" value={String(n)} required={n === 5} />
+              <span>{n}★</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <label>
+        <span>Title (optional)</span>
+        <input type="text" name="title" maxlength="80" placeholder="Short headline" />
+      </label>
+
+      <label>
+        <span>Your review</span>
+        <textarea name="body" rows="4" maxlength="800" required placeholder="How was the device, packaging, and pickup or delivery?"></textarea>
+      </label>
+
+      <p class="reviews__form-error" data-reviews-error hidden></p>
+      <p class="reviews__form-ok" data-reviews-ok hidden>Thanks - your review is live.</p>
+      <button type="submit" class="btn btn--primary" data-reviews-submit>Post review</button>
+      <p class="reviews__persist" data-reviews-persist hidden></p>
+    </form>
+  </div>
+</section>
+
+<script>
+  function stars(n: number) {
+    const full = Math.round(n);
+    return "★★★★★".slice(0, full) + "☆☆☆☆☆".slice(full);
+  }
+
+  function formatDate(iso: string) {
+    try {
+      return new Intl.DateTimeFormat("en-KE", { day: "numeric", month: "short", year: "numeric" }).format(
+        new Date(iso),
+      );
+    } catch {
+      return "";
+    }
+  }
+
+  document.querySelectorAll<HTMLElement>("[data-reviews]").forEach((root) => {
+    if (root.dataset.ready === "1") return;
+    root.dataset.ready = "1";
+
+    const productId = root.dataset.productId || "";
+    const listEl = root.querySelector("[data-reviews-list]");
+    const statusEl = root.querySelector("[data-reviews-status]");
+    const summaryEl = root.querySelector("[data-reviews-summary]");
+    const avgEl = root.querySelector("[data-reviews-avg]");
+    const starsEl = root.querySelector("[data-reviews-stars]");
+    const countEl = root.querySelector("[data-reviews-count]");
+    const form = root.querySelector<HTMLFormElement>("[data-reviews-form]");
+    const errorEl = root.querySelector("[data-reviews-error]");
+    const okEl = root.querySelector("[data-reviews-ok]");
+    const persistEl = root.querySelector("[data-reviews-persist]");
+    const submitBtn = root.querySelector<HTMLButtonElement>("[data-reviews-submit]");
+
+    type Review = {
+      id: string;
+      author: string;
+      rating: number;
+      title: string;
+      body: string;
+      city?: string;
+      createdAt: string;
+    };
+
+    function render(payload: {
+      summary: { count: number; average: number };
+      reviews: Review[];
+      persistence?: string;
+    }) {
+      const { summary, reviews } = payload;
+      if (summaryEl && avgEl && starsEl && countEl) {
+        if (summary.count > 0) {
+          summaryEl.removeAttribute("hidden");
+          avgEl.textContent = summary.average.toFixed(1);
+          starsEl.textContent = stars(summary.average);
+          countEl.textContent = `${summary.count} review${summary.count === 1 ? "" : "s"}`;
+        } else {
+          summaryEl.setAttribute("hidden", "");
+        }
+      }
+
+      if (listEl) {
+        listEl.replaceChildren();
+        if (reviews.length === 0) {
+          if (statusEl) statusEl.textContent = "No reviews yet. Be the first to share yours.";
+        } else if (statusEl) {
+          statusEl.textContent = "";
+        }
+        for (const r of reviews) {
+          const li = document.createElement("li");
+          li.className = "reviews__item";
+          li.innerHTML = `
+            <div class="reviews__item-top">
+              <strong>${escapeHtml(r.author)}</strong>
+              <span class="reviews__item-stars" aria-label="${r.rating} out of 5">${stars(r.rating)}</span>
+            </div>
+            <p class="reviews__item-title">${escapeHtml(r.title)}</p>
+            <p class="reviews__item-body">${escapeHtml(r.body)}</p>
+            <p class="reviews__item-meta">${escapeHtml([r.city, formatDate(r.createdAt)].filter(Boolean).join(" · "))}</p>
+          `;
+          listEl.appendChild(li);
+        }
+      }
+
+      if (persistEl && payload.persistence === "seed-only") {
+        persistEl.hidden = false;
+        persistEl.textContent =
+          "Live posting needs store storage (Upstash). Ask the shop to connect reviews for production.";
+      } else if (persistEl) {
+        persistEl.hidden = true;
+      }
+    }
+
+    function escapeHtml(s: string) {
+      return s
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    async function load() {
+      if (statusEl) statusEl.textContent = "Loading reviews…";
+      try {
+        const res = await fetch(`/api/reviews?productId=${encodeURIComponent(productId)}`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Failed to load");
+        render(data);
+      } catch {
+        if (statusEl) statusEl.textContent = "Could not load reviews right now.";
+      }
+    }
+
+    form?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!form) return;
+      errorEl?.setAttribute("hidden", "");
+      okEl?.setAttribute("hidden", "");
+      const fd = new FormData(form);
+      const payload = {
+        productId,
+        author: String(fd.get("author") || ""),
+        city: String(fd.get("city") || ""),
+        rating: Number(fd.get("rating")),
+        title: String(fd.get("title") || ""),
+        body: String(fd.get("body") || ""),
+      };
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Posting…";
+      }
+      try {
+        const res = await fetch("/api/reviews", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Could not post review");
+        render(data);
+        form.reset();
+        okEl?.removeAttribute("hidden");
+      } catch (err) {
+        if (errorEl) {
+          errorEl.textContent = err instanceof Error ? err.message : "Could not post review.";
+          errorEl.removeAttribute("hidden");
+        }
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Post review";
+        }
+      }
+    });
+
+    void load();
+  });
+</script>
+
+<style>
+  .reviews {
+    margin: 3rem 0 1rem;
+    padding: 2rem 0 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+  .reviews__head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    margin-bottom: 1.5rem;
+  }
+  .reviews__head h2 {
+    margin: 0 0 0.35rem;
+    font-size: clamp(1.4rem, 2vw, 1.85rem);
+    letter-spacing: -0.02em;
+  }
+  .reviews__lede {
+    margin: 0;
+    color: #6e6e73;
+    font-size: 0.95rem;
+  }
+  .reviews__summary {
+    text-align: right;
+  }
+  .reviews__avg {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .reviews__stars {
+    margin: 0.2rem 0 0;
+    color: #1d1d1f;
+    letter-spacing: 0.08em;
+  }
+  .reviews__count {
+    margin: 0.15rem 0 0;
+    color: #6e6e73;
+    font-size: 0.85rem;
+  }
+  .reviews__grid {
+    display: grid;
+    gap: 2rem;
+  }
+  @media (min-width: 56rem) {
+    .reviews__grid {
+      grid-template-columns: 1.2fr 0.9fr;
+      align-items: start;
+    }
+  }
+  .reviews__status {
+    margin: 0 0 0.75rem;
+    color: #6e6e73;
+    font-size: 0.9rem;
+  }
+  .reviews__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+  }
+  .reviews__item {
+    background: #f5f5f7;
+    border-radius: 1rem;
+    padding: 1rem 1.1rem;
+  }
+  .reviews__item-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    align-items: baseline;
+  }
+  .reviews__item-stars {
+    letter-spacing: 0.06em;
+    font-size: 0.9rem;
+  }
+  .reviews__item-title {
+    margin: 0.4rem 0 0.25rem;
+    font-weight: 600;
+  }
+  .reviews__item-body {
+    margin: 0;
+    color: #1d1d1f;
+    font-size: 0.95rem;
+    line-height: 1.45;
+  }
+  .reviews__item-meta {
+    margin: 0.55rem 0 0;
+    color: #6e6e73;
+    font-size: 0.8rem;
+  }
+  .reviews__form {
+    display: grid;
+    gap: 0.75rem;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 1.15rem;
+    padding: 1.15rem 1.2rem 1.25rem;
+  }
+  .reviews__form h3 {
+    margin: 0;
+    font-size: 1.15rem;
+  }
+  .reviews__form-lede {
+    margin: -0.25rem 0 0.25rem;
+    color: #6e6e73;
+    font-size: 0.88rem;
+  }
+  .reviews__form label {
+    display: grid;
+    gap: 0.3rem;
+    font-size: 0.85rem;
+    color: #1d1d1f;
+  }
+  .reviews__form input,
+  .reviews__form textarea {
+    font: inherit;
+    border: 1px solid rgba(0, 0, 0, 0.14);
+    border-radius: 0.65rem;
+    padding: 0.55rem 0.7rem;
+    background: #fff;
+  }
+  .reviews__form textarea {
+    resize: vertical;
+    min-height: 6rem;
+  }
+  .reviews__rating {
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+  .reviews__rating legend {
+    font-size: 0.85rem;
+    margin-bottom: 0.35rem;
+  }
+  .reviews__rating-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .reviews__rating-row label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.35rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+  }
+  .reviews__rating-row input {
+    margin: 0;
+  }
+  .reviews__form-error {
+    margin: 0;
+    color: #b42318;
+    font-size: 0.85rem;
+  }
+  .reviews__form-ok {
+    margin: 0;
+    color: #0e9f6e;
+    font-size: 0.85rem;
+  }
+  .reviews__persist {
+    margin: 0;
+    color: #6e6e73;
+    font-size: 0.78rem;
+  }
+</style>

@@ -7,6 +7,7 @@ import WatchStage from "../../components/watch/WatchStage.astro";
 import WatchFeel from "../../components/watch/WatchFeel.astro";
 import WatchLipaCalc from "../../components/watch/WatchLipaCalc.astro";
 import WatchTradeIn from "../../components/watch/WatchTradeIn.astro";
+import ProductReviews from "../../components/ProductReviews.astro";
 import {
   watchModels,
   getWatchModel,
@@ -355,6 +356,10 @@ const showModelHero = model.isNew && !heroStart.fallback && !heroEnd.fallback;
       <WatchLipaCalc modelId={model.id} />
       <WatchTradeIn modelId={model.id} />
     </section>
+
+    <div class="container">
+      <ProductReviews productId={model.id} productName={model.name} />
+    </div>
   </article>
 
   <dialog class="wpdp-lb" data-lightbox aria-label="Full screen photo">

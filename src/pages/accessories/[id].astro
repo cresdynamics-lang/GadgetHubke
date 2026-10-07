@@ -5,6 +5,7 @@ import CompatibilityFinder from "../../components/accessories/CompatibilityFinde
 import AccessoryLipaCalc from "../../components/accessories/AccessoryLipaCalc.astro";
 import AccessoryTrademark from "../../components/accessories/AccessoryTrademark.astro";
 import AccessoryCard from "../../components/accessories/AccessoryCard.astro";
+import ProductReviews from "../../components/ProductReviews.astro";
 import {
   accessories,
   getAccessory,
@@ -372,6 +373,10 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
       </details>
     ))}
   </section>
+
+  <div class="container">
+    <ProductReviews productId={product.id} productName={product.name} />
+  </div>
 
   <AccessoryLipaCalc productId={product.id} />
   <AccessoryTrademark />

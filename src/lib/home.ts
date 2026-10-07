@@ -55,7 +55,7 @@ export const homeLatestIphones = [
   {
     name: "iPhone 18 Pro",
     href: "/shop/iphone/iphone-pro",
-    priceKes: 184999,
+    priceKes: 190000,
     badge: "New" as const,
     blurb: "Pro camera system",
     image: {
@@ -70,7 +70,7 @@ export const homeLatestIphones = [
   {
     name: "iPhone 18 Pro Max",
     href: "/shop/iphone/iphone-pro-max",
-    priceKes: 199999,
+    priceKes: 220000,
     badge: "New" as const,
     blurb: "Biggest Pro display",
     image: {
@@ -323,7 +323,7 @@ export const homeNewIn: DealItem[] = [
     id: "new-pro",
     name: "iPhone 18 Pro",
     href: "/shop/iphone/iphone-pro",
-    priceKes: 184999,
+    priceKes: 190000,
     badge: "New",
     image: { src: ghImages.iphone.proBlue, alt: "iPhone 18 Pro" },
   },

@@ -5,6 +5,7 @@ import AirPodsFeel from "../../components/airpods/AirPodsFeel.astro";
 import AirPodsLipaCalc from "../../components/airpods/AirPodsLipaCalc.astro";
 import AirPodsTradeIn from "../../components/airpods/AirPodsTradeIn.astro";
 import AirpodsTrademark from "../../components/airpods/AirpodsTrademark.astro";
+import ProductReviews from "../../components/ProductReviews.astro";
 import {
   airpodsModels,
   getAirpodsModel,
@@ -287,6 +288,10 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
       <AirPodsLipaCalc modelId={model.id} />
       <AirPodsTradeIn modelId={model.id} />
     </section>
+
+    <div class="container">
+      <ProductReviews productId={model.id} productName={model.name} />
+    </div>
 
     <section class="container">
       <AirpodsTrademark />

@@ -5,6 +5,7 @@
  */
 import BaseLayout from "./BaseLayout.astro";
 import ProductExperience from "../components/ProductExperience.astro";
+import ProductReviews from "../components/ProductReviews.astro";
 import StockChannelToggle from "../components/StockChannelToggle.astro";
 import type { Product } from "../lib/products";
 import { site, whatsappUrl } from "../lib/site";
@@ -288,6 +289,10 @@ const lipaFrom =
         <a class="btn btn--secondary" href="/trade-in">Trade In</a>
       </div>
     </section>
+
+    <div class="container">
+      <ProductReviews productId={product.id} productName={product.name} />
+    </div>
   </article>
 
   <div class="pdp-sticky" data-sticky-bar hidden>

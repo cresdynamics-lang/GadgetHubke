@@ -1,6 +1,7 @@
 # build output
 dist/
 .astro/
+.vercel/
 
 # dependencies
 node_modules/
@@ -25,6 +26,9 @@ pnpm-debug.log*
 # Agent / local scratch
 *.local
 .cursor/
+
+# Local review store (dev fallback when Upstash is not configured)
+.data/
 
 # Debug / temp image exports
 public/images/_*.png

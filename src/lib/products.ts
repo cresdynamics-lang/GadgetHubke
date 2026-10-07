@@ -352,8 +352,8 @@ export const products: Product[] = [
     gallery: [...pro18GalleryShots("iPhone 18 Pro")],
     finishesLabel: "Available in 4 finishes",
     storages: [
-      { id: "256", label: "256GB", priceKes: 184999 },
-      { id: "512", label: "512GB", priceKes: 209999 },
+      { id: "256", label: "256GB", priceKes: 190000 },
+      { id: "512", label: "512GB", priceKes: 230000 },
       { id: "1tb", label: "1TB", priceKes: 239999 },
     ],
     colors: pro18Colors,
@@ -563,9 +563,9 @@ export const products: Product[] = [
     gallery: [...pro18GalleryShots("iPhone 18 Pro Max")],
     finishesLabel: "Available in 4 finishes",
     storages: [
-      { id: "256", label: "256GB", priceKes: 199999 },
-      { id: "512", label: "512GB", priceKes: 224999 },
-      { id: "1tb", label: "1TB", priceKes: 254999 },
+      { id: "256", label: "256GB", priceKes: 220000 },
+      { id: "512", label: "512GB", priceKes: 250000 },
+      { id: "1tb", label: "1TB", priceKes: 345000 },
     ],
     colors: pro18Colors,
     lipaMonths: 24,

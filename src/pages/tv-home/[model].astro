@@ -5,6 +5,7 @@ import TvHomeFeel from "../../components/tv-home/TvHomeFeel.astro";
 import TvHomeLipaCalc from "../../components/tv-home/TvHomeLipaCalc.astro";
 import TvHomeTradeIn from "../../components/tv-home/TvHomeTradeIn.astro";
 import TvHomeTrademark from "../../components/tv-home/TvHomeTrademark.astro";
+import ProductReviews from "../../components/ProductReviews.astro";
 import {
   tvHomeModels,
   getTvHomeModel,
@@ -270,6 +271,10 @@ const showPair = model.stereoPairCapable;
         </ul>
       </section>
     ) : null}
+
+    <div class="container">
+      <ProductReviews productId={model.id} productName={model.name} />
+    </div>
 
     <section class="container"><TvHomeTrademark /></section>
   </article>

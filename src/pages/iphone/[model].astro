@@ -31,6 +31,7 @@ import {
 } from "../../lib/iphone";
 import { whatsappUrl } from "../../lib/site";
 import StockChannelToggle from "../../components/StockChannelToggle.astro";
+import ProductReviews from "../../components/ProductReviews.astro";
 import { exUkFromNew } from "../../lib/stock-channel";
 
 export function getStaticPaths() {
@@ -355,6 +356,10 @@ const galleryPayload = {
         </table>
       </details>
     </section>
+
+    <div class="container">
+      <ProductReviews productId={model.id} productName={model.name} />
+    </div>
   </article>
 
   <dialog class="ipdp-lb" data-lightbox aria-label="Full screen photo">

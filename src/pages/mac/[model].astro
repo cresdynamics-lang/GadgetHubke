@@ -7,6 +7,7 @@ import MacStage from "../../components/mac/MacStage.astro";
 import MacFeel from "../../components/mac/MacFeel.astro";
 import MacLipaCalc from "../../components/mac/MacLipaCalc.astro";
 import MacTradeIn from "../../components/mac/MacTradeIn.astro";
+import ProductReviews from "../../components/ProductReviews.astro";
 import {
   macModels,
   getMacModel,
@@ -365,6 +366,10 @@ const wa = whatsappUrl(
       <MacLipaCalc modelId={model.id} />
       <MacTradeIn modelId={model.id} />
     </section>
+
+    <div class="container">
+      <ProductReviews productId={model.id} productName={model.name} />
+    </div>
   </article>
 
   <dialog class="mpdp-lb" data-lightbox aria-label="Full screen photo">

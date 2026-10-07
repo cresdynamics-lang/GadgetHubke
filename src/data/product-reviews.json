@@ -1,0 +1,78 @@
+{
+  "iphone-pro": [
+    {
+      "id": "seed-iphone-pro-1",
+      "productId": "iphone-pro",
+      "author": "Amina K.",
+      "rating": 5,
+      "title": "Camera is worth it",
+      "body": "Bought the 256GB in Nairobi. Serial on the invoice, sealed box. Camera in low light is what sold me.",
+      "city": "Nairobi",
+      "createdAt": "2026-09-12T10:20:00.000Z",
+      "approved": true
+    },
+    {
+      "id": "seed-iphone-pro-2",
+      "productId": "iphone-pro",
+      "author": "Brian O.",
+      "rating": 4,
+      "title": "Solid daily phone",
+      "body": "Battery lasts a full workday with maps and WhatsApp. Staff walked me through Lipa Mdogo Mdogo clearly.",
+      "city": "Westlands",
+      "createdAt": "2026-09-28T14:05:00.000Z",
+      "approved": true
+    }
+  ],
+  "iphone-pro-max": [
+    {
+      "id": "seed-iphone-pro-max-1",
+      "productId": "iphone-pro-max",
+      "author": "Faith M.",
+      "rating": 5,
+      "title": "Battery monster",
+      "body": "1TB for photo work. Screen is huge but still usable one-handed at the edges. Happy with the price we got.",
+      "city": "Kilimani",
+      "createdAt": "2026-10-01T09:40:00.000Z",
+      "approved": true
+    }
+  ],
+  "iphone-duo": [
+    {
+      "id": "seed-iphone-duo-1",
+      "productId": "iphone-duo",
+      "author": "Daniel W.",
+      "rating": 5,
+      "title": "Fold that feels finished",
+      "body": "Outer screen is actually useful. Collected same day after WhatsApp confirmation.",
+      "city": "Nairobi",
+      "createdAt": "2026-09-20T16:10:00.000Z",
+      "approved": true
+    }
+  ],
+  "iphone-air": [
+    {
+      "id": "seed-iphone-air-1",
+      "productId": "iphone-air",
+      "author": "Grace N.",
+      "rating": 4,
+      "title": "Light in the bag",
+      "body": "Thinnest phone I have owned. Pocket friendly. Wish it had a louder speaker but otherwise great.",
+      "city": "Karen",
+      "createdAt": "2026-09-18T11:00:00.000Z",
+      "approved": true
+    }
+  ],
+  "iphone-17": [
+    {
+      "id": "seed-iphone-17-1",
+      "productId": "iphone-17",
+      "author": "Kevin L.",
+      "rating": 5,
+      "title": "Best value sealed unit",
+      "body": "Needed a sealed 17 for work. Invoice had the serial. No drama.",
+      "city": "Thika Road",
+      "createdAt": "2026-08-30T08:15:00.000Z",
+      "approved": true
+    }
+  ]
+}

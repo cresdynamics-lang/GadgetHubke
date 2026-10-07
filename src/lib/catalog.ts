@@ -42,7 +42,7 @@ export const iphoneSubcategories: Subcategory[] = [
     href: "/shop/iphone/iphone-pro",
     blurb: "6.3″",
     badge: "New",
-    fromPriceKes: 184999,
+    fromPriceKes: 190000,
     image: {
       src: ghImages.iphone.proBlue,
       alt: "iPhone 18 Pro",
@@ -54,7 +54,7 @@ export const iphoneSubcategories: Subcategory[] = [
     href: "/shop/iphone/iphone-pro-max",
     blurb: "6.9″",
     badge: "New",
-    fromPriceKes: 199999,
+    fromPriceKes: 220000,
     image: {
       src: ghImages.iphone.proSilver,
       alt: "iPhone 18 Pro Max",
