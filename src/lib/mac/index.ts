@@ -1,4 +1,4 @@
-/** MacBook Air + Pro module — data, images, pricing. */
+/** MacBook Air + Pro module - data, images, pricing. */
 
 export { macConfig, macBasePricesKes } from "./config";
 export {

@@ -100,7 +100,7 @@ function buildAnimPages() {
       let rest = rel;
       if (parts[0] === "overview") rest = parts.slice(1).join(path.sep);
       else if (parts[0] === "meta") {
-        // meta og — skip for keys, still counted in 236
+        // meta og - skip for keys, still counted in 236
         continue;
       }
 

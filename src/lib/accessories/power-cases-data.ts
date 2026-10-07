@@ -1,7 +1,7 @@
 /**
  * Power + Cases catalog helpers.
  * Owner: re-verify every wattage, MagSafe model list, case fit and cable rating on apple.com before launch.
- * Where unclear, store null — show nothing rather than guess.
+ * Where unclear, store null - show nothing rather than guess.
  */
 
 import { accessoryBasePricesKes } from "./config";
@@ -78,7 +78,7 @@ export function allCaseFamilySummaries(): { id: string; folder: string; colours:
   }));
 }
 
-/** Sample prices — owner replaces in config.ts */
+/** Sample prices - owner replaces in config.ts */
 export const powerCasePriceDefaults = {
   "power-adapter-20w": 3500,
   "power-adapter-35w-dual": 5500,
@@ -137,15 +137,15 @@ function variantsFor(id: string): CaseVariant[] {
 
 function coloursFrom(id: string): string[] {
   const v = variantsFor(id);
-  return v.length ? v.map((x) => x.colour) : ["—"];
+  return v.length ? v.map((x) => x.colour) : ["-"];
 }
 
 function leadColour(id: string): string {
-  return coloursFrom(id)[0] || "—";
+  return coloursFrom(id)[0] || "-";
 }
 
 function leadPart(id: string): string {
-  return variantsFor(id)[0]?.partNumber || "—";
+  return variantsFor(id)[0]?.partNumber || "-";
 }
 
 type AccLike = Record<string, unknown> & {
@@ -224,7 +224,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     charging: null,
     wattage: 20,
     ports: 1,
-    designedFor: "iPhone and many iPad models — check Apple's list.",
+    designedFor: "iPhone and many iPad models - check Apple's list.",
     plugShape: "owner-confirm",
     geoUs: true,
     features: ["20W USB-C", "Single port"],
@@ -233,9 +233,9 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     tagline: "Everyday USB-C power for iPhone.",
     whoItSuits: "iPhone owners who need a sealed Apple adapter.",
     whyChoose: [
-      "Apple's common USB-C brick for iPhone — check wattage for your model.",
+      "Apple's common USB-C brick for iPhone - check wattage for your model.",
       "Pair with a USB-C charge cable.",
-      "Plug shape varies by country — we confirm before collect.",
+      "Plug shape varies by country - we confirm before collect.",
     ],
     platform: "both",
     notes: "Sample price. Plug shape owner-to-confirm. No charge-time claims.",
@@ -255,7 +255,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     charging: null,
     wattage: 35,
     ports: 2,
-    designedFor: "Two devices at once — iPhone, iPad and compact Macs — check.",
+    designedFor: "Two devices at once - iPhone, iPad and compact Macs - check.",
     plugShape: "owner-confirm",
     features: ["35W shared", "Two USB-C ports", "Compact"],
     featureIds: ["adapter", "35w", "dual"],
@@ -264,11 +264,11 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     whoItSuits: "Travelers charging phone and earbuds or iPad together.",
     whyChoose: [
       "Dual USB-C in a small body.",
-      "Shared 35W across ports — check Apple's sharing notes.",
+      "Shared 35W across ports - check Apple's sharing notes.",
       "Owner confirms plug variant for Kenya.",
     ],
     platform: "both",
-    notes: "Sample price. Dual-port power sharing — check final specs.",
+    notes: "Sample price. Dual-port power sharing - check final specs.",
     imageProductKey: "power-adapter-35w-dual",
   }),
   pc({
@@ -285,15 +285,15 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     charging: null,
     wattage: 40,
     ports: null,
-    designedFor: "Dynamic power up to 60W max — check Apple's page for supported devices.",
+    designedFor: "Dynamic power up to 60W max - check Apple's page for supported devices.",
     plugShape: "owner-confirm",
     features: ["40W dynamic", "60W max"],
     featureIds: ["adapter", "40w"],
     weightG: null,
     tagline: "Dynamic power when you need more.",
-    whoItSuits: "Mixed Apple device desks — confirm your MacBook needs.",
+    whoItSuits: "Mixed Apple device desks - confirm your MacBook needs.",
     whyChoose: [
-      "Dynamic rating — confirm on Apple's product page.",
+      "Dynamic rating - confirm on Apple's product page.",
       "Not a charge-time promise.",
       "Pair with a cable rated for the load.",
     ],
@@ -315,7 +315,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     charging: null,
     wattage: 70,
     ports: 1,
-    designedFor: "MacBook Air and many 14-inch MacBook Pro configs — check.",
+    designedFor: "MacBook Air and many 14-inch MacBook Pro configs - check.",
     plugShape: "owner-confirm",
     geoUs: true,
     features: ["70W USB-C"],
@@ -324,8 +324,8 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     tagline: "MacBook Air class power.",
     whoItSuits: "MacBook Air owners matching Apple's recommended wattage.",
     whyChoose: [
-      "Common MacBook Air pairing — check your model.",
-      "Photos may show a US plug — we confirm the Kenyan plug.",
+      "Common MacBook Air pairing - check your model.",
+      "Photos may show a US plug - we confirm the Kenyan plug.",
       "Use a cable rated for the adapter.",
     ],
     platform: "mac",
@@ -346,17 +346,17 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     charging: null,
     wattage: 96,
     ports: 1,
-    designedFor: "Higher-power MacBook Pro configs — check Apple's list.",
+    designedFor: "Higher-power MacBook Pro configs - check Apple's list.",
     plugShape: "owner-confirm",
     geoUs: true,
     features: ["96W USB-C"],
     featureIds: ["adapter", "96w"],
     weightG: null,
     tagline: "Higher wattage for Pro notebooks.",
-    whoItSuits: "MacBook Pro owners who need more than 70W — check.",
+    whoItSuits: "MacBook Pro owners who need more than 70W - check.",
     whyChoose: [
       "Match the wattage Apple lists for your MacBook.",
-      "GEO_US plug photos — confirm stocked plug.",
+      "GEO_US plug photos - confirm stocked plug.",
       "Pair with a high-rated USB-C or MagSafe 3 cable.",
     ],
     platform: "mac",
@@ -377,7 +377,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     charging: null,
     wattage: 140,
     ports: 1,
-    designedFor: "16-inch MacBook Pro and high-power configs — check.",
+    designedFor: "16-inch MacBook Pro and high-power configs - check.",
     plugShape: "owner-confirm",
     features: ["140W USB-C"],
     featureIds: ["adapter", "140w"],
@@ -385,7 +385,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     tagline: "Top of the USB-C adapter ladder.",
     whoItSuits: "16-inch MacBook Pro owners matching Apple's brick.",
     whyChoose: [
-      "Highest wattage Apple USB-C adapter we list — check your model.",
+      "Highest wattage Apple USB-C adapter we list - check your model.",
       "Needs a cable rated for the load (e.g. MagSafe 3 or 240W USB-C).",
       "No charge-time claims on this site.",
     ],
@@ -431,7 +431,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     colours: ["White"],
     defaultColour: "White",
     connection: "MagSafe / USB-C",
-    charging: "Magnetic wireless for supported iPhones — check.",
+    charging: "Magnetic wireless for supported iPhones - check.",
     lengthM: 1,
     magSafe: true,
     features: ["MagSafe", "1 m cable"],
@@ -440,9 +440,9 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     tagline: "Snaps on. Charges wirelessly.",
     whoItSuits: "MagSafe-compatible iPhone owners.",
     whyChoose: [
-      "Magnetic alignment on supported iPhones — check models.",
-      "Works with MagSafe cases — check.",
-      "Pair with a USB-C adapter (often 20W+) — check.",
+      "Magnetic alignment on supported iPhones - check models.",
+      "Works with MagSafe cases - check.",
+      "Pair with a USB-C adapter (often 20W+) - check.",
     ],
     platform: "both",
     notes: "No charge-time or percentage claims. Sample price.",
@@ -459,7 +459,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     colours: ["White"],
     defaultColour: "White",
     connection: "MagSafe / USB-C",
-    charging: "Magnetic wireless for supported iPhones — check.",
+    charging: "Magnetic wireless for supported iPhones - check.",
     lengthM: 2,
     magSafe: true,
     features: ["MagSafe", "2 m cable"],
@@ -487,7 +487,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     colours: ["White"],
     defaultColour: "White",
     connection: "Magnetic Watch / USB-C",
-    charging: "Magnetic fast charger for supported Apple Watch — check.",
+    charging: "Magnetic fast charger for supported Apple Watch - check.",
     lengthM: 1,
     features: ["Watch magnetic", "USB-C", "1 m"],
     featureIds: ["watch-charger"],
@@ -517,16 +517,16 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     charging: null,
     lengthM: 1,
     powerRatingW: 60,
-    dataSpeed: "USB data — check Apple's page",
+    dataSpeed: "USB data - check Apple's page",
     features: ["60W", "1 m", "USB-C"],
     featureIds: ["cable", "60w"],
     weightG: null,
     tagline: "Charge cable for everyday USB-C.",
-    whoItSuits: "iPhone, iPad and lower-wattage Mac charging — check.",
+    whoItSuits: "iPhone, iPad and lower-wattage Mac charging - check.",
     whyChoose: [
-      "60W rating — do not pair as the only cable for a 140W brick without checking.",
+      "60W rating - do not pair as the only cable for a 140W brick without checking.",
       "1 metre length.",
-      "Data capability — owner confirms Apple's wording.",
+      "Data capability - owner confirms Apple's wording.",
     ],
     platform: "both",
     notes: "Sample. Pairing warnings via chargerAdvice.",
@@ -546,14 +546,14 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     charging: null,
     lengthM: 2,
     powerRatingW: 240,
-    dataSpeed: "USB data — check Apple's page",
+    dataSpeed: "USB data - check Apple's page",
     features: ["240W", "2 m", "USB-C"],
     featureIds: ["cable", "240w"],
     weightG: null,
     tagline: "High-power USB-C charge cable.",
-    whoItSuits: "High-wattage MacBook charging over USB-C — check.",
+    whoItSuits: "High-wattage MacBook charging over USB-C - check.",
     whyChoose: [
-      "Rated up to 240W — match to your adapter.",
+      "Rated up to 240W - match to your adapter.",
       "2 metre reach.",
       "Confirm data vs charge use on Apple's page.",
     ],
@@ -580,7 +580,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     featureIds: ["cable", "magsafe3"],
     weightG: null,
     tagline: "MagSafe 3 for Mac notebooks that have the port.",
-    whoItSuits: "MacBook Air / Pro with MagSafe 3 — check.",
+    whoItSuits: "MacBook Air / Pro with MagSafe 3 - check.",
     whyChoose: [
       "Only for Macs with MagSafe 3.",
       "Pair with the wattage Apple recommends for your Mac.",
@@ -604,14 +604,14 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     charging: null,
     lengthM: 1.8,
     powerRatingW: null,
-    dataSpeed: "Thunderbolt 4 — check Apple's page",
+    dataSpeed: "Thunderbolt 4 - check Apple's page",
     features: ["Thunderbolt 4", "1.8 m", "Pro Cable"],
     featureIds: ["cable", "thunderbolt4"],
     weightG: null,
     tagline: "Pro cable for Thunderbolt 4.",
-    whoItSuits: "Docking, displays and high-speed data — check.",
+    whoItSuits: "Docking, displays and high-speed data - check.",
     whyChoose: [
-      "Thunderbolt 4 data — confirm speed on Apple's page.",
+      "Thunderbolt 4 data - confirm speed on Apple's page.",
       "Not the same as a basic charge cable.",
       "1.8 m Pro Cable.",
     ],
@@ -633,7 +633,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     charging: null,
     lengthM: 3,
     powerRatingW: null,
-    dataSpeed: "Thunderbolt 4 — check Apple's page",
+    dataSpeed: "Thunderbolt 4 - check Apple's page",
     features: ["Thunderbolt 4", "3 m", "Pro Cable"],
     featureIds: ["cable", "thunderbolt4"],
     weightG: null,
@@ -662,12 +662,12 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     charging: null,
     lengthM: 1,
     powerRatingW: null,
-    dataSpeed: "Thunderbolt 5 — check Apple's page",
+    dataSpeed: "Thunderbolt 5 - check Apple's page",
     features: ["Thunderbolt 5", "1 m", "Pro Cable"],
     featureIds: ["cable", "thunderbolt5"],
     weightG: null,
     tagline: "Thunderbolt 5 Pro Cable.",
-    whoItSuits: "Devices that need Thunderbolt 5 — check.",
+    whoItSuits: "Devices that need Thunderbolt 5 - check.",
     whyChoose: [
       "Newest Thunderbolt Pro Cable we list.",
       "Confirm host and device support.",
@@ -701,10 +701,10 @@ function casePc(
     subgroup: opts.subgroup,
     generation: name,
     year: 2025,
-    partNumber: vars[0]?.partNumber || "—",
+    partNumber: vars[0]?.partNumber || "-",
     colours: coloursFrom(id),
     defaultColour: leadColour(id),
-    connection: opts.magSafe ? "MagSafe" : "—",
+    connection: opts.magSafe ? "MagSafe" : "-",
     charging: null,
     material: opts.material,
     magSafe: opts.magSafe ?? false,
@@ -732,8 +732,8 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     tagline: "Soft silicone. Made for iPhone 17 only.",
     whoItSuits: "iPhone 17 owners who want MagSafe colours.",
     whyChoose: [
-      "Exact fit for iPhone 17 — not Pro or Pro Max.",
-      "MagSafe compatible — check.",
+      "Exact fit for iPhone 17 - not Pro or Pro Max.",
+      "MagSafe compatible - check.",
       "Colours from Apple's photos.",
     ],
   }),
@@ -746,7 +746,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     whoItSuits: "iPhone 17 Pro owners.",
     whyChoose: [
       "Does not fit iPhone 17 or 17 Pro Max.",
-      "MagSafe — check.",
+      "MagSafe - check.",
       "Pick a colour; part number changes with colour.",
     ],
   }),
@@ -758,8 +758,8 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     tagline: "Silicone for iPhone 17 Pro Max only.",
     whoItSuits: "iPhone 17 Pro Max owners.",
     whyChoose: [
-      "Pro Max size only — not the Pro.",
-      "MagSafe — check.",
+      "Pro Max size only - not the Pro.",
+      "MagSafe - check.",
       "Tell us your exact model before you pay.",
     ],
   }),
@@ -770,7 +770,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "Silicone for iPhone 17e only.",
     whoItSuits: "iPhone 17e owners.",
-    whyChoose: ["Exact 17e fit.", "MagSafe — check.", "Sample price until stock entered."],
+    whyChoose: ["Exact 17e fit.", "MagSafe - check.", "Sample price until stock entered."],
   }),
   casePc("case-iphone-18-pro-silicone", "iPhone 18 Pro Silicone Case with MagSafe", {
     subgroup: "iphone-case",
@@ -779,7 +779,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "Silicone for iPhone 18 Pro only.",
     whoItSuits: "iPhone 18 Pro owners.",
-    whyChoose: ["Not for 18 Pro Max.", "MagSafe — check.", "Colours from Apple files."],
+    whyChoose: ["Not for 18 Pro Max.", "MagSafe - check.", "Colours from Apple files."],
   }),
   casePc("case-iphone-18-pro-max-silicone", "iPhone 18 Pro Max Silicone Case with MagSafe", {
     subgroup: "iphone-case",
@@ -788,7 +788,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "Silicone for iPhone 18 Pro Max only.",
     whoItSuits: "iPhone 18 Pro Max owners.",
-    whyChoose: ["Pro Max only.", "MagSafe — check.", "Sample price."],
+    whyChoose: ["Pro Max only.", "MagSafe - check.", "Sample price."],
   }),
   casePc("case-iphone-17-clear", "iPhone 17 Clear Case with MagSafe", {
     subgroup: "iphone-case",
@@ -797,7 +797,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "Clear case for iPhone 17 only.",
     whoItSuits: "Show the phone colour with MagSafe.",
-    whyChoose: ["Exact iPhone 17 fit.", "Limited angles in the photo library.", "MagSafe — check."],
+    whyChoose: ["Exact iPhone 17 fit.", "Limited angles in the photo library.", "MagSafe - check."],
   }),
   casePc("case-iphone-17-pro-clear", "iPhone 17 Pro Clear Case with MagSafe", {
     subgroup: "iphone-case",
@@ -806,7 +806,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "Clear case for iPhone 17 Pro only.",
     whoItSuits: "iPhone 17 Pro owners who want a clear shell.",
-    whyChoose: ["Main + limited angles only.", "Not for Pro Max.", "MagSafe — check."],
+    whyChoose: ["Main + limited angles only.", "Not for Pro Max.", "MagSafe - check."],
   }),
   casePc("case-iphone-17-pro-max-clear", "iPhone 17 Pro Max Clear Case with MagSafe", {
     subgroup: "iphone-case",
@@ -815,7 +815,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "Clear case for iPhone 17 Pro Max only.",
     whoItSuits: "iPhone 17 Pro Max owners.",
-    whyChoose: ["Pro Max only.", "Sparse photo set for some Clear SKUs.", "MagSafe — check."],
+    whyChoose: ["Pro Max only.", "Sparse photo set for some Clear SKUs.", "MagSafe - check."],
   }),
   casePc("case-iphone-17e-clear", "iPhone 17e Clear Case with MagSafe", {
     subgroup: "iphone-case",
@@ -824,7 +824,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "Clear case for iPhone 17e only.",
     whoItSuits: "iPhone 17e owners.",
-    whyChoose: ["Exact 17e fit.", "MagSafe — check.", "Sample price."],
+    whyChoose: ["Exact 17e fit.", "MagSafe - check.", "Sample price."],
   }),
   casePc("case-iphone-18-pro-clear", "iPhone 18 Pro Clear Case with MagSafe", {
     subgroup: "iphone-case",
@@ -833,7 +833,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "Clear case for iPhone 18 Pro only.",
     whoItSuits: "iPhone 18 Pro owners.",
-    whyChoose: ["Not Pro Max.", "Limited photos.", "MagSafe — check."],
+    whyChoose: ["Not Pro Max.", "Limited photos.", "MagSafe - check."],
   }),
   casePc("case-iphone-18-pro-max-clear", "iPhone 18 Pro Max Clear Case with MagSafe", {
     subgroup: "iphone-case",
@@ -842,7 +842,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "Clear case for iPhone 18 Pro Max only.",
     whoItSuits: "iPhone 18 Pro Max owners.",
-    whyChoose: ["Pro Max only.", "MagSafe — check.", "Sample price."],
+    whyChoose: ["Pro Max only.", "MagSafe - check.", "Sample price."],
   }),
   casePc("case-iphone-18-pro-techwoven", "iPhone 18 Pro TechWoven Case with MagSafe", {
     subgroup: "iphone-case",
@@ -851,7 +851,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "TechWoven for iPhone 18 Pro only.",
     whoItSuits: "Buyers who want a woven texture on 18 Pro.",
-    whyChoose: ["18 Pro only.", "MagSafe — check.", "Colours from Apple files."],
+    whyChoose: ["18 Pro only.", "MagSafe - check.", "Colours from Apple files."],
   }),
   casePc("case-iphone-18-pro-max-techwoven", "iPhone 18 Pro Max TechWoven Case with MagSafe", {
     subgroup: "iphone-case",
@@ -860,7 +860,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "TechWoven for iPhone 18 Pro Max only.",
     whoItSuits: "iPhone 18 Pro Max woven-case buyers.",
-    whyChoose: ["Pro Max only.", "MagSafe — check.", "Sample price."],
+    whyChoose: ["Pro Max only.", "MagSafe - check.", "Sample price."],
   }),
   casePc("case-iphone-air-bumper", "iPhone Air Bumper", {
     subgroup: "iphone-case",
@@ -878,7 +878,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "Case with MagSafe for iPhone Air only.",
     whoItSuits: "iPhone Air owners.",
-    whyChoose: ["Air only — not other iPhones.", "MagSafe — check.", "Colours from files."],
+    whyChoose: ["Air only - not other iPhones.", "MagSafe - check.", "Colours from files."],
   }),
   casePc("case-iphone-finewoven-wallet", "iPhone FineWoven Wallet with MagSafe", {
     subgroup: "iphone-case",
@@ -886,9 +886,9 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     fitsDeviceIds: ["iphone-17", "iphone-17-pro", "iphone-17-pro-max", "iphone-17e", "iphone-air", "iphone-18-pro", "iphone-18-pro-max"],
     magSafe: true,
     tagline: "FineWoven wallet that attaches with MagSafe.",
-    whoItSuits: "MagSafe iPhone owners who want a wallet — confirm models.",
+    whoItSuits: "MagSafe iPhone owners who want a wallet - confirm models.",
     whyChoose: [
-      "MagSafe wallet — confirm which iPhones Apple lists.",
+      "MagSafe wallet - confirm which iPhones Apple lists.",
       "Not a full protective case.",
       "Colours from Apple files.",
     ],
@@ -898,8 +898,8 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     material: "Duo",
     fitsDeviceIds: ["iphone-17", "iphone-17-pro", "iphone-17-pro-max", "iphone-air", "iphone-18-pro", "iphone-18-pro-max"],
     magSafe: false,
-    tagline: "Duo Case — confirm exact iPhone models with the shop.",
-    whoItSuits: "Buyers considering Apple's Duo Case — owner confirms fit list.",
+    tagline: "Duo Case - confirm exact iPhone models with the shop.",
+    whoItSuits: "Buyers considering Apple's Duo Case - owner confirms fit list.",
     whyChoose: [
       "Fit list flagged check-final-specs.",
       "Ask us which iPhone sizes we stock.",
@@ -911,8 +911,8 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     material: "Duo Folio",
     fitsDeviceIds: ["iphone-17", "iphone-17-pro", "iphone-17-pro-max", "iphone-air", "iphone-18-pro", "iphone-18-pro-max"],
     magSafe: false,
-    tagline: "Duo Folio with kickstand — confirm model fit.",
-    whoItSuits: "Buyers who want a folio kickstand — owner confirms.",
+    tagline: "Duo Folio with kickstand - confirm model fit.",
+    whoItSuits: "Buyers who want a folio kickstand - owner confirms.",
     whyChoose: ["Fit flagged check.", "Kickstand design.", "Sample price."],
   }),
   casePc("strap-crossbody", "Crossbody Strap", {
@@ -920,8 +920,8 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     material: "Strap",
     fitsDeviceIds: [],
     magSafe: false,
-    tagline: "Crossbody strap — pairing with cases is owner-to-confirm.",
-    whoItSuits: "iPhone owners adding a strap — we confirm which cases take it.",
+    tagline: "Crossbody strap - pairing with cases is owner-to-confirm.",
+    whoItSuits: "iPhone owners adding a strap - we confirm which cases take it.",
     whyChoose: [
       "Do not assume every case accepts this strap.",
       "Colours from Apple files.",
@@ -933,8 +933,8 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     material: "Strap",
     fitsDeviceIds: [],
     magSafe: false,
-    tagline: "Wrist strap — case pairing owner-to-confirm.",
-    whoItSuits: "Short strap preference — confirm case loops.",
+    tagline: "Wrist strap - case pairing owner-to-confirm.",
+    whoItSuits: "Short strap preference - confirm case loops.",
     whyChoose: ["Compatibility flagged check.", "Colours from files.", "Sample price."],
   }),
   casePc("folio-ipad-a16", "Smart Folio for iPad (A16)", {
@@ -965,7 +965,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     platform: "ipad",
     tagline: "Smart Folio for iPad Air 11-inch (M4) only.",
     whoItSuits: "iPad Air 11-inch (M4) owners.",
-    whyChoose: ["11-inch Air only — not 13-inch.", "Exact M4 Air fit.", "Sample price."],
+    whyChoose: ["11-inch Air only - not 13-inch.", "Exact M4 Air fit.", "Sample price."],
   }),
   casePc("folio-ipad-air-13-m4", "Smart Folio for iPad Air 13-inch (M4)", {
     subgroup: "folio",
@@ -975,7 +975,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     platform: "ipad",
     tagline: "Smart Folio for iPad Air 13-inch (M4) only.",
     whoItSuits: "iPad Air 13-inch (M4) owners.",
-    whyChoose: ["13-inch Air only — not 11-inch.", "Exact fit.", "Sample price."],
+    whyChoose: ["13-inch Air only - not 11-inch.", "Exact fit.", "Sample price."],
   }),
   casePc("folio-ipad-pro-11-m5", "Smart Folio for iPad Pro 11-inch (M5)", {
     subgroup: "folio",

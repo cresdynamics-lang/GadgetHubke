@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Scan Accesories packs → generated-manifest.json
- * Pencil 74, Keyboard 79, Mouse 29, Trackpad 41 — fail if any count changes.
+ * Pencil 74, Keyboard 79, Mouse 29, Trackpad 41 - fail if any count changes.
  * Keys: <group>/<folder>/<name> e.g. mouse/gestures/magic_mouse-scroll
  */
 import fs from "node:fs";

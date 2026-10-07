@@ -1,6 +1,6 @@
 ---
 /**
- * MacBook PDP — sticky viewer + buy panel + feel sections + specs/FAQ.
+ * MacBook PDP - sticky viewer + buy panel + feel sections + specs/FAQ.
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import MacStage from "../../components/mac/MacStage.astro";
@@ -110,12 +110,12 @@ const wa = whatsappUrl(
           </div>
           {
             model.overviewOnly ? (
-              <p class="mpdp__note">Full colour store shots coming soon — showing Apple’s colour overview.</p>
+              <p class="mpdp__note">Full colour store shots coming soon - showing Apple’s colour overview.</p>
             ) : null
           }
           {
             model.checkFinalSpecs ? (
-              <p class="mpdp__note mpdp__note--warn">Check final specs — M5 figures are provisional until verified on apple.com.</p>
+              <p class="mpdp__note mpdp__note--warn">Check final specs - M5 figures are provisional until verified on apple.com.</p>
             ) : null
           }
 
@@ -142,7 +142,7 @@ const wa = whatsappUrl(
           <p class="mpdp__tagline">{model.tagline}</p>
           <p class="mpdp__suits">{model.whoItSuits}</p>
 
-          <p class="mpdp__colour-label">Colour — <strong data-colour-name>{colourLabel(colour)}</strong></p>
+          <p class="mpdp__colour-label">Colour - <strong data-colour-name>{colourLabel(colour)}</strong></p>
           <div class="mpdp__swatches" role="group" aria-label="Colours">
             {
               model.colours.map((c) => (

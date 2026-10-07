@@ -43,7 +43,7 @@ const related = relatedAirpodsModels(model, airpodsModels);
 const defaultColour = defaultAirpodsColour(model);
 const canWireless = model.caseOptions.includes("wireless");
 
-/** C1 — model hero pairs / single-frame fade */
+/** C1 - model hero pairs / single-frame fade */
 let heroStartSrc = "";
 let heroEndSrc = "";
 if (model.id === "airpods-pro-3") {
@@ -101,11 +101,11 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
         {model.standInImage ? <p class="apdp__stand">Image shows the current design.</p> : null}
         <p class="apdp__fine">Click tabs to change view. Hover to zoom on desktop.</p>
         <div class="apdp__scale" aria-label="Size comparison (illustration)">
-          <svg viewBox="0 0 320 100" role="img" aria-label="Earbud next to a coin and finger tip — check final specs for exact size">
+          <svg viewBox="0 0 320 100" role="img" aria-label="Earbud next to a coin and finger tip - check final specs for exact size">
             <rect x="24" y="28" width="36" height="52" rx="12" fill="#d2d2d7" />
             <circle cx="110" cy="55" r="22" fill="none" stroke="#1d1d1f" stroke-width="2" />
             <path d="M160 20c18 0 34 20 34 42s-10 30-22 30-18-8-18-22 8-50 6-50z" fill="#f5f5f7" stroke="#6e6e73" stroke-width="1.5" />
-            <text x="24" y="96" font-size="10" fill="#6e6e73">Earbud · coin · finger — check final specs</text>
+            <text x="24" y="96" font-size="10" fill="#6e6e73">Earbud · coin · finger - check final specs</text>
           </svg>
         </div>
       </div>
@@ -200,8 +200,8 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
         <ul class="apdp__highlights">
           <li><strong>{model.chip || "Check"}</strong><span>Chip</span></li>
           <li><strong>{model.noiseModes.includes("anc") ? "ANC" : model.noiseModes.join(", ")}</strong><span>Noise</span></li>
-          <li><strong>{model.batterySingleHours ?? "—"}{model.batterySingleHours ? " h" : ""}</strong><span>Battery{model.batterySingleHours == null ? " · check" : ""}</span></li>
-          <li><strong>{model.weightG ?? "—"}{model.weightG ? " g" : ""}</strong><span>Weight</span></li>
+          <li><strong>{model.batterySingleHours ?? "-"}{model.batterySingleHours ? " h" : ""}</strong><span>Battery{model.batterySingleHours == null ? " · check" : ""}</span></li>
+          <li><strong>{model.weightG ?? "-"}{model.weightG ? " g" : ""}</strong><span>Weight</span></li>
         </ul>
 
         <div class="apdp__why">
@@ -227,9 +227,9 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
       <details class="apdp__acc">
         <summary>Hearing</summary>
         <table>
-          <tr><th>Hearing Test</th><td>{model.hearingTest == null ? "—" : model.hearingTest ? "Yes" : "No"}</td></tr>
-          <tr><th>Hearing Aid</th><td>{model.hearingAid == null ? "—" : model.hearingAid ? "Yes" : "No"}</td></tr>
-          <tr><th>Hearing Protection</th><td>{model.hearingProtection == null ? "—" : model.hearingProtection ? "Yes" : "No"}</td></tr>
+          <tr><th>Hearing Test</th><td>{model.hearingTest == null ? "-" : model.hearingTest ? "Yes" : "No"}</td></tr>
+          <tr><th>Hearing Aid</th><td>{model.hearingAid == null ? "-" : model.hearingAid ? "Yes" : "No"}</td></tr>
+          <tr><th>Hearing Protection</th><td>{model.hearingProtection == null ? "-" : model.hearingProtection ? "Yes" : "No"}</td></tr>
         </table>
       </details>
       <details class="apdp__acc">
@@ -325,7 +325,7 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
       bag.setAttribute("data-extras", state.extras);
     }
     if (wa instanceof HTMLAnchorElement) {
-      const msg = `Hi Gadget Hub — interested in ${modelName}, colour: ${state.colour || "-"}, case: ${state.caseOption}${state.extras ? `, add-ons: ${state.extras}` : ""}. Sample KES ${kes.toLocaleString("en-KE")}.`;
+      const msg = `Hi Gadget Hub - interested in ${modelName}, colour: ${state.colour || "-"}, case: ${state.caseOption}${state.extras ? `, add-ons: ${state.extras}` : ""}. Sample KES ${kes.toLocaleString("en-KE")}.`;
       wa.href = waBase + encodeURIComponent(msg);
     }
   }

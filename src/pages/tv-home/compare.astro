@@ -21,14 +21,14 @@ function honestDiff(list: typeof chosen): string {
   if (list.length < 2) return "Pick two or three models to see what actually changes.";
   const bits: string[] = [];
   const families = new Set(list.map((m) => m!.family));
-  if (families.size > 1) bits.push(`Mixed families: ${[...families].join(" vs ")} — TV box vs speaker.`);
+  if (families.size > 1) bits.push(`Mixed families: ${[...families].join(" vs ")} - TV box vs speaker.`);
   const hubs = list.map((m) => isHomeHub(m!));
-  if (hubs.some(Boolean) && hubs.some((v) => !v)) bits.push("Home hub support differs — confirm Thread/Matter for Kenya.");
+  if (hubs.some(Boolean) && hubs.some((v) => !v)) bits.push("Home hub support differs - confirm Thread/Matter for Kenya.");
   const dolby = list.map((m) => hasDolbyVision(m!));
   if (dolby.some(Boolean) && dolby.some((v) => !v)) bits.push("Dolby Vision is only on Apple TV models that list it.");
   const stereo = list.map((m) => m!.stereoPairCapable);
   if (stereo.some(Boolean) && stereo.some((v) => !v)) bits.push("Stereo pair only on listed HomePod models.");
-  return bits.slice(0, 3).join(" ") || "These models are close — check chip, connections and sample price.";
+  return bits.slice(0, 3).join(" ") || "These models are close - check chip, connections and sample price.";
 }
 
 const rows: { label: string; values: (string | number | boolean | null)[] }[] = [
@@ -38,13 +38,13 @@ const rows: { label: string; values: (string | number | boolean | null)[] }[] = 
   { label: "Dolby Vision", values: chosen.map((m) => hasDolbyVision(m!)) },
   { label: "Stereo pair", values: chosen.map((m) => m!.stereoPairCapable) },
   { label: "Intercom", values: chosen.map((m) => m!.intercom) },
-  { label: "Storage / SKU", values: chosen.map((m) => m!.storageOptions.join(", ") || "—") },
+  { label: "Storage / SKU", values: chosen.map((m) => m!.storageOptions.join(", ") || "-") },
   { label: "Speaker", values: chosen.map((m) => isSpeaker(m!)) },
   { label: "From (KES sample)", values: chosen.map((m) => m!.basePriceKes) },
 ];
 
 function cell(v: string | number | boolean | null): string {
-  if (v == null) return "—";
+  if (v == null) return "-";
   if (typeof v === "boolean") return v ? "Yes" : "No";
   if (typeof v === "number") return v.toLocaleString("en-KE");
   return v;

@@ -1,14 +1,14 @@
 ---
 /**
  * Product Overview - storage + color configurator, stories, buy module + sticky bar.
- * New | XUK channel switches sample price (sealed vs ex-UK import).
+ * New | EX-UK channel switches sample price (sealed vs ex-UK import).
  */
 import BaseLayout from "./BaseLayout.astro";
 import ProductExperience from "../components/ProductExperience.astro";
 import StockChannelToggle from "../components/StockChannelToggle.astro";
 import type { Product } from "../lib/products";
 import { site, whatsappUrl } from "../lib/site";
-import { xukFromNew } from "../lib/stock-channel";
+import { exUkFromNew } from "../lib/stock-channel";
 
 interface Props {
   product: Product;
@@ -122,7 +122,7 @@ const lipaFrom =
                     value={s.id}
                     data-price-kes={s.priceKes}
                     data-price-new={s.priceKes}
-                    data-price-xuk={xukFromNew(s.priceKes)}
+                    data-price-ex-uk={exUkFromNew(s.priceKes)}
                     data-label={s.label}
                     checked={i === 0}
                   />
@@ -326,8 +326,8 @@ const lipaFrom =
     const storage = root.querySelector('input[name="storage"]:checked');
     const color = root.querySelector('input[name="color"]:checked');
     const newKes = Number(storage?.getAttribute("data-price-new") || storage?.getAttribute("data-price-kes") || 0);
-    const xukKes = Number(storage?.getAttribute("data-price-xuk") || newKes);
-    const priceKes = channel === "xuk" ? xukKes : newKes;
+    const exUkKes = Number(storage?.getAttribute("data-price-ex-uk") || newKes);
+    const priceKes = channel === "ex-uk" ? exUkKes : newKes;
     return {
       storageId: storage?.value || "",
       storageLabel: storage?.getAttribute("data-label") || "",
@@ -335,7 +335,7 @@ const lipaFrom =
       colorLabel: color?.getAttribute("data-label") || "",
       priceKes,
       channel,
-      channelLabel: channel === "xuk" ? "XUK" : "New",
+      channelLabel: channel === "ex-uk" ? "EX-UK" : "New",
     };
   }
 

@@ -1,4 +1,4 @@
-/** Apple Watch module — data, images, pricing, bands. */
+/** Apple Watch module - data, images, pricing, bands. */
 
 export { watchConfig, watchBasePricesKes } from "./config";
 export {

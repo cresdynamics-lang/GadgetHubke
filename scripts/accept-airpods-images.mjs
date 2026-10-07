@@ -31,7 +31,7 @@ check("Gallery 0", "Pro 3", "gallery:0");
 check("Colour midnight", "Max", "colour:midnight", "airpods-max-usbc");
 check("Case overview", "Pro 3", "case");
 
-// C3–C11 sample
+// C3 - C11 sample
 [
   ["Noise pair", "pair:pro/noise-control/noise_control"],
   ["Noise adaptive", "pro/noise-control/gallery/noise_control_adaptive_audio"],

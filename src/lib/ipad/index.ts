@@ -1,4 +1,4 @@
-/** iPad Pro / Air / mini / standard module — data, images, pricing. */
+/** iPad Pro / Air / mini / standard module - data, images, pricing. */
 
 export { ipadConfig, ipadBasePricesKes } from "./config";
 export {

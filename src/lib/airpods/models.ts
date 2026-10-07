@@ -1,7 +1,7 @@
 /**
- * AirPods catalog (2–5, Pro 1–3, Max 2020/USB-C/Max 2).
+ * AirPods catalog (2 - 5, Pro 1 - 3, Max 2020/USB-C/Max 2).
  * Specs from Apple's published compare page (apple.com/airpods/compare).
- * Owner: re-verify every figure before launch. Store null where unclear —
+ * Owner: re-verify every figure before launch. Store null where unclear -
  * show nothing rather than guess. Groups marked checkFinalSpecs.
  */
 
@@ -84,16 +84,16 @@ export const airpodsModels: AirpodsModel[] = [
     weightG: 5.5,
     colours: ["white"],
     defaultColour: "white",
-    tagline: "The quietest Pro yet — plus hearing care.",
+    tagline: "The quietest Pro yet - plus hearing care.",
     whoItSuits: "Commuters, travellers and anyone who wants the strongest in-ear ANC.",
     whyChoose: [
-      "Strongest noise cancelling in the in-ear range — Apple's claim; check ratio in CONFIG.",
+      "Strongest noise cancelling in the in-ear range - Apple's claim; check ratio in CONFIG.",
       "Hearing Test, Hearing Aid and Hearing Protection where available.",
       "Heart-rate sensing in workouts and MagSafe USB-C case with Precision Finding.",
     ],
     isNew: true,
     checkFinalSpecs: true,
-    notes: "Hearing features — confirm Kenya availability. Battery hours check.",
+    notes: "Hearing features - confirm Kenya availability. Battery hours check.",
     pageFamily: "Pro",
   }),
   m({
@@ -127,8 +127,8 @@ export const airpodsModels: AirpodsModel[] = [
     whoItSuits: "Everyday calls, music and people who prefer open tips.",
     whyChoose: [
       "H2 chip and Adaptive Audio without silicone tips.",
-      "USB-C charging case — wireless case sold as a separate SKU.",
-      "Newest standard AirPods — check battery and IP figures.",
+      "USB-C charging case - wireless case sold as a separate SKU.",
+      "Newest standard AirPods - check battery and IP figures.",
     ],
     isNew: true,
     checkFinalSpecs: true,
@@ -206,7 +206,7 @@ export const airpodsModels: AirpodsModel[] = [
     whyChoose: [
       "Over-ear ANC with Digital Crown volume.",
       "Five colours on the current Max design.",
-      "About 386 g — check chip and mic count.",
+      "About 386 g - check chip and mic count.",
     ],
     isNew: true,
     checkFinalSpecs: true,
@@ -240,12 +240,12 @@ export const airpodsModels: AirpodsModel[] = [
     weightG: 386,
     colours: ["midnight", "blue", "orange", "purple", "starlight"],
     defaultColour: "midnight",
-    tagline: "USB-C Max — five fresh colours.",
+    tagline: "USB-C Max - five fresh colours.",
     whoItSuits: "Over-ear buyers who want the 2024 USB-C redesign.",
     whyChoose: [
       "USB-C charging and the current colour set.",
       "Smart Case included.",
-      "Store photos are this model — flag check for chip.",
+      "Store photos are this model - flag check for chip.",
     ],
     checkFinalSpecs: true,
     notes: "2024 USB-C Max photos used for Max family shots.",
@@ -354,12 +354,12 @@ export const airpodsModels: AirpodsModel[] = [
     weightG: null,
     colours: ["white"],
     defaultColour: "white",
-    tagline: "Pro ANC — still a strong buy.",
+    tagline: "Pro ANC - still a strong buy.",
     whoItSuits: "People who want Pro tips and ANC without Pro 3 pricing.",
     whyChoose: [
       "Pro-level ANC and Adaptive Audio.",
       "MagSafe USB-C case.",
-      "2024 store shots — 'Image shows the current design' for older Pro 2 packs.",
+      "2024 store shots - 'Image shows the current design' for older Pro 2 packs.",
     ],
     standInImage: true,
     checkFinalSpecs: true,
@@ -393,12 +393,12 @@ export const airpodsModels: AirpodsModel[] = [
     weightG: null,
     colours: ["white"],
     defaultColour: "white",
-    tagline: "Also in stock — check condition.",
+    tagline: "Also in stock - check condition.",
     whoItSuits: "Tight budgets who accept an older open-fit model.",
     whyChoose: [
       "Lower sample price.",
       "Spatial Audio on H1.",
-      "No store photo — case overview and stand-in note.",
+      "No store photo - case overview and stand-in note.",
     ],
     standInImage: true,
     checkFinalSpecs: true,
@@ -432,12 +432,12 @@ export const airpodsModels: AirpodsModel[] = [
     weightG: null,
     colours: ["white"],
     defaultColour: "white",
-    tagline: "Entry AirPods — check condition.",
+    tagline: "Entry AirPods - check condition.",
     whoItSuits: "Lowest budget first pair.",
     whyChoose: [
       "Lowest sample price in the shop.",
       "Lightning case (wireless optional historically).",
-      "No store photo — case overview only.",
+      "No store photo - case overview only.",
     ],
     standInImage: true,
     checkFinalSpecs: true,
@@ -471,11 +471,11 @@ export const airpodsModels: AirpodsModel[] = [
     weightG: null,
     colours: ["white"],
     defaultColour: "white",
-    tagline: "Also in stock — Pro tips on a budget.",
+    tagline: "Also in stock - Pro tips on a budget.",
     whoItSuits: "Buyers who want silicone tips and ANC at a lower price.",
     whyChoose: [
       "ANC with tips at a sample price below Pro 2.",
-      "No store photo — case overview.",
+      "No store photo - case overview.",
       "Confirm battery health on the invoice.",
     ],
     standInImage: true,
@@ -510,17 +510,17 @@ export const airpodsModels: AirpodsModel[] = [
     weightG: 384.8,
     colours: ["space-gray", "silver", "sky-blue", "green", "pink"],
     defaultColour: "space-gray",
-    tagline: "Original Max — Lightning. Text condition.",
+    tagline: "Original Max - Lightning. Text condition.",
     whoItSuits: "Over-ear buyers watching the budget.",
     whyChoose: [
       "Lower sample price than USB-C Max.",
-      "No store colour photos — text chips only.",
+      "No store colour photos - text chips only.",
       "Confirm condition and battery.",
     ],
     standInImage: true,
     textOnlyColours: true,
     checkFinalSpecs: true,
-    notes: "2020 colours have no image — text chips only.",
+    notes: "2020 colours have no image - text chips only.",
     pageFamily: "Max",
   }),
 ];

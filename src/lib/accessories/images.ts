@@ -1,5 +1,5 @@
 /**
- * getAccessoryImage(productId, kind) — single door for accessory images.
+ * getAccessoryImage(productId, kind) - single door for accessory images.
  * kind: hero | angle:n | swatch | feature:name | gallery:n | gesture:name | overview | manifest key
  */
 

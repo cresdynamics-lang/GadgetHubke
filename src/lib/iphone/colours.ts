@@ -1,5 +1,5 @@
 /**
- * Colour display labels + swatch hex for iPhone 11–16.
+ * Colour display labels + swatch hex for iPhone 11 - 16.
  * Light swatches need a thin border in the UI.
  */
 

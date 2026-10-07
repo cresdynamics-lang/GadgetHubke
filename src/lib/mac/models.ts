@@ -1,8 +1,8 @@
 /**
- * MacBook Air + Pro catalog (Apple silicon M1–M5, 2020+).
+ * MacBook Air + Pro catalog (Apple silicon M1 - M5, 2020+).
  * Specs from Apple's published figures in the Mac prompt.
  * Owner: re-verify every number on apple.com before launch.
- * M5 rows carry checkFinalSpecs — lower confidence until confirmed.
+ * M5 rows carry checkFinalSpecs - lower confidence until confirmed.
  */
 
 import { macBasePricesKes } from "./config";
@@ -54,7 +54,7 @@ export type MacModel = {
   magsafe: boolean;
   externalDisplays: string;
   thicknessKey: "air-m1" | "air-13-m2-later" | "air-15" | "pro-13" | "pro-14" | "pro-16";
-  /** Missing dedicated store colour shots — use overview as main */
+  /** Missing dedicated store colour shots - use overview as main */
   overviewOnly?: boolean;
   /** Show "Check final specs" badge */
   checkFinalSpecs?: boolean;
@@ -66,7 +66,7 @@ const P = macBasePricesKes;
 
 /** Owner: re-verify all specs against apple.com before launch. */
 export const macModels: MacModel[] = [
-  // —— Air ——
+  // -- Air --
   {
     id: "macbook-air-13-m1",
     name: "MacBook Air 13″ M1",
@@ -102,7 +102,7 @@ export const macModels: MacModel[] = [
     whyChoose: [
       "Still capable for browsing, docs, and streaming.",
       "Fanless and quiet.",
-      "Lowest sample price in the Air line — check battery health on older units.",
+      "Lowest sample price in the Air line - check battery health on older units.",
     ],
     basePriceKes: P["macbook-air-13-m1"],
     defaultColour: "space-gray",
@@ -316,7 +316,7 @@ export const macModels: MacModel[] = [
     wifi: "Wi-Fi 6E",
     bluetooth: "Bluetooth 5.3",
     tagline: "16 GB base. Sky Blue. Center Stage.",
-    whoItSuits: "Students and everyday buyers starting in 2025–2026.",
+    whoItSuits: "Students and everyday buyers starting in 2025 - 2026.",
     whyChoose: [
       "16 GB memory as the base configuration.",
       "12MP Center Stage camera with Desk View.",
@@ -451,7 +451,7 @@ export const macModels: MacModel[] = [
     colours: ["sky-blue", "silver", "starlight", "midnight"],
     wifi: "Wi-Fi 7",
     bluetooth: "Bluetooth 6",
-    tagline: "15″ M5 Air — verify every figure before launch.",
+    tagline: "15″ M5 Air - verify every figure before launch.",
     whoItSuits: "Buyers waiting for the latest 15″ Air.",
     whyChoose: [
       "Largest newest Air.",
@@ -469,7 +469,7 @@ export const macModels: MacModel[] = [
     isNew: true,
   },
 
-  // —— Pro 13 ——
+  // -- Pro 13 --
   {
     id: "macbook-pro-13-m1",
     name: "MacBook Pro 13″ M1",
@@ -560,7 +560,7 @@ export const macModels: MacModel[] = [
     thicknessKey: "pro-13",
   },
 
-  // —— Pro 14 / 16 ——
+  // -- Pro 14 / 16 --
   {
     id: "macbook-pro-14-m1-pro",
     name: "MacBook Pro 14″ M1 Pro",
@@ -597,7 +597,7 @@ export const macModels: MacModel[] = [
     whyChoose: [
       "Liquid Retina XDR with ProMotion.",
       "HDMI and SD card built in.",
-      "No Touch Bar — full-height function keys.",
+      "No Touch Bar - full-height function keys.",
     ],
     basePriceKes: P["macbook-pro-14-m1-pro"],
     defaultColour: "space-gray",
@@ -1049,7 +1049,7 @@ export const macModels: MacModel[] = [
     colours: ["silver", "space-black"],
     wifi: "Wi-Fi 7",
     bluetooth: "Bluetooth 6",
-    tagline: "Newest base Pro — check final specs.",
+    tagline: "Newest base Pro - check final specs.",
     whoItSuits: "Early adopters of M5 Pro hardware.",
     whyChoose: [
       "Newest generation entry Pro.",
@@ -1098,11 +1098,11 @@ export const macModels: MacModel[] = [
     colours: ["silver", "space-black"],
     wifi: "Wi-Fi 7",
     bluetooth: "Bluetooth 6",
-    tagline: "M5 Pro — all figures flagged.",
+    tagline: "M5 Pro - all figures flagged.",
     whoItSuits: "Power users waiting for verified M5 Pro stock.",
     whyChoose: [
       "Highest tier 14″ in this catalogue.",
-      "Thunderbolt 5 and HDMI 8K listed — verify.",
+      "Thunderbolt 5 and HDMI 8K listed - verify.",
       "Check final specs on every number.",
     ],
     basePriceKes: P["macbook-pro-14-m5-pro"],
@@ -1147,7 +1147,7 @@ export const macModels: MacModel[] = [
     colours: ["silver", "space-black"],
     wifi: "Wi-Fi 7",
     bluetooth: "Bluetooth 6",
-    tagline: "Largest M5 Pro — verify before selling.",
+    tagline: "Largest M5 Pro - verify before selling.",
     whoItSuits: "Teams standardising on the newest 16″ Pro.",
     whyChoose: [
       "Flagship size and silicon generation.",

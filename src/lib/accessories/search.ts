@@ -262,21 +262,21 @@ export function searchAccessories(
   if (pencilFuture) {
     future = {
       queried: `Apple Pencil Pro ${pencilFuture[1]}`,
-      note: "That Pencil generation is not in the shop yet. We can message you when stock lands — meanwhile these are the Pencils we carry.",
+      note: "That Pencil generation is not in the shop yet. We can message you when stock lands - meanwhile these are the Pencils we carry.",
     };
   }
   const mouseFuture = q.match(/\bmagic\s*mouse\s*([3-9]|[1-9]\d)\b/);
   if (mouseFuture) {
     future = {
       queried: `Magic Mouse ${mouseFuture[1]}`,
-      note: "That Magic Mouse generation is not in the shop yet. We can message you when stock lands — meanwhile these are the Magic Mice we carry.",
+      note: "That Magic Mouse generation is not in the shop yet. We can message you when stock lands - meanwhile these are the Magic Mice we carry.",
     };
   }
   const trackpadFuture = q.match(/\bmagic\s*trackpad\s*([3-9]|[1-9]\d)\b/);
   if (trackpadFuture) {
     future = {
       queried: `Magic Trackpad ${trackpadFuture[1]}`,
-      note: "That Magic Trackpad generation is not in the shop yet. We can message you when stock lands — meanwhile these are the Trackpads we carry.",
+      note: "That Magic Trackpad generation is not in the shop yet. We can message you when stock lands - meanwhile these are the Trackpads we carry.",
     };
   }
 
@@ -355,7 +355,7 @@ export function searchAccessories(
   if (!hits.length && !future) logAccessoriesSearchMiss(query);
 
   const gamingNote = wantsGamingMouse
-    ? "We stock Apple Magic Mouse, not third-party gaming mice — message us on WhatsApp if you need a gaming pointer."
+    ? "We stock Apple Magic Mouse, not third-party gaming mice - message us on WhatsApp if you need a gaming pointer."
     : null;
 
   return {

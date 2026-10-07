@@ -1,6 +1,6 @@
 ---
 /**
- * iPad PDP — sticky viewer + buy panel + feel hooks + specs/FAQ.
+ * iPad PDP - sticky viewer + buy panel + feel hooks + specs/FAQ.
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import IpadStage from "../../components/ipad/IpadStage.astro";
@@ -102,12 +102,12 @@ const wa = whatsappUrl(
           </div>
           {
             model.overviewOnly ? (
-              <p class="ipdp__note">Full colour store shots coming soon — showing Apple’s colour overview. Colour names below as text.</p>
+              <p class="ipdp__note">Full colour store shots coming soon - showing Apple’s colour overview. Colour names below as text.</p>
             ) : null
           }
           {
             model.checkFinalSpecs ? (
-              <p class="ipdp__note ipdp__note--warn">Check final specs — verify on apple.com before launch.</p>
+              <p class="ipdp__note ipdp__note--warn">Check final specs - verify on apple.com before launch.</p>
             ) : null
           }
 
@@ -147,7 +147,7 @@ const wa = whatsappUrl(
             ) : null
           }
 
-          <p class="ipdp__colour-label">Colour — <strong data-colour-name>{colourLabel(colour)}</strong></p>
+          <p class="ipdp__colour-label">Colour - <strong data-colour-name>{colourLabel(colour)}</strong></p>
           {
             model.overviewOnly ? (
               <p class="ipdp__colours-text">{model.colours.map(colourLabel).join(", ")}</p>
@@ -281,7 +281,7 @@ const wa = whatsappUrl(
     <section class="ipdp__feel-black" id="feel-display" data-feel="display">
       <div class="container">
         <h2>The screen is the reason.</h2>
-        <p class="ipdp__muted">Illustration — not a measurement.</p>
+        <p class="ipdp__muted">Illustration - not a measurement.</p>
         {
           (() => {
             const d = getIpadImage(model.id, colour, "display", model.name);
@@ -306,7 +306,7 @@ const wa = whatsappUrl(
 
     <section class="container ipdp__block" id="feel-pencil" data-feel="pencil">
       <h2>Draw something.</h2>
-      <p>Simple canvas — try the Pencil feel with mouse or finger.</p>
+      <p>Simple canvas - try the Pencil feel with mouse or finger.</p>
       <div class="ipdp__canvas-wrap">
         <canvas data-draw-canvas width="900" height="520" aria-label="Drawing canvas"></canvas>
         <div class="ipdp__canvas-tools">

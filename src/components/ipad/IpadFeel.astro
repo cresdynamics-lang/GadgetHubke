@@ -1,6 +1,6 @@
 ---
 /**
- * PDP feel sections — performance, camera, battery, ports, colour + progress dots.
+ * PDP feel sections - performance, camera, battery, ports, colour + progress dots.
  * Thin/display/pencil already on the PDP; this mounts the remaining story beats.
  */
 import {
@@ -70,7 +70,7 @@ const hours = model.batteryHours;
       </svg>
       <p>
         {model.memoryGb[0]} GB is the floor on this model.
-        {model.memoryGb[0] >= 12 ? " Extra headroom helps Stage Manager and creative apps." : " 12–16 GB helps Stage Manager when available."}
+        {model.memoryGb[0] >= 12 ? " Extra headroom helps Stage Manager and creative apps." : " 12 - 16 GB helps Stage Manager when available."}
       </p>
     </div>
     <ul class="ifeel__handles">
@@ -103,7 +103,7 @@ const hours = model.batteryHours;
     <div class="ifeel__wave" aria-hidden="true" data-wave>
       <span /><span /><span /><span /><span /><span /><span /><span />
     </div>
-    <p class="ifeel__caption">Speakers and mics — confirm count per model before launch.</p>
+    <p class="ifeel__caption">Speakers and mics - confirm count per model before launch.</p>
   </div>
 </section>
 
@@ -123,7 +123,7 @@ const hours = model.batteryHours;
       <input type="range" min="1" max="10" value="6" data-day-slider />
     </label>
     <p data-day-result>At 6 hours of use, this model comfortably covers a typical day (30% safety margin).</p>
-    <p class="ifeel__caption">USB-C charging. Adapter wattage depends on the model — ask in store.</p>
+    <p class="ifeel__caption">USB-C charging. Adapter wattage depends on the model - ask in store.</p>
   </div>
 </section>
 
@@ -243,7 +243,7 @@ const hours = model.batteryHours;
       dayResult.textContent =
         use <= cover
           ? `At ${use} hours of use, this model comfortably covers a typical day (30% safety margin on Apple’s ${hours} h claim).`
-          : `At ${use} hours, plan a midday charge — Apple’s claim is up to ${hours} h with a 30% safety margin.`;
+          : `At ${use} hours, plan a midday charge - Apple’s claim is up to ${hours} h with a 30% safety margin.`;
     }
   }
   daySlider?.addEventListener("input", dayLine);

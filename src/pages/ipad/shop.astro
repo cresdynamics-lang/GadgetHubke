@@ -1,6 +1,6 @@
 ---
 /**
- * iPad shop — Family / Size / Gen / Need + Pencil Pro & Apple Intelligence toggles.
+ * iPad shop - Family / Size / Gen / Need + Pencil Pro & Apple Intelligence toggles.
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import IpadCard from "../../components/ipad/IpadCard.astro";
@@ -208,14 +208,14 @@ const compareCards = Object.fromEntries(
     const chips = new Set(cards.map((c) => c.chip));
     if (chips.size > 1) points.push(`Chip differs: ${[...chips].join(" vs ")}.`);
     const pencils = new Set(cards.map((c) => c.pencil));
-    if (pencils.size > 1) points.push("Apple Pencil support is not the same — check before you buy.");
+    if (pencils.size > 1) points.push("Apple Pencil support is not the same - check before you buy.");
     const ais = new Set(cards.map((c) => c.ai));
     if (ais.size > 1) points.push("Apple Intelligence support differs across these models.");
     const prices = cards.map((c) => c.price);
     if (Math.max(...prices) - Math.min(...prices) >= 20000) {
       points.push(`Sample price gap about KES ${(Math.max(...prices) - Math.min(...prices)).toLocaleString("en-KE")}.`);
     }
-    return points.slice(0, 3).join(" ") || "These iPads are close — compare Pencil and keyboard fit carefully.";
+    return points.slice(0, 3).join(" ") || "These iPads are close - compare Pencil and keyboard fit carefully.";
   }
 
   function renderModal() {

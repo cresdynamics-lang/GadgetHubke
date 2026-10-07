@@ -21,8 +21,8 @@ Replace every placeholder below before launch. Specs and fit rules are flagged *
 - [ ] Confirm Pencil Pro / USB-C / 2nd gen / 1st gen feature gaps (pressure, squeeze, hover, adapter)
 
 ## Images and models without photos
-- [ ] Apple Pencil (1st gen): overview image only — line “Image shows the product design.”
-- [ ] Older iPad Magic Keyboards (2020–2022), Smart Keyboard Folio, original Touch ID for Intel Macs: no photos here — text-only if stocked
+- [ ] Apple Pencil (1st gen): overview image only - line “Image shows the product design.”
+- [ ] Older iPad Magic Keyboards (2020 - 2022), Smart Keyboard Folio, original Touch ID for Intel Macs: no photos here - text-only if stocked
 - [ ] Permission to use Apple product photos on the live site (footer trademark line)
 
 ## Live groups (verify content)

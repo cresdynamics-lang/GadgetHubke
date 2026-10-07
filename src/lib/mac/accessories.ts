@@ -56,7 +56,7 @@ const CATALOG: MacAccessory[] = [
   {
     id: "hardshell",
     name: "Hard shell case",
-    blurb: "Clear shell — confirm exact year/size in shop",
+    blurb: "Clear shell - confirm exact year/size in shop",
     priceKes: 3999,
     href: "/accessories",
     category: "case",
@@ -90,7 +90,7 @@ const CATALOG: MacAccessory[] = [
   {
     id: "keyboard-mac-touchid",
     name: "Magic Keyboard with Touch ID",
-    blurb: "Touch ID needs Apple silicon — check before you pay.",
+    blurb: "Touch ID needs Apple silicon - check before you pay.",
     priceKes: 18000,
     href: "/accessories/keyboard-mac-touchid",
     category: "desk",
@@ -114,7 +114,7 @@ const CATALOG: MacAccessory[] = [
   {
     id: "screen-protector",
     name: "Screen protector",
-    blurb: "Sized per exact model — layouts differ",
+    blurb: "Sized per exact model - layouts differ",
     priceKes: 2999,
     href: "/accessories",
     category: "protection",
@@ -189,7 +189,7 @@ export function macBuyingNotes(model: MacModel): { title: string; body: string }
       body:
         baseMem <= 8
           ? "8 GB is enough for light use. 16 GB is the sensible starting point for most people today."
-          : `${baseMem} GB is the base on this model. Unified memory is built in — pick enough now.`,
+          : `${baseMem} GB is the base on this model. Unified memory is built in - pick enough now.`,
     },
     {
       title: "Storage",
@@ -206,11 +206,11 @@ export function macBuyingNotes(model: MacModel): { title: string; body: string }
     },
     {
       title: "Weight and size",
-      body: `About ${model.weightKg} kg — roughly the weight of a full water bottle${model.weightKg >= 2 ? " and a half" : ""}.`,
+      body: `About ${model.weightKg} kg - roughly the weight of a full water bottle${model.weightKg >= 2 ? " and a half" : ""}.`,
     },
     {
       title: "Age and support",
-      body: `${model.chip} (${model.year}). Check Apple’s list for current macOS support — we do not invent update promises.`,
+      body: `${model.chip} (${model.year}). Check Apple’s list for current macOS support - we do not invent update promises.`,
     },
     {
       title: "Condition and seal",
@@ -226,7 +226,7 @@ export function macFaq(): { q: string; a: string }[] {
   return [
     {
       q: "Is 8 GB enough?",
-      a: "For light browsing and docs, yes. For creative work or many browser tabs in 2026, start at 16 GB — memory is not upgradeable later.",
+      a: "For light browsing and docs, yes. For creative work or many browser tabs in 2026, start at 16 GB - memory is not upgradeable later.",
     },
     {
       q: "Air or Pro?",
@@ -238,11 +238,11 @@ export function macFaq(): { q: string; a: string }[] {
     },
     {
       q: "Is the older M1 still good?",
-      a: "Yes for everyday use. Check battery health on 2020–2022 stock. Prefer M3/M4 when you need longer software runway and newer cameras.",
+      a: "Yes for everyday use. Check battery health on 2020 - 2022 stock. Prefer M3/M4 when you need longer software runway and newer cameras.",
     },
     {
       q: "Will my Windows software run?",
-      a: "Excel and Word work. Most apps have a Mac version. A few Windows-only programs will not run — ask us before you buy.",
+      a: "Excel and Word work. Most apps have a Mac version. A few Windows-only programs will not run - ask us before you buy.",
     },
     {
       q: "Do I need a dongle?",
@@ -254,7 +254,7 @@ export function macFaq(): { q: string; a: string }[] {
     },
     {
       q: "Can I upgrade memory later?",
-      a: "No — it is built in. That is why we help you pick the right config now.",
+      a: "No - it is built in. That is why we help you pick the right config now.",
     },
     {
       q: "What do I get with the invoice?",

@@ -26,8 +26,8 @@ function honestDiff(list: typeof chosen): string {
   const anc = list.map((m) => hasAnc(m!));
   if (anc.some(Boolean) && anc.some((v) => !v)) bits.push("Full ANC is only on some of these.");
   const hear = list.map((m) => hasHearing(m!));
-  if (hear.some(Boolean) && hear.some((v) => !v)) bits.push("Hearing features differ — confirm Kenya availability.");
-  return bits.slice(0, 3).join(" ") || "These models are close — check case, chip and sample price.";
+  if (hear.some(Boolean) && hear.some((v) => !v)) bits.push("Hearing features differ - confirm Kenya availability.");
+  return bits.slice(0, 3).join(" ") || "These models are close - check case, chip and sample price.";
 }
 
 const rows: { label: string; values: (string | number | boolean | null)[] }[] = [
@@ -46,7 +46,7 @@ const rows: { label: string; values: (string | number | boolean | null)[] }[] = 
 ];
 
 function cell(v: string | number | boolean | null): string {
-  if (v == null) return "—";
+  if (v == null) return "-";
   if (typeof v === "boolean") return v ? "Yes" : "No";
   if (typeof v === "number") return v.toLocaleString("en-KE");
   return v;

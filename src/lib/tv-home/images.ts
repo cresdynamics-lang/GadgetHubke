@@ -1,5 +1,5 @@
 /**
- * getTvHomeImage(modelId, kind) — hero, colour, gallery, box, remote, swatch, compare, page assets.
+ * getTvHomeImage(modelId, kind) - hero, colour, gallery, box, remote, swatch, compare, page assets.
  * Uses generated-manifest.json via manifest.ts. Never returns a broken path.
  */
 
@@ -86,7 +86,7 @@ export function getTvHomeImage(
   const pageFam = model?.pageFamily || "Landing";
 
   if (model?.noImage) {
-    return finish(TV_HOME_PLACEHOLDER, `${name} — image not available`, kind, true);
+    return finish(TV_HOME_PLACEHOLDER, `${name} - image not available`, kind, true);
   }
 
   if (kind.startsWith("colour:")) {

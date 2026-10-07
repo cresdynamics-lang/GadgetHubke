@@ -105,7 +105,7 @@ export function macCompareRows(cards: MacCompareCard[]): MacCompareRow[] {
   ];
 }
 
-/** Short paragraph: the 2–3 things that actually change between the set. */
+/** Short paragraph: the 2 - 3 things that actually change between the set. */
 export function honestMacDifference(models: MacModel[]): string {
   if (models.length < 2) {
     return "Pick at least two MacBooks to see what truly differs.";
@@ -135,7 +135,7 @@ export function honestMacDifference(models: MacModel[]): string {
     points.push(`Screen size is the easy choice: ${[...sizes].map((s) => `${s}″`).join(" vs ")}.`);
   }
   if (promotions || panels.size > 1) {
-    points.push("Display class changes — Liquid Retina vs Liquid Retina XDR / ProMotion where present.");
+    points.push("Display class changes - Liquid Retina vs Liquid Retina XDR / ProMotion where present.");
   }
   if (cooling && families.size === 1) {
     points.push("Cooling differs: some stay silent (fanless), others use a fan under load.");
@@ -146,10 +146,10 @@ export function honestMacDifference(models: MacModel[]): string {
     );
   }
   if (Math.max(...weights) - Math.min(...weights) >= 0.2) {
-    points.push(`Weight spans ${Math.min(...weights)}–${Math.max(...weights)} kg.`);
+    points.push(`Weight spans ${Math.min(...weights)}-${Math.max(...weights)} kg.`);
   }
   if (Math.max(...years) - Math.min(...years) >= 2) {
-    points.push("Age gap matters for support — check Apple’s macOS list; older machines need a condition check.");
+    points.push("Age gap matters for support - check Apple’s macOS list; older machines need a condition check.");
   }
   if (Math.max(...prices) - Math.min(...prices) >= 30000) {
     points.push(

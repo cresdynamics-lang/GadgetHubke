@@ -1,6 +1,6 @@
 ---
 /**
- * Watch landing — hero wake-up, choose cards, quiz, gen chips, grid, band studio, plan, visit.
+ * Watch landing - hero wake-up, choose cards, quiz, gen chips, grid, band studio, plan, visit.
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import WatchStage from "../../components/watch/WatchStage.astro";
@@ -41,7 +41,7 @@ const choose = [
   },
   {
     title: "Apple Watch Ultra",
-    body: "Brightest, toughest, longest battery — for trail, sea and siren.",
+    body: "Brightest, toughest, longest battery - for trail, sea and siren.",
     href: "/watch/shop?family=Ultra",
     price: lowestWatchPrice("Ultra"),
     model: ultra.find((m) => m.id === "watch-ultra-4") || ultra[0],
@@ -145,7 +145,7 @@ const genChips = ["Series 12", "Series 11", "Series 10", "Series 9", "Series 8",
 
   <section class="container watch-bands-studio" data-landing-bands>
     <h2>Band studio</h2>
-    <p>Pick a band — name and sample price. Images are gallery shots, not every colour combo.</p>
+    <p>Pick a band - name and sample price. Images are gallery shots, not every colour combo.</p>
     <div class="watch-bands-studio__row">
       {watchBands.slice(0, 8).map((b) => (
         <button type="button" data-land-band={b.id} data-name={b.name} data-price={b.priceKes} data-blurb={b.blurb}>
@@ -215,7 +215,7 @@ const genChips = ["Series 12", "Series 11", "Series 10", "Series 9", "Series 8",
       btn.classList.add("is-active");
       const el = document.querySelector("[data-land-band-detail]");
       if (el && btn instanceof HTMLElement) {
-        el.textContent = `${btn.getAttribute("data-name")} — KES ${Number(btn.getAttribute("data-price") || 0).toLocaleString("en-KE")}. ${btn.getAttribute("data-blurb")}`;
+        el.textContent = `${btn.getAttribute("data-name")} - KES ${Number(btn.getAttribute("data-price") || 0).toLocaleString("en-KE")}. ${btn.getAttribute("data-blurb")}`;
       }
     });
   });

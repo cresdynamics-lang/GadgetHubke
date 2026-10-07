@@ -1,4 +1,4 @@
-/** iPhone 11–16 shop module — data, images, pricing. Mac category can mirror this later. */
+/** iPhone 11 - 16 shop module - data, images, pricing. Mac category can mirror this later. */
 
 export { iphoneConfig } from "./config";
 export {

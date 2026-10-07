@@ -172,7 +172,7 @@ export function defaultMacColour(model: MacModel): string {
   return available[0] || "silver";
 }
 
-/** Build viewer tab list for a model+colour — only include views with real images. */
+/** Build viewer tab list for a model+colour - only include views with real images. */
 export function macViewerTabs(model: MacModel, colourKey: string) {
   const id = model.id;
   const name = model.name;

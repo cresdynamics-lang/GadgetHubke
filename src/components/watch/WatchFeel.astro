@@ -1,6 +1,6 @@
 ---
 /**
- * PDP feel sections — display, health, fitness, safety, battery, water, bands, colour + progress.
+ * PDP feel sections - display, health, fitness, safety, battery, water, bands, colour + progress.
  */
 import {
   type WatchModel,
@@ -46,9 +46,9 @@ const safetyTiles = [
   { key: "sos", label: "Emergency SOS", on: model.safety.emergencySos, body: "Call for help with side button." },
   { key: "fall", label: "Fall Detection", on: model.safety.fallDetection, body: "Detects hard falls and can call for help." },
   { key: "crash", label: "Crash Detection", on: model.safety.crashDetection, body: "Can detect a severe car crash." },
-  { key: "intl", label: "International emergency", on: model.safety.internationalEmergency, body: "Emergency calling while travelling — country dependent." },
+  { key: "intl", label: "International emergency", on: model.safety.internationalEmergency, body: "Emergency calling while travelling - country dependent." },
   { key: "siren", label: "Siren", on: model.safety.siren, body: "Loud siren on Ultra to attract attention." },
-  { key: "sat", label: "Satellite SOS", on: model.safety.satelliteSos, body: "Emergency via satellite where supported — confirm for Kenya." },
+  { key: "sat", label: "Satellite SOS", on: model.safety.satelliteSos, body: "Emergency via satellite where supported - confirm for Kenya." },
 ].filter((t) => t.on !== null && t.on !== false || t.on === false);
 
 const materialGroups = ["aluminum", "titanium", "ceramic", "stainless"] as const;
@@ -63,7 +63,7 @@ const materialGroups = ["aluminum", "titanium", "ceramic", "stainless"] as const
 <section class="wfeel wfeel--black" id="feel-display" data-feel="display">
   <div class="container wfeel__inner">
     <h2>Bright enough for noon.</h2>
-    <p class="wfeel__lede">Illustration — not a measurement. {model.checkFinalSpecs ? "Brightness flagged check final specs." : ""}</p>
+    <p class="wfeel__lede">Illustration - not a measurement. {model.checkFinalSpecs ? "Brightness flagged check final specs." : ""}</p>
     {!displayImg.fallback ? (
       <img class="wfeel__img" data-display-img src={displayImg.src} alt={displayImg.alt} width="1200" height="900" loading="lazy" />
     ) : null}
@@ -78,7 +78,7 @@ const materialGroups = ["aluminum", "titanium", "ceramic", "stainless"] as const
         <input type="range" min="0" max="100" value="80" data-aod />
       </label>
     ) : model.alwaysOn === null ? (
-      <p class="wfeel__caption">Always-On status — check final specs.</p>
+      <p class="wfeel__caption">Always-On status - check final specs.</p>
     ) : (
       <p class="wfeel__caption">No Always-On on this model.</p>
     )}
@@ -100,7 +100,7 @@ const materialGroups = ["aluminum", "titanium", "ceramic", "stainless"] as const
     <svg class="wfeel__pulse" viewBox="0 0 200 40" aria-hidden="true" data-pulse>
       <polyline fill="none" stroke="currentColor" stroke-width="2" points="0,20 20,20 30,5 40,35 50,20 80,20 90,8 100,32 110,20 200,20" />
     </svg>
-    <p class="wfeel__caption">Decorative heartbeat — not a reading.</p>
+    <p class="wfeel__caption">Decorative heartbeat - not a reading.</p>
     <ul class="wfeel__tiles">
       {healthTiles.map((t) => (
         <li class:list={{ "is-off": t.on === false }}>
@@ -121,13 +121,13 @@ const materialGroups = ["aluminum", "titanium", "ceramic", "stainless"] as const
       <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="40" /><circle data-ring="ex" cx="60" cy="60" r="40" /></svg>
       <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="28" /><circle data-ring="stand" cx="60" cy="60" r="28" /></svg>
     </div>
-    <p class="wfeel__caption">Activity rings — illustration.</p>
+    <p class="wfeel__caption">Activity rings - illustration.</p>
     <div class="wfeel__workouts" role="tablist">
       {["Run", "Swim", "Walk", "Cycle", "Strength", "Hike"].map((w, i) => (
         <button type="button" role="tab" class:list={{ "is-active": i === 0 }} data-workout={w}>{w}</button>
       ))}
     </div>
-    <p data-workout-copy>Run — heart rate, distance and GPS route where the model supports it.</p>
+    <p data-workout-copy>Run - heart rate, distance and GPS route where the model supports it.</p>
     {!fitnessEnd.fallback ? (
       <div class="wfeel__cam" data-fit-cam>
         {!fitnessStart.fallback ? <img data-fit-start src={fitnessStart.src} alt={fitnessStart.alt} width="1000" height="700" loading="lazy" /> : null}
@@ -138,7 +138,7 @@ const materialGroups = ["aluminum", "titanium", "ceramic", "stainless"] as const
     ) : null}
     {model.family === "Ultra" ? (
       <p class="wfeel__callout">
-        Action button + dual-frequency GPS{model.dualFrequencyGps ? "" : " (check)"} — built for trail and open water.
+        Action button + dual-frequency GPS{model.dualFrequencyGps ? "" : " (check)"} - built for trail and open water.
       </p>
     ) : null}
   </div>
@@ -155,12 +155,12 @@ const materialGroups = ["aluminum", "titanium", "ceramic", "stainless"] as const
         </li>
       ))}
     </ul>
-    <p class="wfeel__caption">Satellite and some emergency features depend on country and plan — owner to confirm for Kenya.</p>
+    <p class="wfeel__caption">Satellite and some emergency features depend on country and plan - owner to confirm for Kenya.</p>
     <button type="button" class="wfeel__sos" data-sos aria-describedby="sos-note">
       <span data-sos-ring />
       Hold for SOS (illustration)
     </button>
-    <p id="sos-note" class="wfeel__caption">Purely illustrative — does not place a call.</p>
+    <p id="sos-note" class="wfeel__caption">Purely illustrative - does not place a call.</p>
   </div>
 </section>
 
@@ -181,7 +181,7 @@ const materialGroups = ["aluminum", "titanium", "ceramic", "stainless"] as const
       <input type="range" min="1" max="48" value="16" data-day-slider />
     </label>
     <p data-day-result></p>
-    <p class="wfeel__caption">Magnetic fast charger. Time-to-80% and overnight 15-minute top-up — flag check.</p>
+    <p class="wfeel__caption">Magnetic fast charger. Time-to-80% and overnight 15-minute top-up - flag check.</p>
   </div>
 </section>
 
@@ -196,7 +196,7 @@ const materialGroups = ["aluminum", "titanium", "ceramic", "stainless"] as const
         <div class="wfeel__depth-bar"><i data-depth-fill /></div>
         <strong data-depth-label>0 m</strong>
       </div>
-      <p class="wfeel__caption">Depth gauge illustration to {depth ?? model.waterM} m — check final specs.</p>
+      <p class="wfeel__caption">Depth gauge illustration to {depth ?? model.waterM} m - check final specs.</p>
       <p>Swim and snorkel within the rating. Hot tubs, saunas and diving beyond the rating are not covered.</p>
     </div>
   </section>
@@ -222,10 +222,10 @@ const materialGroups = ["aluminum", "titanium", "ceramic", "stainless"] as const
           <strong>{b.name}</strong>
           <span>{formatKes(b.priceKes)}</span>
         </button>
-      )) : <p>No bands listed for this case size family — ask in store.</p>}
+      )) : <p>No bands listed for this case size family - ask in store.</p>}
     </div>
     <p data-band-detail>Select a band to see name, price and description.</p>
-    <p class="wfeel__caption">Match your outfit: black case with Sport Band Black; natural titanium with Milanese Silver; Ultra with Ocean Band Blue — text suggestions only.</p>
+    <p class="wfeel__caption">Match your outfit: black case with Sport Band Black; natural titanium with Milanese Silver; Ultra with Ocean Band Blue - text suggestions only.</p>
   </div>
 </section>
 
@@ -309,12 +309,12 @@ const materialGroups = ["aluminum", "titanium", "ceramic", "stainless"] as const
   }
 
   const copies = {
-    Run: "Run — heart rate, distance and GPS route where supported.",
-    Swim: "Swim — pool or open water within the rating.",
-    Walk: "Walk — rings, heart rate and pace.",
-    Cycle: "Cycle — outdoor ride metrics; GPS where supported.",
-    Strength: "Strength — heart rate and effort.",
-    Hike: "Hike — elevation and dual-frequency GPS on Ultra.",
+    Run: "Run - heart rate, distance and GPS route where supported.",
+    Swim: "Swim - pool or open water within the rating.",
+    Walk: "Walk - rings, heart rate and pace.",
+    Cycle: "Cycle - outdoor ride metrics; GPS where supported.",
+    Strength: "Strength - heart rate and effort.",
+    Hike: "Hike - elevation and dual-frequency GPS on Ultra.",
   };
   document.querySelectorAll("[data-workout]").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -384,7 +384,7 @@ const materialGroups = ["aluminum", "titanium", "ceramic", "stainless"] as const
       dayResult.textContent =
         use <= cover
           ? `At ${use} hours of use, this model covers a typical day (30% margin on Apple’s ${hours} h claim${hours === 18 && !document.body ? "" : ""}).`
-          : `At ${use} hours, plan a charge — Apple’s claim is up to ${hours} h (Low Power ~${lowPower} h).`;
+          : `At ${use} hours, plan a charge - Apple’s claim is up to ${hours} h (Low Power ~${lowPower} h).`;
     }
   }
   daySlider?.addEventListener("input", dayLine);
@@ -423,7 +423,7 @@ const materialGroups = ["aluminum", "titanium", "ceramic", "stainless"] as const
       btn.classList.add("is-active");
       const detail = document.querySelector("[data-band-detail]");
       if (detail) {
-        detail.textContent = `${btn.getAttribute("data-band-name")} — KES ${Number(btn.getAttribute("data-band-price") || 0).toLocaleString("en-KE")}. ${btn.getAttribute("data-band-blurb")}`;
+        detail.textContent = `${btn.getAttribute("data-band-name")} - KES ${Number(btn.getAttribute("data-band-price") || 0).toLocaleString("en-KE")}. ${btn.getAttribute("data-band-blurb")}`;
       }
       const pdpBand = document.querySelector(`[data-pdp-band="${btn.getAttribute("data-band")}"]`);
       if (pdpBand instanceof HTMLElement) pdpBand.click();

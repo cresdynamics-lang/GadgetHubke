@@ -1,6 +1,6 @@
 ---
 /**
- * MacBook compare page — photos, grouped specs, differences toggle, honest summary.
+ * MacBook compare page - photos, grouped specs, differences toggle, honest summary.
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import {
@@ -52,7 +52,7 @@ const pickList = macModels.filter((m) => m.year >= 2023 || m.isNew);
           <label>
             <span class="sr-only">Model {i + 1}</span>
             <select name={`id${i}`}>
-              <option value="">—</option>
+              <option value="">-</option>
               {pickList.map((m) => (
                 <option value={m.id} selected={models[i]?.id === m.id}>
                   {m.name}

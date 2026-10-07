@@ -1,5 +1,5 @@
 /**
- * Owner-editable CONFIG for AirPods (2–5, Pro, Max, 2020–2026).
+ * Owner-editable CONFIG for AirPods (2 - 5, Pro, Max, 2020 - 2026).
  * All KES prices are samples. Re-verify specs on apple.com/airpods/compare before launch.
  */
 
@@ -62,17 +62,17 @@ export const airpodsConfig = {
       ratio: 2,
       source: "Apple AirPods Pro 3 marketing (approx. up to 2×)",
       date: "2025",
-      note: "Illustration only — confirm exact published claim before launch.",
+      note: "Illustration only - confirm exact published claim before launch.",
     },
   ] as const,
 
   missingStoreShotNotes: [
-    "AirPods 2 — no store photo; case overview + stand-in note",
-    "AirPods 3 — no store photo; case overview + stand-in note",
-    "AirPods Pro 1 — no store photo",
-    "AirPods Pro 2 (2022/2023) — use 2024 Pro 2 shots with 'Image shows the current design'",
-    "AirPods Max (2020 Lightning) — no colour photos; text chips only for space gray/silver/sky blue/green/pink",
-    "Max purple and starlight colour dots — approximate CSS (#B8A9C9, #E3D8CC)",
+    "AirPods 2 - no store photo; case overview + stand-in note",
+    "AirPods 3 - no store photo; case overview + stand-in note",
+    "AirPods Pro 1 - no store photo",
+    "AirPods Pro 2 (2022/2023) - use 2024 Pro 2 shots with 'Image shows the current design'",
+    "AirPods Max (2020 Lightning) - no colour photos; text chips only for space gray/silver/sky blue/green/pink",
+    "Max purple and starlight colour dots - approximate CSS (#B8A9C9, #E3D8CC)",
   ] as const,
 
   /** Approximate Max colour dots for missing swatch files. */

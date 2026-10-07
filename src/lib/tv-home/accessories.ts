@@ -55,7 +55,7 @@ export const tvHomeAccessories: TvHomeAccessory[] = [
   {
     id: "homepod-stand",
     name: "HomePod stand / mount",
-    blurb: "Third-party stand — owner to confirm stock.",
+    blurb: "Third-party stand - owner to confirm stock.",
     priceKes: 4500,
     category: "stand",
     families: ["HomePod", "HomePod mini"],
@@ -74,7 +74,7 @@ export const tvHomeAccessories: TvHomeAccessory[] = [
   {
     id: "fabric-cover",
     name: "Fabric cover",
-    blurb: "Third-party cover — owner to confirm.",
+    blurb: "Third-party cover - owner to confirm.",
     priceKes: 2000,
     category: "third",
     families: ["HomePod", "HomePod mini"],
@@ -84,7 +84,7 @@ export const tvHomeAccessories: TvHomeAccessory[] = [
   {
     id: "apple-care",
     name: "AppleCare+",
-    blurb: "Extended coverage — owner to confirm pricing.",
+    blurb: "Extended coverage - owner to confirm pricing.",
     priceKes: 6000,
     category: "care",
     href: "/support",
@@ -144,7 +144,7 @@ export const tvHomeBundles: TvHomeBundle[] = [
   },
   {
     id: "mini-stereo",
-    name: "Two HomePod minis — stereo pair",
+    name: "Two HomePod minis - stereo pair",
     blurb: "Same model, same room, wider sound.",
     modelIds: ["homepod-mini"],
     stereoPair: true,
@@ -162,13 +162,13 @@ export function tvHomeBuyingNotes(model: TvHomeModel): { title: string; body: st
       title: "Wi-Fi vs Ethernet",
       body: model.connections.includes("Ethernet") || model.id.includes("ethernet")
         ? "This SKU includes Ethernet. 64 GB Wi-Fi is enough for most; 128 GB suits many apps and games."
-        : "Wi-Fi model — Ethernet SKU is a separate option with more storage.",
+        : "Wi-Fi model - Ethernet SKU is a separate option with more storage.",
     });
     notes.push({
       title: "Which remote",
       body: model.year >= 2022
         ? "USB-C Siri Remote in the box for 3rd gen."
-        : "Earlier remotes (Lightning or 1st gen) — check the invoice.",
+        : "Earlier remotes (Lightning or 1st gen) - check the invoice.",
     });
   } else {
     notes.push({
@@ -192,13 +192,13 @@ export function tvHomeBuyingNotes(model: TvHomeModel): { title: string; body: st
     },
     {
       title: "Services and region",
-      body: "Apple TV+ and Apple Music need subscriptions. Availability of services and Siri features varies by country — owner confirms for Kenya.",
+      body: "Apple TV+ and Apple Music need subscriptions. Availability of services and Siri features varies by country - owner confirms for Kenya.",
     },
     {
       title: "Condition and power",
       body: model.year <= 2018
-        ? "Older model — invoice shows condition. Check plugs and cables in the box."
-        : "Sealed stock — serial on the invoice. Check box contents for the correct power cable.",
+        ? "Older model - invoice shows condition. Check plugs and cables in the box."
+        : "Sealed stock - serial on the invoice. Check box contents for the correct power cable.",
     },
     {
       title: "Authenticity",
@@ -206,7 +206,7 @@ export function tvHomeBuyingNotes(model: TvHomeModel): { title: string; body: st
     },
     {
       title: "Set-up service",
-      body: "We set up your Apple TV or HomePod, sign in with your Apple ID, and test it before you collect. Fee — owner to confirm.",
+      body: "We set up your Apple TV or HomePod, sign in with your Apple ID, and test it before you collect. Fee - owner to confirm.",
     },
   );
   return notes;
@@ -217,10 +217,10 @@ export function tvHomeFaq(): { q: string; a: string }[] {
     { q: "Which one should I get?", a: "Movies and streaming → Apple TV 4K. Big-room music → HomePod. Kitchen, bedroom or budget → HomePod mini. Use the quiz." },
     { q: "Does the Apple TV include a TV?", a: "No. You need your own TV with an HDMI input." },
     { q: "Do I need a 4K TV?", a: "For the full 4K HDR picture, yes. Apple TV still works on HD TVs at lower resolution." },
-    { q: "Can I use HomePod with Android?", a: "Limited. Check Apple's guide — HomePod works best with iPhone and Apple services." },
-    { q: "Can two HomePod minis make a stereo pair?", a: "Yes — two of the same model in the same room." },
-    { q: "Is HomePod a smart home hub?", a: "Current HomePod and mini can act as hubs where Thread/Matter are supported — confirm for Kenya." },
+    { q: "Can I use HomePod with Android?", a: "Limited. Check Apple's guide - HomePod works best with iPhone and Apple services." },
+    { q: "Can two HomePod minis make a stereo pair?", a: "Yes - two of the same model in the same room." },
+    { q: "Is HomePod a smart home hub?", a: "Current HomePod and mini can act as hubs where Thread/Matter are supported - confirm for Kenya." },
     { q: "Do I need an iPhone?", a: "HomePod needs an iPhone or iPad to set up. Apple TV can be set up from an iPhone or with the remote." },
-    { q: "What do I get with the invoice?", a: "Sealed device, serial on the invoice, and the items listed in the box. Warranty wording — owner to confirm." },
+    { q: "What do I get with the invoice?", a: "Sealed device, serial on the invoice, and the items listed in the box. Warranty wording - owner to confirm." },
   ];
 }

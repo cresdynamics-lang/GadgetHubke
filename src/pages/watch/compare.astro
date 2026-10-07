@@ -1,6 +1,6 @@
 ---
 /**
- * Watch compare — side-by-side with show-only-differences.
+ * Watch compare - side-by-side with show-only-differences.
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import WatchStage from "../../components/watch/WatchStage.astro";
@@ -27,7 +27,7 @@ function honestDiff(list: typeof chosen): string {
   if (sizes.length > 1) bits.push(`Case sizes: ${sizes.map((s) => `${s} mm`).join(" vs ")}.`);
   const ecg = list.map((m) => m!.health.ecg);
   if (ecg.some((v) => v) && ecg.some((v) => v === false)) bits.push("ECG is only on some of these models.");
-  return bits.slice(0, 3).join(" ") || "These models are close — check display, battery and price.";
+  return bits.slice(0, 3).join(" ") || "These models are close - check display, battery and price.";
 }
 
 const rows: { group: string; label: string; values: (string | number | boolean | null)[] }[] = [
@@ -50,7 +50,7 @@ const rows: { group: string; label: string; values: (string | number | boolean |
 ];
 
 function cell(v: string | number | boolean | null): string {
-  if (v == null) return "—";
+  if (v == null) return "-";
   if (typeof v === "boolean") return v ? "Yes" : "No";
   if (typeof v === "number") return v.toLocaleString("en-KE");
   return v;

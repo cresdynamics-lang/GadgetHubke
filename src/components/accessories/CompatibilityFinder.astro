@@ -1,6 +1,6 @@
 ---
 /**
- * Shared compatibility finder — device + accessory → pencilFits / keyboardFits / pointerFits.
+ * Shared compatibility finder - device + accessory → pencilFits / keyboardFits / pointerFits.
  */
 import {
   pencils,
@@ -213,7 +213,7 @@ const fitPayload = {
     if (!c) return "";
     if (c === "usb-c") return "USB-C";
     if (c === "lightning") return "Lightning";
-    if (c === "owner-confirm") return "Connector — owner to confirm";
+    if (c === "owner-confirm") return "Connector - owner to confirm";
     return c;
   }
 
@@ -256,7 +256,7 @@ const fitPayload = {
           </article>`;
         })
         .join("");
-      results.innerHTML = cards || `<p class="xfinder__empty">No charger advice for this device — check Apple's list.</p>`;
+      results.innerHTML = cards || `<p class="xfinder__empty">No charger advice for this device - check Apple's list.</p>`;
       return;
     }
     const listMap = {

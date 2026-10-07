@@ -1,6 +1,6 @@
 /**
- * Central image resolver for iPhone 11–16.
- * Every page uses getImage() — change paths only in the manifest.
+ * Central image resolver for iPhone 11 - 16.
+ * Every page uses getImage() - change paths only in the manifest.
  */
 
 import {

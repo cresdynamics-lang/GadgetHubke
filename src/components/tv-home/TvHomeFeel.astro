@@ -36,14 +36,14 @@ if (model.colours.length > 1) feelIds.push("colour");
     <section class="thfeel thfeel--black" id="feel-picture" data-feel="picture">
       <div class="container thfeel__inner">
         <h2>Every pixel, in its place.</h2>
-        <p class="thfeel__lede">Illustration — no audio. {model.checkFinalSpecs ? "Picture formats flagged check final specs." : ""}</p>
+        <p class="thfeel__lede">Illustration - no audio. {model.checkFinalSpecs ? "Picture formats flagged check final specs." : ""}</p>
         {!pictureImg.fallback ? (
           <img class="thfeel__img" src={pictureImg.src} alt={pictureImg.alt} width="1200" height="900" loading="lazy" />
         ) : null}
-        <p class="thfeel__label">4K · HDR10+ · Dolby Vision — when your TV and content support them.</p>
+        <p class="thfeel__label">4K · HDR10+ · Dolby Vision - when your TV and content support them.</p>
         <ul class="thfeel__strip">
           <li><strong>{model.chip || "Check"}</strong><span>Chip</span></li>
-          <li><strong>{model.pictureFormats.slice(0, 2).join(", ") || "—"}</strong><span>Formats</span></li>
+          <li><strong>{model.pictureFormats.slice(0, 2).join(", ") || "-"}</strong><span>Formats</span></li>
           <li><strong>{model.dolbyVision ? "Yes" : "No"}</strong><span>Dolby Vision</span></li>
         </ul>
       </div>
@@ -56,7 +56,7 @@ if (model.colours.length > 1) feelIds.push("colour");
     <section class="thfeel" id="feel-sound" data-feel="sound">
       <div class="container thfeel__inner">
         <h2>Sound that fills the room.</h2>
-        <p class="thfeel__lede">{model.audioDetails || "360-degree audio — check final specs."}</p>
+        <p class="thfeel__lede">{model.audioDetails || "360-degree audio - check final specs."}</p>
         {!soundImg.fallback ? (
           <img class="thfeel__img" src={soundImg.src} alt={soundImg.alt} width="1100" height="700" loading="lazy" />
         ) : (
@@ -65,7 +65,7 @@ if (model.colours.length > 1) feelIds.push("colour");
             <path d="M20 60 Q80 100 140 60 T260 60" fill="none" stroke="#6e6e73" stroke-width="1.5" opacity="0.6" />
           </svg>
         )}
-        <p class="thfeel__caption">Diagram only — no audio demo.</p>
+        <p class="thfeel__caption">Diagram only - no audio demo.</p>
         {model.stereoPairCapable ? (
           <p class="thfeel__label">Stereo pair: two of the same model in one room.</p>
         ) : null}
@@ -82,7 +82,7 @@ if (model.colours.length > 1) feelIds.push("colour");
         {!remoteImg.fallback ? (
           <img class="thfeel__img" src={remoteImg.src} alt={remoteImg.alt} width="1000" height="700" loading="lazy" />
         ) : null}
-        <p class="thfeel__caption">Siri Remote in box — USB-C on 3rd gen; check invoice for earlier stock.</p>
+        <p class="thfeel__caption">Siri Remote in box - USB-C on 3rd gen; check invoice for earlier stock.</p>
       </div>
     </section>
   ) : null
@@ -91,7 +91,7 @@ if (model.colours.length > 1) feelIds.push("colour");
 <section class="thfeel" id="feel-smarthome" data-feel="smarthome">
   <div class="container thfeel__inner">
     <h2>One home, one voice.</h2>
-    <p class="thfeel__lede">Siri and Home app — availability varies by country.</p>
+    <p class="thfeel__lede">Siri and Home app - availability varies by country.</p>
     {!smartImg.fallback ? (
       <img class="thfeel__img" src={smartImg.src} alt={smartImg.alt} width="1100" height="700" loading="lazy" />
     ) : null}
@@ -107,10 +107,10 @@ if (model.colours.length > 1) feelIds.push("colour");
         {!intercomImg.fallback ? (
           <img class="thfeel__img" src={intercomImg.src} alt={intercomImg.alt} width="1000" height="650" loading="lazy" />
         ) : null}
-        <p class="thfeel__label">Intercom between HomePod speakers — illustration.</p>
+        <p class="thfeel__label">Intercom between HomePod speakers - illustration.</p>
       </>
     ) : (
-      <p class="thfeel__lede">Intercom is on HomePod models — Apple TV focuses on the big screen.</p>
+      <p class="thfeel__lede">Intercom is on HomePod models - Apple TV focuses on the big screen.</p>
     )}
   </div>
 </section>
@@ -121,7 +121,7 @@ if (model.colours.length > 1) feelIds.push("colour");
     {!phoneImg.fallback ? (
       <img class="thfeel__img" src={phoneImg.src} alt={phoneImg.alt} width="1100" height="700" loading="lazy" />
     ) : null}
-    <p class="thfeel__caption">Handoff and AirPlay — works best with iPhone and Apple services.</p>
+    <p class="thfeel__caption">Handoff and AirPlay - works best with iPhone and Apple services.</p>
   </div>
 </section>
 

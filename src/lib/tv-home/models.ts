@@ -1,7 +1,7 @@
 /**
  * TV & Home catalog (Apple TV 4K, HomePod, HomePod mini).
  * Specs from Apple's published product pages. Owner: re-verify every figure
- * on apple.com before launch. Store null where unclear — show nothing rather than guess.
+ * on apple.com before launch. Store null where unclear - show nothing rather than guess.
  */
 
 import { tvHomeBasePricesKes } from "./config";
@@ -85,12 +85,12 @@ export const tvHomeModels: TvHomeModel[] = [
     intercom: false,
     stereoPairCapable: false,
     dolbyVision: true,
-    tagline: "Cinema at home — on the TV you already own.",
+    tagline: "Cinema at home - on the TV you already own.",
     whoItSuits: "Movie nights, sports and anyone who wants 4K HDR apps in one box.",
     whyChoose: [
-      "A15 Bionic with 4K, HDR10+ and Dolby Vision — check TV support.",
+      "A15 Bionic with 4K, HDR10+ and Dolby Vision - check TV support.",
       "Siri Remote with USB-C in the box.",
-      "Can work as a home hub for HomeKit and Matter accessories — confirm for Kenya.",
+      "Can work as a home hub for HomeKit and Matter accessories - confirm for Kenya.",
     ],
     isNew: true,
     checkFinalSpecs: true,
@@ -126,10 +126,10 @@ export const tvHomeModels: TvHomeModel[] = [
     intercom: false,
     stereoPairCapable: false,
     dolbyVision: true,
-    tagline: "Same picture — wired for a busier home hub.",
+    tagline: "Same picture - wired for a busier home hub.",
     whoItSuits: "Homes that want Ethernet and more storage for apps and games.",
     whyChoose: [
-      "128 GB with Ethernet and Thread — check final specs.",
+      "128 GB with Ethernet and Thread - check final specs.",
       "Same A15 picture stack as the Wi-Fi model.",
       "Sample price includes the Ethernet storage step.",
     ],
@@ -170,8 +170,8 @@ export const tvHomeModels: TvHomeModel[] = [
     tagline: "Big sound that learns the room.",
     whoItSuits: "Living rooms and music lovers who want a full-size smart speaker.",
     whyChoose: [
-      "S7 chip with room sensing and Spatial Audio — check final specs.",
-      "Works as a smart home hub with Thread — confirm Matter in Kenya.",
+      "S7 chip with room sensing and Spatial Audio - check final specs.",
+      "Works as a smart home hub with Thread - confirm Matter in Kenya.",
       "Stereo pair two of the same model in one room.",
     ],
     isNew: true,
@@ -212,8 +212,8 @@ export const tvHomeModels: TvHomeModel[] = [
     whoItSuits: "Kitchen, bedroom or a stereo pair on a budget.",
     whyChoose: [
       "Compact 360-degree audio with Siri and Intercom.",
-      "Five finishes — confirm which colours are stocked.",
-      "Thread hub support — check Matter availability.",
+      "Five finishes - confirm which colours are stocked.",
+      "Thread hub support - check Matter availability.",
     ],
     isNew: true,
     checkFinalSpecs: true,
@@ -249,12 +249,12 @@ export const tvHomeModels: TvHomeModel[] = [
     intercom: false,
     stereoPairCapable: false,
     dolbyVision: true,
-    tagline: "Also in stock — earlier 4K box.",
+    tagline: "Also in stock - earlier 4K box.",
     whoItSuits: "Buyers who want 4K at a lower sample price.",
     whyChoose: [
-      "A12 Bionic with 4K and Dolby Vision — check final specs.",
+      "A12 Bionic with 4K and Dolby Vision - check final specs.",
       "Siri Remote 2nd generation (Lightning).",
-      "Overview image from Apple Support — check condition.",
+      "Overview image from Apple Support - check condition.",
     ],
     overviewOnly: true,
     checkFinalSpecs: true,
@@ -290,7 +290,7 @@ export const tvHomeModels: TvHomeModel[] = [
     intercom: false,
     stereoPairCapable: false,
     dolbyVision: true,
-    tagline: "Also in stock — check condition.",
+    tagline: "Also in stock - check condition.",
     whoItSuits: "Tight budgets who accept an older 4K box.",
     whyChoose: [
       "Lowest 4K sample price in the shop.",
@@ -331,11 +331,11 @@ export const tvHomeModels: TvHomeModel[] = [
     intercom: false,
     stereoPairCapable: false,
     dolbyVision: false,
-    tagline: "Also in stock — HD only.",
+    tagline: "Also in stock - HD only.",
     whoItSuits: "Basic streaming when 4K is not needed.",
     whyChoose: [
       "Lowest sample price.",
-      "HD picture only — not 4K.",
+      "HD picture only - not 4K.",
       "Check condition carefully.",
     ],
     overviewOnly: true,
@@ -372,11 +372,11 @@ export const tvHomeModels: TvHomeModel[] = [
     intercom: null,
     stereoPairCapable: true,
     dolbyVision: false,
-    tagline: "Also in stock — original HomePod.",
+    tagline: "Also in stock - original HomePod.",
     whoItSuits: "Buyers watching the budget for big-room sound.",
     whyChoose: [
       "Lower sample price than HomePod 2.",
-      "No store photo — text only.",
+      "No store photo - text only.",
       "Confirm condition and battery/speaker health.",
     ],
     noImage: true,

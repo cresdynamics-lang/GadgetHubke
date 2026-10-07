@@ -229,7 +229,7 @@ export const homeBlog: BlogTeaser[] = latestPosts(3).map((post) => ({
   dateLabel: post.tags[0] ?? post.dateLabel,
 }));
 
-/** Accessories strip — Pencil or Keyboard, Pointers, Power, Cases */
+/** Accessories strip - Pencil or Keyboard, Pointers, Power, Cases */
 export const homeAccessories = [
   {
     name: "Apple Pencil Pro",
@@ -298,7 +298,7 @@ export const homeIpadBand = {
 export const homeDuoLaunch = {
   badge: "In stock",
   title: "iPhone Duo.",
-  body: "Apple's foldable — in the shop now. Colours, storage, and sealed stock ready in Nairobi.",
+  body: "Apple's foldable - in the shop now. Colours, storage, and sealed stock ready in Nairobi.",
   href: "/shop/iphone/iphone-duo",
   learnHref: "/shop/iphone/iphone-duo",
   imageSrc: ghImages.duo.openCamera,
@@ -309,7 +309,7 @@ export const homeDuoLaunch = {
 const tvHomePhotoBase =
   "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos";
 
-/** New In — mixed Apple products just arrived / featured */
+/** New In - mixed Apple products just arrived / featured */
 export const homeNewIn: DealItem[] = [
   {
     id: "new-duo",
@@ -372,12 +372,12 @@ export type HomeCategoryRow = {
   items: DealItem[];
 };
 
-/** Scrollable category rows — full Apple storefront on the home page */
+/** Scrollable category rows - full Apple storefront on the home page */
 export const homeCategoryRows: HomeCategoryRow[] = [
   {
     id: "iphone",
     title: "iPhone",
-    lede: "Duo, Pro, Air, and everyday models — sealed stock.",
+    lede: "Duo, Pro, Air, and everyday models - sealed stock.",
     href: "/iphone",
     items: [
       {
@@ -401,7 +401,7 @@ export const homeCategoryRows: HomeCategoryRow[] = [
   {
     id: "mac",
     title: "Mac",
-    lede: "MacBook Air and MacBook Pro — select shots from the product pack.",
+    lede: "MacBook Air and MacBook Pro - select shots from the product pack.",
     href: "/mac",
     items: [
       {
@@ -492,7 +492,7 @@ export const homeCategoryRows: HomeCategoryRow[] = [
   {
     id: "ipad",
     title: "iPad",
-    lede: "Draw, note, stream — pair with Apple Pencil.",
+    lede: "Draw, note, stream - pair with Apple Pencil.",
     href: "/ipad",
     items: [
       {
@@ -546,7 +546,7 @@ export const homeCategoryRows: HomeCategoryRow[] = [
   {
     id: "airpods",
     title: "AirPods",
-    lede: "Pro, everyday, and Max — sealed and ready.",
+    lede: "Pro, everyday, and Max - sealed and ready.",
     href: "/airpods",
     items: [
       {

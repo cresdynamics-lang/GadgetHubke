@@ -18,7 +18,7 @@ const airGal = getAccessoryImage("keyboard-ipad-air-13", "gallery:0");
   <section class="xfeel-kb__hero" data-kb-hero>
     <div class="container">
       <h2>The laptop moment.</h2>
-      <p>Scroll — the keyboard tilts into the typing angle.</p>
+      <p>Scroll - the keyboard tilts into the typing angle.</p>
     </div>
     <div class="xfeel-kb__stage" data-kb-stage>
       <img data-kb-a src={hero.src} alt={hero.alt} width="1800" height="1200" fetchpriority="high" />
@@ -46,17 +46,17 @@ const airGal = getAccessoryImage("keyboard-ipad-air-13", "gallery:0");
     <div class="container xfeel-kb__type-grid">
       <div>
         <h2>Typing test</h2>
-        <p>30 seconds. Playful — nothing is saved.</p>
+        <p>30 seconds. Playful - nothing is saved.</p>
         <p class="xfeel-kb__prompt" data-type-prompt>The quick brown fox jumps over the lazy dog near Nairobi.</p>
         <textarea data-type-input rows="4" aria-label="Typing test" placeholder="Start typing…"></textarea>
-        <p data-type-stats>WPM: — · Time: 30s</p>
+        <p data-type-stats>WPM: - · Time: 30s</p>
         <button type="button" class="btn btn--secondary btn--sm" data-type-reset>Reset</button>
       </div>
       <div class="xfeel-kb__hotspots" data-hotspots>
         <h2>Keys and trackpad</h2>
         <div class="xfeel-kb__hotspot-stage">
           <img src={product.src} alt="Magic Keyboard parts" width="900" height="675" loading="lazy" />
-          <button type="button" class="hotspot" style="left:20%;top:18%" data-tip="Function row — brightness, media, and more (check).">Function row</button>
+          <button type="button" class="hotspot" style="left:20%;top:18%" data-tip="Function row - brightness, media, and more (check).">Function row</button>
           <button type="button" class="hotspot" style="left:55%;top:70%" data-tip="Large Multi-Touch trackpad (check).">Trackpad</button>
           <button type="button" class="hotspot" style="left:8%;top:55%" data-tip="USB-C pass-through charging (check).">USB-C</button>
           <button type="button" class="hotspot" style="left:50%;top:40%" data-tip="Floating cantilever hinge (check).">Hinge</button>
@@ -69,7 +69,7 @@ const airGal = getAccessoryImage("keyboard-ipad-air-13", "gallery:0");
   <section class="xfeel-kb__touch">
     <div class="container">
       <h2>Touch ID</h2>
-      <p>Illustration only — no real biometrics. Touch ID needs Apple silicon.</p>
+      <p>Illustration only - no real biometrics. Touch ID needs Apple silicon.</p>
       <button type="button" class="xfeel-kb__keycap" data-touchid aria-pressed="false">
         <span class="ring" aria-hidden="true"></span>
         <span data-touch-label>Press</span>
@@ -116,7 +116,7 @@ const airGal = getAccessoryImage("keyboard-ipad-air-13", "gallery:0");
     pro: { src: proSrc, text: "Floating cantilever stand and aluminium palm rest for iPad Pro." },
     air: { src: airSrc, text: "Magnetic attach and function row for iPad Air." },
     folio: { src: airSrc, text: "Two-piece Folio with kickstand for iPad 10th gen and A16." },
-    mac: { src: macSrc, text: "Bluetooth Magic Keyboard for Mac — Touch ID needs Apple silicon." },
+    mac: { src: macSrc, text: "Bluetooth Magic Keyboard for Mac - Touch ID needs Apple silicon." },
   };
   root.querySelectorAll("[data-kb-tab]").forEach((tab) => {
     tab.addEventListener("click", () => {
@@ -164,7 +164,7 @@ const airGal = getAccessoryImage("keyboard-ipad-air-13", "gallery:0");
     start = null;
     if (timer) clearInterval(timer);
     timer = null;
-    if (stats) stats.textContent = "WPM: — · Time: 30s";
+    if (stats) stats.textContent = "WPM: - · Time: 30s";
   });
 
   const tip = root.querySelector("[data-hotspot-tip]");

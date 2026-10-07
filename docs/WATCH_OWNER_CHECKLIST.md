@@ -1,4 +1,4 @@
-# Apple Watch — owner checklist before launch
+# Apple Watch - owner checklist before launch
 
 Replace every placeholder below. Anything marked **check** must be confirmed against Apple’s published compare page ([apple.com/watch/compare](https://www.apple.com/watch/compare/)).
 
@@ -17,14 +17,14 @@ Replace every placeholder below. Anything marked **check** must be confirmed aga
 - [ ] Series 12: brightness, chip, battery hours, Low Power hours, charging speed
 - [ ] Ultra 4: 3000 nits claim, battery hours, depth gauge figures
 - [ ] SE 3: Always-On status, chip, battery, health feature list
-- [ ] Series 6–11 / Ultra 1–3 / SE 1–2: re-verify from Apple compare
-- [ ] Band fit rules (esp. Ultra Alpine/Trail/Ocean on 42–46 mm) vs Apple’s fit guide
+- [ ] Series 6 - 11 / Ultra 1 - 3 / SE 1 - 2: re-verify from Apple compare
+- [ ] Band fit rules (esp. Ultra Alpine/Trail/Ocean on 42 - 46 mm) vs Apple’s fit guide
 - [ ] Wrist / case size guide ranges
 - [ ] Health-feature availability in Kenya (ECG, Blood Oxygen, hypertension, sleep apnea, satellite SOS)
 
 ## Imagery
 - [ ] Permission to use Apple product photos on a live site
-- [ ] Models with **no gallery shot** (overview only): Series 6–8, SE 1–2, Ultra 1
+- [ ] Models with **no gallery shot** (overview only): Series 6 - 8, SE 1 - 2, Ultra 1
 - [ ] Do not promise per-colour store photos, 360° spin, or wrist try-on
 - [ ] Run `npm run watch:manifest` after adding images; `npm run images:watch-webp` for WebP
 

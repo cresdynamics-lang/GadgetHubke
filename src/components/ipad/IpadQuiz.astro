@@ -1,6 +1,6 @@
 ---
 /**
- * Which iPad is for you? — 3 questions → up to 3 matches with reasons.
+ * Which iPad is for you? - 3 questions → up to 3 matches with reasons.
  */
 import {
   ipadModels,
@@ -64,7 +64,7 @@ const payload = ipadModels.map((m) => {
     <p>Budget band (sample prices)?</p>
     <div class="iquiz__opts">
       <button type="button" data-val="tight">Under 70k</button>
-      <button type="button" data-val="mid">70k–140k</button>
+      <button type="button" data-val="mid">70k - 140k</button>
       <button type="button" data-val="open">140k+</button>
     </div>
   </div>
@@ -85,9 +85,9 @@ const payload = ipadModels.map((m) => {
     function reason(m, a) {
       if (a.do === "draw" && (m.family === "Pro" || m.pencilPro)) return "Strong canvas and Pencil Pro support for drawing.";
       if (a.do === "travel" && m.family === "mini") return "Lightest everyday companion for bags and travel.";
-      if (a.do === "kids" && m.family === "iPad") return "Approachable family tablet — add a case.";
+      if (a.do === "kids" && m.family === "iPad") return "Approachable family tablet - add a case.";
       if (a.do === "laptop" && (m.family === "Air" || m.family === "Pro")) return "Pairs well with a Magic Keyboard for light laptop work.";
-      if (a.budget === "tight") return "Lower sample price — check condition on older chips.";
+      if (a.budget === "tight") return "Lower sample price - check condition on older chips.";
       if (m.ai) return "Supports Apple Intelligence.";
       return "Solid fit for how you answered.";
     }

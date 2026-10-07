@@ -54,7 +54,7 @@ const payload = watchModels.map((m) => {
     <p>Budget band (sample prices)?</p>
     <div class="wquiz__opts">
       <button type="button" data-val="tight">Under 35k</button>
-      <button type="button" data-val="mid">35k–70k</button>
+      <button type="button" data-val="mid">35k - 70k</button>
       <button type="button" data-val="open">70k+</button>
     </div>
   </div>
@@ -78,9 +78,9 @@ const payload = watchModels.map((m) => {
       if (a.do === "fitness" && (m.family === "Series" || m.family === "Ultra") && m.isNew)
         return "Strong fitness tracking for runs and workouts.";
       if (a.do === "look" && (m.family === "Hermès" || /titanium|ceramic/i.test(m.sub)))
-        return "Premium finish — Hermès or titanium/ceramic.";
-      if (a.who === "kids" && m.family === "SE") return "Approachable SE — check condition on older gens.";
-      if (a.budget === "tight") return "Lower sample price — confirm condition if older.";
+        return "Premium finish - Hermès or titanium/ceramic.";
+      if (a.who === "kids" && m.family === "SE") return "Approachable SE - check condition on older gens.";
+      if (a.budget === "tight") return "Lower sample price - confirm condition if older.";
       return "Solid fit for how you answered.";
     }
 

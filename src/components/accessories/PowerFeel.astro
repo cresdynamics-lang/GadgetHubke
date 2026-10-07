@@ -1,6 +1,6 @@
 ---
 /**
- * Power feel sections — pairing, cables, MagSafe snap.
+ * Power feel sections - pairing, cables, MagSafe snap.
  * Reduced-motion: final frames, no autoplay.
  */
 import {
@@ -21,7 +21,7 @@ const adapterLadder = adapters().sort((a, b) => (a.wattage || 0) - (b.wattage ||
   <section class="xfeel-power__pair" data-feel-section="pair">
     <div class="container">
       <h2>Adapter + cable</h2>
-      <p>They belong together — match wattage to the device.</p>
+      <p>They belong together - match wattage to the device.</p>
     </div>
     <div class="xfeel-power__pair-stage" data-pair-stage>
       <img data-pair-a src={adapter140.src} alt={adapter140.alt} width="700" height="525" loading="lazy" />
@@ -32,7 +32,7 @@ const adapterLadder = adapters().sort((a, b) => (a.wattage || 0) - (b.wattage ||
   <section class="xfeel-power__cables" data-feel-section="cables">
     <div class="container">
       <h2>Same plug. Different cable.</h2>
-      <p>Select a cable — ratings flagged check-final-specs. {accessoriesConfig.powerChargeClaimNote}</p>
+      <p>Select a cable - ratings flagged check-final-specs. {accessoriesConfig.powerChargeClaimNote}</p>
       <div class="xfeel-power__cable-row" role="listbox" aria-label="Cables">
         {
           cableRows.map((c, i) => {

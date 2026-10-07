@@ -1,6 +1,6 @@
 ---
 /**
- * iPad compare page — photos, grouped specs, differences toggle, honest summary.
+ * iPad compare page - photos, grouped specs, differences toggle, honest summary.
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import {
@@ -70,12 +70,12 @@ const pencils = new Set(cards.map((c) => c.pencil));
 const ais = new Set(cards.map((c) => c.ai));
 const honestParts = [
   chips.size > 1 ? `Chip differs: ${[...chips].join(" vs ")}.` : "",
-  pencils.size > 1 ? "Apple Pencil support is not the same — check before you buy." : "",
+  pencils.size > 1 ? "Apple Pencil support is not the same - check before you buy." : "",
   ais.size > 1 ? "Apple Intelligence support differs." : "",
 ].filter(Boolean);
 const honest =
   honestParts.slice(0, 3).join(" ") ||
-  "These iPads are close — compare Pencil and keyboard fit carefully.";
+  "These iPads are close - compare Pencil and keyboard fit carefully.";
 
 const pickList = ipadModels.filter((m) => m.year >= 2022 || m.isNew);
 ---
@@ -95,7 +95,7 @@ const pickList = ipadModels.filter((m) => m.year >= 2022 || m.isNew);
           <label>
             <span class="sr-only">Model {i + 1}</span>
             <select name={`id${i}`}>
-              <option value="">—</option>
+              <option value="">-</option>
               {pickList.map((m) => (
                 <option value={m.id} selected={models[i]?.id === m.id}>
                   {m.name}

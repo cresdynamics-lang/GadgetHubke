@@ -1,6 +1,6 @@
 /**
- * Unified iPhone generation display — latest shop lineup (17/18/Air/Duo)
- * plus catalog generations 11–16.
+ * Unified iPhone generation display - latest shop lineup (17/18/Air/Duo)
+ * plus catalog generations 11 - 16.
  */
 import { listIphones, type IphoneListItem } from "../iphone-list";
 import { modelsByFamily, type IphoneModel } from "./models";

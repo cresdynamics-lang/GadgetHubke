@@ -34,7 +34,7 @@ function connectorLabel(c: string | null | undefined): string | null {
   if (!c) return null;
   if (c === "usb-c") return "USB-C";
   if (c === "lightning") return "Lightning";
-  if (c === "owner-confirm") return "Connector — owner to confirm";
+  if (c === "owner-confirm") return "Connector - owner to confirm";
   return c;
 }
 
@@ -218,7 +218,7 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
         <span>{product.generation}</span>
         {product.checkFinalSpecs ? <span>Check final specs</span> : null}
       </p>
-      <p class="xpdp__fits"><strong>Fits</strong> — {product.notes}</p>
+      <p class="xpdp__fits"><strong>Fits</strong> - {product.notes}</p>
       <a class="btn btn--secondary btn--sm" href={`/accessories/${finderHub(product.group)}?looking=${finderLooking}#finder`}>
         Check my device
       </a>
@@ -226,8 +226,8 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
       <p class="xpdp__tag">{product.tagline}</p>
       <p class="xpdp__who">{product.whoItSuits}</p>
       <p class="xpdp__colour">Colour: {activeVariant?.colour || product.defaultColour}</p>
-      {activeVariant ? <p class="xpdp__part"><strong>Part number</strong> — {activeVariant.partNumber}</p> : null}
-      {connector ? <p class="xpdp__connector"><strong>Connector</strong> — {connector}</p> : null}
+      {activeVariant ? <p class="xpdp__part"><strong>Part number</strong> - {activeVariant.partNumber}</p> : null}
+      {connector ? <p class="xpdp__connector"><strong>Connector</strong> - {connector}</p> : null}
       {
         product.id === "pencil-pro" ? (
           <p class="xpdp__engrave">{accessoriesConfig.engravingNote}</p>
@@ -259,9 +259,9 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
       </div>
       <div class="xpdp__tiles">
         <div><strong>Connection</strong><span>{product.connection}</span></div>
-        <div><strong>Charging</strong><span>{product.charging || "—"}</span></div>
+        <div><strong>Charging</strong><span>{product.charging || "-"}</span></div>
         <div><strong>Key feature</strong><span>{product.features[0]}</span></div>
-        <div><strong>Weight</strong><span>{product.weightG != null ? `${product.weightG} g` : "—"}</span></div>
+        <div><strong>Weight</strong><span>{product.weightG != null ? `${product.weightG} g` : "-"}</span></div>
       </div>
       <div class="xpdp__why">
         <h2>Why people choose this one</h2>
@@ -291,7 +291,7 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
               </figure>
             ))}
           </div>
-          <p class="flag">Check final specs — full set on Mac; limited on iPad.</p>
+          <p class="flag">Check final specs - full set on Mac; limited on iPad.</p>
         </details>
       ) : null
     }
@@ -302,7 +302,7 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
     </details>
     <details>
       <summary>Charging and battery</summary>
-      <p>{product.charging || "—"}</p>
+      <p>{product.charging || "-"}</p>
     </details>
     <details>
       <summary>Connection</summary>
@@ -310,7 +310,7 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
     </details>
     <details>
       <summary>Size and weight</summary>
-      <p>{product.weightG != null ? `${product.weightG} g` : "Not listed here — check Apple."}</p>
+      <p>{product.weightG != null ? `${product.weightG} g` : "Not listed here - check Apple."}</p>
     </details>
     <details>
       <summary>Colours</summary>
@@ -437,7 +437,7 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
       const colourLine = document.querySelector(".xpdp__colour");
       if (colourLine && colour) colourLine.textContent = `Colour: ${colour}`;
       const partLine = document.querySelector(".xpdp__part");
-      if (partLine) partLine.innerHTML = `<strong>Part number</strong> — ${v}`;
+      if (partLine) partLine.innerHTML = `<strong>Part number</strong> - ${v}`;
     }
   }
 </script>

@@ -1,5 +1,5 @@
 /**
- * iPad catalog (Pro / Air / mini / standard, 2020–2026).
+ * iPad catalog (Pro / Air / mini / standard, 2020 - 2026).
  * Specs from Apple's published figures in the iPad prompt.
  * Owner: re-verify every number on apple.com before launch.
  * M5 Pro, M4 Air, and A16 iPad carry checkFinalSpecs.
@@ -66,7 +66,7 @@ const P = ipadBasePricesKes;
 
 /** Owner: re-verify all specs against apple.com before launch. */
 export const ipadModels: IpadModel[] = [
-  // —— Pro ——
+  // -- Pro --
   {
     id: "ipad-pro-11-2020",
     name: "iPad Pro 11″ (2020)",
@@ -547,7 +547,7 @@ export const ipadModels: IpadModel[] = [
     isNew: true,
   },
 
-  // —— Air ——
+  // -- Air --
   {
     id: "ipad-air-4",
     name: "iPad Air (4th gen)",
@@ -585,7 +585,7 @@ export const ipadModels: IpadModel[] = [
     defaultColour: "sky-blue",
     appleIntelligence: false,
     tagline: "The modern Air shape starts here.",
-    whoItSuits: "Everyday use on a value Air — check condition.",
+    whoItSuits: "Everyday use on a value Air - check condition.",
     whyChoose: [
       "10.9″ Liquid Retina.",
       "USB-C and Touch ID.",
@@ -856,7 +856,7 @@ export const ipadModels: IpadModel[] = [
     whyChoose: [
       "M4 with 12 GB memory.",
       "Wi-Fi 7.",
-      "Check final specs — brightness may need confirm.",
+      "Check final specs - brightness may need confirm.",
     ],
     basePriceKes: P["ipad-air-11-m4"],
     checkFinalSpecs: true,
@@ -909,7 +909,7 @@ export const ipadModels: IpadModel[] = [
     isNew: true,
   },
 
-  // —— mini ——
+  // -- mini --
   {
     id: "ipad-mini-6",
     name: "iPad mini (6th gen)",
@@ -992,7 +992,7 @@ export const ipadModels: IpadModel[] = [
     defaultColour: "blue",
     appleIntelligence: true,
     tagline: "Pocket Pro. Pencil Pro.",
-    whoItSuits: "Travel, comics, notes — and Apple Intelligence on the go.",
+    whoItSuits: "Travel, comics, notes - and Apple Intelligence on the go.",
     whyChoose: [
       "A17 Pro with Apple Intelligence.",
       "Apple Pencil Pro.",
@@ -1002,7 +1002,7 @@ export const ipadModels: IpadModel[] = [
     isNew: true,
   },
 
-  // —— standard iPad ——
+  // -- standard iPad --
   {
     id: "ipad-8",
     name: "iPad (8th gen)",
@@ -1040,7 +1040,7 @@ export const ipadModels: IpadModel[] = [
     defaultColour: "space-gray",
     appleIntelligence: false,
     tagline: "Home-button classic.",
-    whoItSuits: "Kids and first tablets on a tight budget — check condition.",
+    whoItSuits: "Kids and first tablets on a tight budget - check condition.",
     whyChoose: [
       "Familiar Home button.",
       "Apple Pencil (1st gen).",
@@ -1090,7 +1090,7 @@ export const ipadModels: IpadModel[] = [
     whyChoose: [
       "Center Stage front camera.",
       "True Tone display.",
-      "Still Lightning — plan adapters.",
+      "Still Lightning - plan adapters.",
     ],
     basePriceKes: P["ipad-9"],
     overviewOnly: true,
@@ -1180,7 +1180,7 @@ export const ipadModels: IpadModel[] = [
     whyChoose: [
       "A16 with storage from 128 GB.",
       "Same colourful USB-C design.",
-      "Does not support Apple Intelligence — check final specs.",
+      "Does not support Apple Intelligence - check final specs.",
     ],
     basePriceKes: P["ipad-a16"],
     checkFinalSpecs: true,

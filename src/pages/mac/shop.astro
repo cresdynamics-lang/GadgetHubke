@@ -1,6 +1,6 @@
 ---
 /**
- * Mac shop — Family / Size / Gen / Need filters + 16GB toggle + compare tray.
+ * Mac shop - Family / Size / Gen / Need filters + 16GB toggle + compare tray.
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import MacCard from "../../components/mac/MacCard.astro";
@@ -180,7 +180,7 @@ const compareCards = Object.fromEntries(macModels.map((m) => [m.id, macCompareCa
     if (Math.max(...prices) - Math.min(...prices) >= 30000) {
       points.push(`Sample price gap is about KES ${(Math.max(...prices) - Math.min(...prices)).toLocaleString("en-KE")}.`);
     }
-    return points.slice(0, 3).join(" ") || "These MacBooks are close — check memory, storage, and try both in the shop.";
+    return points.slice(0, 3).join(" ") || "These MacBooks are close - check memory, storage, and try both in the shop.";
   }
 
   function buildRows(cards) {

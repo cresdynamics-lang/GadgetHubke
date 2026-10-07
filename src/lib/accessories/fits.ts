@@ -1,6 +1,6 @@
 /**
  * Compatibility: pencilFits / keyboardFits.
- * Results: fits | note | no — with a one-line reason.
+ * Results: fits | note | no - with a one-line reason.
  * Owner: re-verify every rule on Apple's compatibility list before launch.
  */
 
@@ -50,7 +50,7 @@ function ipadMeta(id: string) {
 }
 
 function macIsAppleSilicon(id: string): boolean {
-  // Catalog is Apple silicon only (M1–M5). Intel not in catalog — treat unknown as note.
+  // Catalog is Apple silicon only (M1 - M5). Intel not in catalog - treat unknown as note.
   return /m[1-5]|apple.?silicon/i.test(id);
 }
 
@@ -70,7 +70,7 @@ export function pencilFits(ipadModelId: string, pencilId: string): FitResult {
     if (ok) {
       return {
         status: "fits",
-        reason: "Listed for Pencil Pro on supported iPad Pro M4+, Air M2+ and mini A17 Pro — check Apple's list.",
+        reason: "Listed for Pencil Pro on supported iPad Pro M4+, Air M2+ and mini A17 Pro - check Apple's list.",
         checkFinalSpecs: true,
       };
     }
@@ -82,7 +82,7 @@ export function pencilFits(ipadModelId: string, pencilId: string): FitResult {
   }
 
   if (pencilId === "pencil-usbc") {
-    // USB-C Pencil: many recent iPads — exclude only clear non-fits; flag check
+    // USB-C Pencil: many recent iPads - exclude only clear non-fits; flag check
     if (d.gen8or9) {
       return {
         status: "no",
@@ -99,7 +99,7 @@ export function pencilFits(ipadModelId: string, pencilId: string): FitResult {
     }
     return {
       status: "fits",
-      reason: "USB-C Pencil is listed for many recent iPads — confirm this model on Apple's list.",
+      reason: "USB-C Pencil is listed for many recent iPads - confirm this model on Apple's list.",
       checkFinalSpecs: true,
     };
   }
@@ -114,7 +114,7 @@ export function pencilFits(ipadModelId: string, pencilId: string): FitResult {
     if (ok) {
       return {
         status: "fits",
-        reason: "2nd-generation Pencil fits 2018–2022 Pro, Air 4/5 and mini 6 — check Apple's list.",
+        reason: "2nd-generation Pencil fits 2018 - 2022 Pro, Air 4/5 and mini 6 - check Apple's list.",
         checkFinalSpecs: true,
       };
     }
@@ -129,14 +129,14 @@ export function pencilFits(ipadModelId: string, pencilId: string): FitResult {
     if (d.is10th || d.isA16) {
       return {
         status: "note",
-        reason: "Fits with the USB-C to Apple Pencil adapter on iPad 10th gen and iPad A16 — check Apple's list.",
+        reason: "Fits with the USB-C to Apple Pencil adapter on iPad 10th gen and iPad A16 - check Apple's list.",
         checkFinalSpecs: true,
       };
     }
     if (d.gen8or9 || /ipad-[67]/.test(ipadModelId)) {
       return {
         status: "fits",
-        reason: "1st-generation Pencil fits this Lightning iPad — check Apple's list.",
+        reason: "1st-generation Pencil fits this Lightning iPad - check Apple's list.",
         checkFinalSpecs: true,
       };
     }
@@ -150,7 +150,7 @@ export function pencilFits(ipadModelId: string, pencilId: string): FitResult {
   return { status: "no", reason: "Unknown Pencil.", checkFinalSpecs: true };
 }
 
-/** keyboardFits(deviceModelId, keyboardId) — iPad or Mac */
+/** keyboardFits(deviceModelId, keyboardId) - iPad or Mac */
 export function keyboardFits(deviceModelId: string, keyboardId: string): FitResult {
   const kb = getAccessory(keyboardId);
   if (!kb || kb.group !== "keyboard") {
@@ -163,7 +163,7 @@ export function keyboardFits(deviceModelId: string, keyboardId: string): FitResu
     if (!isMac) {
       return {
         status: "no",
-        reason: "This is a Mac Magic Keyboard — not the iPad Magic Keyboard. Use Bluetooth on iPad only as a plain keyboard, not as a recommended iPad fit.",
+        reason: "This is a Mac Magic Keyboard - not the iPad Magic Keyboard. Use Bluetooth on iPad only as a plain keyboard, not as a recommended iPad fit.",
         checkFinalSpecs: true,
       };
     }
@@ -171,7 +171,7 @@ export function keyboardFits(deviceModelId: string, keyboardId: string): FitResu
       if (macIsAppleSilicon(deviceModelId)) {
         return {
           status: "fits",
-          reason: "Magic Keyboard with Touch ID works on Apple silicon Macs — check Apple's list.",
+          reason: "Magic Keyboard with Touch ID works on Apple silicon Macs - check Apple's list.",
           checkFinalSpecs: true,
         };
       }
@@ -201,36 +201,36 @@ export function keyboardFits(deviceModelId: string, keyboardId: string): FitResu
 
   if (keyboardId === "keyboard-ipad-pro-11") {
     if (d.isPro && d.size11 && (d.chip === "M4" || d.chip === "M5")) {
-      return { status: "fits", reason: "Fits iPad Pro 11-inch M4 and later — check.", checkFinalSpecs: true };
+      return { status: "fits", reason: "Fits iPad Pro 11-inch M4 and later - check.", checkFinalSpecs: true };
     }
     return { status: "no", reason: "Only for iPad Pro 11-inch M4 and later.", checkFinalSpecs: true };
   }
   if (keyboardId === "keyboard-ipad-pro-13") {
     if (d.isPro && d.size13 && (d.chip === "M4" || d.chip === "M5")) {
-      return { status: "fits", reason: "Fits iPad Pro 13-inch M4 and later — check.", checkFinalSpecs: true };
+      return { status: "fits", reason: "Fits iPad Pro 13-inch M4 and later - check.", checkFinalSpecs: true };
     }
     return { status: "no", reason: "Only for iPad Pro 13-inch M4 and later.", checkFinalSpecs: true };
   }
   if (keyboardId === "keyboard-ipad-air-11") {
     if (d.isAir && d.size11 && ["M2", "M3", "M4"].includes(d.chip)) {
-      return { status: "fits", reason: "Fits iPad Air 11-inch M2 and later — check.", checkFinalSpecs: true };
+      return { status: "fits", reason: "Fits iPad Air 11-inch M2 and later - check.", checkFinalSpecs: true };
     }
     return { status: "no", reason: "Only for iPad Air 11-inch M2 and later.", checkFinalSpecs: true };
   }
   if (keyboardId === "keyboard-ipad-air-13") {
     if (d.isAir && d.size13 && ["M2", "M3", "M4"].includes(d.chip)) {
-      return { status: "fits", reason: "Fits iPad Air 13-inch M2 and later — check.", checkFinalSpecs: true };
+      return { status: "fits", reason: "Fits iPad Air 13-inch M2 and later - check.", checkFinalSpecs: true };
     }
     return { status: "no", reason: "Only for iPad Air 13-inch M2 and later.", checkFinalSpecs: true };
   }
   if (keyboardId === "keyboard-folio") {
     if (d.is10th || d.isA16) {
-      return { status: "fits", reason: "Fits iPad 10th generation and iPad A16 — check.", checkFinalSpecs: true };
+      return { status: "fits", reason: "Fits iPad 10th generation and iPad A16 - check.", checkFinalSpecs: true };
     }
     return { status: "no", reason: "Magic Keyboard Folio fits iPad 10th gen and A16 only.", checkFinalSpecs: true };
   }
 
-  return { status: "no", reason: "No rule for this pair — check Apple's list.", checkFinalSpecs: true };
+  return { status: "no", reason: "No rule for this pair - check Apple's list.", checkFinalSpecs: true };
 }
 
 export function fitsLabel(result: FitResult): string {
@@ -260,7 +260,7 @@ export function accessoriesThatFitDevice(
 }
 
 /**
- * pointerFits(deviceModelId, productId) — Magic Mouse / Magic Trackpad.
+ * pointerFits(deviceModelId, productId) - Magic Mouse / Magic Trackpad.
  * Owner: re-verify every macOS / iPadOS / Windows / Android rule on Apple's lists before launch.
  */
 export function pointerFits(deviceModelId: string, productId: string): FitResult {
@@ -274,23 +274,23 @@ export function pointerFits(deviceModelId: string, productId: string): FitResult
   if (id === "windows-pc" || id === "windows") {
     return {
       status: "note",
-      reason: "Works as a basic Bluetooth pointer on Windows; surface gestures do not work — check.",
+      reason: "Works as a basic Bluetooth pointer on Windows; surface gestures do not work - check.",
       checkFinalSpecs: true,
     };
   }
 
   if (id === "android" || id === "android-phone" || id === "android-tablet") {
-    // Owner choice: note for tablet-like, no for phone — use note with clear reason.
+    // Owner choice: note for tablet-like, no for phone - use note with clear reason.
     if (id === "android-phone") {
       return {
         status: "note",
-        reason: "May pair as a basic Bluetooth pointer on some Android phones; gestures do not work — check.",
+        reason: "May pair as a basic Bluetooth pointer on some Android phones; gestures do not work - check.",
         checkFinalSpecs: true,
       };
     }
     return {
       status: "note",
-      reason: "May work as a basic Bluetooth pointer on Android; gestures do not work — check.",
+      reason: "May work as a basic Bluetooth pointer on Android; gestures do not work - check.",
       checkFinalSpecs: true,
     };
   }
@@ -298,7 +298,7 @@ export function pointerFits(deviceModelId: string, productId: string): FitResult
   if (/iphone/.test(id)) {
     return {
       status: "note",
-      reason: "iPhone pointer support is limited — confirm with the shop / Apple's list.",
+      reason: "iPhone pointer support is limited - confirm with the shop / Apple's list.",
       checkFinalSpecs: true,
     };
   }
@@ -306,36 +306,36 @@ export function pointerFits(deviceModelId: string, productId: string): FitResult
   if (/macbook|imac|mac-mini|mac-studio|mac-pro|^mac|intel-mac/.test(id)) {
     return {
       status: "fits",
-      reason: "Works over Bluetooth with Macs that meet Apple's macOS minimum — check Apple's list.",
+      reason: "Works over Bluetooth with Macs that meet Apple's macOS minimum - check Apple's list.",
       checkFinalSpecs: true,
     };
   }
 
   if (/ipad/.test(id)) {
-    // iPadOS 13.4+ for supported iPads — older Lightning-only 8th/9th may still work; flag check
+    // iPadOS 13.4+ for supported iPads - older Lightning-only 8th/9th may still work; flag check
     if (/ipad-[67]$|ipad-mini-[45]|ipad-air-[123]$/.test(id)) {
       return {
         status: "note",
-        reason: "Older iPad — confirm it runs a supported iPadOS for pointer use; gestures limited.",
+        reason: "Older iPad - confirm it runs a supported iPadOS for pointer use; gestures limited.",
         checkFinalSpecs: true,
       };
     }
     return {
       status: "note",
-      reason: "Works as a pointer on supported iPads (iPadOS 13.4+); Mac gestures are limited on iPad — check.",
+      reason: "Works as a pointer on supported iPads (iPadOS 13.4+); Mac gestures are limited on iPad - check.",
       checkFinalSpecs: true,
     };
   }
 
   return {
     status: "no",
-    reason: "Device not in the shop list — check Apple's compatibility list.",
+    reason: "Device not in the shop list - check Apple's compatibility list.",
     checkFinalSpecs: true,
   };
 }
 
 /**
- * caseFits — exact model only. No "fits with note" for cases.
+ * caseFits - exact model only. No "fits with note" for cases.
  * Owner: re-verify every folder-to-model mapping on apple.com before launch.
  */
 export function caseFits(deviceModelId: string, caseFamilyId: string): FitResult {
@@ -348,7 +348,7 @@ export function caseFits(deviceModelId: string, caseFamilyId: string): FitResult
   if (product.subgroup === "strap") {
     return {
       status: "no",
-      reason: "Strap-to-case pairing is owner-to-confirm — ask us which cases take this strap.",
+      reason: "Strap-to-case pairing is owner-to-confirm - ask us which cases take this strap.",
       checkFinalSpecs: true,
     };
   }
@@ -357,7 +357,7 @@ export function caseFits(deviceModelId: string, caseFamilyId: string): FitResult
   if (!fits.length) {
     return {
       status: "no",
-      reason: "Fit list not confirmed for this item — ask the shop.",
+      reason: "Fit list not confirmed for this item - ask the shop.",
       checkFinalSpecs: true,
     };
   }
@@ -410,7 +410,7 @@ export type ChargerAdviceItem = {
 };
 
 /**
- * chargerAdvice(deviceModelId) — recommended adapters/cables/MagSafe.
+ * chargerAdvice(deviceModelId) - recommended adapters/cables/MagSafe.
  * Never invent charge times. Owner: re-verify every wattage on apple.com.
  */
 export function chargerAdvice(deviceModelId: string): ChargerAdviceItem[] {
@@ -421,20 +421,20 @@ export function chargerAdvice(deviceModelId: string): ChargerAdviceItem[] {
     out.push({
       productId: "power-adapter-20w",
       role: "recommended",
-      reason: "20W or higher USB-C adapter for iPhone — confirm Apple's recommended wattage.",
+      reason: "20W or higher USB-C adapter for iPhone - confirm Apple's recommended wattage.",
       checkFinalSpecs: true,
     });
     out.push({
       productId: "cable-usbc-60w-1m",
       role: "recommended",
-      reason: "USB-C charge cable to pair with the adapter — check.",
+      reason: "USB-C charge cable to pair with the adapter - check.",
       checkFinalSpecs: true,
     });
     if (!/iphone-[678]|iphone-x|iphone-11(?!\d)/.test(id)) {
       out.push({
         productId: "magsafe-charger-1m",
         role: "optional",
-        reason: "MagSafe Charger for magnetic wireless charging on supported models — check.",
+        reason: "MagSafe Charger for magnetic wireless charging on supported models - check.",
         checkFinalSpecs: true,
       });
     }
@@ -446,13 +446,13 @@ export function chargerAdvice(deviceModelId: string): ChargerAdviceItem[] {
     out.push({
       productId: watt,
       role: "recommended",
-      reason: "Adapter wattage Apple recommends for this iPad — owner must confirm.",
+      reason: "Adapter wattage Apple recommends for this iPad - owner must confirm.",
       checkFinalSpecs: true,
     });
     out.push({
       productId: "cable-usbc-60w-1m",
       role: "recommended",
-      reason: "USB-C charge cable — check.",
+      reason: "USB-C charge cable - check.",
       checkFinalSpecs: true,
     });
     return out;
@@ -462,19 +462,19 @@ export function chargerAdvice(deviceModelId: string): ChargerAdviceItem[] {
     out.push({
       productId: "power-adapter-70w",
       role: "recommended",
-      reason: "70W-class adapter commonly paired with MacBook Air — confirm your SKU.",
+      reason: "70W-class adapter commonly paired with MacBook Air - confirm your SKU.",
       checkFinalSpecs: true,
     });
     out.push({
       productId: "cable-magsafe3-2m",
       role: "recommended",
-      reason: "USB-C to MagSafe 3 cable for Macs with MagSafe 3 — check.",
+      reason: "USB-C to MagSafe 3 cable for Macs with MagSafe 3 - check.",
       checkFinalSpecs: true,
     });
     out.push({
       productId: "cable-usbc-60w-1m",
       role: "optional",
-      reason: "USB-C charge cable as an alternate path — check power rating vs adapter.",
+      reason: "USB-C charge cable as an alternate path - check power rating vs adapter.",
       checkFinalSpecs: true,
     });
     return out;
@@ -484,19 +484,19 @@ export function chargerAdvice(deviceModelId: string): ChargerAdviceItem[] {
     out.push({
       productId: "power-adapter-140w",
       role: "recommended",
-      reason: "140W adapter for many 16-inch MacBook Pro configs — confirm.",
+      reason: "140W adapter for many 16-inch MacBook Pro configs - confirm.",
       checkFinalSpecs: true,
     });
     out.push({
       productId: "cable-magsafe3-2m",
       role: "recommended",
-      reason: "MagSafe 3 cable when the Mac has MagSafe 3 — check.",
+      reason: "MagSafe 3 cable when the Mac has MagSafe 3 - check.",
       checkFinalSpecs: true,
     });
     out.push({
       productId: "cable-usbc-240w-2m",
       role: "optional",
-      reason: "240W USB-C charge cable for high-power USB-C charging — check.",
+      reason: "240W USB-C charge cable for high-power USB-C charging - check.",
       checkFinalSpecs: true,
     });
     return out;
@@ -506,13 +506,13 @@ export function chargerAdvice(deviceModelId: string): ChargerAdviceItem[] {
     out.push({
       productId: "power-adapter-96w",
       role: "recommended",
-      reason: "96W-class adapter for many 14-inch MacBook Pro configs — confirm your model.",
+      reason: "96W-class adapter for many 14-inch MacBook Pro configs - confirm your model.",
       checkFinalSpecs: true,
     });
     out.push({
       productId: "cable-magsafe3-2m",
       role: "recommended",
-      reason: "USB-C to MagSafe 3 for MagSafe 3 ports — check.",
+      reason: "USB-C to MagSafe 3 for MagSafe 3 ports - check.",
       checkFinalSpecs: true,
     });
     return out;
@@ -522,7 +522,7 @@ export function chargerAdvice(deviceModelId: string): ChargerAdviceItem[] {
     out.push({
       productId: "watch-magnetic-charger-1m",
       role: "recommended",
-      reason: "Apple Watch Magnetic Fast Charger to USB-C — confirm Watch model support.",
+      reason: "Apple Watch Magnetic Fast Charger to USB-C - confirm Watch model support.",
       checkFinalSpecs: true,
     });
     return out;
@@ -532,7 +532,7 @@ export function chargerAdvice(deviceModelId: string): ChargerAdviceItem[] {
     out.push({
       productId: "power-adapter-20w",
       role: "note",
-      reason: "See the AirPods section for wireless / USB-C charging notes — not duplicated here.",
+      reason: "See the AirPods section for wireless / USB-C charging notes - not duplicated here.",
       checkFinalSpecs: true,
     });
     return out;
@@ -542,7 +542,7 @@ export function chargerAdvice(deviceModelId: string): ChargerAdviceItem[] {
     {
       productId: "power-adapter-20w",
       role: "note",
-      reason: "Device not in the advice list — check Apple's compatibility list or ask us.",
+      reason: "Device not in the advice list - check Apple's compatibility list or ask us.",
       checkFinalSpecs: true,
     },
   ];
@@ -559,7 +559,7 @@ export function pairingNote(adapterId: string, cableId: string): FitResult | nul
   if (rating < watts) {
     return {
       status: "note",
-      reason: `This ${rating}W cable is rated below the ${watts}W adapter — charging may be limited. Check Apple's guidance.`,
+      reason: `This ${rating}W cable is rated below the ${watts}W adapter - charging may be limited. Check Apple's guidance.`,
       checkFinalSpecs: true,
     };
   }

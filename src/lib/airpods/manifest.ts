@@ -99,7 +99,7 @@ export function pageKey(key: string): { src?: string; webp?: string; start?: str
     | undefined;
 }
 
-/** @deprecated use pageKey — kept for older callers */
+/** @deprecated use pageKey - kept for older callers */
 export function pageAsset(pageFamily: string, kind: string): string | undefined {
   const map: Record<string, string> = {
     Pro: "pro",

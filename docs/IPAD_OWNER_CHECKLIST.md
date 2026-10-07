@@ -1,26 +1,26 @@
-# Owner launch checklist — iPad Pro / Air / mini / standard
+# Owner launch checklist - iPad Pro / Air / mini / standard
 
 Replace every sample / placeholder before going live.
 
 ## Must replace
 
-1. **Prices and stock** — all KES in `src/lib/ipad/config.ts` (`ipadBasePricesKes`) and storage/cellular/nano steps are samples.
-2. **WhatsApp number** — shared with iPhone/Mac config / `site.whatsapp`.
-3. **Shop address and hours** — `ipadConfig.address` still TBC.
-4. **Lipa Mdogo Mdogo terms** — deposit/months and 0% illustration note.
-5. **Set-up and warranty wording** — owner to confirm service fee and cover.
-6. **Thickness and weight** — `ipadConfig.thicknessMm` and model `weightG` are “about” figures; re-verify. Speaker counts per model also need confirm on feel copy.
-7. **Check final specs** — iPad Pro M5 (11″/13″), iPad Air M4 (11″/13″), iPad (A16) until verified on apple.com. Air 11″ M4 brightness especially.
-8. **Apple performance ratios** — `ipadConfig.performanceRatios` are provisional citations; do not invent bars.
-9. **Missing store photos (overview-only)** — Pro 2020–2022, Air 4/5, mini 6, iPad 8/9. Colour names show as text.
-10. **Pro M4/M5 pack note** — pack has `select-wificell` + `witb` shots; plain `select-wifi` files were not in the zip (flagged).
-11. **Air hero** — `hero_startframe` missing in pack; only `hero_endframe` found. Landing uses Pro start/end pair.
-12. **Apple image permission** — footer line states mock-up only; live use needs permission.
+1. **Prices and stock** - all KES in `src/lib/ipad/config.ts` (`ipadBasePricesKes`) and storage/cellular/nano steps are samples.
+2. **WhatsApp number** - shared with iPhone/Mac config / `site.whatsapp`.
+3. **Shop address and hours** - `ipadConfig.address` still TBC.
+4. **Lipa Mdogo Mdogo terms** - deposit/months and 0% illustration note.
+5. **Set-up and warranty wording** - owner to confirm service fee and cover.
+6. **Thickness and weight** - `ipadConfig.thicknessMm` and model `weightG` are “about” figures; re-verify. Speaker counts per model also need confirm on feel copy.
+7. **Check final specs** - iPad Pro M5 (11″/13″), iPad Air M4 (11″/13″), iPad (A16) until verified on apple.com. Air 11″ M4 brightness especially.
+8. **Apple performance ratios** - `ipadConfig.performanceRatios` are provisional citations; do not invent bars.
+9. **Missing store photos (overview-only)** - Pro 2020 - 2022, Air 4/5, mini 6, iPad 8/9. Colour names show as text.
+10. **Pro M4/M5 pack note** - pack has `select-wificell` + `witb` shots; plain `select-wifi` files were not in the zip (flagged).
+11. **Air hero** - `hero_startframe` missing in pack; only `hero_endframe` found. Landing uses Pro start/end pair.
+12. **Apple image permission** - footer line states mock-up only; live use needs permission.
 
 ## Scripts
 
-- `npm run ipad:manifest` — rebuild image keys from the ten iPad folders.
-- `npm run images:ipad-webp` — sibling WebP (~1400 product / ~1800 hero).
+- `npm run ipad:manifest` - rebuild image keys from the ten iPad folders.
+- `npm run images:ipad-webp` - sibling WebP (~1400 product / ~1800 hero).
 
 ## Image folders checked
 

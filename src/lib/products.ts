@@ -11,7 +11,7 @@ export type ProductColor = {
   label: string;
   /** Greyscale-safe swatch */
   hex: string;
-  /** Product photo for this finish — swaps the main display when selected */
+  /** Product photo for this finish - swaps the main display when selected */
   imageSrc?: string;
 };
 

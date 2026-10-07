@@ -143,7 +143,7 @@ const sizes = trackpads().filter((t) => t.connector === "usb-c");
   <section class="xfeel-tpad__hero">
     <div class="container">
       <h2>A glass surface.</h2>
-      <p>Toggle white or black — same Force Touch gestures on Mac.</p>
+      <p>Toggle white or black - same Force Touch gestures on Mac.</p>
       <div class="xfeel-tpad__toggle" role="group" aria-label="Trackpad colour">
         <button type="button" class="is-active" data-tpad-colour="white">White</button>
         <button type="button" data-tpad-colour="black">Black</button>
@@ -197,7 +197,7 @@ const sizes = trackpads().filter((t) => t.connector === "usb-c");
           <p class="xfeel-tpad__how"><strong>How:</strong> <span data-tpad-g-how>{firstG.how}</span></p>
           <p class="xfeel-tpad__badges">
             <span class="badge">Works on Mac</span>
-            <span class="badge badge--muted" data-tpad-g-ipad>{firstG.ipad ? "Limited on iPad" : "Mac only — check"}</span>
+            <span class="badge badge--muted" data-tpad-g-ipad>{firstG.ipad ? "Limited on iPad" : "Mac only - check"}</span>
           </p>
         </div>
       </div>
@@ -208,7 +208,7 @@ const sizes = trackpads().filter((t) => t.connector === "usb-c");
     <div class="container xfeel-tpad__force-grid">
       <div>
         <h2>Force Touch</h2>
-        <p>Press deeper for a click — illustration only, no haptics in the browser.</p>
+        <p>Press deeper for a click - illustration only, no haptics in the browser.</p>
         <button type="button" class="xfeel-tpad__press" data-force-demo aria-pressed="false">
           <span class="xfeel-tpad__press-ring" aria-hidden="true"></span>
           <span data-force-label>Press</span>
@@ -221,7 +221,7 @@ const sizes = trackpads().filter((t) => t.connector === "usb-c");
   <section class="xfeel-tpad__size">
     <div class="container">
       <h2>Large surface</h2>
-      <p>USB-C models share the same footprint — black may cost more (owner to confirm).</p>
+      <p>USB-C models share the same footprint - black may cost more (owner to confirm).</p>
       <div class="xfeel-tpad__size-strip">
         {sizes.map((t) => {
           const img = getAccessoryImage(t.id, "hero");
@@ -244,7 +244,7 @@ const sizes = trackpads().filter((t) => t.connector === "usb-c");
         <img src={white.src} alt="Magic Trackpad" width="200" height="150" loading="lazy" />
         <p>
           The Mouse is compact with swipe on top; the Trackpad gives Force Touch and the fullest gesture set on Mac.
-          iPad support is limited for both — check Apple's list.
+          iPad support is limited for both - check Apple's list.
         </p>
         <a class="btn btn--secondary" href="/accessories/compare?group=pointer">Compare Mouse and Trackpad</a>
       </div>
@@ -301,7 +301,7 @@ const sizes = trackpads().filter((t) => t.connector === "usb-c");
       if (gTitle) gTitle.textContent = btn.getAttribute("data-label") || "";
       if (gBlurb) gBlurb.textContent = btn.getAttribute("data-blurb") || "";
       if (gHow) gHow.textContent = btn.getAttribute("data-how") || "";
-      if (gIpad) gIpad.textContent = btn.getAttribute("data-ipad") === "1" ? "Limited on iPad" : "Mac only — check";
+      if (gIpad) gIpad.textContent = btn.getAttribute("data-ipad") === "1" ? "Limited on iPad" : "Mac only - check";
     }
     explorer.querySelectorAll("[data-gesture-id]").forEach((btn) => {
       btn.addEventListener("click", () => selectTile(btn));

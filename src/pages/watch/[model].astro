@@ -1,6 +1,6 @@
 ---
 /**
- * Watch PDP — sticky 4:3 viewer + buy panel + feel + specs/FAQ.
+ * Watch PDP - sticky 4:3 viewer + buy panel + feel + specs/FAQ.
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import WatchStage from "../../components/watch/WatchStage.astro";
@@ -85,7 +85,7 @@ const showModelHero = model.isNew && !heroStart.fallback && !heroEnd.fallback;
             Wrist circumference (cm)
             <input type="number" min="13" max="24" step="0.5" value="17" data-wrist />
           </label>
-          <p data-wrist-result>About 17 cm — suggest {model.defaultCaseMm < 44 ? "smaller" : "larger"} case family. Check Apple's size guide.</p>
+          <p data-wrist-result>About 17 cm - suggest {model.defaultCaseMm < 44 ? "smaller" : "larger"} case family. Check Apple's size guide.</p>
         </div>
       </div>
 
@@ -197,7 +197,7 @@ const showModelHero = model.isNew && !heroStart.fallback && !heroEnd.fallback;
           <li><strong>{model.displayType.split(" ").slice(0, 2).join(" ")}</strong><span>Display</span></li>
           <li><strong>{model.chip || "Check"}</strong><span>Chip</span></li>
           <li><strong>{model.batteryHours ?? "Check"}{model.batteryHours ? " h" : ""}</strong><span>Battery</span></li>
-          <li><strong>{model.weightG ?? "—"}{model.weightG ? " g" : ""}</strong><span>Weight</span></li>
+          <li><strong>{model.weightG ?? "-"}{model.weightG ? " g" : ""}</strong><span>Weight</span></li>
         </ul>
 
         <div class="wpdp__why">
@@ -212,7 +212,7 @@ const showModelHero = model.isNew && !heroStart.fallback && !heroEnd.fallback;
       <p>
         {model.dimensionsMm
           ? `About ${model.dimensionsMm.w} × ${model.dimensionsMm.h} × ${model.dimensionsMm.d} mm.`
-          : "Dimensions — check final specs."}
+          : "Dimensions - check final specs."}
         {model.weightG ? ` About ${model.weightG} g.` : ""}
       </p>
       {(() => {
@@ -255,7 +255,7 @@ const showModelHero = model.isNew && !heroStart.fallback && !heroEnd.fallback;
         <summary>Health sensors</summary>
         <table>
           {Object.entries(model.health).map(([k, v]) => (
-            <tr><th>{k}</th><td>{v == null ? "—" : v ? "Yes" : "No"}</td></tr>
+            <tr><th>{k}</th><td>{v == null ? "-" : v ? "Yes" : "No"}</td></tr>
           ))}
         </table>
       </details>
@@ -263,7 +263,7 @@ const showModelHero = model.isNew && !heroStart.fallback && !heroEnd.fallback;
         <summary>Safety</summary>
         <table>
           {Object.entries(model.safety).map(([k, v]) => (
-            <tr><th>{k}</th><td>{v == null ? "—" : v ? "Yes" : "No"}</td></tr>
+            <tr><th>{k}</th><td>{v == null ? "-" : v ? "Yes" : "No"}</td></tr>
           ))}
         </table>
       </details>
@@ -307,7 +307,7 @@ const showModelHero = model.isNew && !heroStart.fallback && !heroEnd.fallback;
       <details class="wpdp__acc">
         <summary>Software</summary>
         <table>
-          <tr><th>Compatibility</th><td>Requires iPhone — check Apple's list for watchOS and iPhone requirements.</td></tr>
+          <tr><th>Compatibility</th><td>Requires iPhone - check Apple's list for watchOS and iPhone requirements.</td></tr>
         </table>
       </details>
     </section>
@@ -397,7 +397,7 @@ const showModelHero = model.isNew && !heroStart.fallback && !heroEnd.fallback;
       bag.setAttribute("data-band", state.band);
     }
     if (wa instanceof HTMLAnchorElement) {
-      const msg = `Hi Gadget Hub — interested in ${modelName}, ${state.size || ""}, ${state.material || ""}, ${state.colour || ""}, ${state.connectivity}, band: ${state.band}. Sample KES ${kes.toLocaleString("en-KE")}.`;
+      const msg = `Hi Gadget Hub - interested in ${modelName}, ${state.size || ""}, ${state.material || ""}, ${state.colour || ""}, ${state.connectivity}, band: ${state.band}. Sample KES ${kes.toLocaleString("en-KE")}.`;
       wa.href = waBase + encodeURIComponent(msg);
     }
   }
@@ -517,10 +517,10 @@ const showModelHero = model.isNew && !heroStart.fallback && !heroEnd.fallback;
     if (wristResult) {
       wristResult.textContent =
         cm < 16
-          ? `About ${cm} cm — smaller case (40–42 mm) often feels better. Check Apple's size guide.`
+          ? `About ${cm} cm - smaller case (40 - 42 mm) often feels better. Check Apple's size guide.`
           : cm > 18.5
-            ? `About ${cm} cm — larger case (44–46 mm or Ultra 49 mm) often reads easier. Check Apple's size guide.`
-            : `About ${cm} cm — either size family can work. Check Apple's size guide.`;
+            ? `About ${cm} cm - larger case (44 - 46 mm or Ultra 49 mm) often reads easier. Check Apple's size guide.`
+            : `About ${cm} cm - either size family can work. Check Apple's size guide.`;
     }
   });
 

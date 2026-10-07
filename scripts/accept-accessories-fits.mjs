@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Part 12 fit acceptance — mirrors src/lib/accessories/fits.ts for the named cases.
+ * Part 12 fit acceptance - mirrors src/lib/accessories/fits.ts for the named cases.
  * Run: node scripts/accept-accessories-fits.mjs
  */
 import fs from "node:fs";
@@ -105,7 +105,7 @@ for (const [name, result, expected] of cases) {
   const ok = result.status === expected;
   if (!ok) fail++;
   console.log(
-    `| ${name} | ${label(result.status)} — ${result.reason} | ${expected} | ${ok ? "PASS" : "FAIL"} |`,
+    `| ${name} | ${label(result.status)} - ${result.reason} | ${expected} | ${ok ? "PASS" : "FAIL"} |`,
   );
 }
 

@@ -1,5 +1,5 @@
 /**
- * getWatchImage(modelId, kind) — lineup, bands, swatch, overview, page assets.
+ * getWatchImage(modelId, kind) - lineup, bands, swatch, overview, page assets.
  * Never returns a broken path; falls back to overview then placeholder.
  */
 

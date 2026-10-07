@@ -1,5 +1,5 @@
 /**
- * Owner-editable CONFIG for the MacBook Air + Pro shop section (M1–M5, 2020+).
+ * Owner-editable CONFIG for the MacBook Air + Pro shop section (M1 - M5, 2020+).
  * All KES prices are samples. Re-verify specs on apple.com before launch.
  */
 
@@ -73,7 +73,7 @@ export const macConfig = {
       ratio: 2.0,
       source: "Apple MacBook Air M4 marketing (approx.)",
       date: "2025-03",
-      note: "Illustration only — confirm exact published claim before launch.",
+      note: "Illustration only - confirm exact published claim before launch.",
     },
     {
       id: "m4-pro-vs-m1-pro",
@@ -81,21 +81,21 @@ export const macConfig = {
       ratio: 1.8,
       source: "Apple MacBook Pro M4 Pro marketing (approx.)",
       date: "2024-10",
-      note: "Illustration only — confirm exact published claim before launch.",
+      note: "Illustration only - confirm exact published claim before launch.",
     },
   ] as const,
 
-  /** Models without a dedicated Apple store colour shot — use overview. */
+  /** Models without a dedicated Apple store colour shot - use overview. */
   missingStoreShotNotes: [
-    "MacBook Air 13\" M2 (2022) — overview only",
-    "MacBook Air 15\" M3 (2024) — overview only",
-    "All MacBook Air M5 — overview only",
-    "All MacBook Pro M5 / M5 Pro / M5 Max — overview only",
+    "MacBook Air 13\" M2 (2022) - overview only",
+    "MacBook Air 15\" M3 (2024) - overview only",
+    "All MacBook Air M5 - overview only",
+    "All MacBook Pro M5 / M5 Pro / M5 Max - overview only",
     "MacBook Air M1 uses 2018-labelled chassis store shots (identical design)",
   ] as const,
 } as const;
 
-/** Sample base prices in KES — one place to edit. */
+/** Sample base prices in KES - one place to edit. */
 export const macBasePricesKes = {
   "macbook-air-13-m1": 70000,
   "macbook-air-13-m2": 95000,

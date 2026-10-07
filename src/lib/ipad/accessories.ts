@@ -241,7 +241,7 @@ export function ipadBuyingNotes(model: IpadModel): { title: string; body: string
     { title: "Which size", body: sizeLine },
     {
       title: "Storage",
-      body: "128 GB suits everyday apps and photos. 256–512 GB for offline video and art files. 1 TB+ for heavy creative libraries.",
+      body: "128 GB suits everyday apps and photos. 256 - 512 GB for offline video and art files. 1 TB+ for heavy creative libraries.",
     },
     {
       title: "Memory",
@@ -254,11 +254,11 @@ export function ipadBuyingNotes(model: IpadModel): { title: string; body: string
       title: "Cellular",
       body: model.cellular
         ? "Wi-Fi + Cellular is worth it if you leave the house without hotspotting a phone. Many newer models use eSIM."
-        : "This listing is Wi-Fi focused — ask about cellular stock.",
+        : "This listing is Wi-Fi focused - ask about cellular stock.",
     },
     {
       title: "Pencil and keyboard",
-      body: `Works with: ${model.pencils.map(pencilLabel).join(", ")}. Keyboards: ${model.keyboards.map(kbLabel).join(", ") || "none officially listed"}. Buying the wrong Pencil is the biggest regret — check before you pay.`,
+      body: `Works with: ${model.pencils.map(pencilLabel).join(", ")}. Keyboards: ${model.keyboards.map(kbLabel).join(", ") || "none officially listed"}. Buying the wrong Pencil is the biggest regret - check before you pay.`,
     },
     {
       title: "Age and support",
@@ -268,7 +268,7 @@ export function ipadBuyingNotes(model: IpadModel): { title: string; body: string
       title: model.year <= 2022 ? "Condition check" : "Sealed and verifiable",
       body:
         model.year <= 2022
-          ? "For 2020–2022 stock, battery health and screen condition are shown on the invoice."
+          ? "For 2020 - 2022 stock, battery health and screen condition are shown on the invoice."
           : "Sealed and serial on the invoice. Check coverage on Apple’s own site.",
     },
     {
@@ -319,7 +319,7 @@ export function ipadFaq(): { q: string; a: string }[] {
     },
     {
       q: "Can an iPad replace my laptop?",
-      a: "For notes, browsing, media and light Office work with a keyboard — often yes. Desktop-only software may not run. Be honest about what you need.",
+      a: "For notes, browsing, media and light Office work with a keyboard - often yes. Desktop-only software may not run. Be honest about what you need.",
     },
     {
       q: "How much storage do I need?",

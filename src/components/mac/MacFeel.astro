@@ -1,6 +1,6 @@
 ---
 /**
- * PDP “feel” sections — thin, display, keyboard, performance, battery, camera, ports, colour.
+ * PDP “feel” sections - thin, display, keyboard, performance, battery, camera, ports, colour.
  */
 import {
   type MacModel,
@@ -69,14 +69,14 @@ const airColours = ["midnight", "starlight", "silver", "sky-blue"] as const;
         <span>mm</span>
       </div>
     </div>
-    <p class="mfeel__caption">Next to a notebook: closed lid is about as thick as a stack of a few sheets — illustration only.</p>
+    <p class="mfeel__caption">Next to a notebook: closed lid is about as thick as a stack of a few sheets - illustration only.</p>
   </div>
 </section>
 
 <section class="mfeel mfeel--black" id="feel-display" data-feel="display">
   <div class="container mfeel__inner">
     <h2>The screen is the reason.</h2>
-    <p class="mfeel__lede">Illustration — not a measurement.</p>
+    <p class="mfeel__lede">Illustration - not a measurement.</p>
     <div class="mfeel__display">
       {
         !display.fallback ? (
@@ -148,7 +148,7 @@ const airColours = ["midnight", "starlight", "silver", "sky-blue"] as const;
     <p class="mfeel__caption">
       Backlit keyboard, Touch ID on all of these Macs, large Force Touch trackpad.
       {model.touchBar
-        ? " This 13″ Pro still has the Touch Bar — later Pros moved to full-height function keys."
+        ? " This 13″ Pro still has the Touch Bar - later Pros moved to full-height function keys."
         : " Full-height function keys on modern Pros."}
     </p>
   </div>
@@ -169,7 +169,7 @@ const airColours = ["midnight", "starlight", "silver", "sky-blue"] as const;
           ))}
         </ul>
       ) : (
-        <p class="mfeel__lede">No cited Apple ratio for this tier yet — we do not invent bars.</p>
+        <p class="mfeel__lede">No cited Apple ratio for this tier yet - we do not invent bars.</p>
       )
     }
     <p class="mfeel__caption">
@@ -197,7 +197,7 @@ const airColours = ["midnight", "starlight", "silver", "sky-blue"] as const;
       <div class="mfeel__batt-icon" aria-hidden="true"><i data-batt-fill /></div>
       <p>
         Up to <strong data-batt-hours>0</strong> hours video
-        <span class="mfeel__fine"> — Apple’s claim; depends on use</span>
+        <span class="mfeel__fine"> - Apple’s claim; depends on use</span>
       </p>
     </div>
     <label class="mfeel__slider">
@@ -406,8 +406,8 @@ const airColours = ["midnight", "starlight", "silver", "sky-blue"] as const;
     const margin = batteryHours * 0.7;
     dayResult.textContent =
       hrs <= margin
-        ? `${hrs} h — this model comfortably covers it (30% safety margin on Apple’s ${batteryHours} h claim).`
-        : `${hrs} h — tight or short of Apple’s ${batteryHours} h claim; plan a charger.`;
+        ? `${hrs} h - this model comfortably covers it (30% safety margin on Apple’s ${batteryHours} h claim).`
+        : `${hrs} h - tight or short of Apple’s ${batteryHours} h claim; plan a charger.`;
   }
   daySlider?.addEventListener("input", updateDay);
   updateDay();

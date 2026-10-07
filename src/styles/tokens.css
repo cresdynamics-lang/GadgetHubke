@@ -118,18 +118,18 @@
   --duration: 200ms;
   --duration-hero: 1.8s;
 
-  /* Mac section — calmer, more spacious */
+  /* Mac section - calmer, more spacious */
   --mac-headline: clamp(2.25rem, 5vw, 3.75rem);
   --mac-section-gap: clamp(4rem, 10vw, 7rem);
   --mac-feel-bg: #000000;
 
-  /* iPad section — friendlier pace, rounder cards */
+  /* iPad section - friendlier pace, rounder cards */
   --ipad-headline: clamp(2.1rem, 4.5vw, 3.4rem);
   --ipad-section-gap: clamp(3.5rem, 9vw, 6.5rem);
   --ipad-feel-bg: #000000;
   --ipad-radius: 1.875rem; /* 30px */
 
-  /* Watch section — small-object, wide stages */
+  /* Watch section - small-object, wide stages */
   --watch-headline: clamp(2.1rem, 4.5vw, 3.4rem);
   --watch-section-gap: clamp(3.5rem, 9vw, 6.5rem);
   --watch-feel-bg: #000000;
@@ -143,7 +143,7 @@
   }
 }
 
-/* Dark theme — product stages stay light (#F5F5F7) */
+/* Dark theme - product stages stay light (#F5F5F7) */
 html[data-theme="dark"] {
   --color-bg: #000000;
   --color-bg-subtle: #1d1d1f;

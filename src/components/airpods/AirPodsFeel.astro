@@ -1,6 +1,6 @@
 ---
 /**
- * AirPods feel sections — wired to exact Airpods3 manifest keys (Part C).
+ * AirPods feel sections - wired to exact Airpods3 manifest keys (Part C).
  */
 import {
   type AirpodsModel,
@@ -186,7 +186,7 @@ const ancRatio = airpodsConfig.ancRatios[0];
 <section class="afeel afeel--black" id="feel-noise" data-feel="noise">
   <div class="container afeel__inner">
     <h2>Turn the world down.</h2>
-    <p class="afeel__lede">Illustration — no audio. {hasAnc(model) ? "Mode switch changes the wave field only." : "Limited noise modes on this model."}</p>
+    <p class="afeel__lede">Illustration - no audio. {hasAnc(model) ? "Mode switch changes the wave field only." : "Limited noise modes on this model."}</p>
     {noisePair && !noisePair.fallback ? (
       <div class="afeel__pair" data-pair>
         {noisePair.start ? <img class="afeel__pair-start" src={noisePair.start} alt="" width="1400" height="900" loading="lazy" /> : null}
@@ -212,7 +212,7 @@ const ancRatio = airpodsConfig.ancRatios[0];
       <div class="afeel__bar"><i data-bar style="height:90%" /></div>
       <div class="afeel__bar"><i data-bar style="height:70%" /></div>
     </div>
-    <p class="afeel__caption">Illustration — not a measurement.{isPro3 && ancRatio ? ` ${ancRatio.note}` : ""}</p>
+    <p class="afeel__caption">Illustration - not a measurement.{isPro3 && ancRatio ? ` ${ancRatio.note}` : ""}</p>
   </div>
 </section>
 ) : null}
@@ -221,7 +221,7 @@ const ancRatio = airpodsConfig.ancRatios[0];
 <section class="afeel afeel--black" id="feel-sound" data-feel="sound">
   <div class="container afeel__inner">
     <h2>Sound that sits around you.</h2>
-    <p class="afeel__lede">{model.spatialAudio ? "Personalized Spatial Audio — illustration." : "Sound — check final specs."}</p>
+    <p class="afeel__lede">{model.spatialAudio ? "Personalized Spatial Audio - illustration." : "Sound - check final specs."}</p>
     <div class="afeel__stage afeel__stage--dark">
       <img src={soundMain.src} alt={soundMain.alt} width="1400" height="900" loading="lazy" />
     </div>
@@ -232,7 +232,7 @@ const ancRatio = airpodsConfig.ancRatios[0];
         ))}
       </ul>
     ) : null}
-    <p class="afeel__caption">Diagram / stills only — no audio demo.</p>
+    <p class="afeel__caption">Diagram / stills only - no audio demo.</p>
   </div>
 </section>
 ) : null}
@@ -267,7 +267,7 @@ const ancRatio = airpodsConfig.ancRatios[0];
 <section class="afeel" id="feel-calls" data-feel="calls">
   <div class="container afeel__inner">
     <h2>Be heard, clearly.</h2>
-    <p>{model.touchControl || "Controls — check final specs."}</p>
+    <p>{model.touchControl || "Controls - check final specs."}</p>
     {callsMain && !callsMain.fallback ? (
       <div class="afeel__stage">
         <img src={callsMain.end || callsMain.src} alt={callsMain.alt} width="1200" height="800" loading="lazy" style="mix-blend-mode:multiply" />
@@ -291,7 +291,7 @@ const ancRatio = airpodsConfig.ancRatios[0];
           ))}
       </ul>
     ) : null}
-    <p class="afeel__caption">Illustration — controls vary by model.</p>
+    <p class="afeel__caption">Illustration - controls vary by model.</p>
   </div>
 </section>
 
@@ -308,7 +308,7 @@ const ancRatio = airpodsConfig.ancRatios[0];
     {showBatteryHours ? (
       <p>Up to {model.batterySingleHours} h single charge · Apple claim</p>
     ) : (
-      <p>Battery hours flagged check-final-specs — no numbers until confirmed.</p>
+      <p>Battery hours flagged check-final-specs - no numbers until confirmed.</p>
     )}
     <p class="afeel__caption">ANC and volume drain faster. Replacement through Apple service.</p>
   </div>
@@ -338,7 +338,7 @@ const ancRatio = airpodsConfig.ancRatios[0];
       ) : null;
     })()}
     {findMy && !findMy.fallback ? (
-      <p class="afeel__caption"><img src={findMy.src} alt="Find My" width="400" height="300" loading="lazy" style="mix-blend-mode:multiply;max-width:16rem" /> Find My — illustration.</p>
+      <p class="afeel__caption"><img src={findMy.src} alt="Find My" width="400" height="300" loading="lazy" style="mix-blend-mode:multiply;max-width:16rem" /> Find My - illustration.</p>
     ) : null}
   </div>
 </section>
@@ -360,7 +360,7 @@ const ancRatio = airpodsConfig.ancRatios[0];
           <li class="afeel__card"><img src={t.end || t.src} alt={t.alt} width="600" height="400" loading="lazy" /></li>
         ))}
     </ul>
-    <p class="afeel__caption">Heart-rate sensing in workouts — decorative. Not a medical device.</p>
+    <p class="afeel__caption">Heart-rate sensing in workouts - decorative. Not a medical device.</p>
   </div>
 </section>
 ) : null}

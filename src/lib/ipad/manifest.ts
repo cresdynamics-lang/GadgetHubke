@@ -114,7 +114,7 @@ export function productSrc(
     if (size && map[`${kind}:${size}:${c}`]) return map[`${kind}:${size}:${c}`];
     if (map[`${kind}:${c}`]) return map[`${kind}:${c}`];
   }
-  // Do NOT fall back to a different colour — that makes swatches look "stuck"
+  // Do NOT fall back to a different colour - that makes swatches look "stuck"
   return undefined;
 }
 

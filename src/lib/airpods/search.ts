@@ -191,7 +191,7 @@ export function searchAirpods(query: string, index: AirpodsSearchHit[]) {
   ) {
     notInStockNewer = {
       message:
-        "We may not have the newest model in stock — results show similar or earlier AirPods we can source.",
+        "We may not have the newest model in stock - results show similar or earlier AirPods we can source.",
     };
   }
 

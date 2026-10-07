@@ -1,6 +1,6 @@
 ---
 /**
- * iPad landing — hero light-up, choose cards, gen chips, grid, plan purchase, visit.
+ * iPad landing - hero light-up, choose cards, gen chips, grid, plan purchase, visit.
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import IpadStage from "../../components/ipad/IpadStage.astro";
@@ -42,7 +42,7 @@ const choose = [
   {
     family: "Air" as const,
     title: "iPad Air",
-    body: "The sweet spot — light, colourful, Pencil Pro, enough for school and creative work.",
+    body: "The sweet spot - light, colourful, Pencil Pro, enough for school and creative work.",
     href: "/ipad/shop?family=Air",
     price: lowestIpadPrice("Air"),
     model: air.find((m) => m.id === "ipad-air-11-m2") || air[0],
@@ -135,7 +135,7 @@ const wa = whatsappUrl("Hi Gadget Hub, I want to visit and try an iPad / Apple P
 
   <section class="container ipad-os">
     <h2>What you can do on iPadOS</h2>
-    <p>Everyday jobs people actually open on an iPad — not a feature dump.</p>
+    <p>Everyday jobs people actually open on an iPad - not a feature dump.</p>
     <ul class="ipad-os__grid">
       {
         [
@@ -144,7 +144,7 @@ const wa = whatsappUrl("Hi Gadget Hub, I want to visit and try an iPad / Apple P
           { t: "Apple Pencil markup", d: "Sign PDFs, sketch wireframes, annotate slides." },
           { t: "Continuity Camera", d: "Use your iPad as a secondary Mac display or webcam." },
           { t: "Files and USB", d: "Plug in a drive, move folders, keep projects tidy." },
-          { t: "Focus modes", d: "School, work, or wind-down — mute the noise." },
+          { t: "Focus modes", d: "School, work, or wind-down - mute the noise." },
         ].map((item) => (
           <li>
             <h3>{item.t}</h3>
@@ -157,13 +157,13 @@ const wa = whatsappUrl("Hi Gadget Hub, I want to visit and try an iPad / Apple P
 
   <section class="container ipad-org">
     <h2>Schools and teams</h2>
-    <p>Bulk quotes, setup help, and classroom Pencil kits — ask on WhatsApp.</p>
+    <p>Bulk quotes, setup help, and classroom Pencil kits - ask on WhatsApp.</p>
     <div class="ipad-org__grid">
-      <a class="ipad-org__card" href={whatsappUrl("Hi Gadget Hub — school / college iPad quote request.")}>
+      <a class="ipad-org__card" href={whatsappUrl("Hi Gadget Hub - school / college iPad quote request.")}>
         <h3>Schools and colleges</h3>
         <p>Volume pricing, MDM-friendly setup notes, and Pencil bundles for labs.</p>
       </a>
-      <a class="ipad-org__card" href={whatsappUrl("Hi Gadget Hub — corporate iPad / fleet quote.")}>
+      <a class="ipad-org__card" href={whatsappUrl("Hi Gadget Hub - corporate iPad / fleet quote.")}>
         <h3>Corporate and field teams</h3>
         <p>Shared devices, cases, and cellular options for staff on the road.</p>
       </a>
@@ -198,7 +198,7 @@ const wa = whatsappUrl("Hi Gadget Hub, I want to visit and try an iPad / Apple P
 
   <section class="container ipad-bundles">
     <h2>Pencil and keyboard bundles</h2>
-    <p>Compatible sets only — sample combined prices.</p>
+    <p>Compatible sets only - sample combined prices.</p>
     <ul class="ipad-bundles__grid">
       {
         [

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Part 12 pointer fit acceptance — mirrors src/lib/accessories/fits.ts pointerFits cases.
+ * Part 12 pointer fit acceptance - mirrors src/lib/accessories/fits.ts pointerFits cases.
  * Run: node scripts/accept-pointer-fits.mjs
  */
 import fs from "node:fs";
@@ -20,34 +20,34 @@ function pointerFits(deviceModelId, productId) {
   if (id === "windows-pc" || id === "windows") {
     return {
       status: "note",
-      reason: "Works as a basic Bluetooth pointer on Windows; surface gestures do not work — check.",
+      reason: "Works as a basic Bluetooth pointer on Windows; surface gestures do not work - check.",
     };
   }
   if (id === "android-phone") {
     return {
       status: "note",
-      reason: "May pair as a basic Bluetooth pointer on some Android phones; gestures do not work — check.",
+      reason: "May pair as a basic Bluetooth pointer on some Android phones; gestures do not work - check.",
     };
   }
   if (/macbook|imac|mac-mini|mac-studio|mac-pro|^mac|intel-mac/.test(id)) {
     return {
       status: "fits",
-      reason: "Works over Bluetooth with Macs that meet Apple's macOS minimum — check Apple's list.",
+      reason: "Works over Bluetooth with Macs that meet Apple's macOS minimum - check Apple's list.",
     };
   }
   if (/ipad/.test(id)) {
     if (/ipad-[67]$|ipad-mini-[45]|ipad-air-[123]$/.test(id)) {
       return {
         status: "note",
-        reason: "Older iPad — confirm it runs a supported iPadOS for pointer use; gestures limited.",
+        reason: "Older iPad - confirm it runs a supported iPadOS for pointer use; gestures limited.",
       };
     }
     return {
       status: "note",
-      reason: "Works as a pointer on supported iPads (iPadOS 13.4+); Mac gestures are limited on iPad — check.",
+      reason: "Works as a pointer on supported iPads (iPadOS 13.4+); Mac gestures are limited on iPad - check.",
     };
   }
-  return { status: "no", reason: "Device not in the shop list — check Apple's compatibility list." };
+  return { status: "no", reason: "Device not in the shop list - check Apple's compatibility list." };
 }
 
 function label(s) {
@@ -75,7 +75,7 @@ for (const [name, result, expected] of cases) {
   const ok = result.status === expected;
   if (!ok) fail++;
   console.log(
-    `| ${name} | ${label(result.status)} — ${result.reason.slice(0, 60)}… | ${expected} | ${ok ? "PASS" : "FAIL"} |`,
+    `| ${name} | ${label(result.status)} - ${result.reason.slice(0, 60)}… | ${expected} | ${ok ? "PASS" : "FAIL"} |`,
   );
 }
 

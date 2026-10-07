@@ -1,6 +1,6 @@
 ---
 /**
- * Shop card for iPhone 11–16 catalog. New | XUK toggles sample from-price.
+ * Shop card for iPhone 11 - 16 catalog. New | EX-UK toggles sample from-price.
  */
 import ProductStage from "./ProductStage.astro";
 import StockChannelToggle from "../StockChannelToggle.astro";
@@ -21,7 +21,7 @@ import {
   colourLabel,
 } from "../../lib/iphone";
 import { iphoneConfig } from "../../lib/iphone/config";
-import { xukFromNew } from "../../lib/stock-channel";
+import { exUkFromNew } from "../../lib/stock-channel";
 
 interface Props {
   model: IphoneModel;
@@ -34,7 +34,7 @@ const img = getImage(model.id, colour, 1, model.name);
 const colours = availableColours(model.id);
 const overviewOnly = isOverviewOnly(model.id);
 const price = storagePrices(model.basePriceKes, model.storage)[0];
-const priceXuk = xukFromNew(price.kes);
+const priceExUk = exUkFromNew(price.kes);
 const lipa = lipaMonthly(price.kes);
 const href = `/iphone/${model.id}`;
 const tag = isLatestTag(model) ? "Latest" : isValueTag(model) ? "Value" : null;
@@ -53,7 +53,7 @@ const colourPayload = colours.map((key) => {
   data-tier={model.tier}
   data-price={price.kes}
   data-price-new={price.kes}
-  data-price-xuk={priceXuk}
+  data-price-ex-uk={priceExUk}
   data-channel="new"
   data-battery={model.batteryVideoHours}
   data-size={model.displayInches}
@@ -133,8 +133,8 @@ const colourPayload = colours.map((key) => {
     function channelKes() {
       const ch = card.getAttribute("data-channel") || "new";
       const newKes = Number(card.getAttribute("data-price-new") || card.getAttribute("data-price") || 0);
-      const xukKes = Number(card.getAttribute("data-price-xuk") || newKes);
-      return ch === "xuk" ? xukKes : newKes;
+      const exUkKes = Number(card.getAttribute("data-price-ex-uk") || newKes);
+      return ch === "ex-uk" ? exUkKes : newKes;
     }
 
     function syncChannelPrice() {
@@ -196,7 +196,7 @@ const colourPayload = colours.map((key) => {
       e.preventDefault();
       if (!(bag instanceof HTMLElement)) return;
       const ch = card.getAttribute("data-channel") || "new";
-      const channelLabel = ch === "xuk" ? "XUK" : "New";
+      const channelLabel = ch === "ex-uk" ? "EX-UK" : "New";
       window.dispatchEvent(
         new CustomEvent("gh:bag-add", {
           detail: {

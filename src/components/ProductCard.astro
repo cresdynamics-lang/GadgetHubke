@@ -1,11 +1,11 @@
 ---
 /**
- * Blueprint product card: stage image, New|XUK price toggle, from price, Bag + WhatsApp.
+ * Blueprint product card: stage image, New|EX-UK price toggle, from price, Bag + WhatsApp.
  */
 import Price from "./Price.astro";
 import StockChannelToggle from "./StockChannelToggle.astro";
 import { whatsappUrl } from "../lib/site";
-import { xukFromNew } from "../lib/stock-channel";
+import { exUkFromNew } from "../lib/stock-channel";
 
 interface Props {
   name: string;
@@ -18,7 +18,7 @@ interface Props {
 }
 
 const { name, href, priceKes, image, blurb, badge, colors = [] } = Astro.props;
-const priceXuk = xukFromNew(priceKes);
+const priceExUk = exUkFromNew(priceKes);
 const waBase = whatsappUrl();
 const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${name}.`);
 ---
@@ -28,7 +28,7 @@ const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${name}.`);
   data-pcard
   data-channel="new"
   data-price-new={priceKes}
-  data-price-xuk={priceXuk}
+  data-price-ex-uk={priceExUk}
   data-wa-base={waBase}
 >
   {
@@ -92,9 +92,9 @@ const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${name}.`);
     function syncChannelPrice() {
       const ch = card.getAttribute("data-channel") || "new";
       const newKes = Number(card.getAttribute("data-price-new") || 0);
-      const xukKes = Number(card.getAttribute("data-price-xuk") || newKes);
-      const kes = ch === "xuk" ? xukKes : newKes;
-      const label = ch === "xuk" ? "XUK" : "New";
+      const exUkKes = Number(card.getAttribute("data-price-ex-uk") || newKes);
+      const kes = ch === "ex-uk" ? exUkKes : newKes;
+      const label = ch === "ex-uk" ? "EX-UK" : "New";
       if (priceHost) priceHost.textContent = `KSh ${Math.round(kes).toLocaleString("en-KE")}`;
       card.querySelectorAll("[data-stock-channel] [data-channel]").forEach((b) => {
         const on = b.getAttribute("data-channel") === ch;

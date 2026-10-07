@@ -1,5 +1,5 @@
 /**
- * Accessories CONFIG — Pencil, Keyboard, Mouse, Trackpad, Power, Cases.
+ * Accessories CONFIG - Pencil, Keyboard, Mouse, Trackpad, Power, Cases.
  * Owner: re-verify every price, spec and compatibility rule on apple.com before launch.
  */
 
@@ -41,19 +41,19 @@ export const accessoriesConfig = {
     "Check Apple's compatibility list if your device is not shown. Every fit rule is flagged check-final-specs until the owner confirms.",
 
   engravingNote:
-    "Engraving for Pencil Pro — owner confirms whether the shop offers it. Sample add +0 KES.",
+    "Engraving for Pencil Pro - owner confirms whether the shop offers it. Sample add +0 KES.",
 
   layoutNote:
     "Photos show US layouts. The shop confirms the keyboard layout on stock.",
 
   mouseChargeNote:
-    "The Magic Mouse charging port is on the underside — it cannot be used while charging by cable. Flag check.",
+    "The Magic Mouse charging port is on the underside - it cannot be used while charging by cable. Flag check.",
 
   trackpadChargeNote:
-    "The Magic Trackpad USB-C port is on the back edge — it can be used while charging if the owner confirms. Flag check.",
+    "The Magic Trackpad USB-C port is on the back edge - it can be used while charging if the owner confirms. Flag check.",
 
   blackPremiumNote:
-    "Black and white are the same hardware; the black finish may cost more — owner to confirm.",
+    "Black and white are the same hardware; the black finish may cost more - owner to confirm.",
 
   /** All Accessories groups are live. */
   comingNextGroups: [] as const,

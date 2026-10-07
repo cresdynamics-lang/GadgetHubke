@@ -1,5 +1,5 @@
 /**
- * Owner-editable CONFIG for the iPad section (Pro / Air / mini / standard, 2020–2026).
+ * Owner-editable CONFIG for the iPad section (Pro / Air / mini / standard, 2020 - 2026).
  * All KES prices are samples. Re-verify specs on apple.com before launch.
  */
 
@@ -74,9 +74,9 @@ export const ipadConfig = {
       label: "M5 vs M4 (iPad Pro)",
       cpuRatio: 1.12,
       gpuRatio: 1.35,
-      source: "Apple iPad Pro M5 launch materials (approx. 10–15% CPU, ~35% GPU)",
+      source: "Apple iPad Pro M5 launch materials (approx. 10 - 15% CPU, ~35% GPU)",
       date: "2025",
-      note: "Illustration only — Apple's claim; confirm exact published figures before launch.",
+      note: "Illustration only - Apple's claim; confirm exact published figures before launch.",
     },
     {
       id: "m4-vs-m2-pro",
@@ -84,21 +84,21 @@ export const ipadConfig = {
       ratio: 1.5,
       source: "Apple iPad Pro M4 marketing (approx.)",
       date: "2024-05",
-      note: "Illustration only — confirm exact published claim before launch.",
+      note: "Illustration only - confirm exact published claim before launch.",
     },
   ] as const,
 
-  /** Generations without dedicated store colour shots — use folder 02 overview. */
+  /** Generations without dedicated store colour shots - use folder 02 overview. */
   missingStoreShotNotes: [
-    "iPad Pro 2020 / 2021 / 2022 — overview only (no per-colour select shots in pack)",
-    "iPad Air 4th / 5th gen — overview only",
-    "iPad mini 6th gen — overview only",
-    "iPad 8th / 9th gen — overview only",
-    "iPad Pro M4/M5 pack has witb + wificell select; plain wifi-select files not present — flag for owner",
+    "iPad Pro 2020 / 2021 / 2022 - overview only (no per-colour select shots in pack)",
+    "iPad Air 4th / 5th gen - overview only",
+    "iPad mini 6th gen - overview only",
+    "iPad 8th / 9th gen - overview only",
+    "iPad Pro M4/M5 pack has witb + wificell select; plain wifi-select files not present - flag for owner",
   ] as const,
 } as const;
 
-/** Sample base prices in KES — one place to edit. */
+/** Sample base prices in KES - one place to edit. */
 export const ipadBasePricesKes = {
   "ipad-pro-11-2020": 60000,
   "ipad-pro-12-9-2020": 75000,

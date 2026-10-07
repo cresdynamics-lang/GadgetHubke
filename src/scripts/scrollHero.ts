@@ -8,7 +8,7 @@ export type ScrollHeroOptions = {
   end?: string;
   copy?: string;
   cta?: string;
-  /** Fade copy out while scrolling (default false — keep copy readable). */
+  /** Fade copy out while scrolling (default false - keep copy readable). */
   fadeCopy?: boolean;
 };
 
@@ -45,7 +45,7 @@ export function initScrollHero(opts: ScrollHeroOptions): void {
     return;
   }
 
-  // Intro without fill:forwards — scroll can take over cleanly
+  // Intro without fill:forwards - scroll can take over cleanly
   let intro = 0;
   const introStart = performance.now();
   const introMs = 1200;

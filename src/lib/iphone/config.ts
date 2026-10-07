@@ -1,5 +1,5 @@
 /**
- * Owner-editable CONFIG for the iPhone 11–16 shop section.
+ * Owner-editable CONFIG for the iPhone 11 - 16 shop section.
  * Replace placeholders before launch. All KES prices are samples.
  */
 

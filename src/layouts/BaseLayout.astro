@@ -17,11 +17,13 @@ interface Props {
 }
 
 const {
-  title = `${site.name} - New Apple devices in Nairobi`,
-  description = "GadgetHub sells new devices only. iPhone, Mac, iPad, Watch, AirPods, and accessories. Trade-in and Lipa Mdogo Mdogo available.",
+  title = `${site.name} - Apple devices in Nairobi`,
+  description = "GadgetHub sells New and EX-UK Apple products in Nairobi. iPhone, Mac, iPad, Watch, AirPods, and accessories. Trade-in and Lipa Mdogo Mdogo available.",
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, site.url).href;
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+const hideFloatWhatsApp = path === "/contact";
 ---
 
 <!doctype html>
@@ -59,7 +61,7 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
     <Footer />
     <SiteSearch />
     <BagDrawer />
-    <FloatingActions />
+    <FloatingActions hideWhatsApp={hideFloatWhatsApp} />
     <CookieBanner />
     <Analytics />
   </body>

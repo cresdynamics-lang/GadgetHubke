@@ -39,14 +39,14 @@ const payload = tvHomeModels.map((m) => {
     <div class="thquiz__opts">
       <button type="button" data-val="living">Living room / TV area</button>
       <button type="button" data-val="small">Kitchen, bedroom or desk</button>
-      <button type="button" data-val="any">Either — I will move it</button>
+      <button type="button" data-val="any">Either - I will move it</button>
     </div>
   </div>
   <div class="thquiz__q" data-q="budget">
     <p>Budget band (sample prices)?</p>
     <div class="thquiz__opts">
       <button type="button" data-val="tight">Under 20k</button>
-      <button type="button" data-val="mid">20k–40k</button>
+      <button type="button" data-val="mid">20k - 40k</button>
       <button type="button" data-val="open">40k+</button>
     </div>
   </div>
@@ -70,7 +70,7 @@ const payload = tvHomeModels.map((m) => {
       if (a.room === "voice" && m.family === "HomePod mini") return "Compact Siri and Intercom in more rooms.";
       if (a.size === "small" && m.id === "homepod-mini") return "Fits a counter or bedside table.";
       if (a.budget === "tight" && m.priceKes < 20000) return "Lower sample price in the lineup.";
-      if (a.room === "movies" && m.hub) return "Can act as a home hub where supported — confirm for Kenya.";
+      if (a.room === "movies" && m.hub) return "Can act as a home hub where supported - confirm for Kenya.";
       return "Solid fit for how you answered.";
     }
 

@@ -48,7 +48,7 @@ const pct = watchConfig.tradeIn.conditionPct;
   <a
     class="btn btn--secondary btn--sm"
     data-trade-wa
-    href={`https://wa.me/${waPhone}?text=${encodeURIComponent(`Hi Gadget Hub — trade-in estimate for ${initial.name}: about ${formatKes(start)} (indicative).`)}`}
+    href={`https://wa.me/${waPhone}?text=${encodeURIComponent(`Hi Gadget Hub - trade-in estimate for ${initial.name}: about ${formatKes(start)} (indicative).`)}`}
     target="_blank"
     rel="noopener noreferrer"
   >
@@ -71,7 +71,7 @@ const pct = watchConfig.tradeIn.conditionPct;
       if (valueEl) valueEl.textContent = `KES ${value.toLocaleString("en-KE")}`;
       if (wa instanceof HTMLAnchorElement) {
         wa.href = `https://wa.me/${waPhone}?text=${encodeURIComponent(
-          `Hi Gadget Hub — trade-in estimate for ${opt?.textContent?.trim()}: about KES ${value.toLocaleString("en-KE")} (indicative).`,
+          `Hi Gadget Hub - trade-in estimate for ${opt?.textContent?.trim()}: about KES ${value.toLocaleString("en-KE")} (indicative).`,
         )}`;
       }
     }

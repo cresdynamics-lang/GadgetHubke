@@ -1,4 +1,4 @@
-/** Accessories module — Pencil, Keyboard, Mouse, Trackpad, Power, Cases. */
+/** Accessories module - Pencil, Keyboard, Mouse, Trackpad, Power, Cases. */
 
 export { accessoriesConfig, accessoryBasePricesKes, type AccessoryPriceId } from "./config";
 export {

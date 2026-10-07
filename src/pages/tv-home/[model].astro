@@ -82,7 +82,7 @@ const showPair = model.stereoPairCapable;
             </>
           )
         }
-        {model.overviewOnly ? <p class="thpdp__note">Overview image only — confirm condition on the invoice.</p> : null}
+        {model.overviewOnly ? <p class="thpdp__note">Overview image only - confirm condition on the invoice.</p> : null}
         <p class="thpdp__fine">Click tabs to change view.</p>
       </div>
 
@@ -187,9 +187,9 @@ const showPair = model.stereoPairCapable;
 
         <ul class="thpdp__highlights">
           <li><strong>{model.chip || "Check"}</strong><span>Chip</span></li>
-          <li><strong>{model.homeHub ? "Hub" : "—"}</strong><span>Home hub</span></li>
-          <li><strong>{model.siri ? "Siri" : "—"}</strong><span>Voice</span></li>
-          <li><strong>{model.weightG ?? "—"}{model.weightG ? " g" : ""}</strong><span>Weight</span></li>
+          <li><strong>{model.homeHub ? "Hub" : "-"}</strong><span>Home hub</span></li>
+          <li><strong>{model.siri ? "Siri" : "-"}</strong><span>Voice</span></li>
+          <li><strong>{model.weightG ?? "-"}{model.weightG ? " g" : ""}</strong><span>Weight</span></li>
         </ul>
 
         <div class="thpdp__why">
@@ -207,10 +207,10 @@ const showPair = model.stereoPairCapable;
       <details class="thpdp__acc" open>
         <summary>Overview {model.checkFinalSpecs ? "· check final specs" : ""}</summary>
         <table>
-          <tr><th>Connections</th><td>{model.connections.join(", ") || "—"}</td></tr>
-          <tr><th>Picture</th><td>{model.pictureFormats.join(", ") || "—"}</td></tr>
-          <tr><th>Audio</th><td>{model.audioDetails || "—"}</td></tr>
-          <tr><th>Drivers</th><td>{model.drivers || "—"}</td></tr>
+          <tr><th>Connections</th><td>{model.connections.join(", ") || "-"}</td></tr>
+          <tr><th>Picture</th><td>{model.pictureFormats.join(", ") || "-"}</td></tr>
+          <tr><th>Audio</th><td>{model.audioDetails || "-"}</td></tr>
+          <tr><th>Drivers</th><td>{model.drivers || "-"}</td></tr>
           <tr><th>Box</th><td>{model.boxContents.join(", ")}</td></tr>
         </table>
       </details>
@@ -219,7 +219,7 @@ const showPair = model.stereoPairCapable;
         <table>
           <tr><th>Home hub</th><td>{model.homeHub == null ? "Check" : model.homeHub ? "Yes" : "No"}</td></tr>
           <tr><th>Thread</th><td>{model.thread == null ? "Check" : model.thread ? "Yes" : "No"}</td></tr>
-          <tr><th>Intercom</th><td>{model.intercom == null ? "—" : model.intercom ? "Yes" : "No"}</td></tr>
+          <tr><th>Intercom</th><td>{model.intercom == null ? "-" : model.intercom ? "Yes" : "No"}</td></tr>
         </table>
       </details>
     </section>
@@ -308,7 +308,7 @@ const showPair = model.stereoPairCapable;
       bag.setAttribute("data-extras", state.extras);
     }
     if (wa instanceof HTMLAnchorElement) {
-      const msg = `Hi Gadget Hub — interested in ${modelName}, colour: ${state.colour || "-"}, storage: ${state.storage || "-"}${state.pair ? `, ${state.pair}` : ""}${state.extras ? `, add-ons: ${state.extras}` : ""}. Sample KES ${kes.toLocaleString("en-KE")}.`;
+      const msg = `Hi Gadget Hub - interested in ${modelName}, colour: ${state.colour || "-"}, storage: ${state.storage || "-"}${state.pair ? `, ${state.pair}` : ""}${state.extras ? `, add-ons: ${state.extras}` : ""}. Sample KES ${kes.toLocaleString("en-KE")}.`;
       wa.href = waBase + encodeURIComponent(msg);
     }
   }

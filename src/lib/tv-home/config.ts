@@ -70,9 +70,9 @@ export const tvHomeConfig = {
   ] as const,
 
   missingImageNotes: [
-    "Original HomePod (2018) — no store photo; show text-only with 'Image not available'",
-    "Apple TV 4K 1st and 2nd gen — use folder 05 overviews only (no 2022 store hero for those gens)",
-    "Apple TV 4K Wi-Fi vs Wi-Fi + Ethernet — same store shots; do not invent separate photos",
+    "Original HomePod (2018) - no store photo; show text-only with 'Image not available'",
+    "Apple TV 4K 1st and 2nd gen - use folder 05 overviews only (no 2022 store hero for those gens)",
+    "Apple TV 4K Wi-Fi vs Wi-Fi + Ethernet - same store shots; do not invent separate photos",
   ] as const,
 } as const;
 

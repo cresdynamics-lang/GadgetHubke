@@ -1,5 +1,5 @@
 /**
- * Owner-editable CONFIG for Apple Watch (Series 6–12, SE, Ultra, Hermès, Nike).
+ * Owner-editable CONFIG for Apple Watch (Series 6 - 12, SE, Ultra, Hermès, Nike).
  * All KES prices are samples. Re-verify specs on apple.com/watch/compare before launch.
  */
 
@@ -62,17 +62,17 @@ export const watchConfig = {
     "Apple Watch features are not medical devices for diagnosis. Talk to a doctor about any health concern. Some features are not available in every country, including Kenya; the owner must confirm availability per feature.",
 
   bandFitRule:
-    "Bands fit within case-size families: 38/40/41/42 mm, 42/44/45/46 mm, and 49 mm Ultra. Ultra-only bands (Alpine, Trail, Ocean) fit the 49 mm family and larger bands of the 42–46 mm family — check Apple's fit guide before launch.",
+    "Bands fit within case-size families: 38/40/41/42 mm, 42/44/45/46 mm, and 49 mm Ultra. Ultra-only bands (Alpine, Trail, Ocean) fit the 49 mm family and larger bands of the 42 - 46 mm family - check Apple's fit guide before launch.",
 
   missingStoreShotNotes: [
-    "Series 6 / 7 / 8 — overview only (no gallery lineup in pack)",
-    "SE 1st and 2nd gen — overview only",
-    "Ultra 1 (2022) — overview only",
-    "Apple publishes no store photo per colour per model — do not promise colour-accurate product shots or wrist try-on",
+    "Series 6 / 7 / 8 - overview only (no gallery lineup in pack)",
+    "SE 1st and 2nd gen - overview only",
+    "Ultra 1 (2022) - overview only",
+    "Apple publishes no store photo per colour per model - do not promise colour-accurate product shots or wrist try-on",
   ] as const,
 } as const;
 
-/** Sample base prices in KES — aluminum GPS base unless noted. */
+/** Sample base prices in KES - aluminum GPS base unless noted. */
 export const watchBasePricesKes = {
   "watch-s12-42": 55000,
   "watch-s12-46": 60000,

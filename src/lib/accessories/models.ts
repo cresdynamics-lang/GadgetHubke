@@ -1,7 +1,7 @@
 /**
- * Shared accessories catalog — Pencil, Keyboard, Mouse, Trackpad, Power, Cases.
+ * Shared accessories catalog - Pencil, Keyboard, Mouse, Trackpad, Power, Cases.
  * Owner: re-verify every figure and compatibility rule on apple.com before launch.
- * Where unclear, store null — show nothing rather than guess.
+ * Where unclear, store null - show nothing rather than guess.
  */
 
 import { accessoryBasePricesKes } from "./config";
@@ -95,13 +95,13 @@ export const accessories: Accessory[] = [
     tagline: "The Pencil that answers a squeeze.",
     whoItSuits: "Drawing and notes on the newest iPad Pro, Air and mini.",
     whyChoose: [
-      "Squeeze, barrel roll and haptics — Pro only.",
+      "Squeeze, barrel roll and haptics - Pro only.",
       "Magnetic charge and Find My.",
       "Check Apple's list for exact iPad models.",
     ],
     platform: "ipad",
     checkFinalSpecs: true,
-    notes: "Fits iPad Pro M4+, Air M2+, mini A17 Pro — flag check.",
+    notes: "Fits iPad Pro M4+, Air M2+, mini A17 Pro - flag check.",
     imageProductKey: "pencil-pro",
   }),
   a({
@@ -122,12 +122,12 @@ export const accessories: Accessory[] = [
     whoItSuits: "Budget notes and sketching when you do not need pressure.",
     whyChoose: [
       "USB-C charge and pair.",
-      "No pressure sensitivity and no squeeze — flag check.",
+      "No pressure sensitivity and no squeeze - flag check.",
       "Check Apple's iPad list.",
     ],
     platform: "ipad",
     checkFinalSpecs: true,
-    notes: "No pressure / squeeze — confirm.",
+    notes: "No pressure / squeeze - confirm.",
     imageProductKey: "pencil-usbc",
   }),
   a({
@@ -144,16 +144,16 @@ export const accessories: Accessory[] = [
     features: ["Double-tap", "Pressure and tilt", "Hover on iPad Pro M2 (check)"],
     featureIds: ["precision", "latency", "tilt", "pressure", "magnetic", "charging", "hover", "doubletap"],
     weightG: null,
-    tagline: "Magnetic Pencil for 2018–2022 Pros and Air 4/5.",
+    tagline: "Magnetic Pencil for 2018 - 2022 Pros and Air 4/5.",
     whoItSuits: "Owners of earlier iPad Pro, Air 4/5 or mini 6.",
     whyChoose: [
       "Magnetic charge and double-tap.",
       "Pressure and tilt.",
-      "Does not fit the newest Pencil Pro iPads — check list.",
+      "Does not fit the newest Pencil Pro iPads - check list.",
     ],
     platform: "ipad",
     checkFinalSpecs: true,
-    notes: "2018–2022 Pro, Air 4/5, mini 6 — flag check.",
+    notes: "2018 - 2022 Pro, Air 4/5, mini 6 - flag check.",
     imageProductKey: "pencil-2",
   }),
   a({
@@ -170,12 +170,12 @@ export const accessories: Accessory[] = [
     features: ["Pressure and tilt"],
     featureIds: ["precision", "latency", "tilt", "pressure"],
     weightG: null,
-    tagline: "Lightning Pencil — adapter for USB-C iPads.",
-    whoItSuits: "iPad 6th–10th gen and iPad A16 with the right adapter.",
+    tagline: "Lightning Pencil - adapter for USB-C iPads.",
+    whoItSuits: "iPad 6th - 10th gen and iPad A16 with the right adapter.",
     whyChoose: [
       "Lowest Pencil sample price.",
-      "Needs USB-C adapter on 10th gen and A16 — flag check.",
-      "No store photo — overview image only.",
+      "Needs USB-C adapter on 10th gen and A16 - flag check.",
+      "No store photo - overview image only.",
     ],
     platform: "ipad",
     overviewOnly: true,
@@ -201,7 +201,7 @@ export const accessories: Accessory[] = [
     tagline: "Laptop feel for iPad Pro 11.",
     whoItSuits: "iPad Pro 11-inch M4 and later.",
     whyChoose: [
-      "Fits iPad Pro 11 M4/M5 only — flag check.",
+      "Fits iPad Pro 11 M4/M5 only - flag check.",
       "Function row and large trackpad.",
       "Black aluminium finish.",
     ],
@@ -228,7 +228,7 @@ export const accessories: Accessory[] = [
     tagline: "Laptop feel for iPad Pro 13.",
     whoItSuits: "iPad Pro 13-inch M4 and later.",
     whyChoose: [
-      "Fits iPad Pro 13 M4/M5 only — flag check.",
+      "Fits iPad Pro 13 M4/M5 only - flag check.",
       "Function row and large trackpad.",
       "Black aluminium finish.",
     ],
@@ -255,7 +255,7 @@ export const accessories: Accessory[] = [
     tagline: "Keyboard for iPad Air 11.",
     whoItSuits: "iPad Air 11-inch M2 and later.",
     whyChoose: [
-      "Fits Air 11 M2+ — flag check.",
+      "Fits Air 11 M2+ - flag check.",
       "Function row and trackpad.",
       "White finish as per swatch.",
     ],
@@ -282,7 +282,7 @@ export const accessories: Accessory[] = [
     tagline: "Keyboard for iPad Air 13.",
     whoItSuits: "iPad Air 13-inch M2 and later.",
     whyChoose: [
-      "Fits Air 13 M2+ — flag check.",
+      "Fits Air 13 M2+ - flag check.",
       "Function row and trackpad.",
       "Not the Pro Magic Keyboard.",
     ],
@@ -309,7 +309,7 @@ export const accessories: Accessory[] = [
     tagline: "Folio keyboard for iPad 10th gen and A16.",
     whoItSuits: "iPad 10th generation and iPad A16.",
     whyChoose: [
-      "Designed for iPad 10 / A16 — flag check.",
+      "Designed for iPad 10 / A16 - flag check.",
       "Kickstand and trackpad.",
       "Not for iPad Air or Pro.",
     ],
@@ -337,7 +337,7 @@ export const accessories: Accessory[] = [
     whyChoose: [
       "Works with any Mac over Bluetooth.",
       "No Touch ID.",
-      "US layout photos — confirm stock layout.",
+      "US layout photos - confirm stock layout.",
     ],
     platform: "mac",
     touchId: false,
@@ -362,7 +362,7 @@ export const accessories: Accessory[] = [
     tagline: "Touch ID for Apple silicon Macs.",
     whoItSuits: "Macs with Apple silicon.",
     whyChoose: [
-      "Touch ID needs Apple silicon — note if Intel.",
+      "Touch ID needs Apple silicon - note if Intel.",
       "Bluetooth keyboard for any Mac.",
       "Confirm layout on stock.",
     ],
@@ -457,11 +457,11 @@ export const accessories: Accessory[] = [
     imageProductKey: "keyboard-mac-num-mq052",
   }),
 
-  // ——— Magic Mouse ———
+  // --- Magic Mouse ---
   // Owner: re-verify every figure and compatibility rule on apple.com before launch.
   a({
     id: "mouse-usbc-white",
-    name: "Magic Mouse (USB-C) — White",
+    name: "Magic Mouse (USB-C) - White",
     group: "mouse",
     generation: "USB-C",
     year: 2024,
@@ -469,7 +469,7 @@ export const accessories: Accessory[] = [
     colours: ["white"],
     defaultColour: "white",
     connection: "Bluetooth / USB-C",
-    charging: "Rechargeable via USB-C (underside — cannot use while charging)",
+    charging: "Rechargeable via USB-C (underside - cannot use while charging)",
     features: [
       "Multi-Touch surface",
       "Optical tracking",
@@ -490,9 +490,9 @@ export const accessories: Accessory[] = [
     tagline: "A mouse you can swipe.",
     whoItSuits: "Mac and iPad users who want a compact Multi-Touch pointer.",
     whyChoose: [
-      "Swipe and scroll on the surface — no scroll wheel.",
+      "Swipe and scroll on the surface - no scroll wheel.",
       "USB-C charging; port is on the underside.",
-      "Works with Mac; limited gestures on iPad — check Apple's list.",
+      "Works with Mac; limited gestures on iPad - check Apple's list.",
     ],
     platform: "pointer",
     connector: "usb-c",
@@ -500,12 +500,12 @@ export const accessories: Accessory[] = [
     stocked: true,
     dimensionsMm: { length: null, width: null, height: null },
     checkFinalSpecs: true,
-    notes: "Works with Mac and iPad over Bluetooth — flag check. Cannot use while charging.",
+    notes: "Works with Mac and iPad over Bluetooth - flag check. Cannot use while charging.",
     imageProductKey: "mouse-usbc-white",
   }),
   a({
     id: "mouse-usbc-black",
-    name: "Magic Mouse (USB-C) — Black",
+    name: "Magic Mouse (USB-C) - Black",
     group: "mouse",
     generation: "USB-C",
     year: 2024,
@@ -513,7 +513,7 @@ export const accessories: Accessory[] = [
     colours: ["black"],
     defaultColour: "black",
     connection: "Bluetooth / USB-C",
-    charging: "Rechargeable via USB-C (underside — cannot use while charging)",
+    charging: "Rechargeable via USB-C (underside - cannot use while charging)",
     features: [
       "Multi-Touch surface",
       "Optical tracking",
@@ -531,10 +531,10 @@ export const accessories: Accessory[] = [
       "mission_control",
     ],
     weightG: null,
-    tagline: "Same Magic Mouse — black finish.",
+    tagline: "Same Magic Mouse - black finish.",
     whoItSuits: "Buyers who want the black Multi-Touch surface.",
     whyChoose: [
-      "Same hardware as white — black may cost more (owner to confirm).",
+      "Same hardware as white - black may cost more (owner to confirm).",
       "USB-C underside charging.",
       "Check Apple's list for your Mac or iPad.",
     ],
@@ -544,12 +544,12 @@ export const accessories: Accessory[] = [
     stocked: true,
     dimensionsMm: { length: null, width: null, height: null },
     checkFinalSpecs: true,
-    notes: "Black premium sample — owner to confirm. Flag check specs.",
+    notes: "Black premium sample - owner to confirm. Flag check specs.",
     imageProductKey: "mouse-usbc-black",
   }),
   a({
     id: "mouse-earlier-space-gray",
-    name: "Magic Mouse — Space Gray (earlier)",
+    name: "Magic Mouse - Space Gray (earlier)",
     group: "mouse",
     generation: "Earlier",
     year: 2019,
@@ -557,15 +557,15 @@ export const accessories: Accessory[] = [
     colours: ["space-gray"],
     defaultColour: "space-gray",
     connection: "Bluetooth (connector owner-to-confirm)",
-    charging: "Rechargeable — connector owner-to-confirm (Lightning or USB-C)",
+    charging: "Rechargeable - connector owner-to-confirm (Lightning or USB-C)",
     features: ["Multi-Touch surface", "Optical tracking"],
     featureIds: ["scroll", "secondary_click", "smart_zoom", "swipe_between_pages", "swipe_apps", "mission_control"],
     weightG: null,
     tagline: "Earlier generation Magic Mouse.",
-    whoItSuits: "Budget buyers when stock exists — check condition.",
+    whoItSuits: "Budget buyers when stock exists - check condition.",
     whyChoose: [
       "Lower sample price when stocked.",
-      "Generation and connector — owner to confirm.",
+      "Generation and connector - owner to confirm.",
       "Check battery and condition on the invoice.",
     ],
     platform: "pointer",
@@ -579,10 +579,10 @@ export const accessories: Accessory[] = [
     imageProductKey: "mouse-earlier-space-gray",
   }),
 
-  // ——— Magic Trackpad ———
+  // --- Magic Trackpad ---
   a({
     id: "trackpad-usbc-white",
-    name: "Magic Trackpad (USB-C) — White",
+    name: "Magic Trackpad (USB-C) - White",
     group: "trackpad",
     generation: "USB-C",
     year: 2024,
@@ -590,7 +590,7 @@ export const accessories: Accessory[] = [
     colours: ["white"],
     defaultColour: "white",
     connection: "Bluetooth / USB-C",
-    charging: "Rechargeable via USB-C (back edge — usable while charging if confirmed)",
+    charging: "Rechargeable via USB-C (back edge - usable while charging if confirmed)",
     features: [
       "Force Touch with haptic feedback",
       "Large glass Multi-Touch surface",
@@ -619,7 +619,7 @@ export const accessories: Accessory[] = [
     whyChoose: [
       "Force Touch and a large glass surface.",
       "Fullest gestures on Mac; limited on iPad.",
-      "USB-C on the back edge — confirm charging-while-in-use.",
+      "USB-C on the back edge - confirm charging-while-in-use.",
     ],
     platform: "pointer",
     connector: "usb-c",
@@ -628,12 +628,12 @@ export const accessories: Accessory[] = [
     stocked: true,
     dimensionsMm: { length: null, width: null, height: null },
     checkFinalSpecs: true,
-    notes: "Works with Mac and iPad over Bluetooth — flag check.",
+    notes: "Works with Mac and iPad over Bluetooth - flag check.",
     imageProductKey: "trackpad-usbc-white",
   }),
   a({
     id: "trackpad-usbc-black",
-    name: "Magic Trackpad (USB-C) — Black",
+    name: "Magic Trackpad (USB-C) - Black",
     group: "trackpad",
     generation: "USB-C",
     year: 2024,
@@ -641,7 +641,7 @@ export const accessories: Accessory[] = [
     colours: ["black"],
     defaultColour: "black",
     connection: "Bluetooth / USB-C",
-    charging: "Rechargeable via USB-C (back edge — usable while charging if confirmed)",
+    charging: "Rechargeable via USB-C (back edge - usable while charging if confirmed)",
     features: [
       "Force Touch with haptic feedback",
       "Large glass Multi-Touch surface",
@@ -665,10 +665,10 @@ export const accessories: Accessory[] = [
       "three-finger-drag",
     ],
     weightG: null,
-    tagline: "Same Trackpad — black finish.",
+    tagline: "Same Trackpad - black finish.",
     whoItSuits: "Buyers who want the black glass Multi-Touch surface.",
     whyChoose: [
-      "Same hardware as white — black may cost more (owner to confirm).",
+      "Same hardware as white - black may cost more (owner to confirm).",
       "Force Touch and full Mac gestures.",
       "Check Apple's list for your device.",
     ],
@@ -679,12 +679,12 @@ export const accessories: Accessory[] = [
     stocked: true,
     dimensionsMm: { length: null, width: null, height: null },
     checkFinalSpecs: true,
-    notes: "Black premium sample — owner to confirm. Flag check specs.",
+    notes: "Black premium sample - owner to confirm. Flag check specs.",
     imageProductKey: "trackpad-usbc-black",
   }),
   a({
     id: "trackpad-earlier-space-gray",
-    name: "Magic Trackpad — Space Gray (earlier)",
+    name: "Magic Trackpad - Space Gray (earlier)",
     group: "trackpad",
     generation: "Earlier",
     year: 2019,
@@ -692,7 +692,7 @@ export const accessories: Accessory[] = [
     colours: ["space-gray"],
     defaultColour: "space-gray",
     connection: "Bluetooth (connector owner-to-confirm)",
-    charging: "Rechargeable — connector owner-to-confirm",
+    charging: "Rechargeable - connector owner-to-confirm",
     features: ["Force Touch", "Multi-Touch surface"],
     featureIds: [
       "secondary-click",
@@ -715,7 +715,7 @@ export const accessories: Accessory[] = [
     whoItSuits: "Budget Trackpad buyers when stock exists.",
     whyChoose: [
       "Lower sample price when stocked.",
-      "Generation and connector — owner to confirm.",
+      "Generation and connector - owner to confirm.",
       "Check condition on the invoice.",
     ],
     platform: "pointer",
@@ -731,7 +731,7 @@ export const accessories: Accessory[] = [
   }),
   a({
     id: "trackpad-earlier-white",
-    name: "Magic Trackpad — White (earlier)",
+    name: "Magic Trackpad - White (earlier)",
     group: "trackpad",
     generation: "Earlier",
     year: 2019,
@@ -739,7 +739,7 @@ export const accessories: Accessory[] = [
     colours: ["white"],
     defaultColour: "white",
     connection: "Bluetooth (connector owner-to-confirm)",
-    charging: "Rechargeable — connector owner-to-confirm",
+    charging: "Rechargeable - connector owner-to-confirm",
     features: ["Force Touch", "Multi-Touch surface"],
     featureIds: [
       "secondary-click",
@@ -762,7 +762,7 @@ export const accessories: Accessory[] = [
     whoItSuits: "Budget Trackpad buyers when stock exists.",
     whyChoose: [
       "Lower sample price when stocked.",
-      "Generation and connector — owner to confirm.",
+      "Generation and connector - owner to confirm.",
       "Check condition on the invoice.",
     ],
     platform: "pointer",
@@ -828,7 +828,7 @@ export function lowestAccessoryPrice(group?: AccessoryGroup): number {
   return Math.min(...pool.map((a) => a.basePriceKes));
 }
 
-/** Empty — every Accessories group is live. */
+/** Empty - every Accessories group is live. */
 export const comingNextGroups: { id: AccessoryGroup; label: string; href: string }[] = [];
 
 export const liveAccessoryGroups: { id: AccessoryGroup; label: string; href: string }[] = [

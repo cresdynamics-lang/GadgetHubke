@@ -1,6 +1,6 @@
 ---
 /**
- * iPhone 11–16 product page — gallery + buying panel (core).
+ * iPhone 11 - 16 product page - gallery + buying panel (core).
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ProductStage from "../../components/iphone/ProductStage.astro";
@@ -31,7 +31,7 @@ import {
 } from "../../lib/iphone";
 import { whatsappUrl } from "../../lib/site";
 import StockChannelToggle from "../../components/StockChannelToggle.astro";
-import { xukFromNew } from "../../lib/stock-channel";
+import { exUkFromNew } from "../../lib/stock-channel";
 
 export function getStaticPaths() {
   return models.map((m) => ({ params: { model: m.id } }));
@@ -181,7 +181,7 @@ const galleryPayload = {
                   data-storage={p.label}
                   data-kes={p.kes}
                   data-kes-new={p.kes}
-                  data-kes-xuk={xukFromNew(p.kes)}
+                  data-kes-ex-uk={exUkFromNew(p.kes)}
                 >
                   {p.label}
                   <span data-storage-price>{formatKes(p.kes)}</span>
@@ -224,7 +224,7 @@ const galleryPayload = {
           <li><strong>{model.batteryVideoHours} h</strong><span>Video playback</span></li>
           <li>
             <strong>
-              {model.rearCameras[0]?.match(/\d+/)?.[0] ?? "—"}MP · {model.rearCameras.length}
+              {model.rearCameras[0]?.match(/\d+/)?.[0] ?? "-"}MP · {model.rearCameras.length}
             </strong>
             <span>Rear cameras</span>
           </li>
@@ -374,17 +374,17 @@ const galleryPayload = {
     view: 1,
     storage: prices[0]?.label,
     kesNew: prices[0]?.kes,
-    kesXuk: prices[0] ? Math.max(999, Math.round((prices[0].kes * 0.88) / 1000) * 1000 - 1) : 0,
+    kesExUk: prices[0] ? Math.max(999, Math.round((prices[0].kes * 0.88) / 1000) * 1000 - 1) : 0,
     channel: "new",
     tour: null,
   };
 
   function activeKes() {
-    return state.channel === "xuk" ? Number(state.kesXuk) || 0 : Number(state.kesNew) || 0;
+    return state.channel === "ex-uk" ? Number(state.kesExUk) || 0 : Number(state.kesNew) || 0;
   }
 
   function channelLabel() {
-    return state.channel === "xuk" ? "XUK" : "New";
+    return state.channel === "ex-uk" ? "EX-UK" : "New";
   }
 
   const img = document.querySelector("[data-gallery-img]");
@@ -489,8 +489,8 @@ const galleryPayload = {
 
     document.querySelectorAll("[data-storage]").forEach((btn) => {
       const newKes = Number(btn.getAttribute("data-kes-new") || btn.getAttribute("data-kes") || 0);
-      const xukKes = Number(btn.getAttribute("data-kes-xuk") || newKes);
-      const shown = state.channel === "xuk" ? xukKes : newKes;
+      const exUkKes = Number(btn.getAttribute("data-kes-ex-uk") || newKes);
+      const shown = state.channel === "ex-uk" ? exUkKes : newKes;
       const span = btn.querySelector("[data-storage-price]");
       if (span) span.textContent = `KES ${shown.toLocaleString("en-KE")}`;
     });
@@ -548,7 +548,7 @@ const galleryPayload = {
       btn.classList.add("is-active");
       state.storage = btn.getAttribute("data-storage");
       state.kesNew = btn.getAttribute("data-kes-new") || btn.getAttribute("data-kes");
-      state.kesXuk = btn.getAttribute("data-kes-xuk") || state.kesNew;
+      state.kesExUk = btn.getAttribute("data-kes-ex-uk") || state.kesNew;
       updatePrice();
     });
   });

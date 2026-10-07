@@ -1,6 +1,6 @@
 /**
- * iPhone 11–16 catalog.
- * Specs are Apple's published figures — owner: re-verify on apple.com before launch.
+ * iPhone 11 - 16 catalog.
+ * Specs are Apple's published figures - owner: re-verify on apple.com before launch.
  * Base prices are SAMPLE placeholders in KES.
  */
 
@@ -48,12 +48,12 @@ export type IphoneModel = {
  * Shared facts (prompt §3):
  * - Front camera 12MP TrueDepth, Face ID: all
  * - 5G from 12 onward; 11 series LTE
- * - IP68: 6 m / 30 min for 12–16; 4 m for 11 Pro/Max; 2 m for 11
+ * - IP68: 6 m / 30 min for 12 - 16; 4 m for 11 Pro/Max; 2 m for 11
  * - Camera Control: 16 / 16 Plus / 16 Pro / 16 Pro Max
  * - Action button: 15 Pro/Max + all 16 + 16e
  * - Crash Detection: 14+
  * - Apple Intelligence: 15 Pro/Max + all 16 + 16e
- * - Wi-Fi 7: 16 family (not 16e per prompt — prompt says 16, 16 Plus, 16 Pro, 16 Pro Max)
+ * - Wi-Fi 7: 16 family (not 16e per prompt - prompt says 16, 16 Plus, 16 Pro, 16 Pro Max)
  * - Wi-Fi 6E: 15 Pro/Max; Wi-Fi 6 rest
  */
 

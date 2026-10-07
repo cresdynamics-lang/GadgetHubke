@@ -18,8 +18,8 @@ export function accessoryBuyingNotes(product: Accessory): { title: string; body:
       title: product.group === "mouse" ? "Magic Mouse" : "Magic Trackpad",
       body:
         product.group === "mouse"
-          ? "Swipe and scroll on the surface — charging port is on the underside. Works with Mac and supported iPads over Bluetooth; gestures are limited on iPad."
-          : "Force Touch and the full Mac gesture set on a large glass surface. USB-C port on the back edge — confirm charging while in use.",
+          ? "Swipe and scroll on the surface - charging port is on the underside. Works with Mac and supported iPads over Bluetooth; gestures are limited on iPad."
+          : "Force Touch and the full Mac gesture set on a large glass surface. USB-C port on the back edge - confirm charging while in use.",
     });
   } else if (product.group === "power") {
     notes.push({
@@ -37,12 +37,12 @@ export function accessoryBuyingNotes(product: Accessory): { title: string; body:
     });
     notes.push({
       title: "MagSafe",
-      body: "MagSafe cases work with MagSafe chargers on supported iPhones — check. Strap pairing is owner-to-confirm.",
+      body: "MagSafe cases work with MagSafe chargers on supported iPhones - check. Strap pairing is owner-to-confirm.",
     });
   } else {
     notes.push({
       title: "Which keyboard",
-      body: "Match the exact iPad size and chip, or pick a Mac keyboard. Thickness, trackpad and price differ — use the finder.",
+      body: "Match the exact iPad size and chip, or pick a Mac keyboard. Thickness, trackpad and price differ - use the finder.",
     });
   }
   notes.push(
@@ -60,7 +60,7 @@ export function accessoryBuyingNotes(product: Accessory): { title: string; body:
     },
     {
       title: "Set-up",
-      body: "We pair your Pencil or keyboard and test it before you collect. Fee — owner to confirm.",
+      body: "We pair your Pencil or keyboard and test it before you collect. Fee - owner to confirm.",
     },
   );
   return notes;
@@ -71,15 +71,15 @@ export function accessoryFaq(): { q: string; a: string }[] {
     { q: "Which Apple Pencil works with my iPad?", a: "Use the finder on this site, then confirm on Apple's compatibility list. Pencil Pro needs newer Pro, Air and mini models." },
     { q: "Which case fits my iPhone?", a: "Cases are made for one exact model. An iPhone 17 case does not fit iPhone 17 Pro. Use the Cases finder." },
     { q: "Does the iPhone 17 case fit the 17 Pro?", a: "No. Each Silicone and Clear case is model-specific." },
-    { q: "Which charger is right for my iPhone?", a: "A 20W or higher USB-C adapter with a USB-C cable, plus optional MagSafe on supported models — check Apple's list. No charge-time claims here." },
+    { q: "Which charger is right for my iPhone?", a: "A 20W or higher USB-C adapter with a USB-C cable, plus optional MagSafe on supported models - check Apple's list. No charge-time claims here." },
     { q: "Can I use a MacBook charger on my iPhone?", a: "USB-C MacBook adapters can charge an iPhone; match cable and confirm with the shop. Wattage above need is fine; too low is slower." },
-    { q: "What is MagSafe?", a: "Magnetic alignment for charging and accessories on supported iPhones and MagSafe cases — check." },
-    { q: "Do cases work with MagSafe chargers?", a: "MagSafe cases are designed to work with MagSafe chargers — confirm for your model." },
+    { q: "What is MagSafe?", a: "Magnetic alignment for charging and accessories on supported iPhones and MagSafe cases - check." },
+    { q: "Do cases work with MagSafe chargers?", a: "MagSafe cases are designed to work with MagSafe chargers - confirm for your model." },
     { q: "Which cable do I need for my MacBook?", a: "Use the Power finder. MagSafe 3 Macs need the USB-C to MagSafe 3 cable; USB-C charging needs a cable rated for the adapter." },
     { q: "Do you stock other brands?", a: "Not yet. We stock Apple's own cases and chargers. Ask on WhatsApp about Belkin, Anker, Spigen and similar." },
     { q: "Does my iPad come with a Pencil?", a: "No. The Pencil is sold separately." },
-    { q: "Which Magic Keyboard fits my iPad?", a: "Pro, Air and Folio keyboards each fit specific iPads. Use the finder — Pro keyboards do not fit Air." },
-    { q: "What do I get with the invoice?", a: "Sealed accessory, serial on the invoice. Warranty wording — owner to confirm." },
+    { q: "Which Magic Keyboard fits my iPad?", a: "Pro, Air and Folio keyboards each fit specific iPads. Use the finder - Pro keyboards do not fit Air." },
+    { q: "What do I get with the invoice?", a: "Sealed accessory, serial on the invoice. Warranty wording - owner to confirm." },
   ];
 }
 
@@ -97,7 +97,7 @@ export function quizRecommend(answers: {
       const usbc = pencils().find((p) => p.id === "pencil-usbc")!;
       const fitPro = pencilFits(answers.device, "pencil-pro");
       if (fitPro.status === "fits" && answers.budget !== "low") {
-        out.push({ product: pro, reason: "Drawing on a supported iPad — Pencil Pro." });
+        out.push({ product: pro, reason: "Drawing on a supported iPad - Pencil Pro." });
       } else {
         const fitUsb = pencilFits(answers.device, "pencil-usbc");
         if (fitUsb.status !== "no") out.push({ product: usbc, reason: fitUsb.reason });

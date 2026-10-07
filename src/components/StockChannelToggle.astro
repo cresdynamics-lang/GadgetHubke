@@ -1,6 +1,6 @@
 ---
 /**
- * New | XUK stock-channel toggle — switches sample price only.
+ * New | EX-UK stock-channel toggle - switches sample price only.
  */
 interface Props {
   /** Extra class on the root */
@@ -14,11 +14,11 @@ const { class: className } = Astro.props;
   <button type="button" class="stock-channel__btn is-active" data-channel="new" aria-pressed="true">
     New
   </button>
-  <button type="button" class="stock-channel__btn" data-channel="xuk" aria-pressed="false">
-    XUK
+  <button type="button" class="stock-channel__btn" data-channel="ex-uk" aria-pressed="false">
+    EX-UK
   </button>
 </div>
-<p class="stock-channel__hint">{`New = sealed. XUK = ex-UK import.`}</p>
+<p class="stock-channel__hint">New = sealed. EX-UK = ex-UK import.</p>
 
 <style>
   .stock-channel {

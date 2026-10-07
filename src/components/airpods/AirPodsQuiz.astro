@@ -49,14 +49,14 @@ const payload = airpodsModels.map((m) => {
     <p>Budget band (sample prices)?</p>
     <div class="aquiz__opts">
       <button type="button" data-val="tight">Under 25k</button>
-      <button type="button" data-val="mid">25k–45k</button>
+      <button type="button" data-val="mid">25k - 45k</button>
       <button type="button" data-val="open">45k+</button>
     </div>
   </div>
   <div class="aquiz__results" data-quiz-results hidden>
     <h3>Your matches</h3>
     <ul data-quiz-list></ul>
-    <p class="aquiz__android">On Android they work as Bluetooth headphones — fewer Apple-only features.</p>
+    <p class="aquiz__android">On Android they work as Bluetooth headphones - fewer Apple-only features.</p>
   </div>
 </section>
 
@@ -70,12 +70,12 @@ const payload = airpodsModels.map((m) => {
     function reason(m, a) {
       if (a.use === "commute" && (m.id === "airpods-pro-3" || m.family === "Max"))
         return "Strong noise control for buses, matatus and flights.";
-      if (a.use === "gym" && m.family === "Pro") return "Secure tips and sweat resistance where rated — check IP on the model page.";
+      if (a.use === "gym" && m.family === "Pro") return "Secure tips and sweat resistance where rated - check IP on the model page.";
       if (a.use === "budget" && (m.id === "airpods-4" || m.id === "airpods-5"))
         return "Lower sample price in the open-fit line.";
       if (a.fit === "over-ear" && m.family === "Max") return "Max 2 for over-ear comfort and ANC.";
       if (a.fit === "open" && m.family === "AirPods") return "Open-fit AirPods without silicone tips.";
-      if (a.budget === "tight") return "Lower sample price — confirm condition on older gens.";
+      if (a.budget === "tight") return "Lower sample price - confirm condition on older gens.";
       return "Solid fit for how you answered.";
     }
 

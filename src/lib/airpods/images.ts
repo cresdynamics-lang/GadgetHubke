@@ -1,5 +1,5 @@
 /**
- * getAirpodsImage(modelId, kind) — single door for AirPods images.
+ * getAirpodsImage(modelId, kind) - single door for AirPods images.
  * kind: hero | earbuds | case | colour:<n> | gallery:<n> | compare | manifest key | pair:<key>
  * Missing manifest keys log MISSING IMAGE and fall back to product shot.
  */

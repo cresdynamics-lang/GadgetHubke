@@ -1,4 +1,4 @@
-/** TV & Home module — data, images, pricing, accessories, search. */
+/** TV & Home module - data, images, pricing, accessories, search. */
 
 export { tvHomeConfig, tvHomeBasePricesKes } from "./config";
 export { colourLabel, colourHex, tvHomeColourMeta, type TvHomeColourMeta } from "./colours";

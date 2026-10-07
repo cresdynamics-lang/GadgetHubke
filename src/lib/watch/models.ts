@@ -1,8 +1,8 @@
 /**
- * Apple Watch catalog (Series 6–12, SE, Ultra, Hermès, Nike, 2020–2026).
+ * Apple Watch catalog (Series 6 - 12, SE, Ultra, Hermès, Nike, 2020 - 2026).
  * Specs from Apple's published compare page (apple.com/watch/compare).
  * Owner: re-verify every figure before launch. Cells marked checkFinalSpecs
- * or null stay uncertain — show nothing rather than guess.
+ * or null stay uncertain - show nothing rather than guess.
  */
 
 import { watchBasePricesKes } from "./config";
@@ -139,7 +139,7 @@ function s(
 }
 
 export const watchModels: WatchModel[] = [
-  // —— Current lineup ——
+  // -- Current lineup --
   s({
     id: "watch-s12-42",
     name: "Apple Watch Series 12 42mm",
@@ -174,7 +174,7 @@ export const watchModels: WatchModel[] = [
     whoItSuits: "Anyone who wants the newest Series health features in a lighter case.",
     whyChoose: [
       "Newest Series display and sensors in a compact 42 mm case.",
-      "Aluminum, titanium or ceramic — pick finish and price.",
+      "Aluminum, titanium or ceramic - pick finish and price.",
       "Pairs with every current Sport Band and Sport Loop family.",
     ],
     isNew: true,
@@ -216,7 +216,7 @@ export const watchModels: WatchModel[] = [
     whoItSuits: "People who want the largest Series face and easiest readability.",
     whyChoose: [
       "46 mm case for a larger Always-On display.",
-      "Ceramic Night Blue reaches about 52.9 g — confirm before launch.",
+      "Ceramic Night Blue reaches about 52.9 g - confirm before launch.",
       "Same health and safety features as 42 mm Series 12.",
     ],
     isNew: true,
@@ -256,7 +256,7 @@ export const watchModels: WatchModel[] = [
     tagline: "Built for the deep end.",
     whoItSuits: "Runners, divers and anyone who wants the brightest, longest-lasting Watch.",
     whyChoose: [
-      "Brightest Ultra-class display — flag 3000 nits as check.",
+      "Brightest Ultra-class display - flag 3000 nits as check.",
       "100 m water resistance with depth gauge and siren.",
       "Action button and dual-frequency GPS for trail and open water.",
     ],
@@ -299,7 +299,7 @@ export const watchModels: WatchModel[] = [
     whyChoose: [
       "Most affordable current Apple Watch.",
       "Core safety and activity tracking without the Series price.",
-      "Always-On status on SE 3 — check final specs.",
+      "Always-On status on SE 3 - check final specs.",
     ],
     isNew: true,
     checkFinalSpecs: true,
@@ -340,7 +340,7 @@ export const watchModels: WatchModel[] = [
     whyChoose: [
       "44 mm SE 3 for easier reading.",
       "About 33 g Wi-Fi aluminum.",
-      "Same SE feature set as 40 mm — check final specs.",
+      "Same SE feature set as 40 mm - check final specs.",
     ],
     isNew: true,
     checkFinalSpecs: true,
@@ -348,7 +348,7 @@ export const watchModels: WatchModel[] = [
     pageFamily: "SE",
   }),
 
-  // —— Series 11–6 ——
+  // -- Series 11 - 6 --
   ...([
     ["watch-s11-42", "Series 11", 2025, 11, 42, ["jet-black", "rose-gold", "silver", "space-gray", "natural", "gold", "slate"], 45, { w: 42, h: 36, d: 9.7 }],
     ["watch-s11-46", "Series 11", 2025, 11, 46, ["jet-black", "rose-gold", "silver", "space-gray", "natural", "gold", "slate"], 50, { w: 46, h: 40, d: 9.7 }],
@@ -385,10 +385,10 @@ export const watchModels: WatchModel[] = [
       fastCharging: true,
       weightG: weight,
       dimensionsMm: dim,
-      tagline: `${gen} — still a strong everyday Watch.`,
+      tagline: `${gen} - still a strong everyday Watch.`,
       whoItSuits: "Buyers who want recent Series features without the newest price.",
       whyChoose: [
-        `Also in stock — ${gen} ${size} mm.`,
+        `Also in stock - ${gen} ${size} mm.`,
         "Always-On display and core health sensors.",
         "Check battery health on older units before you buy.",
       ],
@@ -438,21 +438,21 @@ export const watchModels: WatchModel[] = [
       fastCharging: num >= 7,
       weightG: weight,
       dimensionsMm: dim,
-      tagline: `${gen} — also in stock.`,
+      tagline: `${gen} - also in stock.`,
       whoItSuits: "Value buyers who accept an older generation with condition notes.",
       whyChoose: [
         "Lower sample price than current Series.",
         "Confirm battery health and screen on the invoice.",
-        "Overview-only photos for Series 6–8.",
+        "Overview-only photos for Series 6 - 8.",
       ],
       overviewOnly: num <= 8,
       checkFinalSpecs: true,
-      notes: "Also in stock. Overview image only for Series 6–8. Check condition.",
+      notes: "Also in stock. Overview image only for Series 6 - 8. Check condition.",
       pageFamily: "Series",
     }),
   ),
 
-  // —— SE 1 / 2 ——
+  // -- SE 1 / 2 --
   ...([
     ["watch-se2-40", "SE 2", 2022, 40],
     ["watch-se2-44", "SE 2", 2022, 44],
@@ -488,7 +488,7 @@ export const watchModels: WatchModel[] = [
       fastCharging: false,
       weightG: size === 40 ? 27 : 33,
       dimensionsMm: size === 40 ? { w: 40, h: 34, d: 10.7 } : { w: 44, h: 38, d: 10.7 },
-      tagline: "Entry Watch — check condition.",
+      tagline: "Entry Watch - check condition.",
       whoItSuits: "Tightest budgets and first-time Watch buyers.",
       whyChoose: [
         "Lowest sample prices in the shop.",
@@ -502,7 +502,7 @@ export const watchModels: WatchModel[] = [
     }),
   ),
 
-  // —— Ultra 1–3 ——
+  // -- Ultra 1 - 3 --
   ...([
     ["watch-ultra-3", "Ultra 3", 2025, ["natural", "black"]],
     ["watch-ultra-2", "Ultra 2", 2023, ["natural", "black"]],
@@ -537,7 +537,7 @@ export const watchModels: WatchModel[] = [
       fastCharging: true,
       weightG: 61,
       dimensionsMm: { w: 49, h: 44, d: 14.4 },
-      tagline: `${gen} — adventure class.`,
+      tagline: `${gen} - adventure class.`,
       whoItSuits: "Outdoor athletes who do not need Ultra 4.",
       whyChoose: [
         "49 mm titanium with Action button lineage.",
@@ -551,7 +551,7 @@ export const watchModels: WatchModel[] = [
     }),
   ),
 
-  // —— Hermès ——
+  // -- Hermès --
   s({
     id: "watch-s12-hermes-42",
     name: "Apple Watch Series 12 Hermès 42mm",
@@ -585,7 +585,7 @@ export const watchModels: WatchModel[] = [
     tagline: "Series 12 with Hermès exclusivity.",
     whoItSuits: "Buyers who want the Hermès band and watch faces.",
     whyChoose: [
-      "Special band included — Hermès pack.",
+      "Special band included - Hermès pack.",
       "Same Series 12 insides with premium finish.",
       "Price premium reflects the Hermès band.",
     ],
@@ -681,7 +681,7 @@ export const watchModels: WatchModel[] = [
     pageFamily: "Hermès",
   }),
 
-  // —— Nike ——
+  // -- Nike --
   ...([
     ["watch-s9-nike-41", "Series 9 Nike", 2023, 9, 41],
     ["watch-s9-nike-45", "Series 9 Nike", 2023, 9, 45],
@@ -722,10 +722,10 @@ export const watchModels: WatchModel[] = [
       fastCharging: num >= 7,
       weightG: null,
       dimensionsMm: null,
-      tagline: "Nike edition — special band included.",
+      tagline: "Nike edition - special band included.",
       whoItSuits: "Runners who want Nike Sport Band or Loop in the box.",
       whyChoose: [
-        "Special band included — Nike Sport Band or Loop.",
+        "Special band included - Nike Sport Band or Loop.",
         "Same Series hardware for that generation.",
         "Overview photos for older Nike editions.",
       ],

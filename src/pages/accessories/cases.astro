@@ -22,7 +22,7 @@ const heroIds = silicone.slice(0, 5).map((c) => c.id);
 const heroImgs = heroIds.map((id) => getAccessoryImage(id, "hero"));
 const faq = accessoryFaq();
 const notes = accessoryBuyingNotes(silicone[0] || list[0]);
-const whatsapp = `https://wa.me/${accessoriesConfig.whatsapp}?text=${encodeURIComponent("Hi Gadget Hub — asking about older iPhone cases")}`;
+const whatsapp = `https://wa.me/${accessoriesConfig.whatsapp}?text=${encodeURIComponent("Hi Gadget Hub - asking about older iPhone cases")}`;
 
 const models = [
   { id: "iphone-17", label: "iPhone 17" },
@@ -64,7 +64,7 @@ const fitMatrix = Object.fromEntries(
   <section class="xcases-hero">
     <div class="container">
       <h1>Made to fit.</h1>
-      <p>Sealed Apple cases, serial on the invoice. Cases are made for one exact model — we check before you pay.</p>
+      <p>Sealed Apple cases, serial on the invoice. Cases are made for one exact model - we check before you pay.</p>
     </div>
     <div class="xcases-hero__row" data-hero-colours>
       {
@@ -132,7 +132,7 @@ const fitMatrix = Object.fromEntries(
 
   <section class="container xcases-wall" data-colour-wall>
     <h2>Colour wall</h2>
-    <p>Every colour of the selected material — hover for the name.</p>
+    <p>Every colour of the selected material - hover for the name.</p>
     <div class="xcases-wall__grid" data-wall-grid>
       {
         getCaseVariants("case-iphone-17-pro-silicone").map((v) => {

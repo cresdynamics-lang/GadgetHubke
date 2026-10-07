@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Part 12 Power/Cases acceptance — mirrors fits.ts caseFits + chargerAdvice.
+ * Part 12 Power/Cases acceptance - mirrors fits.ts caseFits + chargerAdvice.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -65,7 +65,7 @@ console.log("|---|---|---|---|");
 for (const [name, result, expected] of cases) {
   const ok = result.status === expected;
   if (!ok) fail++;
-  console.log(`| ${name} | ${result.status} — ${result.reason.slice(0, 70)} | ${expected} | ${ok ? "PASS" : "FAIL"} |`);
+  console.log(`| ${name} | ${result.status} - ${result.reason.slice(0, 70)} | ${expected} | ${ok ? "PASS" : "FAIL"} |`);
 }
 
 const iphoneAdvice = chargerAdvice("iphone-17-pro");

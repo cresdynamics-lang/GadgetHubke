@@ -127,7 +127,7 @@ export const iphoneMegaQuickLinks = [
 
 export const iphoneMegaFeatured = {
   title: "iPhone Duo",
-  body: "Apple's foldable — in stock with colours and storage.",
+  body: "Apple's foldable - in stock with colours and storage.",
   href: "/shop/iphone/iphone-duo",
   imageSrc: ghImages.duo.openCamera,
   imageAlt: "iPhone Duo",
@@ -386,7 +386,7 @@ export const tvHomeSubcategories: Subcategory[] = [
 
 export const tvHomeMegaFeatured = {
   title: "Apple TV 4K",
-  body: "Cinema at home — on the TV you already own.",
+  body: "Cinema at home - on the TV you already own.",
   href: "/tv-home/apple-tv-4k-3",
   imageSrc: `${tvHomePhotoBase}/Apple_TV_4K/apple-tv-4k-hero-select-202210.jpg`,
   imageAlt: "Apple TV 4K",
@@ -440,7 +440,7 @@ export const accessoriesMegaQuickLinks = [
 
 export const accessoriesMegaFeatured = {
   title: "Apple Pencil Pro",
-  body: "Squeeze, barrel roll and Find My — check it fits your iPad first.",
+  body: "Squeeze, barrel roll and Find My - check it fits your iPad first.",
   href: "/accessories/pencil-pro",
   imageSrc:
     "/Accesories/ACC_Apple_Pencil_images/02_Product_photos_by_part_number/Apple_Pencil_Pro/MX2D3.jpg",

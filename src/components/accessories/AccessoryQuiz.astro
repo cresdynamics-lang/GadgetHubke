@@ -53,10 +53,10 @@ const devices = [
     const device = String(fd.get("device") || "");
     const budget = String(fd.get("budget") || "mid");
     const qs = new URLSearchParams({ use, device, budget });
-    // Navigate to landing with hash — server pages also embed quizRecommend for SSR cards.
+    // Navigate to landing with hash - server pages also embed quizRecommend for SSR cards.
     if (out) {
       out.innerHTML = `<p>Open <a href="/accessories/apple-pencil?device=${encodeURIComponent(device)}#finder">the finder</a> for ${device}, or browse <a href="/accessories">Accessories</a>. Use: ${use}, budget: ${budget}.</p>
-      <p class="xquiz__fine">Sample guidance — confirm fit and price with the shop.</p>`;
+      <p class="xquiz__fine">Sample guidance - confirm fit and price with the shop.</p>`;
     }
   });
 </script>

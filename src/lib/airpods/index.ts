@@ -1,4 +1,4 @@
-/** AirPods module — data, images, pricing, accessories, search. */
+/** AirPods module - data, images, pricing, accessories, search. */
 
 export { airpodsConfig, airpodsBasePricesKes } from "./config";
 export {

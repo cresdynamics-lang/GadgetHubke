@@ -85,7 +85,7 @@ function productColourMap(modelId: string): Record<string, string> {
     const path = String(src);
     if (want14 && !/mbp14/i.test(path) && /mbp16/i.test(path)) continue;
     if (want16 && !/mbp16/i.test(path) && /mbp14/i.test(path)) continue;
-    // M3 base uses space-gray/silver; Pro uses space-black/silver — keep all available
+    // M3 base uses space-gray/silver; Pro uses space-black/silver - keep all available
     out[colour] = path;
   }
   return out;
