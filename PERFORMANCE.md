@@ -18,9 +18,18 @@ Changes shipped:
 - Remaining shop stubs → `StockInquiryPage` (WhatsApp stock check)
 - Cache headers in `vercel.json` + `public/_headers`
 
-Lighthouse CLI hung in this environment; re-run locally after deploy:
+Category hero sample (2026-10-07, `/iphone` via `astro preview --host 127.0.0.1`):
+
+| Form factor | Perf | A11y | Best practices |
+| --- | ---: | ---: | ---: |
+| Desktop | 97 | 93 | 96 |
+| Mobile | 77 | 93 | 96 |
+
+Bind preview to IPv4 (`--host 127.0.0.1`) so Lighthouse can reach the server. Re-run after deploy:
 
 ```bash
-npm run build && npx astro preview --port 4322
-npx lighthouse http://127.0.0.1:4322/ --preset=desktop --only-categories=performance,accessibility,best-practices
+npm run build && npx astro preview --host 127.0.0.1 --port 4322
+npx lighthouse http://127.0.0.1:4322/iphone --preset=desktop --only-categories=performance,accessibility,best-practices
 ```
+
+Full hero handover: `docs/HERO_HANDOVER.md`.

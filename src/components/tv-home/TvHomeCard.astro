@@ -19,26 +19,46 @@ interface Props {
 const { model, compare = true } = Astro.props;
 const colour = defaultTvHomeColour(model);
 const img = getTvHomeImage(model.id, model.noImage ? "hero" : `colour:${colour}`, model.name);
+const secondColour = model.colours.find((c) => c !== colour);
+const hoverImg = secondColour
+  ? getTvHomeImage(model.id, `colour:${secondColour}`, model.name)
+  : getTvHomeImage(model.id, "hero", model.name);
+const hoverSrc =
+  !model.noImage && !hoverImg.fallback && hoverImg.src !== img.src ? hoverImg.src : "";
 const lipa = lipaMonthly(model.basePriceKes);
 const square = isSpeaker(model);
 ---
 
 <article class="thcard" data-tvhome-card data-id={model.id}>
-  <a class="thcard__media" href={`/tv-home/${model.id}`}>
+  <a class:list={["thcard__media", { "thcard__media--swap": Boolean(hoverSrc) }]} href={`/tv-home/${model.id}`}>
     {
       model.noImage ? (
         <div class="thcard__noimg">
           <p>Image not available</p>
         </div>
       ) : (
-        <TvHomeStage
-          src={img.src}
-          srcWebp={img.srcWebp}
-          alt={img.alt}
-          width={img.width}
-          height={img.width}
-          square={square}
-        />
+        <>
+          <TvHomeStage
+            src={img.src}
+            srcWebp={img.srcWebp}
+            alt={img.alt}
+            width={img.width}
+            height={img.width}
+            square={square}
+          />
+          {hoverSrc ? (
+            <img
+              class="thcard__img-alt"
+              src={hoverSrc}
+              alt=""
+              width={img.width}
+              height={img.width}
+              loading="lazy"
+              decoding="async"
+              aria-hidden="true"
+            />
+          ) : null}
+        </>
       )
     }
     {model.isNew ? <span class="thcard__tag">New</span> : null}
@@ -72,10 +92,10 @@ const square = isSpeaker(model);
     </p>
     <p class="thcard__fine">Sample price until stock is entered in the admin.</p>
     <div class="thcard__actions">
-      <a class="btn btn--primary btn--sm" href={`/tv-home/${model.id}`}>View</a>
+      <a class="btn btn--primary btn--xs" href={`/tv-home/${model.id}`}>View</a>
       <button
         type="button"
-        class="btn btn--secondary btn--sm"
+        class="btn btn--secondary btn--xs"
         data-tvhome-bag
         data-id={model.id}
         data-name={model.name}
@@ -86,7 +106,7 @@ const square = isSpeaker(model);
         data-kes={model.basePriceKes}
         data-image={model.noImage ? "" : img.src}
       >
-        Add to bag
+        Add to Cart
       </button>
       {
         compare ? (
@@ -158,14 +178,41 @@ const square = isSpeaker(model);
     position: relative;
     display: block;
     text-decoration: none;
-    transition: transform 220ms ease;
   }
-  @media (hover: hover) {
-    .thcard__media:hover { transform: translateY(-6px) scale(1.03); }
+  .thcard__media :global(img) {
+    transition: opacity 0.35s ease;
+  }
+  .thcard__img-alt {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 8%;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+  }
+  .thcard__media--swap:hover :global(.thstage__img),
+  .thcard__media--swap:hover :global(img:not(.thcard__img-alt)) {
+    opacity: 0;
+  }
+  .thcard__media--swap:hover .thcard__img-alt {
+    opacity: 1;
   }
   @media (prefers-reduced-motion: reduce) {
-    .thcard__media { transition: none; }
-    .thcard__media:hover { transform: none; }
+    .thcard__media :global(img),
+    .thcard__img-alt {
+      transition: none;
+    }
+    .thcard__media--swap:hover :global(.thstage__img),
+    .thcard__media--swap:hover :global(img:not(.thcard__img-alt)) {
+      opacity: 1;
+    }
+    .thcard__media--swap:hover .thcard__img-alt {
+      opacity: 0;
+    }
   }
   .thcard__noimg {
     aspect-ratio: 1 / 1;

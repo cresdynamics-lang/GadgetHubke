@@ -1,0 +1,98 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import CategoryHero from "../../components/hero/CategoryHero.astro";
+import { heroCategories } from "../../lib/hero";
+
+const order = [
+  "iphone",
+  "macbook",
+  "ipad",
+  "watch",
+  "airpods",
+  "tv-home",
+  "accessories",
+] as const;
+---
+
+<BaseLayout
+  title="DEV · CategoryHero · all packs"
+  description="Preview every category hero against the public/Hero packs."
+>
+  <div class="dev-hero-index container">
+    <h1>CategoryHero pack preview</h1>
+    <p>
+      Each block uses the real files under <code>public/Hero/</code> with the
+      animated loop. Production pages are not wired yet.
+    </p>
+    <ul>
+      {
+        order.map((slug) => (
+          <li>
+            <a href={`#${slug}`}>{heroCategories[slug].eyebrow}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  {
+    order.map((slug) => (
+      <section id={slug} class="dev-hero-block">
+        <div class="dev-hero-block__label container">
+          <h2>{heroCategories[slug].displayName}</h2>
+          <p>
+            {heroCategories[slug].scenes.map((s) => s.id).join(" · ")}
+          </p>
+        </div>
+        <CategoryHero category={slug} />
+      </section>
+    ))
+  }
+</BaseLayout>
+
+<style>
+  .dev-hero-index {
+    padding: 2rem 0 1.5rem;
+  }
+  .dev-hero-index h1 {
+    margin: 0 0 0.5rem;
+    font-size: 1.75rem;
+  }
+  .dev-hero-index p {
+    color: #6e6e73;
+    max-width: 40rem;
+  }
+  .dev-hero-index ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0;
+  }
+  .dev-hero-index a {
+    color: #000;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .dev-hero-block {
+    border-top: 1px solid #d2d2d7;
+    background: #000;
+  }
+  .dev-hero-block__label {
+    padding: 1rem 0;
+    color: #fff;
+  }
+  .dev-hero-block__label h2 {
+    margin: 0;
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .dev-hero-block__label p {
+    margin: 0.35rem 0 0;
+    color: #a1a1a6;
+    font-size: 0.8rem;
+  }
+</style>

@@ -14,6 +14,7 @@ import {
   colourLabel,
   isLightColour,
   macConfig,
+  macViewerTabs,
 } from "../../lib/mac";
 
 interface Props {
@@ -26,9 +27,13 @@ const colour = defaultMacColour(model);
 const img = getMacImage(model.id, colour, "product", model.name);
 const lipa = lipaMonthly(model.basePriceKes);
 const href = `/mac/${model.id}`;
+const viewerTabs = macViewerTabs(model, colour);
+const hoverFromTabs = viewerTabs.length > 1 ? viewerTabs[1] : null;
 
 const colourPayload = model.colours.map((key) => {
   const resolved = getMacImage(model.id, key, "product", model.name);
+  const tabs = macViewerTabs(model, key);
+  const hover = tabs.length > 1 ? tabs[1] : null;
   return {
     key,
     hex: colourHex(key),
@@ -37,8 +42,16 @@ const colourPayload = model.colours.map((key) => {
     srcWebp: resolved.srcWebp ?? "",
     alt: resolved.alt,
     light: isLightColour(key),
+    hoverSrc: hover && hover.src !== resolved.src ? hover.src : "",
   };
 });
+
+const hoverSrc =
+  hoverFromTabs && hoverFromTabs.src !== img.src
+    ? hoverFromTabs.src
+    : colourPayload[1] && colourPayload[1].src !== img.src
+      ? colourPayload[1].src
+      : "";
 ---
 
 <article
@@ -64,8 +77,23 @@ const colourPayload = model.colours.map((key) => {
   {model.isNew ? <span class="mcard__tag">New</span> : null}
   {model.checkFinalSpecs ? <span class="mcard__tag mcard__tag--warn">Check specs</span> : null}
 
-  <a class="mcard__media" href={href}>
+  <a class:list={["mcard__media", { "mcard__media--swap": Boolean(hoverSrc) }]} href={href}>
     <MacStage src={img.src} srcWebp={img.srcWebp} alt={img.alt} width={img.width} height={Math.round(img.width * 0.625)} />
+    {
+      hoverSrc ? (
+        <img
+          class="mcard__img-alt"
+          data-mcard-alt
+          src={hoverSrc}
+          alt=""
+          width={img.width}
+          height={Math.round(img.width * 0.625)}
+          loading="lazy"
+          decoding="async"
+          aria-hidden="true"
+        />
+      ) : null
+    }
   </a>
 
   <div class="mcard__body">
@@ -88,6 +116,7 @@ const colourPayload = model.colours.map((key) => {
               data-src={c.src}
               data-webp={c.srcWebp}
               data-alt={c.alt}
+              data-hover={c.hoverSrc}
             />
           ))}
         </div>
@@ -102,10 +131,10 @@ const colourPayload = model.colours.map((key) => {
       or {formatKes(lipa.monthlyKes)} a month for {lipa.months} months after a {macConfig.lipa.depositDefaultPct}% deposit
     </p>
     <div class="mcard__actions">
-      <a class="btn btn--primary btn--sm" href={href}>View</a>
+      <a class="btn btn--primary btn--xs" href={href}>View</a>
       <button
         type="button"
-        class="btn btn--secondary btn--sm"
+        class="btn btn--secondary btn--xs"
         data-add-bag
         data-id={model.id}
         data-name={model.name}
@@ -116,7 +145,7 @@ const colourPayload = model.colours.map((key) => {
         data-kes={model.basePriceKes}
         data-image={img.src}
       >
-        Add to bag
+        Add to Cart
       </button>
     </div>
   </div>
@@ -126,6 +155,8 @@ const colourPayload = model.colours.map((key) => {
   document.querySelectorAll("[data-mcard]").forEach((card) => {
     const img = card.querySelector(".mstage__img") as HTMLImageElement | null;
     const webpSource = card.querySelector(".mstage source") as HTMLSourceElement | null;
+    const altImg = card.querySelector("[data-mcard-alt]") as HTMLImageElement | null;
+    const media = card.querySelector(".mcard__media");
     card.querySelectorAll("[data-mcard-swatch]").forEach((btn) => {
       btn.addEventListener("click", (e) => {
         e.preventDefault();
@@ -133,6 +164,7 @@ const colourPayload = model.colours.map((key) => {
         const src = btn.getAttribute("data-src");
         const webp = btn.getAttribute("data-webp");
         const alt = btn.getAttribute("data-alt");
+        const hover = btn.getAttribute("data-hover") || "";
         if (img && src) {
           img.style.opacity = "0";
           window.setTimeout(() => {
@@ -144,6 +176,12 @@ const colourPayload = model.colours.map((key) => {
             if (alt) img.alt = alt;
             img.style.opacity = "1";
           }, 120);
+        }
+        if (altImg && hover && hover !== src) {
+          altImg.src = hover;
+          media?.classList.add("mcard__media--swap");
+        } else if (!hover) {
+          media?.classList.remove("mcard__media--swap");
         }
         card.querySelectorAll("[data-mcard-swatch]").forEach((b) => b.classList.remove("is-active"));
         btn.classList.add("is-active");
@@ -224,8 +262,30 @@ const colourPayload = model.colours.map((key) => {
     background: #1d1d1f;
   }
   .mcard__media {
+    position: relative;
     display: block;
     text-decoration: none;
+  }
+  .mcard__img-alt {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 6%;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+  }
+  .mcard__media--swap:hover :global(.mstage__img) {
+    opacity: 0;
+  }
+  .mcard__media--swap:hover .mcard__img-alt {
+    opacity: 1;
+  }
+  .mcard :global(.mstage__img) {
+    transition: opacity 0.35s ease;
   }
   .mcard__body {
     display: flex;

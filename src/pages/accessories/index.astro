@@ -16,13 +16,14 @@ import {
   lowestAccessoryPrice,
 } from "../../lib/accessories";
 import { whatsappUrl } from "../../lib/site";
+import CategoryHero from "../../components/hero/CategoryHero.astro";
 
 // liveAccessoryGroups kept for other surfaces; landing uses five shop cards below.
-const hero = getAccessoriesPageImage("pencil/hero/hero", "Apple Pencil");
-const heroKb = getAccessoriesPageImage("keyboard/selector/selector_hero", "Magic Keyboard");
-const heroMouse = getAccessoryImage("mouse-usbc-black", "hero");
-const heroPower = getAccessoryImage("power-adapter-70w", "hero");
-const heroCases = getAccessoryImage("case-iphone-17-pro-silicone", "hero");
+const groupPencil = getAccessoriesPageImage("pencil/hero/hero", "Apple Pencil");
+const groupKb = getAccessoriesPageImage("keyboard/selector/selector_hero", "Magic Keyboard");
+const groupMouse = getAccessoryImage("mouse-usbc-black", "hero");
+const groupPower = getAccessoryImage("power-adapter-70w", "hero");
+const groupCases = getAccessoryImage("case-iphone-17-pro-silicone", "hero");
 const featured = ["pencil-pro", "power-adapter-70w", "mouse-usbc-black", "case-iphone-17-pro-silicone"].map(
   (id) => getAccessory(id)!,
 );
@@ -33,35 +34,35 @@ const groups = [
     href: "/accessories/apple-pencil",
     blurb: "Four Pencils. One fit check.",
     fromKes: lowestAccessoryPrice("pencil"),
-    img: hero,
+    img: groupPencil,
   },
   {
     label: "Magic Keyboard",
     href: "/accessories/magic-keyboard",
     blurb: "For iPad and Mac.",
     fromKes: lowestAccessoryPrice("keyboard"),
-    img: heroKb,
+    img: groupKb,
   },
   {
     label: "Pointers",
     href: "/accessories/magic-mouse",
     blurb: "Magic Mouse and Magic Trackpad.",
     fromKes: Math.min(lowestAccessoryPrice("mouse"), lowestAccessoryPrice("trackpad")),
-    img: heroMouse,
+    img: groupMouse,
   },
   {
     label: "Power",
     href: "/accessories/power",
     blurb: "Adapters, MagSafe and cables.",
     fromKes: lowestAccessoryPrice("power"),
-    img: heroPower,
+    img: groupPower,
   },
   {
     label: "Cases",
     href: "/accessories/cases",
     blurb: "Made for one exact model.",
     fromKes: lowestAccessoryPrice("cases"),
-    img: heroCases,
+    img: groupCases,
   },
 ];
 
@@ -98,22 +99,7 @@ const corp = whatsappUrl("Corporate accessories order");
   title="Accessories - GadgetHub"
   description="Apple Pencil, Magic Keyboard, Pointers, Power and Cases in Nairobi. Compatibility checked before you pay."
 >
-  <section class="xland-hero">
-    <div class="xland-hero__copy container">
-      <h1>Made to fit.</h1>
-      <p>{accessoriesConfig.announce}</p>
-      <div class="xland-hero__cta">
-        <a class="btn btn--primary" href="/accessories/apple-pencil">Shop Apple Pencil</a>
-        <a class="btn btn--secondary" href="/accessories/power">Shop Power</a>
-        <a class="btn btn--secondary" href="/accessories/cases">Shop Cases</a>
-        <a class="btn btn--secondary" href="/accessories/magic-mouse">Shop Pointers</a>
-      </div>
-    </div>
-    <div class="xland-hero__stage">
-      <img src={hero.src} alt={hero.alt} width="1800" height="1200" fetchpriority="high" />
-      <img src={heroKb.src} alt={heroKb.alt} width="1800" height="1200" fetchpriority="high" />
-    </div>
-  </section>
+  <CategoryHero category="accessories" />
 
   <section class="xland-groups container">
     <h2>Shop by group</h2>
@@ -206,42 +192,11 @@ const corp = whatsappUrl("Corporate accessories order");
 </script>
 
 <style>
-  .xland-hero {
-    background: #f5f5f7;
-    padding: 3rem 0 0;
-  }
-  .xland-hero h1 {
-    font-size: clamp(2.4rem, 6vw, 4rem);
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    margin: 0 0 0.75rem;
-  }
   .xland-hero__cta {
     display: flex;
     flex-wrap: wrap;
     gap: 0.65rem;
     margin-top: 1.25rem;
-  }
-  .xland-hero__stage {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
-    max-width: 1100px;
-    margin: 2rem auto 0;
-    padding: 0 1rem 2rem;
-  }
-  @media (max-width: 640px) {
-    .xland-hero__stage {
-      grid-template-columns: 1fr;
-    }
-  }
-  .xland-hero__stage img {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: contain;
-    background: #fff;
-    border-radius: 1rem;
-    mix-blend-mode: multiply;
   }
   .xland-groups,
   .xland-featured,
@@ -299,9 +254,15 @@ const corp = whatsappUrl("Corporate accessories order");
   }
   .xland-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 1.25rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
     margin-top: 1.25rem;
+  }
+  @media (min-width: 48rem) {
+    .xland-grid {
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.25rem;
+    }
   }
   .xland-bundle {
     border: 1px solid #d2d2d7;

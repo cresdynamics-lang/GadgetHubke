@@ -14,6 +14,7 @@ import {
   colourLabel,
   isLightColour,
   ipadConfig,
+  ipadViewerTabs,
 } from "../../lib/ipad";
 
 interface Props {
@@ -26,9 +27,12 @@ const colour = defaultIpadColour(model);
 const img = getIpadImage(model.id, colour, "product", model.name);
 const lipa = lipaMonthly(model.basePriceKes);
 const href = `/ipad/${model.id}`;
+const tabs = ipadViewerTabs(model, colour);
 
 const colourPayload = model.colours.map((key) => {
   const resolved = getIpadImage(model.id, key, "product", model.name);
+  const t = ipadViewerTabs(model, key);
+  const hover = t.length > 1 ? t[1] : null;
   return {
     key,
     hex: colourHex(key),
@@ -37,8 +41,16 @@ const colourPayload = model.colours.map((key) => {
     srcWebp: resolved.srcWebp ?? "",
     alt: resolved.alt,
     light: isLightColour(key),
+    hoverSrc: hover && hover.src !== resolved.src ? hover.src : "",
   };
 });
+
+const hoverSrc =
+  tabs.length > 1 && tabs[1].src !== img.src
+    ? tabs[1].src
+    : colourPayload[1] && colourPayload[1].src !== img.src
+      ? colourPayload[1].src
+      : "";
 ---
 
 <article
@@ -64,8 +76,23 @@ const colourPayload = model.colours.map((key) => {
   {model.isNew ? <span class="icard__tag">New</span> : null}
   {model.checkFinalSpecs ? <span class="icard__tag icard__tag--warn">Check specs</span> : null}
 
-  <a class="icard__media" href={href}>
+  <a class:list={["icard__media", { "icard__media--swap": Boolean(hoverSrc) }]} href={href}>
     <IpadStage src={img.src} srcWebp={img.srcWebp} alt={img.alt} width={img.width} height={img.width} />
+    {
+      hoverSrc ? (
+        <img
+          class="icard__img-alt"
+          data-icard-alt
+          src={hoverSrc}
+          alt=""
+          width={img.width}
+          height={img.width}
+          loading="lazy"
+          decoding="async"
+          aria-hidden="true"
+        />
+      ) : null
+    }
   </a>
 
   <div class="icard__body">
@@ -88,6 +115,7 @@ const colourPayload = model.colours.map((key) => {
               data-src={c.src}
               data-webp={c.srcWebp}
               data-alt={c.alt}
+              data-hover={c.hoverSrc}
             />
           ))}
         </div>
@@ -101,10 +129,10 @@ const colourPayload = model.colours.map((key) => {
     <p class="icard__fine">{ipadConfig.samplePriceDisclaimer}</p>
 
     <div class="icard__actions">
-      <a class="btn btn--secondary btn--sm" href={href}>View</a>
+      <a class="btn btn--secondary btn--xs" href={href}>View</a>
       <button
         type="button"
-        class="btn btn--primary btn--sm"
+        class="btn btn--primary btn--xs"
         data-add-bag
         data-id={model.id}
         data-name={model.name}
@@ -115,7 +143,7 @@ const colourPayload = model.colours.map((key) => {
         data-kes={model.basePriceKes}
         data-image={img.src}
       >
-        Add to bag
+        Add to Cart
       </button>
     </div>
   </div>
@@ -126,6 +154,8 @@ const colourPayload = model.colours.map((key) => {
     if (!(card instanceof HTMLElement) || card.dataset.bound === "1") return;
     card.dataset.bound = "1";
     const img = card.querySelector(".istage__img");
+    const altImg = card.querySelector("[data-icard-alt]");
+    const media = card.querySelector(".icard__media");
     card.querySelectorAll("[data-icard-swatch]").forEach((btn) => {
       btn.addEventListener("click", () => {
         card.querySelectorAll("[data-icard-swatch]").forEach((b) => b.classList.remove("is-active"));
@@ -133,6 +163,7 @@ const colourPayload = model.colours.map((key) => {
         const src = btn.getAttribute("data-src");
         const webp = btn.getAttribute("data-webp") || "";
         const alt = btn.getAttribute("data-alt");
+        const hover = btn.getAttribute("data-hover") || "";
         const webpSource = card.querySelector(".istage source");
         if (img instanceof HTMLImageElement && src) {
           img.style.opacity = "0";
@@ -147,6 +178,12 @@ const colourPayload = model.colours.map((key) => {
             img.style.opacity = "1";
           };
           pre.src = src;
+        }
+        if (altImg instanceof HTMLImageElement && hover && hover !== src) {
+          altImg.src = hover;
+          media?.classList.add("icard__media--swap");
+        } else if (!hover) {
+          media?.classList.remove("icard__media--swap");
         }
         const bag = card.querySelector("[data-add-bag]");
         bag?.setAttribute("data-colour", btn.getAttribute("aria-label") || "");
@@ -215,13 +252,29 @@ const colourPayload = model.colours.map((key) => {
     background: #1d1d1f;
   }
   .icard__media {
+    position: relative;
     display: block;
   }
   .icard__media :global(.istage__img) {
-    transition: transform 220ms var(--ease-out), opacity 160ms ease;
+    transition: opacity 0.35s ease;
   }
-  .icard:hover .icard__media :global(.istage__img) {
-    transform: scale(1.06);
+  .icard__img-alt {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 8%;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+  }
+  .icard__media--swap:hover :global(.istage__img) {
+    opacity: 0;
+  }
+  .icard__media--swap:hover .icard__img-alt {
+    opacity: 1;
   }
   .icard__body {
     padding: 1rem 1.1rem 1.15rem;

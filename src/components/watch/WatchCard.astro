@@ -22,12 +22,29 @@ interface Props {
 const { model, compare = true } = Astro.props;
 const colour = defaultWatchColour(model);
 const img = getWatchImage(model.id, "main", model.name);
+const hoverCandidate = getWatchImage(model.id, "design", model.name);
+const hoverSrc =
+  !hoverCandidate.fallback && hoverCandidate.src !== img.src ? hoverCandidate.src : "";
 const lipa = lipaMonthly(model.basePriceKes);
 ---
 
 <article class="wcard" data-watch-card data-id={model.id}>
-  <a class="wcard__media" href={`/watch/${model.id}`}>
+  <a class:list={["wcard__media", { "wcard__media--swap": Boolean(hoverSrc) }]} href={`/watch/${model.id}`}>
     <WatchStage src={img.src} srcWebp={img.srcWebp} alt={img.alt} width={img.width} height={Math.round(img.width * 0.75)} />
+    {
+      hoverSrc ? (
+        <img
+          class="wcard__img-alt"
+          src={hoverSrc}
+          alt=""
+          width={img.width}
+          height={Math.round(img.width * 0.75)}
+          loading="lazy"
+          decoding="async"
+          aria-hidden="true"
+        />
+      ) : null
+    }
     {
       model.isNew ? <span class="wcard__tag">New</span> : null
     }
@@ -66,10 +83,10 @@ const lipa = lipaMonthly(model.basePriceKes);
     </p>
     <p class="wcard__fine">Sample price until stock is entered in the admin.</p>
     <div class="wcard__actions">
-      <a class="btn btn--primary btn--sm" href={`/watch/${model.id}`}>View</a>
+      <a class="btn btn--primary btn--xs" href={`/watch/${model.id}`}>View</a>
       <button
         type="button"
-        class="btn btn--secondary btn--sm"
+        class="btn btn--secondary btn--xs"
         data-watch-bag
         data-id={model.id}
         data-name={model.name}
@@ -79,7 +96,7 @@ const lipa = lipaMonthly(model.basePriceKes);
         data-kes={model.basePriceKes}
         data-image={img.src}
       >
-        Add to bag
+        Add to Cart
       </button>
       {
         compare ? (
@@ -123,14 +140,28 @@ const lipa = lipaMonthly(model.basePriceKes);
     position: relative;
     display: block;
     text-decoration: none;
-    transition: transform 220ms ease;
   }
-  @media (hover: hover) {
-    .wcard__media:hover { transform: translateY(-6px) scale(1.05); }
+  .wcard__media :global(img) {
+    transition: opacity 0.35s ease;
   }
-  @media (prefers-reduced-motion: reduce) {
-    .wcard__media { transition: none; }
-    .wcard__media:hover { transform: none; }
+  .wcard__img-alt {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 6%;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+  }
+  .wcard__media--swap:hover :global(.wstage__img),
+  .wcard__media--swap:hover :global(img:not(.wcard__img-alt)) {
+    opacity: 0;
+  }
+  .wcard__media--swap:hover .wcard__img-alt {
+    opacity: 1;
   }
   .wcard__tag {
     position: absolute;

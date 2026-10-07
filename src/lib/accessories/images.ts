@@ -3,6 +3,8 @@
  * kind: hero | angle:n | swatch | feature:name | gallery:n | gesture:name | overview | manifest key
  */
 
+import fs from "node:fs";
+import path from "node:path";
 import {
   angleSrcs,
   featureSrc,
@@ -46,9 +48,14 @@ function logMissing(key: string) {
   console.warn(`MISSING IMAGE: ${key}`);
 }
 
+/** Only advertise WebP when the sibling file actually exists on disk. */
 function webpSibling(src: string): string | undefined {
-  if (/\.webp$/i.test(src) || src === ACCESSORY_PLACEHOLDER) return undefined;
-  return src.replace(/\.(jpe?g|png)$/i, ".webp");
+  if (!src || src === ACCESSORY_PLACEHOLDER) return undefined;
+  if (/\.webp$/i.test(src)) return src;
+  const webp = src.replace(/\.(jpe?g|png)$/i, ".webp");
+  if (webp === src) return undefined;
+  const disk = path.join(process.cwd(), "public", webp.replace(/^\//, ""));
+  return fs.existsSync(disk) ? webp : undefined;
 }
 
 function widthForKind(kind: string): number {

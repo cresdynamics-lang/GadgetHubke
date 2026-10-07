@@ -19,6 +19,7 @@ import {
   latestByFamily,
 } from "../../lib/iphone/lineup";
 import { site } from "../../lib/site";
+import CategoryHero from "../../components/hero/CategoryHero.astro";
 
 const list = models;
 const comparePayload = list.map((m) => {
@@ -46,6 +47,8 @@ const comparePayload = list.map((m) => {
   title={`iPhone 11 to 18 - ${site.name}`}
   description="Shop sealed iPhone 11 to iPhone 18 at Gadget Hub Kenya. Sample prices. Lipa Mdogo Mdogo available."
 >
+  <CategoryHero category="iphone" />
+
   <section class="ishop">
     <div class="container">
       <nav class="ishop__crumb" aria-label="Breadcrumb">
@@ -54,7 +57,7 @@ const comparePayload = list.map((m) => {
         <span>iPhone</span>
       </nav>
       <header class="ishop__intro">
-        <h1>iPhone</h1>
+        <h2 class="ishop__page-title">Shop iPhone</h2>
         <p>
           Every generation from 11 to 18 - Duo, 18 Pro, Air, 17, and sealed earlier models. Prices below are samples until stock is entered.
         </p>
@@ -409,10 +412,12 @@ const comparePayload = list.map((m) => {
     margin-bottom: var(--space-8);
   }
 
-  .ishop__intro h1 {
+  .ishop__intro h1,
+  .ishop__page-title {
     font-size: clamp(2rem, 5vw, 3rem);
     letter-spacing: -0.035em;
     margin: 0 0 var(--space-3);
+    font-weight: 700;
   }
 
   .ishop__intro p {
@@ -432,7 +437,12 @@ const comparePayload = list.map((m) => {
     padding: 0;
     display: grid;
     gap: 1rem;
-    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (min-width: 48rem) {
+    .ishop__latest-grid {
+      grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    }
   }
 
   .ishop__chips {

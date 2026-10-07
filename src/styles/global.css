@@ -207,6 +207,21 @@ button {
   color: #fff;
 }
 
+/* Compact actions on product cards (View / Add to Cart) */
+.btn--sm {
+  min-height: 2.35rem;
+  padding: 0.45rem 0.9rem;
+  font-size: var(--text-sm);
+}
+
+.btn--xs {
+  min-height: 1.9rem;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.75rem;
+  letter-spacing: -0.01em;
+  border-radius: var(--radius-sm, 0.45rem);
+}
+
 .price {
   font-weight: var(--font-weight-semibold);
   color: var(--color-price);

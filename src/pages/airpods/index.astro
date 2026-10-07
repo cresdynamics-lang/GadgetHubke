@@ -10,21 +10,17 @@ import {
   airpodsModels,
   airpodsModelsByFamily,
   getAirpodsImage,
-  resolveAirpodsKey,
   formatKes,
   lowestAirpodsPrice,
   airpodsConfig,
   homeAirpodsAccessories,
 } from "../../lib/airpods";
 import { whatsappUrl } from "../../lib/site";
+import CategoryHero from "../../components/hero/CategoryHero.astro";
 
 const pro = airpodsModelsByFamily("Pro");
 const std = airpodsModelsByFamily("AirPods");
 const max = airpodsModelsByFamily("Max");
-const heroPair = resolveAirpodsKey("pair:landing/hero", "AirPods");
-const heroStart = resolveAirpodsKey("landing/hero_startframe", "AirPods");
-const heroEnd = resolveAirpodsKey("landing/hero_endframe", "AirPods");
-const heroStatic = resolveAirpodsKey("landing/hero", "AirPods");
 const accessories = homeAirpodsAccessories();
 const newest = [...airpodsModels].sort((a, b) => b.year - a.year || b.basePriceKes - a.basePriceKes);
 const wa = whatsappUrl("Hi Gadget Hub, I want to visit and try AirPods.");
@@ -88,36 +84,7 @@ const caseGuide = airpodsModels
   title="AirPods - GadgetHub"
   description="AirPods Pro, AirPods and Max. Sealed stock in Nairobi. Sample prices until admin is live."
 >
-  <section class="airpods-hero" data-airpods-hero>
-    <div class="airpods-hero__copy container">
-      <h1>Hear what you came for.</h1>
-      <p class="airpods-hero__lede">{airpodsConfig.announce}</p>
-      <div class="airpods-hero__cta" data-hero-cta>
-        <a class="btn btn--primary" href="/airpods/airpods-pro-3">Shop AirPods Pro 3</a>
-        <a class="btn btn--secondary" href="/airpods/shop?family=Max">Shop AirPods Max</a>
-      </div>
-    </div>
-    <div class="airpods-hero__stage" aria-hidden="true">
-      <img
-        class="airpods-hero__frame airpods-hero__frame--start"
-        data-hero-start
-        src={heroPair.start || heroStart.src || heroStatic.src}
-        alt=""
-        width={1800}
-        height={1200}
-        fetchpriority="high"
-      />
-      <img
-        class="airpods-hero__frame airpods-hero__frame--end"
-        data-hero-end
-        src={heroPair.end || heroEnd.src || heroStatic.src}
-        alt=""
-        width={1800}
-        height={1200}
-        fetchpriority="high"
-      />
-    </div>
-  </section>
+  <CategoryHero category="airpods" />
 
   <section class="container airpods-choose">
     <h2>Choose your AirPods</h2>
@@ -257,9 +224,6 @@ const caseGuide = airpodsModels
 </BaseLayout>
 
 <script>
-  import { initScrollHero } from "../../scripts/scrollHero";
-  initScrollHero({ root: "[data-airpods-hero]", copy: ".airpods-hero__copy" });
-
   document.querySelectorAll("[data-gen]").forEach((btn) => {
     btn.addEventListener("click", () => {
       document.querySelectorAll("[data-gen]").forEach((b) => b.classList.remove("is-active"));
@@ -274,53 +238,6 @@ const caseGuide = airpodsModels
 </script>
 
 <style>
-  .airpods-hero {
-    position: relative;
-    min-height: 720px;
-    background: #f5f5f7;
-    display: grid;
-    align-items: end;
-  }
-  .airpods-hero__copy {
-    position: relative;
-    z-index: 2;
-    padding-block: 4rem 2rem;
-    max-width: 40rem;
-  }
-  .airpods-hero h1 {
-    margin: 0 0 0.75rem;
-    font-size: clamp(2.1rem, 4.5vw, 3.4rem);
-    letter-spacing: -0.03em;
-    font-weight: 700;
-  }
-  .airpods-hero__lede { color: #6e6e73; }
-  .airpods-hero__cta {
-    display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 1.25rem;
-  }
-  .airpods-hero__stage {
-    position: absolute; inset: 0; display: grid; place-items: center;
-  }
-  .airpods-hero__frame {
-    grid-area: 1 / 1;
-    width: min(78vw, 42rem);
-    height: auto;
-    object-fit: contain;
-    mix-blend-mode: multiply;
-    transform-origin: center;
-  }
-  @media (min-width: 48rem) {
-    .airpods-hero {
-      min-height: 160vh;
-      align-items: start;
-    }
-    .airpods-hero__stage {
-      position: sticky;
-      top: var(--header-height);
-      height: calc(100vh - var(--header-height));
-      inset: auto;
-      width: 100%;
-    }
-  }
   .airpods-choose,
   .airpods-consider,
   .airpods-music,
@@ -389,9 +306,8 @@ const caseGuide = airpodsModels
   .airpods-chips button.is-active { background: #000; color: #fff; }
   .airpods-grid {
     list-style: none; margin: 0; padding: 0;
-    display: grid; gap: 1.25rem; grid-template-columns: minmax(0, 1fr);
+    display: grid; gap: 1.25rem; grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  @media (min-width: 40rem) { .airpods-grid { grid-template-columns: 1fr 1fr; } }
   @media (min-width: 64rem) { .airpods-grid { grid-template-columns: 1fr 1fr 1fr; } }
   .airpods-case-guide__wrap { overflow-x: auto; margin-top: 1rem; }
   .airpods-case-guide table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); min-width: 20rem; }

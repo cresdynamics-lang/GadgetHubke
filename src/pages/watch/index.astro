@@ -20,12 +20,11 @@ import {
   lipaMonthly,
 } from "../../lib/watch";
 import { whatsappUrl } from "../../lib/site";
+import CategoryHero from "../../components/hero/CategoryHero.astro";
 
 const series = watchModelsByFamily("Series");
 const ultra = watchModelsByFamily("Ultra");
 const se = watchModelsByFamily("SE");
-const heroStart = getWatchImage("watch-s12-46", "hero_startframe");
-const heroEnd = getWatchImage("watch-s12-46", "hero_endframe");
 const accessories = homeWatchAccessories();
 const newest = [...watchModels].sort((a, b) => b.year - a.year || b.basePriceKes - a.basePriceKes);
 const wa = whatsappUrl("Hi Gadget Hub, I want to visit and try an Apple Watch.");
@@ -62,38 +61,7 @@ const genChips = ["Series 12", "Series 11", "Series 10", "Series 9", "Series 8",
   title="Apple Watch - GadgetHub"
   description="Apple Watch Series, Ultra and SE. Sealed stock in Nairobi. Sample prices until admin is live."
 >
-  <section class="watch-hero" data-watch-hero>
-    <div class="watch-hero__copy container">
-      <h1>The watch that looks after you.</h1>
-      <p class="watch-hero__lede">
-        Sealed. Serial number on the invoice. Set up for you before you collect.
-      </p>
-      <div class="watch-hero__cta" data-hero-cta>
-        <a class="btn btn--primary" href="/watch/shop?family=Series&gen=Series+12">Shop Series 12</a>
-        <a class="btn btn--secondary" href="/watch/shop?family=Ultra&gen=Ultra+4">Shop Ultra 4</a>
-      </div>
-    </div>
-    <div class="watch-hero__stage" aria-hidden="true">
-      <img
-        class="watch-hero__frame watch-hero__frame--start"
-        data-hero-start
-        src={heroStart.src}
-        alt=""
-        width={heroStart.width}
-        height={Math.round(heroStart.width * 0.75)}
-        fetchpriority="high"
-      />
-      <img
-        class="watch-hero__frame watch-hero__frame--end"
-        data-hero-end
-        src={heroEnd.src}
-        alt=""
-        width={heroEnd.width}
-        height={Math.round(heroEnd.width * 0.75)}
-        fetchpriority="high"
-      />
-    </div>
-  </section>
+  <CategoryHero category="watch" />
 
   <section class="container watch-choose">
     <h2>Choose your Watch</h2>
@@ -194,9 +162,6 @@ const genChips = ["Series 12", "Series 11", "Series 10", "Series 9", "Series 8",
 </BaseLayout>
 
 <script>
-  import { initScrollHero } from "../../scripts/scrollHero";
-  initScrollHero({ root: "[data-watch-hero]", copy: ".watch-hero__copy" });
-
   document.querySelectorAll("[data-gen]").forEach((btn) => {
     btn.addEventListener("click", () => {
       document.querySelectorAll("[data-gen]").forEach((b) => b.classList.remove("is-active"));
@@ -222,53 +187,6 @@ const genChips = ["Series 12", "Series 11", "Series 10", "Series 9", "Series 8",
 </script>
 
 <style>
-  .watch-hero {
-    position: relative;
-    min-height: 720px;
-    background: #f5f5f7;
-    display: grid;
-    align-items: end;
-  }
-  .watch-hero__copy {
-    position: relative;
-    z-index: 2;
-    padding-block: 4rem 2rem;
-    max-width: 40rem;
-  }
-  .watch-hero h1 {
-    margin: 0 0 0.75rem;
-    font-size: var(--watch-headline, clamp(2.1rem, 4.5vw, 3.4rem));
-    letter-spacing: -0.03em;
-    font-weight: 700;
-  }
-  .watch-hero__lede { color: #6e6e73; }
-  .watch-hero__cta {
-    display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 1.25rem;
-  }
-  .watch-hero__stage {
-    position: absolute; inset: 0; display: grid; place-items: center;
-  }
-  @media (min-width: 48rem) {
-    .watch-hero {
-      min-height: 160vh;
-      align-items: start;
-    }
-    .watch-hero__stage {
-      position: sticky;
-      top: var(--header-height);
-      height: calc(100vh - var(--header-height));
-      inset: auto;
-      width: 100%;
-    }
-  }
-  .watch-hero__frame {
-    grid-area: 1 / 1;
-    width: min(78vw, 56rem);
-    height: auto;
-    object-fit: contain;
-    mix-blend-mode: multiply;
-    transform-origin: center;
-  }
   .watch-choose,
   .watch-grid-sec,
   .watch-bands-studio,
@@ -313,9 +231,8 @@ const genChips = ["Series 12", "Series 11", "Series 10", "Series 9", "Series 8",
   .watch-chips button.is-active { background: #000; color: #fff; }
   .watch-grid {
     list-style: none; margin: 0; padding: 0;
-    display: grid; gap: 1.25rem; grid-template-columns: 1fr;
+    display: grid; gap: 1.25rem; grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  @media (min-width: 40rem) { .watch-grid { grid-template-columns: 1fr 1fr; } }
   @media (min-width: 64rem) { .watch-grid { grid-template-columns: 1fr 1fr 1fr; } }
   .watch-bands-studio__row { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 1rem 0; }
   .watch-bands-studio__row button {

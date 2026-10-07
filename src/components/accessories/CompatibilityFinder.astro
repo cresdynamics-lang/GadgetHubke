@@ -250,7 +250,7 @@ const fitPayload = {
               ${price != null ? `<p class="xfinder__price">From KES ${Number(price).toLocaleString("en-KE")}</p>` : ""}
               <p class="xfinder__flag">Check final specs</p>
               <div class="xfinder__actions">
-                <a class="btn btn--secondary btn--sm" href="${href}">View</a>
+                <a class="btn btn--secondary btn--xs" href="${href}">View</a>
               </div>
             </div>
           </article>`;
@@ -293,12 +293,12 @@ const fitPayload = {
               <p class="xfinder__price">From KES ${item.price.toLocaleString("en-KE")}</p>
               <p class="xfinder__flag">Check final specs</p>
               <div class="xfinder__actions">
-                <a class="btn btn--secondary btn--sm" href="${item.href}">View</a>
+                <a class="btn btn--secondary btn--xs" href="${item.href}">View</a>
                 ${
                   canBag
-                    ? `<button type="button" class="btn btn--primary btn--sm" data-finder-bag
+                    ? `<button type="button" class="btn btn--primary btn--xs" data-finder-bag
                         data-id="${item.id}" data-name="${item.name}" data-kes="${item.price}"
-                        data-image="${item.img}" data-device="${device}" data-connector="${conn}">Add to bag</button>`
+                        data-image="${item.img}" data-device="${device}" data-connector="${conn}">Add to Cart</button>`
                     : ""
                 }
               </div>

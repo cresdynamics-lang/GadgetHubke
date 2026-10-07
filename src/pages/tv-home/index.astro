@@ -18,12 +18,11 @@ import {
   tvHomeConfigurePrice,
 } from "../../lib/tv-home";
 import { whatsappUrl } from "../../lib/site";
+import CategoryHero from "../../components/hero/CategoryHero.astro";
 
 const atv = tvHomeModelsByFamily("Apple TV");
 const hp = tvHomeModelsByFamily("HomePod");
 const mini = tvHomeModelsByFamily("HomePod mini");
-const hero = getTvHomeImage("apple-tv-4k-3", "landing");
-const heroAlt = getTvHomeImage("homepod-2", "hero");
 const accessories = homeTvHomeAccessories();
 const newest = [...tvHomeModels].sort((a, b) => b.year - a.year || b.basePriceKes - a.basePriceKes);
 const wa = whatsappUrl("Hi Gadget Hub, I want to visit and try TV & Home.");
@@ -80,36 +79,7 @@ const bundlePayload = tvHomeBundles.map((b) => ({
   title="TV & Home - GadgetHub"
   description="Apple TV 4K, HomePod and HomePod mini. Sealed stock in Nairobi. Sample prices until admin is live."
 >
-  <section class="tvhome-hero" data-tvhome-hero>
-    <div class="tvhome-hero__copy container">
-      <h1>Make home feel bigger.</h1>
-      <p class="tvhome-hero__lede">{tvHomeConfig.announce}</p>
-      <div class="tvhome-hero__cta" data-hero-cta>
-        <a class="btn btn--primary" href="/tv-home/apple-tv-4k-3">Shop Apple TV 4K</a>
-        <a class="btn btn--secondary" href="/tv-home/homepod-2">Shop HomePod</a>
-      </div>
-    </div>
-    <div class="tvhome-hero__stage" aria-hidden="true">
-      <img
-        class="tvhome-hero__frame tvhome-hero__frame--start"
-        data-hero-start
-        src={hero.src}
-        alt=""
-        width={hero.width}
-        height={hero.width}
-        fetchpriority="high"
-      />
-      <img
-        class="tvhome-hero__frame tvhome-hero__frame--end"
-        data-hero-end
-        src={heroAlt.fallback ? hero.src : heroAlt.src}
-        alt=""
-        width={heroAlt.width}
-        height={heroAlt.width}
-        fetchpriority="high"
-      />
-    </div>
-  </section>
+  <CategoryHero category="tv-home" />
 
   <section class="container tvhome-choose">
     <h2>Choose your corner of home</h2>
@@ -221,9 +191,6 @@ const bundlePayload = tvHomeBundles.map((b) => ({
 </BaseLayout>
 
 <script define:vars={{ modelsJson: JSON.stringify(tvHomeModels.map((m) => ({ id: m.id, name: m.name, base: m.basePriceKes }))) }}>
-  import { initScrollHero } from "../../scripts/scrollHero";
-  initScrollHero({ root: "[data-tvhome-hero]", copy: ".tvhome-hero__copy" });
-
   const models = JSON.parse(modelsJson);
 
   document.querySelectorAll("[data-bundle-add]").forEach((btn) => {
@@ -254,45 +221,6 @@ const bundlePayload = tvHomeBundles.map((b) => ({
 </script>
 
 <style>
-  .tvhome-hero {
-    position: relative;
-    min-height: 720px;
-    background: #f5f5f7;
-    display: grid;
-    align-items: end;
-    font-family: Inter, system-ui, sans-serif;
-  }
-  .tvhome-hero__copy { position: relative; z-index: 2; padding-block: 4rem 2rem; max-width: 40rem; }
-  .tvhome-hero h1 { margin: 0 0 0.75rem; font-size: clamp(2.1rem, 4.5vw, 3.4rem); letter-spacing: -0.03em; font-weight: 700; }
-  .tvhome-hero__lede { color: #6e6e73; }
-  .tvhome-hero__cta { display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 1.25rem; }
-  .tvhome-hero__stage {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-  }
-  .tvhome-hero__frame {
-    grid-area: 1 / 1;
-    width: min(92vw, 52rem);
-    max-height: 70vh;
-    object-fit: contain;
-    mix-blend-mode: multiply;
-    transform-origin: center;
-  }
-  @media (min-width: 48rem) {
-    .tvhome-hero {
-      min-height: 160vh;
-      align-items: start;
-    }
-    .tvhome-hero__stage {
-      position: sticky;
-      top: var(--header-height);
-      height: calc(100vh - var(--header-height));
-      inset: auto;
-      width: 100%;
-    }
-  }
   .tvhome-choose { padding-block: 3rem; }
   .tvhome-choose__grid { list-style: none; margin: 1.25rem 0 0; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
   .tvhome-choose__card { text-decoration: none; color: inherit; display: grid; gap: 0.5rem; }
@@ -302,7 +230,17 @@ const bundlePayload = tvHomeBundles.map((b) => ({
   .tvhome-chips a {
     padding: 0.4rem 0.85rem; border-radius: 999px; border: 1px solid #d2d2d7; text-decoration: none; color: inherit; font-size: var(--text-sm);
   }
-  .tvhome-grid { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); }
+  .tvhome-grid {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (min-width: 64rem) {
+    .tvhome-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
   .tvhome-grid-sec__head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
   .tvhome-bundles ul { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: 0.75rem; }
   .tvhome-bundles li {

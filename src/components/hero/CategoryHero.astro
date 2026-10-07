@@ -1,0 +1,559 @@
+---
+/**
+ * CategoryHero - silent image-loop hero for category landings.
+ * Images from public/Hero packs. Playback: src/scripts/categoryHero.ts.
+ */
+import SocialIcon from "../SocialIcon.astro";
+import { whatsappUrl } from "../../lib/site";
+import {
+  getHeroCategory,
+  heroVariantUrls,
+  colourNameFromPath,
+  validateHeroScenes,
+} from "../../lib/hero";
+import type { HeroScene } from "../../lib/hero";
+
+interface Props {
+  category: string;
+  whatsappMessage?: string;
+}
+
+const { category: slug, whatsappMessage } = Astro.props;
+
+validateHeroScenes();
+
+const cat = getHeroCategory(slug);
+const waHref = whatsappUrl(whatsappMessage ?? cat.whatsappMessage);
+const poster = cat.scenes[0];
+const posterVars = heroVariantUrls(poster.src);
+
+function cutoutSrcset(src: string) {
+  const v = heroVariantUrls(src);
+  const parts = [`${v.w800} 800w`];
+  // only advertise sizes that the pipeline may have written; browser skips 404s poorly,
+  // so keep 800 always and add 1400 when source is typically large enough
+  parts.push(`${v.w1400} 1400w`);
+  return parts.join(", ");
+}
+---
+
+<section
+  class="ch"
+  data-category-hero
+  data-scene-count={String(cat.scenes.length)}
+  data-playing="true"
+  data-active-scene="0"
+  data-video-src={cat.videoSrc ?? ""}
+  aria-label={`${cat.displayName} highlights`}
+>
+  {
+    cat.videoSrc ? (
+      <video class="ch__video-fallback" muted playsinline loop preload="none" hidden>
+        <source src={cat.videoSrc} />
+      </video>
+    ) : null
+  }
+
+  {/* Scene 1 preload - phones prefer 800w WebP */}
+  <link
+    rel="preload"
+    as="image"
+    href={posterVars.w800}
+    type="image/webp"
+    media="(max-width: 47.99rem)"
+  />
+  <link
+    rel="preload"
+    as="image"
+    href={poster.type === "cutout" ? posterVars.w1400 : posterVars.w1280}
+    type="image/webp"
+    media="(min-width: 48rem)"
+  />
+
+  <div class="ch__frame">
+    <div class="ch__stage" data-ch-stage>
+      {
+        cat.scenes.map((scene: HeroScene, index: number) => {
+          const v = heroVariantUrls(scene.src);
+          const fx = scene.focus.x;
+          const fy = scene.focus.y;
+          const swaps =
+            scene.swap && scene.swap.length > 1
+              ? scene.swap
+              : null;
+
+          return (
+            <div
+              class:list={[
+                "ch__scene",
+                `ch__scene--${scene.type}`,
+                index === 0 && "ch__scene--poster",
+              ]}
+              data-ch-scene
+              data-index={String(index)}
+              data-motion={scene.motion}
+              data-title={scene.title}
+              data-subtitle={scene.subtitle}
+              data-tilt={String(scene.tiltDeg ?? 2)}
+              style={`--fx: ${fx}%; --fy: ${fy}%; opacity: ${index === 0 ? 1 : 0};`}
+            >
+              {scene.type === "cutout" ? (
+                <>
+                  <div class="ch__spotlight" aria-hidden="true" />
+                  <div class="ch__glow" data-ch-glow aria-hidden="true" />
+                </>
+              ) : null}
+
+              <div class="ch__media-slot">
+                <div class="ch__media" data-ch-motion>
+                  {swaps ? (
+                    <div class="ch__swap-stack">
+                      {swaps.map((src, si) => {
+                        const colour = colourNameFromPath(src) ?? "AirPods Max";
+                        return (
+                          <picture
+                            class="ch__swap"
+                            data-ch-swap
+                            data-colour={colour}
+                            style={`opacity: ${si === 0 ? 1 : 0};`}
+                          >
+                            <source
+                              type="image/webp"
+                              srcset={cutoutSrcset(src)}
+                              sizes="(max-width: 48rem) 70vw, 42vw"
+                            />
+                            <img
+                              src={src}
+                              alt=""
+                              width="1400"
+                              height="1400"
+                              loading={index === 0 && si === 0 ? "eager" : "lazy"}
+                              decoding="async"
+                              fetchpriority={index === 0 && si === 0 ? "high" : "low"}
+                            />
+                          </picture>
+                        );
+                      })}
+                    </div>
+                  ) : scene.type === "cinematic" ? (
+                    <picture>
+                      <source
+                        type="image/webp"
+                        srcset={`${v.w800} 800w, ${v.w1280} 1280w, ${v.w1920} 1920w`}
+                        sizes="100vw"
+                      />
+                      <img
+                        src={scene.src}
+                        alt={scene.alt}
+                        width="1920"
+                        height="1080"
+                        loading={index === 0 ? "eager" : "lazy"}
+                        decoding="async"
+                        fetchpriority={index === 0 ? "high" : "low"}
+                        style={`object-position: ${fx}% ${fy}%;`}
+                      />
+                    </picture>
+                  ) : (
+                    <picture>
+                      <source
+                        type="image/webp"
+                        srcset={cutoutSrcset(scene.src)}
+                        sizes="(max-width: 48rem) 80vw, 42vw"
+                      />
+                      <img
+                        src={scene.src}
+                        alt={scene.alt}
+                        width="1400"
+                        height="1400"
+                        loading={index === 0 ? "eager" : "lazy"}
+                        decoding="async"
+                        fetchpriority={index === 0 ? "high" : "low"}
+                      />
+                    </picture>
+                  )}
+                </div>
+              </div>
+
+              <div class="ch__scrim" aria-hidden="true" />
+            </div>
+          );
+        })
+      }
+    </div>
+
+    <div class="ch__ui">
+      <div class="ch__copy">
+        <p class="ch__eyebrow">{cat.eyebrow}</p>
+        <h1 class="ch__title" data-ch-title>{poster.title}</h1>
+        <p class="ch__subtitle is-on" data-ch-subtitle>{poster.subtitle}</p>
+        <p class="sr-only" data-ch-live aria-live="polite" aria-atomic="true"></p>
+
+        <div class="ch__cta">
+          <a
+            class="ch__wa"
+            href={waHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-ch-wa
+          >
+            <SocialIcon name="whatsapp" class="ch__wa-icon" />
+            Order on WhatsApp
+          </a>
+          <a class="ch__shop" href={cat.shopHref} data-ch-shop>
+            {cat.shopLabel}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initCategoryHero } from "../../scripts/categoryHero";
+
+  document.querySelectorAll<HTMLElement>("[data-category-hero]").forEach((root) => {
+    if (root.dataset.chReady === "1") return;
+    root.dataset.chReady = "1";
+    initCategoryHero({
+      root,
+      sceneCount: Number(root.dataset.sceneCount || 4),
+      sceneMs: 4000,
+      crossfadeMs: 900,
+      colourSwapMs: 800,
+      phoneMaxScenes: 3,
+      phoneMq: "(max-width: 47.99rem)",
+    });
+  });
+</script>
+
+<style>
+  .ch {
+    --ch-bg: #000;
+    --ch-ink: #fff;
+    --ch-muted: #a1a1a6;
+    --ch-wa-a: #2ee46f;
+    --ch-wa-b: #0e9f6e;
+    --ch-wa-c: #075e54;
+    position: relative;
+    background: var(--ch-bg);
+    color: var(--ch-ink);
+    overflow: clip;
+  }
+
+  .ch__frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    max-height: min(92vh, 52rem);
+  }
+
+  @media (min-width: 48rem) {
+    .ch__frame {
+      aspect-ratio: 16 / 9;
+      max-height: min(86vh, 46rem);
+    }
+  }
+
+  .ch__stage {
+    position: absolute;
+    inset: 0;
+    background: #000;
+  }
+
+  .ch__scene {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+
+  .ch__scene--poster {
+    opacity: 1;
+  }
+
+  .ch__spotlight {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      ellipse 52% 62% at 66% 46%,
+      #2b2b2f 0%,
+      #0a0a0b 55%,
+      #000 100%
+    );
+  }
+
+  .ch__glow {
+    position: absolute;
+    left: 58%;
+    top: 72%;
+    width: 42%;
+    height: 12%;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse at center, rgb(255 255 255 / 0.14), transparent 70%);
+    filter: blur(8px);
+    opacity: 0.1;
+    pointer-events: none;
+  }
+
+  .ch__media-slot {
+    position: absolute;
+    inset: 0;
+  }
+
+  .ch__scene--cutout .ch__media-slot {
+    inset: auto;
+    right: 4%;
+    top: 10%;
+    width: min(58%, 28rem);
+    height: 62%;
+  }
+
+  @media (max-width: 47.99rem) {
+    .ch__scene--cutout .ch__media-slot {
+      left: 50%;
+      right: auto;
+      top: 6%;
+      width: min(78%, 20rem);
+      height: 48%;
+      transform: translateX(-50%);
+    }
+  }
+
+  .ch__media {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    transform-origin: var(--fx, 62%) var(--fy, 50%);
+  }
+
+  .ch__scene--cinematic .ch__media :global(picture),
+  .ch__scene--cinematic .ch__media :global(img) {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .ch__scene--cinematic .ch__media :global(img) {
+    object-fit: cover;
+    object-position: var(--fx, 62%) var(--fy, 50%);
+  }
+
+  .ch__scene--cutout .ch__media {
+    place-items: end center;
+  }
+
+  @media (max-width: 47.99rem) {
+    .ch__scene--cutout .ch__media {
+      place-items: center;
+      transform-origin: 50% 50%;
+    }
+  }
+
+  .ch__scene--cutout .ch__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 22px 28px rgb(0 0 0 / 0.55));
+  }
+
+  .ch__swap-stack {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .ch__swap {
+    position: absolute;
+    inset: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .ch__swap :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .ch__scrim {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(
+        90deg,
+        rgb(0 0 0 / 0.88) 0%,
+        rgb(0 0 0 / 0.62) 33%,
+        transparent 62%
+      ),
+      linear-gradient(to top, rgb(0 0 0 / 0.55) 0%, transparent 34%);
+  }
+
+  @media (max-width: 47.99rem) {
+    .ch__scrim {
+      background: linear-gradient(
+        to top,
+        rgb(0 0 0 / 0.85) 0%,
+        rgb(0 0 0 / 0.55) 28%,
+        transparent 55%
+      );
+    }
+  }
+
+  .ch__ui {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.25rem 1.25rem 1.1rem;
+    pointer-events: none;
+  }
+
+  @media (min-width: 48rem) {
+    .ch__ui {
+      justify-content: center;
+      padding: clamp(1.5rem, 4vw, 3rem);
+    }
+  }
+
+  .ch__copy {
+    max-width: 26.25rem;
+    pointer-events: auto;
+  }
+
+  .ch__eyebrow {
+    margin: 0 0 0.65rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ch-muted);
+  }
+
+  .ch__title {
+    margin: 0;
+    font-size: 2.125rem;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    font-weight: 700;
+  }
+
+  @media (min-width: 48rem) {
+    .ch__title {
+      font-size: clamp(2.875rem, 4.2vw, 3.5rem);
+    }
+  }
+
+  .ch__title :global(.ch__word) {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 0.35s ease,
+      transform 0.35s ease;
+  }
+
+  .ch__title :global(.ch__word.is-on) {
+    opacity: 1;
+    transform: none;
+  }
+
+  .ch__subtitle {
+    margin: 0.65rem 0 0;
+    color: var(--ch-muted);
+    font-size: 1rem;
+    line-height: 1.35;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+
+  .ch__subtitle.is-on {
+    opacity: 1;
+  }
+
+  .ch__cta {
+    margin-top: 1.25rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .ch__wa,
+  .ch__shop {
+    flex: 1 1 0;
+    min-width: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 2.75rem;
+    padding: 0.65rem 0.7rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.82rem;
+    white-space: nowrap;
+  }
+
+  @media (min-width: 48rem) {
+    .ch__cta {
+      flex-wrap: wrap;
+      gap: 0.65rem;
+    }
+
+    .ch__wa,
+    .ch__shop {
+      flex: 0 1 auto;
+      min-height: 3rem;
+      padding: 0.8rem 1.35rem;
+      font-size: 1rem;
+    }
+  }
+
+  .ch__wa {
+    color: #fff !important;
+    background: linear-gradient(135deg, var(--ch-wa-a), var(--ch-wa-b) 55%, var(--ch-wa-c));
+    box-shadow: 0 10px 24px rgb(14 159 110 / 0.35);
+  }
+
+  .ch__wa:hover {
+    color: #fff !important;
+  }
+
+  .ch__wa :global(.ch__wa-icon) {
+    width: 1.05rem;
+    height: 1.05rem;
+    flex: 0 0 auto;
+  }
+
+  .ch__shop {
+    border: 1px solid rgb(255 255 255 / 0.85);
+    color: #fff !important;
+    background: transparent;
+  }
+
+  .ch__shop:hover {
+    color: #fff !important;
+    background: rgb(255 255 255 / 0.08);
+  }
+
+  .ch__wa:focus-visible,
+  .ch__shop:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 3px;
+  }
+
+  .ch__video-fallback {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ch__title :global(.ch__word) {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
