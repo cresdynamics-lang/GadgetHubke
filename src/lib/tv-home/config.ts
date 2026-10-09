@@ -81,11 +81,18 @@ export const tvHomeBasePricesKes = {
   "apple-tv-4k-3": 35000,
   "apple-tv-4k-3-ethernet": 43000,
   "apple-tv-4k-2": 25000,
-  "apple-tv-4k-1": 12000,
-  "apple-tv-hd": 9000,
+  "apple-tv-4k-1": 22000,
+  "apple-tv-hd": 22500,
   "homepod-2": 48000,
-  "homepod-1": 22000,
+  "homepod-1": 24000,
   "homepod-mini": 18000,
+} as const;
+
+/** EX-UK base prices. */
+export const tvHomeBaseExUkKes = {
+  "apple-tv-hd": 12000,
+  "apple-tv-4k-1": 14000,
+  "homepod-1": 24000,
 } as const;
 
 export type TvHomeConfig = typeof tvHomeConfig;

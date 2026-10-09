@@ -94,8 +94,8 @@ export const airpodsBasePricesKes = {
   "airpods-max-usbc": 72000,
   "airpods-3": 22000,
   "airpods-2": 16000,
-  "airpods-pro-1": 22000,
-  "airpods-max-2020": 55000,
+  "airpods-pro-1": 27500,
+  "airpods-max-2020": 67000,
 } as const;
 
 /** EX-UK base prices from sheet. */
@@ -110,6 +110,8 @@ export const airpodsBaseExUkKes = {
   "airpods-max-usbc": 55000,
   "airpods-3": 15000,
   "airpods-2": 11000,
+  "airpods-pro-1": 15000,
+  "airpods-max-2020": 46000,
 } as const;
 
 export type AirpodsConfig = typeof airpodsConfig;
