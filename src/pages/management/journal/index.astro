@@ -1,0 +1,108 @@
+---
+export const prerender = false;
+
+import ManagementLayout from "../../../layouts/ManagementLayout.astro";
+import { isAdminAuthed } from "../../../lib/admin";
+import { journalStatusCounts, listJournalPosts, type JournalStatus } from "../../../lib/journal";
+import { sampleStaff } from "../../../lib/management/sample";
+
+const authed = await isAdminAuthed(Astro.cookies);
+if (!authed) return Astro.redirect("/management");
+
+const statusFilter = (Astro.url.searchParams.get("status") || "all") as JournalStatus | "all";
+const q = (Astro.url.searchParams.get("q") || "").trim().toLowerCase();
+const all = await listJournalPosts();
+const counts = journalStatusCounts(all);
+const posts = all.filter((p) => {
+  if (statusFilter !== "all" && p.status !== statusFilter) return false;
+  if (q && !`${p.title} ${p.category} ${p.author}`.toLowerCase().includes(q)) return false;
+  return true;
+});
+
+const statusTag: Record<string, string> = {
+  published: "mgmt-tag--published",
+  scheduled: "mgmt-tag--scheduled",
+  review: "mgmt-tag--review",
+  draft: "mgmt-tag--draft",
+};
+---
+
+<ManagementLayout title="Journal - Management" authed active="journal" staffName={sampleStaff.name} staffRole={sampleStaff.role}>
+  <section>
+    <header style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.75rem;align-items:end;margin-bottom:1rem;">
+      <div>
+        <h1 class="mgmt-page-title">Journal</h1>
+        <p class="mgmt-muted">Guides, tips and news that appear on the website’s Journal page</p>
+      </div>
+      <a class="mgmt-btn" href="/management/journal/new">+ New post</a>
+    </header>
+
+    <div class="mgmt-grid mgmt-grid--4" style="margin-bottom:1rem;">
+      <div class="mgmt-card"><p class="mgmt-muted">Published</p><p class="mgmt-stat">{counts.published}</p></div>
+      <div class="mgmt-card"><p class="mgmt-muted">Scheduled</p><p class="mgmt-stat">{counts.scheduled}</p></div>
+      <div class="mgmt-card"><p class="mgmt-muted">In review</p><p class="mgmt-stat">{counts.review}</p></div>
+      <div class="mgmt-card"><p class="mgmt-muted">Drafts</p><p class="mgmt-stat">{counts.draft}</p></div>
+    </div>
+
+    <div class="mgmt-card">
+      <form class="mgmt-filter" method="get">
+        <input class="mgmt-input" type="search" name="q" value={q} placeholder="Search posts by title" style="max-width:18rem;" />
+        <select class="mgmt-select" name="status" style="max-width:10rem;">
+          <option value="all" selected={statusFilter === "all"}>All</option>
+          <option value="published" selected={statusFilter === "published"}>Published</option>
+          <option value="scheduled" selected={statusFilter === "scheduled"}>Scheduled</option>
+          <option value="review" selected={statusFilter === "review"}>In review</option>
+          <option value="draft" selected={statusFilter === "draft"}>Draft</option>
+        </select>
+        <button class="mgmt-btn mgmt-btn--ghost" type="submit">Filter</button>
+      </form>
+
+      <div class="mgmt-tabs">
+        <a class:list={["mgmt-tab", { "is-active": statusFilter === "all" }]} href="/management/journal">All {counts.all}</a>
+        <a class:list={["mgmt-tab", { "is-active": statusFilter === "published" }]} href="/management/journal?status=published">Published</a>
+        <a class:list={["mgmt-tab", { "is-active": statusFilter === "scheduled" }]} href="/management/journal?status=scheduled">Scheduled</a>
+        <a class:list={["mgmt-tab", { "is-active": statusFilter === "review" }]} href="/management/journal?status=review">In review</a>
+        <a class:list={["mgmt-tab", { "is-active": statusFilter === "draft" }]} href="/management/journal?status=draft">Draft</a>
+      </div>
+
+      <div style="overflow:auto;">
+        <table class="mgmt-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Author</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Views</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              posts.map((p) => (
+                <tr>
+                  <td>
+                    <strong>{p.title}</strong>
+                  </td>
+                  <td>{p.category}</td>
+                  <td>{p.author}</td>
+                  <td>
+                    <span class:list={["mgmt-tag", statusTag[p.status]]}>{p.status}</span>
+                  </td>
+                  <td>{p.dateLabel}</td>
+                  <td>{p.views || "—"}</td>
+                  <td>
+                    <a class="mgmt-link" href={`/management/journal/${p.id}`}>
+                      Edit ›
+                    </a>
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</ManagementLayout>

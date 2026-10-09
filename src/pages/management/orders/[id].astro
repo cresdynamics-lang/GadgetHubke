@@ -1,0 +1,53 @@
+---
+export const prerender = false;
+
+import ManagementLayout from "../../../layouts/ManagementLayout.astro";
+import { isAdminAuthed } from "../../../lib/admin";
+import { sampleOrders, sampleStaff } from "../../../lib/management/sample";
+
+const authed = await isAdminAuthed(Astro.cookies);
+if (!authed) return Astro.redirect("/management");
+
+const id = `#${Astro.params.id}`;
+const order = sampleOrders.find((o) => o.id === id) || sampleOrders[0];
+---
+
+<ManagementLayout title={`Order ${order.id} - Management`} authed active="orders" staffName={sampleStaff.name} staffRole={sampleStaff.role}>
+  <p class="mgmt-banner">Sample order detail — full actions in Phase E.</p>
+  <p class="mgmt-muted" style="margin-bottom:0.5rem;">
+    <a class="mgmt-link" href="/management/orders">‹ Back to Orders</a>
+  </p>
+  <header style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.75rem;margin-bottom:1rem;">
+    <div>
+      <h1 class="mgmt-page-title">Order {order.id}</h1>
+      <p class="mgmt-muted">{order.customer} · {order.placed}</p>
+    </div>
+    <span class:list={["mgmt-tag", { "mgmt-tag--new": order.status === "New" }]}>{order.status}</span>
+  </header>
+
+  <div class="mgmt-grid mgmt-grid--2">
+    <div class="mgmt-card">
+      <h2 style="font-size:1.05rem;">Items</h2>
+      <p style="margin:0.75rem 0 0;"><strong>{order.item}</strong></p>
+      <p class="mgmt-muted">{order.total}</p>
+    </div>
+    <div class="mgmt-card">
+      <h2 style="font-size:1.05rem;">Payment & source</h2>
+      <p style="margin:0.75rem 0 0;">{order.payment}</p>
+      <p class="mgmt-muted">Came from {order.from}</p>
+    </div>
+    <div class="mgmt-card">
+      <h2 style="font-size:1.05rem;">Customer</h2>
+      <p style="margin:0.75rem 0 0;">{order.customer}</p>
+      <p class="mgmt-muted">Phone shown only on open orders (sample hidden).</p>
+    </div>
+    <div class="mgmt-card">
+      <h2 style="font-size:1.05rem;">Actions</h2>
+      <div class="mgmt-actions" style="margin-top:0.75rem;">
+        <button class="mgmt-btn" type="button" disabled>Confirm</button>
+        <button class="mgmt-btn mgmt-btn--ghost" type="button" disabled>Mark dispatched</button>
+        <button class="mgmt-btn mgmt-btn--ghost" type="button" disabled>Add note</button>
+      </div>
+    </div>
+  </div>
+</ManagementLayout>

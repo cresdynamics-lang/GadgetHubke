@@ -1,0 +1,89 @@
+---
+export const prerender = false;
+
+import ManagementLayout from "../../../layouts/ManagementLayout.astro";
+import { isAdminAuthed } from "../../../lib/admin";
+import { sampleOrders, sampleStaff } from "../../../lib/management/sample";
+
+const authed = await isAdminAuthed(Astro.cookies);
+if (!authed) return Astro.redirect("/management");
+
+const status = (Astro.url.searchParams.get("status") || "all").toLowerCase();
+const orders = sampleOrders.filter((o) => status === "all" || o.status.toLowerCase() === status);
+const counts = {
+  new: sampleOrders.filter((o) => o.status === "New").length,
+  confirmed: sampleOrders.filter((o) => o.status === "Confirmed").length,
+  dispatched: sampleOrders.filter((o) => o.status === "Dispatched").length,
+  delivered: sampleOrders.filter((o) => o.status === "Delivered").length,
+};
+---
+
+<ManagementLayout title="Orders - Management" authed active="orders" staffName={sampleStaff.name} staffRole={sampleStaff.role}>
+  <p class="mgmt-banner">Sample data — cart / WhatsApp order intake wires in Phase E.</p>
+  <header style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.75rem;align-items:end;margin-bottom:1rem;">
+    <div>
+      <h1 class="mgmt-page-title">Orders</h1>
+      <p class="mgmt-muted">Website checkout and WhatsApp orders in one list</p>
+    </div>
+    <div class="mgmt-actions">
+      <button class="mgmt-btn mgmt-btn--ghost" type="button" disabled>Export CSV</button>
+      <button class="mgmt-btn" type="button" disabled>+ Add WhatsApp order</button>
+    </div>
+  </header>
+
+  <div class="mgmt-grid mgmt-grid--4" style="margin-bottom:1rem;">
+    <div class="mgmt-card"><p class="mgmt-muted">New</p><p class="mgmt-stat">{counts.new}</p><p class="mgmt-muted">to confirm</p></div>
+    <div class="mgmt-card"><p class="mgmt-muted">Confirmed</p><p class="mgmt-stat">{counts.confirmed}</p><p class="mgmt-muted">to dispatch</p></div>
+    <div class="mgmt-card"><p class="mgmt-muted">Out for delivery</p><p class="mgmt-stat">{counts.dispatched}</p></div>
+    <div class="mgmt-card"><p class="mgmt-muted">Delivered this week</p><p class="mgmt-stat">{counts.delivered}</p></div>
+  </div>
+
+  <div class="mgmt-card">
+    <div class="mgmt-tabs">
+      <a class:list={["mgmt-tab", { "is-active": status === "all" }]} href="/management/orders">All</a>
+      <a class:list={["mgmt-tab", { "is-active": status === "new" }]} href="/management/orders?status=new">New {counts.new}</a>
+      <a class:list={["mgmt-tab", { "is-active": status === "confirmed" }]} href="/management/orders?status=confirmed">Confirmed</a>
+      <a class:list={["mgmt-tab", { "is-active": status === "dispatched" }]} href="/management/orders?status=dispatched">Dispatched</a>
+      <a class:list={["mgmt-tab", { "is-active": status === "delivered" }]} href="/management/orders?status=delivered">Delivered</a>
+      <a class:list={["mgmt-tab", { "is-active": status === "cancelled" }]} href="/management/orders?status=cancelled">Cancelled</a>
+    </div>
+    <div style="overflow:auto;">
+      <table class="mgmt-table">
+        <thead>
+          <tr>
+            <th>Order</th>
+            <th>Customer</th>
+            <th>Item</th>
+            <th>Total</th>
+            <th>Payment</th>
+            <th>Came from</th>
+            <th>Status</th>
+            <th>Placed</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            orders.map((o) => (
+              <tr>
+                <td>
+                  <a class="mgmt-link" href={`/management/orders/${o.id.replace("#", "")}`}>
+                    {o.id}
+                  </a>
+                </td>
+                <td>{o.customer}</td>
+                <td>{o.item}</td>
+                <td>{o.total}</td>
+                <td>{o.payment}</td>
+                <td>{o.from}</td>
+                <td>
+                  <span class:list={["mgmt-tag", { "mgmt-tag--new": o.status === "New" }]}>{o.status}</span>
+                </td>
+                <td class="mgmt-muted">{o.placed}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</ManagementLayout>

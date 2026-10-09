@@ -1,6 +1,6 @@
 /** Homepage merchandising content - KES base prices */
 
-import { latestPosts } from "./blog";
+import { latestPosts } from "./journal";
 import { ghImages, macProductPhotos } from "./images";
 
 export type HeroPhone = {
@@ -224,9 +224,9 @@ export const homeDeals: DealItem[] = [
 export const homeBlog: BlogTeaser[] = latestPosts(3).map((post) => ({
   id: post.slug,
   title: post.title,
-  href: `/blog/${post.slug}`,
+  href: `/journal/${post.slug}`,
   excerpt: post.excerpt,
-  dateLabel: post.tags[0] ?? post.dateLabel,
+  dateLabel: post.category || post.tags[0] || post.dateLabel,
 }));
 
 /** Accessories strip - Pencil or Keyboard, Pointers, Power, Cases */

@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { site } from "../lib/site";
 import { homeCategories } from "../lib/home";
 import { productNav } from "../lib/catalog";
-import { blogPosts } from "../lib/blog";
+import { journalSeedPosts } from "../lib/journal";
 import { products } from "../lib/products";
 import { tvHomeModels } from "../lib/tv-home";
 
@@ -12,7 +12,7 @@ const staticPaths = [
   "/deals",
   "/trade-in",
   "/lipa-mdogo-mdogo",
-  "/blog",
+  "/journal",
   "/support",
   "/about",
   "/contact",
@@ -53,7 +53,9 @@ export const GET: APIRoute = () => {
     urls.add(abs(cat.href));
     for (const child of cat.children ?? []) urls.add(abs(child.href));
   }
-  for (const post of blogPosts) urls.add(abs(`/blog/${post.slug}`));
+  for (const post of journalSeedPosts.filter((p) => p.status === "published")) {
+    urls.add(abs(`/journal/${post.slug}`));
+  }
   for (const product of products) {
     urls.add(abs(product.overviewHref));
     urls.add(abs(product.specsHref));

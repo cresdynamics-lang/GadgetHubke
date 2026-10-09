@@ -1,0 +1,74 @@
+---
+export const prerender = false;
+
+import ManagementLayout from "../../layouts/ManagementLayout.astro";
+import { isAdminAuthed } from "../../lib/admin";
+import { sampleStaff, sampleStaffList } from "../../lib/management/sample";
+
+const authed = await isAdminAuthed(Astro.cookies);
+if (!authed) return Astro.redirect("/management");
+---
+
+<ManagementLayout title="Staff - Management" authed active="staff" staffName={sampleStaff.name} staffRole={sampleStaff.role}>
+  <p class="mgmt-banner">Sample team — invites, roles, and activity log in Phase I.</p>
+  <header style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.75rem;margin-bottom:1rem;">
+    <div>
+      <h1 class="mgmt-page-title">Staff and roles</h1>
+      <p class="mgmt-muted">Who can see and change what</p>
+    </div>
+    <button class="mgmt-btn" type="button" disabled>+ Invite</button>
+  </header>
+
+  <div class="mgmt-card" style="margin-bottom:1rem;">
+    <table class="mgmt-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          sampleStaffList.map((s) => (
+            <tr>
+              <td>{s.name}</td>
+              <td>{s.email}</td>
+              <td>{s.role}</td>
+              <td>
+                <span class:list={["mgmt-tag", { "mgmt-tag--scheduled": s.status === "Invited" }]}>{s.status}</span>
+              </td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mgmt-card">
+    <h2 style="font-size:1.05rem;">Role matrix (PDF default)</h2>
+    <div style="overflow:auto;margin-top:0.75rem;">
+      <table class="mgmt-table">
+        <thead>
+          <tr>
+            <th>Area</th>
+            <th>Owner</th>
+            <th>Manager</th>
+            <th>Sales</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Dashboard</td><td>✓</td><td>✓</td><td>✓ (no sales totals)</td></tr>
+          <tr><td>Live visitors</td><td>✓</td><td>✓</td><td>—</td></tr>
+          <tr><td>Journal</td><td>publish</td><td>publish</td><td>draft</td></tr>
+          <tr><td>Orders</td><td>✓</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Trade-ins</td><td>✓</td><td>✓</td><td>quote</td></tr>
+          <tr><td>Sales</td><td>✓</td><td>✓</td><td>—</td></tr>
+          <tr><td>Lipa</td><td>edit</td><td>edit</td><td>record payment</td></tr>
+          <tr><td>Staff</td><td>✓</td><td>—</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</ManagementLayout>

@@ -1,0 +1,64 @@
+---
+export const prerender = false;
+
+import ManagementLayout from "../../../layouts/ManagementLayout.astro";
+import { isAdminAuthed, listSearchMisses } from "../../../lib/admin";
+import { sampleStaff } from "../../../lib/management/sample";
+
+const authed = await isAdminAuthed(Astro.cookies);
+if (!authed) return Astro.redirect("/management");
+
+const misses = await listSearchMisses();
+---
+
+<ManagementLayout title="Search misses - Management" authed active="search-misses" staffName={sampleStaff.name} staffRole={sampleStaff.role}>
+  <section class="mgmt-card">
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.75rem;align-items:center;">
+      <div>
+        <h1 class="mgmt-page-title">Search misses</h1>
+        <p class="mgmt-muted">Queries shoppers typed that returned no results. Use this to add products or synonyms.</p>
+      </div>
+      <button type="button" class="mgmt-btn mgmt-btn--ghost" data-clear>Clear all</button>
+    </div>
+    <p class="mgmt-error" data-err hidden></p>
+    {
+      misses.length === 0 ? (
+        <p class="mgmt-muted" style="margin-top:1rem;">No misses logged yet.</p>
+      ) : (
+        <table class="mgmt-table" style="margin-top:1rem;">
+          <thead>
+            <tr>
+              <th>Query</th>
+              <th>When</th>
+            </tr>
+          </thead>
+          <tbody>
+            {misses.map((m) => (
+              <tr>
+                <td>{m.q}</td>
+                <td class="mgmt-muted">{new Date(m.at).toLocaleString("en-KE")}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )
+    }
+  </section>
+</ManagementLayout>
+
+<script>
+  document.querySelector("[data-clear]")?.addEventListener("click", async () => {
+    if (!confirm("Clear all search misses?")) return;
+    const res = await fetch("/api/admin/search-misses", { method: "DELETE" });
+    if (!res.ok) {
+      const data = await res.json();
+      const err = document.querySelector("[data-err]");
+      if (err) {
+        err.textContent = data.error || "Clear failed";
+        err.removeAttribute("hidden");
+      }
+      return;
+    }
+    location.reload();
+  });
+</script>

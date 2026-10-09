@@ -78,10 +78,10 @@ const lipa = lipaMonthly(model.basePriceKes);
       }
     </div>
     <p class="wcard__price">
-      From {formatKes(model.basePriceKes)}
+      <span data-live-price={model.id} data-live-prefix="From ">From {formatKes(model.basePriceKes)}</span>
       <small>or {formatKes(lipa.monthlyKes)} / mo</small>
     </p>
-    <p class="wcard__fine">Sample price until stock is entered in the admin.</p>
+    <p class="wcard__fine" data-live-stock={model.id}>Sample price until stock is entered in the admin.</p>
     <div class="wcard__actions">
       <a class="btn btn--primary btn--xs" href={`/watch/${model.id}`}>View</a>
       <button

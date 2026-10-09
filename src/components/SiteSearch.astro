@@ -788,6 +788,11 @@ const tvHomeAcc = Object.fromEntries(
           misses.push({ q, at: Date.now() });
           sessionStorage.setItem("gh-search-misses", JSON.stringify(misses.slice(-50)));
         } catch {}
+        void fetch("/api/search-miss", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ q }),
+        }).catch(() => {});
         return;
       }
       empty.hidden = true;

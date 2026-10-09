@@ -1,0 +1,41 @@
+---
+/**
+ * Applies admin price/stock overlays on the storefront.
+ * Targets: [data-live-price="product-id"], [data-live-stock="product-id"]
+ */
+---
+
+<script>
+  function formatKes(n: number) {
+    return `KSh ${Math.round(n).toLocaleString("en-KE")}`;
+  }
+
+  async function applyOverlay() {
+    try {
+      const res = await fetch("/api/catalog-overlay");
+      if (!res.ok) return;
+      const data = (await res.json()) as {
+        overlay: Record<string, { priceKes?: number; inStock?: boolean }>;
+      };
+      const overlay = data.overlay || {};
+      for (const [id, entry] of Object.entries(overlay)) {
+        if (typeof entry.priceKes === "number") {
+          document.querySelectorAll(`[data-live-price="${id}"]`).forEach((el) => {
+            const prefix = el.getAttribute("data-live-prefix") || "";
+            el.textContent = `${prefix}${formatKes(entry.priceKes!)}`;
+          });
+        }
+        if (typeof entry.inStock === "boolean") {
+          document.querySelectorAll(`[data-live-stock="${id}"]`).forEach((el) => {
+            el.textContent = entry.inStock ? "In stock" : "Out of stock";
+            el.classList.toggle("is-oos", !entry.inStock);
+          });
+        }
+      }
+    } catch {
+      /* ignore */
+    }
+  }
+
+  void applyOverlay();
+</script>

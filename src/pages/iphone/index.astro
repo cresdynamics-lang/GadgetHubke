@@ -77,6 +77,7 @@ const comparePayload = list.map((m) => {
             latestByFamily(18).map((item) => (
               <li data-latest-card data-family="18">
                 <ProductCard
+                  id={item.id}
                   name={item.name}
                   href={item.href}
                   priceKes={item.priceKes}
@@ -96,6 +97,7 @@ const comparePayload = list.map((m) => {
             latestByFamily(17).map((item) => (
               <li data-latest-card data-family="17">
                 <ProductCard
+                  id={item.id}
                   name={item.name}
                   href={item.href}
                   priceKes={item.priceKes}

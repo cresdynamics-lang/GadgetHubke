@@ -1,0 +1,212 @@
+---
+export const prerender = false;
+
+import ManagementLayout from "../../../layouts/ManagementLayout.astro";
+import { isAdminAuthed } from "../../../lib/admin";
+import { listJournalPosts } from "../../../lib/journal";
+import { sampleStaff } from "../../../lib/management/sample";
+
+const authed = await isAdminAuthed(Astro.cookies);
+if (!authed) return Astro.redirect("/management");
+
+const id = Astro.params.id!;
+const posts = await listJournalPosts();
+const post = posts.find((p) => p.id === id);
+if (!post) return Astro.redirect("/management/journal");
+
+const body = post.paragraphs.join("\n\n");
+const previewUrl = `gadgethubke.com › journal › ${post.slug}`;
+---
+
+<ManagementLayout title={`${post.title} - Journal`} authed active="journal" staffName={sampleStaff.name} staffRole={sampleStaff.role}>
+  <section>
+    <p class="mgmt-muted" style="margin-bottom:0.5rem;">
+      <a class="mgmt-link" href="/management/journal">‹ Back to Journal</a>
+      · draft saved automatically
+    </p>
+    <header style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.75rem;align-items:end;margin-bottom:1rem;">
+      <h1 class="mgmt-page-title">Write a journal post</h1>
+      <div class="mgmt-actions">
+        <a class="mgmt-btn mgmt-btn--ghost" href={`/journal/${post.slug}`} target="_blank" rel="noopener">Preview on site</a>
+        <button class="mgmt-btn mgmt-btn--ghost" type="button" data-action="review">Send for review</button>
+        <button class="mgmt-btn" type="button" data-action="publish">Publish</button>
+      </div>
+    </header>
+
+    <form data-journal-form class="mgmt-grid" style="gap:1rem;">
+      <input type="hidden" name="id" value={post.id} />
+      <div class="mgmt-card">
+        <h2 style="font-size:1rem;">Title and address</h2>
+        <label style="display:grid;gap:0.3rem;margin-top:0.75rem;">
+          <span class="mgmt-muted">Title</span>
+          <input class="mgmt-input" name="title" required value={post.title} data-title />
+        </label>
+        <label style="display:grid;gap:0.3rem;margin-top:0.75rem;">
+          <span class="mgmt-muted">Page address</span>
+          <div style="display:flex;align-items:center;gap:0.35rem;">
+            <span class="mgmt-muted">/journal/</span>
+            <input class="mgmt-input" name="slug" value={post.slug} data-slug />
+          </div>
+        </label>
+      </div>
+
+      <div class="mgmt-card">
+        <h2 style="font-size:1rem;">Writing area</h2>
+        <label style="display:grid;gap:0.3rem;margin-top:0.75rem;">
+          <span class="mgmt-muted">Body (paragraphs separated by a blank line)</span>
+          <textarea class="mgmt-textarea" name="body" required rows="12">{body}</textarea>
+        </label>
+      </div>
+
+      <div class="mgmt-grid mgmt-grid--2">
+        <div class="mgmt-card">
+          <h2 style="font-size:1rem;">Cover photo</h2>
+          <label style="display:grid;gap:0.3rem;margin-top:0.75rem;">
+            <span class="mgmt-muted">Description for screen readers</span>
+            <input class="mgmt-input" name="coverAlt" value={post.coverAlt || ""} />
+          </label>
+        </div>
+        <div class="mgmt-card">
+          <h2 style="font-size:1rem;">Category and tags</h2>
+          <label style="display:grid;gap:0.3rem;margin-top:0.75rem;">
+            <span class="mgmt-muted">Category</span>
+            <input class="mgmt-input" name="category" value={post.category} />
+          </label>
+          <label style="display:grid;gap:0.3rem;margin-top:0.75rem;">
+            <span class="mgmt-muted">Tags (comma separated)</span>
+            <input class="mgmt-input" name="tags" value={post.tags.join(", ")} />
+          </label>
+        </div>
+      </div>
+
+      <div class="mgmt-grid mgmt-grid--2">
+        <div class="mgmt-card">
+          <h2 style="font-size:1rem;">Publish</h2>
+          <label style="display:grid;gap:0.3rem;margin-top:0.75rem;">
+            <span class="mgmt-muted">Status</span>
+            <select class="mgmt-select" name="status" data-status>
+              {["draft", "review", "scheduled", "published"].map((s) => (
+                <option value={s} selected={post.status === s}>
+                  {s}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label style="display:grid;gap:0.3rem;margin-top:0.75rem;">
+            <span class="mgmt-muted">Author</span>
+            <input class="mgmt-input" name="author" value={post.author} />
+          </label>
+          <label style="display:grid;gap:0.3rem;margin-top:0.75rem;">
+            <span class="mgmt-muted">Publish / schedule date</span>
+            <input class="mgmt-input" type="date" name="date" value={post.date || ""} />
+          </label>
+          <label style="display:flex;gap:0.5rem;align-items:center;margin-top:0.75rem;">
+            <input type="checkbox" name="needsReview" checked={post.needsReview} />
+            <span class="mgmt-muted">Needs review first</span>
+          </label>
+        </div>
+        <div class="mgmt-card">
+          <h2 style="font-size:1rem;">Search appearance</h2>
+          <label style="display:grid;gap:0.3rem;margin-top:0.75rem;">
+            <span class="mgmt-muted">SEO title</span>
+            <input class="mgmt-input" name="seoTitle" value={post.seoTitle || `${post.title} | Gadget Hub`} data-seo-title />
+          </label>
+          <label style="display:grid;gap:0.3rem;margin-top:0.75rem;">
+            <span class="mgmt-muted">Search description</span>
+            <textarea class="mgmt-textarea" name="seoDescription" style="min-height:5rem;">{post.seoDescription || post.excerpt}</textarea>
+          </label>
+          <label style="display:grid;gap:0.3rem;margin-top:0.75rem;">
+            <span class="mgmt-muted">Excerpt</span>
+            <textarea class="mgmt-textarea" name="excerpt" style="min-height:5rem;">{post.excerpt}</textarea>
+          </label>
+          <div class="mgmt-card" style="margin-top:0.75rem;background:#f5f5f7;">
+            <p style="font-size:0.95rem;color:#1a0dab;margin:0;" data-preview-title>{post.seoTitle || `${post.title} | Gadget Hub`}</p>
+            <p class="mgmt-muted" style="margin:0.2rem 0;font-size:0.8rem;" data-preview-url>{previewUrl}</p>
+            <p class="mgmt-muted" style="margin:0;font-size:0.85rem;" data-preview-desc>{post.seoDescription || post.excerpt}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mgmt-card">
+        <h2 style="font-size:1rem;">Before you publish</h2>
+        <ul class="mgmt-checklist" style="margin-top:0.75rem;">
+          <li><input type="checkbox" checked={Boolean(post.coverAlt)} /> Cover photo has a description</li>
+          <li><input type="checkbox" checked={Boolean(post.seoDescription || post.excerpt)} /> Search description added</li>
+          <li><input type="checkbox" /> All links work</li>
+        </ul>
+        <p class="mgmt-error" data-form-err hidden style="margin-top:0.75rem;"></p>
+        <p class="mgmt-ok" data-form-ok hidden style="margin-top:0.75rem;">Saved</p>
+        <div class="mgmt-actions" style="margin-top:1rem;">
+          <button class="mgmt-btn" type="submit">Save</button>
+        </div>
+      </div>
+    </form>
+  </section>
+</ManagementLayout>
+
+<script>
+  const form = document.querySelector("[data-journal-form]") as HTMLFormElement;
+  const titleEl = form.querySelector<HTMLInputElement>("[data-title]");
+  const slugEl = form.querySelector<HTMLInputElement>("[data-slug]");
+  const statusEl = form.querySelector<HTMLSelectElement>("[data-status]");
+  const err = document.querySelector("[data-form-err]");
+  const ok = document.querySelector("[data-form-ok]");
+
+  function refreshPreview() {
+    const title = titleEl?.value || "Title";
+    const slug = slugEl?.value || "…";
+    const seoTitle = (form.elements.namedItem("seoTitle") as HTMLInputElement)?.value || `${title} | Gadget Hub`;
+    const desc = (form.elements.namedItem("seoDescription") as HTMLTextAreaElement)?.value || "Short description…";
+    const t = document.querySelector("[data-preview-title]");
+    const u = document.querySelector("[data-preview-url]");
+    const d = document.querySelector("[data-preview-desc]");
+    if (t) t.textContent = seoTitle;
+    if (u) u.textContent = `gadgethubke.com › journal › ${slug}`;
+    if (d) d.textContent = desc;
+  }
+  form.addEventListener("input", refreshPreview);
+
+  async function save(statusOverride?: string) {
+    err?.setAttribute("hidden", "");
+    ok?.setAttribute("hidden", "");
+    const fd = new FormData(form);
+    if (statusOverride && statusEl) statusEl.value = statusOverride;
+    const payload = {
+      id: String(fd.get("id") || ""),
+      title: String(fd.get("title") || ""),
+      slug: String(fd.get("slug") || ""),
+      body: String(fd.get("body") || ""),
+      coverAlt: String(fd.get("coverAlt") || ""),
+      category: String(fd.get("category") || ""),
+      tags: String(fd.get("tags") || ""),
+      status: String(fd.get("status") || "draft"),
+      author: String(fd.get("author") || ""),
+      date: String(fd.get("date") || ""),
+      needsReview: Boolean(fd.get("needsReview")),
+      seoTitle: String(fd.get("seoTitle") || ""),
+      seoDescription: String(fd.get("seoDescription") || ""),
+      excerpt: String(fd.get("excerpt") || ""),
+    };
+    const res = await fetch("/api/management/journal", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      if (err) {
+        err.textContent = data.error || "Save failed";
+        err.removeAttribute("hidden");
+      }
+      return;
+    }
+    ok?.removeAttribute("hidden");
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    void save();
+  });
+  document.querySelector('[data-action="review"]')?.addEventListener("click", () => void save("review"));
+  document.querySelector('[data-action="publish"]')?.addEventListener("click", () => void save("published"));
+</script>

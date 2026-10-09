@@ -123,10 +123,10 @@ const hoverSrc =
     }
 
     <p class="icard__price">
-      From {formatKes(model.basePriceKes)}
+      <span data-live-price={model.id} data-live-prefix="From ">From {formatKes(model.basePriceKes)}</span>
       <span>or {formatKes(lipa.monthlyKes)} / mo sample</span>
     </p>
-    <p class="icard__fine">{ipadConfig.samplePriceDisclaimer}</p>
+    <p class="icard__fine" data-live-stock={model.id}>{ipadConfig.samplePriceDisclaimer}</p>
 
     <div class="icard__actions">
       <a class="btn btn--secondary btn--xs" href={href}>View</a>

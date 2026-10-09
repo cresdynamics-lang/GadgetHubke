@@ -1,0 +1,486 @@
+---
+/**
+ * Gadget Hub Management chrome — PDF sidebar IA (no storefront header).
+ */
+import interLatin from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  authed?: boolean;
+  active?: string;
+  staffName?: string;
+  staffRole?: string;
+}
+
+const {
+  title = "Management - GadgetHub",
+  authed = false,
+  active = "dashboard",
+  staffName = "Asha M.",
+  staffRole = "Owner",
+} = Astro.props;
+
+const nav = [
+  { id: "dashboard", href: "/management", label: "Dashboard" },
+  { id: "live", href: "/management/live", label: "Live visitors" },
+  { id: "journal", href: "/management/journal", label: "Journal" },
+  { id: "orders", href: "/management/orders", label: "Orders" },
+  { id: "trade-ins", href: "/management/trade-ins", label: "Trade-ins" },
+  { id: "sales", href: "/management/sales", label: "Sales" },
+  { id: "lipa", href: "/management/lipa", label: "Lipa Mdogo Mdogo" },
+  { id: "staff", href: "/management/staff", label: "Staff" },
+] as const;
+
+const tools = [
+  { id: "catalog", href: "/management/tools/catalog", label: "Prices & stock" },
+  { id: "reviews", href: "/management/tools/reviews", label: "Reviews" },
+  { id: "search-misses", href: "/management/tools/search-misses", label: "Search misses" },
+] as const;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="icon" type="image/png" href="/images/logo.png" />
+    <title>{title}</title>
+  </head>
+  <body class:list={["mgmt-body", { "mgmt-body--authed": authed }]}>
+    {
+      authed ? (
+        <div class="mgmt-shell">
+          <aside class="mgmt-side">
+            <a class="mgmt-side__brand" href="/management">Gadget Hub</a>
+            <nav class="mgmt-side__nav" aria-label="Management">
+              {nav.map((item) => (
+                <a
+                  href={item.href}
+                  class:list={["mgmt-side__link", { "is-active": active === item.id }]}
+                  aria-current={active === item.id ? "page" : undefined}
+                >
+                  {item.label}
+                </a>
+              ))}
+            </nav>
+            <p class="mgmt-side__label">Store tools</p>
+            <nav class="mgmt-side__nav" aria-label="Store tools">
+              {tools.map((item) => (
+                <a
+                  href={item.href}
+                  class:list={["mgmt-side__link", { "is-active": active === item.id }]}
+                  aria-current={active === item.id ? "page" : undefined}
+                >
+                  {item.label}
+                </a>
+              ))}
+            </nav>
+            <div class="mgmt-side__user">
+              <strong>{staffName}</strong>
+              <span>{staffRole}</span>
+              <button type="button" class="mgmt-side__logout" data-mgmt-logout>
+                Log out
+              </button>
+            </div>
+          </aside>
+          <div class="mgmt-content">
+            <header class="mgmt-top">
+              <a class="mgmt-top__site" href="/" target="_blank" rel="noopener">View site</a>
+            </header>
+            <main class="mgmt-main">
+              <slot />
+            </main>
+          </div>
+        </div>
+      ) : (
+        <main class="mgmt-main mgmt-main--gate">
+          <slot />
+        </main>
+      )
+    }
+    {
+      authed ? (
+        <script>
+          document.querySelector("[data-mgmt-logout]")?.addEventListener("click", async () => {
+            await fetch("/api/management/logout", { method: "POST" });
+            location.href = "/management";
+          });
+        </script>
+      ) : null
+    }
+  </body>
+</html>
+
+<style is:global>
+  .mgmt-body {
+    margin: 0;
+    min-height: 100vh;
+    background: #f0f0f2;
+    color: #1d1d1f;
+    font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  }
+  .mgmt-shell {
+    display: grid;
+    min-height: 100vh;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 56rem) {
+    .mgmt-shell {
+      grid-template-columns: 15.5rem minmax(0, 1fr);
+    }
+  }
+  .mgmt-side {
+    background: #111113;
+    color: #f5f5f7;
+    padding: 1.25rem 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .mgmt-side__brand {
+    color: inherit;
+    text-decoration: none;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    font-size: 1.05rem;
+    margin-bottom: 1rem;
+    padding: 0 0.5rem;
+  }
+  .mgmt-side__label {
+    margin: 1rem 0 0.35rem;
+    padding: 0 0.5rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #86868b;
+  }
+  .mgmt-side__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .mgmt-side__link {
+    color: #d2d2d7;
+    text-decoration: none;
+    font-size: 0.92rem;
+    padding: 0.45rem 0.55rem;
+    border-radius: 0.45rem;
+  }
+  .mgmt-side__link:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.06);
+  }
+  .mgmt-side__link.is-active {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.12);
+    font-weight: 600;
+  }
+  .mgmt-side__user {
+    margin-top: auto;
+    padding: 1rem 0.55rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: grid;
+    gap: 0.15rem;
+    font-size: 0.85rem;
+  }
+  .mgmt-side__user strong {
+    font-size: 0.95rem;
+  }
+  .mgmt-side__user span {
+    color: #86868b;
+  }
+  .mgmt-side__logout {
+    margin-top: 0.65rem;
+    justify-self: start;
+    font: inherit;
+    font-size: 0.82rem;
+    border: 0;
+    background: #3a3a3c;
+    color: #fff;
+    border-radius: 999px;
+    padding: 0.35rem 0.75rem;
+    cursor: pointer;
+  }
+  .mgmt-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .mgmt-top {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.75rem 1.25rem;
+  }
+  .mgmt-top__site {
+    font-size: 0.85rem;
+    color: #6e6e73;
+    text-decoration: none;
+  }
+  .mgmt-top__site:hover {
+    color: #1d1d1f;
+  }
+  .mgmt-main {
+    padding: 0.5rem 1.25rem 3rem;
+    max-width: 72rem;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .mgmt-main--gate {
+    padding: 2rem 1.25rem 3rem;
+  }
+  .mgmt-card {
+    background: #fff;
+    border-radius: 0.85rem;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    padding: 1.15rem 1.25rem;
+  }
+  .mgmt-card h1,
+  .mgmt-card h2 {
+    margin: 0 0 0.5rem;
+    letter-spacing: -0.02em;
+  }
+  .mgmt-muted {
+    color: #6e6e73;
+    font-size: 0.9rem;
+  }
+  .mgmt-eyebrow {
+    margin: 0 0 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #86868b;
+  }
+  .mgmt-page-title {
+    margin: 0 0 0.25rem;
+    font-size: clamp(1.5rem, 3vw, 1.85rem);
+    letter-spacing: -0.03em;
+  }
+  .mgmt-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+  .mgmt-table th,
+  .mgmt-table td {
+    text-align: left;
+    padding: 0.6rem 0.45rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    vertical-align: middle;
+  }
+  .mgmt-table th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #6e6e73;
+    font-weight: 600;
+  }
+  .mgmt-table input[type="number"],
+  .mgmt-table input[type="text"],
+  .mgmt-input,
+  .mgmt-select,
+  .mgmt-textarea {
+    width: 100%;
+    font: inherit;
+    padding: 0.5rem 0.65rem;
+    border: 1px solid rgba(0, 0, 0, 0.14);
+    border-radius: 0.5rem;
+    background: #fff;
+  }
+  .mgmt-textarea {
+    min-height: 10rem;
+    resize: vertical;
+  }
+  .mgmt-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    align-items: center;
+  }
+  .mgmt-btn {
+    font: inherit;
+    border: 0;
+    border-radius: 0.5rem;
+    padding: 0.45rem 0.8rem;
+    cursor: pointer;
+    background: #1d1d1f;
+    color: #fff;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .mgmt-btn--ghost {
+    background: #e8e8ed;
+    color: #1d1d1f;
+  }
+  .mgmt-btn--danger {
+    background: #b42318;
+  }
+  .mgmt-btn--sm {
+    font-size: 0.85rem;
+    padding: 0.3rem 0.6rem;
+  }
+  .mgmt-grid {
+    display: grid;
+    gap: 1rem;
+  }
+  @media (min-width: 40rem) {
+    .mgmt-grid--2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .mgmt-grid--4 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 56rem) {
+    .mgmt-grid--3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .mgmt-grid--4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .mgmt-stat {
+    font-size: 1.65rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin: 0.25rem 0 0;
+  }
+  .mgmt-stat-card {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .mgmt-stat-card:hover {
+    border-color: rgba(0, 0, 0, 0.14);
+  }
+  .mgmt-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.45rem;
+    border-radius: 0.35rem;
+    background: #e8e8ed;
+    color: #1d1d1f;
+  }
+  .mgmt-tag--live {
+    background: #d1fae5;
+    color: #065f46;
+  }
+  .mgmt-tag--new,
+  .mgmt-tag--draft {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  .mgmt-tag--published {
+    background: #d1fae5;
+    color: #065f46;
+  }
+  .mgmt-tag--scheduled {
+    background: #dbeafe;
+    color: #1e40af;
+  }
+  .mgmt-tag--review {
+    background: #ede9fe;
+    color: #5b21b6;
+  }
+  .mgmt-tag--danger {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+  .mgmt-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0.75rem 0 1rem;
+  }
+  .mgmt-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 0.75rem 0 1rem;
+  }
+  .mgmt-tab {
+    font: inherit;
+    font-size: 0.85rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: #fff;
+    border-radius: 999px;
+    padding: 0.35rem 0.75rem;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+  }
+  .mgmt-tab.is-active {
+    background: #1d1d1f;
+    color: #fff;
+    border-color: #1d1d1f;
+  }
+  .mgmt-error {
+    color: #b42318;
+    font-size: 0.9rem;
+  }
+  .mgmt-ok {
+    color: #0e9f6e;
+    font-size: 0.9rem;
+  }
+  .mgmt-attention {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .mgmt-attention li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+  .mgmt-attention li:last-child {
+    border-bottom: 0;
+  }
+  .mgmt-attention__count {
+    font-weight: 700;
+    min-width: 1.5rem;
+  }
+  .mgmt-link {
+    color: #1d1d1f;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.88rem;
+  }
+  .mgmt-link:hover {
+    text-decoration: underline;
+  }
+  .mgmt-banner {
+    margin: 0 0 1rem;
+    padding: 0.65rem 0.85rem;
+    border-radius: 0.55rem;
+    background: #fff8e7;
+    border: 1px solid #f5d78e;
+    font-size: 0.88rem;
+    color: #6b5420;
+  }
+  .mgmt-checklist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.45rem;
+  }
+  .mgmt-checklist li {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.9rem;
+  }
+</style>

@@ -1,0 +1,118 @@
+---
+export const prerender = false;
+
+import ManagementLayout from "../../../layouts/ManagementLayout.astro";
+import { isAdminAuthed, listCatalogMerged } from "../../../lib/admin";
+import { sampleStaff } from "../../../lib/management/sample";
+
+const authed = await isAdminAuthed(Astro.cookies);
+if (!authed) return Astro.redirect("/management");
+
+const items = await listCatalogMerged();
+const groups = [...new Set(items.map((i) => i.group))];
+---
+
+<ManagementLayout title="Prices & stock - Management" authed active="catalog" staffName={sampleStaff.name} staffRole={sampleStaff.role}>
+  <section class="mgmt-card">
+    <h1 class="mgmt-page-title">Prices & stock</h1>
+    <p class="mgmt-muted">
+      Edit live KES price and stock. Repo sample prices stay as defaults until you override them here.
+    </p>
+    <div class="mgmt-filter">
+      <input class="mgmt-input" type="search" placeholder="Filter by name or id" data-filter-q style="max-width:16rem;" />
+      <select class="mgmt-select" data-filter-group style="max-width:12rem;">
+        <option value="">All groups</option>
+        {groups.map((g) => <option value={g}>{g}</option>)}
+      </select>
+      <span class="mgmt-ok" data-save-ok hidden>Saved</span>
+      <span class="mgmt-error" data-save-err hidden></span>
+    </div>
+    <div style="overflow:auto;">
+      <table class="mgmt-table" data-catalog-table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Group</th>
+            <th>Sample</th>
+            <th>Live price (KES)</th>
+            <th>In stock</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            items.map((item) => (
+              <tr data-row data-id={item.id} data-group={item.group} data-name={`${item.name} ${item.id}`.toLowerCase()}>
+                <td>
+                  <strong>{item.name}</strong>
+                  <div class="mgmt-muted">{item.id}</div>
+                </td>
+                <td>{item.group}</td>
+                <td>{item.basePriceKes.toLocaleString("en-KE")}</td>
+                <td>
+                  <input type="number" min="0" step="1000" value={item.priceKes} data-price />
+                </td>
+                <td>
+                  <input type="checkbox" checked={item.inStock} data-stock />
+                </td>
+                <td class="mgmt-actions">
+                  <button type="button" class="mgmt-btn mgmt-btn--sm" data-save>
+                    Save
+                  </button>
+                  <a class="mgmt-btn mgmt-btn--ghost mgmt-btn--sm" href={item.href} target="_blank" rel="noopener">
+                    Open
+                  </a>
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+</ManagementLayout>
+
+<script>
+  const ok = document.querySelector("[data-save-ok]");
+  const err = document.querySelector("[data-save-err]");
+  const qEl = document.querySelector<HTMLInputElement>("[data-filter-q]");
+  const gEl = document.querySelector<HTMLSelectElement>("[data-filter-group]");
+
+  function filter() {
+    const q = (qEl?.value || "").trim().toLowerCase();
+    const g = gEl?.value || "";
+    document.querySelectorAll<HTMLTableRowElement>("[data-row]").forEach((row) => {
+      const name = row.dataset.name || "";
+      const group = row.dataset.group || "";
+      row.hidden = Boolean((q && !name.includes(q)) || (g && group !== g));
+    });
+  }
+  qEl?.addEventListener("input", filter);
+  gEl?.addEventListener("change", filter);
+
+  document.querySelectorAll("[data-save]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const row = (btn as HTMLElement).closest<HTMLTableRowElement>("[data-row]");
+      if (!row) return;
+      ok?.setAttribute("hidden", "");
+      err?.setAttribute("hidden", "");
+      const id = row.dataset.id;
+      const price = Number(row.querySelector<HTMLInputElement>("[data-price]")?.value);
+      const inStock = Boolean(row.querySelector<HTMLInputElement>("[data-stock]")?.checked);
+      const res = await fetch("/api/admin/catalog", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, priceKes: price, inStock }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        if (err) {
+          err.textContent = data.error || "Save failed";
+          err.removeAttribute("hidden");
+        }
+        return;
+      }
+      ok?.removeAttribute("hidden");
+    });
+  });
+</script>

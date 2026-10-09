@@ -73,10 +73,10 @@ const lipa = lipaMonthly(model.basePriceKes);
       }
     </div>
     <p class="acard__price">
-      From {formatKes(model.basePriceKes)}
+      <span data-live-price={model.id} data-live-prefix="From ">From {formatKes(model.basePriceKes)}</span>
       <small>or {formatKes(lipa.monthlyKes)} / mo</small>
     </p>
-    <p class="acard__fine">Sample price until stock is entered in the admin.</p>
+    <p class="acard__fine" data-live-stock={model.id}>Sample price until stock is entered in the admin.</p>
     <div class="acard__actions">
       <a class="btn btn--primary btn--xs" href={`/airpods/${model.id}`}>View</a>
       <button

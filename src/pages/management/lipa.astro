@@ -1,0 +1,73 @@
+---
+export const prerender = false;
+
+import ManagementLayout from "../../layouts/ManagementLayout.astro";
+import { isAdminAuthed } from "../../lib/admin";
+import { sampleLipa, sampleStaff } from "../../lib/management/sample";
+
+const authed = await isAdminAuthed(Astro.cookies);
+if (!authed) return Astro.redirect("/management");
+
+const filter = Astro.url.searchParams.get("filter") || "all";
+const plans = sampleLipa.filter((p) => {
+  if (filter === "missed") return p.status === "Missed";
+  if (filter === "due") return p.status === "Due today";
+  return true;
+});
+---
+
+<ManagementLayout title="Lipa Mdogo Mdogo - Management" authed active="lipa" staffName={sampleStaff.name} staffRole={sampleStaff.role}>
+  <p class="mgmt-banner">Sample data — blocked on owner Lipa rules (PDF p14 / Phase H).</p>
+  <header style="margin-bottom:1rem;">
+    <h1 class="mgmt-page-title">Lipa Mdogo Mdogo</h1>
+    <p class="mgmt-muted">Installment plans, due and missed payments</p>
+  </header>
+
+  <div class="mgmt-tabs">
+    <a class:list={["mgmt-tab", { "is-active": filter === "all" }]} href="/management/lipa">All</a>
+    <a class:list={["mgmt-tab", { "is-active": filter === "due" }]} href="/management/lipa?filter=due">Due today</a>
+    <a class:list={["mgmt-tab", { "is-active": filter === "missed" }]} href="/management/lipa?filter=missed">Missed</a>
+  </div>
+
+  <div class="mgmt-card">
+    <table class="mgmt-table">
+      <thead>
+        <tr>
+          <th>Plan</th>
+          <th>Customer</th>
+          <th>Device</th>
+          <th>Status</th>
+          <th>Next due</th>
+          <th>Remaining</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          plans.map((p) => (
+            <tr>
+              <td>
+                <a class="mgmt-link" href={`/management/lipa/${p.id}`}>
+                  {p.id}
+                </a>
+              </td>
+              <td>{p.customer}</td>
+              <td>{p.device}</td>
+              <td>
+                <span
+                  class:list={[
+                    "mgmt-tag",
+                    { "mgmt-tag--danger": p.status === "Missed", "mgmt-tag--new": p.status === "Due today" },
+                  ]}
+                >
+                  {p.status}
+                </span>
+              </td>
+              <td>{p.nextDue}</td>
+              <td>{p.remaining}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</ManagementLayout>

@@ -1,0 +1,48 @@
+---
+export const prerender = false;
+
+import ManagementLayout from "../../layouts/ManagementLayout.astro";
+import { isAdminAuthed } from "../../lib/admin";
+import { sampleStaff, sampleTradeIns } from "../../lib/management/sample";
+
+const authed = await isAdminAuthed(Astro.cookies);
+if (!authed) return Astro.redirect("/management");
+---
+
+<ManagementLayout title="Trade-ins - Management" authed active="trade-ins" staffName={sampleStaff.name} staffRole={sampleStaff.role}>
+  <p class="mgmt-banner">Sample data — connect `/trade-in` form in Phase F.</p>
+  <header style="margin-bottom:1rem;">
+    <h1 class="mgmt-page-title">Trade-ins</h1>
+    <p class="mgmt-muted">Device requests, quotes and credit toward a new device</p>
+  </header>
+  <div class="mgmt-card">
+    <table class="mgmt-table">
+      <thead>
+        <tr>
+          <th>Request</th>
+          <th>Customer</th>
+          <th>Device</th>
+          <th>Status</th>
+          <th>Quote</th>
+          <th>Submitted</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          sampleTradeIns.map((t) => (
+            <tr>
+              <td>{t.id}</td>
+              <td>{t.customer}</td>
+              <td>{t.device}</td>
+              <td>
+                <span class:list={["mgmt-tag", { "mgmt-tag--new": t.status.includes("Waiting") }]}>{t.status}</span>
+              </td>
+              <td>{t.quote || "—"}</td>
+              <td class="mgmt-muted">{t.submitted}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</ManagementLayout>

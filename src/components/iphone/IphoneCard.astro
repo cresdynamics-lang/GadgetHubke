@@ -136,8 +136,8 @@ const hoverSrc =
       )
     }
     <p class="icard__price">
-      <span class="icard__from" data-icard-price>From {formatKes(price.kes)}</span>
-      <span class="icard__sample">Sample price</span>
+      <span class="icard__from" data-icard-price data-live-price={model.id} data-live-prefix="From ">From {formatKes(price.kes)}</span>
+      <span class="icard__sample" data-live-stock={model.id}>Sample price</span>
     </p>
     <p class="icard__lipa" data-icard-lipa>
       or {formatKes(lipa.monthlyKes)} a month for {lipa.months} months after a {iphoneConfig.lipa.depositDefaultPct}% deposit

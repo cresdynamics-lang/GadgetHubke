@@ -1,0 +1,111 @@
+---
+export const prerender = false;
+
+import ManagementLayout from "../../../layouts/ManagementLayout.astro";
+import { isAdminAuthed } from "../../../lib/admin";
+import { listAllReviewsForAdmin } from "../../../lib/reviews/store";
+import { sampleStaff } from "../../../lib/management/sample";
+
+const authed = await isAdminAuthed(Astro.cookies);
+if (!authed) return Astro.redirect("/management");
+
+const reviews = await listAllReviewsForAdmin();
+---
+
+<ManagementLayout title="Reviews - Management" authed active="reviews" staffName={sampleStaff.name} staffRole={sampleStaff.role}>
+  <section class="mgmt-card">
+    <h1 class="mgmt-page-title">Reviews</h1>
+    <p class="mgmt-muted">Approve, hide, or remove customer reviews. Hidden reviews leave the storefront.</p>
+    <p class="mgmt-ok" data-ok hidden>Updated</p>
+    <p class="mgmt-error" data-err hidden></p>
+    <div style="overflow:auto;margin-top:1rem;">
+      <table class="mgmt-table" data-reviews-table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Author</th>
+            <th>Rating</th>
+            <th>Review</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            reviews.map((r) => (
+              <tr data-id={r.id}>
+                <td>{r.productId}</td>
+                <td>
+                  {r.author}
+                  <div class="mgmt-muted">{new Date(r.createdAt).toLocaleDateString("en-KE")}</div>
+                </td>
+                <td>{r.rating}★</td>
+                <td>
+                  <strong>{r.title}</strong>
+                  <div>{r.body}</div>
+                </td>
+                <td>{r.approved ? "Live" : "Hidden"}</td>
+                <td class="mgmt-actions">
+                  {!r.approved ? (
+                    <button type="button" class="mgmt-btn mgmt-btn--sm" data-approve>
+                      Approve
+                    </button>
+                  ) : (
+                    <button type="button" class="mgmt-btn mgmt-btn--ghost mgmt-btn--sm" data-hide>
+                      Hide
+                    </button>
+                  )}
+                  <button type="button" class="mgmt-btn mgmt-btn--danger mgmt-btn--sm" data-delete>
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+</ManagementLayout>
+
+<script>
+  async function patch(body: Record<string, unknown>) {
+    const ok = document.querySelector("[data-ok]");
+    const err = document.querySelector("[data-err]");
+    ok?.setAttribute("hidden", "");
+    err?.setAttribute("hidden", "");
+    const res = await fetch("/api/admin/reviews", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      if (err) {
+        err.textContent = data.error || "Failed";
+        err.removeAttribute("hidden");
+      }
+      return;
+    }
+    location.reload();
+  }
+
+  document.querySelectorAll("[data-approve]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = (btn as HTMLElement).closest("tr")?.getAttribute("data-id");
+      if (id) void patch({ id, approved: true });
+    });
+  });
+  document.querySelectorAll("[data-hide]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = (btn as HTMLElement).closest("tr")?.getAttribute("data-id");
+      if (id) void patch({ id, approved: false });
+    });
+  });
+  document.querySelectorAll("[data-delete]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = (btn as HTMLElement).closest("tr")?.getAttribute("data-id");
+      if (id && confirm("Remove this review?")) void patch({ id, delete: true });
+    });
+  });
+</script>

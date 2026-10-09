@@ -8,6 +8,7 @@ import { whatsappUrl } from "../lib/site";
 import { exUkFromNew } from "../lib/stock-channel";
 
 interface Props {
+  id?: string;
   name: string;
   href: string;
   priceKes: number;
@@ -17,7 +18,8 @@ interface Props {
   colors?: { id: string; label: string; hex: string; imageSrc?: string }[];
 }
 
-const { name, href, priceKes, image, blurb, badge, colors = [] } = Astro.props;
+const { id: productId, name, href, priceKes, image, blurb, badge, colors = [] } = Astro.props;
+const liveId = productId || href.split("/").filter(Boolean).pop() || "";
 const priceExUk = exUkFromNew(priceKes);
 const waBase = whatsappUrl();
 const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${name}.`);
@@ -89,7 +91,9 @@ const hoverSrc =
         </div>
       ) : null
     }
-    <p class="pcard__price" data-pcard-price><Price kes={priceKes} prefix="From" /></p>
+    <p class="pcard__price" data-pcard-price data-live-price={liveId} data-live-prefix="From ">
+      <Price kes={priceKes} prefix="From" />
+    </p>
     <div class="pcard__actions">
       <a class="btn btn--primary btn--xs" href={href}>View</a>
       <a class="btn btn--secondary btn--xs" href={href}>Add to Cart</a>

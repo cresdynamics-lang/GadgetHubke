@@ -124,8 +124,8 @@ const hoverSrc =
     }
 
     <p class="mcard__price">
-      <span>From {formatKes(model.basePriceKes)}</span>
-      <span class="mcard__sample">Sample price</span>
+      <span data-live-price={model.id} data-live-prefix="From ">From {formatKes(model.basePriceKes)}</span>
+      <span class="mcard__sample" data-live-stock={model.id}>Sample price</span>
     </p>
     <p class="mcard__lipa">
       or {formatKes(lipa.monthlyKes)} a month for {lipa.months} months after a {macConfig.lipa.depositDefaultPct}% deposit

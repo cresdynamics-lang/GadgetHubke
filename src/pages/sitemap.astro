@@ -2,7 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { homeCategories } from "../lib/home";
 import { productNav, secondaryNav } from "../lib/catalog";
-import { blogPosts } from "../lib/blog";
+import { journalSeedPosts } from "../lib/journal";
 
 const company = [
   { label: "About", href: "/about" },
@@ -12,9 +12,11 @@ const company = [
   { label: "Locations", href: "/locations" },
   { label: "Careers", href: "/careers" },
   { label: "Authenticity", href: "/authenticity" },
-  { label: "Blog", href: "/blog" },
+  { label: "Journal", href: "/journal" },
   { label: "Newsletter", href: "/newsletter" },
 ] as const;
+
+const journalLinks = journalSeedPosts.filter((p) => p.status === "published");
 
 const care = [
   { label: "Trade-In", href: "/trade-in" },
@@ -90,17 +92,17 @@ const legal = [
         </ul>
       </nav>
 
-      <nav aria-label="Legal & blog">
-        <h2>Legal &amp; blog</h2>
+      <nav aria-label="Legal & journal">
+        <h2>Legal &amp; journal</h2>
         <ul>
           {legal.map((l) => (
             <li>
               <a href={l.href}>{l.label}</a>
             </li>
           ))}
-          {blogPosts.map((p) => (
+          {journalLinks.map((p) => (
             <li>
-              <a href={`/blog/${p.slug}`}>{p.title}</a>
+              <a href={`/journal/${p.slug}`}>{p.title}</a>
             </li>
           ))}
         </ul>

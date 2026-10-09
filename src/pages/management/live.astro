@@ -1,0 +1,102 @@
+---
+export const prerender = false;
+
+import ManagementLayout from "../../layouts/ManagementLayout.astro";
+import { isAdminAuthed } from "../../lib/admin";
+import { sampleLive, sampleStaff } from "../../lib/management/sample";
+
+const authed = await isAdminAuthed(Astro.cookies);
+if (!authed) return Astro.redirect("/management");
+const d = sampleLive;
+---
+
+<ManagementLayout title="Live visitors - Management" authed active="live" staffName={sampleStaff.name} staffRole={sampleStaff.role}>
+  <p class="mgmt-banner">Sample data — presence beacon ships in Phase C.</p>
+  <header style="margin-bottom:1rem;">
+    <h1 class="mgmt-page-title">Live visitors</h1>
+    <p class="mgmt-muted">Updates every few seconds · people active in the last 5 minutes</p>
+  </header>
+
+  <div class="mgmt-grid mgmt-grid--4" style="margin-bottom:1rem;">
+    <div class="mgmt-card"><p class="mgmt-muted">On the site now</p><p class="mgmt-stat">{d.now}</p></div>
+    <div class="mgmt-card"><p class="mgmt-muted">Looking at a product</p><p class="mgmt-stat">{d.lookingAtProduct}</p></div>
+    <div class="mgmt-card"><p class="mgmt-muted">In a cart</p><p class="mgmt-stat">{d.inCart}</p></div>
+    <div class="mgmt-card"><p class="mgmt-muted">At checkout</p><p class="mgmt-stat">{d.atCheckout}</p></div>
+  </div>
+
+  <div class="mgmt-card" style="margin-bottom:1rem;">
+    <h2 style="font-size:1.05rem;">Who is here <span class="mgmt-tag">anonymous</span></h2>
+    <div style="overflow:auto;">
+      <table class="mgmt-table">
+        <thead>
+          <tr>
+            <th>Visitor</th>
+            <th>Town</th>
+            <th>Device</th>
+            <th>Looking at</th>
+            <th>Came from</th>
+            <th>On site</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            d.visitors.map((v) => (
+              <tr>
+                <td>Visitor {v.id}</td>
+                <td>{v.town}</td>
+                <td>{v.device}</td>
+                <td>{v.page}</td>
+                <td>{v.from}</td>
+                <td>{v.onSite}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="mgmt-grid mgmt-grid--2">
+    <div class="mgmt-card">
+      <h2 style="font-size:1.05rem;">Where they came from</h2>
+      <table class="mgmt-table">
+        <tbody>
+          {d.sources.map((s) => (
+            <tr>
+              <td>{s.label}</td>
+              <td style="text-align:right;font-weight:600;">{s.count}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <div class="mgmt-card">
+      <h2 style="font-size:1.05rem;">Live activity <span class="mgmt-tag mgmt-tag--live">streaming</span></h2>
+      <ul class="mgmt-attention">
+        {d.activity.map((a) => (
+          <li>
+            <span class="mgmt-muted" style="min-width:4.5rem;">{a.when}</span>
+            <span style="flex:1;">{a.text}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+
+  <div class="mgmt-card" style="margin-top:1rem;">
+    <h2 style="font-size:1.05rem;">Pages right now</h2>
+    <table class="mgmt-table">
+      <tbody>
+        {d.pages.map((p) => (
+          <tr>
+            <td><code>{p.path}</code></td>
+            <td style="text-align:right;font-weight:600;">{p.count}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <p class="mgmt-muted" style="margin-top:0.75rem;">
+      Privacy: visitors are anonymous codes. No names, phone numbers or exact locations are shown.
+    </p>
+  </div>
+</ManagementLayout>

@@ -116,10 +116,10 @@ function seedFor(productId: string): ProductReview[] {
 }
 
 export async function listReviews(productId: string): Promise<ReviewsPayload> {
-  const stored = (await loadStored()).filter(
-    (r) => r.productId === productId && r.approved,
-  );
-  const seed = seedFor(productId);
+  const storedAll = await loadStored();
+  const hidden = new Set(storedAll.filter((r) => !r.approved).map((r) => r.id));
+  const stored = storedAll.filter((r) => r.productId === productId && r.approved);
+  const seed = seedFor(productId).filter((r) => !hidden.has(r.id));
   const byId = new Map<string, ProductReview>();
   for (const r of seed) byId.set(r.id, r);
   for (const r of stored) byId.set(r.id, r);
@@ -187,4 +187,49 @@ export async function addReview(input: NewReviewInput): Promise<ProductReview> {
   all.push(review);
   await saveStored(all);
   return review;
+}
+
+/** Admin: all stored + seed reviews (including unapproved). */
+export async function listAllReviewsForAdmin(): Promise<ProductReview[]> {
+  const stored = await loadStored();
+  const seedRows = Object.values(seeds()).flat();
+  const byId = new Map<string, ProductReview>();
+  for (const r of seedRows) byId.set(r.id, r);
+  for (const r of stored) byId.set(r.id, r);
+  return [...byId.values()].sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
+}
+
+export async function setReviewApproved(id: string, approved: boolean) {
+  const all = await loadStored();
+  const idx = all.findIndex((r) => r.id === id);
+  if (idx >= 0) {
+    all[idx] = { ...all[idx], approved };
+    await saveStored(all);
+    return all[idx];
+  }
+  // Seed reviews become stored copies when moderated
+  const seedHit = Object.values(seeds())
+    .flat()
+    .find((r) => r.id === id);
+  if (!seedHit) throw new Error("Review not found.");
+  const copy = { ...seedHit, approved };
+  all.push(copy);
+  await saveStored(all);
+  return copy;
+}
+
+export async function deleteReview(id: string) {
+  const all = await loadStored();
+  const next = all.filter((r) => r.id !== id);
+  if (next.length === all.length) {
+    // Hiding a seed: store a tombstone as unapproved empty marker via approved=false copy removal
+    const seedHit = Object.values(seeds())
+      .flat()
+      .find((r) => r.id === id);
+    if (!seedHit) throw new Error("Review not found.");
+    all.push({ ...seedHit, approved: false, body: "[removed by admin]", title: "Removed" });
+    await saveStored(all);
+    return;
+  }
+  await saveStored(next);
 }

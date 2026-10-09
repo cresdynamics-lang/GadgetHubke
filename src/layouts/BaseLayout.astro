@@ -7,6 +7,7 @@ import Analytics from "../components/Analytics.astro";
 import AnnouncementBar from "../components/AnnouncementBar.astro";
 import SiteSearch from "../components/SiteSearch.astro";
 import BagDrawer from "../components/iphone/BagDrawer.astro";
+import CatalogOverlay from "../components/CatalogOverlay.astro";
 import interLatin from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
 import "../styles/global.css";
 import { site } from "../lib/site";
@@ -64,5 +65,6 @@ const hideFloatWhatsApp = path === "/contact";
     <FloatingActions hideWhatsApp={hideFloatWhatsApp} />
     <CookieBanner />
     <Analytics />
+    <CatalogOverlay />
   </body>
 </html>

@@ -1,0 +1,248 @@
+---
+export const prerender = false;
+
+import ManagementLayout from "../../layouts/ManagementLayout.astro";
+import { adminSecretConfigured, isAdminAuthed } from "../../lib/admin";
+import { sampleDashboard, sampleStaff } from "../../lib/management/sample";
+
+const authed = await isAdminAuthed(Astro.cookies);
+const d = sampleDashboard;
+
+const now = new Date();
+const greetingHour = Number(
+  new Intl.DateTimeFormat("en-GB", { hour: "numeric", hour12: false, timeZone: "Africa/Nairobi" }).format(now),
+);
+const greeting =
+  greetingHour < 12 ? "Good morning" : greetingHour < 17 ? "Good afternoon" : "Good evening";
+const dayLabel = new Intl.DateTimeFormat("en-GB", {
+  weekday: "long",
+  timeZone: "Africa/Nairobi",
+}).format(now);
+---
+
+<ManagementLayout
+  title={authed ? "Dashboard - Management" : "Sign in - Gadget Hub Admin"}
+  authed={authed}
+  active="dashboard"
+  staffName={sampleStaff.name}
+  staffRole={sampleStaff.role}
+>
+  {
+    !authed ? (
+      <section class="mgmt-card" style="max-width:26rem;margin:3rem auto;">
+        <p class="mgmt-eyebrow">Gadget Hub Admin · Sign in</p>
+        <h1 class="mgmt-page-title">Sign in to Gadget Hub Admin</h1>
+        <p class="mgmt-muted">Staff only. Ask the owner if you need access.</p>
+        {!adminSecretConfigured() ? (
+          <p class="mgmt-error" style="margin-top:0.75rem;">Set ADMIN_SECRET in the server env first.</p>
+        ) : null}
+
+        <form data-mgmt-login style="display:grid;gap:0.85rem;margin-top:1.25rem;">
+          <div data-login-step="password">
+            <label style="display:grid;gap:0.3rem;">
+              <span class="mgmt-muted">Email</span>
+              <input class="mgmt-input" type="email" name="email" required autocomplete="username" value="asha@example.com" />
+            </label>
+            <label style="display:grid;gap:0.3rem;margin-top:0.75rem;">
+              <span class="mgmt-muted">Password</span>
+              <input class="mgmt-input" type="password" name="password" required autocomplete="current-password" />
+            </label>
+          </div>
+
+          <div data-login-step="otp" hidden>
+            <p class="mgmt-muted" style="margin-bottom:0.65rem;">Step 2: enter the 6-digit code</p>
+            <label style="display:grid;gap:0.3rem;">
+              <span class="mgmt-muted">One-time code</span>
+              <input
+                class="mgmt-input"
+                type="text"
+                name="otp"
+                inputmode="numeric"
+                pattern="[0-9]{6}"
+                maxlength="6"
+                autocomplete="one-time-code"
+                placeholder="••••••"
+              />
+            </label>
+            {import.meta.env.DEV ? (
+              <p class="mgmt-muted" style="margin-top:0.5rem;">
+                Dev: any 6 digits work unless MANAGEMENT_OTP_CODE is set.
+              </p>
+            ) : null}
+          </div>
+
+          <p class="mgmt-error" data-login-error hidden></p>
+          <button class="mgmt-btn" type="submit" data-login-submit>Continue</button>
+          <p class="mgmt-muted" style="margin:0;font-size:0.82rem;">
+            Forgot password · Locked after 5 wrong tries
+          </p>
+        </form>
+
+        {import.meta.env.DEV ? (
+          <p class="mgmt-muted" style="margin-top:1rem;">
+            Dev password: <code>gadgethub-dev-admin</code> (or ADMIN_SECRET).
+          </p>
+        ) : null}
+      </section>
+    ) : (
+      <section>
+        <p class="mgmt-banner">Sample data — live metrics wire up in later phases (see docs/MANAGEMENT_CRAFT_PLAN.md).</p>
+        <header style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.75rem;align-items:end;margin-bottom:1.25rem;">
+          <div>
+            <h1 class="mgmt-page-title">
+              {greeting}, {sampleStaff.name.split(" ")[0]}
+            </h1>
+            <p class="mgmt-muted">{dayLabel} · all times East Africa Time</p>
+          </div>
+          <span class="mgmt-tag">Today</span>
+        </header>
+
+        <div class="mgmt-grid mgmt-grid--4" style="margin-bottom:1rem;">
+          <a class="mgmt-card mgmt-stat-card" href="/management/live">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span class="mgmt-muted">Visitors on the website now</span>
+              <span class="mgmt-tag mgmt-tag--live">live</span>
+            </div>
+            <p class="mgmt-stat">{d.visitorsNow}</p>
+            <p class="mgmt-muted">
+              {d.visitorsLast5Min} active in the last 5 minutes
+              <br />
+              {d.phones} phones · {d.computers} computers · {d.tablets} tablet
+            </p>
+          </a>
+          <div class="mgmt-card">
+            <p class="mgmt-muted">Orders today</p>
+            <p class="mgmt-stat">{d.ordersToday}</p>
+            <p class="mgmt-muted">▲ {d.ordersDelta} vs yesterday</p>
+          </div>
+          <div class="mgmt-card">
+            <p class="mgmt-muted">Sales today</p>
+            <p class="mgmt-stat">KES {d.salesTodayKes.toLocaleString("en-KE")}</p>
+            <p class="mgmt-muted">Sample figure</p>
+          </div>
+          <div class="mgmt-card">
+            <p class="mgmt-muted">WhatsApp clicks</p>
+            <p class="mgmt-stat">{d.whatsappClicks}</p>
+            <p class="mgmt-muted">from product pages</p>
+          </div>
+        </div>
+
+        <div class="mgmt-grid mgmt-grid--2" style="margin-bottom:1rem;">
+          <div class="mgmt-card">
+            <p class="mgmt-muted">Trade-in requests</p>
+            <p class="mgmt-stat">{d.tradeInRequests}</p>
+            <p class="mgmt-muted">{d.tradeInsWaitingQuote} waiting for a quote</p>
+          </div>
+          <div class="mgmt-card">
+            <h2 style="font-size:1.05rem;">Needs your attention</h2>
+            <ul class="mgmt-attention">
+              {d.attention.map((item) => (
+                <li>
+                  <span>
+                    <span class="mgmt-attention__count">{item.count}</span> {item.label}
+                    {item.badge ? <span class="mgmt-tag mgmt-tag--new" style="margin-left:0.4rem;">{item.badge}</span> : null}
+                  </span>
+                  <a class="mgmt-link" href={item.href}>
+                    Open ›
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div class="mgmt-grid mgmt-grid--2">
+          <div class="mgmt-card">
+            <h2 style="font-size:1.05rem;">Pages people are viewing now</h2>
+            <table class="mgmt-table">
+              <tbody>
+                {d.pagesNow.map((p) => (
+                  <tr>
+                    <td>{p.label}</td>
+                    <td style="text-align:right;font-weight:600;">{p.count}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div class="mgmt-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+              <h2 style="font-size:1.05rem;margin:0;">Latest orders</h2>
+              <a class="mgmt-link" href="/management/orders">
+                View all ›
+              </a>
+            </div>
+            <table class="mgmt-table">
+              <thead>
+                <tr>
+                  <th>Order</th>
+                  <th>Customer</th>
+                  <th>Item</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {d.latestOrders.map((o) => (
+                  <tr>
+                    <td>{o.id}</td>
+                    <td>{o.customer}</td>
+                    <td>{o.item}</td>
+                    <td>{o.total}</td>
+                    <td>
+                      <span class:list={["mgmt-tag", { "mgmt-tag--new": o.status === "New" }]}>{o.status}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    )
+  }
+</ManagementLayout>
+
+{
+  !authed ? (
+    <script>
+      const form = document.querySelector("[data-mgmt-login]") as HTMLFormElement | null;
+      const err = document.querySelector("[data-login-error]");
+      const stepPassword = document.querySelector('[data-login-step="password"]') as HTMLElement | null;
+      const stepOtp = document.querySelector('[data-login-step="otp"]') as HTMLElement | null;
+      const submitBtn = document.querySelector("[data-login-submit]") as HTMLButtonElement | null;
+      let stage: "password" | "otp" = "password";
+
+      form?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        err?.setAttribute("hidden", "");
+        const fd = new FormData(form);
+        const email = String(fd.get("email") || "");
+        const password = String(fd.get("password") || "");
+        const otp = String(fd.get("otp") || "");
+        const res = await fetch("/api/management/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password, otp, step: stage }),
+        });
+        const data = await res.json();
+        if (data.needOtp && stage === "password" && res.ok) {
+          stage = "otp";
+          stepPassword?.setAttribute("hidden", "");
+          stepOtp?.removeAttribute("hidden");
+          if (submitBtn) submitBtn.textContent = "Sign in";
+          (form.querySelector('[name="otp"]') as HTMLInputElement | null)?.focus();
+          return;
+        }
+        if (!res.ok || !data.ok) {
+          if (err) {
+            err.textContent = data.error || "Login failed.";
+            err.removeAttribute("hidden");
+          }
+          return;
+        }
+        location.reload();
+      });
+    </script>
+  ) : null
+}

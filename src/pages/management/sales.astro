@@ -1,0 +1,76 @@
+---
+export const prerender = false;
+
+import ManagementLayout from "../../layouts/ManagementLayout.astro";
+import { isAdminAuthed } from "../../lib/admin";
+import { sampleSales, sampleStaff } from "../../lib/management/sample";
+
+const authed = await isAdminAuthed(Astro.cookies);
+if (!authed) return Astro.redirect("/management");
+const s = sampleSales;
+---
+
+<ManagementLayout title="Sales - Management" authed active="sales" staffName={sampleStaff.name} staffRole={sampleStaff.role}>
+  <p class="mgmt-banner">Sample data — owner/manager only (Phase G).</p>
+  <header style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.75rem;margin-bottom:1rem;">
+    <div>
+      <h1 class="mgmt-page-title">Sales</h1>
+      <p class="mgmt-muted">Revenue by day, product, payment method and staff</p>
+    </div>
+    <span class="mgmt-tag">{s.rangeLabel}</span>
+  </header>
+
+  <div class="mgmt-grid mgmt-grid--3" style="margin-bottom:1rem;">
+    <div class="mgmt-card"><p class="mgmt-muted">Revenue</p><p class="mgmt-stat">KES {s.revenueKes.toLocaleString("en-KE")}</p></div>
+    <div class="mgmt-card"><p class="mgmt-muted">Orders</p><p class="mgmt-stat">{s.orders}</p></div>
+    <div class="mgmt-card"><p class="mgmt-muted">Avg order</p><p class="mgmt-stat">KES {s.avgOrderKes.toLocaleString("en-KE")}</p></div>
+  </div>
+
+  <div class="mgmt-grid mgmt-grid--3">
+    <div class="mgmt-card">
+      <h2 style="font-size:1.05rem;">Payment mix</h2>
+      <table class="mgmt-table">
+        <tbody>
+          {s.paymentMix.map((p) => (
+            <tr>
+              <td>{p.label}</td>
+              <td style="text-align:right;font-weight:600;">{p.pct}%</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <div class="mgmt-card">
+      <h2 style="font-size:1.05rem;">Top products</h2>
+      <table class="mgmt-table">
+        <tbody>
+          {s.topProducts.map((p) => (
+            <tr>
+              <td>
+                {p.name}
+                <div class="mgmt-muted">{p.units} units</div>
+              </td>
+              <td style="text-align:right;">{p.revenue}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <div class="mgmt-card">
+      <h2 style="font-size:1.05rem;">By staff</h2>
+      <table class="mgmt-table">
+        <tbody>
+          {s.byStaff.map((p) => (
+            <tr>
+              <td>
+                {p.name}
+                <div class="mgmt-muted">{p.orders} orders</div>
+              </td>
+              <td style="text-align:right;">{p.revenue}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</ManagementLayout>
