@@ -1,6 +1,6 @@
 /**
  * TV & Home catalog (Apple TV 4K, HomePod, HomePod mini).
- * Specs from Apple's published product pages. Owner: re-verify every figure
+ * Specs from Apple's published product pages. re-verify every figure
  * on apple.com before launch. Store null where unclear - show nothing rather than guess.
  */
 
@@ -129,7 +129,7 @@ export const tvHomeModels: TvHomeModel[] = [
     tagline: "Same picture - wired for a busier home hub.",
     whoItSuits: "Homes that want Ethernet and more storage for apps and games.",
     whyChoose: [
-      "128 GB with Ethernet and Thread - check final specs.",
+      "128 GB with Ethernet and Thread - on request.",
       "Same A15 picture stack as the Wi-Fi model.",
       "Sample price includes the Ethernet storage step.",
     ],
@@ -170,7 +170,7 @@ export const tvHomeModels: TvHomeModel[] = [
     tagline: "Big sound that learns the room.",
     whoItSuits: "Living rooms and music lovers who want a full-size smart speaker.",
     whyChoose: [
-      "S7 chip with room sensing and Spatial Audio - check final specs.",
+      "S7 chip with room sensing and Spatial Audio - on request.",
       "Works as a smart home hub with Thread - confirm Matter in Kenya.",
       "Stereo pair two of the same model in one room.",
     ],
@@ -217,7 +217,7 @@ export const tvHomeModels: TvHomeModel[] = [
     ],
     isNew: true,
     checkFinalSpecs: true,
-    notes: "Owner confirms stocked colours.",
+    notes: "Ask us about stocked colours.",
     pageFamily: "HomePodMini",
   }),
   m({
@@ -252,7 +252,7 @@ export const tvHomeModels: TvHomeModel[] = [
     tagline: "Also in stock - earlier 4K box.",
     whoItSuits: "Buyers who want 4K at a lower sample price.",
     whyChoose: [
-      "A12 Bionic with 4K and Dolby Vision - check final specs.",
+      "A12 Bionic with 4K and Dolby Vision - on request.",
       "Siri Remote 2nd generation (Lightning).",
       "Overview image from Apple Support - check condition.",
     ],

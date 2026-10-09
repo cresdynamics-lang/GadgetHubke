@@ -258,7 +258,7 @@ export function macFaq(): { q: string; a: string }[] {
     },
     {
       q: "What do I get with the invoice?",
-      a: "Sealed machine, serial number, and sample warranty wording until the owner confirms final cover and set-up fees.",
+      a: "Sealed machine with serial number on the invoice. New devices include a 1-year warranty. Set-up fees vary and are confirmed when you engage with us.",
     },
   ];
 }

@@ -138,7 +138,7 @@ const scaleVbH = scaleMidY + Math.max(scaleWatchR, scaleCoinR) + 18;
           <span>{model.year}</span>
           {model.isNew ? <span>New</span> : <span>Also in stock</span>}
           {model.specialBandIncluded ? <span>Special band included</span> : null}
-          {model.checkFinalSpecs ? <span>Check final specs</span> : null}
+          
         </p>
         <h1>{model.name}</h1>
         <p class="wpdp__tagline">{model.tagline}</p>
@@ -258,7 +258,7 @@ const scaleVbH = scaleMidY + Math.max(scaleWatchR, scaleCoinR) + 18;
       <p>
         {model.dimensionsMm
           ? `About ${model.dimensionsMm.w} × ${model.dimensionsMm.h} × ${model.dimensionsMm.d} mm.`
-          : "Dimensions - check final specs."}
+          : "Dimensions on request."}
         {model.weightG ? ` About ${model.weightG} g.` : ""}
       </p>
       {(() => {
@@ -282,17 +282,17 @@ const scaleVbH = scaleMidY + Math.max(scaleWatchR, scaleCoinR) + 18;
       <h2>Full specifications</h2>
       <p class="wpdp__fine">{watchConfig.appleSpecsFootnote}</p>
       <details class="wpdp__acc" open>
-        <summary>Display {model.checkFinalSpecs ? "· check" : ""}</summary>
+        <summary>Display ""</summary>
         <table>
           <tr><th>Type</th><td>{model.displayType}</td></tr>
-          <tr><th>Always-On</th><td>{model.alwaysOn == null ? "Check final specs" : model.alwaysOn ? "Yes" : "No"}</td></tr>
-          <tr><th>Brightness</th><td>{model.brightnessNits != null ? `${model.brightnessNits} nits` : "Check final specs"}</td></tr>
+          <tr><th>Always-On</th><td>{model.alwaysOn == null ? "—" : model.alwaysOn ? "Yes" : "No"}</td></tr>
+          <tr><th>Brightness</th><td>{model.brightnessNits != null ? `${model.brightnessNits} nits` : "—"}</td></tr>
         </table>
       </details>
       <details class="wpdp__acc">
         <summary>Chip and performance</summary>
         <table>
-          <tr><th>Chip</th><td>{model.chip || "Check final specs"}</td></tr>
+          <tr><th>Chip</th><td>{model.chip || "—"}</td></tr>
           <tr><th>Double tap</th><td>{model.doubleTap == null ? "Check" : model.doubleTap ? "Yes" : "No"}</td></tr>
           <tr><th>Wrist flick</th><td>{model.wristFlick == null ? "Check" : model.wristFlick ? "Yes" : "No"}</td></tr>
         </table>
@@ -331,7 +331,7 @@ const scaleVbH = scaleMidY + Math.max(scaleWatchR, scaleCoinR) + 18;
       <details class="wpdp__acc">
         <summary>Battery and charging</summary>
         <table>
-          <tr><th>Claim</th><td>{model.batteryHours != null ? `${model.batteryHours} h` : "Check final specs"}</td></tr>
+          <tr><th>Claim</th><td>{model.batteryHours != null ? `${model.batteryHours} h` : "—"}</td></tr>
           <tr><th>Low Power</th><td>{model.lowPowerHours != null ? `${model.lowPowerHours} h` : "Check"}</td></tr>
           <tr><th>Fast charging</th><td>{model.fastCharging == null ? "Check" : model.fastCharging ? "Yes" : "No"}</td></tr>
         </table>

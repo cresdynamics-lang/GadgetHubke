@@ -36,7 +36,7 @@ function connectorLabel(c: string | null | undefined): string | null {
   if (!c) return null;
   if (c === "usb-c") return "USB-C";
   if (c === "lightning") return "Lightning";
-  if (c === "owner-confirm") return "Connector - owner to confirm";
+  if (c === "ask-us") return "Connector details on request";
   return c;
 }
 
@@ -218,7 +218,7 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
       <p class="xpdp__pills">
         <span>{product.year}</span>
         <span>{product.generation}</span>
-        {product.checkFinalSpecs ? <span>Check final specs</span> : null}
+        
       </p>
       <p class="xpdp__fits"><strong>Fits</strong> - {product.notes}</p>
       <a class="btn btn--secondary btn--sm" href={`/accessories/${finderHub(product.group)}?looking=${finderLooking}#finder`}>
@@ -281,8 +281,7 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
     <details open={!isPointer}>
       <summary>Features</summary>
       <ul>{product.features.map((f) => <li>{f}</li>)}</ul>
-      <p class="flag">Check final specs</p>
-    </details>
+          </details>
     {
       gestureTiles ? (
         <details open>
@@ -295,15 +294,14 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
               </figure>
             ))}
           </div>
-          <p class="flag">Check final specs - full set on Mac; limited on iPad.</p>
+          <p class="flag">Full gesture set on Mac; limited on iPad.</p>
         </details>
       ) : null
     }
     <details>
       <summary>Compatibility</summary>
       <p>{product.notes}</p>
-      <p class="flag">Check final specs</p>
-    </details>
+          </details>
     <details>
       <summary>Charging and battery</summary>
       <p>{product.charging || "-"}</p>
@@ -339,8 +337,7 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
               ))
             }
           </ul>
-          <p class="flag">Check final specs</p>
-        </details>
+                  </details>
       ) : null
     }
   </section>

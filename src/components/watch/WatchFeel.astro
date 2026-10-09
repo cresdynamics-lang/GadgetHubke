@@ -63,7 +63,7 @@ const materialGroups = ["aluminum", "titanium", "ceramic", "stainless"] as const
 <section class="wfeel wfeel--black" id="feel-display" data-feel="display">
   <div class="container wfeel__inner">
     <h2>Bright enough for noon.</h2>
-    <p class="wfeel__lede">Illustration - not a measurement. {model.checkFinalSpecs ? "Brightness flagged check final specs." : ""}</p>
+    <p class="wfeel__lede">Illustration - not a measurement. </p>
     {!displayImg.fallback ? (
       <img class="wfeel__img" data-display-img src={displayImg.src} alt={displayImg.alt} width="1200" height="900" loading="lazy" />
     ) : null}
@@ -78,7 +78,7 @@ const materialGroups = ["aluminum", "titanium", "ceramic", "stainless"] as const
         <input type="range" min="0" max="100" value="80" data-aod />
       </label>
     ) : model.alwaysOn === null ? (
-      <p class="wfeel__caption">Always-On status - check final specs.</p>
+      <p class="wfeel__caption">Always-On details on request.</p>
     ) : (
       <p class="wfeel__caption">No Always-On on this model.</p>
     )}
@@ -161,7 +161,7 @@ const materialGroups = ["aluminum", "titanium", "ceramic", "stainless"] as const
         </li>
       ))}
     </ul>
-    <p class="wfeel__caption">Satellite and some emergency features depend on country and plan - owner to confirm for Kenya.</p>
+    <p class="wfeel__caption">Satellite and some emergency features depend on country and plan — ask us what works in Kenya.</p>
     <button type="button" class="wfeel__sos" data-sos aria-describedby="sos-note">
       <span data-sos-ring />
       Hold for SOS (illustration)
@@ -202,7 +202,7 @@ const materialGroups = ["aluminum", "titanium", "ceramic", "stainless"] as const
         <div class="wfeel__depth-bar"><i data-depth-fill /></div>
         <strong data-depth-label>0 m</strong>
       </div>
-      <p class="wfeel__caption">Depth gauge illustration to {depth ?? model.waterM} m - check final specs.</p>
+      <p class="wfeel__caption">Depth gauge illustration to {depth ?? model.waterM} m.</p>
       <p>Swim and snorkel within the rating. Hot tubs, saunas and diving beyond the rating are not covered.</p>
     </div>
   </section>

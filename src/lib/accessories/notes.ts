@@ -37,7 +37,7 @@ export function accessoryBuyingNotes(product: Accessory): { title: string; body:
     });
     notes.push({
       title: "MagSafe",
-      body: "MagSafe cases work with MagSafe chargers on supported iPhones - check. Strap pairing is owner-to-confirm.",
+      body: "MagSafe cases work with MagSafe chargers on supported iPhones. Ask us about strap pairing.",
     });
   } else {
     notes.push({
@@ -60,7 +60,7 @@ export function accessoryBuyingNotes(product: Accessory): { title: string; body:
     },
     {
       title: "Set-up",
-      body: "We pair your Pencil or keyboard and test it before you collect. Fee - owner to confirm.",
+      body: "We pair your Pencil or keyboard and test it before you collect. Set-up fees vary and are confirmed when you engage with us.",
     },
   );
   return notes;
@@ -79,7 +79,7 @@ export function accessoryFaq(): { q: string; a: string }[] {
     { q: "Do you stock other brands?", a: "Not yet. We stock Apple's own cases and chargers. Ask on WhatsApp about Belkin, Anker, Spigen and similar." },
     { q: "Does my iPad come with a Pencil?", a: "No. The Pencil is sold separately." },
     { q: "Which Magic Keyboard fits my iPad?", a: "Pro, Air and Folio keyboards each fit specific iPads. Use the finder - Pro keyboards do not fit Air." },
-    { q: "What do I get with the invoice?", a: "Sealed accessory, serial on the invoice. Warranty wording - owner to confirm." },
+    { q: "What do I get with the invoice?", a: "Sealed accessory, serial on the invoice. New products include a 1-year warranty." },
   ];
 }
 

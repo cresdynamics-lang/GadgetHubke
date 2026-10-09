@@ -23,7 +23,7 @@ export const airpodsAccessories: AirpodsAccessory[] = [
   { id: "protective-case", name: "Protective case", blurb: "Soft case for earbuds case.", priceKes: 2500, category: "case", families: ["AirPods", "Pro"], href: "/shop/accessories/cases" },
   { id: "lanyard", name: "Lanyard", blurb: "Loop for Pro MagSafe case.", priceKes: 1500, category: "lanyard", families: ["Pro"], href: "/shop/accessories" },
   { id: "travel-pouch", name: "Travel pouch", blurb: "Soft pouch for Max or earbuds.", priceKes: 3000, category: "pouch", href: "/shop/accessories" },
-  { id: "apple-care", name: "AppleCare+", blurb: "Extended coverage - owner to confirm pricing.", priceKes: 8000, category: "care", href: "/support" },
+  { id: "apple-care", name: "AppleCare+", blurb: "Extended coverage — ask us for pricing.", priceKes: 8000, category: "care", href: "/support" },
   { id: "cross-iphone", name: "iPhone cases", blurb: "Match your phone to your AirPods.", priceKes: 0, category: "cross", href: "/shop/accessories/cases" },
   { id: "cross-watch", name: "Apple Watch", blurb: "Workouts with Watch + AirPods.", priceKes: 0, category: "cross", href: "/watch" },
 ];
@@ -78,7 +78,7 @@ export function airpodsBuyingNotes(model: AirpodsModel): { title: string; body: 
       title: "Battery honesty",
       body: model.batterySingleHours
         ? `Apple claims up to ${model.batterySingleHours} h single charge - not a promise. ANC and loud volume drain faster.`
-        : "Battery hours flagged check-final-specs. Batteries wear out; replacement is through Apple.",
+        : "Battery hours . Batteries wear out; replacement is through Apple.",
     },
     {
       title: "Case and charging",
@@ -96,7 +96,7 @@ export function airpodsBuyingNotes(model: AirpodsModel): { title: string; body: 
     },
     {
       title: "Warranty and set-up",
-      body: "Warranty wording and pairing fee - owner to confirm. We pair with your iPhone, set up Find My and test noise control before collect.",
+      body: "We pair with your iPhone, set up Find My and test noise control before collect. New devices include a 1-year warranty. Set-up fees vary and are confirmed when you engage with us.",
     },
   ];
 }
@@ -108,10 +108,10 @@ export function airpodsFaq(): { q: string; a: string }[] {
     { q: "Are my AirPods real?", a: "Buy sealed with the serial on the invoice, then check coverage on Apple's site." },
     { q: "Pro 3 or AirPods 5?", a: "Pro 3 seals with tips and stronger ANC. AirPods 5 are open-fit and usually cheaper." },
     { q: "Is Max worth the price?", a: "If you want over-ear comfort and ANC for long sessions - yes for many listeners. Otherwise Pro is enough." },
-    { q: "How long does the battery last?", a: "Apple publishes hours per model - flagged check until confirmed. ANC drains faster." },
+    { q: "How long does the battery last?", a: "Apple publishes hours per model. ANC drains faster." },
     { q: "Can the battery be replaced?", a: "Through Apple service - not a DIY swap." },
     { q: "Do they work with my iPhone?", a: "Yes on supported iPhone models. Check Apple's list for the exact features you want." },
     { q: "Can I use one earbud?", a: "Yes on in-ear models - Automatic Ear Detection pauses when you remove them (where supported)." },
-    { q: "What do I get with the invoice?", a: "Sealed device, serial on the invoice, and the case in the pack. Warranty wording - owner to confirm." },
+    { q: "What do I get with the invoice?", a: "Sealed device, serial on the invoice, and the case in the pack. New devices include a 1-year warranty." },
   ];
 }

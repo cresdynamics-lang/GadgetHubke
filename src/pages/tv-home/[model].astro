@@ -92,7 +92,7 @@ const showPair = model.stereoPairCapable;
         <p class="thpdp__pills">
           <span>{model.year}</span>
           {model.isNew ? <span>New</span> : <span>Also in stock</span>}
-          {model.checkFinalSpecs ? <span>Check final specs</span> : null}
+          
         </p>
         <h1>{model.name}</h1>
         <p class="thpdp__tagline">{model.tagline}</p>
@@ -209,7 +209,7 @@ const showPair = model.stereoPairCapable;
       <h2>Full specifications</h2>
       <p class="thpdp__fine">{tvHomeConfig.appleSpecsFootnote}</p>
       <details class="thpdp__acc" open>
-        <summary>Overview {model.checkFinalSpecs ? "· check final specs" : ""}</summary>
+        <summary>Overview </summary>
         <table>
           <tr><th>Connections</th><td>{model.connections.join(", ") || "-"}</td></tr>
           <tr><th>Picture</th><td>{model.pictureFormats.join(", ") || "-"}</td></tr>

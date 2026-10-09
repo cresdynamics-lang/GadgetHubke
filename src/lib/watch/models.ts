@@ -1,7 +1,7 @@
 /**
  * Apple Watch catalog (Series 6 - 12, SE, Ultra, Hermès, Nike, 2020 - 2026).
  * Specs from Apple's published compare page (apple.com/watch/compare).
- * Owner: re-verify every figure before launch. Cells marked checkFinalSpecs
+ * re-verify every figure before launch. Cells marked checkFinalSpecs
  * or null stay uncertain - show nothing rather than guess.
  */
 
@@ -221,7 +221,7 @@ export const watchModels: WatchModel[] = [
     ],
     isNew: true,
     checkFinalSpecs: true,
-    notes: "Case about 46 × 40 × 9.7 mm; ceramic about 9.85 mm. Check specs.",
+    notes: "Case about 46 × 40 × 9.7 mm; ceramic about 9.85 mm.",
     pageFamily: "Series",
   }),
   s({
@@ -299,7 +299,7 @@ export const watchModels: WatchModel[] = [
     whyChoose: [
       "Most affordable current Apple Watch.",
       "Core safety and activity tracking without the Series price.",
-      "Always-On status on SE 3 - check final specs.",
+      "Always-On status on SE 3 — ask us for the latest.",
     ],
     isNew: true,
     checkFinalSpecs: true,
@@ -340,7 +340,7 @@ export const watchModels: WatchModel[] = [
     whyChoose: [
       "44 mm SE 3 for easier reading.",
       "About 33 g Wi-Fi aluminum.",
-      "Same SE feature set as 40 mm - check final specs.",
+      "Same SE feature set as 40 mm.",
     ],
     isNew: true,
     checkFinalSpecs: true,

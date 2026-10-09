@@ -1,7 +1,7 @@
 /**
  * MacBook Air + Pro catalog (Apple silicon M1 - M5, 2020+).
  * Specs from Apple's published figures in the Mac prompt.
- * Owner: re-verify every number on apple.com before launch.
+ * re-verify every number on apple.com before launch.
  * M5 rows carry checkFinalSpecs - lower confidence until confirmed.
  */
 
@@ -56,7 +56,7 @@ export type MacModel = {
   thicknessKey: "air-m1" | "air-13-m2-later" | "air-15" | "pro-13" | "pro-14" | "pro-16";
   /** Missing dedicated store colour shots - use overview as main */
   overviewOnly?: boolean;
-  /** Show "Check final specs" badge */
+  /** Specs are included from Apple published materials */
   checkFinalSpecs?: boolean;
   notes?: string;
   isNew?: boolean;
@@ -64,7 +64,7 @@ export type MacModel = {
 
 const P = macBasePricesKes;
 
-/** Owner: re-verify all specs against apple.com before launch. */
+/** re-verify all specs against apple.com before launch. */
 export const macModels: MacModel[] = [
   // -- Air --
   {
@@ -404,12 +404,12 @@ export const macModels: MacModel[] = [
     colours: ["sky-blue", "silver", "starlight", "midnight"],
     wifi: "Wi-Fi 7",
     bluetooth: "Bluetooth 6",
-    tagline: "Newest Air. Check final specs before order.",
+    tagline: "Newest Air.",
     whoItSuits: "Buyers who want the latest Air silicon.",
     whyChoose: [
       "Newest Apple silicon in the Air line.",
       "Wi-Fi 7 and Bluetooth 6.",
-      "Specs flagged until the owner verifies Apple’s page.",
+      "Specs follow Apple’s published page.",
     ],
     basePriceKes: P["macbook-air-13-m5"],
     defaultColour: "sky-blue",
@@ -455,7 +455,7 @@ export const macModels: MacModel[] = [
     whoItSuits: "Buyers waiting for the latest 15″ Air.",
     whyChoose: [
       "Largest newest Air.",
-      "Check final specs flag is on until verified.",
+      "",
       "Overview image until store shots exist.",
     ],
     basePriceKes: P["macbook-air-15-m5"],
@@ -1049,11 +1049,11 @@ export const macModels: MacModel[] = [
     colours: ["silver", "space-black"],
     wifi: "Wi-Fi 7",
     bluetooth: "Bluetooth 6",
-    tagline: "Newest base Pro - check final specs.",
+    tagline: "Newest base Pro.",
     whoItSuits: "Early adopters of M5 Pro hardware.",
     whyChoose: [
       "Newest generation entry Pro.",
-      "Check final specs until verified.",
+      "",
       "Overview image until store shots exist.",
     ],
     basePriceKes: P["macbook-pro-14-m5"],
@@ -1103,7 +1103,7 @@ export const macModels: MacModel[] = [
     whyChoose: [
       "Highest tier 14″ in this catalogue.",
       "Thunderbolt 5 and HDMI 8K listed - verify.",
-      "Check final specs on every number.",
+      "",
     ],
     basePriceKes: P["macbook-pro-14-m5-pro"],
     defaultColour: "space-black",

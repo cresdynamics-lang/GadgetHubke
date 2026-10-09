@@ -92,7 +92,7 @@ export async function initiateStkPush(input: {
   const billAccountRef = process.env.STANBIC_BILL_ACCOUNT_REF!;
   const token = await getAccessToken();
 
-  // Path may vary by Stanbic product subscription — owner confirms exact route after onboarding.
+  // Path may vary by Stanbic product subscription — confirm exact route after onboarding.
   const url =
     process.env.STANBIC_STK_PATH ||
     `${base.replace(/\/$/, "")}/api/v1/payments/stk-push`;

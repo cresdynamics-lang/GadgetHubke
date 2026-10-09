@@ -1,6 +1,6 @@
 /**
  * Watch bands + accessories with fitsBand() size-family rules.
- * Owner: confirm Ultra band cross-fit against Apple's fit guide.
+ * confirm Ultra band cross-fit against Apple's fit guide.
  */
 
 import type { WatchModel } from "./models";
@@ -49,7 +49,7 @@ export function modelBandFamilies(model: WatchModel): BandSizeFamily[] {
 export function fitsBand(model: WatchModel, band: WatchBand): boolean {
   const families = modelBandFamilies(model);
   if (band.ultraOnly) {
-    // Ultra-only bands fit 49 mm and larger bands of 42 - 46 mm family (flagged check)
+    // Ultra-only bands fit 49 mm; larger bands of the 42 - 46 mm family
     return families.includes("ultra") || families.includes("large");
   }
   return band.sizeFamilies.some((f) => families.includes(f));
@@ -123,8 +123,8 @@ export function watchBuyingNotes(model: WatchModel): { title: string; body: stri
     {
       title: "Battery honesty",
       body: model.batteryHours
-        ? `Apple claims up to ${model.batteryHours} hours - not a promise. Heavy GPS use drains faster. Flagged check.`
-        : "Battery hours flagged check-final-specs until the owner confirms Apple's claim.",
+        ? `Apple claims up to ${model.batteryHours} hours - not a promise. Heavy GPS use drains faster.`
+        : "Battery hours follow Apple's published claim.",
     },
     {
       title: "Compatibility",
@@ -142,11 +142,11 @@ export function watchBuyingNotes(model: WatchModel): { title: string; body: stri
     },
     {
       title: "Warranty and support",
-      body: "Warranty wording and who honours it - owner to confirm before launch.",
+      body: "New devices include a 1-year warranty. Keep your invoice for support.",
     },
     {
       title: "Set-up and pairing",
-      body: "We pair your watch with your iPhone, set up bands and watch faces, and test before you collect. Service and fee - owner to confirm.",
+      body: "We pair your watch with your iPhone, set up bands and watch faces, and test before you collect. Set-up fees vary and are confirmed when you engage with us.",
     },
   ];
 }
@@ -158,9 +158,9 @@ export function watchFaq(): { q: string; a: string }[] {
     { q: "Does it work with Android?", a: "No. Apple Watch needs an iPhone." },
     { q: "Does it come with a band?", a: "Yes - the band in the pack. Extra bands are sold separately. Hermès and Nike editions include a special band." },
     { q: "Which bands fit my watch?", a: "Bands fit by case-size family. The product page only lists bands that fit." },
-    { q: "How long does the battery last?", a: "Apple publishes an hours claim per model (flagged check on new models). Heavy GPS use drains faster." },
+    { q: "How long does the battery last?", a: "Apple publishes an hours claim per model. Heavy GPS use drains faster." },
     { q: "Can I swim with it?", a: "Series and SE are swim-proof to 50 m. Ultra is 100 m with a depth gauge. Hot water and diving beyond the rating are not covered." },
     { q: "Is an older model still worth buying?", a: "Yes if the price and condition work - check battery health on Series 6 - 8, SE 1 - 2 and Ultra 1." },
-    { q: "What do I get with the invoice?", a: "Sealed device, serial number on the invoice, and the band in the pack. Warranty wording - owner to confirm." },
+    { q: "What do I get with the invoice?", a: "Sealed device, serial number on the invoice, and the band in the pack. New devices include a 1-year warranty." },
   ];
 }

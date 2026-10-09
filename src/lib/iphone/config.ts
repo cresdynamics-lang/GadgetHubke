@@ -8,9 +8,9 @@ export const iphoneConfig = {
   whatsappDisplay: "0729 585 471",
 
   address: {
-    line: "To be confirmed",
+    line: "Norwich House, Suite 15, 4th Floor",
     city: "Nairobi, Kenya",
-    hours: "To be confirmed",
+    hours: "Mon-Sat 8am-8pm · Sun 10am-8pm",
   },
 
   /** Sample storage steps above base (KES). Owner can change. */
@@ -37,14 +37,14 @@ export const iphoneConfig = {
   },
 
   samplePriceDisclaimer:
-    "Sample price until stock is entered in the admin. Sealed, serial number on the invoice.",
+    "Sealed product, serial on the invoice. 1-year warranty. Set-up fees vary and are confirmed when you engage with us.",
 
   announce:
     "Sealed iPhones, serial number on your invoice. Lipa Mdogo Mdogo available.",
 
   /** Footnote for Apple-published figures */
   appleSpecsFootnote:
-    "Battery figures are Apple's video-playback claims for a new battery. Satellite and carrier features vary by country. Owner: re-verify specs on apple.com before launch.",
+    "Battery figures are Apple's video-playback claims for a new battery. Satellite and carrier features vary by country. Figures follow Apple's published claims.",
 } as const;
 
 export type IphoneConfig = typeof iphoneConfig;

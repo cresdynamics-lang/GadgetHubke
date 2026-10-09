@@ -36,7 +36,7 @@ if (model.colours.length > 1) feelIds.push("colour");
     <section class="thfeel thfeel--black" id="feel-picture" data-feel="picture">
       <div class="container thfeel__inner">
         <h2>Every pixel, in its place.</h2>
-        <p class="thfeel__lede">Illustration - no audio. {model.checkFinalSpecs ? "Picture formats flagged check final specs." : ""}</p>
+        <p class="thfeel__lede">Illustration - no audio. ""</p>
         {!pictureImg.fallback ? (
           <img class="thfeel__img" src={pictureImg.src} alt={pictureImg.alt} width="1200" height="900" loading="lazy" />
         ) : null}
@@ -56,7 +56,7 @@ if (model.colours.length > 1) feelIds.push("colour");
     <section class="thfeel" id="feel-sound" data-feel="sound">
       <div class="container thfeel__inner">
         <h2>Sound that fills the room.</h2>
-        <p class="thfeel__lede">{model.audioDetails || "360-degree audio - check final specs."}</p>
+        <p class="thfeel__lede">{model.audioDetails || "360-degree audio - on request."}</p>
         {!soundImg.fallback ? (
           <img class="thfeel__img" src={soundImg.src} alt={soundImg.alt} width="1100" height="700" loading="lazy" />
         ) : (

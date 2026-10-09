@@ -1,10 +1,10 @@
-/** Sample data matching the Admin PDF (pages 3-13). Replace with live stores later. */
+import { currentStaff } from "./staff";
 
-export const sampleStaff = {
-  name: "Asha M.",
-  role: "Owner",
-  email: "asha@example.com",
-};
+/** Sample / fallback data for management UI until live stores are wired. */
+
+
+/** Signed-in chrome — from env, not dummy people. */
+export const sampleStaff = currentStaff();
 
 export const sampleDashboard = {
   visitorsNow: 28,
@@ -33,7 +33,7 @@ export const sampleDashboard = {
     { label: "Lipa Mdogo Mdogo", count: 2 },
   ],
   latestOrders: [
-    { id: "#1042", customer: "Brian K.", item: "iPhone 15 Pro", total: "KES 168,000", payment: "M-Pesa", status: "New" },
+    { id: "#1042", customer: "Customer", item: "iPhone 15 Pro", total: "KES 168,000", payment: "M-Pesa", status: "New" },
     { id: "#1041", customer: "Mercy A.", item: "AirPods Pro", total: "KES 29,500", payment: "On delivery", status: "Confirmed" },
     { id: "#1040", customer: "Kevin O.", item: "MacBook Air", total: "KES 134,000", payment: "Lipa Mdogo Mdogo", status: "Dispatched" },
     { id: "#1039", customer: "Joy W.", item: "iPad Air", total: "KES 92,000", payment: "M-Pesa", status: "Delivered" },
@@ -78,7 +78,7 @@ export const sampleLive = {
 };
 
 export const sampleOrders = [
-  { id: "#1042", customer: "Brian K.", item: "iPhone 15 Pro · 256 GB", total: "KES 168,000", payment: "M-Pesa", from: "Website", status: "New", placed: "2 min ago" },
+  { id: "#1042", customer: "Customer", item: "iPhone 15 Pro · 256 GB", total: "KES 168,000", payment: "M-Pesa", from: "Website", status: "New", placed: "2 min ago" },
   { id: "#1041", customer: "Mercy A.", item: "AirPods Pro", total: "KES 29,500", payment: "On delivery", from: "WhatsApp", status: "Confirmed", placed: "25 min ago" },
   { id: "#1040", customer: "Kevin O.", item: "MacBook Air · 13\"", total: "KES 134,000", payment: "Lipa Mdogo Mdogo", from: "Website", status: "Dispatched", placed: "1 hr ago" },
   { id: "#1039", customer: "Joy W.", item: "iPad Air · 256 GB", total: "KES 92,000", payment: "M-Pesa", from: "Website", status: "Delivered", placed: "3 hrs ago" },
@@ -89,9 +89,9 @@ export const sampleOrders = [
 ];
 
 export const sampleTradeIns = [
-  { id: "TI-204", customer: "Brian K.", device: "iPhone 13 Pro · 256 GB", status: "Waiting for quote", submitted: "12 min ago" },
+  { id: "TI-204", customer: "Customer", device: "iPhone 13 Pro · 256 GB", status: "Waiting for quote", submitted: "12 min ago" },
   { id: "TI-203", customer: "Ann W.", device: "Samsung S23 · 128 GB", status: "Quoted", submitted: "1 hr ago", quote: "KES 42,000" },
-  { id: "TI-202", customer: "Leo M.", device: "iPhone 12 · 64 GB", status: "Credit applied", submitted: "Yesterday", quote: "KES 28,000" },
+  { id: "TI-202", customer: "Customer", device: "iPhone 12 · 64 GB", status: "Credit applied", submitted: "Yesterday", quote: "KES 28,000" },
   { id: "TI-201", customer: "Grace T.", device: "iPhone 14 · 128 GB", status: "Waiting for quote", submitted: "Yesterday" },
 ];
 
@@ -110,11 +110,7 @@ export const sampleSales = {
     { name: "MacBook Air", units: 8, revenue: "KES 1,072,000" },
     { name: "AirPods Pro", units: 15, revenue: "KES 442,500" },
   ],
-  byStaff: [
-    { name: "Asha M.", orders: 18, revenue: "KES 890,000" },
-    { name: "Brian K.", orders: 21, revenue: "KES 1,120,000" },
-    { name: "Faith W.", orders: 15, revenue: "KES 470,000" },
-  ],
+  byStaff: [] as { name: string; orders: number; revenue: string }[],
 };
 
 export const sampleLipa = [
@@ -124,9 +120,5 @@ export const sampleLipa = [
   { id: "LP-85", customer: "Joy W.", device: "iPhone 15", status: "On track", nextDue: "12 Oct", remaining: "KES 72,000" },
 ];
 
-export const sampleStaffList = [
-  { name: "Asha M.", email: "asha@example.com", role: "Owner", status: "Active" },
-  { name: "Brian K.", email: "brian@example.com", role: "Manager", status: "Active" },
-  { name: "Faith W.", email: "faith@example.com", role: "Sales", status: "Active" },
-  { name: "Leo M.", email: "leo@example.com", role: "Sales", status: "Invited" },
-];
+/** Live staff invites are not wired yet — keep empty (no dummy people). */
+export const sampleStaffList: { name: string; email: string; role: string; status: string }[] = [];

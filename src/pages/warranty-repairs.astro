@@ -5,11 +5,11 @@ import { site, policy } from "../lib/site";
 
 <BaseLayout
   title="Warranty & Repairs - GadgetHub"
-  description={`Manufacturer warranty support for new devices purchased from ${site.legalName}.`}
+  description={`1-year warranty support for new devices purchased from ${site.legalName}.`}
 >
   <section class="page container">
     <h1>Warranty &amp; Repairs</h1>
-    <p class="page__lede">{site.warranty.note}</p>
+    <p class="page__lede">{site.warranty.note} {site.setup.note}</p>
     <ul class="page__points">
       <li>Keep your proof of purchase from GadgetHub</li>
       <li>

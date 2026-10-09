@@ -28,22 +28,22 @@ export const aboutStory = {
   sticky:
     "Clear stock. Clear prices. A real person on WhatsApp.",
   paragraphs: [
-    "Gadget Hub Investments sells Apple products in Nairobi - New sealed units and EX-UK imports - with sample prices shown up front.",
-    "Pick a device on the site, message us on WhatsApp, then receive or collect. Payment options include M-Pesa, card, and Lipa Mdogo Mdogo run in-house by Gadget Hub Investments.",
+    "Gadget Hub Investments sells Apple products in Nairobi - New sealed units and EX-UK imports - with live prices shown up front.",
+    "Pick a device on the site, message us on WhatsApp, then receive or collect at Norwich House, Suite 15, 4th Floor. Payment options include M-Pesa, card, and Lipa Mdogo Mdogo run in-house by Gadget Hub Investments.",
   ],
 } as const;
 
 export const aboutChannels = {
   new: {
     title: "New",
-    body: "Sealed, straight from the box. Sample prices shown on each product.",
+    body: "Sealed, straight from the box. Live prices on each product. 1-year warranty.",
     note: site.warranty.note,
     image: ghImages.iphone.proBlue,
     imageAlt: "iPhone - New sealed stock",
   },
   "ex-uk": {
     title: "EX-UK",
-    body: "Previously owned in the UK, sold at a lower sample price than New.",
+    body: "Previously owned in the UK, sold at a lower price than New.",
     note: "Ask us on WhatsApp for the condition of any EX-UK unit before you buy.",
     image: ghImages.duo.openCamera,
     imageAlt: "iPhone - EX-UK option",
@@ -60,12 +60,12 @@ export const aboutWhy = [
   {
     n: "02",
     title: "New and EX-UK, side by side",
-    body: "Toggle sample prices for sealed New stock and EX-UK imports on the product display.",
+    body: "Toggle New and EX-UK prices on the product display.",
   },
   {
     n: "03",
-    title: "Manufacturer warranty on New",
-    body: site.warranty.note,
+    title: "1-year warranty on New",
+    body: `${site.warranty.note} ${site.setup.note}`,
   },
   {
     n: "04",
@@ -83,17 +83,17 @@ export const aboutSteps = [
   {
     n: "01",
     title: "Pick your device",
-    body: "Browse New or EX-UK sample prices across the Apple lineup.",
+    body: "Browse New or EX-UK prices across the Apple lineup.",
   },
   {
     n: "02",
     title: "Message us on WhatsApp",
-    body: "Confirm stock, finish, and price with the shop.",
+    body: "Confirm stock, finish, and price with the shop. Set-up fees vary and are confirmed when you engage with us.",
   },
   {
     n: "03",
     title: "Receive or collect",
-    body: `Arrange delivery or collection. Payments: ${policy.paymentMethods.join(", ")}.`,
+    body: `Arrange delivery or collect at ${site.address}. Payments: ${policy.paymentMethods.join(", ")}.`,
   },
 ] as const;
 
@@ -141,11 +141,11 @@ export const contactChips = [
 export const contactFaq = [
   {
     q: "Do you sell New and EX-UK?",
-    a: "Yes. New means sealed, straight from the box. EX-UK means previously owned in the UK and sold at a lower sample price. Toggle both on product pages.",
+    a: "Yes. New means sealed, straight from the box. EX-UK means previously owned in the UK and sold at a lower price. Toggle both on product pages.",
   },
   {
     q: "Do New phones come with a warranty?",
-    a: site.warranty.note,
+    a: `${site.warranty.note} ${site.setup.note}`,
   },
   {
     q: "What payment methods do you take?",

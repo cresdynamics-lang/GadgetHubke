@@ -1,7 +1,7 @@
 /**
  * iPad catalog (Pro / Air / mini / standard, 2020 - 2026).
  * Specs from Apple's published figures in the iPad prompt.
- * Owner: re-verify every number on apple.com before launch.
+ * re-verify every number on apple.com before launch.
  * M5 Pro, M4 Air, and A16 iPad carry checkFinalSpecs.
  */
 
@@ -64,7 +64,7 @@ export type IpadModel = {
 
 const P = ipadBasePricesKes;
 
-/** Owner: re-verify all specs against apple.com before launch. */
+/** re-verify all specs against apple.com before launch. */
 export const ipadModels: IpadModel[] = [
   // -- Pro --
   {
@@ -540,7 +540,7 @@ export const ipadModels: IpadModel[] = [
     whyChoose: [
       "13″ Ultra Retina XDR.",
       "M5 with more base memory.",
-      "Check final specs before launch.",
+      "",
     ],
     basePriceKes: P["ipad-pro-13-m5"],
     checkFinalSpecs: true,
@@ -856,7 +856,7 @@ export const ipadModels: IpadModel[] = [
     whyChoose: [
       "M4 with 12 GB memory.",
       "Wi-Fi 7.",
-      "Check final specs - brightness may need confirm.",
+      "",
     ],
     basePriceKes: P["ipad-air-11-m4"],
     checkFinalSpecs: true,
@@ -902,7 +902,7 @@ export const ipadModels: IpadModel[] = [
     whyChoose: [
       "M4 and 12 GB memory.",
       "13″ at 600 nits.",
-      "Check final specs before launch.",
+      "",
     ],
     basePriceKes: P["ipad-air-13-m4"],
     checkFinalSpecs: true,
@@ -1180,7 +1180,7 @@ export const ipadModels: IpadModel[] = [
     whyChoose: [
       "A16 with storage from 128 GB.",
       "Same colourful USB-C design.",
-      "Does not support Apple Intelligence - check final specs.",
+      "Does not support Apple Intelligence.",
     ],
     basePriceKes: P["ipad-a16"],
     checkFinalSpecs: true,

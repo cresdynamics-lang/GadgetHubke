@@ -15,11 +15,11 @@ export const site = {
   privacyEmail: "hello@gadgethubke.com",
   location: "Nairobi, Kenya",
   /** Short line for footer / compact UI */
-  address: "Norwich Union Building, 4th Floor, Suite 15",
+  address: "Norwich House, Suite 15, 4th Floor",
   /** Full store address for the locations page */
   addressLines: [
-    "Norwich Union Building",
-    "4th Floor, Suite 15",
+    "Norwich House",
+    "Suite 15, 4th Floor",
     "Nairobi, Kenya",
   ],
   hours: {
@@ -33,9 +33,14 @@ export const site = {
     label: "Lipa Mdogo Mdogo",
     note: "Installment plans are offered directly by Gadget Hub Investments. Corporate and bulk orders are settled by agreement.",
   },
+  /** Device set-up before collect / delivery — fee confirmed when you engage */
+  setup: {
+    note: "Set-up is available before you collect or take delivery. The fee varies and is confirmed when you engage with us.",
+  },
   warranty: {
-    type: "manufacturer" as const,
-    note: "All new devices carry the manufacturer’s standard warranty. Gadget Hub Investments does not provide any additional warranty beyond the manufacturer’s terms.",
+    type: "one-year" as const,
+    years: 1,
+    note: "New devices include a 1-year warranty. Keep your GadgetHub invoice for support.",
   },
   social: {
     facebook: "https://www.facebook.com/",

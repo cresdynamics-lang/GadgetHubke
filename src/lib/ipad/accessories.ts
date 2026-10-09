@@ -273,7 +273,7 @@ export function ipadBuyingNotes(model: IpadModel): { title: string; body: string
     },
     {
       title: "Warranty and set-up",
-      body: "Cover terms and set-up fee are owner to confirm. We can restore an old iPad or iPhone and install apps before collect.",
+      body: "We can restore an old iPad or iPhone and install apps before collect. New devices include a 1-year warranty. Set-up fees vary and are confirmed when you engage with us.",
     },
   ];
 }
@@ -335,7 +335,7 @@ export function ipadFaq(): { q: string; a: string }[] {
     },
     {
       q: "What do I get with the invoice?",
-      a: "Sealed device, serial number on the invoice, and sample pricing until stock is entered in the admin. Warranty wording is owner to confirm.",
+      a: "Sealed device, serial number on the invoice. New devices include a 1-year warranty.",
     },
   ];
 }

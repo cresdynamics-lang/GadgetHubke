@@ -213,7 +213,7 @@ const fitPayload = {
     if (!c) return "";
     if (c === "usb-c") return "USB-C";
     if (c === "lightning") return "Lightning";
-    if (c === "owner-confirm") return "Connector - owner to confirm";
+    if (c === "ask-us") return "Connector details on request";
     return c;
   }
 
@@ -248,7 +248,6 @@ const fitPayload = {
               <h3><a href="${href}">${name}</a></h3>
               <p class="xfinder__reason">${row.reason}</p>
               ${price != null ? `<p class="xfinder__price">From KES ${Number(price).toLocaleString("en-KE")}</p>` : ""}
-              <p class="xfinder__flag">Check final specs</p>
               <div class="xfinder__actions">
                 <a class="btn btn--secondary btn--xs" href="${href}">View</a>
               </div>
@@ -291,7 +290,6 @@ const fitPayload = {
               ${conn ? `<p class="xfinder__conn">${conn}</p>` : ""}
               <p class="xfinder__reason">${fit.reason}</p>
               <p class="xfinder__price">From KES ${item.price.toLocaleString("en-KE")}</p>
-              <p class="xfinder__flag">Check final specs</p>
               <div class="xfinder__actions">
                 <a class="btn btn--secondary btn--xs" href="${item.href}">View</a>
                 ${

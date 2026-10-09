@@ -75,7 +75,7 @@ const hoverSrc =
     ) : null
   }
   {model.isNew ? <span class="mcard__tag">New</span> : null}
-  {model.checkFinalSpecs ? <span class="mcard__tag mcard__tag--warn">Check specs</span> : null}
+  
 
   <a class:list={["mcard__media", { "mcard__media--swap": Boolean(hoverSrc) }]} href={href}>
     <MacStage src={img.src} srcWebp={img.srcWebp} alt={img.alt} width={img.width} height={Math.round(img.width * 0.625)} />
@@ -125,7 +125,7 @@ const hoverSrc =
 
     <p class="mcard__price">
       <span data-live-price={model.id} data-live-prefix="From ">From {formatKes(model.basePriceKes)}</span>
-      <span class="mcard__sample" data-live-stock={model.id}>Sample price</span>
+      <span class="mcard__sample" data-live-stock={model.id}>1-year warranty</span>
     </p>
     <p class="mcard__lipa">
       or {formatKes(lipa.monthlyKes)} a month for {lipa.months} months after a {macConfig.lipa.depositDefaultPct}% deposit

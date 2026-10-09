@@ -8,9 +8,9 @@ export const airpodsConfig = {
   whatsappDisplay: "0729 585 471",
 
   address: {
-    line: "To be confirmed",
+    line: "Norwich House, Suite 15, 4th Floor",
     city: "Nairobi, Kenya",
-    hours: "To be confirmed",
+    hours: "Mon-Sat 8am-8pm · Sun 10am-8pm",
   },
 
   /** Wireless charging case add-on where offered (KES). */
@@ -32,18 +32,18 @@ export const airpodsConfig = {
       good: 25,
       worn: 12,
     } as const,
-    note: "AirPods trade-in is at the owner's discretion. Indicative only if accepted after inspection.",
-    acceptAirpods: null as boolean | null, // owner to confirm
+    note: "AirPods trade-in is indicative and confirmed after inspection.",
+    acceptAirpods: null as boolean | null, // confirm trade-in acceptance
   },
 
   samplePriceDisclaimer:
-    "Sample price until stock is entered in the admin. Sealed, serial number on the invoice.",
+    "Sealed product, serial on the invoice. 1-year warranty. Set-up fees vary and are confirmed when you engage with us.",
 
   announce:
     "Sealed AirPods, serial number on your invoice. Lipa Mdogo Mdogo available.",
 
   appleSpecsFootnote:
-    "Battery hours, ANC ratios, IP ratings, microphone counts, chip and weights are flagged check-final-specs until the owner confirms Apple's published compare page.",
+    "Battery hours and ratings follow Apple's published compare page.",
 
   trademarkLine:
     "Apple, AirPods and the Apple logo are trademarks of Apple Inc. Product images belong to Apple and are used here for a design mock-up. Live use needs permission.",
@@ -53,7 +53,7 @@ export const airpodsConfig = {
 
   /**
    * Apple-published ANC ratio claims only. Do not invent bars.
-   * Owner: confirm source/date before launch.
+   * confirm source/date before launch.
    */
   ancRatios: [
     {
@@ -84,18 +84,32 @@ export const airpodsConfig = {
 
 /** Sample base prices in KES. */
 export const airpodsBasePricesKes = {
-  "airpods-5": 22000,
-  "airpods-5-wireless": 26000,
-  "airpods-4": 18000,
-  "airpods-4-anc": 25000,
-  "airpods-pro-3": 38000,
+  "airpods-5": 24000,
+  "airpods-5-wireless": 28000,
+  "airpods-4": 21000,
+  "airpods-4-anc": 26000,
+  "airpods-pro-3": 33000,
   "airpods-pro-2": 32000,
-  "airpods-max-2": 85000,
+  "airpods-max-2": 75000,
   "airpods-max-usbc": 72000,
-  "airpods-3": 20000,
-  "airpods-2": 14000,
+  "airpods-3": 22000,
+  "airpods-2": 16000,
   "airpods-pro-1": 22000,
   "airpods-max-2020": 55000,
+} as const;
+
+/** EX-UK base prices from sheet. */
+export const airpodsBaseExUkKes = {
+  "airpods-5": 19000,
+  "airpods-5-wireless": 19000,
+  "airpods-4": 16000,
+  "airpods-4-anc": 20000,
+  "airpods-pro-3": 25000,
+  "airpods-pro-2": 23000,
+  "airpods-max-2": 58000,
+  "airpods-max-usbc": 55000,
+  "airpods-3": 15000,
+  "airpods-2": 11000,
 } as const;
 
 export type AirpodsConfig = typeof airpodsConfig;

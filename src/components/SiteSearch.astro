@@ -877,12 +877,12 @@ const tvHomeAcc = Object.fromEntries(
             <li><a href="/watch/compare?ids=${encodeURIComponent(top.id)}">Compare Watches</a></li>`;
         } else if (mode === "airpods") {
           services.innerHTML = `
-            <li><a href="/trade-in">Trade in (owner discretion)</a></li>
+            <li><a href="/trade-in">Trade in</a></li>
             <li><a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo · about KES ${monthly.toLocaleString("en-KE")}/mo</a></li>
             <li><a href="/airpods/compare?ids=${encodeURIComponent(top.id)}">Compare AirPods</a></li>`;
         } else if (mode === "tv-home") {
           services.innerHTML = `
-            <li><a href="/trade-in">Trade in (owner discretion)</a></li>
+            <li><a href="/trade-in">Trade in</a></li>
             <li><a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo · about KES ${monthly.toLocaleString("en-KE")}/mo</a></li>
             <li><a href="/tv-home/compare?ids=${encodeURIComponent(top.id)}">Compare TV & Home</a></li>`;
         } else if (mode === "accessories") {

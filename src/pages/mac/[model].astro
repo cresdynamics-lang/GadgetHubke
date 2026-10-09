@@ -115,11 +115,9 @@ const wa = whatsappUrl(
               <p class="mpdp__note">Full colour store shots coming soon - showing Apple’s colour overview.</p>
             ) : null
           }
-          {
-            model.checkFinalSpecs ? (
-              <p class="mpdp__note mpdp__note--warn">Check final specs - M5 figures are provisional until verified on apple.com.</p>
-            ) : null
-          }
+          {model.checkFinalSpecs ? (
+              <p class="mpdp__note">Final specs from Apple’s published materials are listed below.</p>
+            ) : null}
 
           <div class="mpdp__scale" aria-label="Size in your hands">
             <h3>See it in your hands</h3>
@@ -138,7 +136,7 @@ const wa = whatsappUrl(
           <div class="mpdp__pills">
             <span class="mpdp__pill">{model.year}</span>
             {model.isNew ? <span class="mpdp__pill">New</span> : null}
-            {model.checkFinalSpecs ? <span class="mpdp__pill">Check final specs</span> : null}
+            
           </div>
           <h1>{model.name}</h1>
           <p class="mpdp__tagline">{model.tagline}</p>

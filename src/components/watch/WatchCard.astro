@@ -59,7 +59,7 @@ const lipa = lipaMonthly(model.basePriceKes);
       model.batteryHours != null ? (
         <p class="wcard__meta">Up to {model.batteryHours} h · Apple claim</p>
       ) : (
-        <p class="wcard__meta">Battery · check final specs</p>
+        <p class="wcard__meta">Battery details on request</p>
       )
     }
     <div class="wcard__colours" role="list" aria-label="Colours">
@@ -81,7 +81,7 @@ const lipa = lipaMonthly(model.basePriceKes);
       <span data-live-price={model.id} data-live-prefix="From ">From {formatKes(model.basePriceKes)}</span>
       <small>or {formatKes(lipa.monthlyKes)} / mo</small>
     </p>
-    <p class="wcard__fine" data-live-stock={model.id}>Sample price until stock is entered in the admin.</p>
+    <p class="wcard__fine" data-live-stock={model.id}>Sealed · 1-year warranty · serial on invoice</p>
     <div class="wcard__actions">
       <a class="btn btn--primary btn--xs" href={`/watch/${model.id}`}>View</a>
       <button

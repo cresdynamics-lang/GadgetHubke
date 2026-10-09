@@ -1,7 +1,7 @@
 /**
  * AirPods catalog (2 - 5, Pro 1 - 3, Max 2020/USB-C/Max 2).
  * Specs from Apple's published compare page (apple.com/airpods/compare).
- * Owner: re-verify every figure before launch. Store null where unclear -
+ * re-verify every figure before launch. Store null where unclear -
  * show nothing rather than guess. Groups marked checkFinalSpecs.
  */
 

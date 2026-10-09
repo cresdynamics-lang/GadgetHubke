@@ -60,15 +60,23 @@ const s = sampleSales;
       <h2 style="font-size:1.05rem;">By staff</h2>
       <table class="mgmt-table">
         <tbody>
-          {s.byStaff.map((p) => (
-            <tr>
-              <td>
-                {p.name}
-                <div class="mgmt-muted">{p.orders} orders</div>
-              </td>
-              <td style="text-align:right;">{p.revenue}</td>
-            </tr>
-          ))}
+          {
+            s.byStaff.length ? (
+              s.byStaff.map((p) => (
+                <tr>
+                  <td>
+                    {p.name}
+                    <div class="mgmt-muted">{p.orders} orders</div>
+                  </td>
+                  <td style="text-align:right;">{p.revenue}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colspan="2" class="mgmt-muted">No staff sales breakdown yet.</td>
+              </tr>
+            )
+          }
         </tbody>
       </table>
     </div>

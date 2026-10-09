@@ -1,4 +1,11 @@
 User-agent: *
 Allow: /
+Allow: /journal
+Allow: /journal/
+
+# Staff-only admin chrome — keep out of search results
+Disallow: /management
+Disallow: /api/management
+Disallow: /api/admin
 
 Sitemap: https://gadgethubke.com/sitemap.xml

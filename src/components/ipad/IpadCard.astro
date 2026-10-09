@@ -74,7 +74,7 @@ const hoverSrc =
     ) : null
   }
   {model.isNew ? <span class="icard__tag">New</span> : null}
-  {model.checkFinalSpecs ? <span class="icard__tag icard__tag--warn">Check specs</span> : null}
+  
 
   <a class:list={["icard__media", { "icard__media--swap": Boolean(hoverSrc) }]} href={href}>
     <IpadStage src={img.src} srcWebp={img.srcWebp} alt={img.alt} width={img.width} height={img.width} />
@@ -124,7 +124,7 @@ const hoverSrc =
 
     <p class="icard__price">
       <span data-live-price={model.id} data-live-prefix="From ">From {formatKes(model.basePriceKes)}</span>
-      <span>or {formatKes(lipa.monthlyKes)} / mo sample</span>
+      <span>or {formatKes(lipa.monthlyKes)} / mo</span>
     </p>
     <p class="icard__fine" data-live-stock={model.id}>{ipadConfig.samplePriceDisclaimer}</p>
 

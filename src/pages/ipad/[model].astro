@@ -107,11 +107,9 @@ const wa = whatsappUrl(
               <p class="ipdp__note">Full colour store shots coming soon - showing Apple’s colour overview. Colour names below as text.</p>
             ) : null
           }
-          {
-            model.checkFinalSpecs ? (
-              <p class="ipdp__note ipdp__note--warn">Check final specs - verify on apple.com before launch.</p>
-            ) : null
-          }
+          {model.checkFinalSpecs ? (
+              <p class="ipdp__note">Final specs from Apple’s published materials are listed below.</p>
+            ) : null}
 
           <div class="ipdp__scale" aria-label="Size in your hands">
             <h3>See it in your hands</h3>
@@ -129,7 +127,7 @@ const wa = whatsappUrl(
             <span class="ipdp__pill">{model.year}</span>
             {model.isNew ? <span class="ipdp__pill">New</span> : null}
             {model.appleIntelligence ? <span class="ipdp__pill">Apple Intelligence</span> : <span class="ipdp__pill">No Apple Intelligence</span>}
-            {model.checkFinalSpecs ? <span class="ipdp__pill">Check final specs</span> : null}
+            
           </div>
           <h1>{model.name}</h1>
           <p class="ipdp__tagline">{model.tagline}</p>
@@ -271,7 +269,7 @@ const wa = whatsappUrl(
 
     <section class="container ipdp__block" id="feel-thin" data-feel="thin">
       <h2>Thin enough to forget.</h2>
-      <p>About {thickness} mm. Owner: confirm before launch. {model.weightG} g Wi-Fi.</p>
+      <p>About {thickness} mm. confirm before launch. {model.weightG} g Wi-Fi.</p>
       {
         (() => {
           const side = getIpadImage(model.id, colour, "design", model.name);

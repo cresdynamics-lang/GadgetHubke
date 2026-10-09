@@ -8,9 +8,9 @@ export const macConfig = {
   whatsappDisplay: "0729 585 471",
 
   address: {
-    line: "To be confirmed",
+    line: "Norwich House, Suite 15, 4th Floor",
     city: "Nairobi, Kenya",
-    hours: "To be confirmed",
+    hours: "Mon-Sat 8am-8pm · Sun 10am-8pm",
   },
 
   /** Memory upgrade steps above base (KES). */
@@ -38,19 +38,19 @@ export const macConfig = {
   },
 
   samplePriceDisclaimer:
-    "Sample price until stock is entered in the admin. Sealed, serial number on the invoice.",
+    "Sealed product, serial on the invoice. 1-year warranty. Set-up fees vary and are confirmed when you engage with us.",
 
   announce:
     "Sealed MacBooks, serial number on your invoice. Lipa Mdogo Mdogo available.",
 
   appleSpecsFootnote:
-    "Battery hours and performance ratios are Apple's published claims for a new battery / cited launch materials. Owner: re-verify on apple.com before launch. M5 figures carry a check-final-specs flag.",
+    "Battery hours and performance ratios are Apple's published claims for a new battery / cited launch materials. M5 figures follow Apple launch materials.",
 
   trademarkLine:
     "Apple, MacBook and the Apple logo are trademarks of Apple Inc. Product images belong to Apple and are used here for a design mock-up. Live use needs permission.",
 
   /**
-   * Approximate closed-lid thickness (mm). Owner: confirm against Apple tech specs.
+   * Approximate closed-lid thickness (mm). Approximate; see Apple tech specs.
    * Air M1 uses thickest-point figure from older chassis.
    */
   thicknessMm: {
@@ -64,7 +64,7 @@ export const macConfig = {
 
   /**
    * Relative multi-core CPU illustration ratios. Only cite published Apple claims.
-   * Do not invent bars for missing pairs. Owner: update source/date when verified.
+   * Do not invent bars for missing pairs. 
    */
   performanceRatios: [
     {
@@ -97,30 +97,59 @@ export const macConfig = {
 
 /** Sample base prices in KES - one place to edit. */
 export const macBasePricesKes = {
-  "macbook-air-13-m1": 70000,
-  "macbook-air-13-m2": 95000,
-  "macbook-air-15-m2": 125000,
-  "macbook-air-13-m3": 120000,
-  "macbook-air-15-m3": 150000,
-  "macbook-air-13-m4": 135000,
-  "macbook-air-15-m4": 165000,
+  "macbook-air-13-m1": 99000,
+  "macbook-air-13-m2": 118000,
+  "macbook-air-15-m2": 145000,
+  "macbook-air-13-m3": 135000,
+  "macbook-air-15-m3": 160000,
+  "macbook-air-13-m4": 148000,
+  "macbook-air-15-m4": 180000,
+  "macbook-air-13-m5": 190000,
+  "macbook-air-15-m5": 225000,
+  "macbook-pro-13-m1": 110000,
+  "macbook-pro-13-m2": 135000,
+  "macbook-pro-14-m1-pro": 180000,
+  "macbook-pro-16-m1-pro": 210000,
+  "macbook-pro-14-m2-pro": 215000,
+  "macbook-pro-16-m2-pro": 250000,
+  "macbook-pro-14-m3": 195000,
+  "macbook-pro-14-m3-pro": 245000,
+  "macbook-pro-16-m3-pro": 295000,
+  "macbook-pro-14-m4": 215000,
+  "macbook-pro-14-m4-pro": 270000,
+  "macbook-pro-16-m4-pro": 340000,
+  "macbook-pro-14-m5": 255000,
+  "macbook-pro-14-m5-pro": 365000,
+  "macbook-pro-16-m5-pro": 430000,
+} as const;
+
+/** EX-UK base prices from sheet / overlay. */
+export const macBaseExUkKes = {
+  "macbook-air-13-m1": 68000,
+  "macbook-air-13-m2": 88000,
+  "macbook-air-13-m3": 105000,
+  "macbook-air-13-m4": 118000,
   "macbook-air-13-m5": 150000,
+  "macbook-air-15-m2": 110000,
+  "macbook-air-15-m3": 125000,
+  "macbook-air-15-m4": 145000,
   "macbook-air-15-m5": 180000,
-  "macbook-pro-13-m1": 95000,
-  "macbook-pro-13-m2": 125000,
-  "macbook-pro-14-m1-pro": 190000,
-  "macbook-pro-16-m1-pro": 240000,
-  "macbook-pro-14-m2-pro": 230000,
-  "macbook-pro-16-m2-pro": 285000,
-  "macbook-pro-14-m3": 175000,
-  "macbook-pro-14-m3-pro": 260000,
-  "macbook-pro-16-m3-pro": 330000,
-  "macbook-pro-14-m4": 190000,
-  "macbook-pro-14-m4-pro": 290000,
-  "macbook-pro-16-m4-pro": 360000,
-  "macbook-pro-14-m5": 210000,
-  "macbook-pro-14-m5-pro": 320000,
-  "macbook-pro-16-m5-pro": 390000,
+  "macbook-pro-13-m1": 75000,
+  "macbook-pro-13-m2": 95000,
+  "macbook-pro-14-m1-pro": 135000,
+  "macbook-pro-14-m2-pro": 165000,
+  "macbook-pro-14-m3": 155000,
+  "macbook-pro-14-m3-pro": 195000,
+  "macbook-pro-14-m4": 175000,
+  "macbook-pro-14-m4-pro": 220000,
+  "macbook-pro-14-m5": 205000,
+  "macbook-pro-14-m5-pro": 295000,
+  "macbook-pro-16-m1-pro": 160000,
+  "macbook-pro-16-m2-pro": 195000,
+  "macbook-pro-16-m3-pro": 235000,
+  "macbook-pro-16-m4-pro": 275000,
+  "macbook-pro-16-m5-pro": 350000,
+  "macbook-pro": 175000,
 } as const;
 
 export type MacConfig = typeof macConfig;

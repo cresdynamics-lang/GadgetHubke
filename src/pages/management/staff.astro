@@ -7,10 +7,12 @@ import { sampleStaff, sampleStaffList } from "../../lib/management/sample";
 
 const authed = await isAdminAuthed(Astro.cookies);
 if (!authed) return Astro.redirect("/management");
+
+const signedIn = sampleStaff;
 ---
 
-<ManagementLayout title="Staff - Management" authed active="staff" staffName={sampleStaff.name} staffRole={sampleStaff.role}>
-  <p class="mgmt-banner">Sample team - invites, roles, and activity log in Phase I.</p>
+<ManagementLayout title="Staff - Management" authed active="staff" staffName={signedIn.name} staffRole={signedIn.role}>
+  <p class="mgmt-banner">Staff invites and roles are not live yet. Signed-in identity comes from server env (MANAGEMENT_STAFF_*).</p>
   <header style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.75rem;margin-bottom:1rem;">
     <div>
       <h1 class="mgmt-page-title">Staff and roles</h1>
@@ -31,23 +33,39 @@ if (!authed) return Astro.redirect("/management");
       </thead>
       <tbody>
         {
-          sampleStaffList.map((s) => (
+          sampleStaffList.length ? (
+            sampleStaffList.map((s) => (
+              <tr>
+                <td>{s.name}</td>
+                <td>{s.email}</td>
+                <td>{s.role}</td>
+                <td>
+                  <span class:list={["mgmt-tag", { "mgmt-tag--scheduled": s.status === "Invited" }]}>{s.status}</span>
+                </td>
+              </tr>
+            ))
+          ) : (
             <tr>
-              <td>{s.name}</td>
-              <td>{s.email}</td>
-              <td>{s.role}</td>
-              <td>
-                <span class:list={["mgmt-tag", { "mgmt-tag--scheduled": s.status === "Invited" }]}>{s.status}</span>
-              </td>
+              <td>{signedIn.name}</td>
+              <td>{signedIn.email}</td>
+              <td>{signedIn.role}</td>
+              <td><span class="mgmt-tag">Active</span></td>
             </tr>
-          ))
+          )
         }
       </tbody>
     </table>
+    {
+      !sampleStaffList.length ? (
+        <p class="mgmt-muted" style="margin-top:0.75rem;">
+          No other staff accounts yet. Set <code>MANAGEMENT_STAFF_NAME</code>, <code>MANAGEMENT_STAFF_EMAIL</code>, and <code>MANAGEMENT_STAFF_ROLE</code> on the server, or invite teammates when that ships.
+        </p>
+      ) : null
+    }
   </div>
 
   <div class="mgmt-card">
-    <h2 style="font-size:1.05rem;">Role matrix (PDF default)</h2>
+    <h2 style="font-size:1.05rem;">Role matrix</h2>
     <div style="overflow:auto;margin-top:0.75rem;">
       <table class="mgmt-table">
         <thead>

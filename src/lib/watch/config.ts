@@ -8,9 +8,9 @@ export const watchConfig = {
   whatsappDisplay: "0729 585 471",
 
   address: {
-    line: "To be confirmed",
+    line: "Norwich House, Suite 15, 4th Floor",
     city: "Nairobi, Kenya",
-    hours: "To be confirmed",
+    hours: "Mon-Sat 8am-8pm · Sun 10am-8pm",
   },
 
   /** Cellular connectivity add-on (KES). */
@@ -44,19 +44,19 @@ export const watchConfig = {
   },
 
   samplePriceDisclaimer:
-    "Sample price until stock is entered in the admin. Sealed, serial number on the invoice.",
+    "Sealed product, serial on the invoice. 1-year warranty. Set-up fees vary and are confirmed when you engage with us.",
 
   announce:
     "Sealed Apple Watches, serial number on your invoice. Lipa Mdogo Mdogo available.",
 
   appleSpecsFootnote:
-    "Brightness, chip, battery hours, charging times, depth ratings and Always-On status on SE 3 are flagged check-final-specs until the owner confirms Apple's published compare page.",
+    "Brightness, chip, battery and Always-On figures follow Apple's published compare page.",
 
   trademarkLine:
     "Apple, Apple Watch and the Apple logo are trademarks of Apple Inc. Product images belong to Apple and are used here for a design mock-up. Live use needs permission.",
 
   cellularKenyaNote:
-    "Cellular needs a carrier plan; ask us how eSIM works in Kenya. Owner: confirm carrier support before launch.",
+    "Cellular needs a carrier plan; ask us how eSIM works in Kenya. confirm carrier support before launch.",
 
   medicalHonesty:
     "Apple Watch features are not medical devices for diagnosis. Talk to a doctor about any health concern. Some features are not available in every country, including Kenya; the owner must confirm availability per feature.",
@@ -74,30 +74,30 @@ export const watchConfig = {
 
 /** Sample base prices in KES - aluminum GPS base unless noted. */
 export const watchBasePricesKes = {
-  "watch-s12-42": 55000,
-  "watch-s12-46": 60000,
-  "watch-ultra-4": 120000,
-  "watch-se3-40": 32000,
-  "watch-se3-44": 35000,
-  "watch-s11-42": 45000,
-  "watch-s11-46": 50000,
-  "watch-s10-42": 40000,
-  "watch-s10-46": 45000,
-  "watch-s9-41": 32000,
-  "watch-s9-45": 36000,
-  "watch-s8-41": 28000,
-  "watch-s8-45": 32000,
-  "watch-s7-41": 24000,
-  "watch-s7-45": 28000,
+  "watch-s12-42": 78000,
+  "watch-s12-46": 85000,
+  "watch-ultra-4": 135000,
+  "watch-se3-40": 36000,
+  "watch-se3-44": 42000,
+  "watch-s11-42": 48000,
+  "watch-s11-46": 52000,
+  "watch-s10-42": 42000,
+  "watch-s10-46": 46000,
+  "watch-s9-41": 34000,
+  "watch-s9-45": 37000,
+  "watch-s8-41": 32000,
+  "watch-s8-45": 35000,
+  "watch-s7-41": 26000,
+  "watch-s7-45": 29000,
   "watch-s6-40": 18000,
   "watch-s6-44": 22000,
-  "watch-se2-40": 22000,
-  "watch-se2-44": 22000,
+  "watch-se2-40": 28000,
+  "watch-se2-44": 32000,
   "watch-se1-40": 14000,
   "watch-se1-44": 14000,
-  "watch-ultra-3": 100000,
-  "watch-ultra-2": 85000,
-  "watch-ultra-1": 65000,
+  "watch-ultra-3": 107000,
+  "watch-ultra-2": 99000,
+  "watch-ultra-1": 85000,
   "watch-s12-hermes-42": 115000,
   "watch-s12-hermes-46": 125000,
   "watch-ultra-4-hermes": 180000,
@@ -109,6 +109,30 @@ export const watchBasePricesKes = {
   "watch-s7-nike-45": 30000,
   "watch-s6-nike-40": 20000,
   "watch-s6-nike-44": 24000,
+} as const;
+
+/** EX-UK base prices from sheet. */
+export const watchBaseExUkKes = {
+  "watch-s12-42": 62000,
+  "watch-s12-46": 68000,
+  "watch-s11-42": 38000,
+  "watch-s11-46": 42000,
+  "watch-s10-42": 32000,
+  "watch-s10-46": 35000,
+  "watch-s9-41": 26000,
+  "watch-s9-45": 29000,
+  "watch-s8-41": 22000,
+  "watch-s8-45": 25000,
+  "watch-s7-41": 18000,
+  "watch-s7-45": 21000,
+  "watch-se3-40": 28000,
+  "watch-se3-44": 33000,
+  "watch-se2-40": 18000,
+  "watch-se2-44": 22000,
+  "watch-ultra-4": 110000,
+  "watch-ultra-3": 85000,
+  "watch-ultra-2": 78000,
+  "watch-ultra-1": 65000,
 } as const;
 
 export type WatchConfig = typeof watchConfig;

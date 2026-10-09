@@ -1,7 +1,7 @@
 /**
  * Compatibility: pencilFits / keyboardFits.
  * Results: fits | note | no - with a one-line reason.
- * Owner: re-verify every rule on Apple's compatibility list before launch.
+ * re-verify every rule on Apple's compatibility list before launch.
  */
 
 import { accessories, getAccessory, type Accessory } from "./models";
@@ -261,7 +261,7 @@ export function accessoriesThatFitDevice(
 
 /**
  * pointerFits(deviceModelId, productId) - Magic Mouse / Magic Trackpad.
- * Owner: re-verify every macOS / iPadOS / Windows / Android rule on Apple's lists before launch.
+ * re-verify every macOS / iPadOS / Windows / Android rule on Apple's lists before launch.
  */
 export function pointerFits(deviceModelId: string, productId: string): FitResult {
   const product = getAccessory(productId);
@@ -336,7 +336,7 @@ export function pointerFits(deviceModelId: string, productId: string): FitResult
 
 /**
  * caseFits - exact model only. No "fits with note" for cases.
- * Owner: re-verify every folder-to-model mapping on apple.com before launch.
+ * re-verify every folder-to-model mapping on apple.com before launch.
  */
 export function caseFits(deviceModelId: string, caseFamilyId: string): FitResult {
   const product = getAccessory(caseFamilyId);
@@ -348,7 +348,7 @@ export function caseFits(deviceModelId: string, caseFamilyId: string): FitResult
   if (product.subgroup === "strap") {
     return {
       status: "no",
-      reason: "Strap-to-case pairing is owner-to-confirm - ask us which cases take this strap.",
+      reason: "Ask us which cases take this strap.",
       checkFinalSpecs: true,
     };
   }
@@ -411,7 +411,7 @@ export type ChargerAdviceItem = {
 
 /**
  * chargerAdvice(deviceModelId) - recommended adapters/cables/MagSafe.
- * Never invent charge times. Owner: re-verify every wattage on apple.com.
+ * Never invent charge times. re-verify every wattage on apple.com.
  */
 export function chargerAdvice(deviceModelId: string): ChargerAdviceItem[] {
   const id = deviceModelId.toLowerCase();
@@ -446,7 +446,7 @@ export function chargerAdvice(deviceModelId: string): ChargerAdviceItem[] {
     out.push({
       productId: watt,
       role: "recommended",
-      reason: "Adapter wattage Apple recommends for this iPad - owner must confirm.",
+      reason: "Adapter wattage Apple recommends for this iPad — ask us to confirm.",
       checkFinalSpecs: true,
     });
     out.push({

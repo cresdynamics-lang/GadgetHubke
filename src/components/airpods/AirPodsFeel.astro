@@ -221,7 +221,7 @@ const ancRatio = airpodsConfig.ancRatios[0];
 <section class="afeel afeel--black" id="feel-sound" data-feel="sound">
   <div class="container afeel__inner">
     <h2>Sound that sits around you.</h2>
-    <p class="afeel__lede">{model.spatialAudio ? "Personalized Spatial Audio - illustration." : "Sound - check final specs."}</p>
+    <p class="afeel__lede">{model.spatialAudio ? "Personalized Spatial Audio - illustration." : "Sound overview."}</p>
     <div class="afeel__stage afeel__stage--dark">
       <img src={soundMain.src} alt={soundMain.alt} width="1400" height="900" loading="lazy" />
     </div>
@@ -267,7 +267,7 @@ const ancRatio = airpodsConfig.ancRatios[0];
 <section class="afeel" id="feel-calls" data-feel="calls">
   <div class="container afeel__inner">
     <h2>Be heard, clearly.</h2>
-    <p>{model.touchControl || "Controls - check final specs."}</p>
+    <p>{model.touchControl || "Controls overview."}</p>
     {callsMain && !callsMain.fallback ? (
       <div class="afeel__stage">
         <img src={callsMain.end || callsMain.src} alt={callsMain.alt} width="1200" height="800" loading="lazy" style="mix-blend-mode:multiply" />
@@ -308,7 +308,7 @@ const ancRatio = airpodsConfig.ancRatios[0];
     {showBatteryHours ? (
       <p>Up to {model.batterySingleHours} h single charge · Apple claim</p>
     ) : (
-      <p>Battery hours flagged check-final-specs - no numbers until confirmed.</p>
+      <p>Battery hours follow Apple's published claims per model.</p>
     )}
     <p class="afeel__caption">ANC and volume drain faster. Replacement through Apple service.</p>
   </div>

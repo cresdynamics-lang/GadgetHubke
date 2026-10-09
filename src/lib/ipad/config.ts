@@ -8,9 +8,9 @@ export const ipadConfig = {
   whatsappDisplay: "0729 585 471",
 
   address: {
-    line: "To be confirmed",
+    line: "Norwich House, Suite 15, 4th Floor",
     city: "Nairobi, Kenya",
-    hours: "To be confirmed",
+    hours: "Mon-Sat 8am-8pm · Sun 10am-8pm",
   },
 
   /** Storage upgrade step above base (KES). */
@@ -40,19 +40,19 @@ export const ipadConfig = {
   },
 
   samplePriceDisclaimer:
-    "Sample price until stock is entered in the admin. Sealed, serial number on the invoice.",
+    "Sealed product, serial on the invoice. 1-year warranty. Set-up fees vary and are confirmed when you engage with us.",
 
   announce:
     "Sealed iPads, serial number on your invoice. Lipa Mdogo Mdogo available.",
 
   appleSpecsFootnote:
-    "Battery hours and performance ratios are Apple's published claims. Owner: re-verify on apple.com before launch. M5 Pro, M4 Air and A16 iPad carry a check-final-specs flag.",
+    "Battery hours and performance ratios are Apple's published claims for M5 Pro, M4 Air and A16 iPad.",
 
   trademarkLine:
     "Apple, iPad, Apple Pencil and the Apple logo are trademarks of Apple Inc. Product images belong to Apple and are used here for a design mock-up. Live use needs permission.",
 
   /**
-   * Approximate thickness (mm). Owner: confirm against Apple tech specs.
+   * Approximate thickness (mm). Approximate; see Apple tech specs.
    * Flagged in owner checklist.
    */
   thicknessMm: {
@@ -66,7 +66,7 @@ export const ipadConfig = {
 
   /**
    * Relative performance illustration ratios. Only cite published Apple claims.
-   * Do not invent bars. Owner: update source/date when verified.
+   * Do not invent bars. 
    */
   performanceRatios: [
     {
@@ -106,24 +106,43 @@ export const ipadBasePricesKes = {
   "ipad-pro-12-9-m1": 135000,
   "ipad-pro-11-m2": 125000,
   "ipad-pro-12-9-m2": 155000,
-  "ipad-pro-11-m4": 170000,
-  "ipad-pro-13-m4": 220000,
-  "ipad-pro-11-m5": 190000,
-  "ipad-pro-13-m5": 245000,
+  "ipad-pro-11-m4": 137000,
+  "ipad-pro-13-m4": 163000,
+  "ipad-pro-11-m5": 160000,
+  "ipad-pro-13-m5": 177000,
   "ipad-air-4": 55000,
   "ipad-air-5": 75000,
-  "ipad-air-11-m2": 95000,
-  "ipad-air-13-m2": 125000,
-  "ipad-air-11-m3": 105000,
-  "ipad-air-13-m3": 140000,
-  "ipad-air-11-m4": 120000,
-  "ipad-air-13-m4": 155000,
-  "ipad-mini-6": 60000,
-  "ipad-mini-a17-pro": 85000,
+  "ipad-air-11-m2": 85000,
+  "ipad-air-13-m2": 110000,
+  "ipad-air-11-m3": 85000,
+  "ipad-air-13-m3": 110000,
+  "ipad-air-11-m4": 100000,
+  "ipad-air-13-m4": 143000,
+  "ipad-mini-6": 58000,
+  "ipad-mini-a17-pro": 75000,
   "ipad-8": 32000,
-  "ipad-9": 38000,
-  "ipad-10": 50000,
-  "ipad-a16": 55000,
+  "ipad-9": 36000,
+  "ipad-10": 45000,
+  "ipad-a16": 63000,
+} as const;
+
+/** EX-UK base prices from sheet. */
+export const ipadBaseExUkKes = {
+  "ipad-pro-13-m5": 142000,
+  "ipad-pro-11-m5": 128000,
+  "ipad-pro-13-m4": 135000,
+  "ipad-pro-11-m4": 115000,
+  "ipad-air-13-m4": 114000,
+  "ipad-air-11-m4": 80000,
+  "ipad-air-13-m3": 88000,
+  "ipad-air-11-m3": 68000,
+  "ipad-air-13-m2": 88000,
+  "ipad-air-11-m2": 68000,
+  "ipad-a16": 50000,
+  "ipad-10": 36000,
+  "ipad-9": 26000,
+  "ipad-mini-a17-pro": 60000,
+  "ipad-mini-6": 42000,
 } as const;
 
 export type IpadConfig = typeof ipadConfig;

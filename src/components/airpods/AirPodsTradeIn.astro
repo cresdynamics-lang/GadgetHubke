@@ -32,7 +32,7 @@ const pct = airpodsConfig.tradeIn.conditionPct;
   <a
     class="btn btn--secondary btn--sm"
     data-trade-wa
-    href={`https://wa.me/${waPhone}?text=${encodeURIComponent(`Hi Gadget Hub - AirPods trade-in estimate for ${initial.name}: about ${formatKes(start)} (indicative, owner discretion).`)}`}
+    href={`https://wa.me/${waPhone}?text=${encodeURIComponent(`Hi Gadget Hub - AirPods trade-in estimate for ${initial.name}: about ${formatKes(start)} (indicative).`)}`}
     target="_blank"
     rel="noopener noreferrer"
   >
@@ -55,7 +55,7 @@ const pct = airpodsConfig.tradeIn.conditionPct;
       if (valueEl) valueEl.textContent = `KES ${value.toLocaleString("en-KE")}`;
       if (wa instanceof HTMLAnchorElement) {
         wa.href = `https://wa.me/${waPhone}?text=${encodeURIComponent(
-          `Hi Gadget Hub - AirPods trade-in estimate for ${opt?.textContent?.trim()}: about KES ${value.toLocaleString("en-KE")} (indicative, owner discretion).`,
+          `Hi Gadget Hub - AirPods trade-in estimate for ${opt?.textContent?.trim()}: about KES ${value.toLocaleString("en-KE")} (indicative).`,
         )}`;
       }
     }

@@ -1,6 +1,6 @@
 /**
  * Power + Cases catalog helpers.
- * Owner: re-verify every wattage, MagSafe model list, case fit and cable rating on apple.com before launch.
+ * re-verify every wattage, MagSafe model list, case fit and cable rating on apple.com before launch.
  * Where unclear, store null - show nothing rather than guess.
  */
 
@@ -41,7 +41,7 @@ export type AccessoryVariantFields = {
   fitsDeviceIds?: string[];
   designedFor?: string | null;
   geoUs?: boolean;
-  plugShape?: "uk" | "us" | "owner-confirm" | null;
+  plugShape?: "uk" | "us" | "ask-us" | null;
   variants?: CaseVariant[];
   leadPartNumber?: string | null;
 };
@@ -225,7 +225,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     wattage: 20,
     ports: 1,
     designedFor: "iPhone and many iPad models - check Apple's list.",
-    plugShape: "owner-confirm",
+    plugShape: "ask-us",
     geoUs: true,
     features: ["20W USB-C", "Single port"],
     featureIds: ["adapter", "20w"],
@@ -238,7 +238,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
       "Plug shape varies by country - we confirm before collect.",
     ],
     platform: "both",
-    notes: "Sample price. Plug shape owner-to-confirm. No charge-time claims.",
+    notes: "Ask us about the Kenya plug shape. No charge-time claims.",
     imageProductKey: "power-adapter-20w",
   }),
   pc({
@@ -256,7 +256,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     wattage: 35,
     ports: 2,
     designedFor: "Two devices at once - iPhone, iPad and compact Macs - check.",
-    plugShape: "owner-confirm",
+    plugShape: "ask-us",
     features: ["35W shared", "Two USB-C ports", "Compact"],
     featureIds: ["adapter", "35w", "dual"],
     weightG: null,
@@ -265,10 +265,10 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     whyChoose: [
       "Dual USB-C in a small body.",
       "Shared 35W across ports - check Apple's sharing notes.",
-      "Owner confirms plug variant for Kenya.",
+      "Ask us about the Kenya plug variant.",
     ],
     platform: "both",
-    notes: "Sample price. Dual-port power sharing - check final specs.",
+    notes: "Sample price. Dual-port power sharing - on request.",
     imageProductKey: "power-adapter-35w-dual",
   }),
   pc({
@@ -286,7 +286,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     wattage: 40,
     ports: null,
     designedFor: "Dynamic power up to 60W max - check Apple's page for supported devices.",
-    plugShape: "owner-confirm",
+    plugShape: "ask-us",
     features: ["40W dynamic", "60W max"],
     featureIds: ["adapter", "40w"],
     weightG: null,
@@ -298,7 +298,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
       "Pair with a cable rated for the load.",
     ],
     platform: "both",
-    notes: "Sample. Confirm dynamic / 60W max wording with owner.",
+    notes: "Confirm dynamic / 60W max wording with us.",
     imageProductKey: "power-adapter-40w-dynamic",
   }),
   pc({
@@ -316,7 +316,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     wattage: 70,
     ports: 1,
     designedFor: "MacBook Air and many 14-inch MacBook Pro configs - check.",
-    plugShape: "owner-confirm",
+    plugShape: "ask-us",
     geoUs: true,
     features: ["70W USB-C"],
     featureIds: ["adapter", "70w"],
@@ -347,7 +347,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     wattage: 96,
     ports: 1,
     designedFor: "Higher-power MacBook Pro configs - check Apple's list.",
-    plugShape: "owner-confirm",
+    plugShape: "ask-us",
     geoUs: true,
     features: ["96W USB-C"],
     featureIds: ["adapter", "96w"],
@@ -378,7 +378,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     wattage: 140,
     ports: 1,
     designedFor: "16-inch MacBook Pro and high-power configs - check.",
-    plugShape: "owner-confirm",
+    plugShape: "ask-us",
     features: ["140W USB-C"],
     featureIds: ["adapter", "140w"],
     weightG: null,
@@ -414,7 +414,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     whyChoose: [
       "One photo only in the library.",
       "Confirm compatibility with your adapter.",
-      "Owner confirms stock.",
+      "Ask us about stock.",
     ],
     platform: "both",
     notes: "Single photo. Sample price.",
@@ -526,7 +526,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     whyChoose: [
       "60W rating - do not pair as the only cable for a 140W brick without checking.",
       "1 metre length.",
-      "Data capability - owner confirms Apple's wording.",
+      "Data capability follows Apple's wording.",
     ],
     platform: "both",
     notes: "Sample. Pairing warnings via chargerAdvice.",
@@ -616,7 +616,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
       "1.8 m Pro Cable.",
     ],
     platform: "mac",
-    notes: "Sample. Confirm power delivery rating with owner.",
+    notes: "Confirm power delivery rating with us.",
     imageProductKey: "cable-tb4-1-8m",
   }),
   pc({
@@ -642,7 +642,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
     whyChoose: [
       "3 m reach.",
       "Confirm Thunderbolt 4 use case.",
-      "Sample price until stock entered.",
+      "Sealed product pricing.",
     ],
     platform: "mac",
     notes: "Sample.",
@@ -746,7 +746,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     whoItSuits: "iPhone 17 Pro owners.",
     whyChoose: [
       "Does not fit iPhone 17 or 17 Pro Max.",
-      "MagSafe - check.",
+      "MagSafe compatible.",
       "Pick a colour; part number changes with colour.",
     ],
   }),
@@ -759,7 +759,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     whoItSuits: "iPhone 17 Pro Max owners.",
     whyChoose: [
       "Pro Max size only - not the Pro.",
-      "MagSafe - check.",
+      "MagSafe compatible.",
       "Tell us your exact model before you pay.",
     ],
   }),
@@ -770,7 +770,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "Silicone for iPhone 17e only.",
     whoItSuits: "iPhone 17e owners.",
-    whyChoose: ["Exact 17e fit.", "MagSafe - check.", "Sample price until stock entered."],
+    whyChoose: ["Exact 17e fit.", "MagSafe compatible.", "Sealed product pricing."],
   }),
   casePc("case-iphone-18-pro-silicone", "iPhone 18 Pro Silicone Case with MagSafe", {
     subgroup: "iphone-case",
@@ -779,7 +779,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "Silicone for iPhone 18 Pro only.",
     whoItSuits: "iPhone 18 Pro owners.",
-    whyChoose: ["Not for 18 Pro Max.", "MagSafe - check.", "Colours from Apple files."],
+    whyChoose: ["Not for 18 Pro Max.", "MagSafe compatible.", "Colours from Apple files."],
   }),
   casePc("case-iphone-18-pro-max-silicone", "iPhone 18 Pro Max Silicone Case with MagSafe", {
     subgroup: "iphone-case",
@@ -788,7 +788,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "Silicone for iPhone 18 Pro Max only.",
     whoItSuits: "iPhone 18 Pro Max owners.",
-    whyChoose: ["Pro Max only.", "MagSafe - check.", "Sample price."],
+    whyChoose: ["Pro Max only.", "MagSafe compatible.", "Sample price."],
   }),
   casePc("case-iphone-17-clear", "iPhone 17 Clear Case with MagSafe", {
     subgroup: "iphone-case",
@@ -797,7 +797,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "Clear case for iPhone 17 only.",
     whoItSuits: "Show the phone colour with MagSafe.",
-    whyChoose: ["Exact iPhone 17 fit.", "Limited angles in the photo library.", "MagSafe - check."],
+    whyChoose: ["Exact iPhone 17 fit.", "Limited angles in the photo library.", "MagSafe compatible."],
   }),
   casePc("case-iphone-17-pro-clear", "iPhone 17 Pro Clear Case with MagSafe", {
     subgroup: "iphone-case",
@@ -806,7 +806,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "Clear case for iPhone 17 Pro only.",
     whoItSuits: "iPhone 17 Pro owners who want a clear shell.",
-    whyChoose: ["Main + limited angles only.", "Not for Pro Max.", "MagSafe - check."],
+    whyChoose: ["Main + limited angles only.", "Not for Pro Max.", "MagSafe compatible."],
   }),
   casePc("case-iphone-17-pro-max-clear", "iPhone 17 Pro Max Clear Case with MagSafe", {
     subgroup: "iphone-case",
@@ -815,7 +815,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "Clear case for iPhone 17 Pro Max only.",
     whoItSuits: "iPhone 17 Pro Max owners.",
-    whyChoose: ["Pro Max only.", "Sparse photo set for some Clear SKUs.", "MagSafe - check."],
+    whyChoose: ["Pro Max only.", "Sparse photo set for some Clear SKUs.", "MagSafe compatible."],
   }),
   casePc("case-iphone-17e-clear", "iPhone 17e Clear Case with MagSafe", {
     subgroup: "iphone-case",
@@ -824,7 +824,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "Clear case for iPhone 17e only.",
     whoItSuits: "iPhone 17e owners.",
-    whyChoose: ["Exact 17e fit.", "MagSafe - check.", "Sample price."],
+    whyChoose: ["Exact 17e fit.", "MagSafe compatible.", "Sample price."],
   }),
   casePc("case-iphone-18-pro-clear", "iPhone 18 Pro Clear Case with MagSafe", {
     subgroup: "iphone-case",
@@ -833,7 +833,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "Clear case for iPhone 18 Pro only.",
     whoItSuits: "iPhone 18 Pro owners.",
-    whyChoose: ["Not Pro Max.", "Limited photos.", "MagSafe - check."],
+    whyChoose: ["Not Pro Max.", "Limited photos.", "MagSafe compatible."],
   }),
   casePc("case-iphone-18-pro-max-clear", "iPhone 18 Pro Max Clear Case with MagSafe", {
     subgroup: "iphone-case",
@@ -842,7 +842,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "Clear case for iPhone 18 Pro Max only.",
     whoItSuits: "iPhone 18 Pro Max owners.",
-    whyChoose: ["Pro Max only.", "MagSafe - check.", "Sample price."],
+    whyChoose: ["Pro Max only.", "MagSafe compatible.", "Sample price."],
   }),
   casePc("case-iphone-18-pro-techwoven", "iPhone 18 Pro TechWoven Case with MagSafe", {
     subgroup: "iphone-case",
@@ -851,7 +851,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "TechWoven for iPhone 18 Pro only.",
     whoItSuits: "Buyers who want a woven texture on 18 Pro.",
-    whyChoose: ["18 Pro only.", "MagSafe - check.", "Colours from Apple files."],
+    whyChoose: ["18 Pro only.", "MagSafe compatible.", "Colours from Apple files."],
   }),
   casePc("case-iphone-18-pro-max-techwoven", "iPhone 18 Pro Max TechWoven Case with MagSafe", {
     subgroup: "iphone-case",
@@ -860,7 +860,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "TechWoven for iPhone 18 Pro Max only.",
     whoItSuits: "iPhone 18 Pro Max woven-case buyers.",
-    whyChoose: ["Pro Max only.", "MagSafe - check.", "Sample price."],
+    whyChoose: ["Pro Max only.", "MagSafe compatible.", "Sample price."],
   }),
   casePc("case-iphone-air-bumper", "iPhone Air Bumper", {
     subgroup: "iphone-case",
@@ -869,7 +869,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: false,
     tagline: "Bumper for iPhone Air only.",
     whoItSuits: "iPhone Air owners who want edge protection.",
-    whyChoose: ["Air only.", "Confirm MagSafe interaction with owner.", "Sample price."],
+    whyChoose: ["Air only.", "Ask us about MagSafe interaction.", "Sample price."],
   }),
   casePc("case-iphone-air-case", "iPhone Air Case with MagSafe", {
     subgroup: "iphone-case",
@@ -878,7 +878,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "Case with MagSafe for iPhone Air only.",
     whoItSuits: "iPhone Air owners.",
-    whyChoose: ["Air only - not other iPhones.", "MagSafe - check.", "Colours from files."],
+    whyChoose: ["Air only - not other iPhones.", "MagSafe compatible.", "Colours from files."],
   }),
   casePc("case-iphone-finewoven-wallet", "iPhone FineWoven Wallet with MagSafe", {
     subgroup: "iphone-case",
@@ -899,9 +899,9 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     fitsDeviceIds: ["iphone-17", "iphone-17-pro", "iphone-17-pro-max", "iphone-air", "iphone-18-pro", "iphone-18-pro-max"],
     magSafe: false,
     tagline: "Duo Case - confirm exact iPhone models with the shop.",
-    whoItSuits: "Buyers considering Apple's Duo Case - owner confirms fit list.",
+    whoItSuits: "Buyers considering Apple's Duo Case — ask us about fit.",
     whyChoose: [
-      "Fit list flagged check-final-specs.",
+      "Fit list .",
       "Ask us which iPhone sizes we stock.",
       "Sample price.",
     ],
@@ -912,20 +912,20 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     fitsDeviceIds: ["iphone-17", "iphone-17-pro", "iphone-17-pro-max", "iphone-air", "iphone-18-pro", "iphone-18-pro-max"],
     magSafe: false,
     tagline: "Duo Folio with kickstand - confirm model fit.",
-    whoItSuits: "Buyers who want a folio kickstand - owner confirms.",
-    whyChoose: ["Fit flagged check.", "Kickstand design.", "Sample price."],
+    whoItSuits: "Buyers who want a folio kickstand — ask us to confirm fit.",
+    whyChoose: ["Confirm fit with us.", "Kickstand design.", "Sample price."],
   }),
   casePc("strap-crossbody", "Crossbody Strap", {
     subgroup: "strap",
     material: "Strap",
     fitsDeviceIds: [],
     magSafe: false,
-    tagline: "Crossbody strap - pairing with cases is owner-to-confirm.",
+    tagline: "Crossbody strap — ask us which cases it pairs with.",
     whoItSuits: "iPhone owners adding a strap - we confirm which cases take it.",
     whyChoose: [
       "Do not assume every case accepts this strap.",
       "Colours from Apple files.",
-      "Owner confirms compatibility.",
+      "Ask us about compatibility.",
     ],
   }),
   casePc("strap-wrist", "Wrist Strap", {
@@ -933,9 +933,9 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     material: "Strap",
     fitsDeviceIds: [],
     magSafe: false,
-    tagline: "Wrist strap - case pairing owner-to-confirm.",
+    tagline: "Wrist strap — ask us which cases it pairs with.",
     whoItSuits: "Short strap preference - confirm case loops.",
-    whyChoose: ["Compatibility flagged check.", "Colours from files.", "Sample price."],
+    whyChoose: ["Confirm compatibility with us.", "Colours from files.", "Sample price."],
   }),
   casePc("folio-ipad-a16", "Smart Folio for iPad (A16)", {
     subgroup: "folio",

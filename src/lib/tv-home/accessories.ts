@@ -55,7 +55,7 @@ export const tvHomeAccessories: TvHomeAccessory[] = [
   {
     id: "homepod-stand",
     name: "HomePod stand / mount",
-    blurb: "Third-party stand - owner to confirm stock.",
+    blurb: "Third-party stand — ask us about stock.",
     priceKes: 4500,
     category: "stand",
     families: ["HomePod", "HomePod mini"],
@@ -74,7 +74,7 @@ export const tvHomeAccessories: TvHomeAccessory[] = [
   {
     id: "fabric-cover",
     name: "Fabric cover",
-    blurb: "Third-party cover - owner to confirm.",
+    blurb: "Third-party cover — ask us on WhatsApp.",
     priceKes: 2000,
     category: "third",
     families: ["HomePod", "HomePod mini"],
@@ -84,7 +84,7 @@ export const tvHomeAccessories: TvHomeAccessory[] = [
   {
     id: "apple-care",
     name: "AppleCare+",
-    blurb: "Extended coverage - owner to confirm pricing.",
+    blurb: "Extended coverage — ask us for pricing.",
     priceKes: 6000,
     category: "care",
     href: "/support",
@@ -192,7 +192,7 @@ export function tvHomeBuyingNotes(model: TvHomeModel): { title: string; body: st
     },
     {
       title: "Services and region",
-      body: "Apple TV+ and Apple Music need subscriptions. Availability of services and Siri features varies by country - owner confirms for Kenya.",
+      body: "Apple TV+ and Apple Music need subscriptions. Availability of services and Siri features varies by country — ask us what works in Kenya.",
     },
     {
       title: "Condition and power",
@@ -206,7 +206,7 @@ export function tvHomeBuyingNotes(model: TvHomeModel): { title: string; body: st
     },
     {
       title: "Set-up service",
-      body: "We set up your Apple TV or HomePod, sign in with your Apple ID, and test it before you collect. Fee - owner to confirm.",
+      body: "We set up your Apple TV or HomePod, sign in with your Apple ID, and test it before you collect. Set-up fees vary and are confirmed when you engage with us.",
     },
   );
   return notes;
@@ -221,6 +221,6 @@ export function tvHomeFaq(): { q: string; a: string }[] {
     { q: "Can two HomePod minis make a stereo pair?", a: "Yes - two of the same model in the same room." },
     { q: "Is HomePod a smart home hub?", a: "Current HomePod and mini can act as hubs where Thread/Matter are supported - confirm for Kenya." },
     { q: "Do I need an iPhone?", a: "HomePod needs an iPhone or iPad to set up. Apple TV can be set up from an iPhone or with the remote." },
-    { q: "What do I get with the invoice?", a: "Sealed device, serial on the invoice, and the items listed in the box. Warranty wording - owner to confirm." },
+    { q: "What do I get with the invoice?", a: "Sealed device, serial on the invoice, and the items listed in the box. New devices include a 1-year warranty." },
   ];
 }

@@ -1,6 +1,6 @@
 /**
  * iPhone 11 - 16 catalog.
- * Specs are Apple's published figures - owner: re-verify on apple.com before launch.
+ * Specs are Apple's published figures — re-verify on apple.com when updating.
  * Base prices are SAMPLE placeholders in KES.
  */
 

@@ -330,7 +330,7 @@ export const products: Product[] = [
           {
             label: "Warranty",
             value:
-              "Manufacturer’s standard warranty. Gadget Hub Investments does not provide any additional warranty beyond the manufacturer’s terms.",
+              "1-year warranty. Keep your GadgetHub invoice for support.",
           },
         ],
       },
@@ -541,7 +541,7 @@ export const products: Product[] = [
           {
             label: "Warranty",
             value:
-              "Manufacturer’s standard warranty. Claims follow manufacturer terms and GadgetHub’s Return & Refund Policy - not AppleCare retail terms.",
+              "1-year warranty. Claims follow GadgetHub’s Return & Refund Policy - not AppleCare retail terms.",
           },
         ],
       },
@@ -787,7 +787,7 @@ export const products: Product[] = [
           {
             label: "Warranty",
             value:
-              "Manufacturer’s standard warranty. Claims follow manufacturer terms and GadgetHub’s Return & Refund Policy - not AppleCare retail terms.",
+              "1-year warranty. Claims follow GadgetHub’s Return & Refund Policy - not AppleCare retail terms.",
           },
         ],
       },
@@ -1043,7 +1043,7 @@ export const products: Product[] = [
           {
             label: "Warranty",
             value:
-              "Manufacturer’s standard warranty. Claims follow manufacturer terms and GadgetHub’s Return & Refund Policy - not AppleCare retail terms.",
+              "1-year warranty. Claims follow GadgetHub’s Return & Refund Policy - not AppleCare retail terms.",
           },
         ],
       },
@@ -1293,7 +1293,7 @@ export const products: Product[] = [
           {
             label: "Warranty",
             value:
-              "Manufacturer’s standard warranty. Claims follow manufacturer terms and GadgetHub’s Return & Refund Policy - not AppleCare retail terms.",
+              "1-year warranty. Claims follow GadgetHub’s Return & Refund Policy - not AppleCare retail terms.",
           },
         ],
       },
@@ -1526,7 +1526,7 @@ export const products: Product[] = [
           {
             label: "Warranty",
             value:
-              "Manufacturer’s standard warranty. Claims follow manufacturer terms and GadgetHub’s Return & Refund Policy - not AppleCare retail terms.",
+              "1-year warranty. Claims follow GadgetHub’s Return & Refund Policy - not AppleCare retail terms.",
           },
         ],
       },
@@ -1761,7 +1761,7 @@ export const products: Product[] = [
           {
             label: "Warranty",
             value:
-              "Manufacturer’s standard warranty. Claims follow manufacturer terms and GadgetHub’s Return & Refund Policy - not AppleCare retail terms.",
+              "1-year warranty. Claims follow GadgetHub’s Return & Refund Policy - not AppleCare retail terms.",
           },
         ],
       },

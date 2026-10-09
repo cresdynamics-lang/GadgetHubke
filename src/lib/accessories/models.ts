@@ -1,6 +1,6 @@
 /**
  * Shared accessories catalog - Pencil, Keyboard, Mouse, Trackpad, Power, Cases.
- * Owner: re-verify every figure and compatibility rule on apple.com before launch.
+ * re-verify every figure and compatibility rule on apple.com before launch.
  * Where unclear, store null - show nothing rather than guess.
  */
 
@@ -37,8 +37,8 @@ export type Accessory = {
   checkFinalSpecs?: boolean;
   notes: string;
   imageProductKey: string;
-  /** USB-C | Lightning | owner-confirm */
-  connector?: "usb-c" | "lightning" | "owner-confirm" | null;
+  /** USB-C | Lightning | ask-us */
+  connector?: "usb-c" | "lightning" | "ask-us" | null;
   surface?: string | null;
   earlierGeneration?: boolean;
   /** Show in shop lists when true (earlier gen: owner toggles if stock exists). */
@@ -446,19 +446,19 @@ export const accessories: Accessory[] = [
     whoItSuits: "Mac buyers watching the budget.",
     whyChoose: [
       "Lower sample price.",
-      "Owner confirms generation of MQ052.",
+      "Ask us to confirm the MQ052 generation.",
       "No Touch ID.",
     ],
     platform: "mac",
     touchId: false,
     numericKeypad: true,
     checkFinalSpecs: true,
-    notes: "Owner confirms MQ052 generation.",
+    notes: "Ask us to confirm the MQ052 generation.",
     imageProductKey: "keyboard-mac-num-mq052",
   }),
 
   // --- Magic Mouse ---
-  // Owner: re-verify every figure and compatibility rule on apple.com before launch.
+  // re-verify every figure and compatibility rule on apple.com before launch.
   a({
     id: "mouse-usbc-white",
     name: "Magic Mouse (USB-C) - White",
@@ -534,7 +534,7 @@ export const accessories: Accessory[] = [
     tagline: "Same Magic Mouse - black finish.",
     whoItSuits: "Buyers who want the black Multi-Touch surface.",
     whyChoose: [
-      "Same hardware as white - black may cost more (owner to confirm).",
+      "Same hardware as white — black may cost more; ask us on WhatsApp.",
       "USB-C underside charging.",
       "Check Apple's list for your Mac or iPad.",
     ],
@@ -544,7 +544,7 @@ export const accessories: Accessory[] = [
     stocked: true,
     dimensionsMm: { length: null, width: null, height: null },
     checkFinalSpecs: true,
-    notes: "Black premium sample - owner to confirm. Flag check specs.",
+    notes: "Black finish may differ in price — ask us on WhatsApp.",
     imageProductKey: "mouse-usbc-black",
   }),
   a({
@@ -556,8 +556,8 @@ export const accessories: Accessory[] = [
     partNumber: "MRME2",
     colours: ["space-gray"],
     defaultColour: "space-gray",
-    connection: "Bluetooth (connector owner-to-confirm)",
-    charging: "Rechargeable - connector owner-to-confirm (Lightning or USB-C)",
+    connection: "Bluetooth (ask us about connector)",
+    charging: "Rechargeable — ask us about Lightning or USB-C",
     features: ["Multi-Touch surface", "Optical tracking"],
     featureIds: ["scroll", "secondary_click", "smart_zoom", "swipe_between_pages", "swipe_apps", "mission_control"],
     weightG: null,
@@ -565,17 +565,17 @@ export const accessories: Accessory[] = [
     whoItSuits: "Budget buyers when stock exists - check condition.",
     whyChoose: [
       "Lower sample price when stocked.",
-      "Generation and connector - owner to confirm.",
+      "Ask us to confirm generation and connector.",
       "Check battery and condition on the invoice.",
     ],
     platform: "pointer",
-    connector: "owner-confirm",
+    connector: "ask-us",
     surface: "Space Gray Multi-Touch",
     earlierGeneration: true,
     stocked: true,
     overviewOnly: true,
     checkFinalSpecs: true,
-    notes: "Earlier generation. Image shows the product design. Connector owner-to-confirm.",
+    notes: "Earlier generation. Image shows the product design. Ask us about the connector.",
     imageProductKey: "mouse-earlier-space-gray",
   }),
 
@@ -668,7 +668,7 @@ export const accessories: Accessory[] = [
     tagline: "Same Trackpad - black finish.",
     whoItSuits: "Buyers who want the black glass Multi-Touch surface.",
     whyChoose: [
-      "Same hardware as white - black may cost more (owner to confirm).",
+      "Same hardware as white — black may cost more; ask us on WhatsApp.",
       "Force Touch and full Mac gestures.",
       "Check Apple's list for your device.",
     ],
@@ -679,7 +679,7 @@ export const accessories: Accessory[] = [
     stocked: true,
     dimensionsMm: { length: null, width: null, height: null },
     checkFinalSpecs: true,
-    notes: "Black premium sample - owner to confirm. Flag check specs.",
+    notes: "Black finish may differ in price — ask us on WhatsApp.",
     imageProductKey: "trackpad-usbc-black",
   }),
   a({
@@ -691,8 +691,8 @@ export const accessories: Accessory[] = [
     partNumber: "MRMF2",
     colours: ["space-gray"],
     defaultColour: "space-gray",
-    connection: "Bluetooth (connector owner-to-confirm)",
-    charging: "Rechargeable - connector owner-to-confirm",
+    connection: "Bluetooth (ask us about connector)",
+    charging: "Rechargeable — ask us about the connector",
     features: ["Force Touch", "Multi-Touch surface"],
     featureIds: [
       "secondary-click",
@@ -715,18 +715,18 @@ export const accessories: Accessory[] = [
     whoItSuits: "Budget Trackpad buyers when stock exists.",
     whyChoose: [
       "Lower sample price when stocked.",
-      "Generation and connector - owner to confirm.",
+      "Ask us to confirm generation and connector.",
       "Check condition on the invoice.",
     ],
     platform: "pointer",
-    connector: "owner-confirm",
+    connector: "ask-us",
     surface: "Space Gray Multi-Touch",
     forceTouch: true,
     earlierGeneration: true,
     stocked: true,
     overviewOnly: true,
     checkFinalSpecs: true,
-    notes: "Earlier generation. Image shows the product design. Connector owner-to-confirm.",
+    notes: "Earlier generation. Image shows the product design. Ask us about the connector.",
     imageProductKey: "trackpad-earlier-space-gray",
   }),
   a({
@@ -738,8 +738,8 @@ export const accessories: Accessory[] = [
     partNumber: "MJ2R2",
     colours: ["white"],
     defaultColour: "white",
-    connection: "Bluetooth (connector owner-to-confirm)",
-    charging: "Rechargeable - connector owner-to-confirm",
+    connection: "Bluetooth (ask us about connector)",
+    charging: "Rechargeable — ask us about the connector",
     features: ["Force Touch", "Multi-Touch surface"],
     featureIds: [
       "secondary-click",
@@ -762,18 +762,18 @@ export const accessories: Accessory[] = [
     whoItSuits: "Budget Trackpad buyers when stock exists.",
     whyChoose: [
       "Lower sample price when stocked.",
-      "Generation and connector - owner to confirm.",
+      "Ask us to confirm generation and connector.",
       "Check condition on the invoice.",
     ],
     platform: "pointer",
-    connector: "owner-confirm",
+    connector: "ask-us",
     surface: "White Multi-Touch",
     forceTouch: true,
     earlierGeneration: true,
     stocked: true,
     overviewOnly: true,
     checkFinalSpecs: true,
-    notes: "Earlier generation. Image shows the product design. Connector owner-to-confirm.",
+    notes: "Earlier generation. Image shows the product design. Ask us about the connector.",
     imageProductKey: "trackpad-earlier-white",
   }),
   ...allPowerCaseProducts as unknown as Accessory[],
