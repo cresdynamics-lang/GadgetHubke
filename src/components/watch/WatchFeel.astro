@@ -129,12 +129,18 @@ const materialGroups = ["aluminum", "titanium", "ceramic", "stainless"] as const
     </div>
     <p data-workout-copy>Run - heart rate, distance and GPS route where the model supports it.</p>
     {!fitnessEnd.fallback ? (
-      <div class="wfeel__cam" data-fit-cam>
+      <div class="wfeel__cam" data-fit-cam data-fit-mode="pair">
         {!fitnessStart.fallback ? <img data-fit-start src={fitnessStart.src} alt={fitnessStart.alt} width="1000" height="700" loading="lazy" /> : null}
         <img data-fit-end src={fitnessEnd.src} alt={fitnessEnd.alt} width="1000" height="700" loading="lazy" />
       </div>
+    ) : !fitnessStart.fallback ? (
+      <div class="wfeel__cam wfeel__cam--solo" data-fit-cam data-fit-mode="solo">
+        <img data-fit-solo src={fitnessStart.src} alt={fitnessStart.alt} width="1000" height="700" loading="lazy" />
+      </div>
     ) : !fitnessImg.fallback ? (
-      <img class="wfeel__img" src={fitnessImg.src} alt={fitnessImg.alt} width="1000" height="700" loading="lazy" />
+      <div class="wfeel__cam wfeel__cam--solo" data-fit-cam data-fit-mode="solo">
+        <img data-fit-solo class="wfeel__img" src={fitnessImg.src} alt={fitnessImg.alt} width="1000" height="700" loading="lazy" />
+      </div>
     ) : null}
     {model.family === "Ultra" ? (
       <p class="wfeel__callout">
@@ -287,27 +293,8 @@ const materialGroups = ["aluminum", "titanium", "ceramic", "stainless"] as const
     displayImg.style.opacity = String(0.35 + (v / 100) * 0.65);
   });
 
-  // Rings
+  // Fitness section - looping rings, workouts, and image motion
   const ringsSec = document.querySelector("#feel-fitness");
-  if (ringsSec) {
-    const obs = new IntersectionObserver(([e]) => {
-      if (!e?.isIntersecting) return;
-      document.querySelectorAll("[data-ring]").forEach((el, i) => {
-        if (!(el instanceof SVGCircleElement)) return;
-        const len = 2 * Math.PI * Number(el.getAttribute("r"));
-        el.style.strokeDasharray = String(len);
-        el.style.strokeDashoffset = reduce ? "0" : String(len);
-        if (!reduce) {
-          el.animate([{ strokeDashoffset: len }, { strokeDashoffset: len * (0.2 + i * 0.15) }], {
-            duration: 1200, fill: "forwards", easing: "ease-out", delay: i * 120,
-          });
-        } else el.style.strokeDashoffset = String(len * 0.25);
-      });
-      obs.disconnect();
-    }, { threshold: 0.35 });
-    obs.observe(ringsSec);
-  }
-
   const copies = {
     Run: "Run - heart rate, distance and GPS route where supported.",
     Swim: "Swim - pool or open water within the rating.",
@@ -316,29 +303,165 @@ const materialGroups = ["aluminum", "titanium", "ceramic", "stainless"] as const
     Strength: "Strength - heart rate and effort.",
     Hike: "Hike - elevation and dual-frequency GPS on Ultra.",
   };
-  document.querySelectorAll("[data-workout]").forEach((btn) => {
+  const workoutBtns = [...document.querySelectorAll("[data-workout]")];
+  const workoutCopy = document.querySelector("[data-workout-copy]");
+  let workoutTimer = null;
+  let workoutIndex = 0;
+  let fitnessActive = false;
+
+  function setWorkout(i) {
+    workoutIndex = ((i % workoutBtns.length) + workoutBtns.length) % workoutBtns.length;
+    workoutBtns.forEach((b, idx) => b.classList.toggle("is-active", idx === workoutIndex));
+    const key = workoutBtns[workoutIndex]?.getAttribute("data-workout") || "Run";
+    if (workoutCopy) workoutCopy.textContent = copies[key] || copies.Run;
+  }
+
+  function startWorkoutLoop() {
+    if (reduce || workoutBtns.length < 2 || workoutTimer) return;
+    workoutTimer = window.setInterval(() => setWorkout(workoutIndex + 1), 2800);
+  }
+
+  function stopWorkoutLoop() {
+    if (workoutTimer) {
+      window.clearInterval(workoutTimer);
+      workoutTimer = null;
+    }
+  }
+
+  workoutBtns.forEach((btn, i) => {
     btn.addEventListener("click", () => {
-      document.querySelectorAll("[data-workout]").forEach((b) => b.classList.remove("is-active"));
-      btn.classList.add("is-active");
-      const el = document.querySelector("[data-workout-copy]");
-      const key = btn.getAttribute("data-workout") || "Run";
-      if (el) el.textContent = copies[key] || copies.Run;
+      setWorkout(i);
+      stopWorkoutLoop();
+      if (fitnessActive) startWorkoutLoop();
     });
   });
 
-  // Fitness cross-fade
-  const fitEnd = document.querySelector("[data-fit-end]");
-  if (fitEnd instanceof HTMLElement) {
-    fitEnd.style.opacity = reduce ? "1" : "0";
-    const cam = document.querySelector("[data-fit-cam]");
-    if (cam) {
-      const obs = new IntersectionObserver(([e]) => {
-        if (!e?.isIntersecting) return;
-        if (!reduce) fitEnd.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 900, fill: "forwards" });
-        obs.disconnect();
-      }, { threshold: 0.35 });
-      obs.observe(cam);
+  const ringEls = [...document.querySelectorAll("[data-ring]")].filter(
+    (el) => el instanceof SVGCircleElement,
+  );
+  const ringAnims = [];
+
+  function startRingLoop() {
+    if (reduce) {
+      ringEls.forEach((el) => {
+        const len = 2 * Math.PI * Number(el.getAttribute("r"));
+        el.style.strokeDasharray = String(len);
+        el.style.strokeDashoffset = String(len * 0.25);
+      });
+      return;
     }
+    ringAnims.forEach((a) => a.cancel());
+    ringAnims.length = 0;
+    ringEls.forEach((el, i) => {
+      const len = 2 * Math.PI * Number(el.getAttribute("r"));
+      el.style.strokeDasharray = String(len);
+      const target = len * (0.18 + i * 0.12);
+      const anim = el.animate(
+        [
+          { strokeDashoffset: len },
+          { strokeDashoffset: target, offset: 0.45 },
+          { strokeDashoffset: target, offset: 0.62 },
+          { strokeDashoffset: len },
+        ],
+        {
+          duration: 4200,
+          delay: i * 180,
+          iterations: Infinity,
+          easing: "ease-in-out",
+        },
+      );
+      ringAnims.push(anim);
+    });
+  }
+
+  function stopRingLoop() {
+    ringAnims.forEach((a) => a.cancel());
+    ringAnims.length = 0;
+  }
+
+  const fitCam = document.querySelector("[data-fit-cam]");
+  const fitStart = document.querySelector("[data-fit-start]");
+  const fitEnd = document.querySelector("[data-fit-end]");
+  const fitSolo = document.querySelector("[data-fit-solo]");
+  const camAnims = [];
+
+  function startCamLoop() {
+    if (reduce || !fitCam) return;
+    camAnims.forEach((a) => a.cancel());
+    camAnims.length = 0;
+    const mode = fitCam.getAttribute("data-fit-mode");
+
+    if (mode === "pair" && fitEnd instanceof HTMLElement) {
+      if (fitStart instanceof HTMLElement) {
+        fitStart.style.opacity = "1";
+        camAnims.push(
+          fitStart.animate(
+            [
+              { opacity: 1, transform: "scale(1)" },
+              { opacity: 1, transform: "scale(1.04)", offset: 0.35 },
+              { opacity: 0, transform: "scale(1.06)", offset: 0.5 },
+              { opacity: 0, transform: "scale(1)", offset: 0.5 },
+              { opacity: 1, transform: "scale(1)", offset: 1 },
+            ],
+            { duration: 5600, iterations: Infinity, easing: "ease-in-out" },
+          ),
+        );
+      }
+      fitEnd.style.opacity = "0";
+      camAnims.push(
+        fitEnd.animate(
+          [
+            { opacity: 0, transform: "scale(1.05)" },
+            { opacity: 0, transform: "scale(1.05)", offset: 0.35 },
+            { opacity: 1, transform: "scale(1)", offset: 0.5 },
+            { opacity: 1, transform: "scale(1.04)", offset: 0.85 },
+            { opacity: 0, transform: "scale(1.06)", offset: 1 },
+          ],
+          { duration: 5600, iterations: Infinity, easing: "ease-in-out" },
+        ),
+      );
+      return;
+    }
+
+    if (fitSolo instanceof HTMLElement) {
+      camAnims.push(
+        fitSolo.animate(
+          [
+            { transform: "scale(1)" },
+            { transform: "scale(1.08)" },
+            { transform: "scale(1)" },
+          ],
+          { duration: 4800, iterations: Infinity, easing: "ease-in-out" },
+        ),
+      );
+    }
+  }
+
+  function stopCamLoop() {
+    camAnims.forEach((a) => a.cancel());
+    camAnims.length = 0;
+    if (fitEnd instanceof HTMLElement) fitEnd.style.opacity = reduce ? "1" : "0";
+    if (fitStart instanceof HTMLElement) fitStart.style.opacity = "1";
+    if (fitSolo instanceof HTMLElement) fitSolo.style.transform = "scale(1)";
+  }
+
+  if (ringsSec) {
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        fitnessActive = Boolean(e?.isIntersecting);
+        if (fitnessActive) {
+          startRingLoop();
+          startWorkoutLoop();
+          startCamLoop();
+        } else {
+          stopRingLoop();
+          stopWorkoutLoop();
+          stopCamLoop();
+        }
+      },
+      { threshold: 0.28 },
+    );
+    obs.observe(ringsSec);
   }
 
   // SOS
@@ -478,9 +601,23 @@ const materialGroups = ["aluminum", "titanium", "ceramic", "stainless"] as const
     padding: 0.35rem 0.7rem; font: inherit; font-size: var(--text-sm); cursor: pointer;
   }
   .wfeel__workouts button.is-active { background: #000; color: #fff; }
-  .wfeel__cam { position: relative; max-width: 48rem; }
-  .wfeel__cam img { width: 100%; height: auto; display: block; border-radius: 1rem; }
-  .wfeel__cam [data-fit-end] { position: absolute; inset: 0; }
+  .wfeel__cam {
+    position: relative;
+    max-width: 48rem;
+    overflow: hidden;
+    border-radius: 1rem;
+    background: #f5f5f7;
+  }
+  .wfeel__cam img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 1rem;
+    transform-origin: center center;
+    will-change: transform, opacity;
+  }
+  .wfeel__cam [data-fit-end] { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .wfeel__cam--solo img { display: block; }
   .wfeel__callout { margin-top: 1rem; font-weight: 600; }
   .wfeel__sos {
     position: relative; margin-top: 1rem; border: 1px solid #3a3a3c; background: transparent;

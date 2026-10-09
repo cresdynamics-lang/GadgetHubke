@@ -91,7 +91,7 @@ const statusTag: Record<string, string> = {
                     <span class:list={["mgmt-tag", statusTag[p.status]]}>{p.status}</span>
                   </td>
                   <td>{p.dateLabel}</td>
-                  <td>{p.views || "—"}</td>
+                  <td>{p.views || "-"}</td>
                   <td>
                     <a class="mgmt-link" href={`/management/journal/${p.id}`}>
                       Edit ›

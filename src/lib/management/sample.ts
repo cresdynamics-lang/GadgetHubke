@@ -1,4 +1,4 @@
-/** Sample data matching the Admin PDF (pages 3–13). Replace with live stores later. */
+/** Sample data matching the Admin PDF (pages 3-13). Replace with live stores later. */
 
 export const sampleStaff = {
   name: "Asha M.",

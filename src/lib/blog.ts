@@ -1,4 +1,4 @@
-/** @deprecated Prefer `src/lib/journal.ts` — Blog is now Journal. */
+/** @deprecated Prefer `src/lib/journal.ts` - Blog is now Journal. */
 export {
   type JournalPost as BlogPost,
   journalSeedPosts as blogPosts,

@@ -6,6 +6,7 @@
 import BaseLayout from "./BaseLayout.astro";
 import ProductExperience from "../components/ProductExperience.astro";
 import ProductReviews from "../components/ProductReviews.astro";
+import StickyBuyBar from "../components/StickyBuyBar.astro";
 import StockChannelToggle from "../components/StockChannelToggle.astro";
 import type { Product } from "../lib/products";
 import { site, whatsappUrl } from "../lib/site";
@@ -166,6 +167,7 @@ const lipaFrom =
             type="button"
             class="btn btn--primary"
             data-add-cart
+            data-pdp-cart
             data-storage={defaultStorage?.id}
             data-color={defaultColor?.id}
             data-price={basePrice}
@@ -175,11 +177,12 @@ const lipaFrom =
           <a
             class="btn btn--primary"
             data-buy-now
+            data-pdp-buy
             href={waBase}
             target="_blank"
             rel="noopener noreferrer"
           >
-            Buy
+            Buy now
           </a>
           <a class="btn btn--secondary" href="/trade-in">Trade In</a>
         </div>
@@ -281,10 +284,10 @@ const lipaFrom =
         Configure storage and finish above. Add to Cart, Buy on WhatsApp{" "}
         {site.phoneDisplay}, or Trade In toward {product.name}.
       </p>
-      <div class="pdp__actions">
-        <button type="button" class="btn btn--primary" data-add-cart>Add to Cart</button>
-        <a class="btn btn--primary" data-buy-now href={waBase} target="_blank" rel="noopener noreferrer">
-          Buy
+      <div class="pdp__actions" data-pdp-cta>
+        <button type="button" class="btn btn--primary" data-add-cart data-pdp-cart>Add to Cart</button>
+        <a class="btn btn--primary" data-buy-now data-pdp-buy href={waBase} target="_blank" rel="noopener noreferrer">
+          Buy now
         </a>
         <a class="btn btn--secondary" href="/trade-in">Trade In</a>
       </div>
@@ -295,32 +298,18 @@ const lipaFrom =
     </div>
   </article>
 
-  <div class="pdp-sticky" data-sticky-bar hidden>
-    <div class="container pdp-sticky__inner">
-      <span class="pdp-sticky__name">{product.name}</span>
-      <span class="pdp-sticky__price" data-sticky-price></span>
-      <div class="pdp-sticky__actions">
-        <button type="button" class="btn btn--primary btn--sm" data-add-cart-sticky>
-          Add to Cart
-        </button>
-        <a
-          class="btn btn--primary btn--sm"
-          data-buy-now
-          href={waBase}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Buy
-        </a>
-        <a class="btn btn--secondary btn--sm" href="/trade-in">Trade In</a>
-      </div>
-    </div>
-  </div>
+  <StickyBuyBar
+    productName={product.name}
+    imageSrc={product.image.src}
+    imageAlt={product.image.alt}
+    description={product.tagline}
+  />
+  <!-- Keep hidden price sync target for configurator script -->
+  <span data-sticky-price hidden></span>
 </BaseLayout>
 
 <script define:vars={{ waBase, productName: product.name, productId: product.id }}>
   const root = document.querySelector("[data-configurator]");
-  const sticky = document.querySelector("[data-sticky-bar]");
   if (!root) throw new Error("configurator missing");
 
   const CART_KEY = "gh-cart";
@@ -360,9 +349,10 @@ const lipaFrom =
     }
 
     const stickyPrice = document.querySelector("[data-sticky-price]");
-    if (stickyPrice) {
-      stickyPrice.textContent = `${channelLabel} · ${storageLabel} · ${colorLabel} · ${formatKes(priceKes)}`;
-    }
+    const floatDesc = document.querySelector("[data-float-desc]");
+    const configLine = `${channelLabel} · ${storageLabel} · ${colorLabel} · ${formatKes(priceKes)}`;
+    if (stickyPrice) stickyPrice.textContent = configLine;
+    if (floatDesc) floatDesc.textContent = configLine;
 
     const msg = [
       "Hi GadgetHub - I'd like to buy",
@@ -461,15 +451,6 @@ const lipaFrom =
     });
   });
 
-  const buyBlock = root;
-  const io = new IntersectionObserver(
-    ([entry]) => {
-      if (!sticky) return;
-      sticky.hidden = entry.isIntersecting;
-    },
-    { threshold: 0.15 },
-  );
-  io.observe(buyBlock);
 </script>
 
 <style>
@@ -713,13 +694,13 @@ const lipaFrom =
   }
 
   .pdp__section {
-    padding-block: var(--space-10);
+    padding-block: var(--space-5);
     border-top: 1px solid var(--color-border);
   }
 
   .pdp__section h2 {
     font-size: var(--text-xl);
-    margin-bottom: var(--space-4);
+    margin: 0 0 var(--space-2);
   }
 
   .pdp__highlights {
@@ -804,44 +785,6 @@ const lipaFrom =
   .pdp__close p {
     color: var(--color-fg-muted);
     margin-bottom: var(--space-5);
-  }
-
-  .pdp-sticky {
-    position: fixed;
-    inset-inline: 0;
-    bottom: 0;
-    z-index: 40;
-    background: var(--color-white);
-    border-top: 1px solid var(--color-border);
-    padding-block: var(--space-3);
-    padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
-  }
-
-  .pdp-sticky[hidden] {
-    display: none;
-  }
-
-  .pdp-sticky__inner {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-3);
-  }
-
-  .pdp-sticky__name {
-    font-weight: var(--font-weight-semibold);
-    font-size: var(--text-sm);
-  }
-
-  .pdp-sticky__price {
-    flex: 1;
-    font-size: var(--text-xs);
-    color: var(--color-fg-muted);
-  }
-
-  .pdp-sticky__actions {
-    display: flex;
-    gap: var(--space-2);
   }
 
   :global(.btn--sm) {

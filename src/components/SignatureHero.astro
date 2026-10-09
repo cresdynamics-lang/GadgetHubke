@@ -1,7 +1,8 @@
 ---
 /**
- * Signature home hero - four phones gather, then settle to corners (1.8s once).
- * Mobile: 2×2 grid. Respects prefers-reduced-motion.
+ * Signature home hero - four equal rectangular tiles fill the viewport
+ * as one solid rectangle, hold ~2s, then split to the corners while
+ * centred copy opens. Respects prefers-reduced-motion.
  */
 import { whatsappUrl } from "../lib/site";
 import type { HeroPhone } from "../lib/home";
@@ -9,6 +10,7 @@ import type { HeroPhone } from "../lib/home";
 interface Props {
   eyebrow?: string;
   title?: string;
+  titleLine?: string;
   lede?: string;
   primaryHref?: string;
   primaryLabel?: string;
@@ -18,8 +20,9 @@ interface Props {
 }
 
 const {
-  eyebrow = "Apple · Nairobi",
-  title = "The full lineup.",
+  eyebrow = "Gadget Hub · Norwich House Nairobi · Verified Apple Reseller",
+  title = "Some People Buy Phones,",
+  titleLine = "Some Come At Gadget Hub",
   lede = "iPhone, Mac, iPad, Watch, AirPods, and more - genuine, sealed, set up for you. Pay in full or Lipa Mdogo Mdogo.",
   primaryHref = "/shop",
   primaryLabel = "Shop Apple",
@@ -29,6 +32,10 @@ const {
 } = Astro.props;
 
 const wa = whatsappUrl("Hello Gadget Hub, I'd like to shop Apple products.");
+const brandIdx = titleLine.indexOf("Gadget Hub");
+const punchBefore = brandIdx >= 0 ? titleLine.slice(0, brandIdx) : titleLine;
+const punchAfter = brandIdx >= 0 ? titleLine.slice(brandIdx + "Gadget Hub".length) : "";
+const punchHasBrand = brandIdx >= 0;
 ---
 
 <section class="sig-hero" data-sig-hero aria-labelledby="sig-hero-title">
@@ -36,7 +43,7 @@ const wa = whatsappUrl("Hello Gadget Hub, I'd like to shop Apple products.");
     {
       phones.map((phone, i) => (
         <a
-          class={`sig-hero__phone sig-hero__phone--${i + 1}`}
+          class={`sig-hero__tile sig-hero__tile--${i + 1}`}
           href={phone.href}
           tabindex="-1"
           data-sig-phone
@@ -44,8 +51,8 @@ const wa = whatsappUrl("Hello Gadget Hub, I'd like to shop Apple products.");
           <img
             src={phone.src}
             alt=""
-            width="480"
-            height="480"
+            width="960"
+            height="720"
             loading={i === 0 ? "eager" : "lazy"}
             decoding="async"
             fetchpriority={i === 0 ? "high" : "auto"}
@@ -58,8 +65,12 @@ const wa = whatsappUrl("Hello Gadget Hub, I'd like to shop Apple products.");
   <div class="sig-hero__copy container">
     <p class="sig-hero__eyebrow">{eyebrow}</p>
     <h1 id="sig-hero-title">
-      {title}
-      <span class="sig-hero__title-line">Done properly.</span>
+      <span class="sig-hero__title-line">{title}</span>
+      <span class="sig-hero__title-line">
+        {punchBefore}
+        {punchHasBrand ? <span class="sig-hero__brand">Gadget Hub</span> : null}
+        {punchAfter}
+      </span>
     </h1>
     <p class="sig-hero__lede">{lede}</p>
     <div class="sig-hero__actions">
@@ -74,20 +85,21 @@ const wa = whatsappUrl("Hello Gadget Hub, I'd like to shop Apple products.");
   const root = document.querySelector("[data-sig-hero]");
   if (root) {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    /* 1s total: assemble lands, then open immediately */
+    const HOLD_MS = 1000;
+
     if (reduce) {
       root.classList.add("is-settled");
     } else {
-      // Double rAF so the gathered pose paints before corner transition
       requestAnimationFrame(() => {
-        requestAnimationFrame(() => root.classList.add("is-playing"));
+        requestAnimationFrame(() => root.classList.add("is-assembled"));
       });
       window.setTimeout(() => {
-        root.classList.remove("is-playing");
+        root.classList.add("is-dispersing");
         root.classList.add("is-settled");
-      }, 1800);
+      }, HOLD_MS);
     }
 
-    // Subtle scroll drift - keep copy visible; only stage moves
     const stage = root.querySelector("[data-sig-stage]");
     if (stage && !reduce) {
       let ticking = false;
@@ -97,7 +109,7 @@ const wa = whatsappUrl("Hello Gadget Hub, I'd like to shop Apple products.");
           if (ticking) return;
           ticking = true;
           requestAnimationFrame(() => {
-            if (!root.classList.contains("is-settled") && !root.classList.contains("is-playing")) {
+            if (!root.classList.contains("is-settled")) {
               ticking = false;
               return;
             }
@@ -114,13 +126,17 @@ const wa = whatsappUrl("Hello Gadget Hub, I'd like to shop Apple products.");
 
 <style>
   .sig-hero {
+    --sig-disperse: 1.05s;
+    --sig-settle-w: min(30vw, 14.5rem);
+    --sig-settle-h: calc(var(--sig-settle-w) * 0.72);
     position: relative;
     isolation: isolate;
-    min-height: min(92dvh, 52rem);
+    min-height: 100dvh;
+    min-height: 100svh;
     display: grid;
-    align-items: end;
-    padding-block: var(--space-16) var(--space-12);
-    background: var(--color-stage);
+    place-items: center;
+    padding-block: var(--space-12);
+    background: #ffffff;
     overflow: clip;
   }
 
@@ -131,119 +147,191 @@ const wa = whatsappUrl("Hello Gadget Hub, I'd like to shop Apple products.");
     --drift: 0px;
   }
 
-  .sig-hero__phone {
+  /* Equal rectangular tiles - shared size/shape always */
+  .sig-hero__tile {
     position: absolute;
-    width: min(42vw, 16rem);
-    aspect-ratio: 1;
-    display: grid;
-    place-items: center;
+    display: block;
+    overflow: hidden;
+    background: #e8e8ed;
     pointer-events: auto;
     transition:
-      left var(--duration-hero) var(--ease-out),
-      right var(--duration-hero) var(--ease-out),
-      top var(--duration-hero) var(--ease-out),
-      bottom var(--duration-hero) var(--ease-out),
-      transform var(--duration-hero) var(--ease-out),
+      left var(--sig-disperse) var(--ease-out),
+      right var(--sig-disperse) var(--ease-out),
+      top var(--sig-disperse) var(--ease-out),
+      bottom var(--sig-disperse) var(--ease-out),
+      width var(--sig-disperse) var(--ease-out),
+      height var(--sig-disperse) var(--ease-out),
+      border-radius var(--sig-disperse) var(--ease-out),
+      transform var(--sig-disperse) var(--ease-out),
+      box-shadow var(--sig-disperse) var(--ease-out),
       opacity 0.6s var(--ease-out);
-    will-change: transform, left, top;
+    will-change: left, top, width, height, transform;
   }
 
-  .sig-hero__phone img {
+  .sig-hero__tile img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
-    filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.12));
+    object-fit: cover;
+    object-position: center;
+    display: block;
   }
 
-  /* Gathered (start) */
-  .sig-hero__phone--1,
-  .sig-hero__phone--2,
-  .sig-hero__phone--3,
-  .sig-hero__phone--4 {
-    left: 50%;
-    top: 38%;
-    transform: translate(-50%, -50%) scale(0.72);
-    opacity: 0.85;
-  }
-
-  /* Settled corners - desktop */
-  .sig-hero.is-settled .sig-hero__phone--1,
-  .sig-hero.is-playing .sig-hero__phone--1 {
-    left: 4%;
-    top: 8%;
-    transform: translate(0, var(--drift, 0px)) scale(1);
-    opacity: 1;
-  }
-
-  .sig-hero.is-settled .sig-hero__phone--2,
-  .sig-hero.is-playing .sig-hero__phone--2 {
-    right: 4%;
-    left: auto;
-    top: 10%;
-    transform: translate(0, calc(var(--drift, 0px) * -0.6)) scale(1);
-    opacity: 1;
-  }
-
-  .sig-hero.is-settled .sig-hero__phone--3,
-  .sig-hero.is-playing .sig-hero__phone--3 {
-    left: 6%;
-    top: auto;
-    bottom: 12%;
-    transform: translate(0, calc(var(--drift, 0px) * 0.5)) scale(1);
-    opacity: 1;
-  }
-
-  .sig-hero.is-settled .sig-hero__phone--4,
-  .sig-hero.is-playing .sig-hero__phone--4 {
-    right: 5%;
-    left: auto;
-    top: auto;
-    bottom: 14%;
-    transform: translate(0, calc(var(--drift, 0px) * -0.4)) scale(1);
-    opacity: 1;
-  }
-
-  .sig-hero__copy {
-    position: relative;
-    z-index: 2;
-    max-width: 36rem;
-    text-align: center;
-    margin-inline: auto;
-    opacity: 0;
-    transform: translateY(0.75rem);
-    transition:
-      opacity 0.7s var(--ease-out) 0.55s,
-      transform 0.7s var(--ease-out) 0.55s;
-  }
-
-  .sig-hero.is-playing .sig-hero__copy,
-  .sig-hero.is-settled .sig-hero__copy {
+  /*
+   * Phase 1 - full-screen rectangle: 2×2 equal tiles, no gap,
+   * flush to hero edges so together they are one solid rectangle.
+   */
+  .sig-hero__tile--1,
+  .sig-hero__tile--2,
+  .sig-hero__tile--3,
+  .sig-hero__tile--4 {
+    width: 50%;
+    height: 50%;
+    border-radius: 0;
+    box-shadow: none;
     opacity: 1;
     transform: none;
   }
 
+  .sig-hero__tile--1 {
+    left: 0;
+    top: 0;
+  }
+
+  .sig-hero__tile--2 {
+    left: 50%;
+    top: 0;
+  }
+
+  .sig-hero__tile--3 {
+    left: 0;
+    top: 50%;
+  }
+
+  .sig-hero__tile--4 {
+    left: 50%;
+    top: 50%;
+  }
+
+  /* Soft entrance: tiles scale in from slightly larger */
+  .sig-hero:not(.is-assembled):not(.is-settled) .sig-hero__tile {
+    opacity: 0.85;
+    transform: scale(1.04);
+  }
+
+  .sig-hero.is-assembled:not(.is-settled) .sig-hero__tile {
+    transition-duration: 0.55s;
+    transform: none;
+    opacity: 1;
+  }
+
+  /* Phase 2 - float on white: soft elevation + crisp edge so tiles pop */
+  .sig-hero.is-settled .sig-hero__tile {
+    width: var(--sig-settle-w);
+    height: var(--sig-settle-h);
+    border-radius: 0.65rem;
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.06),
+      0 10px 24px rgba(0, 0, 0, 0.08),
+      0 28px 56px rgba(0, 0, 0, 0.12);
+  }
+
+  .sig-hero.is-settled .sig-hero__tile:hover {
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.08),
+      0 14px 28px rgba(0, 0, 0, 0.1),
+      0 36px 64px rgba(0, 0, 0, 0.14);
+  }
+
+  .sig-hero.is-settled .sig-hero__tile--1 {
+    left: 3%;
+    top: 6%;
+    transform: translateY(var(--drift, 0px));
+  }
+
+  .sig-hero.is-settled .sig-hero__tile--2 {
+    left: auto;
+    right: 3%;
+    top: 7%;
+    transform: translateY(calc(var(--drift, 0px) * -0.55));
+  }
+
+  .sig-hero.is-settled .sig-hero__tile--3 {
+    left: 4%;
+    top: auto;
+    bottom: 8%;
+    transform: translateY(calc(var(--drift, 0px) * 0.45));
+  }
+
+  .sig-hero.is-settled .sig-hero__tile--4 {
+    left: auto;
+    right: 4%;
+    top: auto;
+    bottom: 9%;
+    transform: translateY(calc(var(--drift, 0px) * -0.35));
+  }
+
+  /* Centre copy - opens as tiles split */
+  .sig-hero__copy {
+    position: relative;
+    z-index: 2;
+    max-width: min(52rem, 100%);
+    width: 100%;
+    text-align: center;
+    margin-inline: auto;
+    opacity: 0;
+    transform: translateY(0.85rem) scale(0.98);
+    pointer-events: none;
+    color: var(--color-fg);
+    transition:
+      opacity 0.65s var(--ease-out) 0.05s,
+      transform 0.65s var(--ease-out) 0.05s;
+  }
+
+  .sig-hero.is-settled .sig-hero__copy,
+  .sig-hero.is-dispersing .sig-hero__copy {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+
   .sig-hero__eyebrow {
-    font-size: var(--text-xs);
+    font-size: clamp(0.68rem, 1.6vw, 0.78rem);
     font-weight: var(--font-weight-medium);
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--color-fg-muted);
     margin-bottom: var(--space-3);
+    line-height: var(--leading-snug);
+    max-width: 34rem;
+    margin-inline: auto;
   }
 
   .sig-hero h1 {
-    font-size: var(--text-hero);
+    font-family: var(--font-hero);
+    font-size: clamp(1.35rem, 4.2vw, 3.25rem);
+    font-weight: 600;
+    letter-spacing: -0.022em;
+    line-height: 1.08;
     margin-bottom: var(--space-4);
+    color: var(--color-fg);
   }
 
   .sig-hero__title-line {
     display: block;
+    white-space: nowrap;
+  }
+
+  .sig-hero__brand {
+    font-family: inherit;
+    font-weight: inherit;
   }
 
   .sig-hero__lede {
     color: var(--color-fg-muted);
     margin-bottom: var(--space-6);
     line-height: var(--leading-normal);
+    max-width: 32rem;
+    margin-inline: auto;
   }
 
   .sig-hero__actions {
@@ -253,46 +341,51 @@ const wa = whatsappUrl("Hello Gadget Hub, I'd like to shop Apple products.");
     justify-content: center;
   }
 
-  /* Mobile: 2×2 above copy */
   @media (max-width: 47.99rem) {
     .sig-hero {
-      align-items: start;
-      padding-top: var(--space-6);
-      min-height: auto;
+      --sig-settle-w: min(40vw, 9.75rem);
+      --sig-settle-h: calc(var(--sig-settle-w) * 0.72);
+      padding-block: var(--space-10) var(--space-8);
     }
 
-    .sig-hero__stage {
-      position: relative;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-3);
-      padding: var(--space-4);
-      inset: auto;
-      margin-bottom: var(--space-6);
+    .sig-hero.is-settled .sig-hero__tile--1 {
+      left: 2%;
+      top: 5%;
     }
 
-    .sig-hero__phone {
-      position: relative;
-      left: auto !important;
-      right: auto !important;
-      top: auto !important;
-      bottom: auto !important;
-      width: 100%;
-      transform: none !important;
-      opacity: 1;
+    .sig-hero.is-settled .sig-hero__tile--2 {
+      right: 2%;
+      top: 6%;
+    }
+
+    .sig-hero.is-settled .sig-hero__tile--3 {
+      left: 2.5%;
+      bottom: 7%;
+    }
+
+    .sig-hero.is-settled .sig-hero__tile--4 {
+      right: 2.5%;
+      bottom: 8%;
     }
 
     .sig-hero__copy {
-      opacity: 1;
-      transform: none;
-      padding-bottom: var(--space-10);
+      padding-inline: var(--space-4);
+    }
+
+    .sig-hero__eyebrow {
+      letter-spacing: 0.04em;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .sig-hero__phone,
+    .sig-hero__tile,
     .sig-hero__copy {
       transition: none;
+    }
+
+    .sig-hero:not(.is-assembled):not(.is-settled) .sig-hero__tile {
+      opacity: 1;
+      transform: none;
     }
   }
 </style>

@@ -46,6 +46,7 @@ const start = lipaMonthly(initial.base, cfg.depositDefaultPct, cfg.monthsDefault
       value={cfg.depositDefaultPct}
       data-mac-lipa-deposit
     />
+    <span class="mac-lipa__hint">Minimum deposit is {cfg.depositMinPct}%.</span>
   </label>
   <div class="mac-lipa__months" role="group" aria-label="Months">
     {
@@ -158,6 +159,15 @@ const start = lipaMonthly(initial.base, cfg.depositDefaultPct, cfg.monthsDefault
   .mac-lipa__result p:last-child {
     margin: 0.25rem 0 0;
     font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+  .mac-lipa__hint {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 0;
     color: var(--color-fg-muted);
   }
 </style>

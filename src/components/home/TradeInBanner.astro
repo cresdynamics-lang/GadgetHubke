@@ -1,63 +1,120 @@
 ---
 ---
 
-<section class="home-section home-promo home-promo--tradein">
-  <div class="container home-promo__inner">
-    <div class="home-promo__copy">
-      <h2>Trade in. Save on any new device.</h2>
-      <p>
-        Bring an iPhone or Samsung - get credit toward anything new in our catalog.
-        Online values are estimates; we confirm after inspection.
-      </p>
-    </div>
-    <a class="btn btn--primary" href="/trade-in">Start Trade-In</a>
+<section class="tradein fade-up" data-fade-up aria-labelledby="tradein-heading">
+  <img
+    class="tradein__bg"
+    src="/images/home/trade-in-pro.jpg"
+    alt=""
+    width="1024"
+    height="235"
+    loading="lazy"
+    decoding="async"
+    aria-hidden="true"
+  />
+
+  <div class="tradein__content">
+    <p class="tradein__brand">Gadget Hub</p>
+    <h2 id="tradein-heading">You don’t have to worry.</h2>
+    <p class="tradein__lede">
+      Offers you trade-in options. Bring your current phone and get out with an
+      Apple smile. The phone you want is a click away.
+    </p>
+    <a class="btn btn--inverse tradein__cta" href="/trade-in">Start trade in</a>
   </div>
 </section>
 
 <style>
-  .home-promo--tradein {
-    background: var(--color-bg-inverse);
-    color: var(--color-fg-inverse);
+  .tradein {
+    position: relative;
+    isolation: isolate;
+    background: #000;
+    color: var(--color-white);
+    min-height: clamp(18rem, 42vw, 28rem);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    overflow: hidden;
   }
 
-  .home-promo__inner {
+  .tradein__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Keep the phone (center band) clear of copy */
+    object-position: center 58%;
+  }
+
+  .tradein__content {
+    position: relative;
+    z-index: 1;
+    width: min(100% - 2rem, 40rem);
+    margin-inline: auto;
+    padding: var(--space-8) var(--space-4) 0;
+    text-align: center;
     display: flex;
     flex-direction: column;
-    gap: var(--space-5);
-    align-items: flex-start;
+    align-items: center;
+    /* Soft veil only behind text so the phone below stays visible */
+    background: linear-gradient(
+      to bottom,
+      rgb(0 0 0 / 0.72) 0%,
+      rgb(0 0 0 / 0.35) 70%,
+      transparent 100%
+    );
+    padding-bottom: var(--space-8);
   }
 
-  @media (min-width: 48rem) {
-    .home-promo__inner {
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-8);
-    }
+  .tradein__brand {
+    font-family: var(--font-hero);
+    font-size: clamp(1.6rem, 4vw, 2.5rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: var(--space-2);
   }
 
-  .home-promo__copy {
-    max-width: 36rem;
-  }
-
-  .home-promo__copy h2 {
-    font-size: clamp(1.35rem, 3vw, 1.85rem);
+  .tradein__content h2 {
+    font-family: var(--font-hero);
+    font-size: clamp(1.15rem, 2.6vw, 1.55rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
     margin-bottom: var(--space-3);
   }
 
-  .home-promo__copy p {
-    color: var(--color-grey-400);
+  .tradein__lede {
+    color: rgb(255 255 255 / 0.78);
     font-size: var(--text-sm);
-    line-height: var(--leading-snug);
+    line-height: var(--leading-normal);
+    margin-bottom: var(--space-5);
+    max-width: 30rem;
   }
 
-  .home-promo--tradein :global(.btn--primary) {
+  .tradein__cta {
     background: var(--color-white);
     color: var(--color-black);
   }
 
-  .home-promo--tradein :global(.btn--primary:hover) {
+  .tradein__cta:hover {
     background: var(--color-grey-200);
     color: var(--color-black);
+  }
+
+  @media (min-width: 48rem) {
+    .tradein {
+      min-height: clamp(22rem, 36vw, 32rem);
+    }
+
+    .tradein__content {
+      padding-top: var(--space-10);
+    }
+
+    .tradein__lede {
+      font-size: var(--text-base);
+    }
   }
 </style>

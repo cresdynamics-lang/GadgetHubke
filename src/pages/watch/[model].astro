@@ -8,6 +8,7 @@ import WatchFeel from "../../components/watch/WatchFeel.astro";
 import WatchLipaCalc from "../../components/watch/WatchLipaCalc.astro";
 import WatchTradeIn from "../../components/watch/WatchTradeIn.astro";
 import ProductReviews from "../../components/ProductReviews.astro";
+import StickyBuyBar from "../../components/StickyBuyBar.astro";
 import {
   watchModels,
   getWatchModel,
@@ -172,11 +173,12 @@ const showModelHero = model.isNew && !heroStart.fallback && !heroEnd.fallback;
 
         <p class="wpdp__stock"><span class="wpdp__dot" /> In stock (sample) · Collect today in Nairobi</p>
 
-        <div class="wpdp__cta">
+        <div class="wpdp__cta" data-pdp-cta>
           <button
             type="button"
             class="btn btn--primary"
             data-watch-bag
+            data-pdp-cart
             data-id={model.id}
             data-name={model.name}
             data-size={`${model.defaultCaseMm}mm`}
@@ -189,7 +191,7 @@ const showModelHero = model.isNew && !heroStart.fallback && !heroEnd.fallback;
           >
             Add to Cart
           </button>
-          <a class="btn btn--whatsapp" data-wa href={`https://wa.me/${watchConfig.whatsapp}`} target="_blank" rel="noopener noreferrer">
+          <a class="btn btn--whatsapp" data-wa data-pdp-buy href={`https://wa.me/${watchConfig.whatsapp}`} target="_blank" rel="noopener noreferrer">
             Ask on WhatsApp
           </a>
         </div>
@@ -321,7 +323,7 @@ const showModelHero = model.isNew && !heroStart.fallback && !heroEnd.fallback;
             const rimg = getWatchImage(r.id, "main", r.name);
             return (
               <a href={`/watch/compare?ids=${encodeURIComponent(`${model.id},${r.id}`)}`}>
-                <WatchStage src={rimg.src} srcWebp={rimg.srcWebp} alt={rimg.alt} width={560} height={420} />
+                <WatchStage src={rimg.src} srcWebp={rimg.srcWebp} alt={rimg.alt} width={280} height={210} />
                 <span>{r.name}</span>
                 <em>From {formatKes(r.basePriceKes)}</em>
               </a>
@@ -335,7 +337,7 @@ const showModelHero = model.isNew && !heroStart.fallback && !heroEnd.fallback;
       <section class="container wpdp__block">
         <h2>Fits this watch</h2>
         <ul class="wpdp__fits">
-          {bands.slice(0, 6).map((b) => (
+          {bands.slice(0, 8).map((b) => (
             <li><h3>{b.name}</h3><p>{b.blurb}</p><p>{formatKes(b.priceKes)} sample</p></li>
           ))}
           {fits.map((a) => (
@@ -361,6 +363,13 @@ const showModelHero = model.isNew && !heroStart.fallback && !heroEnd.fallback;
       <ProductReviews productId={model.id} productName={model.name} />
     </div>
   </article>
+
+  <StickyBuyBar
+    productName={model.name}
+    imageSrc={img.src}
+    imageAlt={img.alt}
+    description={model.tagline}
+  />
 
   <dialog class="wpdp-lb" data-lightbox aria-label="Full screen photo">
     <button type="button" data-lb-close aria-label="Close">Close</button>
@@ -558,7 +567,7 @@ const showModelHero = model.isNew && !heroStart.fallback && !heroEnd.fallback;
     grid-area: 1 / 1; width: min(70vw, 40rem); height: auto; mix-blend-mode: multiply;
   }
   .wpdp__top {
-    display: grid; gap: 2rem; padding-block: 2rem;
+    display: grid; gap: 1.25rem; padding-block: 1.25rem;
   }
   @media (min-width: 64rem) {
     .wpdp__top { grid-template-columns: 1.1fr 0.9fr; align-items: start; }
@@ -626,27 +635,98 @@ const showModelHero = model.isNew && !heroStart.fallback && !heroEnd.fallback;
   .wpdp__highlights span { font-size: 0.75rem; color: #6e6e73; }
   .wpdp__why h2 { margin: 0 0 0.5rem; font-size: 1.1rem; }
   .wpdp__why ul { margin: 0; padding-left: 1.1rem; }
-  .wpdp__block { padding-block: var(--watch-section-gap, 3.5rem); }
+  .wpdp__block { padding-block: var(--watch-section-gap, 1.75rem); }
+  .wpdp__block h2 { margin: 0 0 0.55rem; }
   .wpdp__block h2 { margin: 0 0 0.75rem; letter-spacing: -0.02em; }
   .wpdp__notes { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
   .wpdp__notes h3 { margin: 0 0 0.25rem; font-size: 1rem; }
   .wpdp__notes p { margin: 0; color: #6e6e73; font-size: var(--text-sm); }
-  .wpdp__acc { border-top: 1px solid #d2d2d7; padding: 0.75rem 0; }
-  .wpdp__acc summary { cursor: pointer; font-weight: 600; }
-  .wpdp__acc table { width: 100%; border-collapse: collapse; margin-top: 0.65rem; font-size: var(--text-sm); }
-  .wpdp__acc th { text-align: left; color: #6e6e73; font-weight: 500; padding: 0.25rem 0.5rem 0.25rem 0; width: 40%; }
-  .wpdp__related {
-    display: grid; gap: 1rem; grid-template-columns: 1fr;
+  .wpdp__acc {
+    border: 1px solid #d2d2d7;
+    border-radius: 0.65rem;
+    padding: 0.25rem 0.7rem;
+    margin-bottom: 0.35rem;
   }
-  @media (min-width: 40rem) { .wpdp__related { grid-template-columns: 1fr 1fr; } }
-  .wpdp__related a { text-decoration: none; color: inherit; display: grid; gap: 0.35rem; }
-  .wpdp__related em { font-style: normal; color: #6e6e73; font-size: var(--text-sm); }
-  .wpdp__fits { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; }
-  @media (min-width: 40rem) { .wpdp__fits { grid-template-columns: 1fr 1fr; } }
-  .wpdp__fits li { border: 1px solid #d2d2d7; border-radius: 1rem; padding: 0.85rem; }
-  .wpdp__fits h3 { margin: 0 0 0.25rem; font-size: 1rem; }
-  .wpdp__fits p { margin: 0.2rem 0; font-size: var(--text-sm); color: #6e6e73; }
-  .wpdp__tools { display: grid; gap: 0.75rem; padding-block: var(--watch-section-gap, 3.5rem); }
+  .wpdp__acc summary { cursor: pointer; font-weight: 600; font-size: 0.92rem; padding: 0.4rem 0; }
+  .wpdp__acc table { width: 100%; border-collapse: collapse; margin-top: 0.35rem; font-size: var(--text-sm); }
+  .wpdp__acc th { text-align: left; color: #6e6e73; font-weight: 500; padding: 0.22rem 0.5rem 0.22rem 0; width: 40%; }
+  .wpdp__related {
+    display: grid;
+    gap: 0.65rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (min-width: 48rem) {
+    .wpdp__related { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+  .wpdp__related a {
+    text-decoration: none;
+    color: inherit;
+    display: grid;
+    gap: 0.25rem;
+    border: 1px solid #d2d2d7;
+    border-radius: 0.75rem;
+    padding: 0.55rem;
+    min-width: 0;
+  }
+  .wpdp__related :global(.wstage),
+  .wpdp__related :global(picture),
+  .wpdp__related :global(img) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: contain;
+    border-radius: 0.5rem;
+    background: #f5f5f7;
+  }
+  .wpdp__related span {
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+  }
+  .wpdp__related em {
+    font-style: normal;
+    color: #6e6e73;
+    font-size: 0.72rem;
+  }
+  .wpdp__fits {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.55rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (min-width: 48rem) {
+    .wpdp__fits { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+  .wpdp__fits li {
+    border: 1px solid #d2d2d7;
+    border-radius: 0.75rem;
+    padding: 0.55rem 0.65rem;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .wpdp__fits h3 {
+    margin: 0;
+    font-size: 0.82rem;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+  }
+  .wpdp__fits p {
+    margin: 0;
+    font-size: 0.72rem;
+    color: #6e6e73;
+    line-height: 1.3;
+  }
+  .wpdp__fits a {
+    font-size: 0.72rem;
+    font-weight: 600;
+    margin-top: 0.15rem;
+  }
+  .wpdp__tools { display: grid; gap: 0.75rem; padding-block: var(--watch-section-gap, 1.35rem); }
   @media (min-width: 40rem) { .wpdp__tools { grid-template-columns: 1fr 1fr; } }
   .wpdp-lb {
     border: none; padding: 1rem; max-width: min(96vw, 56rem); background: #000; color: #fff;

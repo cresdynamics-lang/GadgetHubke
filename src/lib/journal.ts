@@ -49,10 +49,10 @@ export const journalSeedPosts: JournalPost[] = [
     id: "j-iphone-15-or-16",
     slug: "iphone-15-or-iphone-16",
     title: "How to choose between an iPhone 15 and an iPhone 16",
-    excerpt: "Real differences that matter for Nairobi buyers — storage, camera, and longevity.",
+    excerpt: "Real differences that matter for Nairobi buyers - storage, camera, and longevity.",
     seoTitle: "iPhone 15 or iPhone 16? How to choose | Gadget Hub",
     seoDescription:
-      "Compare iPhone 15 and iPhone 16 for everyday use in Kenya — camera, battery, and which models we stock.",
+      "Compare iPhone 15 and iPhone 16 for everyday use in Kenya - camera, battery, and which models we stock.",
     category: "Buying guides",
     tags: ["iPhone", "iPhone 15", "iPhone 16"],
     author: "Asha M.",
@@ -64,7 +64,7 @@ export const journalSeedPosts: JournalPost[] = [
     paragraphs: [
       "Which one fits you? The iPhone 15 and iPhone 16 both make sense depending on how long you want to keep the phone and which camera features you actually use.",
       "We stock sealed units only. Compare storage and colour options on the iPhone pages, then WhatsApp us if you want a side-by-side recommendation for your budget.",
-      "Trade-in credit can bring the jump to a newer model within reach — start on Trade-In if you are moving from an older Android or iPhone.",
+      "Trade-in credit can bring the jump to a newer model within reach - start on Trade-In if you are moving from an older Android or iPhone.",
     ],
   },
   {
@@ -80,7 +80,7 @@ export const journalSeedPosts: JournalPost[] = [
     dateLabel: "28 Sep 2026",
     views: 863,
     paragraphs: [
-      "MacBook Air is the everyday pick for most people — light, quiet, and strong enough for browsing, docs, and light creative work.",
+      "MacBook Air is the everyday pick for most people - light, quiet, and strong enough for browsing, docs, and light creative work.",
       "MacBook Pro earns its keep when you edit video, run heavier apps, or need more ports and sustained performance.",
       "Visit the Mac pages for current configurations we stock in Nairobi, or message the shop for a quick recommendation.",
     ],
@@ -99,7 +99,7 @@ export const journalSeedPosts: JournalPost[] = [
     views: 541,
     paragraphs: [
       "Before you visit, back up photos and WhatsApp, then remove your Google account and any screen lock you can.",
-      "We accept iPhone and Samsung for trade-in credit toward a new sealed device — not for resale on this site.",
+      "We accept iPhone and Samsung for trade-in credit toward a new sealed device - not for resale on this site.",
       "Start the Trade-In form online, then finish the estimate on WhatsApp.",
     ],
   },
@@ -116,7 +116,7 @@ export const journalSeedPosts: JournalPost[] = [
     dateLabel: "12 Oct 2026",
     views: 0,
     paragraphs: [
-      "Power on, connect to Wi‑Fi, and sign in with your Apple ID — or create one if you are new to Apple.",
+      "Power on, connect to Wi‑Fi, and sign in with your Apple ID - or create one if you are new to Apple.",
       "Update iPadOS, turn on Find My, and restore from a backup if you are moving from another iPad.",
       "Need a Magic Keyboard or Pencil? Browse Accessories after setup.",
     ],
@@ -125,17 +125,17 @@ export const journalSeedPosts: JournalPost[] = [
     id: "j-lipa-guide",
     slug: "a-guide-to-lipa-mdogo-mdogo",
     title: "A guide to Lipa Mdogo Mdogo",
-    excerpt: "How our in-house installment plans work — deposit, schedule, and what to expect.",
+    excerpt: "How our in-house installment plans work - deposit, schedule, and what to expect.",
     category: "Lipa Mdogo Mdogo",
     tags: ["Lipa", "Financing"],
     author: "Brian K.",
     status: "review",
     date: "",
-    dateLabel: "—",
+    dateLabel: "-",
     views: 0,
     needsReview: true,
     paragraphs: [
-      "Lipa Mdogo Mdogo is offered directly by Gadget Hub Investments — there is no third-party bank in the middle for these plans.",
+      "Lipa Mdogo Mdogo is offered directly by Gadget Hub Investments - there is no third-party bank in the middle for these plans.",
       "You agree a deposit and schedule for a new sealed device, then pay over time with reminders from the shop.",
       "Eligibility depends on the device and a conversation with staff. Start on the Lipa page or WhatsApp.",
     ],
@@ -150,12 +150,12 @@ export const journalSeedPosts: JournalPost[] = [
     author: "Asha M.",
     status: "draft",
     date: "",
-    dateLabel: "—",
+    dateLabel: "-",
     views: 0,
     paragraphs: [
-      "Try each ear tip size — a good seal is what makes noise cancellation work.",
+      "Try each ear tip size - a good seal is what makes noise cancellation work.",
       "Pair once from the case near your iPhone, then enable Automatic Ear Detection and Find My.",
-      "Draft in progress — expand with shop-specific tips before publish.",
+      "Draft in progress - expand with shop-specific tips before publish.",
     ],
   },
   // Legacy blog slugs kept as published so old links still resolve after redirect
@@ -290,7 +290,7 @@ export async function saveJournalPost(input: Partial<JournalPost> & { title: str
     author: input.author ?? existing?.author ?? "Asha M.",
     status,
     date,
-    dateLabel: date ? formatDateLabel(date) : "—",
+    dateLabel: date ? formatDateLabel(date) : "-",
     views: input.views ?? existing?.views ?? 0,
     coverAlt: input.coverAlt ?? existing?.coverAlt,
     coverUrl: input.coverUrl ?? existing?.coverUrl,
@@ -310,12 +310,12 @@ export async function deleteJournalPost(id: string) {
   const overrides = await loadOverrides();
   const seedIds = new Set(journalSeedPosts.map((p) => p.id));
   if (seedIds.has(id)) {
-    // Soft-hide seed by storing a draft tombstone? Prefer status archived — use draft empty
+    // Soft-hide seed by storing a draft tombstone? Prefer status archived - use draft empty
     const seed = journalSeedPosts.find((p) => p.id === id)!;
     await saveJournalPost({ ...seed, status: "draft", title: seed.title, paragraphs: seed.paragraphs });
     const all = await loadOverrides();
     const filtered = all.filter((p) => p.id !== id);
-    // Mark deleted via override with special status — store as draft titled [deleted]
+    // Mark deleted via override with special status - store as draft titled [deleted]
     filtered.push({ ...seed, status: "draft", title: `[removed] ${seed.title}`, paragraphs: [], views: 0, updatedAt: new Date().toISOString() });
     await kvSetJson(REDIS_KEY, filtered);
     return;
@@ -336,7 +336,7 @@ export function journalStatusCounts(posts: JournalPost[]) {
   };
 }
 
-/** @deprecated use Journal — kept for gradual import updates */
+/** @deprecated use Journal - kept for gradual import updates */
 export type BlogPost = JournalPost;
 export const blogPosts = journalSeedPosts;
 export function getPost(slug: string) {

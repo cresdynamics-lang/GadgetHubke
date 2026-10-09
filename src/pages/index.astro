@@ -4,6 +4,7 @@ import SignatureHero from "../components/SignatureHero.astro";
 import LaunchBand from "../components/LaunchBand.astro";
 import HomeProductRow from "../components/home/HomeProductRow.astro";
 import CategoryStrip from "../components/home/CategoryStrip.astro";
+import HomeCinemaStrip from "../components/home/HomeCinemaStrip.astro";
 import TradeInBanner from "../components/home/TradeInBanner.astro";
 import LipaStrip from "../components/home/LipaStrip.astro";
 import TrustRow from "../components/home/TrustRow.astro";
@@ -11,6 +12,7 @@ import BlogTeaser from "../components/home/BlogTeaser.astro";
 import { site } from "../lib/site";
 import {
   heroPhones,
+  homeCinemaShots,
   homeDuoLaunch,
   homeNewIn,
   homeCategoryRows,
@@ -23,8 +25,9 @@ import {
 >
   <SignatureHero
     phones={heroPhones}
-    eyebrow="Apple · Nairobi"
-    title="The full lineup."
+    eyebrow="Gadget Hub · Norwich House Nairobi · Verified Apple Reseller"
+    title="Some People Buy Phones,"
+    titleLine="Some Come At Gadget Hub"
     lede="iPhone, Mac, iPad, Watch, AirPods, TV & Home, and Accessories - genuine, sealed, ready to take home. Pay in full or Lipa Mdogo Mdogo."
     primaryHref="/shop"
     primaryLabel="Shop Apple"
@@ -33,6 +36,8 @@ import {
   />
 
   <CategoryStrip />
+
+  <HomeCinemaStrip shots={[homeCinemaShots[0], homeCinemaShots[1]]} />
 
   <HomeProductRow
     title="New In"

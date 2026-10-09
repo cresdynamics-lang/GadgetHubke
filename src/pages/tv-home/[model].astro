@@ -6,6 +6,7 @@ import TvHomeLipaCalc from "../../components/tv-home/TvHomeLipaCalc.astro";
 import TvHomeTradeIn from "../../components/tv-home/TvHomeTradeIn.astro";
 import TvHomeTrademark from "../../components/tv-home/TvHomeTrademark.astro";
 import ProductReviews from "../../components/ProductReviews.astro";
+import StickyBuyBar from "../../components/StickyBuyBar.astro";
 import {
   tvHomeModels,
   getTvHomeModel,
@@ -165,11 +166,12 @@ const showPair = model.stereoPairCapable;
 
         <p class="thpdp__stock"><span class="thpdp__dot" /> In stock (sample) · Collect today in Nairobi</p>
 
-        <div class="thpdp__cta">
+        <div class="thpdp__cta" data-pdp-cta>
           <button
             type="button"
             class="btn btn--primary"
             data-tvhome-bag
+            data-pdp-cart
             data-id={model.id}
             data-name={model.name}
             data-colour={colourLabel(defaultColour)}
@@ -181,7 +183,7 @@ const showPair = model.stereoPairCapable;
           >
             Add to Cart
           </button>
-          <a class="btn btn--whatsapp" data-wa href={`https://wa.me/${tvHomeConfig.whatsapp}`} target="_blank" rel="noopener noreferrer">
+          <a class="btn btn--whatsapp" data-wa data-pdp-buy href={`https://wa.me/${tvHomeConfig.whatsapp}`} target="_blank" rel="noopener noreferrer">
             Ask on WhatsApp
           </a>
         </div>
@@ -274,6 +276,13 @@ const showPair = model.stereoPairCapable;
 
     <div class="container">
       <ProductReviews productId={model.id} productName={model.name} />
+
+  <StickyBuyBar
+    productName={model.name}
+    imageSrc={img.src}
+    imageAlt={img.alt}
+    description={model.tagline}
+  />
     </div>
 
     <section class="container"><TvHomeTrademark /></section>
@@ -408,7 +417,7 @@ const showPair = model.stereoPairCapable;
 <style>
   .thpdp { font-family: Inter, system-ui, sans-serif; padding-bottom: 3rem; }
   .thpdp__top {
-    display: grid; gap: 2rem; padding-block: 2rem;
+    display: grid; gap: 1.25rem; padding-block: 1.25rem;
     grid-template-columns: 1fr;
   }
   @media (min-width: 56rem) {
@@ -445,8 +454,13 @@ const showPair = model.stereoPairCapable;
   .thpdp__highlights { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.5rem; font-size: var(--text-sm); }
   .thpdp__highlights strong { display: block; }
   .thpdp__highlights span { color: #6e6e73; }
-  .thpdp__block { padding-block: 2rem; }
-  .thpdp__acc { margin: 0.5rem 0; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
+  .thpdp__block { padding-block: 0.95rem; }
+  .thpdp__acc {
+    margin: 0 0 0.35rem;
+    border: 1px solid #d2d2d7;
+    border-radius: 0.65rem;
+    padding: 0.25rem 0.7rem;
+  }
   .thpdp__acc table { width: 100%; font-size: var(--text-sm); border-collapse: collapse; }
   .thpdp__acc th { text-align: left; width: 40%; color: #6e6e73; font-weight: 500; }
   .thpdp__fits { list-style: none; padding: 0; }

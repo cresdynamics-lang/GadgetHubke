@@ -6,6 +6,7 @@ import AirPodsLipaCalc from "../../components/airpods/AirPodsLipaCalc.astro";
 import AirPodsTradeIn from "../../components/airpods/AirPodsTradeIn.astro";
 import AirpodsTrademark from "../../components/airpods/AirpodsTrademark.astro";
 import ProductReviews from "../../components/ProductReviews.astro";
+import StickyBuyBar from "../../components/StickyBuyBar.astro";
 import {
   airpodsModels,
   getAirpodsModel,
@@ -178,11 +179,12 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
 
         <p class="apdp__stock"><span class="apdp__dot" /> In stock (sample) · Collect today in Nairobi</p>
 
-        <div class="apdp__cta">
+        <div class="apdp__cta" data-pdp-cta>
           <button
             type="button"
             class="btn btn--primary"
             data-airpods-bag
+            data-pdp-cart
             data-id={model.id}
             data-name={model.name}
             data-colour={colourLabel(defaultColour)}
@@ -193,7 +195,7 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
           >
             Add to Cart
           </button>
-          <a class="btn btn--whatsapp" data-wa href={`https://wa.me/${airpodsConfig.whatsapp}`} target="_blank" rel="noopener noreferrer">
+          <a class="btn btn--whatsapp" data-wa data-pdp-buy href={`https://wa.me/${airpodsConfig.whatsapp}`} target="_blank" rel="noopener noreferrer">
             Ask on WhatsApp
           </a>
         </div>
@@ -291,6 +293,13 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
 
     <div class="container">
       <ProductReviews productId={model.id} productName={model.name} />
+
+  <StickyBuyBar
+    productName={model.name}
+    imageSrc={img.src}
+    imageAlt={img.alt}
+    description={model.tagline}
+  />
     </div>
 
     <section class="container">
@@ -469,7 +478,7 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
     position: relative; z-index: 2; padding-block: 3rem 2rem; max-width: 36rem;
   }
   .apdp__top {
-    display: grid; gap: 2rem; padding-block: 2rem;
+    display: grid; gap: 1.25rem; padding-block: 1.25rem;
     grid-template-columns: minmax(0, 1fr);
   }
   @media (min-width: 56rem) {
@@ -526,9 +535,11 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
   }
   .apdp__highlights span { display: block; font-size: var(--text-sm); color: #6e6e73; }
   .apdp__why ul { margin: 0.5rem 0 0; padding-left: 1.1rem; color: #1d1d1f; }
-  .apdp__block { padding-block: 2.5rem; }
+  .apdp__block { padding-block: 0.95rem; }
   .apdp__block h2 { margin: 0 0 1rem; letter-spacing: -0.02em; }
-  .apdp__acc { margin-bottom: 0.65rem; border: 1px solid #d2d2d7; border-radius: 0.75rem; padding: 0.65rem 0.85rem; }
+  .apdp__acc { margin-bottom: 0.35rem; border: 1px solid #d2d2d7; border-radius: 0.65rem; padding: 0.4rem 0.7rem; }
+  .apdp__acc summary { font-size: 0.92rem; }
+  .apdp__block h2 { margin: 0 0 0.5rem; }
   .apdp__acc table { width: 100%; font-size: var(--text-sm); }
   .apdp__acc th { text-align: left; padding-right: 1rem; color: #6e6e73; font-weight: 500; }
   .apdp__notes { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }

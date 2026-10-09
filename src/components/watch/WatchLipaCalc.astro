@@ -25,6 +25,7 @@ const start = lipaMonthly(initial.base, cfg.depositDefaultPct, cfg.monthsDefault
   <label>
     Deposit <span data-watch-lipa-dep-label>{cfg.depositDefaultPct}%</span>
     <input type="range" min={cfg.depositMinPct} max={cfg.depositMaxPct} step={cfg.depositStepPct} value={cfg.depositDefaultPct} data-watch-lipa-deposit />
+    <span class="watch-lipa__hint">Minimum deposit is {cfg.depositMinPct}%.</span>
   </label>
   <div class="watch-lipa__months" role="group" aria-label="Months">
     {cfg.monthOptions.map((m) => (
@@ -83,4 +84,12 @@ const start = lipaMonthly(initial.base, cfg.depositDefaultPct, cfg.monthsDefault
   .watch-lipa__months button.is-active { background: #000; color: #fff; }
   .watch-lipa__result span { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.03em; }
   .watch-lipa__result p[data-watch-lipa-line] { margin-top: 0.35rem; font-size: var(--text-sm); color: #6e6e73; }
+  .watch-lipa__hint {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 0;
+    color: #6e6e73;
+  }
 </style>

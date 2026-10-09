@@ -8,6 +8,7 @@ import MacFeel from "../../components/mac/MacFeel.astro";
 import MacLipaCalc from "../../components/mac/MacLipaCalc.astro";
 import MacTradeIn from "../../components/mac/MacTradeIn.astro";
 import ProductReviews from "../../components/ProductReviews.astro";
+import StickyBuyBar from "../../components/StickyBuyBar.astro";
 import {
   macModels,
   getMacModel,
@@ -190,11 +191,12 @@ const wa = whatsappUrl(
           </p>
           <p class="mpdp__stock"><span class="mpdp__pulse" /> In stock (sample) · Collect today in Nairobi</p>
 
-          <div class="mpdp__actions">
+          <div class="mpdp__actions" data-pdp-cta>
             <button
               type="button"
               class="btn btn--primary"
               data-add-bag
+              data-pdp-cart
               data-id={model.id}
               data-name={model.name}
               data-chip={model.chip}
@@ -206,7 +208,7 @@ const wa = whatsappUrl(
             >
               Add to Cart
             </button>
-            <a class="btn btn--secondary" href={wa} target="_blank" rel="noopener noreferrer" data-wa-link>
+            <a class="btn btn--secondary" href={wa} target="_blank" rel="noopener noreferrer" data-wa-link data-pdp-buy>
               Ask on WhatsApp
             </a>
           </div>
@@ -369,6 +371,13 @@ const wa = whatsappUrl(
 
     <div class="container">
       <ProductReviews productId={model.id} productName={model.name} />
+
+  <StickyBuyBar
+    productName={model.name}
+    imageSrc={img.src}
+    imageAlt={img.alt}
+    description={model.tagline}
+  />
     </div>
   </article>
 
@@ -711,7 +720,7 @@ const wa = whatsappUrl(
   .mpdp__why h2 { margin: 0 0 0.5rem; font-size: 1.1rem; }
   .mpdp__why ul { margin: 0; padding-left: 1.1rem; color: var(--color-fg-muted); }
   .mpdp__block { padding-block: var(--mac-section-gap); }
-  .mpdp__block h2 { margin: 0 0 1rem; letter-spacing: -0.02em; }
+  .mpdp__block h2 { margin: 0 0 0.55rem; letter-spacing: -0.02em; }
   .mpdp__notes {
     list-style: none; margin: 0; padding: 0;
     display: grid; gap: 0.85rem;
@@ -724,13 +733,13 @@ const wa = whatsappUrl(
   .mpdp__notes p { margin: 0; color: var(--color-fg-muted); font-size: var(--text-sm); }
   .mpdp__acc {
     border: 1px solid var(--color-border);
-    border-radius: 0.75rem;
-    padding: 0.75rem 1rem;
-    margin-bottom: 0.5rem;
+    border-radius: 0.65rem;
+    padding: 0.45rem 0.75rem;
+    margin-bottom: 0.35rem;
   }
-  .mpdp__acc summary { cursor: pointer; font-weight: 600; }
-  .mpdp__acc table { width: 100%; margin-top: 0.75rem; border-collapse: collapse; font-size: var(--text-sm); }
-  .mpdp__acc th, .mpdp__acc td { text-align: left; padding: 0.35rem 0; border-bottom: 1px solid var(--color-border); vertical-align: top; }
+  .mpdp__acc summary { cursor: pointer; font-weight: 600; font-size: 0.92rem; }
+  .mpdp__acc table { width: 100%; margin-top: 0.4rem; border-collapse: collapse; font-size: var(--text-sm); }
+  .mpdp__acc th, .mpdp__acc td { text-align: left; padding: 0.28rem 0; border-bottom: 1px solid var(--color-border); vertical-align: top; }
   .mpdp__acc th { width: 35%; color: var(--color-fg-muted); font-weight: 500; }
   .mpdp__related {
     display: grid; gap: 1rem;

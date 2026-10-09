@@ -26,25 +26,45 @@ export type BlogTeaser = {
   dateLabel: string;
 };
 
-/** Signature hero - four devices across the Apple lineup */
+/** Cinematic Apple frames for the home spotlight strip */
+export const homeCinemaShots = [
+  {
+    href: "/shop/iphone/iphone-pro",
+    src: "/images/home/hero-iphone-18-pro.jpg",
+    alt: "iPhone 18 Pro - Pro camera system",
+    eyebrow: "iPhone 18 Pro",
+    title: "Pro. Beyond.",
+    cta: "Shop iPhone 18 Pro ›",
+  },
+  {
+    href: "/watch",
+    src: "/images/home/hero-watch-series-12.jpg",
+    alt: "Apple Watch Series 12 heart rate sensing",
+    eyebrow: "Apple Watch Series 12",
+    title: "Know your heart.",
+    cta: "Shop Watch ›",
+  },
+] as const;
+
+/** Signature hero - four equal cinematic rectangles (fill screen, then split) */
 export const heroPhones: [HeroPhone, HeroPhone, HeroPhone, HeroPhone] = [
   {
-    src: ghImages.iphone.proBlue,
+    src: "/Hero/Gadget_Hub_Hero_Video_iPhone_part1of2/01_Cinematic_black_background_JPG/C01_iPhone_18_Pro_camera_hero.w1280.webp",
     alt: "iPhone 18 Pro",
     href: "/shop/iphone/iphone-pro",
   },
   {
-    src: ghImages.mac.air,
-    alt: "MacBook Air",
-    href: "/shop/mac/macbook-air",
+    src: "/Hero/Gadget_Hub_Hero_Video_MacBook/01_Cinematic_black_background_JPG/C01_MacBook_Pro_open_hero.w1280.webp",
+    alt: "MacBook Pro",
+    href: "/shop/mac/macbook-pro",
   },
   {
-    src: ghImages.watchAirPods.watch,
-    alt: "Apple Watch",
+    src: "/Hero/Gadget_Hub_Hero_Video_Watch/01_Cinematic_black_background_JPG/C01_Series_12_full_watch.w1280.webp",
+    alt: "Apple Watch Series 12",
     href: "/watch",
   },
   {
-    src: ghImages.watchAirPods.airpodsPro,
+    src: "/Hero/Gadget_Hub_Hero_Video_AirPods/03_Lifestyle_and_detail_JPG/L02_AirPods_Pro_3_open_case.jpg",
     alt: "AirPods Pro",
     href: "/airpods",
   },
@@ -127,15 +147,49 @@ export const homeLatestIphones = [
   },
 ];
 
-/** Six core Apple product families for the home category strip */
+const tvHomePhotoBase =
+  "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos";
+
+/** Apple product families for the home “Shop Apple” strip */
 export const homeAppleProducts = [
-  { label: "iPhone", href: "/iphone" },
-  { label: "Mac", href: "/mac" },
-  { label: "iPad", href: "/ipad" },
-  { label: "Watch", href: "/watch" },
-  { label: "AirPods", href: "/airpods" },
-  { label: "TV & Home", href: "/tv-home" },
-  { label: "Accessories", href: "/accessories" },
+  {
+    label: "iPhone",
+    href: "/iphone",
+    image: { src: ghImages.iphone.proBlue, alt: "iPhone" },
+  },
+  {
+    label: "Mac",
+    href: "/mac",
+    image: { src: ghImages.mac.air, alt: "MacBook" },
+  },
+  {
+    label: "iPad",
+    href: "/ipad",
+    image: { src: ghImages.ipad.air, alt: "iPad" },
+  },
+  {
+    label: "Watch",
+    href: "/watch",
+    image: { src: ghImages.watchAirPods.watch, alt: "Apple Watch" },
+  },
+  {
+    label: "AirPods",
+    href: "/airpods",
+    image: { src: ghImages.watchAirPods.airpodsPro, alt: "AirPods" },
+  },
+  {
+    label: "TV & Home",
+    href: "/tv-home",
+    image: {
+      src: `${tvHomePhotoBase}/HomePod_2nd_gen/homepod-select-202210.jpg`,
+      alt: "HomePod",
+    },
+  },
+  {
+    label: "Accessories",
+    href: "/accessories",
+    image: { src: ghImages.accessories.magsafeCharger, alt: "Accessories" },
+  },
 ] as const;
 
 export const homeCategories = [
@@ -305,9 +359,6 @@ export const homeDuoLaunch = {
   imageAlt: "iPhone Duo open",
   ctaLabel: "Shop iPhone Duo",
 } as const;
-
-const tvHomePhotoBase =
-  "/Gadget_Hub_TV_and_Home_1_Product_photos_colours_and_compare/01_Product_photos";
 
 /** New In - mixed Apple products just arrived / featured */
 export const homeNewIn: DealItem[] = [
@@ -504,6 +555,17 @@ export const homeCategoryRows: HomeCategoryRow[] = [
         image: { src: ghImages.ipad.pro, alt: "iPad Pro" },
       },
       {
+        id: "ipad-pro-13",
+        name: "iPad Pro 13″",
+        href: "/ipad",
+        priceKes: 220000,
+        badge: "New",
+        image: {
+          src: "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Pro_11in_and_13in_M4_M5_(same_design)/ipad-pro-13-select-wificell-silver-202405.jpg",
+          alt: "iPad Pro 13-inch",
+        },
+      },
+      {
         id: "ipad-air",
         name: "iPad Air",
         href: "/shop/ipad/ipad-air",
@@ -518,6 +580,16 @@ export const homeCategoryRows: HomeCategoryRow[] = [
         priceKes: 79999,
         image: { src: ghImages.ipad.mini, alt: "iPad mini" },
       },
+      {
+        id: "ipad",
+        name: "iPad",
+        href: "/ipad",
+        priceKes: 55000,
+        image: {
+          src: "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_standard_10th_gen_and_A16_2022-2025/ipad-2022-hero-blue-wifi-select.jpg",
+          alt: "iPad",
+        },
+      },
     ],
   },
   {
@@ -530,16 +602,50 @@ export const homeCategoryRows: HomeCategoryRow[] = [
         id: "watch-s12",
         name: "Apple Watch Series 12",
         href: "/watch",
-        priceKes: 54999,
+        priceKes: 55000,
         badge: "New",
-        image: { src: ghImages.watchAirPods.watch, alt: "Apple Watch" },
+        image: { src: ghImages.watchAirPods.watch, alt: "Apple Watch Series 12" },
       },
       {
-        id: "watch-shop",
-        name: "Shop Apple Watch",
-        href: "/watch/shop",
-        priceKes: 44999,
-        image: { src: ghImages.watchAirPods.watch, alt: "Apple Watch styles" },
+        id: "watch-ultra",
+        name: "Apple Watch Ultra",
+        href: "/watch",
+        priceKes: 120000,
+        badge: "New",
+        image: {
+          src: "/Gadget_Hub_Watch_1_Product_photos_and_swatches_part1/01_Product_photos/Ultra_2023_to_2026/ultra-band-unselect-gallery-1-202509.jpg",
+          alt: "Apple Watch Ultra",
+        },
+      },
+      {
+        id: "watch-s11",
+        name: "Apple Watch Series 11",
+        href: "/watch",
+        priceKes: 45000,
+        image: {
+          src: "/Gadget_Hub_Watch_1_Product_photos_and_swatches_part1/01_Product_photos/Series_11_2025/s11-case-unselect-gallery-1-202509.jpg",
+          alt: "Apple Watch Series 11",
+        },
+      },
+      {
+        id: "watch-se",
+        name: "Apple Watch SE",
+        href: "/watch",
+        priceKes: 32000,
+        image: {
+          src: "/Gadget_Hub_Watch_1_Product_photos_and_swatches_part1/01_Product_photos/SE_2022_2025_2026/se-band-unselect-gallery-1-202509.jpg",
+          alt: "Apple Watch SE",
+        },
+      },
+      {
+        id: "watch-s10",
+        name: "Apple Watch Series 10",
+        href: "/watch",
+        priceKes: 40000,
+        image: {
+          src: "/Gadget_Hub_Watch_1_Product_photos_and_swatches_part1/01_Product_photos/Series_10_2024/s10-case-unselect-gallery-1-202409.jpg",
+          alt: "Apple Watch Series 10",
+        },
       },
     ],
   },
@@ -550,33 +656,48 @@ export const homeCategoryRows: HomeCategoryRow[] = [
     href: "/airpods",
     items: [
       {
+        id: "ap-pro-3",
+        name: "AirPods Pro 3",
+        href: "/airpods",
+        priceKes: 38000,
+        badge: "New",
+        image: {
+          src: "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_Pro_3/airpods-pro-3-gallery-1-202509.jpg",
+          alt: "AirPods Pro 3",
+        },
+      },
+      {
+        id: "ap-5",
+        name: "AirPods 5",
+        href: "/airpods",
+        priceKes: 22000,
+        badge: "New",
+        image: {
+          src: "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_5_(newest_standard)/airpods-5-hero-select-202609.jpg",
+          alt: "AirPods 5",
+        },
+      },
+      {
         id: "ap-pro",
         name: "AirPods Pro",
         href: "/airpods",
-        priceKes: 39999,
+        priceKes: 32000,
         badge: "Popular",
         image: { src: ghImages.watchAirPods.airpodsPro, alt: "AirPods Pro" },
       },
       {
         id: "ap-4",
-        name: "AirPods",
+        name: "AirPods 4",
         href: "/airpods",
-        priceKes: 24999,
-        image: { src: ghImages.watchAirPods.airpods4, alt: "AirPods" },
+        priceKes: 18000,
+        image: { src: ghImages.watchAirPods.airpods4, alt: "AirPods 4" },
       },
       {
         id: "ap-max",
         name: "AirPods Max",
         href: "/airpods",
-        priceKes: 79999,
+        priceKes: 72000,
         image: { src: ghImages.watchAirPods.airpodsMax, alt: "AirPods Max" },
-      },
-      {
-        id: "ap-family",
-        name: "AirPods family",
-        href: "/airpods",
-        priceKes: 24999,
-        image: { src: ghImages.watchAirPods.airpodsFamily, alt: "AirPods family" },
       },
     ],
   },
@@ -598,13 +719,33 @@ export const homeCategoryRows: HomeCategoryRow[] = [
         },
       },
       {
+        id: "tv-4k-ethernet",
+        name: "Apple TV 4K Wi‑Fi + Ethernet",
+        href: "/tv-home",
+        priceKes: 28000,
+        image: {
+          src: `${tvHomePhotoBase}/Apple_TV_4K/apple-tv-4k-gallery1-202210.jpg`,
+          alt: "Apple TV 4K with Ethernet",
+        },
+      },
+      {
         id: "homepod",
         name: "HomePod",
         href: "/tv-home",
         priceKes: 42000,
         image: {
-          src: `${tvHomePhotoBase}/HomePod_2nd_gen/homepod-select-202210.jpg`,
-          alt: "HomePod",
+          src: `${tvHomePhotoBase}/HomePod_2nd_gen/homepod-select-midnight-202210.jpg`,
+          alt: "HomePod in Midnight",
+        },
+      },
+      {
+        id: "homepod-white",
+        name: "HomePod White",
+        href: "/tv-home",
+        priceKes: 42000,
+        image: {
+          src: `${tvHomePhotoBase}/HomePod_2nd_gen/homepod-select-white-202210.jpg`,
+          alt: "HomePod in White",
         },
       },
       {
@@ -624,12 +765,24 @@ export const homeCategoryRows: HomeCategoryRow[] = [
     title: "Accessories",
     lede: "Pencil, pointers, power, and cases made for your device.",
     href: "/accessories",
-    items: homeAccessories.map((a, i) => ({
-      id: `acc-${i}`,
-      name: a.name,
-      href: a.href,
-      priceKes: a.priceKes,
-      image: { src: a.image.src, alt: a.image.alt },
-    })),
+    items: [
+      ...homeAccessories.map((a, i) => ({
+        id: `acc-${i}`,
+        name: a.name,
+        href: a.href,
+        priceKes: a.priceKes,
+        image: { src: a.image.src, alt: a.image.alt },
+      })),
+      {
+        id: "acc-keyboard",
+        name: "Magic Keyboard",
+        href: "/accessories",
+        priceKes: 28000,
+        image: {
+          src: "/Accesories/ACC_Magic_Keyboard_images/02_Product_photos_by_part_number/Magic_Keyboard_Mac_USB-C/MJLX4.jpg",
+          alt: "Magic Keyboard",
+        },
+      },
+    ],
   },
 ];

@@ -103,16 +103,16 @@ const {
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
-    width: 12.5rem;
+    flex: 0 0 auto;
+    /* Aim for ~5 cards across the content width on desktop */
+    width: clamp(
+      9.5rem,
+      calc((min(100vw, var(--container)) - 2rem - (4 * var(--space-4))) / 5),
+      13rem
+    );
     text-decoration: none;
     color: inherit;
     scroll-snap-align: start;
-  }
-
-  @media (min-width: 40rem) {
-    .home-row__card {
-      width: 14rem;
-    }
   }
 
   .home-row__card:hover .home-row__name {

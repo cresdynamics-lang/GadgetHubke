@@ -639,10 +639,12 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
     right: 0;
     top: 100%;
     background: var(--color-white);
+    /* Reset: header is white-on-black; panels inherit otherwise → invisible text */
+    color: var(--color-fg);
     border-bottom: 1px solid var(--color-border);
     box-shadow: 0 12px 32px rgb(10 10 10 / 0.06);
     padding: var(--space-5) 0 var(--space-6);
-    max-height: min(78dvh, 40rem);
+    max-height: min(70dvh, 26rem);
     overflow-y: auto;
     opacity: 0;
     transform: translateY(-8px);
@@ -662,33 +664,15 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
     display: none;
   }
 
-  .flyout--iphone {
-    padding-top: var(--space-6);
-  }
-
-  .flyout--mac {
-    padding-top: var(--space-6);
-    max-height: min(82dvh, 44rem);
-  }
-
-  .flyout--ipad {
-    padding-top: var(--space-6);
-    max-height: min(82dvh, 44rem);
-  }
-
-  .flyout--watch {
-    padding-top: var(--space-6);
-    max-height: min(82dvh, 44rem);
-  }
-
-  .flyout--airpods {
-    padding-top: var(--space-6);
-    max-height: min(82dvh, 44rem);
-  }
-
-  .flyout--tv-home {
-    padding-top: var(--space-6);
-    max-height: min(82dvh, 44rem);
+  .flyout--iphone,
+  .flyout--mac,
+  .flyout--ipad,
+  .flyout--watch,
+  .flyout--airpods,
+  .flyout--tv-home,
+  .flyout--accessories {
+    padding-top: var(--space-5);
+    max-height: min(70dvh, 26rem);
   }
 
   .nav-dim {
@@ -757,10 +741,12 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
     font-size: var(--text-sm);
     font-weight: var(--font-weight-medium);
     text-decoration: none;
+    color: var(--color-fg);
   }
 
   .flyout__all:hover {
     color: var(--color-black);
+    text-decoration: underline;
   }
 
   .site-header__actions {

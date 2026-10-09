@@ -1,151 +1,69 @@
 ---
 /**
- * iPhone mega menu - New (17/18) + 11 - 16 generations + live preview.
+ * Compact iPhone nav flyout - iPhone 18 lineup + shop all.
  */
-import {
-  models,
-  modelsByFamily,
-  getImage,
-  defaultColourForModel,
-  availableColours,
-  colourHex,
-  formatKes,
-  isLatestTag,
-  isOverviewOnly,
-} from "../../lib/iphone";
-import { megaNewIphones } from "../../lib/iphone/lineup";
+import { formatKes } from "../../lib/iphone";
+import { latestByFamily, formatFromKes } from "../../lib/iphone/lineup";
 
-const family16 = modelsByFamily(16);
-const family15 = modelsByFamily(15);
-const family14 = modelsByFamily(14);
-const family13 = modelsByFamily(13);
-const family12 = modelsByFamily(12);
-const family11 = modelsByFamily(11);
-const newest = megaNewIphones();
+const eighteen = latestByFamily(18);
 
-function previewFor(id: string) {
-  const m = models.find((x) => x.id === id)!;
-  const colour = defaultColourForModel(m.id, m.defaultColour ?? undefined);
-  const img = getImage(m.id, colour, isOverviewOnly(m.id) ? "overview" : 1, m.name);
-  const colours = availableColours(m.id).slice(0, 6).map((key) => colourHex(key));
-  return {
-    id: m.id,
-    name: m.name,
-    tagline: m.tagline,
-    href: `/iphone/${m.id}`,
-    priceKes: m.basePriceKes,
-    src: img.src,
-    alt: img.alt,
-    colours,
-    latest: isLatestTag(m),
-  };
-}
+const picks = eighteen.map((i) => ({
+  id: i.id,
+  name: i.name,
+  href: i.href,
+  priceLabel: formatKes(i.priceKes),
+  badge: i.badge || "New",
+  src: i.image.src,
+  alt: i.image.alt,
+  priceKes: i.priceKes,
+}));
 
-const catalogPreviews = Object.fromEntries(models.map((m) => [m.id, previewFor(m.id)]));
-const newPreviews = Object.fromEntries(
-  newest.map((n) => [
-    n.id,
-    {
-      id: n.id,
-      name: n.name,
-      tagline: n.preview.tagline,
-      href: n.href,
-      priceKes: n.preview.priceKes,
-      src: n.preview.src,
-      alt: n.preview.alt,
-      colours: n.preview.colours,
-      latest: true,
-    },
-  ]),
-);
-const previews = { ...catalogPreviews, ...newPreviews };
+const previews = Object.fromEntries(picks.map((p) => [p.id, p]));
 const defaultPreview =
-  newPreviews["iphone-pro"] || previewFor("iphone-16-pro-max");
+  picks.find((p) => p.id === "iphone-pro") ||
+  picks[0] || {
+    id: "iphone-18",
+    name: "iPhone 18",
+    href: "/iphone?family=18",
+    priceLabel: "",
+    badge: "New",
+    src: "",
+    alt: "",
+    priceKes: 0,
+  };
 ---
 
 <div class="imega" data-imega>
   <div class="imega__cols">
     <div class="imega__col">
-      <p class="imega__heading">New</p>
+      <p class="imega__heading">iPhone 18</p>
       <ul>
         {
-          newest.map((m) => (
+          picks.map((m) => (
             <li>
               <a class="imega__link" href={m.href} data-mega-preview={m.id}>
                 <span>
                   {m.name}
-                  {m.badge ? <span class="imega__tag">{m.badge}</span> : <span class="imega__tag">Latest</span>}
+                  <span class="imega__tag">{m.badge}</span>
                 </span>
-                <span class="imega__from">from {m.price}</span>
+                <span class="imega__from">{formatFromKes(m.priceKes)}</span>
               </a>
             </li>
           ))
         }
       </ul>
-      <div class="imega__foot">
-        <a href="/iphone">All iPhone 11 - 18</a>
-        <a href="/shop/iphone">Shop latest lineup</a>
-      </div>
+      <a class="imega__all" href="/iphone?family=18">Shop all iPhone 18</a>
+      <a class="imega__all" href="/shop/iphone">Shop all iPhone</a>
     </div>
 
     <div class="imega__col">
-      <p class="imega__heading">iPhone 16</p>
+      <p class="imega__heading">Explore</p>
       <ul>
-        {
-          family16.map((m) => (
-            <li>
-              <a class="imega__link" href={`/iphone/${m.id}`} data-mega-preview={m.id}>
-                <span>
-                  {m.name}
-                  {isLatestTag(m) ? <span class="imega__tag">Latest</span> : null}
-                </span>
-                <span class="imega__from">from {formatKes(m.basePriceKes)}</span>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-      <p class="imega__heading imega__heading--spaced">iPhone 15</p>
-      <ul>
-        {
-          family15.map((m) => (
-            <li>
-              <a class="imega__link" href={`/iphone/${m.id}`} data-mega-preview={m.id}>
-                <span>{m.name}</span>
-                <span class="imega__from">from {formatKes(m.basePriceKes)}</span>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-
-    <div class="imega__col imega__col--older">
-      <p class="imega__heading">iPhone 14</p>
-      <ul>
-        {
-          family14.map((m) => (
-            <li>
-              <a class="imega__link" href={`/iphone/${m.id}`} data-mega-preview={m.id}>
-                <span>{m.name}</span>
-                <span class="imega__from">from {formatKes(m.basePriceKes)}</span>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-      <p class="imega__heading imega__heading--spaced">iPhone 13 - 11</p>
-      <ul>
-        {
-          [...family13, ...family12, ...family11].map((m) => (
-            <li>
-              <a class="imega__link" href={`/iphone/${m.id}`} data-mega-preview={m.id}>
-                <span>{m.name}</span>
-                <span class="imega__from">from {formatKes(m.basePriceKes)}</span>
-              </a>
-            </li>
-          ))
-        }
+        <li><a class="imega__link" href="/iphone">iPhone overview</a></li>
+        <li><a class="imega__link" href="/iphone?family=17">iPhone 17</a></li>
+        <li><a class="imega__link" href="/iphone">All generations</a></li>
+        <li><a class="imega__link" href="/trade-in">Trade in</a></li>
+        <li><a class="imega__link" href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo</a></li>
       </ul>
     </div>
 
@@ -155,28 +73,18 @@ const defaultPreview =
           data-mega-img
           src={defaultPreview.src}
           alt={defaultPreview.alt}
-          width="280"
-          height="280"
+          width="240"
+          height="240"
           decoding="async"
         />
       </div>
       <p class="imega__pname" data-mega-name>{defaultPreview.name}</p>
-      <p class="imega__ptag" data-mega-tagline>{defaultPreview.tagline}</p>
-      <div class="imega__dots" data-mega-dots aria-hidden="true">
-        {
-          defaultPreview.colours.map((hex) => (
-            <span style={`background:${hex}`} />
-          ))
-        }
-      </div>
-      <p class="imega__pprice" data-mega-price>From {formatKes(defaultPreview.priceKes)}</p>
+      <p class="imega__pprice" data-mega-price>
+        {defaultPreview.priceLabel ? `From ${defaultPreview.priceLabel}` : ""}
+      </p>
       <a class="btn btn--primary btn--sm" data-mega-cta href={defaultPreview.href}>
-        View {defaultPreview.name}
+        View
       </a>
-      <div class="imega__services">
-        <a href="/trade-in">Trade in your old iPhone</a>
-        <a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo</a>
-      </div>
     </aside>
   </div>
 </div>
@@ -186,228 +94,116 @@ const defaultPreview =
   if (root) {
     const img = root.querySelector("[data-mega-img]");
     const name = root.querySelector("[data-mega-name]");
-    const tagline = root.querySelector("[data-mega-tagline]");
     const price = root.querySelector("[data-mega-price]");
     const cta = root.querySelector("[data-mega-cta]");
-    const dots = root.querySelector("[data-mega-dots]");
 
     function show(id) {
       const p = previews[id] || defaultPreview;
       if (img instanceof HTMLImageElement) {
-        img.style.opacity = "0";
-        const next = new Image();
-        next.onload = () => {
-          img.src = p.src;
-          img.alt = p.alt;
-          img.style.opacity = "1";
-        };
-        next.onerror = () => {
-          img.src = p.src;
-          img.style.opacity = "1";
-        };
-        next.src = p.src;
+        img.src = p.src;
+        img.alt = p.alt;
       }
       if (name) name.textContent = p.name;
-      if (tagline) tagline.textContent = p.tagline;
-      if (price) price.textContent = `From KES ${p.priceKes.toLocaleString("en-KE")}`;
-      if (cta instanceof HTMLAnchorElement) {
-        cta.href = p.href;
-        cta.textContent = `View ${p.name}`;
-      }
-      if (dots) {
-        dots.innerHTML = (p.colours || [])
-          .map((hex) => `<span style="background:${hex}"></span>`)
-          .join("");
-      }
+      if (price) price.textContent = p.priceLabel ? `From ${p.priceLabel}` : "";
+      if (cta instanceof HTMLAnchorElement) cta.href = p.href;
     }
 
-    root.querySelectorAll("[data-mega-preview]").forEach((link) => {
-      const id = link.getAttribute("data-mega-preview");
-      link.addEventListener("mouseenter", () => show(id));
-      link.addEventListener("focus", () => show(id));
+    root.querySelectorAll("[data-mega-preview]").forEach((a) => {
+      a.addEventListener("mouseenter", () => show(a.getAttribute("data-mega-preview")));
+      a.addEventListener("focus", () => show(a.getAttribute("data-mega-preview")));
     });
   }
 </script>
 
 <style>
   .imega {
-    color: #1d1d1f;
+    padding: 0.25rem 0 0.5rem;
   }
-
   .imega__cols {
     display: grid;
-    gap: 1.5rem 2rem;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+    grid-template-columns: 1.25fr 0.9fr 0.85fr;
     align-items: start;
   }
-
   .imega__heading {
-    margin: 0 0 0.65rem;
+    margin: 0 0 0.5rem;
     font-size: 0.7rem;
-    font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: #6e6e73;
+    color: var(--color-fg-muted);
+    font-weight: 600;
   }
-
-  .imega__heading--spaced {
-    margin-top: 1.25rem;
-  }
-
-  .imega__col ul {
+  .imega ul {
     list-style: none;
     margin: 0;
     padding: 0;
   }
-
   .imega__link {
     display: flex;
-    align-items: baseline;
     justify-content: space-between;
     gap: 0.75rem;
-    padding: 0.4rem 0.35rem;
-    margin: 0 -0.35rem;
-    border-radius: 0.4rem;
+    padding: 0.4rem 0;
     text-decoration: none;
-    color: inherit;
+    color: var(--color-fg);
     font-size: 0.875rem;
-    font-weight: 600;
-    letter-spacing: -0.015em;
-    transition: transform 160ms var(--ease-out);
   }
-
   .imega__link:hover,
   .imega__link:focus-visible {
-    transform: translateX(5px);
-    color: inherit;
-    background: #f5f5f7;
-    outline: none;
-  }
-
-  .imega__from {
-    font-size: 0.7rem;
-    font-weight: 400;
-    color: #6e6e73;
-    white-space: nowrap;
-  }
-
-  .imega__tag {
-    display: inline-block;
-    margin-left: 0.35rem;
-    font-size: 0.6rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    background: #000;
-    color: #fff;
-    border-radius: 999px;
-    padding: 0.12rem 0.4rem;
-    vertical-align: middle;
-  }
-
-  .imega__col--older .imega__link {
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: #515154;
-  }
-
-  .imega__foot {
-    display: grid;
-    gap: 0.45rem;
-    margin-top: 1.1rem;
-    padding-top: 0.85rem;
-    border-top: 1px solid #d2d2d7;
-  }
-
-  .imega__foot a {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: #1d1d1f;
-    text-decoration: none;
-  }
-
-  .imega__foot a:hover {
     text-decoration: underline;
   }
-
-  .imega__preview {
-    background: #f5f5f7;
-    border-radius: 1.25rem;
-    padding: 1rem 1.1rem 1.15rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
+  .imega__from {
+    font-size: 0.75rem;
+    color: var(--color-fg-muted);
+    white-space: nowrap;
   }
-
+  .imega__tag {
+    margin-left: 0.35rem;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: var(--color-black);
+    color: var(--color-white);
+    border-radius: 999px;
+    padding: 0.1rem 0.35rem;
+  }
+  .imega__all {
+    display: inline-block;
+    margin-top: 0.65rem;
+    margin-right: 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-fg);
+  }
+  .imega__preview {
+    background: var(--color-stage);
+    border-radius: var(--radius-lg);
+    padding: 0.85rem;
+  }
   .imega__stage {
     aspect-ratio: 1;
     display: grid;
     place-items: center;
-    overflow: hidden;
+    margin-bottom: 0.5rem;
   }
-
   .imega__stage img {
-    width: 88%;
+    width: 72%;
     height: auto;
-    mix-blend-mode: multiply;
-    transition: opacity 180ms linear;
+    object-fit: contain;
   }
-
   .imega__pname {
-    margin: 0.35rem 0 0;
+    margin: 0;
     font-weight: 700;
+    font-size: 0.875rem;
     letter-spacing: -0.02em;
   }
-
-  .imega__ptag {
-    margin: 0;
-    font-size: 0.8rem;
-    color: #6e6e73;
-    line-height: 1.35;
-  }
-
-  .imega__dots {
-    display: flex;
-    gap: 0.35rem;
-    margin: 0.25rem 0;
-  }
-
-  .imega__dots span {
-    width: 0.65rem;
-    height: 0.65rem;
-    border-radius: 50%;
-    border: 1px solid rgb(0 0 0 / 0.12);
-  }
-
   .imega__pprice {
-    margin: 0;
-    font-size: 0.85rem;
+    margin: 0.25rem 0 0.65rem;
+    font-size: 0.875rem;
     font-weight: 600;
   }
-
-  .imega__services {
-    display: grid;
-    gap: 0.35rem;
-    margin-top: 0.65rem;
-    padding-top: 0.65rem;
-    border-top: 1px solid #d2d2d7;
-  }
-
-  .imega__services a {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: #1d1d1f;
-    text-decoration: none;
-  }
-
-  .imega__services a:hover {
-    text-decoration: underline;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .imega__link,
-    .imega__stage img {
-      transition: none;
+  @media (max-width: 63.749rem) {
+    .imega {
+      display: none;
     }
   }
 </style>

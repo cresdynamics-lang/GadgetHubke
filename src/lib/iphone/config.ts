@@ -17,7 +17,7 @@ export const iphoneConfig = {
   storageStepsKes: [0, 14000, 34000, 54000] as const,
 
   lipa: {
-    depositMinPct: 20,
+    depositMinPct: 40,
     depositMaxPct: 60,
     depositStepPct: 5,
     depositDefaultPct: 40,

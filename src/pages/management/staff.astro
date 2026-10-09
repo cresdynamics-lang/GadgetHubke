@@ -10,7 +10,7 @@ if (!authed) return Astro.redirect("/management");
 ---
 
 <ManagementLayout title="Staff - Management" authed active="staff" staffName={sampleStaff.name} staffRole={sampleStaff.role}>
-  <p class="mgmt-banner">Sample team — invites, roles, and activity log in Phase I.</p>
+  <p class="mgmt-banner">Sample team - invites, roles, and activity log in Phase I.</p>
   <header style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.75rem;margin-bottom:1rem;">
     <div>
       <h1 class="mgmt-page-title">Staff and roles</h1>
@@ -60,13 +60,13 @@ if (!authed) return Astro.redirect("/management");
         </thead>
         <tbody>
           <tr><td>Dashboard</td><td>✓</td><td>✓</td><td>✓ (no sales totals)</td></tr>
-          <tr><td>Live visitors</td><td>✓</td><td>✓</td><td>—</td></tr>
+          <tr><td>Live visitors</td><td>✓</td><td>✓</td><td>-</td></tr>
           <tr><td>Journal</td><td>publish</td><td>publish</td><td>draft</td></tr>
           <tr><td>Orders</td><td>✓</td><td>✓</td><td>✓</td></tr>
           <tr><td>Trade-ins</td><td>✓</td><td>✓</td><td>quote</td></tr>
-          <tr><td>Sales</td><td>✓</td><td>✓</td><td>—</td></tr>
+          <tr><td>Sales</td><td>✓</td><td>✓</td><td>-</td></tr>
           <tr><td>Lipa</td><td>edit</td><td>edit</td><td>record payment</td></tr>
-          <tr><td>Staff</td><td>✓</td><td>—</td><td>—</td></tr>
+          <tr><td>Staff</td><td>✓</td><td>-</td><td>-</td></tr>
         </tbody>
       </table>
     </div>

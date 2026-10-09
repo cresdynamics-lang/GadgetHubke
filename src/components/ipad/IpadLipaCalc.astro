@@ -46,6 +46,7 @@ const start = lipaMonthly(initial.base, cfg.depositDefaultPct, cfg.monthsDefault
       value={cfg.depositDefaultPct}
       data-ipad-lipa-deposit
     />
+    <span class="ipad-lipa__hint">Minimum deposit is {cfg.depositMinPct}%.</span>
   </label>
   <div class="ipad-lipa__months" role="group" aria-label="Months">
     {
@@ -123,4 +124,12 @@ const start = lipaMonthly(initial.base, cfg.depositDefaultPct, cfg.monthsDefault
   .ipad-lipa__result span { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.03em; }
   .ipad-lipa__result small { color: var(--color-fg-muted); }
   .ipad-lipa__result p[data-ipad-lipa-line] { margin-top: 0.35rem; font-size: var(--text-sm); color: var(--color-fg-muted); }
+  .ipad-lipa__hint {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--color-fg-muted);
+  }
 </style>

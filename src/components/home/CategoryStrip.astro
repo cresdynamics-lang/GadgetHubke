@@ -13,7 +13,17 @@ import { homeAppleProducts } from "../../lib/home";
         homeAppleProducts.map((cat) => (
           <li>
             <a class="home-categories__tile" href={cat.href}>
-              {cat.label}
+              <span class="home-categories__media" aria-hidden="true">
+                <img
+                  src={cat.image.src}
+                  alt=""
+                  width="160"
+                  height="160"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </span>
+              <span class="home-categories__label">{cat.label}</span>
             </a>
           </li>
         ))
@@ -27,50 +37,108 @@ import { homeAppleProducts } from "../../lib/home";
     list-style: none;
     margin: 0;
     padding: 0;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.65rem;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 0.4rem;
+    width: 100%;
   }
 
-  @media (min-width: 24.375rem) {
-    .home-categories__list {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
-  @media (min-width: 40rem) {
-    .home-categories__list {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-  }
-
-  @media (min-width: 85rem) {
-    .home-categories__list {
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-    }
+  .home-categories__list > li {
+    flex: 1 1 0;
+    min-width: 0;
   }
 
   .home-categories__tile {
-    display: grid;
-    place-items: center;
-    min-height: 3.25rem;
-    padding: 0.75rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    width: 100%;
+    min-height: 2.65rem;
+    padding: 0.45rem 0.2rem;
     text-align: center;
     text-decoration: none;
-    font-size: var(--text-sm);
-    font-weight: var(--font-weight-medium);
     color: var(--color-fg);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     background: var(--color-bg);
     transition:
       background-color var(--duration-fast) var(--ease),
-      border-color var(--duration-fast) var(--ease);
+      border-color var(--duration-fast) var(--ease),
+      transform var(--duration-fast) var(--ease);
   }
 
   .home-categories__tile:hover {
     background: var(--color-bg-muted);
     border-color: var(--color-border-strong);
     color: var(--color-fg);
+  }
+
+  /* Mobile / small: label-only compact buttons in one row */
+  .home-categories__media {
+    display: none;
+  }
+
+  .home-categories__label {
+    font-size: clamp(0.58rem, 2.4vw, 0.75rem);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    padding-inline: 0.1rem;
+  }
+
+  /* Desktop: image cards still in one row */
+  @media (min-width: 48rem) {
+    .home-categories__list {
+      gap: 0.75rem;
+    }
+
+    .home-categories__tile {
+      gap: 0.65rem;
+      min-height: 0;
+      padding: 1rem 0.65rem 0.9rem;
+    }
+
+    .home-categories__tile:hover {
+      transform: translateY(-2px);
+    }
+
+    .home-categories__media {
+      display: grid;
+      place-items: center;
+      width: 100%;
+      aspect-ratio: 1;
+      max-width: 6.5rem;
+    }
+
+    .home-categories__media img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.08));
+    }
+
+    .home-categories__label {
+      font-size: var(--text-sm);
+      white-space: normal;
+      text-overflow: unset;
+      overflow: visible;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .home-categories__media {
+      max-width: 7.5rem;
+    }
+
+    .home-categories__tile {
+      padding: 1.15rem 0.75rem 1rem;
+    }
   }
 </style>

@@ -28,7 +28,7 @@ const lipa = accessoriesConfig.lipa;
       </select>
     </label>
     <label>
-      Deposit {lipa.depositMinPct}-{lipa.depositMaxPct}%
+      Deposit <span data-lipa-deposit-label>{lipa.depositDefaultPct}%</span>
       <input
         type="range"
         data-lipa-deposit
@@ -37,7 +37,7 @@ const lipa = accessoriesConfig.lipa;
         step={lipa.depositStepPct}
         value={lipa.depositDefaultPct}
       />
-      <span data-lipa-deposit-label>{lipa.depositDefaultPct}%</span>
+      <span class="xlipa__hint">Minimum deposit is {lipa.depositMinPct}%. Range {lipa.depositMinPct}-{lipa.depositMaxPct}%.</span>
     </label>
     <label>
       Months
@@ -110,5 +110,12 @@ const lipa = accessoriesConfig.lipa;
   }
   .xlipa__out p {
     margin: 0.35rem 0;
+  }
+  .xlipa__hint {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #6e6e73;
   }
 </style>

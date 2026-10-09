@@ -32,6 +32,7 @@ import {
 import { whatsappUrl } from "../../lib/site";
 import StockChannelToggle from "../../components/StockChannelToggle.astro";
 import ProductReviews from "../../components/ProductReviews.astro";
+import StickyBuyBar from "../../components/StickyBuyBar.astro";
 import { exUkFromNew } from "../../lib/stock-channel";
 
 export function getStaticPaths() {
@@ -205,11 +206,12 @@ const galleryPayload = {
           In stock (sample) · Collect today in Nairobi
         </p>
 
-        <div class="ipdp__cta">
-          <button type="button" class="btn btn--primary" data-add-bag>Add to Cart</button>
+        <div class="ipdp__cta" data-pdp-cta>
+          <button type="button" class="btn btn--primary" data-add-bag data-pdp-cart>Add to Cart</button>
           <a
             class="btn btn--whatsapp"
             data-wa-link
+            data-pdp-buy
             href={whatsappUrl(`Hi Gadget Hub, I'm interested in the ${model.name}.`)}
             target="_blank"
             rel="noopener noreferrer"
@@ -371,6 +373,13 @@ const galleryPayload = {
     </div>
     <button type="button" class="ipdp-lb__nav ipdp-lb__next" data-lb-next aria-label="Next">›</button>
   </dialog>
+
+  <StickyBuyBar
+    productName={model.name}
+    imageSrc={initialImg.src}
+    imageAlt={initialImg.alt}
+    description={model.tagline}
+  />
 </BaseLayout>
 
 <script define:vars={{ galleryPayload, modelName: model.name, prices, depositPct: iphoneConfig.lipa.depositDefaultPct, months: iphoneConfig.lipa.monthsDefault, waBase: `https://wa.me/${iphoneConfig.whatsapp}?text=` }}>
@@ -690,12 +699,12 @@ const galleryPayload = {
 
 <style>
   .ipdp {
-    padding: var(--space-8) 0 var(--space-16);
+    padding: var(--space-5) 0 var(--space-10);
   }
 
   .ipdp__grid {
     display: grid;
-    gap: var(--space-10);
+    gap: var(--space-6);
   }
 
   @media (min-width: 56rem) {
@@ -1037,8 +1046,8 @@ const galleryPayload = {
 
   .ipdp__tools {
     display: grid;
-    gap: var(--space-6);
-    margin-top: var(--space-12);
+    gap: var(--space-4);
+    margin-top: var(--space-6);
   }
 
   @media (min-width: 48rem) {
@@ -1050,13 +1059,13 @@ const galleryPayload = {
   .ipdp__notes,
   .ipdp__fits,
   .ipdp__related {
-    margin-top: var(--space-12);
+    margin-top: var(--space-6);
   }
 
   .ipdp__notes h2,
   .ipdp__fits h2,
   .ipdp__related h2 {
-    margin: 0 0 var(--space-5);
+    margin: 0 0 var(--space-3);
     letter-spacing: -0.02em;
   }
 
@@ -1183,42 +1192,50 @@ const galleryPayload = {
   }
 
   .ipdp__specs {
-    margin-top: var(--space-12);
-    padding-top: var(--space-10);
+    margin-top: var(--space-4);
+    padding-top: var(--space-4);
     border-top: 1px solid var(--color-border);
   }
 
   .ipdp__specs h2 {
-    margin: 0 0 var(--space-3);
+    margin: 0 0 0.35rem;
   }
 
   .ipdp__footnote {
     font-size: var(--text-sm);
     color: var(--color-fg-muted);
-    margin: 0 0 var(--space-6);
+    margin: 0 0 var(--space-2);
     max-width: 40rem;
   }
 
   .ipdp__acc {
-    border-top: 1px solid var(--color-border);
+    border: 1px solid var(--color-border);
+    border-radius: 0.65rem;
+    padding: 0.2rem 0.7rem;
+    margin-bottom: 0.35rem;
   }
 
   .ipdp__acc summary {
     cursor: pointer;
-    padding: 1rem 0;
+    padding: 0.45rem 0;
     font-weight: var(--font-weight-semibold);
+    font-size: 0.92rem;
+  }
+
+  .ipdp__acc[open] summary {
+    padding-bottom: 0.2rem;
   }
 
   .ipdp__acc table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 1rem;
+    margin-bottom: 0.35rem;
     font-size: var(--text-sm);
   }
 
   .ipdp__acc th,
   .ipdp__acc td {
-    padding: 0.55rem 0;
+    padding: 0.28rem 0;
     border-bottom: 1px solid var(--color-border);
     text-align: left;
     vertical-align: top;

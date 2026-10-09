@@ -1,0 +1,141 @@
+---
+/**
+ * Dual cinematic panels - Apple-style black hero frames for home.
+ */
+interface Shot {
+  href: string;
+  src: string;
+  alt: string;
+  eyebrow: string;
+  title: string;
+  cta: string;
+}
+
+interface Props {
+  shots: [Shot, Shot];
+}
+
+const { shots } = Astro.props;
+---
+
+<section class="home-cinema" aria-label="Featured products">
+  <div class="home-cinema__grid">
+    {
+      shots.map((shot) => (
+        <a class="home-cinema__panel" href={shot.href}>
+          <img
+            class="home-cinema__img"
+            src={shot.src}
+            alt={shot.alt}
+            width="1024"
+            height="235"
+            loading="lazy"
+            decoding="async"
+          />
+          <span class="home-cinema__shade" aria-hidden="true" />
+          <span class="home-cinema__copy">
+            <span class="home-cinema__eyebrow">{shot.eyebrow}</span>
+            <span class="home-cinema__title">{shot.title}</span>
+            <span class="home-cinema__cta">{shot.cta}</span>
+          </span>
+        </a>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .home-cinema {
+    padding-block: 0 var(--space-4);
+  }
+
+  .home-cinema__grid {
+    display: grid;
+    gap: 0.5rem;
+    padding-inline: max(var(--space-4), calc((100% - var(--container, 72rem)) / 2 + var(--space-4)));
+  }
+
+  @media (min-width: 48rem) {
+    .home-cinema__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 0.65rem;
+    }
+  }
+
+  .home-cinema__panel {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    background: #000;
+    text-decoration: none;
+    color: #f5f5f7;
+    min-height: clamp(11rem, 28vw, 18rem);
+    isolation: isolate;
+  }
+
+  .home-cinema__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.7s var(--ease-out);
+  }
+
+  .home-cinema__panel:hover .home-cinema__img {
+    transform: scale(1.04);
+  }
+
+  .home-cinema__shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.15) 0%,
+      rgba(0, 0, 0, 0.05) 40%,
+      rgba(0, 0, 0, 0.72) 100%
+    );
+    z-index: 1;
+  }
+
+  .home-cinema__copy {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    display: grid;
+    gap: 0.25rem;
+    padding: 1.1rem 1.15rem 1.2rem;
+  }
+
+  .home-cinema__eyebrow {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(245, 245, 247, 0.72);
+  }
+
+  .home-cinema__title {
+    font-family: var(--font-display);
+    font-weight: var(--font-weight-display);
+    font-size: clamp(1.25rem, 3vw, 1.65rem);
+    letter-spacing: -0.03em;
+    line-height: var(--leading-tight);
+  }
+
+  .home-cinema__cta {
+    margin-top: 0.2rem;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+    color: #2997ff;
+  }
+
+  .home-cinema__panel:hover .home-cinema__cta {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+</style>

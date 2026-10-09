@@ -10,7 +10,7 @@ if (!authed) return Astro.redirect("/management");
 ---
 
 <ManagementLayout title="Trade-ins - Management" authed active="trade-ins" staffName={sampleStaff.name} staffRole={sampleStaff.role}>
-  <p class="mgmt-banner">Sample data — connect `/trade-in` form in Phase F.</p>
+  <p class="mgmt-banner">Sample data - connect `/trade-in` form in Phase F.</p>
   <header style="margin-bottom:1rem;">
     <h1 class="mgmt-page-title">Trade-ins</h1>
     <p class="mgmt-muted">Device requests, quotes and credit toward a new device</p>
@@ -37,7 +37,7 @@ if (!authed) return Astro.redirect("/management");
               <td>
                 <span class:list={["mgmt-tag", { "mgmt-tag--new": t.status.includes("Waiting") }]}>{t.status}</span>
               </td>
-              <td>{t.quote || "—"}</td>
+              <td>{t.quote || "-"}</td>
               <td class="mgmt-muted">{t.submitted}</td>
             </tr>
           ))

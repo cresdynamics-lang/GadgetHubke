@@ -1,53 +1,124 @@
 ---
 ---
 
-<section class="home-section home-promo home-promo--lipa">
-  <div class="container home-promo__inner">
-    <div class="home-promo__copy">
-      <h2>Lipa Mdogo Mdogo</h2>
-      <p>
-        Pay in smaller amounts on qualifying new devices. Plans are with Gadget Hub
-        Investments - no third-party finance partner.
-      </p>
-    </div>
-    <a class="btn btn--secondary" href="/lipa-mdogo-mdogo">How it works</a>
+<section class="lipa fade-up" data-fade-up aria-labelledby="lipa-heading">
+  <div class="lipa__media">
+    <img
+      src="/images/home/lipa-mdogo-pro.jpg"
+      alt="iPhone Pro camera system in deep burgundy"
+      width="1024"
+      height="676"
+      loading="lazy"
+      decoding="async"
+    />
+  </div>
+
+  <div class="lipa__copy">
+    <p class="lipa__eyebrow">Lipa Mdogo Mdogo</p>
+    <h2 id="lipa-heading">
+      You probably wondering how long you save to have this device.
+    </h2>
+    <p class="lipa__lede">
+      Deposit as low as 40%, then pay the balance on installments. Choose the plan
+      that is convenient - you don’t have to miss it saving when you can have it
+      and Lipa Mdogo Mdogo.
+    </p>
+    <a class="btn btn--primary btn--sm" href="/lipa-mdogo-mdogo">See payment plans</a>
   </div>
 </section>
 
 <style>
-  .home-promo--lipa {
-    background: var(--color-bg-subtle);
-    border-block: 1px solid var(--color-border);
+  .lipa {
+    display: grid;
+    background: #000;
+    color: var(--color-white);
+    overflow: hidden;
   }
 
-  .home-promo__inner {
+  .lipa__media {
+    height: 11rem;
+    line-height: 0;
+  }
+
+  .lipa__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 28% 40%;
+  }
+
+  .lipa__copy {
     display: flex;
     flex-direction: column;
-    gap: var(--space-5);
+    justify-content: center;
     align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-6) var(--space-5);
+  }
+
+  .lipa__eyebrow {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.55);
+  }
+
+  .lipa__copy h2 {
+    font-family: var(--font-hero);
+    font-size: clamp(1.1rem, 2.4vw, 1.35rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    max-width: 28rem;
+  }
+
+  .lipa__lede {
+    color: rgb(255 255 255 / 0.68);
+    font-size: var(--text-sm);
+    line-height: var(--leading-snug);
+    max-width: 28rem;
+  }
+
+  .lipa :global(.btn--primary) {
+    background: var(--color-white);
+    color: var(--color-black);
+    margin-top: var(--space-1);
+  }
+
+  .lipa :global(.btn--primary:hover) {
+    background: var(--color-grey-200);
+    color: var(--color-black);
   }
 
   @media (min-width: 48rem) {
-    .home-promo__inner {
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-8);
+    .lipa {
+      grid-template-columns: minmax(14rem, 38%) 1fr;
+      min-height: 0;
+      height: 15.5rem;
+    }
+
+    .lipa__media {
+      height: 100%;
+    }
+
+    .lipa__copy {
+      padding: var(--space-5) var(--space-8);
+      gap: var(--space-2);
     }
   }
 
-  .home-promo__copy {
-    max-width: 36rem;
-  }
+  @media (min-width: 64rem) {
+    .lipa {
+      grid-template-columns: minmax(16rem, 34%) 1fr;
+      height: 16.5rem;
+      max-width: var(--container-wide);
+      margin-inline: auto;
+    }
 
-  .home-promo__copy h2 {
-    font-size: clamp(1.35rem, 3vw, 1.85rem);
-    margin-bottom: var(--space-3);
-  }
-
-  .home-promo__copy p {
-    color: var(--color-fg-muted);
-    font-size: var(--text-sm);
-    line-height: var(--leading-snug);
+    .lipa__copy {
+      padding-inline: var(--space-10);
+    }
   }
 </style>

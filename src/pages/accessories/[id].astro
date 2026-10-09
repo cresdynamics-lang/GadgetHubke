@@ -6,6 +6,7 @@ import AccessoryLipaCalc from "../../components/accessories/AccessoryLipaCalc.as
 import AccessoryTrademark from "../../components/accessories/AccessoryTrademark.astro";
 import AccessoryCard from "../../components/accessories/AccessoryCard.astro";
 import ProductReviews from "../../components/ProductReviews.astro";
+import StickyBuyBar from "../../components/StickyBuyBar.astro";
 import {
   accessories,
   getAccessory,
@@ -240,11 +241,12 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
       </p>
       <p class="xpdp__fine">{accessoriesConfig.samplePriceDisclaimer}</p>
       <p class="xpdp__stock"><span class="dot" aria-hidden="true" /> In stock (sample) · Collect today in Nairobi</p>
-      <div class="xpdp__actions">
+      <div class="xpdp__actions" data-pdp-cta>
         <button
           type="button"
           class="btn btn--primary"
           data-accessory-bag
+          data-pdp-cart
           data-id={product.id}
           data-name={product.name}
           data-colour={activeVariant?.colour || product.defaultColour}
@@ -256,7 +258,7 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
         >
           Add to Cart
         </button>
-        <a class="btn btn--secondary" href={wa} rel="noopener">Ask on WhatsApp</a>
+        <a class="btn btn--secondary" href={wa} rel="noopener" data-pdp-buy data-wa-link>Ask on WhatsApp</a>
       </div>
       <div class="xpdp__tiles">
         <div><strong>Connection</strong><span>{product.connection}</span></div>
@@ -376,6 +378,13 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
 
   <div class="container">
     <ProductReviews productId={product.id} productName={product.name} />
+
+  <StickyBuyBar
+    productName={product.name}
+    imageSrc={activeHero.src}
+    imageAlt={activeHero.alt}
+    description={product.tagline}
+  />
   </div>
 
   <AccessoryLipaCalc productId={product.id} />
@@ -662,13 +671,19 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
   .xpdp-notes,
   .xpdp-sibs,
   .xpdp-faq {
-    padding: 2rem 0;
+    padding: 0.85rem 0;
+  }
+  .xpdp-specs h2,
+  .xpdp-notes h2,
+  .xpdp-sibs h2,
+  .xpdp-faq h2 {
+    margin: 0 0 0.4rem;
   }
   .xpdp-sibs__grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 1rem;
-    margin: 1rem 0;
+    gap: 0.75rem;
+    margin: 0.65rem 0;
   }
   .flag {
     font-size: 0.7rem;
@@ -676,11 +691,15 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
     text-transform: uppercase;
   }
   details {
-    border-bottom: 1px solid #d2d2d7;
-    padding: 0.75rem 0;
+    border: 1px solid #d2d2d7;
+    border-radius: 0.65rem;
+    padding: 0.25rem 0.7rem;
+    margin-bottom: 0.35rem;
   }
   summary {
     cursor: pointer;
     font-weight: 600;
+    font-size: 0.92rem;
+    padding: 0.4rem 0;
   }
 </style>

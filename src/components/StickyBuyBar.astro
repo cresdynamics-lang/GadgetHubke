@@ -1,0 +1,208 @@
+---
+/**
+ * Floating oval buy card — product thumb + name + blurb + CTAs.
+ * Appears after scroll; proxies page cart / buy controls.
+ */
+interface Props {
+  productName: string;
+  imageSrc: string;
+  imageAlt?: string;
+  description?: string;
+}
+
+const {
+  productName,
+  imageSrc,
+  imageAlt = productName,
+  description = "Sealed stock · ready in Nairobi",
+} = Astro.props;
+---
+
+<div class="float-buy" data-sticky-buy hidden>
+  <div class="float-buy__media">
+    <img src={imageSrc} alt={imageAlt} width="72" height="72" loading="lazy" decoding="async" />
+  </div>
+  <div class="float-buy__copy">
+    <p class="float-buy__name">{productName}</p>
+    <p class="float-buy__desc" data-float-desc>{description}</p>
+  </div>
+  <div class="float-buy__actions">
+    <button type="button" class="btn btn--secondary btn--sm" data-sticky-cart>Add to Cart</button>
+    <button type="button" class="btn btn--primary btn--sm" data-sticky-buy-now>Buy now</button>
+  </div>
+</div>
+
+<script>
+  const bar = document.querySelector("[data-sticky-buy]");
+  if (bar) {
+    document.documentElement.classList.add("has-sticky-buy");
+
+    function sync() {
+      const show = window.scrollY > 120;
+      bar.toggleAttribute("hidden", !show);
+      document.documentElement.classList.toggle("sticky-buy-visible", show);
+    }
+
+    window.addEventListener("scroll", sync, { passive: true });
+    sync();
+
+    bar.querySelector("[data-sticky-cart]")?.addEventListener("click", () => {
+      const source = document.querySelector(
+        "[data-pdp-cart], [data-add-bag], [data-watch-bag], [data-airpods-bag], [data-tvhome-bag], [data-accessory-bag], [data-add-cart]",
+      );
+      if (source instanceof HTMLElement) source.click();
+    });
+
+    bar.querySelector("[data-sticky-buy-now]")?.addEventListener("click", () => {
+      const source = document.querySelector(
+        "[data-pdp-buy], [data-wa-link], [data-wa], a.btn--whatsapp",
+      );
+      if (source instanceof HTMLAnchorElement) {
+        window.open(source.href, "_blank", "noopener,noreferrer");
+        return;
+      }
+      if (source instanceof HTMLElement) source.click();
+    });
+  }
+</script>
+
+<style>
+  .float-buy {
+    position: fixed;
+    z-index: 88;
+    left: 50%;
+    bottom: max(0.85rem, env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    width: min(calc(100vw - 1.75rem), 36rem);
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.45rem 0.5rem 0.45rem 0.45rem;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.95);
+    border: 1px solid rgb(0 0 0 / 0.08);
+    box-shadow: 0 12px 36px rgb(0 0 0 / 0.14);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .float-buy[hidden] {
+    display: none;
+  }
+
+  .float-buy__media {
+    width: 2.85rem;
+    height: 2.85rem;
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--color-stage, #f5f5f7);
+    flex-shrink: 0;
+  }
+
+  .float-buy__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    padding: 0.15rem;
+  }
+
+  .float-buy__copy {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .float-buy__name {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .float-buy__desc {
+    margin: 0.08rem 0 0;
+    font-size: 0.65rem;
+    color: var(--color-fg-muted);
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .float-buy__actions {
+    display: flex;
+    gap: 0.35rem;
+    flex: 0 0 auto;
+  }
+
+  .float-buy__actions :global(.btn) {
+    min-height: 2.1rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    padding-inline: 0.7rem;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 39.99rem) {
+    .float-buy {
+      flex-wrap: wrap;
+      width: min(calc(100vw - 1.25rem), 22rem);
+      padding: 0.55rem 0.6rem;
+      border-radius: 1.35rem;
+      gap: 0.5rem 0.65rem;
+    }
+
+    .float-buy__media {
+      width: 2.55rem;
+      height: 2.55rem;
+    }
+
+    .float-buy__copy {
+      flex: 1 1 calc(100% - 3.4rem);
+    }
+
+    .float-buy__actions {
+      width: 100%;
+    }
+
+    .float-buy__actions :global(.btn) {
+      flex: 1 1 auto;
+      font-size: 0.75rem;
+    }
+  }
+
+  @media (min-width: 40rem) {
+    .float-buy__media {
+      width: 3rem;
+      height: 3rem;
+    }
+
+    .float-buy__name {
+      font-size: 0.88rem;
+    }
+
+    .float-buy__desc {
+      font-size: 0.7rem;
+    }
+
+    .float-buy__actions :global(.btn) {
+      font-size: 0.78rem;
+      padding-inline: 0.85rem;
+    }
+  }
+
+  :global(html.sticky-buy-visible .float-wa-pill) {
+    bottom: calc(5.75rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  :global(html.sticky-buy-visible .float-socials) {
+    bottom: calc(5.75rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  :global(html.has-sticky-buy body) {
+    padding-bottom: 5.5rem;
+  }
+</style>

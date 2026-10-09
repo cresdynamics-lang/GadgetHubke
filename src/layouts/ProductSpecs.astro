@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
+import StickyBuyBar from "../components/StickyBuyBar.astro";
 import type { Product } from "../lib/products";
 import { site } from "../lib/site";
 
@@ -29,24 +30,26 @@ const { product } = Astro.props;
       </p>
     </header>
 
-    {
-      product.specs.map((group) => (
-        <section class="specs__group">
-          <h2>{group.title}</h2>
-          <dl>
-            {group.rows.map((row) => (
-              <>
-                <dt>{row.label}</dt>
-                <dd>{row.value}</dd>
-              </>
-            ))}
-          </dl>
-        </section>
-      ))
-    }
+    <div class="specs__groups">
+      {
+        product.specs.map((group, i) => (
+          <details class="specs__group" open={i === 0}>
+            <summary>{group.title}</summary>
+            <dl>
+              {group.rows.map((row) => (
+                <>
+                  <dt>{row.label}</dt>
+                  <dd>{row.value}</dd>
+                </>
+              ))}
+            </dl>
+          </details>
+        ))
+      }
+    </div>
 
     <p class="specs__note">
-      New sealed devices only. Warranty is the manufacturer’s standard coverage - 
+      New sealed devices only. Warranty is the manufacturer’s standard coverage -
       see <a href="/warranty-repairs">Warranty &amp; Repairs</a> and{" "}
       <a href="/returns">Returns</a>.
     </p>
@@ -55,21 +58,28 @@ const { product } = Astro.props;
       <h2>Ready to buy?</h2>
       <p>Configure storage and finish on the overview - then Add to Cart or Buy on WhatsApp.</p>
       <p class="specs__buy-actions">
-        <a class="btn btn--primary" href={`${product.overviewHref}#buy`}>Buy on GadgetHub</a>
+        <a class="btn btn--primary" href={`${product.overviewHref}#buy`} data-pdp-buy>Buy on GadgetHub</a>
         <a class="btn btn--secondary" href={product.overviewHref}>Back to Overview</a>
       </p>
     </section>
   </article>
+
+  <StickyBuyBar
+    productName={product.name}
+    imageSrc={product.image.src}
+    imageAlt={product.image.alt}
+    description={product.tagline}
+  />
 </BaseLayout>
 
 <style>
   .specs {
-    padding-block: var(--space-12) calc(var(--space-16) + var(--fab-clearance));
+    padding-block: var(--space-6) calc(var(--space-8) + var(--fab-clearance));
     max-width: 42rem;
   }
 
   .specs__intro {
-    margin-bottom: var(--space-10);
+    margin-bottom: var(--space-5);
   }
 
   .specs__eyebrow {
@@ -78,7 +88,7 @@ const { product } = Astro.props;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--color-fg-subtle);
-    margin-bottom: var(--space-3);
+    margin-bottom: var(--space-2);
   }
 
   .specs__eyebrow a {
@@ -86,33 +96,56 @@ const { product } = Astro.props;
   }
 
   .specs h1 {
-    font-size: clamp(1.5rem, 4vw, 2.25rem);
-    margin-bottom: var(--space-3);
+    font-size: clamp(1.35rem, 3.5vw, 1.85rem);
+    margin: 0 0 var(--space-2);
+    letter-spacing: -0.02em;
   }
 
   .specs__lede {
     font-size: var(--text-sm);
+    margin: 0;
+  }
+
+  .specs__groups {
+    display: grid;
+    gap: 0.35rem;
   }
 
   .specs__group {
-    padding-block: var(--space-6);
-    border-top: 1px solid var(--color-border);
+    border: 1px solid var(--color-border);
+    border-radius: 0.65rem;
+    padding: 0.35rem 0.75rem;
   }
 
-  .specs__group h2 {
+  .specs__group summary {
+    cursor: pointer;
+    list-style: none;
     font-size: var(--text-sm);
     font-weight: var(--font-weight-semibold);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    padding: 0.45rem 0;
+  }
+
+  .specs__group summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .specs__group summary::after {
+    content: "+";
+    float: right;
+    font-weight: 500;
     color: var(--color-fg-subtle);
-    margin-bottom: var(--space-4);
+  }
+
+  .specs__group[open] summary::after {
+    content: "–";
   }
 
   .specs__group dl {
-    margin: 0;
+    margin: 0 0 0.45rem;
     display: grid;
-    grid-template-columns: minmax(7rem, 10rem) minmax(0, 1fr);
-    gap: var(--space-2) var(--space-4);
+    grid-template-columns: minmax(6.5rem, 9rem) minmax(0, 1fr);
+    gap: 0.35rem var(--space-3);
   }
 
   .specs__group dt {
@@ -128,31 +161,32 @@ const { product } = Astro.props;
   }
 
   .specs__note {
-    margin-top: var(--space-8);
+    margin-top: var(--space-5);
     font-size: var(--text-sm);
     color: var(--color-fg-muted);
   }
 
   .specs__buy {
-    margin-top: var(--space-10);
-    padding-top: var(--space-8);
+    margin-top: var(--space-5);
+    padding-top: var(--space-5);
     border-top: 1px solid var(--color-border);
   }
 
   .specs__buy h2 {
-    font-size: var(--text-xl);
-    margin-bottom: var(--space-3);
+    font-size: var(--text-lg);
+    margin: 0 0 var(--space-2);
   }
 
   .specs__buy p {
     color: var(--color-fg-muted);
-    margin-bottom: var(--space-4);
+    margin: 0 0 var(--space-3);
     max-width: 36rem;
+    font-size: var(--text-sm);
   }
 
   .specs__buy-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-3);
+    gap: var(--space-2);
   }
 </style>

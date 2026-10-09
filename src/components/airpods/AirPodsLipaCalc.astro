@@ -25,6 +25,7 @@ const start = lipaMonthly(initial.base, cfg.depositDefaultPct, cfg.monthsDefault
   <label>
     Deposit <span data-airpods-lipa-dep-label>{cfg.depositDefaultPct}%</span>
     <input type="range" min={cfg.depositMinPct} max={cfg.depositMaxPct} step={cfg.depositStepPct} value={cfg.depositDefaultPct} data-airpods-lipa-deposit />
+    <span class="airpods-lipa__hint">Minimum deposit is {cfg.depositMinPct}%.</span>
   </label>
   <div class="airpods-lipa__months" role="group" aria-label="Months">
     {cfg.monthOptions.map((m) => (
@@ -83,4 +84,12 @@ const start = lipaMonthly(initial.base, cfg.depositDefaultPct, cfg.monthsDefault
   .airpods-lipa__months button.is-active { background: #000; color: #fff; }
   .airpods-lipa__result span { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.03em; }
   .airpods-lipa__result p[data-airpods-lipa-line] { margin-top: 0.35rem; font-size: var(--text-sm); color: #6e6e73; }
+  .airpods-lipa__hint {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 0;
+    color: #6e6e73;
+  }
 </style>

@@ -1,7 +1,7 @@
 ---
 /**
- * Customer reviews block: list + submit form.
- * Loads/saves via /api/reviews so reviews persist across visitors (Upstash or local .data).
+ * Customer reviews: list + fullscreen write sheet on tap → Post.
+ * Persists via /api/reviews (admin Tools → Reviews).
  */
 interface Props {
   productId: string;
@@ -30,73 +30,129 @@ const { productId, productName } = Astro.props;
     </div>
   </div>
 
-  <div class="reviews__grid">
-    <div class="reviews__list-wrap">
-      <p class="reviews__status" data-reviews-status>Loading reviews…</p>
-      <ul class="reviews__list" data-reviews-list role="list"></ul>
-    </div>
+  <div class="reviews__toolbar">
+    <button type="button" class="btn btn--primary" data-reviews-open>
+      Write a review
+    </button>
+  </div>
 
-    <form class="reviews__form" data-reviews-form novalidate>
-      <h3>Write a review</h3>
-      <p class="reviews__form-lede">Share your experience. Other shoppers will see it here.</p>
+  <div class="reviews__list-wrap">
+    <p class="reviews__status" data-reviews-status>Loading reviews…</p>
+    <ul class="reviews__list" data-reviews-list role="list"></ul>
+  </div>
 
-      <label>
-        <span>Your name</span>
-        <input type="text" name="author" maxlength="40" required autocomplete="nickname" placeholder="e.g. Amina K." />
-      </label>
-
-      <label>
-        <span>City (optional)</span>
-        <input type="text" name="city" maxlength="40" autocomplete="address-level2" placeholder="Nairobi" />
-      </label>
-
-      <fieldset class="reviews__rating">
-        <legend>Rating</legend>
-        <div class="reviews__rating-row">
-          {[5, 4, 3, 2, 1].map((n) => (
-            <label>
-              <input type="radio" name="rating" value={String(n)} required={n === 5} />
-              <span>{n}★</span>
-            </label>
-          ))}
+  <div
+    class="reviews-sheet"
+    data-reviews-sheet
+    hidden
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby={`reviews-sheet-title-${productId}`}
+  >
+    <div class="reviews-sheet__panel">
+      <header class="reviews-sheet__head">
+        <div>
+          <p class="reviews-sheet__eyebrow">Review</p>
+          <h3 id={`reviews-sheet-title-${productId}`}>Write a review</h3>
+          <p class="reviews-sheet__product">{productName}</p>
         </div>
-      </fieldset>
+        <button type="button" class="reviews-sheet__close" data-reviews-close aria-label="Close review form">
+          ×
+        </button>
+      </header>
 
-      <label>
-        <span>Title (optional)</span>
-        <input type="text" name="title" maxlength="80" placeholder="Short headline" />
-      </label>
+      <form class="reviews-sheet__form" data-reviews-form novalidate>
+        <label>
+          <span>Your name</span>
+          <input
+            type="text"
+            name="author"
+            maxlength="40"
+            required
+            autocomplete="nickname"
+            placeholder="e.g. Amina K."
+          />
+        </label>
 
-      <label>
-        <span>Your review</span>
-        <textarea name="body" rows="4" maxlength="800" required placeholder="How was the device, packaging, and pickup or delivery?"></textarea>
-      </label>
+        <label>
+          <span>City (optional)</span>
+          <input
+            type="text"
+            name="city"
+            maxlength="40"
+            autocomplete="address-level2"
+            placeholder="Nairobi"
+          />
+        </label>
 
-      <p class="reviews__form-error" data-reviews-error hidden></p>
-      <p class="reviews__form-ok" data-reviews-ok hidden>Thanks - your review is live.</p>
-      <button type="submit" class="btn btn--primary" data-reviews-submit>Post review</button>
-      <p class="reviews__persist" data-reviews-persist hidden></p>
-    </form>
+        <fieldset class="reviews__rating">
+          <legend>Rating</legend>
+          <div class="reviews__rating-row">
+            {[5, 4, 3, 2, 1].map((n) => (
+              <label>
+                <input type="radio" name="rating" value={String(n)} required={n === 5} />
+                <span>{n}★</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <label>
+          <span>Title (optional)</span>
+          <input type="text" name="title" maxlength="80" placeholder="Short headline" />
+        </label>
+
+        <label>
+          <span>Your review</span>
+          <textarea
+            name="body"
+            rows="5"
+            maxlength="800"
+            required
+            placeholder="How was the device, packaging, and pickup or delivery?"
+          ></textarea>
+        </label>
+
+        <p class="reviews__form-error" data-reviews-error hidden></p>
+        <p class="reviews__form-ok" data-reviews-ok hidden>Thanks - your review is live.</p>
+
+        <div class="reviews-sheet__actions">
+          <button type="button" class="btn btn--secondary" data-reviews-close>Cancel</button>
+          <button type="submit" class="btn btn--primary" data-reviews-submit>Post review</button>
+        </div>
+        <p class="reviews__persist" data-reviews-persist hidden></p>
+      </form>
+    </div>
   </div>
 </section>
 
 <script>
-  function stars(n: number) {
+  function stars(n) {
     const full = Math.round(n);
     return "★★★★★".slice(0, full) + "☆☆☆☆☆".slice(full);
   }
 
-  function formatDate(iso: string) {
+  function formatDate(iso) {
     try {
-      return new Intl.DateTimeFormat("en-KE", { day: "numeric", month: "short", year: "numeric" }).format(
-        new Date(iso),
-      );
+      return new Intl.DateTimeFormat("en-KE", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      }).format(new Date(iso));
     } catch {
       return "";
     }
   }
 
-  document.querySelectorAll<HTMLElement>("[data-reviews]").forEach((root) => {
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  document.querySelectorAll("[data-reviews]").forEach((root) => {
     if (root.dataset.ready === "1") return;
     root.dataset.ready = "1";
 
@@ -107,27 +163,44 @@ const { productId, productName } = Astro.props;
     const avgEl = root.querySelector("[data-reviews-avg]");
     const starsEl = root.querySelector("[data-reviews-stars]");
     const countEl = root.querySelector("[data-reviews-count]");
-    const form = root.querySelector<HTMLFormElement>("[data-reviews-form]");
+    const sheet = root.querySelector("[data-reviews-sheet]");
+    const form = root.querySelector("[data-reviews-form]");
     const errorEl = root.querySelector("[data-reviews-error]");
     const okEl = root.querySelector("[data-reviews-ok]");
     const persistEl = root.querySelector("[data-reviews-persist]");
-    const submitBtn = root.querySelector<HTMLButtonElement>("[data-reviews-submit]");
+    const submitBtn = root.querySelector("[data-reviews-submit]");
+    const openBtn = root.querySelector("[data-reviews-open]");
 
-    type Review = {
-      id: string;
-      author: string;
-      rating: number;
-      title: string;
-      body: string;
-      city?: string;
-      createdAt: string;
-    };
+    function openSheet() {
+      if (!sheet) return;
+      sheet.hidden = false;
+      document.documentElement.classList.add("reviews-sheet-open");
+      document.body.style.overflow = "hidden";
+      const first = form?.querySelector("input, textarea, button");
+      if (first instanceof HTMLElement) first.focus();
+    }
 
-    function render(payload: {
-      summary: { count: number; average: number };
-      reviews: Review[];
-      persistence?: string;
-    }) {
+    function closeSheet() {
+      if (!sheet) return;
+      sheet.hidden = true;
+      document.documentElement.classList.remove("reviews-sheet-open");
+      document.body.style.overflow = "";
+      errorEl?.setAttribute("hidden", "");
+      okEl?.setAttribute("hidden", "");
+    }
+
+    openBtn?.addEventListener("click", openSheet);
+    root.querySelectorAll("[data-reviews-close]").forEach((btn) => {
+      btn.addEventListener("click", closeSheet);
+    });
+    sheet?.addEventListener("click", (e) => {
+      if (e.target === sheet) closeSheet();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && sheet && !sheet.hidden) closeSheet();
+    });
+
+    function render(payload) {
       const { summary, reviews } = payload;
       if (summaryEl && avgEl && starsEl && countEl) {
         if (summary.count > 0) {
@@ -172,14 +245,6 @@ const { productId, productName } = Astro.props;
       }
     }
 
-    function escapeHtml(s: string) {
-      return s
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;");
-    }
-
     async function load() {
       if (statusEl) statusEl.textContent = "Loading reviews…";
       try {
@@ -206,7 +271,7 @@ const { productId, productName } = Astro.props;
         title: String(fd.get("title") || ""),
         body: String(fd.get("body") || ""),
       };
-      if (submitBtn) {
+      if (submitBtn instanceof HTMLButtonElement) {
         submitBtn.disabled = true;
         submitBtn.textContent = "Posting…";
       }
@@ -221,13 +286,14 @@ const { productId, productName } = Astro.props;
         render(data);
         form.reset();
         okEl?.removeAttribute("hidden");
+        window.setTimeout(() => closeSheet(), 900);
       } catch (err) {
         if (errorEl) {
           errorEl.textContent = err instanceof Error ? err.message : "Could not post review.";
           errorEl.removeAttribute("hidden");
         }
       } finally {
-        if (submitBtn) {
+        if (submitBtn instanceof HTMLButtonElement) {
           submitBtn.disabled = false;
           submitBtn.textContent = "Post review";
         }
@@ -249,7 +315,7 @@ const { productId, productName } = Astro.props;
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 1rem 2rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
   }
   .reviews__head h2 {
     margin: 0 0 0.35rem;
@@ -281,15 +347,8 @@ const { productId, productName } = Astro.props;
     color: #6e6e73;
     font-size: 0.85rem;
   }
-  .reviews__grid {
-    display: grid;
-    gap: 2rem;
-  }
-  @media (min-width: 56rem) {
-    .reviews__grid {
-      grid-template-columns: 1.2fr 0.9fr;
-      align-items: start;
-    }
+  .reviews__toolbar {
+    margin-bottom: 1.25rem;
   }
   .reviews__status {
     margin: 0 0 0.75rem;
@@ -333,40 +392,101 @@ const { productId, productName } = Astro.props;
     color: #6e6e73;
     font-size: 0.8rem;
   }
-  .reviews__form {
+
+  .reviews-sheet {
+    position: fixed;
+    inset: 0;
+    z-index: 120;
+    background: rgb(0 0 0 / 0.45);
     display: grid;
-    gap: 0.75rem;
+    place-items: stretch;
+    padding: 0;
+  }
+  .reviews-sheet[hidden] {
+    display: none;
+  }
+  .reviews-sheet__panel {
     background: #fff;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 1.15rem;
-    padding: 1.15rem 1.2rem 1.25rem;
+    width: 100%;
+    height: 100%;
+    max-height: 100dvh;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    padding: max(1rem, env(safe-area-inset-top)) 1.15rem
+      calc(1.25rem + env(safe-area-inset-bottom));
   }
-  .reviews__form h3 {
-    margin: 0;
-    font-size: 1.15rem;
+  @media (min-width: 40rem) {
+    .reviews-sheet {
+      place-items: center;
+      padding: 1.5rem;
+    }
+    .reviews-sheet__panel {
+      width: min(34rem, 100%);
+      height: auto;
+      max-height: min(92dvh, 44rem);
+      border-radius: 1.25rem;
+      box-shadow: 0 24px 64px rgb(0 0 0 / 0.28);
+    }
   }
-  .reviews__form-lede {
-    margin: -0.25rem 0 0.25rem;
+  .reviews-sheet__head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+  .reviews-sheet__eyebrow {
+    margin: 0 0 0.2rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     color: #6e6e73;
-    font-size: 0.88rem;
+    font-weight: 600;
   }
-  .reviews__form label {
+  .reviews-sheet__head h3 {
+    margin: 0;
+    font-size: 1.35rem;
+    letter-spacing: -0.02em;
+  }
+  .reviews-sheet__product {
+    margin: 0.25rem 0 0;
+    color: #6e6e73;
+    font-size: 0.9rem;
+  }
+  .reviews-sheet__close {
+    border: 0;
+    background: #f5f5f7;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 999px;
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    color: #1d1d1f;
+  }
+  .reviews-sheet__form {
+    display: grid;
+    gap: 0.85rem;
+    flex: 1;
+  }
+  .reviews-sheet__form label {
     display: grid;
     gap: 0.3rem;
     font-size: 0.85rem;
     color: #1d1d1f;
   }
-  .reviews__form input,
-  .reviews__form textarea {
+  .reviews-sheet__form input,
+  .reviews-sheet__form textarea {
     font: inherit;
     border: 1px solid rgba(0, 0, 0, 0.14);
     border-radius: 0.65rem;
-    padding: 0.55rem 0.7rem;
+    padding: 0.65rem 0.75rem;
     background: #fff;
   }
-  .reviews__form textarea {
+  .reviews-sheet__form textarea {
     resize: vertical;
-    min-height: 6rem;
+    min-height: 7rem;
   }
   .reviews__rating {
     border: 0;
@@ -386,13 +506,23 @@ const { productId, productName } = Astro.props;
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
-    padding: 0.35rem 0.55rem;
+    padding: 0.4rem 0.6rem;
     border-radius: 999px;
     border: 1px solid rgba(0, 0, 0, 0.12);
     cursor: pointer;
   }
   .reviews__rating-row input {
     margin: 0;
+  }
+  .reviews-sheet__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin-top: 0.35rem;
+  }
+  .reviews-sheet__actions :global(.btn) {
+    flex: 1 1 auto;
+    min-width: 7rem;
   }
   .reviews__form-error {
     margin: 0;

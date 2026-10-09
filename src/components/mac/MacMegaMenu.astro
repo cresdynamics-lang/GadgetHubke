@@ -1,23 +1,14 @@
 ---
 /**
- * Mac mega menu - Air / Pro / Shop by need / live preview.
+ * Compact Mac nav flyout - featured Air/Pro picks + shop all.
  */
 import {
   macModels,
-  macModelsByFamily,
   getMacImage,
   defaultMacColour,
   formatKes,
+  type MacModel,
 } from "../../lib/mac";
-import type { MacChipGen, MacModel } from "../../lib/mac";
-
-const gens: MacChipGen[] = ["M5", "M4", "M3", "M2", "M1"];
-const air = macModelsByFamily("Air");
-const pro = macModelsByFamily("Pro");
-
-function byGen(list: MacModel[], gen: MacChipGen) {
-  return list.filter((m) => m.chipGen === gen);
-}
 
 function previewFor(m: MacModel) {
   const colour = defaultMacColour(m);
@@ -25,120 +16,80 @@ function previewFor(m: MacModel) {
   return {
     id: m.id,
     name: m.name,
-    tagline: m.tagline,
-    chip: m.chip,
     href: `/mac/${m.id}`,
     priceKes: m.basePriceKes,
+    priceLabel: formatKes(m.basePriceKes),
     src: img.src,
     alt: img.alt,
     isNew: Boolean(m.isNew),
   };
 }
 
-const previews = Object.fromEntries(macModels.map((m) => [m.id, previewFor(m)]));
-const defaultPreview = previewFor(
-  macModels.find((m) => m.id === "macbook-air-13-m4") || macModels[0],
-);
+const featuredIds = [
+  "macbook-air-13-m4",
+  "macbook-air-15-m4",
+  "macbook-pro-14-m4",
+  "macbook-pro-16-m4-pro",
+] as const;
 
-const needs = [
-  { label: "For students and everyday", href: "/mac/shop?need=everyday" },
-  { label: "For creators and video", href: "/mac/shop?need=creators" },
-  { label: "For developers", href: "/mac/shop?need=developers" },
-  { label: "For business", href: "/mac/shop?need=business" },
-  { label: "Lightest", href: "/mac/shop?need=lightest" },
-  { label: "Longest battery", href: "/mac/shop?need=battery" },
-  { label: "Best screen", href: "/mac/shop?need=screen" },
-];
+const picks = featuredIds
+  .map((id) => macModels.find((m) => m.id === id))
+  .filter(Boolean)
+  .map((m) => previewFor(m as MacModel));
+
+const defaultPreview =
+  picks[0] ||
+  previewFor(macModels.find((m) => m.id === "macbook-air-13-m4") || macModels[0]);
+const previews = Object.fromEntries(picks.map((p) => [p.id, p]));
 ---
 
 <div class="mmega" data-mmega>
   <div class="mmega__cols">
     <div class="mmega__col">
-      <p class="mmega__heading">MacBook Air</p>
-      {
-        gens.map((g) => {
-          const rows = byGen(air, g);
-          if (!rows.length) return null;
-          return (
-            <div class="mmega__group">
-              <p class="mmega__gen">{g}</p>
-              <ul>
-                {rows.map((m) => (
-                  <li>
-                    <a class="mmega__link" href={`/mac/${m.id}`} data-mega-preview={m.id}>
-                      <span>
-                        {m.screenInches}″
-                        {m.isNew ? <span class="mmega__tag">New</span> : null}
-                      </span>
-                      <span class="mmega__from">from {formatKes(m.basePriceKes)}</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          );
-        })
-      }
-      <a class="mmega__all" href="/mac/shop?family=Air">Shop all Air</a>
-    </div>
-
-    <div class="mmega__col">
-      <p class="mmega__heading">MacBook Pro</p>
-      {
-        gens.map((g) => {
-          const rows = byGen(pro, g);
-          if (!rows.length) return null;
-          return (
-            <div class="mmega__group">
-              <p class="mmega__gen">{g}</p>
-              <ul>
-                {rows.map((m) => (
-                  <li>
-                    <a class="mmega__link" href={`/mac/${m.id}`} data-mega-preview={m.id}>
-                      <span>
-                        {m.screenInches}″ {m.chip.replace(/^M\d+\s?/, "") || m.chip}
-                        {m.isNew ? <span class="mmega__tag">New</span> : null}
-                      </span>
-                      <span class="mmega__from">from {formatKes(m.basePriceKes)}</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          );
-        })
-      }
-      <a class="mmega__all" href="/mac/shop?family=Pro">Shop all Pro</a>
-    </div>
-
-    <div class="mmega__col">
-      <p class="mmega__heading">Shop by need</p>
+      <p class="mmega__heading">Featured Mac</p>
       <ul>
         {
-          needs.map((n) => (
+          picks.map((m) => (
             <li>
-              <a class="mmega__need" href={n.href}>
-                {n.label}
+              <a class="mmega__link" href={m.href} data-mega-preview={m.id}>
+                <span>
+                  {m.name}
+                  {m.isNew ? <span class="mmega__tag">New</span> : null}
+                </span>
+                <span class="mmega__from">from {formatKes(m.priceKes)}</span>
               </a>
             </li>
           ))
         }
       </ul>
-      <div class="mmega__foot">
-        <a href="/mac/compare">Compare Macs</a>
-        <a href="/trade-in">Trade in your old Mac</a>
-        <a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo</a>
-        <a href="/shop/accessories">Mac accessories</a>
-      </div>
+      <a class="mmega__all" href="/mac/shop">Shop all Mac</a>
+    </div>
+
+    <div class="mmega__col">
+      <p class="mmega__heading">Explore</p>
+      <ul>
+        <li><a class="mmega__link" href="/mac">Mac overview</a></li>
+        <li><a class="mmega__link" href="/mac/shop?family=Air">MacBook Air</a></li>
+        <li><a class="mmega__link" href="/mac/shop?family=Pro">MacBook Pro</a></li>
+        <li><a class="mmega__link" href="/mac/compare">Compare</a></li>
+        <li><a class="mmega__link" href="/trade-in">Trade in</a></li>
+        <li><a class="mmega__link" href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo</a></li>
+      </ul>
     </div>
 
     <div class="mmega__preview" data-mega-card>
       <div class="mmega__stage">
-        <img data-mega-img src={defaultPreview.src} alt={defaultPreview.alt} width="420" height="262" />
+        <img
+          data-mega-img
+          src={defaultPreview.src}
+          alt={defaultPreview.alt}
+          width="320"
+          height="200"
+          loading="lazy"
+          decoding="async"
+        />
       </div>
       <p class="mmega__pname" data-mega-name>{defaultPreview.name}</p>
-      <p class="mmega__ptag" data-mega-tag>{defaultPreview.tagline}</p>
-      <p class="mmega__pchip" data-mega-chip>{defaultPreview.chip}</p>
       <p class="mmega__pprice" data-mega-price>From {formatKes(defaultPreview.priceKes)}</p>
       <a class="btn btn--primary btn--sm" data-mega-view href={defaultPreview.href}>View</a>
     </div>
@@ -150,25 +101,17 @@ const needs = [
   if (root) {
     const img = root.querySelector("[data-mega-img]");
     const name = root.querySelector("[data-mega-name]");
-    const tag = root.querySelector("[data-mega-tag]");
-    const chip = root.querySelector("[data-mega-chip]");
     const price = root.querySelector("[data-mega-price]");
     const view = root.querySelector("[data-mega-view]");
 
     function show(id) {
       const p = previews[id] || defaultPreview;
       if (img instanceof HTMLImageElement) {
-        img.style.opacity = "0";
-        setTimeout(() => {
-          img.src = p.src;
-          img.alt = p.alt;
-          img.style.opacity = "1";
-        }, 120);
+        img.src = p.src;
+        img.alt = p.alt;
       }
       if (name) name.textContent = p.name;
-      if (tag) tag.textContent = p.tagline;
-      if (chip) chip.textContent = p.chip;
-      if (price) price.textContent = `From KES ${p.priceKes.toLocaleString("en-KE")}`;
+      if (price) price.textContent = `From ${p.priceLabel}`;
       if (view instanceof HTMLAnchorElement) view.href = p.href;
     }
 
@@ -181,54 +124,39 @@ const needs = [
 
 <style>
   .mmega {
-    padding: 1.25rem 0 1.5rem;
+    padding: 0.25rem 0 0.5rem;
   }
   .mmega__cols {
     display: grid;
     gap: 1.5rem;
-    grid-template-columns: 1fr 1.15fr 1fr 1.1fr;
+    grid-template-columns: 1.25fr 0.9fr 0.85fr;
+    align-items: start;
   }
   .mmega__heading {
-    margin: 0 0 0.65rem;
+    margin: 0 0 0.5rem;
     font-size: 0.7rem;
-    font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: #6e6e73;
-  }
-  .mmega__gen {
-    margin: 0.65rem 0 0.25rem;
-    font-size: 0.8rem;
     font-weight: 600;
-  }
-  .mmega__group:first-of-type .mmega__gen {
-    margin-top: 0;
   }
   .mmega ul {
     list-style: none;
     margin: 0;
     padding: 0;
   }
-  .mmega__link,
-  .mmega__need {
+  .mmega__link {
     display: flex;
     justify-content: space-between;
     gap: 0.75rem;
-    padding: 0.35rem 0.25rem;
+    padding: 0.4rem 0;
     text-decoration: none;
     color: #1d1d1f;
-    font-size: 0.9rem;
-    border-radius: 0.35rem;
-    transition: transform 160ms ease;
-  }
-  .mmega__need {
-    display: block;
+    font-size: 0.875rem;
   }
   .mmega__link:hover,
-  .mmega__link:focus-visible,
-  .mmega__need:hover {
-    transform: translateX(5px);
-    color: #000;
+  .mmega__link:focus-visible {
+    text-decoration: underline;
   }
   .mmega__from {
     color: #6e6e73;
@@ -244,55 +172,45 @@ const needs = [
     color: #fff;
     padding: 0.1rem 0.35rem;
     border-radius: 999px;
-    vertical-align: middle;
   }
   .mmega__all {
     display: inline-block;
     margin-top: 0.75rem;
-    font-size: 0.85rem;
-    color: #1d1d1f;
-  }
-  .mmega__foot {
-    display: grid;
-    gap: 0.4rem;
-    margin-top: 1rem;
-  }
-  .mmega__foot a {
-    font-size: 0.85rem;
+    font-size: 0.875rem;
+    font-weight: 600;
     color: #1d1d1f;
   }
   .mmega__preview {
     background: #f5f5f7;
-    border-radius: 1.25rem;
-    padding: 1rem;
+    border-radius: 1rem;
+    padding: 0.85rem;
     color: #1d1d1f;
   }
   .mmega__stage {
     aspect-ratio: 16 / 10;
     display: grid;
     place-items: center;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
   }
   .mmega__stage img {
     width: 92%;
     height: auto;
     object-fit: contain;
-    mix-blend-mode: multiply;
-    transition: opacity 160ms ease;
   }
   .mmega__pname {
     margin: 0;
     font-weight: 700;
+    font-size: 0.875rem;
     letter-spacing: -0.02em;
   }
-  .mmega__ptag,
-  .mmega__pchip {
-    margin: 0.2rem 0 0;
-    font-size: 0.8rem;
-    color: #6e6e73;
-  }
   .mmega__pprice {
-    margin: 0.5rem 0 0.75rem;
+    margin: 0.25rem 0 0.65rem;
+    font-size: 0.875rem;
     font-weight: 600;
+  }
+  @media (max-width: 63.749rem) {
+    .mmega {
+      display: none;
+    }
   }
 </style>

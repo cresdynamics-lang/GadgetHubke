@@ -1,7 +1,5 @@
 ---
-import { site, whatsappUrl } from "../lib/site";
-import LogoMark from "./LogoMark.astro";
-import { isPlaceholderSocial } from "../lib/about-contact";
+import { site, whatsappUrl, telUrl } from "../lib/site";
 import SocialIcon from "./SocialIcon.astro";
 
 interface Props {
@@ -11,48 +9,54 @@ interface Props {
 const { hideWhatsApp = false } = Astro.props;
 const waHref = whatsappUrl("Hi Gadget Hub - I'd like to shop.");
 
-const socials = (
-  [
-    {
-      label: "Facebook",
-      href: site.social.facebook,
-      icon: "facebook" as const,
-      className: "float-socials__btn--facebook",
-    },
-    {
-      label: "Instagram",
-      href: site.social.instagram,
-      icon: "instagram" as const,
-      className: "float-socials__btn--instagram",
-    },
-    {
-      label: "TikTok",
-      href: site.social.tiktok,
-      icon: "tiktok" as const,
-      className: "float-socials__btn--tiktok",
-    },
-  ] as const
-).filter((item) => !isPlaceholderSocial(item.href));
+const socials = [
+  {
+    label: "Facebook",
+    href: site.social.facebook,
+    icon: "facebook" as const,
+    className: "float-socials__btn--facebook",
+    external: true,
+  },
+  {
+    label: "Instagram",
+    href: site.social.instagram,
+    icon: "instagram" as const,
+    className: "float-socials__btn--instagram",
+    external: true,
+  },
+  {
+    label: "TikTok",
+    href: site.social.tiktok,
+    icon: "tiktok" as const,
+    className: "float-socials__btn--tiktok",
+    external: true,
+  },
+  {
+    label: `Call ${site.phoneDisplay}`,
+    href: telUrl(),
+    icon: "phone" as const,
+    className: "float-socials__btn--call",
+    external: false,
+  },
+] as const;
 ---
 
-{
-  socials.length > 0 ? (
-    <aside class="float-socials" aria-label="Social media">
-      {socials.map((item) => (
-        <a
-          class:list={["float-socials__btn", item.className]}
-          href={item.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={item.label}
-          title={item.label}
-        >
-          <SocialIcon name={item.icon} class="float-socials__icon" />
-        </a>
-      ))}
-    </aside>
-  ) : null
-}
+<aside class="float-socials" aria-label="Social and call">
+  {
+    socials.map((item) => (
+      <a
+        class:list={["float-socials__btn", item.className]}
+        href={item.href}
+        target={item.external ? "_blank" : undefined}
+        rel={item.external ? "noopener noreferrer" : undefined}
+        aria-label={item.label}
+        title={item.label}
+      >
+        <SocialIcon name={item.icon} class="float-socials__icon" />
+      </a>
+    ))
+  }
+</aside>
 
 {
   !hideWhatsApp ? (
@@ -65,7 +69,14 @@ const socials = (
       title={`WhatsApp ${site.phoneDisplay}`}
     >
       <span class="float-wa-pill__mark">
-        <LogoMark inverse size={28} />
+        <img
+          class="float-wa-pill__logo"
+          src="/images/logo-mark.png"
+          alt=""
+          width="40"
+          height="40"
+          decoding="async"
+        />
       </span>
       <span class="float-wa-pill__text">
         <span class="float-wa-pill__online">Online on WhatsApp</span>
@@ -78,23 +89,24 @@ const socials = (
 <style>
   .float-socials {
     position: fixed;
-    left: max(0.65rem, env(safe-area-inset-left));
-    bottom: max(0.85rem, env(safe-area-inset-bottom));
+    left: max(0.55rem, env(safe-area-inset-left));
+    bottom: max(0.75rem, env(safe-area-inset-bottom));
     z-index: 90;
     display: flex;
     flex-direction: column;
-    gap: 0.45rem;
+    align-items: center;
+    gap: 0.35rem;
   }
 
   .float-socials__btn {
     display: grid;
     place-items: center;
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 1.85rem;
+    height: 1.85rem;
     border-radius: 999px;
     color: #fff;
     text-decoration: none;
-    box-shadow: 0 6px 18px rgb(10 10 10 / 0.18);
+    box-shadow: 0 4px 12px rgb(10 10 10 / 0.16);
     transition:
       transform var(--duration-fast) var(--ease),
       box-shadow var(--duration-fast) var(--ease);
@@ -102,13 +114,13 @@ const socials = (
 
   .float-socials__btn:hover {
     color: #fff;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 22px rgb(10 10 10 / 0.22);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgb(10 10 10 / 0.2);
   }
 
   .float-socials__btn :global(.float-socials__icon) {
-    width: 1.05rem;
-    height: 1.05rem;
+    width: 0.78rem;
+    height: 0.78rem;
   }
 
   .float-socials__btn--facebook {
@@ -127,6 +139,10 @@ const socials = (
 
   .float-socials__btn--tiktok {
     background: #0a0a0a;
+  }
+
+  .float-socials__btn--call {
+    background: #1d1d1f;
   }
 
   .float-wa-pill {
@@ -158,12 +174,21 @@ const socials = (
 
   .float-wa-pill__mark {
     flex: 0 0 auto;
-    width: 2.35rem;
-    height: 2.35rem;
+    width: 2.45rem;
+    height: 2.45rem;
     border-radius: 999px;
     display: grid;
     place-items: center;
-    background: rgb(0 0 0 / 0.22);
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.35);
+  }
+
+  .float-wa-pill__logo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   .float-wa-pill__text {
@@ -193,19 +218,19 @@ const socials = (
 
   @media (min-width: 40rem) {
     .float-socials {
-      left: max(1.1rem, env(safe-area-inset-left));
-      bottom: max(1.25rem, env(safe-area-inset-bottom));
-      gap: 0.65rem;
+      left: max(0.85rem, env(safe-area-inset-left));
+      bottom: max(1rem, env(safe-area-inset-bottom));
+      gap: 0.4rem;
     }
 
     .float-socials__btn {
-      width: 2.85rem;
-      height: 2.85rem;
+      width: 2rem;
+      height: 2rem;
     }
 
     .float-socials__btn :global(.float-socials__icon) {
-      width: 1.2rem;
-      height: 1.2rem;
+      width: 0.85rem;
+      height: 0.85rem;
     }
 
     .float-wa-pill {

@@ -8,6 +8,7 @@ import IpadFeel from "../../components/ipad/IpadFeel.astro";
 import IpadLipaCalc from "../../components/ipad/IpadLipaCalc.astro";
 import IpadTradeIn from "../../components/ipad/IpadTradeIn.astro";
 import ProductReviews from "../../components/ProductReviews.astro";
+import StickyBuyBar from "../../components/StickyBuyBar.astro";
 import {
   ipadModels,
   getIpadModel,
@@ -226,11 +227,12 @@ const wa = whatsappUrl(
           </p>
           <p class="ipdp__stock"><span class="ipdp__pulse" /> In stock (sample) · Collect today in Nairobi</p>
 
-          <div class="ipdp__actions">
+          <div class="ipdp__actions" data-pdp-cta>
             <button
               type="button"
               class="btn btn--primary"
               data-add-bag
+              data-pdp-cart
               data-id={model.id}
               data-name={model.name}
               data-chip={model.chip}
@@ -243,7 +245,7 @@ const wa = whatsappUrl(
             >
               Add to Cart
             </button>
-            <a class="btn btn--secondary" href={wa} target="_blank" rel="noopener noreferrer" data-wa-link>
+            <a class="btn btn--secondary" href={wa} target="_blank" rel="noopener noreferrer" data-wa-link data-pdp-buy>
               Ask on WhatsApp
             </a>
           </div>
@@ -457,6 +459,13 @@ const wa = whatsappUrl(
       <ProductReviews productId={model.id} productName={model.name} />
     </div>
   </article>
+
+  <StickyBuyBar
+    productName={model.name}
+    imageSrc={img.src}
+    imageAlt={img.alt}
+    description={model.tagline}
+  />
 
   <dialog class="ipdp-lb" data-lightbox aria-label="Full screen photo">
     <button type="button" data-lb-close aria-label="Close">Close</button>
@@ -836,7 +845,7 @@ const wa = whatsappUrl(
   .ipdp__why h2 { margin: 0 0 0.5rem; font-size: 1.1rem; }
   .ipdp__why ul { margin: 0; padding-left: 1.1rem; color: var(--color-fg-muted); }
   .ipdp__block { padding-block: var(--ipad-section-gap); }
-  .ipdp__block h2 { margin: 0 0 1rem; letter-spacing: -0.02em; }
+  .ipdp__block h2 { margin: 0 0 0.45rem; letter-spacing: -0.02em; }
   .ipdp__feel-black {
     background: #000; color: #fff; padding-block: var(--ipad-section-gap);
   }
@@ -857,10 +866,10 @@ const wa = whatsappUrl(
   .ipdp__notes li { border: 1px solid var(--color-border); border-radius: 1rem; padding: 1rem; }
   .ipdp__notes h3 { margin: 0 0 0.35rem; font-size: 1rem; }
   .ipdp__notes p { margin: 0; color: var(--color-fg-muted); font-size: var(--text-sm); }
-  .ipdp__acc { border: 1px solid var(--color-border); border-radius: 0.75rem; padding: 0.75rem 1rem; margin-bottom: 0.5rem; }
-  .ipdp__acc summary { cursor: pointer; font-weight: 600; }
-  .ipdp__acc table { width: 100%; margin-top: 0.75rem; border-collapse: collapse; font-size: var(--text-sm); }
-  .ipdp__acc th, .ipdp__acc td { text-align: left; padding: 0.35rem 0; border-bottom: 1px solid var(--color-border); vertical-align: top; }
+  .ipdp__acc { border: 1px solid var(--color-border); border-radius: 0.65rem; padding: 0.25rem 0.7rem; margin-bottom: 0.35rem; }
+  .ipdp__acc summary { cursor: pointer; font-weight: 600; font-size: 0.92rem; padding: 0.4rem 0; }
+  .ipdp__acc table { width: 100%; margin-top: 0.35rem; border-collapse: collapse; font-size: var(--text-sm); }
+  .ipdp__acc th, .ipdp__acc td { text-align: left; padding: 0.25rem 0; border-bottom: 1px solid var(--color-border); vertical-align: top; }
   .ipdp__acc th { width: 35%; color: var(--color-fg-muted); font-weight: 500; }
   .ipdp__related { display: grid; gap: 1rem; }
   @media (min-width: 48rem) { .ipdp__related { grid-template-columns: repeat(3, minmax(0, 1fr)); } }

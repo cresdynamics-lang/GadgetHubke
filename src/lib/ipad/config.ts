@@ -21,7 +21,7 @@ export const ipadConfig = {
   nanoTextureStepKes: 12000,
 
   lipa: {
-    depositMinPct: 20,
+    depositMinPct: 40,
     depositMaxPct: 60,
     depositStepPct: 5,
     depositDefaultPct: 40,

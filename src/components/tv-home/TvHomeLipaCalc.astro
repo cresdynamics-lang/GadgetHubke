@@ -25,6 +25,7 @@ const start = lipaMonthly(initial.base, cfg.depositDefaultPct, cfg.monthsDefault
   <label>
     Deposit <span data-tvhome-lipa-dep-label>{cfg.depositDefaultPct}%</span>
     <input type="range" min={cfg.depositMinPct} max={cfg.depositMaxPct} step={cfg.depositStepPct} value={cfg.depositDefaultPct} data-tvhome-lipa-deposit />
+    <span class="tvhome-lipa__hint">Minimum deposit is {cfg.depositMinPct}%.</span>
   </label>
   <div class="tvhome-lipa__months" role="group" aria-label="Months">
     {cfg.monthOptions.map((m) => (
@@ -83,4 +84,12 @@ const start = lipaMonthly(initial.base, cfg.depositDefaultPct, cfg.monthsDefault
   .tvhome-lipa__months button.is-active { background: #000; color: #fff; border-color: #000; }
   .tvhome-lipa__result p { margin: 0.15rem 0; }
   .tvhome-lipa__result span { font-size: 1.35rem; font-weight: 700; }
+  .tvhome-lipa__hint {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 0;
+    color: #6e6e73;
+  }
 </style>
