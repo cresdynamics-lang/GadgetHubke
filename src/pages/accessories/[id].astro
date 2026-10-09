@@ -258,7 +258,8 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
         >
           Add to Cart
         </button>
-        <a class="btn btn--secondary" href={wa} rel="noopener" data-pdp-buy data-wa-link>Ask on WhatsApp</a>
+        <button type="button" class="btn btn--primary" data-buy-now-checkout data-pdp-buy>Buy now</button>
+        <a class="btn btn--whatsapp" href={wa} rel="noopener" data-wa-link>Ask on WhatsApp</a>
       </div>
       <div class="xpdp__tiles">
         <div><strong>Connection</strong><span>{product.connection}</span></div>
@@ -405,24 +406,36 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
     });
   });
 
+  function accessoryLine(el) {
+    if (!(el instanceof HTMLElement)) return null;
+    return {
+      id: el.dataset.id,
+      name: el.dataset.name,
+      colour: el.dataset.colour,
+      kes: Number(el.dataset.kes),
+      image: el.dataset.image,
+      connector: el.dataset.connector || null,
+      partNumber: el.dataset.part || null,
+      kind: "accessory",
+      href: location.pathname,
+      qty: 1,
+    };
+  }
+
   document.querySelectorAll("[data-accessory-bag]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const el = btn as HTMLElement;
-      window.dispatchEvent(
-        new CustomEvent("gh:bag-add", {
-          detail: {
-            id: el.dataset.id,
-            name: el.dataset.name,
-            colour: el.dataset.colour,
-            kes: Number(el.dataset.kes),
-            image: el.dataset.image,
-            group: el.dataset.group,
-            connector: el.dataset.connector || null,
-            partNumber: el.dataset.part || null,
-            kind: "accessory",
-          },
-        }),
-      );
+      const detail = accessoryLine(btn);
+      if (detail) window.dispatchEvent(new CustomEvent("gh:bag-add", { detail }));
+    });
+  });
+
+  document.querySelectorAll("[data-buy-now-checkout]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const source = document.querySelector("[data-accessory-bag]");
+      const detail = accessoryLine(source);
+      if (!detail) return;
+      sessionStorage.setItem("gh-checkout-express", JSON.stringify([detail]));
+      location.href = "/checkout?mode=buy-now";
     });
   });
 
@@ -681,9 +694,14 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
   }
   .xpdp-sibs__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 0.75rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
     margin: 0.65rem 0;
+  }
+  @media (min-width: 48rem) {
+    .xpdp-sibs__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
   }
   .flag {
     font-size: 0.7rem;

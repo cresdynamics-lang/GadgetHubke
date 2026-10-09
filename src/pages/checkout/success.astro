@@ -1,0 +1,107 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { site, whatsappUrl } from "../../lib/site";
+
+const orderId = Astro.url.searchParams.get("order") || "";
+const wa = whatsappUrl(
+  orderId
+    ? `Hi Gadget Hub - I paid for order ${orderId}. Please confirm.`
+    : "Hi Gadget Hub - I just checked out and need help.",
+);
+---
+
+<BaseLayout
+  title="Order confirmed - GadgetHub"
+  description="Payment received via Stanbic Bank. We’ll confirm your order shortly."
+>
+  <section class="ok container" data-success data-order-id={orderId}>
+    <p class="ok__eyebrow">Thank you</p>
+    <h1>Payment received</h1>
+    <p class="ok__lede">
+      Payment via Stanbic Bank · M-Pesa or card. We'll follow up on WhatsApp or email for pickup / delivery.
+    </p>
+    <p class="ok__meta" data-success-meta>Loading order…</p>
+    <div class="ok__actions">
+      <a class="btn btn--primary" href="/shop">Continue shopping</a>
+      <a class="btn btn--whatsapp" href={wa} target="_blank" rel="noopener noreferrer">WhatsApp help</a>
+      <a class="btn btn--secondary" href="/account">Account</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { formatKes } from "../../lib/checkout/bag";
+  import { RECENT_ORDER_KEY } from "../../lib/checkout/types";
+
+  const root = document.querySelector("[data-success]");
+  const meta = document.querySelector("[data-success-meta]");
+  const orderId =
+    root?.getAttribute("data-order-id") ||
+    new URLSearchParams(location.search).get("order") ||
+    localStorage.getItem(RECENT_ORDER_KEY) ||
+    "";
+
+  async function load() {
+    if (!orderId) {
+      if (meta) meta.textContent = "No order id found. Check your email or WhatsApp us.";
+      return;
+    }
+    localStorage.setItem(RECENT_ORDER_KEY, orderId);
+    try {
+      const res = await fetch(`/api/checkout/order?id=${encodeURIComponent(orderId)}`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Order not found");
+      const o = data.order;
+      if (meta) {
+        meta.textContent = [
+          `Order ${o.id}`,
+          o.status === "paid" ? "Paid" : o.status,
+          formatKes(o.subtotalKes),
+          o.paymentMethod === "card" ? "Card" : o.paymentMethod === "mpesa" ? "M-Pesa" : "",
+          o.customer?.fulfillment === "delivery" ? "Delivery" : "Pickup",
+          o.mock ? "Sandbox" : "",
+        ]
+          .filter(Boolean)
+          .join(" · ");
+      }
+    } catch {
+      if (meta) meta.textContent = `Order ${orderId} - we'll confirm shortly.`;
+    }
+  }
+
+  load();
+</script>
+
+<style>
+  .ok {
+    padding-block: var(--space-10) calc(var(--space-12) + var(--fab-clearance));
+    max-width: 32rem;
+  }
+
+  .ok__eyebrow {
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+  }
+
+  .ok h1 {
+    margin: 0 0 var(--space-2);
+    letter-spacing: -0.03em;
+  }
+
+  .ok__lede,
+  .ok__meta {
+    color: var(--color-fg-muted);
+    font-size: var(--text-sm);
+  }
+
+  .ok__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-top: var(--space-6);
+  }
+</style>

@@ -174,16 +174,9 @@ const lipaFrom =
           >
             Add to Cart
           </button>
-          <a
-            class="btn btn--primary"
-            data-buy-now
-            data-pdp-buy
-            href={waBase}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <button type="button" class="btn btn--primary" data-buy-now data-pdp-buy data-buy-now-checkout>
             Buy now
-          </a>
+          </button>
           <a class="btn btn--secondary" href="/trade-in">Trade In</a>
         </div>
         <p class="pdp__specs-link">
@@ -259,15 +252,9 @@ const lipaFrom =
         <a class="btn btn--secondary" href="#experience">How it feels</a>
         <a class="btn btn--secondary" href={product.specsHref}>Tech Specs</a>
         <a class="btn btn--primary" href="#buy">Buy on GadgetHub</a>
-        <a
-          class="btn btn--primary"
-          data-buy-now
-          href={waBase}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Buy
-        </a>
+        <button type="button" class="btn btn--primary" data-buy-now data-buy-now-checkout>
+          Buy now
+        </button>
         {
           product.related ? (
             <a class="btn btn--secondary" href={product.related.href}>
@@ -286,9 +273,7 @@ const lipaFrom =
       </p>
       <div class="pdp__actions" data-pdp-cta>
         <button type="button" class="btn btn--primary" data-add-cart data-pdp-cart>Add to Cart</button>
-        <a class="btn btn--primary" data-buy-now data-pdp-buy href={waBase} target="_blank" rel="noopener noreferrer">
-          Buy now
-        </a>
+        <button type="button" class="btn btn--primary" data-buy-now data-pdp-buy data-buy-now-checkout>Buy now</button>
         <a class="btn btn--secondary" href="/trade-in">Trade In</a>
       </div>
     </section>
@@ -312,7 +297,6 @@ const lipaFrom =
   const root = document.querySelector("[data-configurator]");
   if (!root) throw new Error("configurator missing");
 
-  const CART_KEY = "gh-cart";
   const lipaMonths = Number(root.getAttribute("data-lipa-months") || 0);
   let channel = root.getAttribute("data-channel") || "new";
 
@@ -354,19 +338,25 @@ const lipaFrom =
     if (stickyPrice) stickyPrice.textContent = configLine;
     if (floatDesc) floatDesc.textContent = configLine;
 
-    const msg = [
-      "Hi GadgetHub - I'd like to buy",
-      "",
-      `Product: ${productName}`,
-      `Stock: ${channelLabel}`,
-      `Storage: ${storageLabel}`,
-      `Finish: ${colorLabel}`,
-      `Price: ${formatKes(priceKes)}`,
-    ].join("\n");
-    const href = `${waBase}?text=${encodeURIComponent(msg)}`;
-    document.querySelectorAll("[data-buy-now]").forEach((el) => {
-      if (el instanceof HTMLAnchorElement) el.href = href;
-    });
+  }
+
+  function buyNowCheckout() {
+    const cfg = selected();
+    const mainImg = document.querySelector("[data-gallery-main]");
+    const image = mainImg instanceof HTMLImageElement ? mainImg.src : "";
+    const line = {
+      id: `${productId}-${cfg.channel}`,
+      name: productName,
+      colour: cfg.colorLabel,
+      storage: cfg.storageLabel,
+      channel: cfg.channelLabel,
+      kes: cfg.priceKes,
+      image,
+      href: location.pathname,
+      qty: 1,
+    };
+    sessionStorage.setItem("gh-checkout-express", JSON.stringify([line]));
+    location.href = "/checkout?mode=buy-now";
   }
 
   root.querySelectorAll("[data-stock-channel] [data-channel]").forEach((btn) => {
@@ -385,32 +375,22 @@ const lipaFrom =
 
   function addToCart() {
     const cfg = selected();
-    let cart = [];
-    try {
-      cart = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
-      if (!Array.isArray(cart)) cart = [];
-    } catch {
-      cart = [];
-    }
-    const lineId = `${productId}-${cfg.storageId}-${cfg.colorId}-${cfg.channel}`;
-    const existing = cart.find((l) => l.id === lineId);
-    if (existing) existing.qty += 1;
-    else {
-      cart.push({
-        id: lineId,
-        productId,
-        name: productName,
-        storage: cfg.storageLabel,
-        color: cfg.colorLabel,
-        channel: cfg.channelLabel,
-        priceKes: cfg.priceKes,
-        qty: 1,
-        href: location.pathname,
-      });
-    }
-    localStorage.setItem(CART_KEY, JSON.stringify(cart));
-    window.dispatchEvent(new CustomEvent("gh:cart", { detail: { cart } }));
-    window.location.href = "/cart";
+    const mainImg = document.querySelector("[data-gallery-main]");
+    const image = mainImg instanceof HTMLImageElement ? mainImg.src : "";
+    window.dispatchEvent(
+      new CustomEvent("gh:bag-add", {
+        detail: {
+          id: `${productId}-${cfg.channel}`,
+          name: productName,
+          colour: cfg.colorLabel,
+          storage: cfg.storageLabel,
+          channel: cfg.channelLabel,
+          kes: cfg.priceKes,
+          image,
+          href: location.pathname,
+        },
+      }),
+    );
   }
 
   const gallery = document.querySelector("[data-gallery]");
@@ -434,6 +414,13 @@ const lipaFrom =
 
   document.querySelectorAll("[data-add-cart], [data-add-cart-sticky]").forEach((btn) => {
     btn.addEventListener("click", addToCart);
+  });
+
+  document.querySelectorAll("[data-buy-now-checkout]").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      buyNowCheckout();
+    });
   });
 
   gallery?.querySelectorAll("[data-gallery-thumb]").forEach((btn) => {

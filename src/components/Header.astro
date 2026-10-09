@@ -162,13 +162,38 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
           <path d="M16.5 16.5 20 20" stroke-linecap="round" />
         </svg>
       </button>
-      <a class="site-header__icon" href="/account" aria-label="Account">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
-          <circle cx="12" cy="8" r="3.25" />
-          <path d="M5.5 19.25c1.6-3 4-4.5 6.5-4.5s4.9 1.5 6.5 4.5" stroke-linecap="round" />
-        </svg>
-      </a>
-      <button type="button" class="site-header__icon site-header__bag" data-bag-open aria-label="Open bag">
+      <div class="site-header__account" data-account-menu>
+        <button
+          type="button"
+          class="site-header__icon"
+          data-account-trigger
+          aria-label="Account"
+          aria-expanded="false"
+          aria-haspopup="true"
+          aria-controls="account-menu"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+            <circle cx="12" cy="8" r="3.25" />
+            <path d="M5.5 19.25c1.6-3 4-4.5 6.5-4.5s4.9 1.5 6.5 4.5" stroke-linecap="round" />
+          </svg>
+        </button>
+        <div class="account-menu" id="account-menu" data-account-panel hidden>
+          <p class="account-menu__title" data-account-menu-title>Account</p>
+          <div data-account-menu-guest>
+            <a href="/account">Sign in</a>
+            <a href="/account?tab=create">Create account</a>
+            <a href="/account?tab=forgot">Forgot password</a>
+            <a href="/track-order">Track order</a>
+          </div>
+          <div data-account-menu-user hidden>
+            <a href="/account">My account</a>
+            <a href="/track-order">Orders</a>
+            <a href="/lipa-mdogo-mdogo">Lipa plans</a>
+            <button type="button" data-account-menu-signout>Sign out</button>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="site-header__icon site-header__bag" data-bag-open aria-label="Open cart">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
           <path d="M3.5 5h1.6l1.2 11.2a1.5 1.5 0 0 0 1.5 1.3h9.4a1.5 1.5 0 0 0 1.5-1.3L20 8.5H7" stroke-linecap="round" stroke-linejoin="round" />
           <circle cx="9.5" cy="20" r="1.25" fill="currentColor" stroke="none" />
@@ -531,6 +556,15 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
           ))
         }
         <li class="mobile-nav__item">
+          <a class="mobile-nav__link" href="/account">Sign in</a>
+        </li>
+        <li class="mobile-nav__item">
+          <a class="mobile-nav__link" href="/account?tab=create">Create account</a>
+        </li>
+        <li class="mobile-nav__item">
+          <a class="mobile-nav__link" href="/track-order">Track order</a>
+        </li>
+        <li class="mobile-nav__item">
           <a class="mobile-nav__link" href="/support">Support</a>
         </li>
       </ul>
@@ -774,6 +808,60 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
   .site-header__icon:hover {
     background: rgba(255, 255, 255, 0.1);
     color: var(--color-white);
+  }
+
+  .site-header__account {
+    position: relative;
+  }
+
+  .account-menu {
+    position: absolute;
+    top: calc(100% + 0.35rem);
+    right: 0;
+    z-index: 80;
+    min-width: 11.5rem;
+    padding: 0.55rem;
+    border-radius: 0.85rem;
+    background: var(--color-white);
+    color: var(--color-fg);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 12px 32px rgb(0 0 0 / 0.16);
+  }
+
+  .account-menu[hidden] {
+    display: none;
+  }
+
+  .account-menu__title {
+    margin: 0 0 0.35rem;
+    padding: 0.2rem 0.45rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+  }
+
+  .account-menu a,
+  .account-menu button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    border: none;
+    background: transparent;
+    padding: 0.5rem 0.55rem;
+    border-radius: 0.5rem;
+    font: inherit;
+    font-size: 0.88rem;
+    color: var(--color-fg);
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .account-menu a:hover,
+  .account-menu button:hover {
+    background: var(--color-stage);
+    color: var(--color-fg);
   }
 
   .site-header__menu-btn {
@@ -1147,8 +1235,75 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
       if (e.key === "Escape") {
         closeAll();
         closeMobile();
+        closeAccountMenu();
       }
     });
+
+    const accountWrap = header.querySelector("[data-account-menu]");
+    const accountTrigger = header.querySelector("[data-account-trigger]");
+    const accountPanel = header.querySelector("[data-account-panel]");
+    const accountGuest = header.querySelector("[data-account-menu-guest]");
+    const accountUser = header.querySelector("[data-account-menu-user]");
+    const accountTitle = header.querySelector("[data-account-menu-title]");
+
+    function accountSession() {
+      try {
+        const raw = localStorage.getItem("gh-account");
+        return raw ? JSON.parse(raw) : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function syncAccountMenu() {
+      const session = accountSession();
+      const signedIn = Boolean(session?.email);
+      accountGuest?.toggleAttribute("hidden", signedIn);
+      accountUser?.toggleAttribute("hidden", !signedIn);
+      if (accountTitle) {
+        accountTitle.textContent = signedIn
+          ? `Hi, ${session.name || session.email.split("@")[0] || "there"}`
+          : "Account";
+      }
+      accountTrigger?.setAttribute(
+        "aria-label",
+        signedIn ? "Account menu" : "Sign in or create account",
+      );
+    }
+
+    function closeAccountMenu() {
+      accountPanel?.setAttribute("hidden", "");
+      accountTrigger?.setAttribute("aria-expanded", "false");
+    }
+
+    function openAccountMenu() {
+      closeAll();
+      syncAccountMenu();
+      accountPanel?.removeAttribute("hidden");
+      accountTrigger?.setAttribute("aria-expanded", "true");
+    }
+
+    accountTrigger?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const open = accountTrigger.getAttribute("aria-expanded") === "true";
+      if (open) closeAccountMenu();
+      else openAccountMenu();
+    });
+
+    header.querySelector("[data-account-menu-signout]")?.addEventListener("click", () => {
+      localStorage.removeItem("gh-account");
+      syncAccountMenu();
+      closeAccountMenu();
+      if (window.location.pathname.startsWith("/account")) window.location.reload();
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!(e.target instanceof Node)) return;
+      if (accountWrap?.contains(e.target)) return;
+      closeAccountMenu();
+    });
+
+    syncAccountMenu();
   }
 
   setupHeader();

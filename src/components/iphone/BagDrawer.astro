@@ -7,15 +7,15 @@ import { iphoneConfig } from "../../lib/iphone/config";
 const waPhone = iphoneConfig.whatsapp;
 ---
 
-<dialog class="bag" data-bag-drawer aria-label="Bag">
+<dialog class="bag" data-bag-drawer aria-label="Cart">
   <div class="bag__panel">
     <header class="bag__head">
-      <h2>Bag</h2>
-      <button type="button" class="bag__close" data-bag-close aria-label="Close bag">Close</button>
+      <h2>Cart</h2>
+      <button type="button" class="bag__close" data-bag-close aria-label="Close cart">Close</button>
     </header>
-    <p class="bag__note">Checkout, M-Pesa and delivery come in the next phase. Order on WhatsApp for now.</p>
+    <p class="bag__note">Checkout with Stanbic. M-Pesa STK or card. WhatsApp help stays available.</p>
     <div class="bag__empty" data-bag-empty>
-      <p>Your bag is empty.</p>
+      <p>Your cart is empty.</p>
       <a class="btn btn--primary btn--sm" href="/iphone">Shop iPhone</a>
       <a class="btn btn--secondary btn--sm" href="/mac">Shop Mac</a>
       <a class="btn btn--secondary btn--sm" href="/ipad">Shop iPad</a>
@@ -26,8 +26,9 @@ const waPhone = iphoneConfig.whatsapp;
     <ul class="bag__list" data-bag-list hidden></ul>
     <footer class="bag__foot" data-bag-foot hidden>
       <p class="bag__total">Total <strong data-bag-total></strong></p>
-      <a class="btn btn--whatsapp" data-bag-wa href="#" target="_blank" rel="noopener noreferrer">
-        Order on WhatsApp
+      <a class="btn btn--primary" data-bag-checkout href="/checkout">Checkout</a>
+      <a class="btn btn--whatsapp btn--sm" data-bag-wa href="#" target="_blank" rel="noopener noreferrer">
+        Need help on WhatsApp
       </a>
     </footer>
   </div>
@@ -36,7 +37,8 @@ const waPhone = iphoneConfig.whatsapp;
 <div class="bag-toast" data-bag-toast hidden role="status"></div>
 
 <script define:vars={{ waPhone }}>
-  const KEY = "gh-iphone-bag";
+  const KEY = "gh-bag";
+  const LEGACY_KEYS = ["gh-iphone-bag", "gh-cart"];
   const drawer = document.querySelector("[data-bag-drawer]");
   const list = document.querySelector("[data-bag-list]");
   const empty = document.querySelector("[data-bag-empty]");
@@ -46,18 +48,102 @@ const waPhone = iphoneConfig.whatsapp;
   const toast = document.querySelector("[data-bag-toast]");
   const badge = document.querySelector("[data-bag-badge]");
 
-  function read() {
+  function normalizeItem(raw) {
+    if (!raw || typeof raw !== "object") return null;
+    const kes = Number(raw.kes ?? raw.priceKes ?? 0) || 0;
+    const qty = Math.max(1, Number(raw.qty) || 1);
+    const id = String(raw.id || raw.productId || "");
+    if (!id && !raw.name) return null;
+    return {
+      id: id || String(raw.name),
+      name: String(raw.name || "Item"),
+      colour: raw.colour || raw.color || "",
+      storage: raw.storage || "",
+      chip: raw.chip || "",
+      memory: raw.memory || "",
+      size: raw.size || "",
+      material: raw.material || "",
+      connectivity: raw.connectivity || "",
+      connector: raw.connector || null,
+      partNumber: raw.partNumber || null,
+      caseOption: raw.caseOption || "",
+      pair: raw.pair || "",
+      band: raw.band || "",
+      extras: raw.extras || "",
+      deviceFor: raw.deviceFor || null,
+      kind: raw.kind || null,
+      channel: raw.channel || raw.channelLabel || "",
+      kes,
+      image: raw.image || "",
+      href: raw.href || "",
+      qty,
+    };
+  }
+
+  function lineKey(item) {
+    return [
+      item.id,
+      item.colour,
+      item.storage,
+      item.chip || "",
+      item.memory || "",
+      item.size || "",
+      item.material || "",
+      item.connectivity || "",
+      item.connector || "",
+      item.partNumber || "",
+      item.caseOption || "",
+      item.pair || "",
+      item.band || "",
+      item.extras || "",
+      item.deviceFor || "",
+      item.channel || "",
+    ].join("|");
+  }
+
+  function mergeLists(...lists) {
+    const map = new Map();
+    for (const listItems of lists) {
+      for (const raw of listItems) {
+        const item = normalizeItem(raw);
+        if (!item) continue;
+        const key = lineKey(item);
+        const prev = map.get(key);
+        if (prev) prev.qty += item.qty;
+        else map.set(key, item);
+      }
+    }
+    return [...map.values()];
+  }
+
+  function readRaw(key) {
     try {
-      const raw = JSON.parse(localStorage.getItem(KEY) || "[]");
+      const raw = JSON.parse(localStorage.getItem(key) || "[]");
       return Array.isArray(raw) ? raw : [];
     } catch {
       return [];
     }
   }
 
+  function read() {
+    const primary = readRaw(KEY);
+    const legacy = LEGACY_KEYS.flatMap((k) => readRaw(k));
+    const merged = mergeLists(primary, legacy);
+    if (legacy.length && merged.length) {
+      try {
+        localStorage.setItem(KEY, JSON.stringify(merged));
+        for (const k of LEGACY_KEYS) localStorage.removeItem(k);
+      } catch {
+        /* ignore */
+      }
+    }
+    return merged;
+  }
+
   function write(items) {
     try {
       localStorage.setItem(KEY, JSON.stringify(items));
+      for (const k of LEGACY_KEYS) localStorage.removeItem(k);
     } catch {
       /* ignore quota */
     }
@@ -169,52 +255,40 @@ const waPhone = iphoneConfig.whatsapp;
   });
 
   document.querySelector("[data-bag-close]")?.addEventListener("click", closeBag);
+  document.querySelector("[data-bag-checkout]")?.addEventListener("click", () => {
+    closeBag();
+  });
   drawer?.addEventListener("click", (e) => {
     if (e.target === drawer) closeBag();
   });
 
   window.addEventListener("gh:bag-add", (e) => {
     const detail = e.detail || {};
-    const key = `${detail.id}|${detail.colour}|${detail.storage}|${detail.chip || ""}|${detail.memory || ""}|${detail.size || ""}|${detail.material || ""}|${detail.connectivity || ""}|${detail.connector || ""}|${detail.partNumber || ""}|${detail.caseOption || ""}|${detail.pair || ""}|${detail.band || ""}|${detail.extras || ""}|${detail.deviceFor || ""}`;
+    const incoming = normalizeItem({ ...detail, qty: 1 });
+    if (!incoming) return;
+    const key = lineKey(incoming);
     const items = read();
-    const existing = items.find(
-      (i) =>
-        `${i.id}|${i.colour}|${i.storage}|${i.chip || ""}|${i.memory || ""}|${i.size || ""}|${i.material || ""}|${i.connectivity || ""}|${i.connector || ""}|${i.partNumber || ""}|${i.caseOption || ""}|${i.pair || ""}|${i.band || ""}|${i.extras || ""}|${i.deviceFor || ""}` ===
-        key,
-    );
+    const existing = items.find((i) => lineKey(i) === key);
     if (existing) existing.qty = (existing.qty || 1) + 1;
-    else
-      items.push({
-        id: detail.id,
-        name: detail.name,
-        colour: detail.colour,
-        storage: detail.storage,
-        chip: detail.chip,
-        memory: detail.memory,
-        size: detail.size,
-        material: detail.material,
-        connectivity: detail.connectivity,
-        connector: detail.connector || null,
-        partNumber: detail.partNumber || null,
-        caseOption: detail.caseOption,
-        pair: detail.pair,
-        band: detail.band,
-        extras: detail.extras,
-        deviceFor: detail.deviceFor || null,
-        kind: detail.kind || null,
-        kes: detail.kes,
-        image: detail.image,
-        qty: 1,
-      });
+    else items.push(incoming);
     write(items);
-    showToast("Added to bag");
+    showToast("Added to cart");
     openBag();
+  });
+
+  window.addEventListener("gh:cart", () => {
+    render();
   });
 
   render();
 </script>
 
 <style>
+  /* Explicit display rules override the [hidden] UA stylesheet - restore it. */
+  .bag [hidden] {
+    display: none !important;
+  }
+
   .bag {
     margin: 0 0 0 auto;
     width: min(100%, 26.25rem);

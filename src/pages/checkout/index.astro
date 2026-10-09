@@ -1,0 +1,587 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { site } from "../../lib/site";
+---
+
+<BaseLayout
+  title="Checkout - GadgetHub"
+  description={`Pay securely via Stanbic Bank. M-Pesa STK or card. ${site.address}.`}
+>
+  <section class="checkout container" data-checkout>
+    <header class="checkout__intro">
+      <p class="checkout__eyebrow">Checkout</p>
+      <h1 data-checkout-title>Review cart</h1>
+      <p class="checkout__lede" data-checkout-lede>
+        Sample prices. Payment via Stanbic Bank. M-Pesa or card.
+      </p>
+    </header>
+
+    <ol class="checkout__steps" aria-label="Checkout steps">
+      <li data-step-dot="review" class="is-active">1. Review</li>
+      <li data-step-dot="details">2. Details</li>
+      <li data-step-dot="pay">3. Pay</li>
+    </ol>
+
+    <div class="checkout__empty" data-checkout-empty hidden>
+      <p>Your cart is empty.</p>
+      <a class="btn btn--primary" href="/shop">Continue shopping</a>
+    </div>
+
+    <div data-checkout-flow>
+      <!-- Review -->
+      <div class="checkout__panel" data-panel="review">
+        <ul class="checkout__lines" data-checkout-lines></ul>
+        <p class="checkout__total">Total <strong data-checkout-total></strong></p>
+        <div class="checkout__actions">
+          <a class="btn btn--secondary" href="/shop">Keep shopping</a>
+          <button type="button" class="btn btn--primary" data-next="details">Continue</button>
+        </div>
+      </div>
+
+      <!-- Details -->
+      <form class="checkout__panel" data-panel="details" hidden>
+        <label class="checkout__field">
+          <span>Full name</span>
+          <input type="text" name="name" required autocomplete="name" placeholder="Your name" />
+        </label>
+        <label class="checkout__field">
+          <span>Phone</span>
+          <input type="tel" name="phone" required autocomplete="tel" placeholder="07XX XXX XXX" />
+        </label>
+        <label class="checkout__field">
+          <span>Email</span>
+          <input type="email" name="email" required autocomplete="email" placeholder="you@email.com" />
+        </label>
+        <fieldset class="checkout__fulfill">
+          <legend>Fulfillment</legend>
+          <label>
+            <input type="radio" name="fulfillment" value="pickup" checked />
+            Pickup · {site.address}
+          </label>
+          <label>
+            <input type="radio" name="fulfillment" value="delivery" />
+            Delivery · Nairobi (fee confirmed after payment)
+          </label>
+        </fieldset>
+        <label class="checkout__field">
+          <span>Notes (optional)</span>
+          <textarea name="notes" rows="2" placeholder="Landmark, preferred pickup time…"></textarea>
+        </label>
+        <p class="checkout__error" data-details-error hidden></p>
+        <div class="checkout__actions">
+          <button type="button" class="btn btn--secondary" data-next="review">Back</button>
+          <button type="submit" class="btn btn--primary">Continue to pay</button>
+        </div>
+      </form>
+
+      <!-- Pay -->
+      <div class="checkout__panel" data-panel="pay" hidden>
+        <p class="checkout__pay-total">Pay <strong data-pay-total></strong></p>
+        <p class="checkout__hint">Order <span data-order-id></span> · Stanbic Bank</p>
+
+        <div class="checkout__methods" role="radiogroup" aria-label="Payment method">
+          <label class="checkout__method is-active">
+            <input type="radio" name="method" value="mpesa" checked />
+            <span>
+              <strong>M-Pesa</strong>
+              <em>STK Push on your phone</em>
+            </span>
+          </label>
+          <label class="checkout__method">
+            <input type="radio" name="method" value="card" />
+            <span>
+              <strong>Card</strong>
+              <em>Visa / Mastercard via Stanbic</em>
+            </span>
+          </label>
+        </div>
+
+        <div data-pay-mpesa>
+          <label class="checkout__field">
+            <span>M-Pesa number</span>
+            <input type="tel" name="mpesaPhone" data-mpesa-phone placeholder="07XX XXX XXX" />
+          </label>
+          <button type="button" class="btn btn--whatsapp checkout__pay-btn" data-pay-mpesa-btn>
+            Pay with M-Pesa
+          </button>
+          <p class="checkout__wait" data-mpesa-wait hidden>Check your phone for the M-Pesa prompt…</p>
+        </div>
+
+        <div data-pay-card hidden>
+          <p class="checkout__hint">You will complete payment on Stanbic’s secure page. We never store card numbers.</p>
+          <button type="button" class="btn btn--primary checkout__pay-btn" data-pay-card-btn>
+            Pay with card
+          </button>
+        </div>
+
+        <p class="checkout__error" data-pay-error hidden></p>
+        <div class="checkout__actions">
+          <button type="button" class="btn btn--secondary" data-next="details">Back</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import {
+    bagMetaLine,
+    bagTotal,
+    clearExpressItems,
+    formatKes,
+    readBagFromStorage,
+    readExpressItems,
+    writeBagToStorage,
+  } from "../../lib/checkout/bag";
+  import { RECENT_ORDER_KEY } from "../../lib/checkout/types";
+
+  const root = document.querySelector("[data-checkout]");
+  if (!root) throw new Error("checkout missing");
+
+  const params = new URLSearchParams(location.search);
+  const expressMode = params.get("mode") === "buy-now";
+
+  let items = expressMode ? readExpressItems() : readBagFromStorage();
+  if (expressMode && !items.length) items = readBagFromStorage();
+
+  let orderId = "";
+  let customer = {
+    name: "",
+    phone: "",
+    email: "",
+    fulfillment: "pickup",
+    notes: "",
+  };
+
+  try {
+    const acc = JSON.parse(localStorage.getItem("gh-account") || "null");
+    if (acc?.email) {
+      customer.name = acc.name || "";
+      customer.email = acc.email || "";
+      customer.phone = acc.phone || "";
+    }
+  } catch {
+    /* ignore */
+  }
+
+  const linesEl = root.querySelector("[data-checkout-lines]");
+  const totalEl = root.querySelector("[data-checkout-total]");
+  const payTotalEl = root.querySelector("[data-pay-total]");
+  const emptyEl = root.querySelector("[data-checkout-empty]");
+  const flowEl = root.querySelector("[data-checkout-flow]");
+  const titleEl = root.querySelector("[data-checkout-title]");
+  const ledeEl = root.querySelector("[data-checkout-lede]");
+
+  const titles = {
+    review: "Review cart",
+    details: "Your details",
+    pay: "Pay securely",
+  };
+  const ledes = {
+    review: "Sample prices. Payment via Stanbic Bank. M-Pesa or card.",
+    details: "We'll use these for pickup, delivery updates, and your receipt.",
+    pay: "M-Pesa STK Push or card through Stanbic Bank.",
+  };
+
+  function showPanel(id) {
+    root.querySelectorAll("[data-panel]").forEach((p) => {
+      p.toggleAttribute("hidden", p.getAttribute("data-panel") !== id);
+    });
+    root.querySelectorAll("[data-step-dot]").forEach((d) => {
+      d.classList.toggle("is-active", d.getAttribute("data-step-dot") === id);
+    });
+    if (titleEl) titleEl.textContent = titles[id] || titles.review;
+    if (ledeEl) ledeEl.textContent = ledes[id] || ledes.review;
+  }
+
+  function renderLines() {
+    if (!items.length) {
+      emptyEl?.removeAttribute("hidden");
+      flowEl?.setAttribute("hidden", "");
+      return;
+    }
+    emptyEl?.setAttribute("hidden", "");
+    flowEl?.removeAttribute("hidden");
+    if (linesEl) {
+      linesEl.innerHTML = items
+        .map(
+          (i) => `
+        <li class="checkout__line">
+          ${i.image ? `<img src="${i.image}" alt="" width="56" height="56" />` : `<span class="checkout__ph"></span>`}
+          <div>
+            <strong>${i.name}</strong>
+            <p>${bagMetaLine(i) || "Configured item"}</p>
+            <p>×${i.qty}</p>
+          </div>
+          <span>${formatKes(i.kes * i.qty)}</span>
+        </li>`,
+        )
+        .join("");
+    }
+    const total = formatKes(bagTotal(items));
+    if (totalEl) totalEl.textContent = total;
+    if (payTotalEl) payTotalEl.textContent = total;
+  }
+
+  function fillDetailsForm() {
+    const form = root.querySelector('[data-panel="details"]');
+    if (!(form instanceof HTMLFormElement)) return;
+    form.name.value = customer.name;
+    form.phone.value = customer.phone;
+    form.email.value = customer.email;
+    form.notes.value = customer.notes || "";
+    const radio = form.querySelector(`input[name="fulfillment"][value="${customer.fulfillment}"]`);
+    if (radio instanceof HTMLInputElement) radio.checked = true;
+  }
+
+  root.querySelectorAll("[data-next]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const next = btn.getAttribute("data-next") || "review";
+      if (next === "details") fillDetailsForm();
+      showPanel(next);
+    });
+  });
+
+  root.querySelector('[data-panel="details"]')?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    if (!(form instanceof HTMLFormElement)) return;
+    const err = root.querySelector("[data-details-error]");
+    const fd = new FormData(form);
+    customer = {
+      name: String(fd.get("name") || "").trim(),
+      phone: String(fd.get("phone") || "").trim(),
+      email: String(fd.get("email") || "").trim(),
+      fulfillment: String(fd.get("fulfillment") || "pickup") === "delivery" ? "delivery" : "pickup",
+      notes: String(fd.get("notes") || "").trim(),
+    };
+
+    if (err) err.hidden = true;
+    try {
+      const res = await fetch("/api/checkout/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items, customer }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Could not create order.");
+      orderId = data.order.id;
+      const oid = root.querySelector("[data-order-id]");
+      if (oid) oid.textContent = orderId;
+      const mpesa = root.querySelector("[data-mpesa-phone]");
+      if (mpesa instanceof HTMLInputElement) mpesa.value = customer.phone;
+      localStorage.setItem(RECENT_ORDER_KEY, orderId);
+      showPanel("pay");
+    } catch (ex) {
+      if (err) {
+        err.textContent = ex instanceof Error ? ex.message : "Could not continue.";
+        err.hidden = false;
+      }
+    }
+  });
+
+  function syncMethodUi() {
+    const method = root.querySelector('input[name="method"]:checked')?.value || "mpesa";
+    root.querySelectorAll(".checkout__method").forEach((el) => {
+      const input = el.querySelector('input[name="method"]');
+      el.classList.toggle("is-active", input instanceof HTMLInputElement && input.checked);
+    });
+    root.querySelector("[data-pay-mpesa]")?.toggleAttribute("hidden", method !== "mpesa");
+    root.querySelector("[data-pay-card]")?.toggleAttribute("hidden", method !== "card");
+  }
+
+  root.querySelectorAll('input[name="method"]').forEach((el) => {
+    el.addEventListener("change", syncMethodUi);
+  });
+
+  let pollTimer = null;
+  function stopPoll() {
+    if (pollTimer) {
+      clearInterval(pollTimer);
+      pollTimer = null;
+    }
+  }
+
+  async function pollMpesa() {
+    const wait = root.querySelector("[data-mpesa-wait]");
+    const err = root.querySelector("[data-pay-error]");
+    stopPoll();
+    pollTimer = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/checkout/mpesa/status?orderId=${encodeURIComponent(orderId)}`);
+        const data = await res.json();
+        if (data.status === "paid") {
+          stopPoll();
+          if (!expressMode) writeBagToStorage([]);
+          clearExpressItems();
+          location.href = `/checkout/success?order=${encodeURIComponent(orderId)}`;
+        } else if (data.status === "failed") {
+          stopPoll();
+          if (wait) wait.hidden = true;
+          if (err) {
+            err.textContent = data.order?.error || "Payment failed. Try again.";
+            err.hidden = false;
+          }
+        }
+      } catch {
+        /* keep polling briefly */
+      }
+    }, 1500);
+  }
+
+  root.querySelector("[data-pay-mpesa-btn]")?.addEventListener("click", async () => {
+    const err = root.querySelector("[data-pay-error]");
+    const wait = root.querySelector("[data-mpesa-wait]");
+    const phoneEl = root.querySelector("[data-mpesa-phone]");
+    const mobileNumber = phoneEl instanceof HTMLInputElement ? phoneEl.value.trim() : customer.phone;
+    if (err) err.hidden = true;
+    if (!orderId) {
+      if (err) {
+        err.textContent = "Create the order from details first.";
+        err.hidden = false;
+      }
+      return;
+    }
+    try {
+      const res = await fetch("/api/checkout/mpesa/stk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId, mobileNumber }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "STK failed.");
+      if (wait) {
+        wait.textContent = data.stk?.message || "Check your phone for the M-Pesa prompt…";
+        wait.hidden = false;
+      }
+      await pollMpesa();
+    } catch (ex) {
+      if (err) {
+        err.textContent = ex instanceof Error ? ex.message : "STK failed.";
+        err.hidden = false;
+      }
+    }
+  });
+
+  root.querySelector("[data-pay-card-btn]")?.addEventListener("click", async () => {
+    const err = root.querySelector("[data-pay-error]");
+    if (err) err.hidden = true;
+    if (!orderId) {
+      if (err) {
+        err.textContent = "Create the order from details first.";
+        err.hidden = false;
+      }
+      return;
+    }
+    try {
+      const res = await fetch("/api/checkout/card/session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Card session failed.");
+      if (!expressMode) writeBagToStorage([]);
+      clearExpressItems();
+      const url = data.card?.redirectUrl || `/checkout/success?order=${encodeURIComponent(orderId)}`;
+      location.href = url;
+    } catch (ex) {
+      if (err) {
+        err.textContent = ex instanceof Error ? ex.message : "Card payment failed.";
+        err.hidden = false;
+      }
+    }
+  });
+
+  renderLines();
+  showPanel("review");
+  syncMethodUi();
+</script>
+
+<style>
+  .checkout {
+    padding-block: var(--space-8) calc(var(--space-12) + var(--fab-clearance));
+    max-width: 36rem;
+  }
+
+  .checkout__eyebrow {
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+  }
+
+  .checkout h1 {
+    margin: 0 0 var(--space-2);
+    font-size: clamp(1.6rem, 4vw, 2rem);
+    letter-spacing: -0.03em;
+  }
+
+  .checkout__lede {
+    margin: 0 0 var(--space-5);
+    color: var(--color-fg-muted);
+    font-size: var(--text-sm);
+  }
+
+  .checkout__steps {
+    list-style: none;
+    margin: 0 0 var(--space-5);
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    color: var(--color-fg-muted);
+  }
+
+  .checkout__steps .is-active {
+    color: var(--color-fg);
+    font-weight: 700;
+  }
+
+  .checkout__panel {
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .checkout__lines {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  :global(.checkout__line) {
+    display: grid;
+    grid-template-columns: 3.5rem 1fr auto;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--color-border);
+    align-items: start;
+  }
+
+  :global(.checkout__line img),
+  :global(.checkout__ph) {
+    width: 3.5rem;
+    height: 3.5rem;
+    object-fit: contain;
+    background: var(--color-stage);
+    border-radius: 0.5rem;
+    display: block;
+  }
+
+  :global(.checkout__line strong) {
+    font-size: 0.92rem;
+  }
+
+  :global(.checkout__line p) {
+    margin: 0.15rem 0 0;
+    font-size: 0.75rem;
+    color: var(--color-fg-muted);
+  }
+
+  .checkout__total,
+  .checkout__pay-total {
+    margin: 0;
+    font-size: 1.05rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .checkout__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  .checkout__field {
+    display: grid;
+    gap: 0.35rem;
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+
+  .checkout__field input,
+  .checkout__field textarea {
+    font: inherit;
+    font-weight: 400;
+    border: 1px solid var(--color-border);
+    border-radius: 0.65rem;
+    padding: 0.7rem 0.85rem;
+  }
+
+  .checkout__fulfill {
+    border: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.45rem;
+    font-size: var(--text-sm);
+  }
+
+  .checkout__fulfill legend {
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+  }
+
+  .checkout__fulfill label {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  .checkout__methods {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .checkout__method {
+    display: flex;
+    gap: 0.65rem;
+    align-items: flex-start;
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    padding: 0.75rem 0.85rem;
+    cursor: pointer;
+  }
+
+  .checkout__method.is-active {
+    border-color: var(--color-fg);
+  }
+
+  .checkout__method strong {
+    display: block;
+    font-size: 0.92rem;
+  }
+
+  .checkout__method em {
+    font-style: normal;
+    font-size: 0.75rem;
+    color: var(--color-fg-muted);
+  }
+
+  .checkout__pay-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .checkout__hint,
+  .checkout__wait {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+
+  .checkout__error {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: #b00020;
+  }
+
+  .checkout__empty p {
+    margin: 0 0 var(--space-4);
+    color: var(--color-fg-muted);
+  }
+</style>

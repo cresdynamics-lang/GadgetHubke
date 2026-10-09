@@ -195,7 +195,8 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
           >
             Add to Cart
           </button>
-          <a class="btn btn--whatsapp" data-wa data-pdp-buy href={`https://wa.me/${airpodsConfig.whatsapp}`} target="_blank" rel="noopener noreferrer">
+          <button type="button" class="btn btn--primary" data-buy-now-checkout data-pdp-buy>Buy now</button>
+          <a class="btn btn--whatsapp" data-wa href={`https://wa.me/${airpodsConfig.whatsapp}`} target="_blank" rel="noopener noreferrer">
             Ask on WhatsApp
           </a>
         </div>
@@ -400,21 +401,33 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
     });
   });
 
+  function airpodsLine() {
+    if (!(bag instanceof HTMLElement)) return null;
+    return {
+      id: bag.getAttribute("data-id"),
+      name: bag.getAttribute("data-name"),
+      colour: bag.getAttribute("data-colour"),
+      caseOption: bag.getAttribute("data-case-option"),
+      extras: bag.getAttribute("data-extras") || "",
+      kes: Number(bag.getAttribute("data-kes") || 0),
+      image: bag.getAttribute("data-image"),
+      href: location.pathname,
+      qty: 1,
+    };
+  }
+
   bag?.addEventListener("click", () => {
-    if (!(bag instanceof HTMLElement)) return;
-    window.dispatchEvent(
-      new CustomEvent("gh:bag-add", {
-        detail: {
-          id: bag.getAttribute("data-id"),
-          name: bag.getAttribute("data-name"),
-          colour: bag.getAttribute("data-colour"),
-          caseOption: bag.getAttribute("data-case-option"),
-          extras: bag.getAttribute("data-extras") || "",
-          kes: Number(bag.getAttribute("data-kes") || 0),
-          image: bag.getAttribute("data-image"),
-        },
-      }),
-    );
+    const detail = airpodsLine();
+    if (detail) window.dispatchEvent(new CustomEvent("gh:bag-add", { detail }));
+  });
+
+  document.querySelectorAll("[data-buy-now-checkout]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const detail = airpodsLine();
+      if (!detail) return;
+      sessionStorage.setItem("gh-checkout-express", JSON.stringify([detail]));
+      location.href = "/checkout?mode=buy-now";
+    });
   });
 
   refresh();
@@ -544,10 +557,35 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
   .apdp__acc th { text-align: left; padding-right: 1rem; color: #6e6e73; font-weight: 500; }
   .apdp__notes { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
   .apdp__notes h3 { margin: 0 0 0.25rem; font-size: 1rem; }
-  .apdp__related { display: grid; gap: 1rem; grid-template-columns: minmax(0, 1fr); }
-  @media (min-width: 40rem) { .apdp__related { grid-template-columns: 1fr 1fr; } }
-  .apdp__related a { text-decoration: none; color: inherit; display: grid; gap: 0.35rem; }
-  .apdp__related em { font-style: normal; color: #6e6e73; font-size: var(--text-sm); }
+  .apdp__related {
+    display: grid;
+    gap: 0.55rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (min-width: 48rem) {
+    .apdp__related { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+  .apdp__related a {
+    text-decoration: none;
+    color: inherit;
+    display: grid;
+    gap: 0.25rem;
+    border: 1px solid #d2d2d7;
+    border-radius: 0.75rem;
+    padding: 0.55rem 0.65rem;
+    min-width: 0;
+  }
+  .apdp__related :global(img),
+  .apdp__related :global(picture) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: contain;
+    border-radius: 0.45rem;
+    background: #f5f5f7;
+  }
+  .apdp__related span { font-size: 0.82rem; font-weight: 600; line-height: 1.25; }
+  .apdp__related em { font-style: normal; color: #6e6e73; font-size: 0.72rem; }
   .apdp__tools { display: grid; gap: 1rem; padding-bottom: 2rem; }
   @media (min-width: 40rem) { .apdp__tools { grid-template-columns: 1fr 1fr; } }
 </style>

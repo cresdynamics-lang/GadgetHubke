@@ -49,6 +49,19 @@ const materials = model.materials;
 const heroStart = getWatchImage(model.id, "hero_startframe", model.name);
 const heroEnd = getWatchImage(model.id, "hero_endframe", model.name);
 const showModelHero = model.isNew && !heroStart.fallback && !heroEnd.fallback;
+
+/** Case vs ~24 mm coin — SVG units = millimetres for true proportion. */
+const coinMm = 24;
+const scaleGap = 12;
+const scalePadX = 6;
+const scalePadTop = 6;
+const scaleWatchR = model.defaultCaseMm / 2;
+const scaleCoinR = coinMm / 2;
+const scaleMidY = scalePadTop + Math.max(scaleWatchR, scaleCoinR);
+const scaleWatchCx = scalePadX + scaleWatchR;
+const scaleCoinCx = scaleWatchCx + scaleWatchR + scaleGap + scaleCoinR;
+const scaleVbW = scaleCoinCx + scaleCoinR + scalePadX;
+const scaleVbH = scaleMidY + Math.max(scaleWatchR, scaleCoinR) + 18;
 ---
 
 <BaseLayout title={`${model.name} - GadgetHub`} description={model.tagline}>
@@ -74,11 +87,40 @@ const showModelHero = model.isNew && !heroStart.fallback && !heroEnd.fallback;
         </div>
         <p class="wpdp__fine">Hover to zoom on desktop. Click for lightbox.</p>
 
-        <div class="wpdp__scale" aria-hidden="true">
-          <svg viewBox="0 0 320 80" width="320" height="80">
-            <rect x="20" y="20" width={model.defaultCaseMm * 2.2} height={model.defaultCaseMm * 1.1} rx="12" fill="none" stroke="#1d1d1f" stroke-width="2" />
-            <circle cx="260" cy="40" r="14" fill="none" stroke="#6e6e73" stroke-width="2" />
-            <text x="20" y="72" font-size="11" fill="#6e6e73">{model.defaultCaseMm} mm case vs coin</text>
+        <div
+          class="wpdp__scale"
+          data-scale
+          data-coin-mm={coinMm}
+          aria-label={`${model.defaultCaseMm} mm case next to a coin`}
+        >
+          <svg
+            viewBox={`0 0 ${scaleVbW} ${scaleVbH}`}
+            data-scale-svg
+            role="img"
+            aria-hidden="true"
+            preserveAspectRatio="xMinYMid meet"
+          >
+            <circle
+              data-scale-case
+              cx={scaleWatchCx}
+              cy={scaleMidY}
+              r={scaleWatchR}
+              fill="none"
+              stroke="#1d1d1f"
+              stroke-width="1.6"
+            />
+            <circle
+              data-scale-coin
+              cx={scaleCoinCx}
+              cy={scaleMidY}
+              r={scaleCoinR}
+              fill="none"
+              stroke="#6e6e73"
+              stroke-width="1.4"
+            />
+            <text data-scale-label x={scalePadX} y={scaleVbH - 4} font-size="7.5" fill="#6e6e73">
+              {model.defaultCaseMm} mm case vs coin
+            </text>
           </svg>
         </div>
 
@@ -106,7 +148,7 @@ const showModelHero = model.isNew && !heroStart.fallback && !heroEnd.fallback;
           <legend>Case size</legend>
           <div class="wpdp__opts" data-size>
             {model.caseSizesMm.map((s) => (
-              <button type="button" class="is-active" data-size-val={s}>{s} mm</button>
+              <button type="button" class:list={{ "is-active": s === model.defaultCaseMm }} data-size-val={s}>{s} mm</button>
             ))}
           </div>
         </fieldset>
@@ -191,7 +233,8 @@ const showModelHero = model.isNew && !heroStart.fallback && !heroEnd.fallback;
           >
             Add to Cart
           </button>
-          <a class="btn btn--whatsapp" data-wa data-pdp-buy href={`https://wa.me/${watchConfig.whatsapp}`} target="_blank" rel="noopener noreferrer">
+          <button type="button" class="btn btn--primary" data-buy-now-checkout data-pdp-buy>Buy now</button>
+          <a class="btn btn--whatsapp" data-wa href={`https://wa.me/${watchConfig.whatsapp}`} target="_blank" rel="noopener noreferrer">
             Ask on WhatsApp
           </a>
         </div>
@@ -472,30 +515,79 @@ const showModelHero = model.isNew && !heroStart.fallback && !heroEnd.fallback;
     });
   });
 
+  function syncCaseScale(mm) {
+    const root = document.querySelector("[data-scale]");
+    const svg = document.querySelector("[data-scale-svg]");
+    const caseEl = document.querySelector("[data-scale-case]");
+    const coinEl = document.querySelector("[data-scale-coin]");
+    const label = document.querySelector("[data-scale-label]");
+    if (!(root && svg && caseEl instanceof SVGCircleElement && coinEl instanceof SVGCircleElement)) return;
+    const coin = Number(root.getAttribute("data-coin-mm") || 24);
+    const gap = 12;
+    const padX = 6;
+    const padTop = 6;
+    const watchR = mm / 2;
+    const coinR = coin / 2;
+    const midY = padTop + Math.max(watchR, coinR);
+    const watchCx = padX + watchR;
+    const coinCx = watchCx + watchR + gap + coinR;
+    const vbW = coinCx + coinR + padX;
+    const vbH = midY + Math.max(watchR, coinR) + 18;
+    caseEl.setAttribute("cx", String(watchCx));
+    caseEl.setAttribute("cy", String(midY));
+    caseEl.setAttribute("r", String(watchR));
+    coinEl.setAttribute("cx", String(coinCx));
+    coinEl.setAttribute("cy", String(midY));
+    coinEl.setAttribute("r", String(coinR));
+    svg.setAttribute("viewBox", `0 0 ${vbW} ${vbH}`);
+    if (label) {
+      label.setAttribute("x", String(padX));
+      label.setAttribute("y", String(vbH - 4));
+      label.textContent = `${mm} mm case vs coin`;
+    }
+    root.setAttribute("aria-label", `${mm} mm case next to a coin`);
+  }
+
   document.querySelectorAll("[data-size-val]").forEach((btn) => {
     btn.addEventListener("click", () => {
       document.querySelectorAll("[data-size-val]").forEach((b) => b.classList.remove("is-active"));
       btn.classList.add("is-active");
-      state.size = `${btn.getAttribute("data-size-val")}mm`;
+      const mm = Number(btn.getAttribute("data-size-val") || 0);
+      state.size = `${mm}mm`;
+      if (mm) syncCaseScale(mm);
       refresh();
     });
   });
 
+  function watchLine() {
+    if (!(bag instanceof HTMLElement)) return null;
+    return {
+      id: bag.getAttribute("data-id"),
+      name: bag.getAttribute("data-name"),
+      size: bag.getAttribute("data-size"),
+      material: bag.getAttribute("data-material"),
+      colour: bag.getAttribute("data-colour"),
+      connectivity: bag.getAttribute("data-connectivity"),
+      band: bag.getAttribute("data-band"),
+      kes: Number(bag.getAttribute("data-kes") || 0),
+      image: bag.getAttribute("data-image"),
+      href: location.pathname,
+      qty: 1,
+    };
+  }
+
   bag?.addEventListener("click", () => {
-    if (!(bag instanceof HTMLElement)) return;
-    window.dispatchEvent(new CustomEvent("gh:bag-add", {
-      detail: {
-        id: bag.getAttribute("data-id"),
-        name: bag.getAttribute("data-name"),
-        size: bag.getAttribute("data-size"),
-        material: bag.getAttribute("data-material"),
-        colour: bag.getAttribute("data-colour"),
-        connectivity: bag.getAttribute("data-connectivity"),
-        band: bag.getAttribute("data-band"),
-        kes: Number(bag.getAttribute("data-kes") || 0),
-        image: bag.getAttribute("data-image"),
-      },
-    }));
+    const detail = watchLine();
+    if (detail) window.dispatchEvent(new CustomEvent("gh:bag-add", { detail }));
+  });
+
+  document.querySelectorAll("[data-buy-now-checkout]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const detail = watchLine();
+      if (!detail) return;
+      sessionStorage.setItem("gh-checkout-express", JSON.stringify([detail]));
+      location.href = "/checkout?mode=buy-now";
+    });
   });
 
   // Zoom
@@ -587,8 +679,16 @@ const showModelHero = model.isNew && !heroStart.fallback && !heroEnd.fallback;
   }
   .wpdp__tabs button.is-active { background: #000; color: #fff; }
   .wpdp__fine { font-size: var(--text-sm); color: #6e6e73; }
-  .wpdp__scale { margin-top: 1rem; }
-  .wpdp__wrist { margin-top: 1rem; display: grid; gap: 0.35rem; font-size: var(--text-sm); }
+  .wpdp__scale {
+    margin-top: 0.85rem;
+    max-width: 14.5rem;
+  }
+  .wpdp__scale svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .wpdp__wrist { margin-top: 0.85rem; display: grid; gap: 0.35rem; font-size: var(--text-sm); }
   .wpdp__buy h1 { margin: 0.35rem 0; letter-spacing: -0.03em; font-size: clamp(1.6rem, 3vw, 2.2rem); }
   .wpdp__pills { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0; }
   .wpdp__pills span {

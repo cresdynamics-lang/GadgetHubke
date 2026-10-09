@@ -1,45 +1,532 @@
 ---
+/**
+ * Customer account - Sign in / Create account / Forgot password / dashboard shell.
+ * Session is local until a real auth backend is wired.
+ */
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { site, whatsappUrl } from "../lib/site";
 
 const waHref = whatsappUrl("Hi GadgetHub - account / order help.");
+const tab = Astro.url.searchParams.get("tab") || "signin";
+const initialPanel =
+  tab === "create" || tab === "signup" || tab === "register"
+    ? "create"
+    : tab === "forgot"
+      ? "forgot"
+      : "signin";
 ---
 
 <BaseLayout
   title="Account - GadgetHub"
-  description="Account coming soon. For order help, WhatsApp or visit the shop."
+  description={`Sign in or create a GadgetHub account. Track orders, Lipa plans, and trade-ins. WhatsApp ${site.phoneDisplay}.`}
 >
-  <section class="account container">
-    <h1>Account</h1>
-    <p class="account__lede">
-      Online accounts are coming in a later phase. For now, track and manage
-      orders with us on WhatsApp {site.phoneDisplay}.
-    </p>
-    <div class="account__actions">
-      <a class="btn btn--primary" href={waHref} target="_blank" rel="noopener noreferrer">
-        WhatsApp help
-      </a>
-      <a class="btn btn--secondary" href="/track-order">Track order</a>
-      <a class="btn btn--secondary" href="/shop">Continue shopping</a>
+  <section class="account container" data-account data-initial-panel={initialPanel}>
+    <!-- Guest: auth panels -->
+    <div class="account__guest" data-account-guest>
+      <header class="account__intro">
+        <p class="account__eyebrow">GadgetHub account</p>
+        <h1 data-account-title>Sign in</h1>
+        <p class="account__lede" data-account-lede>
+          Access orders, Lipa Mdogo Mdogo plans, and trade-in quotes.
+        </p>
+      </header>
+
+      <div class="account__tabs" role="tablist" aria-label="Account options">
+        <button type="button" role="tab" data-panel-tab="signin" aria-selected="true">Sign in</button>
+        <button type="button" role="tab" data-panel-tab="create" aria-selected="false">Create account</button>
+        <button type="button" role="tab" data-panel-tab="forgot" aria-selected="false">Forgot password</button>
+      </div>
+
+      <div class="account__panels">
+        <form class="account__panel" data-panel="signin" data-account-form="signin" novalidate>
+          <label class="account__field">
+            <span>Email</span>
+            <input type="email" name="email" autocomplete="username" required placeholder="you@email.com" />
+          </label>
+          <label class="account__field">
+            <span>Password</span>
+            <input type="password" name="password" autocomplete="current-password" required minlength="6" placeholder="Your password" />
+          </label>
+          <p class="account__error" data-form-error hidden></p>
+          <button class="btn btn--primary account__submit" type="submit">Sign in</button>
+          <p class="account__switch">
+            New here?
+            <button type="button" data-goto="create">Create an account</button>
+            ·
+            <button type="button" data-goto="forgot">Forgot password?</button>
+          </p>
+        </form>
+
+        <form class="account__panel" data-panel="create" data-account-form="create" hidden novalidate>
+          <label class="account__field">
+            <span>Full name</span>
+            <input type="text" name="name" autocomplete="name" required placeholder="Your name" />
+          </label>
+          <label class="account__field">
+            <span>Email</span>
+            <input type="email" name="email" autocomplete="email" required placeholder="you@email.com" />
+          </label>
+          <label class="account__field">
+            <span>Phone (Kenya)</span>
+            <input type="tel" name="phone" autocomplete="tel" required placeholder="07XX XXX XXX" />
+          </label>
+          <label class="account__field">
+            <span>Password</span>
+            <input type="password" name="password" autocomplete="new-password" required minlength="6" placeholder="At least 6 characters" />
+          </label>
+          <label class="account__check">
+            <input type="checkbox" name="terms" required />
+            <span>I agree to the <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.</span>
+          </label>
+          <p class="account__error" data-form-error hidden></p>
+          <button class="btn btn--primary account__submit" type="submit">Create account</button>
+          <p class="account__switch">
+            Already have an account?
+            <button type="button" data-goto="signin">Sign in</button>
+          </p>
+        </form>
+
+        <form class="account__panel" data-panel="forgot" data-account-form="forgot" hidden novalidate>
+          <label class="account__field">
+            <span>Email</span>
+            <input type="email" name="email" autocomplete="email" required placeholder="you@email.com" />
+          </label>
+          <p class="account__hint">
+            We will send a reset link when email delivery is connected. For now, WhatsApp us and we will help.
+          </p>
+          <p class="account__error" data-form-error hidden></p>
+          <p class="account__ok" data-form-ok hidden></p>
+          <button class="btn btn--primary account__submit" type="submit">Send reset link</button>
+          <p class="account__switch">
+            <button type="button" data-goto="signin">Back to sign in</button>
+            ·
+            <a href={waHref} target="_blank" rel="noopener noreferrer">WhatsApp help</a>
+          </p>
+        </form>
+      </div>
+
+      <aside class="account__links">
+        <a href="/track-order">Track an order</a>
+        <a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo</a>
+        <a href="/trade-in">Trade-in</a>
+        <a href="/shop">Continue shopping</a>
+      </aside>
+    </div>
+
+    <!-- Signed in -->
+    <div class="account__home" data-account-home hidden>
+      <header class="account__intro">
+        <p class="account__eyebrow">Your account</p>
+        <h1>Hi, <span data-account-name>there</span></h1>
+        <p class="account__lede">
+          Manage orders and plans from here. Full sync with the shop comes next.
+        </p>
+      </header>
+
+      <ul class="account__cards">
+        <li>
+          <a href="/track-order">
+            <strong>Orders</strong>
+            <span>Track delivery and pickup</span>
+          </a>
+        </li>
+        <li>
+          <a href="/lipa-mdogo-mdogo">
+            <strong>Lipa Mdogo Mdogo</strong>
+            <span>View installment plans</span>
+          </a>
+        </li>
+        <li>
+          <a href="/trade-in">
+            <strong>Trade-in</strong>
+            <span>Start or continue a quote</span>
+          </a>
+        </li>
+        <li>
+          <a href={waHref} target="_blank" rel="noopener noreferrer">
+            <strong>WhatsApp help</strong>
+            <span>{site.phoneDisplay}</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="account__profile" data-account-profile>
+        <p><strong>Email</strong> <span data-account-email></span></p>
+        <p data-account-phone-row hidden><strong>Phone</strong> <span data-account-phone></span></p>
+      </div>
+
+      <div class="account__actions">
+        <a class="btn btn--secondary" href="/shop">Continue shopping</a>
+        <button type="button" class="btn btn--secondary" data-account-signout>Sign out</button>
+      </div>
     </div>
   </section>
 </BaseLayout>
 
+<script>
+  const KEY = "gh-account";
+  const root = document.querySelector("[data-account]");
+  if (!root) throw new Error("account root missing");
+
+  const guest = root.querySelector("[data-account-guest]");
+  const home = root.querySelector("[data-account-home]");
+  const titleEl = root.querySelector("[data-account-title]");
+  const ledeEl = root.querySelector("[data-account-lede]");
+
+  const titles = {
+    signin: "Sign in",
+    create: "Create account",
+    forgot: "Reset password",
+  };
+  const ledes = {
+    signin: "Access orders, Lipa Mdogo Mdogo plans, and trade-in quotes.",
+    create: "Save your details for faster checkout and order updates.",
+    forgot: "Enter the email on your account and we will help you get back in.",
+  };
+
+  function readSession() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function writeSession(user) {
+    localStorage.setItem(KEY, JSON.stringify(user));
+  }
+
+  function clearSession() {
+    localStorage.removeItem(KEY);
+  }
+
+  function showPanel(id) {
+    root.querySelectorAll("[data-panel]").forEach((p) => {
+      p.toggleAttribute("hidden", p.getAttribute("data-panel") !== id);
+    });
+    root.querySelectorAll("[data-panel-tab]").forEach((t) => {
+      const on = t.getAttribute("data-panel-tab") === id;
+      t.setAttribute("aria-selected", on ? "true" : "false");
+      t.classList.toggle("is-active", on);
+    });
+    if (titleEl) titleEl.textContent = titles[id] || titles.signin;
+    if (ledeEl) ledeEl.textContent = ledes[id] || ledes.signin;
+    const url = new URL(window.location.href);
+    if (id === "signin") url.searchParams.delete("tab");
+    else url.searchParams.set("tab", id === "create" ? "create" : id);
+    window.history.replaceState({}, "", url);
+  }
+
+  function render() {
+    const session = readSession();
+    if (session?.email) {
+      guest?.setAttribute("hidden", "");
+      home?.removeAttribute("hidden");
+      const name = root.querySelector("[data-account-name]");
+      const email = root.querySelector("[data-account-email]");
+      const phone = root.querySelector("[data-account-phone]");
+      const phoneRow = root.querySelector("[data-account-phone-row]");
+      if (name) name.textContent = session.name || "there";
+      if (email) email.textContent = session.email;
+      if (phone && phoneRow) {
+        if (session.phone) {
+          phone.textContent = session.phone;
+          phoneRow.removeAttribute("hidden");
+        } else {
+          phoneRow.setAttribute("hidden", "");
+        }
+      }
+      document.documentElement.classList.add("account-signed-in");
+      return;
+    }
+    home?.setAttribute("hidden", "");
+    guest?.removeAttribute("hidden");
+    document.documentElement.classList.remove("account-signed-in");
+    const initial = root.getAttribute("data-initial-panel") || "signin";
+    showPanel(initial);
+  }
+
+  root.querySelectorAll("[data-panel-tab]").forEach((btn) => {
+    btn.addEventListener("click", () => showPanel(btn.getAttribute("data-panel-tab") || "signin"));
+  });
+  root.querySelectorAll("[data-goto]").forEach((btn) => {
+    btn.addEventListener("click", () => showPanel(btn.getAttribute("data-goto") || "signin"));
+  });
+
+  root.querySelector("[data-account-form='signin']")?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    if (!(form instanceof HTMLFormElement)) return;
+    const err = form.querySelector("[data-form-error]");
+    const fd = new FormData(form);
+    const email = String(fd.get("email") || "").trim();
+    const password = String(fd.get("password") || "");
+    if (!email || password.length < 6) {
+      if (err) {
+        err.textContent = "Enter a valid email and password (6+ characters).";
+        err.hidden = false;
+      }
+      return;
+    }
+    if (err) err.hidden = true;
+    const existing = readSession();
+    writeSession({
+      email,
+      name: existing?.name || email.split("@")[0],
+      phone: existing?.phone || "",
+      signedInAt: Date.now(),
+    });
+    render();
+  });
+
+  root.querySelector("[data-account-form='create']")?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    if (!(form instanceof HTMLFormElement)) return;
+    const err = form.querySelector("[data-form-error]");
+    const fd = new FormData(form);
+    const name = String(fd.get("name") || "").trim();
+    const email = String(fd.get("email") || "").trim();
+    const phone = String(fd.get("phone") || "").trim();
+    const password = String(fd.get("password") || "");
+    const terms = fd.get("terms");
+    if (!name || !email || !phone || password.length < 6 || !terms) {
+      if (err) {
+        err.textContent = "Fill all fields, accept the terms, and use a password of 6+ characters.";
+        err.hidden = false;
+      }
+      return;
+    }
+    if (err) err.hidden = true;
+    writeSession({ name, email, phone, signedInAt: Date.now() });
+    render();
+  });
+
+  root.querySelector("[data-account-form='forgot']")?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    if (!(form instanceof HTMLFormElement)) return;
+    const err = form.querySelector("[data-form-error]");
+    const ok = form.querySelector("[data-form-ok]");
+    const email = String(new FormData(form).get("email") || "").trim();
+    if (!email.includes("@")) {
+      if (err) {
+        err.textContent = "Enter a valid email address.";
+        err.hidden = false;
+      }
+      if (ok) ok.hidden = true;
+      return;
+    }
+    if (err) err.hidden = true;
+    if (ok) {
+      ok.textContent = `If an account exists for ${email}, we will follow up. Prefer faster help? Message us on WhatsApp.`;
+      ok.hidden = false;
+    }
+  });
+
+  root.querySelector("[data-account-signout]")?.addEventListener("click", () => {
+    clearSession();
+    render();
+    showPanel("signin");
+  });
+
+  render();
+</script>
+
 <style>
   .account {
-    padding-block: var(--space-12) calc(var(--space-16) + var(--fab-clearance));
-    max-width: 36rem;
+    padding-block: var(--space-8) calc(var(--space-12) + var(--fab-clearance));
+    max-width: 28rem;
+  }
+
+  .account__intro {
+    margin-bottom: var(--space-5);
+  }
+
+  .account__eyebrow {
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
   }
 
   .account h1 {
-    font-size: clamp(1.75rem, 5vw, var(--text-3xl));
-    margin-bottom: var(--space-3);
+    margin: 0 0 var(--space-2);
+    font-size: clamp(1.6rem, 4vw, 2rem);
+    letter-spacing: -0.03em;
   }
 
   .account__lede {
+    margin: 0;
     color: var(--color-fg-muted);
-    margin-bottom: var(--space-6);
     line-height: var(--leading-normal);
+    font-size: var(--text-sm);
+  }
+
+  .account__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-bottom: var(--space-4);
+  }
+
+  .account__tabs button {
+    border: 1px solid var(--color-border);
+    background: var(--color-white);
+    border-radius: 999px;
+    padding: 0.4rem 0.85rem;
+    font: inherit;
+    font-size: var(--text-sm);
+    cursor: pointer;
+    color: var(--color-fg);
+  }
+
+  .account__tabs button.is-active,
+  .account__tabs button[aria-selected="true"] {
+    background: var(--color-black);
+    border-color: var(--color-black);
+    color: var(--color-white);
+  }
+
+  .account__panel {
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .account__field {
+    display: grid;
+    gap: 0.35rem;
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+
+  .account__field input {
+    font: inherit;
+    font-weight: 400;
+    border: 1px solid var(--color-border);
+    border-radius: 0.65rem;
+    padding: 0.7rem 0.85rem;
+    background: var(--color-white);
+    color: var(--color-fg);
+  }
+
+  .account__field input:focus {
+    outline: 2px solid var(--color-black);
+    outline-offset: 1px;
+  }
+
+  .account__check {
+    display: flex;
+    gap: 0.55rem;
+    align-items: flex-start;
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+
+  .account__check input {
+    margin-top: 0.2rem;
+  }
+
+  .account__hint {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+
+  .account__error {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: #b00020;
+  }
+
+  .account__ok {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+
+  .account__submit {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .account__switch {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+
+  .account__switch button {
+    border: none;
+    background: none;
+    padding: 0;
+    font: inherit;
+    color: var(--color-fg);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .account__links {
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-border);
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .account__links a {
+    font-size: var(--text-sm);
+    color: var(--color-fg);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  .account__cards {
+    list-style: none;
+    margin: 0 0 var(--space-5);
+    padding: 0;
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .account__cards a {
+    display: grid;
+    gap: 0.15rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .account__cards a:hover {
+    border-color: var(--color-fg);
+  }
+
+  .account__cards strong {
+    font-size: 0.95rem;
+    letter-spacing: -0.01em;
+  }
+
+  .account__cards span {
+    font-size: 0.78rem;
+    color: var(--color-fg-muted);
+  }
+
+  .account__profile {
+    margin-bottom: var(--space-5);
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .account__profile strong {
+    color: var(--color-fg);
+    margin-right: 0.35rem;
   }
 
   .account__actions {

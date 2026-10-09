@@ -1,7 +1,7 @@
 ---
 /**
- * Floating oval buy card — product thumb + name + blurb + CTAs.
- * Appears after scroll; proxies page cart / buy controls.
+ * Floating oval buy card - product thumb + name + blurb + CTAs.
+ * Appears after scroll; proxies page cart / buy-now checkout controls.
  */
 interface Props {
   productName: string;
@@ -54,13 +54,12 @@ const {
     });
 
     bar.querySelector("[data-sticky-buy-now]")?.addEventListener("click", () => {
-      const source = document.querySelector(
-        "[data-pdp-buy], [data-wa-link], [data-wa], a.btn--whatsapp",
-      );
-      if (source instanceof HTMLAnchorElement) {
-        window.open(source.href, "_blank", "noopener,noreferrer");
+      const checkoutBtn = document.querySelector("[data-buy-now-checkout]");
+      if (checkoutBtn instanceof HTMLElement) {
+        checkoutBtn.click();
         return;
       }
+      const source = document.querySelector("[data-pdp-buy], [data-buy-now]");
       if (source instanceof HTMLElement) source.click();
     });
   }
