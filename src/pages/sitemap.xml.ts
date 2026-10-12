@@ -5,6 +5,7 @@ import { productNav } from "../lib/catalog";
 import { journalSeedPosts } from "../lib/journal";
 import { products } from "../lib/products";
 import { tvHomeModels } from "../lib/tv-home";
+import { listSeoModels, listSeriesHubs } from "../lib/iphone/seo";
 
 const staticPaths = [
   "/",
@@ -61,6 +62,13 @@ export const GET: APIRoute = () => {
     urls.add(abs(product.specsHref));
   }
   for (const m of tvHomeModels) urls.add(abs(`/tv-home/${m.id}`));
+  for (const m of listSeoModels()) {
+    urls.add(abs(`/iphone/${m.id}`));
+    for (const c of m.compareWith) urls.add(abs(`/iphone/compare/${c}`));
+  }
+  for (const s of listSeriesHubs()) urls.add(abs(`/iphone/${s.slug}`));
+  urls.add(abs("/iphone"));
+  urls.add(abs("/feeds/google-merchant-iphone.xml"));
 
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

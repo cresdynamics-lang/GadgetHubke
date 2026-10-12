@@ -1,0 +1,330 @@
+---
+/**
+ * Shared SEO blocks for iPhone model pages: intro, specs, buying, FAQs, compare/related.
+ * Content is server-rendered HTML (readable without JavaScript).
+ */
+import {
+  buyingBlock,
+  sharedProductFaq,
+  formatKesSeo,
+  seriesHubForModel,
+  SHOW_EX_UK,
+  EX_UK_CONDITION_LABEL,
+  EX_UK_WARRANTY,
+  type IphoneSeoModel,
+} from "../../lib/iphone/seo";
+import { whatsappUrl } from "../../lib/site";
+
+interface Props {
+  model: IphoneSeoModel;
+}
+
+const { model } = Astro.props;
+const series = seriesHubForModel(model);
+const waDefault = whatsappUrl(
+  `Hi Gadget Hub, I'm interested in the ${model.name}. What storage options do you have?`,
+);
+---
+
+<section class="seo-blocks" aria-label={`${model.name} details`}>
+  <nav class="seo-blocks__crumbs" aria-label="Breadcrumb">
+    <ol>
+      <li><a href="/">Home</a></li>
+      <li><a href="/iphone">iPhone</a></li>
+      <li><a href={`/iphone/${series.slug}`}>{series.name}</a></li>
+      <li aria-current="page">{model.h1}</li>
+    </ol>
+  </nav>
+
+  <header class="seo-blocks__head">
+    <p class="seo-blocks__price-line">
+      Price in Kenya · From {formatKesSeo(model.fromKes)}
+    </p>
+    <p class="seo-blocks__updated">Prices updated on {model.lastPriceUpdate}</p>
+  </header>
+
+  <div class="seo-blocks__variants">
+    <h2>Storage and price</h2>
+    <div class="seo-blocks__table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Storage</th>
+          <th scope="col">Condition</th>
+          <th scope="col">Price</th>
+          <th scope="col">Stock</th>
+          <th scope="col">Order</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          model.variants.flatMap((v) => {
+            const stock =
+              v.stockStatus === "in_stock"
+                ? "In stock"
+                : v.stockStatus === "out_of_stock"
+                  ? "Out of stock"
+                  : "Ask on WhatsApp";
+            const rows = [
+              {
+                storage: v.storage,
+                condition: "New",
+                price: v.newKes,
+                sheetId: v.sheetId,
+                stock,
+              },
+            ];
+            if (SHOW_EX_UK) {
+              rows.push({
+                storage: v.storage,
+                condition: EX_UK_CONDITION_LABEL,
+                price: v.exUkKes,
+                sheetId: `${v.sheetId}-EXUK`,
+                stock,
+              });
+            }
+            return rows.map((row) => {
+              const wa = whatsappUrl(
+                `Hi Gadget Hub, I'd like to order the ${model.name} ${row.storage} (${row.condition}, Item ${row.sheetId}).`,
+              );
+              return (
+                <tr>
+                  <td>{row.storage}</td>
+                  <td>{row.condition}</td>
+                  <td>{formatKesSeo(row.price)}</td>
+                  <td>{stock}</td>
+                  <td>
+                    <a class="seo-blocks__wa" href={wa} target="_blank" rel="noopener noreferrer">
+                      Order on WhatsApp
+                    </a>
+                  </td>
+                </tr>
+              );
+            });
+          })
+        }
+      </tbody>
+    </table>
+    </div>
+    {
+      SHOW_EX_UK ? (
+        <p class="seo-blocks__used-note">
+          {EX_UK_CONDITION_LABEL}: {EX_UK_WARRANTY}
+        </p>
+      ) : null
+    }
+  </div>
+
+  <div class="seo-blocks__intro">
+    <h2>About the {model.h1}</h2>
+    <p>{model.intro}</p>
+    <p><strong>Best for:</strong> {model.bestFor}</p>
+  </div>
+
+  <div class="seo-blocks__specs">
+    <h2>Specifications</h2>
+    <div class="seo-blocks__table-wrap">
+    <table>
+      <tbody>
+        {
+          model.specs.map((s) => (
+            <tr>
+              <th scope="row">{s.label}</th>
+              <td>{s.value}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="seo-blocks__buying">
+    <h2>Buying at Gadget Hub</h2>
+    <ul>
+      <li>{buyingBlock.payment}</li>
+      <li>{buyingBlock.delivery}</li>
+      <li>{buyingBlock.warranty}</li>
+      <li>Hours: {buyingBlock.hours}</li>
+    </ul>
+    <p>
+      <a class="seo-blocks__wa" href={waDefault} target="_blank" rel="noopener noreferrer">
+        Chat on WhatsApp
+      </a>
+    </p>
+  </div>
+
+  <div class="seo-blocks__tradein">
+    <h2>Trade-in</h2>
+    <p>{buyingBlock.tradeIn}</p>
+    <p><a href="/trade-in">Open the trade-in form</a></p>
+  </div>
+
+  <div class="seo-blocks__faq">
+    <h2>Questions about the {model.h1}</h2>
+    {
+      model.faq.map((f) => (
+        <details>
+          <summary>{f.question}</summary>
+          <p>{f.answer}</p>
+        </details>
+      ))
+    }
+    <h3>Shopping with Gadget Hub</h3>
+    {
+      sharedProductFaq.map((f) => (
+        <details>
+          <summary>{f.question}</summary>
+          <p>
+            {f.answer} <a href={f.href}>Learn more</a>
+          </p>
+        </details>
+      ))
+    }
+  </div>
+
+  {
+    model.compareWith.length ? (
+      <div class="seo-blocks__compare">
+        <h2>Compare</h2>
+        <ul>
+          {model.compareWith.map((slug) => (
+            <li>
+              <a href={`/iphone/compare/${slug}`}>{slug.replace(/-/g, " ")}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ) : null
+  }
+
+  {
+    model.related.length ? (
+      <div class="seo-blocks__related">
+        <h2>Related models</h2>
+        <ul>
+          {model.related.map((id) => (
+            <li>
+              <a href={`/iphone/${id}`}>{id.replace(/-/g, " ")}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ) : null
+  }
+
+  <p class="seo-blocks__back">
+    <a href={`/iphone/${series.slug}`}>← {series.name}</a>
+    {" · "}
+    <a href="/iphone">All iPhones</a>
+  </p>
+</section>
+
+<style>
+  .seo-blocks {
+    max-width: 52rem;
+    margin: 2.5rem auto 4rem;
+    padding: 0 1.25rem;
+    color: #1d1d1f;
+  }
+  .seo-blocks__crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+    font-size: 0.85rem;
+    color: #6e6e73;
+  }
+  .seo-blocks__crumbs li:not(:last-child)::after {
+    content: "/";
+    margin-left: 0.35rem;
+    color: #aeaeb2;
+  }
+  .seo-blocks__crumbs a {
+    color: inherit;
+  }
+  .seo-blocks__price-line {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+  }
+  .seo-blocks__updated {
+    font-size: 0.85rem;
+    color: #6e6e73;
+    margin: 0 0 1.5rem;
+  }
+  .seo-blocks h2 {
+    font-size: 1.25rem;
+    margin: 2rem 0 0.75rem;
+  }
+  .seo-blocks h3 {
+    font-size: 1.05rem;
+    margin: 1.5rem 0 0.5rem;
+  }
+  .seo-blocks__table-wrap {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .seo-blocks table {
+    width: 100%;
+    min-width: 28rem;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+  .seo-blocks__specs table {
+    min-width: 0;
+  }
+  .seo-blocks th,
+  .seo-blocks td {
+    text-align: left;
+    padding: 0.55rem 0.4rem;
+    border-bottom: 1px solid #e8e8ed;
+    vertical-align: top;
+  }
+  .seo-blocks__specs th {
+    width: 34%;
+    color: #6e6e73;
+    font-weight: 500;
+  }
+  .seo-blocks__wa {
+    display: inline-block;
+    padding: 0.45rem 0.85rem;
+    border-radius: 980px;
+    background: #25d366;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .seo-blocks__buying ul {
+    padding-left: 1.1rem;
+    line-height: 1.55;
+  }
+  .seo-blocks details {
+    border-bottom: 1px solid #e8e8ed;
+    padding: 0.65rem 0;
+  }
+  .seo-blocks summary {
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .seo-blocks details p {
+    margin: 0.5rem 0 0;
+    color: #424245;
+    line-height: 1.55;
+  }
+  .seo-blocks__compare ul,
+  .seo-blocks__related ul {
+    padding-left: 1.1rem;
+    line-height: 1.7;
+  }
+  .seo-blocks__back {
+    margin-top: 2.5rem;
+    font-size: 0.95rem;
+  }
+</style>

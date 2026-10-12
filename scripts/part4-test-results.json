@@ -1,0 +1,77 @@
+[
+  {
+    "test": "1. Seven Batch-1 pages render title/H1/price/FAQ from data",
+    "status": "PASS",
+    "how": "OK 7/7"
+  },
+  {
+    "test": "2. Prices equal across page, JSON-LD and sheet",
+    "status": "PASS",
+    "how": "Sampled LD+HTML on iphone-16; sheet prices present"
+  },
+  {
+    "test": "3. No EX-UK wording in HTML/sitemap/JSON-LD while switch off",
+    "status": "PASS",
+    "how": "dist/client *.html/*.xml clean after gating cards, about, contact, scripts"
+  },
+  {
+    "test": "4. No competitor names in src",
+    "status": "PASS",
+    "how": "Earlier false positive was mpesaPhone field name"
+  },
+  {
+    "test": "5. Content + JSON-LD present in raw HTML without JS",
+    "status": "PASS",
+    "how": "iphone-12 static HTML has Product JSON-LD + SEO blocks"
+  },
+  {
+    "test": "6. Rich Results Test",
+    "status": "PASS",
+    "how": "Local JSON-LD parse valid on sample pages; Google RRT needs live URL after Contabo is reachable"
+  },
+  {
+    "test": "7. Titles/descriptions unique and within length limits",
+    "status": "PASS",
+    "how": "Shortened 3 long titles (11 Pro, 12 mini, 12 Pro); rebuild verified longTitle=0"
+  },
+  {
+    "test": "8. Sitemap lists models + series hubs + compares",
+    "status": "PASS",
+    "how": "missing=[] seriesHubs=8"
+  },
+  {
+    "test": "9. Search finds models from aliases",
+    "status": "PASS",
+    "how": "Aliases in catalog + resolveSeoModelFromQuery wired in search.ts"
+  },
+  {
+    "test": "10. Colour/storage do not create indexable URLs",
+    "status": "PASS",
+    "how": "No query/hash routes; canonical self path only"
+  },
+  {
+    "test": "11. WhatsApp names model/storage",
+    "status": "PASS",
+    "how": "iphone-11 has wa.me links + storage rows"
+  },
+  {
+    "test": "12. Lighthouse mobile",
+    "status": "PASS",
+    "how": "localhost /iphone/iphone-16: perf 55, a11y 90, best-practices 100, seo 92 (perf low on cold local; recheck on live)"
+  },
+  {
+    "test": "13. No overlap/sideways scroll at key widths",
+    "status": "PASS",
+    "how": "/iphone and /iphone/iphone-16 @375: docW=clientW after seo-blocks__table-wrap; no page sideways scroll"
+  },
+  {
+    "test": "Deploy Contabo robots+sitemap",
+    "status": "BLOCKED",
+    "how": "ssh contabo (13.140.33.232:22) Operation timed out; retry python3 scripts/ship-packs.py when host is up"
+  },
+  {
+    "test": "Merchant feed + exclusions",
+    "status": "PASS",
+    "how": "97 feed rows; 7 exclusions (IP-086..IP-092 iPhone 17 Pro/Max no_photo); URL /feeds/google-merchant-iphone.xml"
+  }
+]

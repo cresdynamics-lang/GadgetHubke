@@ -57,3 +57,9 @@ export {
   latestByFamily,
   megaNewIphones,
 } from "./lineup";
+export {
+  listSeoModels,
+  getSeoModel,
+  resolveSeoModelFromQuery,
+  SHOW_EX_UK,
+} from "./seo";

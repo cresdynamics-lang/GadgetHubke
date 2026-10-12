@@ -8,17 +8,33 @@ import ProductExperience from "../components/ProductExperience.astro";
 import ProductReviews from "../components/ProductReviews.astro";
 import StickyBuyBar from "../components/StickyBuyBar.astro";
 import StockChannelToggle from "../components/StockChannelToggle.astro";
+import SeoProductBlocks from "../components/iphone/SeoProductBlocks.astro";
 import type { Product } from "../lib/products";
 import { site, whatsappUrl } from "../lib/site";
-import { exUkFromNew } from "../lib/stock-channel";
+import {
+  getSeoModelByName,
+  buildIphoneProductJsonLd,
+  SHOW_EX_UK,
+  formatKesSeo,
+} from "../lib/iphone/seo";
 
 interface Props {
   product: Product;
 }
 
 const { product } = Astro.props;
-const basePrice = product.storages[0]?.priceKes ?? 0;
-const defaultStorage = product.storages[0];
+const seo = getSeoModelByName(product.name);
+const basePrice = seo?.fromKes ?? product.storages[0]?.priceKes ?? 0;
+const storages = seo
+  ? seo.variants.map((v) => ({
+      id: v.storage.toLowerCase().replace(/\s+/g, ""),
+      label: v.storage,
+      priceKes: v.newKes,
+      sheetId: v.sheetId,
+      exUkKes: v.exUkKes,
+    }))
+  : product.storages;
+const defaultStorage = storages[0];
 const defaultColor = product.colors[0];
 const waBase = whatsappUrl();
 const gallery =
@@ -28,12 +44,22 @@ const gallery =
 const lipaMonths = product.lipaMonths ?? 0;
 const lipaFrom =
   lipaMonths > 0 ? Math.ceil(basePrice / lipaMonths) : 0;
+const pageUrl = new URL(product.overviewHref, site.url).href;
+const jsonLd = seo
+  ? buildIphoneProductJsonLd(seo, {
+      pageUrl,
+      imageUrl: new URL(gallery[0].src, site.url).href,
+    })
+  : null;
+const pageTitle = seo?.seoTitle ?? `${product.name} - GadgetHub`;
+const pageDescription = seo?.metaDescription ?? product.tagline;
 ---
 
 <BaseLayout
-  title={`${product.name} - GadgetHub`}
-  description={product.tagline}
+  title={pageTitle}
+  description={pageDescription}
 >
+  {jsonLd ? <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} /> : null}
   <article class="pdp" data-product-id={product.id} data-product-name={product.name}>
     <div class="container pdp__hero">
       <div class="pdp__media" data-gallery>
@@ -85,9 +111,12 @@ const lipaFrom =
           <span aria-hidden="true">/</span>
           <a href={product.categoryHref}>{product.categoryLabel}</a>
         </nav>
-        <h1>{product.name}</h1>
-        <StockChannelToggle />
-        <p class="pdp__tagline">{product.tagline}</p>
+        <h1>{seo?.h1 ?? product.name}</h1>
+        {SHOW_EX_UK ? <StockChannelToggle /> : null}
+        <p class="pdp__tagline">
+          {seo ? `Price in Kenya · From ${formatKesSeo(seo.fromKes)}. ` : ""}
+          {product.tagline}
+        </p>
 
         <div class="pdp__pricing">
           <p class="pdp__price">
@@ -116,7 +145,7 @@ const lipaFrom =
           <legend>Storage</legend>
           <div class="pdp__options" role="radiogroup" aria-label="Storage">
             {
-              product.storages.map((s, i) => (
+              storages.map((s, i) => (
                 <label class="pdp__option">
                   <input
                     type="radio"
@@ -124,7 +153,12 @@ const lipaFrom =
                     value={s.id}
                     data-price-kes={s.priceKes}
                     data-price-new={s.priceKes}
-                    data-price-ex-uk={exUkFromNew(s.priceKes)}
+                    {...(SHOW_EX_UK
+                      ? {
+                          "data-price-ex-uk":
+                            ("exUkKes" in s && s.exUkKes) || s.priceKes,
+                        }
+                      : {})}
                     data-label={s.label}
                     checked={i === 0}
                   />
@@ -281,6 +315,7 @@ const lipaFrom =
     <div class="container">
       <ProductReviews productId={product.id} productName={product.name} />
     </div>
+    {seo ? <SeoProductBlocks model={seo} /> : null}
   </article>
 
   <StickyBuyBar
@@ -293,7 +328,17 @@ const lipaFrom =
   <span data-sticky-price hidden></span>
 </BaseLayout>
 
-<script define:vars={{ waBase, productName: product.name, productId: product.id }}>
+<script
+  define:vars={{
+    waBase,
+    productName: product.name,
+    productId: product.id,
+    channelOn: SHOW_EX_UK,
+    usedPriceAttr: SHOW_EX_UK ? "data-price-ex-uk" : "",
+    usedChannel: SHOW_EX_UK ? "ex-uk" : "",
+    usedLabel: SHOW_EX_UK ? "EX-UK" : "New",
+  }}
+>
   const root = document.querySelector("[data-configurator]");
   if (!root) throw new Error("configurator missing");
 
@@ -304,8 +349,10 @@ const lipaFrom =
     const storage = root.querySelector('input[name="storage"]:checked');
     const color = root.querySelector('input[name="color"]:checked');
     const newKes = Number(storage?.getAttribute("data-price-new") || storage?.getAttribute("data-price-kes") || 0);
-    const exUkKes = Number(storage?.getAttribute("data-price-ex-uk") || newKes);
-    const priceKes = channel === "ex-uk" ? exUkKes : newKes;
+    let priceKes = newKes;
+    if (channelOn && usedPriceAttr && usedChannel && channel === usedChannel) {
+      priceKes = Number(storage?.getAttribute(usedPriceAttr) || newKes);
+    }
     return {
       storageId: storage?.value || "",
       storageLabel: storage?.getAttribute("data-label") || "",
@@ -313,7 +360,7 @@ const lipaFrom =
       colorLabel: color?.getAttribute("data-label") || "",
       priceKes,
       channel,
-      channelLabel: channel === "ex-uk" ? "EX-UK" : "New",
+      channelLabel: channelOn && usedChannel && channel === usedChannel ? usedLabel : "New",
     };
   }
 

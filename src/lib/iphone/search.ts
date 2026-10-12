@@ -8,6 +8,7 @@ import { accessoriesFor } from "./accessories";
 import { lipaMonthly } from "./pricing";
 import { iphoneConfig } from "./config";
 import { listIphones } from "../iphone-list";
+import { listSeoModels, resolveSeoModelFromQuery } from "./seo";
 
 export type IphoneSearchHit = {
   id: string;
@@ -116,75 +117,76 @@ export function normalizeQuery(raw: string): string {
 }
 
 export function buildIphoneSearchIndex(): IphoneSearchHit[] {
-  const legacy = models.map((m) => {
-    const colour = defaultColourForModel(m.id, m.defaultColour ?? undefined);
-    const img = getImage(m.id, colour, isOverviewOnly(m.id) ? "overview" : 1, m.name);
-    const searchable = [
-      m.name,
-      m.id,
-      m.chip,
-      m.tier,
-      String(m.family),
-      String(m.year),
-      m.port,
-      ...m.rearCameras,
-      ...m.storage,
-    ]
+  /** Prefer SEO catalog (sheet prices + aliases) as the search source of truth. */
+  const byId = new Map<string, IphoneSearchHit>();
+
+  for (const seo of listSeoModels()) {
+    const legacy = models.find((m) => m.id === seo.id);
+    const colour = legacy
+      ? defaultColourForModel(legacy.id, legacy.defaultColour ?? undefined)
+      : null;
+    const img = legacy
+      ? getImage(legacy.id, colour, isOverviewOnly(legacy.id) ? "overview" : 1, legacy.name)
+      : { src: "/images/logo.png", alt: seo.name };
+    const tier = /pro max/i.test(seo.name)
+      ? "Pro Max"
+      : /\bpro\b/i.test(seo.name)
+        ? "Pro"
+        : /plus/i.test(seo.name)
+          ? "Plus"
+          : /mini/i.test(seo.name)
+            ? "mini"
+            : /duo/i.test(seo.name)
+              ? "Duo"
+              : /\bair\b/i.test(seo.name)
+                ? "Air"
+                : /e$/i.test(seo.name)
+                  ? "e"
+                  : "Standard";
+    const searchable = [seo.name, seo.id, ...seo.aliases, seo.series, ...seo.variants.map((v) => v.storage)]
       .join(" ")
       .toLowerCase();
-    return {
-      id: m.id,
-      name: m.name,
-      href: `/iphone/${m.id}`,
-      priceKes: m.basePriceKes,
+    byId.set(seo.id, {
+      id: seo.id,
+      name: seo.name,
+      href: `/iphone/${seo.id}`,
+      priceKes: seo.fromKes,
       imageSrc: img.src,
       imageAlt: img.alt,
-      family: m.family,
-      tier: m.tier,
-      chip: m.chip,
+      family: seo.family,
+      tier,
+      chip: seo.specs.find((s) => s.label === "Chip")?.value ?? "",
       searchable,
-      cameras: m.rearCameras.length,
-      battery: m.batteryVideoHours,
-      display: m.displayInches,
-      port: m.port,
-    };
-  });
-
-  // Latest shop lineup (17 / 18 / Air / Duo)
-  const newest: IphoneSearchHit[] = listIphones()
-    .filter((i) => i.id !== "iphone-16")
-    .map((i) => {
-      const family = /17e|iphone-17\b/.test(i.id) ? 17 : 18;
-      const tier = /pro-max/.test(i.id)
-        ? "Pro Max"
-        : /pro/.test(i.id)
-          ? "Pro"
-          : /duo/.test(i.id)
-            ? "Duo"
-            : /air/.test(i.id)
-              ? "Air"
-              : /17e/.test(i.id)
-                ? "e"
-                : "Standard";
-      return {
-        id: i.id,
-        name: i.name,
-        href: i.href,
-        priceKes: i.priceKes,
-        imageSrc: i.image.src,
-        imageAlt: i.image.alt,
-        family,
-        tier,
-        chip: "",
-        searchable: `${i.name} ${i.id} ${i.blurb} ${family}`.toLowerCase(),
-        cameras: 0,
-        battery: 0,
-        display: 0,
-        port: "USB-C",
-      };
+      cameras: 0,
+      battery: 0,
+      display: 0,
+      port: legacy?.port ?? "USB-C",
     });
+  }
 
-  return [...newest, ...legacy];
+  // Keep any shop-only list items not already covered
+  for (const i of listIphones()) {
+    if (byId.has(i.id) || byId.has(i.id.replace(/^iphone-pro$/, "iphone-18-pro"))) continue;
+    const family = /17/.test(i.id) ? 17 : 18;
+    byId.set(i.id, {
+      id: i.id,
+      name: i.name,
+      href: `/iphone/${i.id.startsWith("iphone-pro") ? i.id.replace("iphone-pro-max", "iphone-18-pro-max").replace("iphone-pro", "iphone-18-pro") : i.id}`,
+      priceKes: i.priceKes,
+      imageSrc: i.image.src,
+      imageAlt: i.image.alt,
+      family,
+      tier: "Standard",
+      chip: "",
+      searchable: `${i.name} ${i.id}`.toLowerCase(),
+      cameras: 0,
+      battery: 0,
+      display: 0,
+      port: "USB-C",
+    });
+  }
+
+  return [...byId.values()].sort((a, b) => b.family - a.family || a.name.localeCompare(b.name));
 }
 
 export type SearchResult = {
@@ -199,6 +201,41 @@ export function searchIphones(query: string, index: IphoneSearchHit[]): SearchRe
   const q = normalizeQuery(query);
   if (!q) {
     return { hits: [], futureNotice: null, accessories: [], top: null, monthly: null };
+  }
+
+  /** Exact / alias hit wins — never show an unrelated product as the match. */
+  const aliasHit = resolveSeoModelFromQuery(query);
+  if (aliasHit) {
+    const top =
+      index.find((i) => i.id === aliasHit.id) ||
+      ({
+        id: aliasHit.id,
+        name: aliasHit.name,
+        href: `/iphone/${aliasHit.id}`,
+        priceKes: aliasHit.fromKes,
+        imageSrc: "/images/logo.png",
+        imageAlt: aliasHit.name,
+        family: aliasHit.family,
+        tier: "Standard",
+        chip: "",
+        searchable: aliasHit.aliases.join(" "),
+        cameras: 0,
+        battery: 0,
+        display: 0,
+        port: "USB-C",
+      } satisfies IphoneSearchHit);
+    const related = index
+      .filter((i) => aliasHit.related.includes(i.id) || i.family === aliasHit.family)
+      .filter((i) => i.id !== top.id)
+      .slice(0, 7);
+    const m = models.find((x) => x.id === top.id);
+    return {
+      hits: [top, ...related],
+      futureNotice: null,
+      accessories: m ? accessoriesFor(m).slice(0, 4) : [],
+      top,
+      monthly: lipaMonthly(top.priceKes).monthlyKes,
+    };
   }
 
   const tokens = q.split(" ").filter(Boolean);

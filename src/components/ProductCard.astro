@@ -5,7 +5,8 @@
 import Price from "./Price.astro";
 import StockChannelToggle from "./StockChannelToggle.astro";
 import { whatsappUrl } from "../lib/site";
-import { exUkFromNew } from "../lib/stock-channel";
+import { SHOW_EX_UK } from "../lib/iphone/seo/flags";
+import { sheetRowsForProduct } from "../lib/pricing/iphone-sheet";
 
 interface Props {
   id?: string;
@@ -20,7 +21,7 @@ interface Props {
 
 const { id: productId, name, href, priceKes, image, blurb, badge, colors = [] } = Astro.props;
 const liveId = productId || href.split("/").filter(Boolean).pop() || "";
-const priceExUk = exUkFromNew(priceKes);
+const sheetEx = SHOW_EX_UK ? sheetRowsForProduct(name)[0]?.exUkKes : undefined;
 const waBase = whatsappUrl();
 const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${name}.`);
 const hoverSrc =
@@ -32,7 +33,7 @@ const hoverSrc =
   data-pcard
   data-channel="new"
   data-price-new={priceKes}
-  data-price-ex-uk={priceExUk}
+  {...(SHOW_EX_UK && sheetEx ? { "data-price-ex-uk": sheetEx } : {})}
   data-wa-base={waBase}
 >
   {
@@ -72,7 +73,7 @@ const hoverSrc =
     <h3 class="pcard__name">
       <a href={href}>{name}</a>
     </h3>
-    <StockChannelToggle class="pcard__channel" />
+    {SHOW_EX_UK ? <StockChannelToggle class="pcard__channel" /> : null}
     {blurb ? <p class="pcard__blurb">{blurb}</p> : null}
     {
       colors.length > 0 ? (
@@ -104,9 +105,9 @@ const hoverSrc =
   </div>
 </article>
 
-<script>
+<script define:vars={{ channelOn: SHOW_EX_UK, usedPriceAttr: SHOW_EX_UK ? "data-price-ex-uk" : "" }}>
   document.querySelectorAll("[data-pcard]").forEach((card) => {
-    const img = card.querySelector("[data-pcard-img]") as HTMLImageElement | null;
+    const img = card.querySelector("[data-pcard-img]");
     const priceHost = card.querySelector("[data-pcard-price] .price__amount");
     const wa = card.querySelector("[data-pcard-wa]");
     const name = card.querySelector(".pcard__name a")?.textContent?.trim() || "this product";
@@ -114,33 +115,40 @@ const hoverSrc =
     function syncChannelPrice() {
       const ch = card.getAttribute("data-channel") || "new";
       const newKes = Number(card.getAttribute("data-price-new") || 0);
-      const exUkKes = Number(card.getAttribute("data-price-ex-uk") || newKes);
-      const kes = ch === "ex-uk" ? exUkKes : newKes;
-      const label = ch === "ex-uk" ? "EX-UK" : "New";
+      let kes = newKes;
+      if (channelOn && usedPriceAttr) {
+        const hasUsed = card.hasAttribute(usedPriceAttr);
+        const usedKes = Number(card.getAttribute(usedPriceAttr) || newKes);
+        kes = hasUsed && ch !== "new" ? usedKes : newKes;
+      }
       if (priceHost) priceHost.textContent = `KSh ${Math.round(kes).toLocaleString("en-KE")}`;
-      card.querySelectorAll("[data-stock-channel] [data-channel]").forEach((b) => {
-        const on = b.getAttribute("data-channel") === ch;
-        b.classList.toggle("is-active", on);
-        b.setAttribute("aria-pressed", on ? "true" : "false");
-      });
+      if (channelOn) {
+        card.querySelectorAll("[data-stock-channel] [data-channel]").forEach((b) => {
+          const on = b.getAttribute("data-channel") === ch;
+          b.classList.toggle("is-active", on);
+          b.setAttribute("aria-pressed", on ? "true" : "false");
+        });
+      }
       if (wa instanceof HTMLAnchorElement) {
         const base = card.getAttribute("data-wa-base") || "https://wa.me/";
-        const msg = `Hello Gadget Hub, I'm interested in the ${name} (${label}). Sample from KSh ${Math.round(kes).toLocaleString("en-KE")}.`;
+        const msg = `Hello Gadget Hub, I'm interested in the ${name}. From KSh ${Math.round(kes).toLocaleString("en-KE")}.`;
         const sep = base.includes("?") ? "&" : "?";
         wa.href = `${base}${sep}text=${encodeURIComponent(msg)}`;
       }
     }
 
-    card.querySelectorAll("[data-stock-channel] [data-channel]").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        card.setAttribute("data-channel", btn.getAttribute("data-channel") || "new");
-        syncChannelPrice();
+    if (channelOn) {
+      card.querySelectorAll("[data-stock-channel] [data-channel]").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          card.setAttribute("data-channel", btn.getAttribute("data-channel") || "new");
+          syncChannelPrice();
+        });
       });
-    });
+    }
 
-    const altImg = card.querySelector("[data-pcard-alt]") as HTMLImageElement | null;
+    const altImg = card.querySelector("[data-pcard-alt]");
     const media = card.querySelector(".pcard__media");
 
     card.querySelectorAll("[data-pcard-swatch]").forEach((btn) => {

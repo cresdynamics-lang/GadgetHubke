@@ -22,7 +22,8 @@ import {
   colourLabel,
 } from "../../lib/iphone";
 import { iphoneConfig } from "../../lib/iphone/config";
-import { exUkFromNew } from "../../lib/stock-channel";
+import { SHOW_EX_UK } from "../../lib/iphone/seo/flags";
+import { sheetRowsForProduct } from "../../lib/pricing/iphone-sheet";
 
 interface Props {
   model: IphoneModel;
@@ -34,8 +35,10 @@ const colour = defaultColourForModel(model.id, model.defaultColour ?? undefined)
 const img = getImage(model.id, colour, 1, model.name);
 const colours = availableColours(model.id);
 const overviewOnly = isOverviewOnly(model.id);
-const price = storagePrices(model.basePriceKes, model.storage)[0];
-const priceExUk = exUkFromNew(price.kes);
+const price = storagePrices(model.basePriceKes, model.storage, model.name)[0];
+const sheetEx = SHOW_EX_UK
+  ? sheetRowsForProduct(model.name).find((r) => r.storage === price.label)?.exUkKes
+  : undefined;
 const lipa = lipaMonthly(price.kes);
 const href = `/iphone/${model.id}`;
 const tag = isLatestTag(model) ? "Latest" : isValueTag(model) ? "Value" : null;
@@ -76,7 +79,7 @@ const hoverSrc =
   data-tier={model.tier}
   data-price={price.kes}
   data-price-new={price.kes}
-  data-price-ex-uk={priceExUk}
+  {...(SHOW_EX_UK && sheetEx ? { "data-price-ex-uk": sheetEx } : {})}
   data-channel="new"
   data-battery={model.batteryVideoHours}
   data-size={model.displayInches}
@@ -111,7 +114,7 @@ const hoverSrc =
   </a>
   <div class="icard__body">
     <h3 class="icard__name"><a href={href}>{model.name}</a></h3>
-    <StockChannelToggle class="icard__channel" />
+    {SHOW_EX_UK ? <StockChannelToggle class="icard__channel" /> : null}
     <p class="icard__sub">{modelSubline(model)}</p>
     {
       overviewOnly ? (
@@ -160,10 +163,10 @@ const hoverSrc =
   </div>
 </article>
 
-<script>
+<script define:vars={{ channelOn: SHOW_EX_UK, usedPriceAttr: SHOW_EX_UK ? "data-price-ex-uk" : "" }}>
   document.querySelectorAll("[data-icard]").forEach((card) => {
-    const img = card.querySelector(".pstage__img") as HTMLImageElement | null;
-    const webpSource = card.querySelector(".pstage source") as HTMLSourceElement | null;
+    const img = card.querySelector(".pstage__img");
+    const webpSource = card.querySelector(".pstage source");
     const priceEl = card.querySelector("[data-icard-price]");
     const lipaEl = card.querySelector("[data-icard-lipa]");
     const bag = card.querySelector("[data-add-bag]");
@@ -173,8 +176,8 @@ const hoverSrc =
     function channelKes() {
       const ch = card.getAttribute("data-channel") || "new";
       const newKes = Number(card.getAttribute("data-price-new") || card.getAttribute("data-price") || 0);
-      const exUkKes = Number(card.getAttribute("data-price-ex-uk") || newKes);
-      return ch === "ex-uk" ? exUkKes : newKes;
+      if (!channelOn || !usedPriceAttr || !card.hasAttribute(usedPriceAttr) || ch === "new") return newKes;
+      return Number(card.getAttribute(usedPriceAttr) || newKes);
     }
 
     function syncChannelPrice() {
@@ -188,21 +191,25 @@ const hoverSrc =
       }
       if (bag) bag.setAttribute("data-kes", String(kes));
       card.setAttribute("data-price", String(kes));
-      card.querySelectorAll("[data-stock-channel] [data-channel]").forEach((b) => {
-        const on = b.getAttribute("data-channel") === ch;
-        b.classList.toggle("is-active", on);
-        b.setAttribute("aria-pressed", on ? "true" : "false");
-      });
+      if (channelOn) {
+        card.querySelectorAll("[data-stock-channel] [data-channel]").forEach((b) => {
+          const on = b.getAttribute("data-channel") === ch;
+          b.classList.toggle("is-active", on);
+          b.setAttribute("aria-pressed", on ? "true" : "false");
+        });
+      }
     }
 
-    card.querySelectorAll("[data-stock-channel] [data-channel]").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        card.setAttribute("data-channel", btn.getAttribute("data-channel") || "new");
-        syncChannelPrice();
+    if (channelOn) {
+      card.querySelectorAll("[data-stock-channel] [data-channel]").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          card.setAttribute("data-channel", btn.getAttribute("data-channel") || "new");
+          syncChannelPrice();
+        });
       });
-    });
+    }
 
     const altImg = card.querySelector("[data-icard-alt]") as HTMLImageElement | null;
     const media = card.querySelector(".icard__media");
@@ -246,17 +253,15 @@ const hoverSrc =
       e.preventDefault();
       if (!(bag instanceof HTMLElement)) return;
       const ch = card.getAttribute("data-channel") || "new";
-      const channelLabel = ch === "ex-uk" ? "EX-UK" : "New";
       window.dispatchEvent(
         new CustomEvent("gh:bag-add", {
           detail: {
             id: `${bag.getAttribute("data-add-bag")}-${ch}`,
             name: bag.getAttribute("data-name"),
             colour: bag.getAttribute("data-colour"),
-            storage: `${bag.getAttribute("data-storage")} · ${channelLabel}`,
+            storage: bag.getAttribute("data-storage"),
             kes: Number(bag.getAttribute("data-kes") || 0),
             image: bag.getAttribute("data-image"),
-            channel: channelLabel,
           },
         }),
       );

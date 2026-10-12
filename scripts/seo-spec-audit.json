@@ -1,0 +1,1640 @@
+[
+  {
+    "model": "iPhone 13 mini",
+    "claim": "Display: 5.4-inch Super Retina XDR OLED",
+    "source": "https://support.apple.com/en-us/111873",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 mini",
+    "claim": "Chip: A15 Bionic",
+    "source": "https://support.apple.com/en-us/111873",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 mini",
+    "claim": "Rear cameras: Dual 12MP camera system (Main and Ultra Wide)",
+    "source": "https://support.apple.com/en-us/111873",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 mini",
+    "claim": "Front camera: 12MP TrueDepth",
+    "source": "https://support.apple.com/en-us/111873",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 mini",
+    "claim": "Battery: up to 17 hours video playback",
+    "source": "https://support.apple.com/en-us/111873",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 mini",
+    "claim": "Water resistance: IP68, 6 m for up to 30 minutes",
+    "source": "https://support.apple.com/en-us/111873",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 mini",
+    "claim": "5G: Supported (bands vary by model)",
+    "source": "https://support.apple.com/en-us/111873",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 mini",
+    "claim": "Weight: 141 g",
+    "source": "https://support.apple.com/en-us/111873",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 mini",
+    "claim": "Storage: 128GB, 256GB, 512GB",
+    "source": "iphone-sheet.ts",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 mini",
+    "claim": "colours in SEO copy",
+    "source": "https://support.apple.com/en-us/111873",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 13 mini",
+    "claim": "SIM detail",
+    "source": "https://support.apple.com/en-us/111873",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 13",
+    "claim": "Display: 6.1-inch Super Retina XDR OLED",
+    "source": "https://support.apple.com/en-us/111872",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13",
+    "claim": "Chip: A15 Bionic",
+    "source": "https://support.apple.com/en-us/111872",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13",
+    "claim": "Rear cameras: Dual 12MP camera system (Main and Ultra Wide)",
+    "source": "https://support.apple.com/en-us/111872",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13",
+    "claim": "Front camera: 12MP TrueDepth",
+    "source": "https://support.apple.com/en-us/111872",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13",
+    "claim": "Battery: up to 19 hours video playback",
+    "source": "https://support.apple.com/en-us/111872",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13",
+    "claim": "Water resistance: IP68, 6 m for up to 30 minutes",
+    "source": "https://support.apple.com/en-us/111872",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13",
+    "claim": "5G: Supported (bands vary by model)",
+    "source": "https://support.apple.com/en-us/111872",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13",
+    "claim": "Weight: 174 g",
+    "source": "https://support.apple.com/en-us/111872",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13",
+    "claim": "Storage: 128GB, 256GB, 512GB",
+    "source": "iphone-sheet.ts",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13",
+    "claim": "colours in SEO copy",
+    "source": "https://support.apple.com/en-us/111872",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 13",
+    "claim": "SIM detail",
+    "source": "https://support.apple.com/en-us/111872",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 13 Pro",
+    "claim": "Display: 6.1-inch Super Retina XDR OLED with ProMotion",
+    "source": "https://support.apple.com/en-us/111871",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 Pro",
+    "claim": "Chip: A15 Bionic",
+    "source": "https://support.apple.com/en-us/111871",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 Pro",
+    "claim": "Rear cameras: Pro 12MP camera system (Telephoto, Wide, Ultra Wide)",
+    "source": "https://support.apple.com/en-us/111871",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 Pro",
+    "claim": "Front camera: 12MP TrueDepth",
+    "source": "https://support.apple.com/en-us/111871",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 Pro",
+    "claim": "Battery: up to 22 hours video playback",
+    "source": "https://support.apple.com/en-us/111871",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 Pro",
+    "claim": "Water resistance: IP68, 6 m for up to 30 minutes",
+    "source": "https://support.apple.com/en-us/111871",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 Pro",
+    "claim": "5G: Supported (bands vary by model)",
+    "source": "https://support.apple.com/en-us/111871",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 Pro",
+    "claim": "Weight: 204 g",
+    "source": "https://support.apple.com/en-us/111871",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 Pro",
+    "claim": "Storage: 128GB, 256GB, 512GB, 1TB",
+    "source": "iphone-sheet.ts",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 Pro",
+    "claim": "colours in SEO copy",
+    "source": "https://support.apple.com/en-us/111871",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 13 Pro",
+    "claim": "SIM detail",
+    "source": "https://support.apple.com/en-us/111871",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 13 Pro Max",
+    "claim": "Display: 6.7-inch Super Retina XDR OLED with ProMotion",
+    "source": "https://support.apple.com/en-us/111870",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 Pro Max",
+    "claim": "Chip: A15 Bionic",
+    "source": "https://support.apple.com/en-us/111870",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 Pro Max",
+    "claim": "Rear cameras: Pro 12MP camera system (Telephoto, Wide, Ultra Wide)",
+    "source": "https://support.apple.com/en-us/111870",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 Pro Max",
+    "claim": "Front camera: 12MP TrueDepth",
+    "source": "https://support.apple.com/en-us/111870",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 Pro Max",
+    "claim": "Battery: up to 28 hours video playback",
+    "source": "https://support.apple.com/en-us/111870",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 Pro Max",
+    "claim": "Water resistance: IP68, 6 m for up to 30 minutes",
+    "source": "https://support.apple.com/en-us/111870",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 Pro Max",
+    "claim": "5G: Supported (bands vary by model)",
+    "source": "https://support.apple.com/en-us/111870",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 Pro Max",
+    "claim": "Weight: 240 g",
+    "source": "https://support.apple.com/en-us/111870",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 Pro Max",
+    "claim": "Storage: 128GB, 256GB, 512GB, 1TB",
+    "source": "iphone-sheet.ts",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 13 Pro Max",
+    "claim": "colours in SEO copy",
+    "source": "https://support.apple.com/en-us/111870",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 13 Pro Max",
+    "claim": "SIM detail",
+    "source": "https://support.apple.com/en-us/111870",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 14",
+    "claim": "Display: 6.1-inch Super Retina XDR OLED",
+    "source": "https://support.apple.com/en-us/111850",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14",
+    "claim": "Chip: A15 Bionic",
+    "source": "https://support.apple.com/en-us/111850",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14",
+    "claim": "Rear cameras: Dual 12MP camera system (Main and Ultra Wide)",
+    "source": "https://support.apple.com/en-us/111850",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14",
+    "claim": "Front camera: 12MP TrueDepth",
+    "source": "https://support.apple.com/en-us/111850",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14",
+    "claim": "Battery: up to 20 hours video playback",
+    "source": "https://support.apple.com/en-us/111850",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14",
+    "claim": "Water resistance: IP68, 6 m for up to 30 minutes",
+    "source": "https://support.apple.com/en-us/111850",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14",
+    "claim": "5G: Supported (bands vary by model)",
+    "source": "https://support.apple.com/en-us/111850",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14",
+    "claim": "Weight: 172 g",
+    "source": "https://support.apple.com/en-us/111850",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14",
+    "claim": "Storage: 128GB, 256GB, 512GB",
+    "source": "iphone-sheet.ts",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14",
+    "claim": "colours in SEO copy",
+    "source": "https://support.apple.com/en-us/111850",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 14",
+    "claim": "SIM detail",
+    "source": "https://support.apple.com/en-us/111850",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 14 Plus",
+    "claim": "Display: 6.7-inch Super Retina XDR OLED",
+    "source": "https://support.apple.com/en-us/111854",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Plus",
+    "claim": "Chip: A15 Bionic",
+    "source": "https://support.apple.com/en-us/111854",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Plus",
+    "claim": "Rear cameras: Dual 12MP camera system (Main and Ultra Wide)",
+    "source": "https://support.apple.com/en-us/111854",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Plus",
+    "claim": "Front camera: 12MP TrueDepth",
+    "source": "https://support.apple.com/en-us/111854",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Plus",
+    "claim": "Battery: up to 26 hours video playback",
+    "source": "https://support.apple.com/en-us/111854",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Plus",
+    "claim": "Water resistance: IP68, 6 m for up to 30 minutes",
+    "source": "https://support.apple.com/en-us/111854",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Plus",
+    "claim": "5G: Supported (bands vary by model)",
+    "source": "https://support.apple.com/en-us/111854",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Plus",
+    "claim": "Weight: 203 g",
+    "source": "https://support.apple.com/en-us/111854",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Plus",
+    "claim": "Storage: 128GB, 256GB, 512GB",
+    "source": "iphone-sheet.ts",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Plus",
+    "claim": "colours in SEO copy",
+    "source": "https://support.apple.com/en-us/111854",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 14 Plus",
+    "claim": "SIM detail",
+    "source": "https://support.apple.com/en-us/111854",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 14 Pro",
+    "claim": "Display: 6.1-inch Super Retina XDR OLED with ProMotion",
+    "source": "https://support.apple.com/en-us/111849",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Pro",
+    "claim": "Chip: A16 Bionic",
+    "source": "https://support.apple.com/en-us/111849",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Pro",
+    "claim": "Rear cameras: 48MP Main, Ultra Wide and Telephoto camera system",
+    "source": "https://support.apple.com/en-us/111849",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Pro",
+    "claim": "Front camera: 12MP TrueDepth",
+    "source": "https://support.apple.com/en-us/111849",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Pro",
+    "claim": "Battery: up to 23 hours video playback",
+    "source": "https://support.apple.com/en-us/111849",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Pro",
+    "claim": "Water resistance: IP68, 6 m for up to 30 minutes",
+    "source": "https://support.apple.com/en-us/111849",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Pro",
+    "claim": "5G: Supported (bands vary by model)",
+    "source": "https://support.apple.com/en-us/111849",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Pro",
+    "claim": "Weight: 206 g",
+    "source": "https://support.apple.com/en-us/111849",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Pro",
+    "claim": "Storage: 128GB, 256GB, 512GB, 1TB",
+    "source": "iphone-sheet.ts",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Pro",
+    "claim": "colours in SEO copy",
+    "source": "https://support.apple.com/en-us/111849",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 14 Pro",
+    "claim": "SIM detail",
+    "source": "https://support.apple.com/en-us/111849",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 14 Pro Max",
+    "claim": "Display: 6.7-inch Super Retina XDR OLED with ProMotion",
+    "source": "https://support.apple.com/en-us/111846",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Pro Max",
+    "claim": "Chip: A16 Bionic",
+    "source": "https://support.apple.com/en-us/111846",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Pro Max",
+    "claim": "Rear cameras: 48MP Main, Ultra Wide and Telephoto camera system",
+    "source": "https://support.apple.com/en-us/111846",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Pro Max",
+    "claim": "Front camera: 12MP TrueDepth",
+    "source": "https://support.apple.com/en-us/111846",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Pro Max",
+    "claim": "Battery: up to 29 hours video playback",
+    "source": "https://support.apple.com/en-us/111846",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Pro Max",
+    "claim": "Water resistance: IP68, 6 m for up to 30 minutes",
+    "source": "https://support.apple.com/en-us/111846",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Pro Max",
+    "claim": "5G: Supported (bands vary by model)",
+    "source": "https://support.apple.com/en-us/111846",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Pro Max",
+    "claim": "Weight: 240 g",
+    "source": "https://support.apple.com/en-us/111846",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Pro Max",
+    "claim": "Storage: 128GB, 256GB, 512GB, 1TB",
+    "source": "iphone-sheet.ts",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 14 Pro Max",
+    "claim": "colours in SEO copy",
+    "source": "https://support.apple.com/en-us/111846",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 14 Pro Max",
+    "claim": "SIM detail",
+    "source": "https://support.apple.com/en-us/111846",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 15",
+    "claim": "Display: 6.1-inch Super Retina XDR OLED",
+    "source": "https://support.apple.com/en-us/111831",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15",
+    "claim": "Chip: A16 Bionic",
+    "source": "https://support.apple.com/en-us/111831",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15",
+    "claim": "Rear cameras: 48MP Main, Ultra Wide and Telephoto camera system",
+    "source": "https://support.apple.com/en-us/111831",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15",
+    "claim": "Front camera: 12MP TrueDepth",
+    "source": "https://support.apple.com/en-us/111831",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15",
+    "claim": "Battery: up to 20 hours video playback",
+    "source": "https://support.apple.com/en-us/111831",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15",
+    "claim": "Water resistance: IP68, 6 m for up to 30 minutes",
+    "source": "https://support.apple.com/en-us/111831",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15",
+    "claim": "5G: Supported (bands vary by model)",
+    "source": "https://support.apple.com/en-us/111831",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15",
+    "claim": "Weight: 171 g",
+    "source": "https://support.apple.com/en-us/111831",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15",
+    "claim": "Storage: 128GB, 256GB, 512GB",
+    "source": "iphone-sheet.ts",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15",
+    "claim": "colours in SEO copy",
+    "source": "https://support.apple.com/en-us/111831",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 15",
+    "claim": "SIM detail",
+    "source": "https://support.apple.com/en-us/111831",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 15 Plus",
+    "claim": "Display: 6.7-inch Super Retina XDR OLED",
+    "source": "https://support.apple.com/en-us/111830",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Plus",
+    "claim": "Chip: A16 Bionic",
+    "source": "https://support.apple.com/en-us/111830",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Plus",
+    "claim": "Rear cameras: 48MP Main, Ultra Wide and Telephoto camera system",
+    "source": "https://support.apple.com/en-us/111830",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Plus",
+    "claim": "Front camera: 12MP TrueDepth",
+    "source": "https://support.apple.com/en-us/111830",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Plus",
+    "claim": "Battery: up to 26 hours video playback",
+    "source": "https://support.apple.com/en-us/111830",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Plus",
+    "claim": "Water resistance: IP68, 6 m for up to 30 minutes",
+    "source": "https://support.apple.com/en-us/111830",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Plus",
+    "claim": "5G: Supported (bands vary by model)",
+    "source": "https://support.apple.com/en-us/111830",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Plus",
+    "claim": "Weight: 201 g",
+    "source": "https://support.apple.com/en-us/111830",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Plus",
+    "claim": "Storage: 128GB, 256GB, 512GB",
+    "source": "iphone-sheet.ts",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Plus",
+    "claim": "colours in SEO copy",
+    "source": "https://support.apple.com/en-us/111830",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 15 Plus",
+    "claim": "SIM detail",
+    "source": "https://support.apple.com/en-us/111830",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 15 Pro",
+    "claim": "Display: 6.1-inch Super Retina XDR OLED with ProMotion",
+    "source": "https://support.apple.com/en-us/111829",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Pro",
+    "claim": "Chip: A17 Pro",
+    "source": "https://support.apple.com/en-us/111829",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Pro",
+    "claim": "Rear cameras: 48MP Main, Ultra Wide and Telephoto camera system",
+    "source": "https://support.apple.com/en-us/111829",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Pro",
+    "claim": "Front camera: 12MP TrueDepth",
+    "source": "https://support.apple.com/en-us/111829",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Pro",
+    "claim": "Battery: up to 23 hours video playback",
+    "source": "https://support.apple.com/en-us/111829",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Pro",
+    "claim": "Water resistance: IP68, 6 m for up to 30 minutes",
+    "source": "https://support.apple.com/en-us/111829",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Pro",
+    "claim": "5G: Supported (bands vary by model)",
+    "source": "https://support.apple.com/en-us/111829",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Pro",
+    "claim": "Weight: 187 g",
+    "source": "https://support.apple.com/en-us/111829",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Pro",
+    "claim": "Storage: 128GB, 256GB, 512GB, 1TB",
+    "source": "iphone-sheet.ts",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Pro",
+    "claim": "colours in SEO copy",
+    "source": "https://support.apple.com/en-us/111829",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 15 Pro",
+    "claim": "SIM detail",
+    "source": "https://support.apple.com/en-us/111829",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 15 Pro Max",
+    "claim": "Display: 6.7-inch Super Retina XDR OLED with ProMotion",
+    "source": "https://support.apple.com/en-us/111828",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Pro Max",
+    "claim": "Chip: A17 Pro",
+    "source": "https://support.apple.com/en-us/111828",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Pro Max",
+    "claim": "Rear cameras: 48MP Main, Ultra Wide and Telephoto camera system",
+    "source": "https://support.apple.com/en-us/111828",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Pro Max",
+    "claim": "Front camera: 12MP TrueDepth",
+    "source": "https://support.apple.com/en-us/111828",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Pro Max",
+    "claim": "Battery: up to 29 hours video playback",
+    "source": "https://support.apple.com/en-us/111828",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Pro Max",
+    "claim": "Water resistance: IP68, 6 m for up to 30 minutes",
+    "source": "https://support.apple.com/en-us/111828",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Pro Max",
+    "claim": "5G: Supported (bands vary by model)",
+    "source": "https://support.apple.com/en-us/111828",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Pro Max",
+    "claim": "Weight: 221 g",
+    "source": "https://support.apple.com/en-us/111828",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Pro Max",
+    "claim": "Storage: 256GB, 512GB, 1TB",
+    "source": "iphone-sheet.ts",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 15 Pro Max",
+    "claim": "colours in SEO copy",
+    "source": "https://support.apple.com/en-us/111828",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 15 Pro Max",
+    "claim": "SIM detail",
+    "source": "https://support.apple.com/en-us/111828",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 16e",
+    "claim": "Display: 6.1-inch Super Retina XDR OLED",
+    "source": "https://support.apple.com/en-us/122208",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16e",
+    "claim": "Chip: A18",
+    "source": "https://support.apple.com/en-us/122208",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16e",
+    "claim": "Rear cameras: 48MP Fusion Main, Ultra Wide and Telephoto camera system",
+    "source": "https://support.apple.com/en-us/122208",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16e",
+    "claim": "Front camera: 12MP TrueDepth",
+    "source": "https://support.apple.com/en-us/122208",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16e",
+    "claim": "Battery: up to 26 hours video playback",
+    "source": "https://support.apple.com/en-us/122208",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16e",
+    "claim": "Water resistance: IP68, 6 m for up to 30 minutes",
+    "source": "https://support.apple.com/en-us/122208",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16e",
+    "claim": "5G: Supported (bands vary by model)",
+    "source": "https://support.apple.com/en-us/122208",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16e",
+    "claim": "Weight: 167 g",
+    "source": "https://support.apple.com/en-us/122208",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16e",
+    "claim": "Storage: 128GB, 256GB, 512GB",
+    "source": "iphone-sheet.ts",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16e",
+    "claim": "colours in SEO copy",
+    "source": "https://support.apple.com/en-us/122208",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 16e",
+    "claim": "SIM detail",
+    "source": "https://support.apple.com/en-us/122208",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 16",
+    "claim": "Display: 6.1-inch Super Retina XDR OLED",
+    "source": "https://support.apple.com/en-us/121029",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16",
+    "claim": "Chip: A18",
+    "source": "https://support.apple.com/en-us/121029",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16",
+    "claim": "Rear cameras: 48MP Fusion Main, Ultra Wide and Telephoto camera system",
+    "source": "https://support.apple.com/en-us/121029",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16",
+    "claim": "Front camera: 12MP TrueDepth",
+    "source": "https://support.apple.com/en-us/121029",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16",
+    "claim": "Battery: up to 22 hours video playback",
+    "source": "https://support.apple.com/en-us/121029",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16",
+    "claim": "Water resistance: IP68, 6 m for up to 30 minutes",
+    "source": "https://support.apple.com/en-us/121029",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16",
+    "claim": "5G: Supported (bands vary by model)",
+    "source": "https://support.apple.com/en-us/121029",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16",
+    "claim": "Weight: 170 g",
+    "source": "https://support.apple.com/en-us/121029",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16",
+    "claim": "Storage: 128GB, 256GB, 512GB",
+    "source": "iphone-sheet.ts",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16",
+    "claim": "colours in SEO copy",
+    "source": "https://support.apple.com/en-us/121029",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 16",
+    "claim": "SIM detail",
+    "source": "https://support.apple.com/en-us/121029",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 16 Plus",
+    "claim": "Display: 6.7-inch Super Retina XDR OLED",
+    "source": "https://support.apple.com/en-us/121030",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Plus",
+    "claim": "Chip: A18",
+    "source": "https://support.apple.com/en-us/121030",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Plus",
+    "claim": "Rear cameras: 48MP Fusion Main, Ultra Wide and Telephoto camera system",
+    "source": "https://support.apple.com/en-us/121030",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Plus",
+    "claim": "Front camera: 12MP TrueDepth",
+    "source": "https://support.apple.com/en-us/121030",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Plus",
+    "claim": "Battery: up to 27 hours video playback",
+    "source": "https://support.apple.com/en-us/121030",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Plus",
+    "claim": "Water resistance: IP68, 6 m for up to 30 minutes",
+    "source": "https://support.apple.com/en-us/121030",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Plus",
+    "claim": "5G: Supported (bands vary by model)",
+    "source": "https://support.apple.com/en-us/121030",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Plus",
+    "claim": "Weight: 199 g",
+    "source": "https://support.apple.com/en-us/121030",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Plus",
+    "claim": "Storage: 128GB, 256GB, 512GB",
+    "source": "iphone-sheet.ts",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Plus",
+    "claim": "colours in SEO copy",
+    "source": "https://support.apple.com/en-us/121030",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 16 Plus",
+    "claim": "SIM detail",
+    "source": "https://support.apple.com/en-us/121030",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 16 Pro",
+    "claim": "Display: 6.3-inch Super Retina XDR OLED with ProMotion",
+    "source": "https://support.apple.com/en-us/121031",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Pro",
+    "claim": "Chip: A18 Pro",
+    "source": "https://support.apple.com/en-us/121031",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Pro",
+    "claim": "Rear cameras: Pro camera system (48MP Fusion, Ultra Wide, Telephoto)",
+    "source": "https://support.apple.com/en-us/121031",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Pro",
+    "claim": "Front camera: 12MP TrueDepth",
+    "source": "https://support.apple.com/en-us/121031",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Pro",
+    "claim": "Battery: up to 27 hours video playback",
+    "source": "https://support.apple.com/en-us/121031",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Pro",
+    "claim": "Water resistance: IP68, 6 m for up to 30 minutes",
+    "source": "https://support.apple.com/en-us/121031",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Pro",
+    "claim": "5G: Supported (bands vary by model)",
+    "source": "https://support.apple.com/en-us/121031",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Pro",
+    "claim": "Weight: 199 g",
+    "source": "https://support.apple.com/en-us/121031",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Pro",
+    "claim": "Storage: 128GB, 256GB, 512GB, 1TB",
+    "source": "iphone-sheet.ts",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Pro",
+    "claim": "colours in SEO copy",
+    "source": "https://support.apple.com/en-us/121031",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 16 Pro",
+    "claim": "SIM detail",
+    "source": "https://support.apple.com/en-us/121031",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 16 Pro Max",
+    "claim": "Display: 6.9-inch Super Retina XDR OLED with ProMotion",
+    "source": "https://support.apple.com/en-us/121032",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Pro Max",
+    "claim": "Chip: A18 Pro",
+    "source": "https://support.apple.com/en-us/121032",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Pro Max",
+    "claim": "Rear cameras: Pro camera system (48MP Fusion, Ultra Wide, Telephoto)",
+    "source": "https://support.apple.com/en-us/121032",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Pro Max",
+    "claim": "Front camera: 12MP TrueDepth",
+    "source": "https://support.apple.com/en-us/121032",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Pro Max",
+    "claim": "Battery: up to 33 hours video playback",
+    "source": "https://support.apple.com/en-us/121032",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Pro Max",
+    "claim": "Water resistance: IP68, 6 m for up to 30 minutes",
+    "source": "https://support.apple.com/en-us/121032",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Pro Max",
+    "claim": "5G: Supported (bands vary by model)",
+    "source": "https://support.apple.com/en-us/121032",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Pro Max",
+    "claim": "Weight: 227 g",
+    "source": "https://support.apple.com/en-us/121032",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Pro Max",
+    "claim": "Storage: 256GB, 512GB, 1TB",
+    "source": "iphone-sheet.ts",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 16 Pro Max",
+    "claim": "colours in SEO copy",
+    "source": "https://support.apple.com/en-us/121032",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 16 Pro Max",
+    "claim": "SIM detail",
+    "source": "https://support.apple.com/en-us/121032",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 17e",
+    "claim": "Display: 6.1-inch Super Retina XDR OLED",
+    "source": "https://support.apple.com/en-us/126470",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17e",
+    "claim": "Chip: A19",
+    "source": "https://support.apple.com/en-us/126470",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17e",
+    "claim": "Rear cameras: 48MP Fusion camera system",
+    "source": "https://support.apple.com/en-us/126470",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17e",
+    "claim": "Front camera: 12MP TrueDepth",
+    "source": "https://support.apple.com/en-us/126470",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17e",
+    "claim": "Battery: up to 26 hours video playback",
+    "source": "https://support.apple.com/en-us/126470",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17e",
+    "claim": "Water resistance: IP68, 6 m for up to 30 minutes",
+    "source": "https://support.apple.com/en-us/126470",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17e",
+    "claim": "5G: Supported (bands vary by model)",
+    "source": "https://support.apple.com/en-us/126470",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17e",
+    "claim": "Weight: 169 g",
+    "source": "https://support.apple.com/en-us/126470",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17e",
+    "claim": "Storage: 256GB, 512GB",
+    "source": "iphone-sheet.ts",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17e",
+    "claim": "colours in SEO copy",
+    "source": "https://support.apple.com/en-us/126470",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 17e",
+    "claim": "SIM detail",
+    "source": "https://support.apple.com/en-us/126470",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 17",
+    "claim": "Display: 6.3-inch Super Retina XDR OLED with ProMotion",
+    "source": "https://support.apple.com/en-us/125089",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17",
+    "claim": "Chip: A19",
+    "source": "https://support.apple.com/en-us/125089",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17",
+    "claim": "Rear cameras: 48MP Dual Fusion camera system",
+    "source": "https://support.apple.com/en-us/125089",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17",
+    "claim": "Front camera: 18MP Center Stage",
+    "source": "https://support.apple.com/en-us/125089",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17",
+    "claim": "Battery: up to 30 hours video playback",
+    "source": "https://support.apple.com/en-us/125089",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17",
+    "claim": "Water resistance: IP68, 6 m for up to 30 minutes",
+    "source": "https://support.apple.com/en-us/125089",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17",
+    "claim": "5G: Supported (bands vary by model)",
+    "source": "https://support.apple.com/en-us/125089",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17",
+    "claim": "Weight: 177 g",
+    "source": "https://support.apple.com/en-us/125089",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17",
+    "claim": "Storage: 256GB, 512GB",
+    "source": "iphone-sheet.ts",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17",
+    "claim": "colours in SEO copy",
+    "source": "https://support.apple.com/en-us/125089",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 17",
+    "claim": "SIM detail",
+    "source": "https://support.apple.com/en-us/125089",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 17 Pro",
+    "claim": "Display: 6.3-inch Super Retina XDR OLED with ProMotion",
+    "source": "https://support.apple.com/en-us/125090",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17 Pro",
+    "claim": "Chip: A19 Pro",
+    "source": "https://support.apple.com/en-us/125090",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17 Pro",
+    "claim": "Rear cameras: 48MP Pro Fusion camera system",
+    "source": "https://support.apple.com/en-us/125090",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17 Pro",
+    "claim": "Front camera: 18MP Center Stage",
+    "source": "https://support.apple.com/en-us/125090",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17 Pro",
+    "claim": "Battery: up to 33 hours video playback",
+    "source": "https://support.apple.com/en-us/125090",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17 Pro",
+    "claim": "Water resistance: IP68, 6 m for up to 30 minutes",
+    "source": "https://support.apple.com/en-us/125090",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17 Pro",
+    "claim": "5G: Supported (bands vary by model)",
+    "source": "https://support.apple.com/en-us/125090",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17 Pro",
+    "claim": "Weight: 206 g",
+    "source": "https://support.apple.com/en-us/125090",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17 Pro",
+    "claim": "Storage: 256GB, 512GB, 1TB",
+    "source": "iphone-sheet.ts",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17 Pro",
+    "claim": "colours in SEO copy",
+    "source": "https://support.apple.com/en-us/125090",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 17 Pro",
+    "claim": "SIM detail",
+    "source": "https://support.apple.com/en-us/125090",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 17 Pro Max",
+    "claim": "Display: 6.9-inch Super Retina XDR OLED with ProMotion",
+    "source": "https://support.apple.com/en-us/125091",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17 Pro Max",
+    "claim": "Chip: A19 Pro",
+    "source": "https://support.apple.com/en-us/125091",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17 Pro Max",
+    "claim": "Rear cameras: 48MP Pro Fusion camera system",
+    "source": "https://support.apple.com/en-us/125091",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17 Pro Max",
+    "claim": "Front camera: 18MP Center Stage",
+    "source": "https://support.apple.com/en-us/125091",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17 Pro Max",
+    "claim": "Battery: up to 39 hours video playback",
+    "source": "https://support.apple.com/en-us/125091",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17 Pro Max",
+    "claim": "Water resistance: IP68, 6 m for up to 30 minutes",
+    "source": "https://support.apple.com/en-us/125091",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17 Pro Max",
+    "claim": "5G: Supported (bands vary by model)",
+    "source": "https://support.apple.com/en-us/125091",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17 Pro Max",
+    "claim": "Weight: 233 g",
+    "source": "https://support.apple.com/en-us/125091",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17 Pro Max",
+    "claim": "Storage: 256GB, 512GB, 1TB, 2TB",
+    "source": "iphone-sheet.ts",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 17 Pro Max",
+    "claim": "colours in SEO copy",
+    "source": "https://support.apple.com/en-us/125091",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 17 Pro Max",
+    "claim": "SIM detail",
+    "source": "https://support.apple.com/en-us/125091",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone Air",
+    "claim": "Display: 6.5-inch Super Retina XDR OLED with ProMotion",
+    "source": "https://support.apple.com/en-us/125092",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone Air",
+    "claim": "Chip: A19 Pro",
+    "source": "https://support.apple.com/en-us/125092",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone Air",
+    "claim": "Rear cameras: 48MP Fusion camera",
+    "source": "https://support.apple.com/en-us/125092",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone Air",
+    "claim": "Front camera: 18MP Center Stage",
+    "source": "https://support.apple.com/en-us/125092",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone Air",
+    "claim": "Battery: up to 27 hours video playback",
+    "source": "https://support.apple.com/en-us/125092",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone Air",
+    "claim": "Water resistance: IP68, 6 m for up to 30 minutes",
+    "source": "https://support.apple.com/en-us/125092",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone Air",
+    "claim": "5G: Supported (bands vary by model)",
+    "source": "https://support.apple.com/en-us/125092",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone Air",
+    "claim": "Weight: 165 g",
+    "source": "https://support.apple.com/en-us/125092",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone Air",
+    "claim": "Storage: 256GB, 512GB, 1TB",
+    "source": "iphone-sheet.ts",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone Air",
+    "claim": "colours in SEO copy",
+    "source": "https://support.apple.com/en-us/125092",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone Air",
+    "claim": "SIM detail",
+    "source": "https://support.apple.com/en-us/125092",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 18 Pro",
+    "claim": "Display: 6.3-inch Super Retina XDR OLED with ProMotion",
+    "source": "https://support.apple.com/en-us/148590",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 18 Pro",
+    "claim": "Chip: A20 Pro",
+    "source": "https://support.apple.com/en-us/148590",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 18 Pro",
+    "claim": "Rear cameras: 48MP Pro Fusion camera system",
+    "source": "https://support.apple.com/en-us/148590",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 18 Pro",
+    "claim": "Front camera: 18MP Center Stage",
+    "source": "https://support.apple.com/en-us/148590",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 18 Pro",
+    "claim": "Battery: up to 36 hours video playback",
+    "source": "https://support.apple.com/en-us/148590",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 18 Pro",
+    "claim": "Water resistance: IP68, 6 m for up to 30 minutes",
+    "source": "https://support.apple.com/en-us/148590",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 18 Pro",
+    "claim": "5G: Supported (bands vary by model)",
+    "source": "https://support.apple.com/en-us/148590",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 18 Pro",
+    "claim": "Weight: 211 g",
+    "source": "https://support.apple.com/en-us/148590",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 18 Pro",
+    "claim": "Storage: 256GB, 512GB, 1TB, 2TB",
+    "source": "iphone-sheet.ts",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 18 Pro",
+    "claim": "colours in SEO copy",
+    "source": "https://support.apple.com/en-us/148590",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 18 Pro",
+    "claim": "SIM detail",
+    "source": "https://support.apple.com/en-us/148590",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 18 Pro Max",
+    "claim": "Display: 6.9-inch Super Retina XDR OLED with ProMotion",
+    "source": "https://support.apple.com/en-us/148591",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 18 Pro Max",
+    "claim": "Chip: A20 Pro",
+    "source": "https://support.apple.com/en-us/148591",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 18 Pro Max",
+    "claim": "Rear cameras: 48MP Pro Fusion camera system",
+    "source": "https://support.apple.com/en-us/148591",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 18 Pro Max",
+    "claim": "Front camera: 18MP Center Stage",
+    "source": "https://support.apple.com/en-us/148591",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 18 Pro Max",
+    "claim": "Battery: up to 45 hours video playback",
+    "source": "https://support.apple.com/en-us/148591",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 18 Pro Max",
+    "claim": "Water resistance: IP68, 6 m for up to 30 minutes",
+    "source": "https://support.apple.com/en-us/148591",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 18 Pro Max",
+    "claim": "5G: Supported (bands vary by model)",
+    "source": "https://support.apple.com/en-us/148591",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 18 Pro Max",
+    "claim": "Weight: 249 g",
+    "source": "https://support.apple.com/en-us/148591",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 18 Pro Max",
+    "claim": "Storage: 256GB, 512GB, 1TB, 2TB",
+    "source": "iphone-sheet.ts",
+    "status": "verified"
+  },
+  {
+    "model": "iPhone 18 Pro Max",
+    "claim": "colours in SEO copy",
+    "source": "https://support.apple.com/en-us/148591",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone 18 Pro Max",
+    "claim": "SIM detail",
+    "source": "https://support.apple.com/en-us/148591",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone Duo",
+    "claim": "chip",
+    "source": "no Apple tech-spec page",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone Duo",
+    "claim": "display",
+    "source": "no Apple tech-spec page",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone Duo",
+    "claim": "cameras",
+    "source": "no Apple tech-spec page",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone Duo",
+    "claim": "battery",
+    "source": "no Apple tech-spec page",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone Duo",
+    "claim": "water",
+    "source": "no Apple tech-spec page",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone Duo",
+    "claim": "5G",
+    "source": "no Apple tech-spec page",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone Duo",
+    "claim": "weight",
+    "source": "no Apple tech-spec page",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone Duo",
+    "claim": "colours",
+    "source": "no Apple tech-spec page",
+    "status": "removed"
+  },
+  {
+    "model": "iPhone Duo",
+    "claim": "storage/price from sheet",
+    "source": "iphone-sheet.ts",
+    "status": "verified"
+  }
+]

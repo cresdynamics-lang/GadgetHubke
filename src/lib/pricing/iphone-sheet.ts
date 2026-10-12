@@ -151,7 +151,7 @@ export function storagesFromSheet(name: string) {
 export function baseNewKes(name: string): number | undefined {
   const rows = sheetRowsForProduct(name);
   if (!rows.length) return undefined;
-  return Math.min(..rows.map((r) => r.newKes));
+  return Math.min(...rows.map((r) => r.newKes));
 }
 
 export function sheetPrice(name: string, storageLabel: string): { newKes: number; exUkKes: number } | undefined {

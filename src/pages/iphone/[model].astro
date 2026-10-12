@@ -1,11 +1,13 @@
 ---
 /**
- * iPhone 11 - 16 product page - gallery + buying panel (core).
+ * iPhone SEO product page (11–18). Gallery + buying panel for catalog models;
+ * SEO-only layout for sheet models without a legacy gallery entry.
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ProductStage from "../../components/iphone/ProductStage.astro";
 import LipaCalc from "../../components/iphone/LipaCalc.astro";
 import TradeInCalc from "../../components/iphone/TradeInCalc.astro";
+import SeoProductBlocks from "../../components/iphone/SeoProductBlocks.astro";
 import {
   models,
   getModel,
@@ -29,64 +31,213 @@ import {
   relatedModels,
   type IphoneView,
 } from "../../lib/iphone";
-import { whatsappUrl } from "../../lib/site";
+import {
+  listSeoModels,
+  getSeoModel,
+  buildIphoneProductJsonLd,
+  SHOW_EX_UK,
+  formatKesSeo,
+  listSeriesHubs,
+  getSeriesHub,
+  seriesHubForModel,
+  assertExUkWarrantyConfigured,
+  seoIdToShopProductId,
+} from "../../lib/iphone/seo";
+import { getProduct } from "../../lib/products";
+import { site, whatsappUrl } from "../../lib/site";
 import StockChannelToggle from "../../components/StockChannelToggle.astro";
 import ProductReviews from "../../components/ProductReviews.astro";
 import StickyBuyBar from "../../components/StickyBuyBar.astro";
-import { exUkFromNew } from "../../lib/stock-channel";
+import SeriesHub from "../../components/iphone/SeriesHub.astro";
+
+assertExUkWarrantyConfigured();
+
+type Props = { kind: "model" | "series" };
 
 export function getStaticPaths() {
-  return models.map((m) => ({ params: { model: m.id } }));
+  return [
+    ...listSeoModels().map((m) => ({ params: { model: m.id }, props: { kind: "model" as const } })),
+    ...listSeriesHubs().map((s) => ({ params: { model: s.slug }, props: { kind: "series" as const } })),
+  ];
 }
 
 const { model: modelId } = Astro.params;
-const model = getModel(modelId!);
-if (!model) {
+const { kind } = Astro.props as Props;
+const seriesPage = kind === "series" ? getSeriesHub(modelId!) : undefined;
+if (kind === "series" && !seriesPage) {
   return Astro.redirect("/iphone");
 }
 
-const overviewOnly = isOverviewOnly(model.id);
-const colours = availableColours(model.id);
-const textColours = textOnlyColours(model.id);
-const initialColour = defaultColourForModel(model.id, model.defaultColour ?? undefined);
-const initialViews = initialColour ? availableViews(model.id, initialColour) : [];
-const initialImg = getImage(model.id, initialColour, overviewOnly ? "overview" : 1, model.name);
-const prices = storagePrices(model.basePriceKes, model.storage);
-const firstPrice = prices[0];
-const lipa = lipaMonthly(firstPrice.kes);
-const tag = isLatestTag(model) ? "Latest" : isValueTag(model) ? "Value" : null;
-const notes = buyingNotes(model);
-const fits = accessoriesFor(model);
-const related = relatedModels(model, models);
+const seo = kind === "model" ? getSeoModel(modelId!) : undefined;
+if (kind === "model" && !seo) {
+  return Astro.redirect("/iphone");
+}
 
-const colourData = colours.map((key) => ({
-  key,
-  label: colourLabel(key),
-  hex: colourHex(key),
-  light: isLightColour(key),
-  views: availableViews(model.id, key),
-  images: ([1, 2, 3] as IphoneView[])
-    .filter((v) => availableViews(model.id, key).includes(v))
-    .map((v) => {
-      const img = getImage(model.id, key, v, model.name);
-      return { view: v, src: img.src, srcWebp: img.srcWebp ?? "", alt: img.alt, width: img.width };
-    }),
-}));
-
-const overviewImg = getImage(model.id, null, "overview", model.name);
-
-const galleryPayload = {
-  modelId: model.id,
-  name: model.name,
-  overviewOnly,
-  overview: overviewImg,
-  colours: colourData,
-  initialColour,
-  textColours: textColours.map((k) => colourLabel(k)),
+let hasLegacyGallery = false;
+let model: ReturnType<typeof getModel>;
+let prices: ReturnType<typeof storagePrices> = [];
+let firstPrice = { label: "", kes: 0 };
+let lipa = { depositKes: 0, monthlyKes: 0, months: 6 };
+let tag: string | null = null;
+let notes: ReturnType<typeof buyingNotes> = [];
+let fits: ReturnType<typeof accessoriesFor> = [];
+let related: ReturnType<typeof relatedModels> = [];
+let jsonLd: ReturnType<typeof buildIphoneProductJsonLd> | null = null;
+let galleryPayload: Record<string, unknown> = {};
+let initialImg = {
+  src: "/images/logo.png",
+  srcWebp: undefined as string | undefined,
+  alt: "iPhone",
+  width: 800,
 };
+let overviewOnly = true;
+let colours: string[] = [];
+let colourData: {
+  key: string;
+  label: string;
+  hex: string;
+  light: boolean;
+  views: IphoneView[];
+  images: { view: IphoneView; src: string; srcWebp: string; alt: string; width: number }[];
+}[] = [];
+let textColours: string[] = [];
+let initialColour: string | null = null;
+
+if (seo) {
+  const seriesHub = seriesHubForModel(seo);
+  const legacyModel = getModel(seo.id);
+  const shopProduct = getProduct(seoIdToShopProductId[seo.id] ?? seo.id);
+  const pageUrl = new URL(`/iphone/${seo.id}`, site.url).href;
+  hasLegacyGallery = Boolean(legacyModel);
+  model = legacyModel;
+  overviewOnly = model ? isOverviewOnly(model.id) : true;
+  colours = model ? availableColours(model.id) : [];
+  textColours = model ? textOnlyColours(model.id) : [];
+  initialColour = model
+    ? defaultColourForModel(model.id, model.defaultColour ?? undefined)
+    : null;
+  initialImg = model
+    ? getImage(model.id, initialColour, overviewOnly ? "overview" : 1, model.name)
+    : shopProduct
+      ? {
+          src: shopProduct.image.src,
+          srcWebp: undefined,
+          alt: shopProduct.image.alt,
+          width: 800,
+        }
+      : { src: "/images/logo.png", srcWebp: undefined, alt: seo.name, width: 800 };
+  prices = storagePrices(
+    model?.basePriceKes ?? seo.fromKes,
+    model?.storage ?? seo.variants.map((v) => v.storage),
+    seo.name,
+  );
+  firstPrice = prices[0] ?? { label: "", kes: seo.fromKes };
+  lipa = lipaMonthly(firstPrice.kes);
+  tag = model ? (isLatestTag(model) ? "Latest" : isValueTag(model) ? "Value" : null) : null;
+  notes = model ? buyingNotes(model) : [];
+  fits = model ? accessoriesFor(model) : [];
+  related = model ? relatedModels(model, models) : [];
+  jsonLd = buildIphoneProductJsonLd(seo, {
+    pageUrl,
+    imageUrl: new URL(initialImg.src, site.url).href,
+    seriesUrl: new URL(`/iphone/${seriesHub.slug}`, site.url).href,
+  });
+  colourData = hasLegacyGallery
+    ? colours.map((key) => ({
+        key,
+        label: colourLabel(key),
+        hex: colourHex(key),
+        light: isLightColour(key),
+        views: availableViews(model!.id, key),
+        images: ([1, 2, 3] as IphoneView[])
+          .filter((v) => availableViews(model!.id, key).includes(v))
+          .map((v) => {
+            const img = getImage(model!.id, key, v, model!.name);
+            return { view: v, src: img.src, srcWebp: img.srcWebp ?? "", alt: img.alt, width: img.width };
+          }),
+      }))
+    : [];
+  const overviewImg = model
+    ? getImage(model.id, null, "overview", model.name)
+    : {
+        src: initialImg.src,
+        srcWebp: initialImg.srcWebp,
+        alt: initialImg.alt,
+        width: initialImg.width,
+      };
+  galleryPayload = {
+    modelId: seo.id,
+    name: seo.name,
+    overviewOnly,
+    overview: overviewImg,
+    colours: colourData,
+    initialColour,
+    textColours: textColours.map((k) => colourLabel(k)),
+  };
+}
 ---
 
-<BaseLayout title={`${model.name} - GadgetHub`} description={model.tagline}>
+{seriesPage ? <SeriesHub hub={seriesPage} /> : null}
+{seo && jsonLd ? (
+<BaseLayout title={seo.seoTitle} description={seo.metaDescription}>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  {!hasLegacyGallery ? (
+    <article class="ipdp ipdp--seo-only">
+      <div class="container ipdp__grid">
+        <div class="ipdp__gallery">
+          <div class="ipdp__stage-wrap">
+            <picture>
+              <img
+                class="ipdp__img"
+                src={initialImg.src}
+                alt={initialImg.alt}
+                width={initialImg.width}
+                height={initialImg.width}
+                fetchpriority="high"
+                loading="eager"
+                decoding="async"
+              />
+            </picture>
+          </div>
+        </div>
+        <div class="ipdp__buy">
+          <h1>{seo.h1}</h1>
+          <p class="ipdp__tagline">
+            Price in Kenya · From {formatKesSeo(seo.fromKes)}
+          </p>
+          <div class="ipdp__field">
+            <p class="ipdp__label">Storage</p>
+            <div class="ipdp__storage">
+              {prices.map((p, i) => (
+                <a
+                  class:list={["ipdp__storage-btn", { "is-active": i === 0 }]}
+                  href={whatsappUrl(
+                    `Hi Gadget Hub, I'd like to order the ${seo.name} ${p.label}${p.sheetId ? ` (Item ${p.sheetId})` : ""}.`,
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {p.label}
+                  <span>{formatKes(p.kes)}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+          <p class="ipdp__price">From {formatKes(firstPrice.kes)}</p>
+          <a
+            class="ipdp__wa"
+            href={whatsappUrl(`Hi Gadget Hub, I'm interested in the ${seo.name}.`)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Order on WhatsApp
+          </a>
+        </div>
+      </div>
+      <SeoProductBlocks model={seo} />
+    </article>
+  ) : (
   <article class="ipdp" data-ipdp>
     <div class="container ipdp__grid">
       <div class="ipdp__gallery" data-gallery>
@@ -134,9 +285,12 @@ const galleryPayload = {
           {tag ? <span class="ipdp__pill">{tag}</span> : null}
           <span class="ipdp__pill ipdp__pill--muted">{model.year}</span>
         </div>
-        <h1>{model.name}</h1>
-        <StockChannelToggle />
-        <p class="ipdp__tagline">{model.tagline}</p>
+        <h1>{seo.h1}</h1>
+        {SHOW_EX_UK ? <StockChannelToggle /> : null}
+        <p class="ipdp__tagline">
+          Price in Kenya · From {formatKesSeo(seo.fromKes)}
+          {model?.tagline ? ` · ${model.tagline}` : ""}
+        </p>
 
         <div class="ipdp__field">
           <p class="ipdp__label">
@@ -183,7 +337,7 @@ const galleryPayload = {
                   data-storage={p.label}
                   data-kes={p.kes}
                   data-kes-new={p.kes}
-                  data-kes-ex-uk={exUkFromNew(p.kes)}
+                  data-sheet-id={p.sheetId ?? ""}
                 >
                   {p.label}
                   <span data-storage-price>{formatKes(p.kes)}</span>
@@ -360,8 +514,10 @@ const galleryPayload = {
     </section>
 
     <div class="container">
-      <ProductReviews productId={model.id} productName={model.name} />
+      <ProductReviews productId={seo.id} productName={seo.name} />
     </div>
+
+    <SeoProductBlocks model={seo} />
   </article>
 
   <dialog class="ipdp-lb" data-lightbox aria-label="Full screen photo">
@@ -375,30 +531,38 @@ const galleryPayload = {
   </dialog>
 
   <StickyBuyBar
-    productName={model.name}
+    productName={seo.name}
     imageSrc={initialImg.src}
     imageAlt={initialImg.alt}
-    description={model.tagline}
+    description={seo.metaDescription}
   />
+  )}
 </BaseLayout>
+) : null}
 
-<script define:vars={{ galleryPayload, modelName: model.name, prices, depositPct: iphoneConfig.lipa.depositDefaultPct, months: iphoneConfig.lipa.monthsDefault, waBase: `https://wa.me/${iphoneConfig.whatsapp}?text=` }}>
+{seo && hasLegacyGallery ? (
+<script define:vars={{
+  galleryPayload,
+  modelName: seo.name,
+  prices: prices.map((p) =>
+    SHOW_EX_UK
+      ? { label: p.label, kes: p.kes, sheetId: p.sheetId, exUkKes: p.exUkKes }
+      : { label: p.label, kes: p.kes, sheetId: p.sheetId },
+  ),
+  depositPct: iphoneConfig.lipa.depositDefaultPct,
+  months: iphoneConfig.lipa.monthsDefault,
+  waBase: `https://wa.me/${iphoneConfig.whatsapp}?text=`,
+}}>
   const state = {
     colour: galleryPayload.initialColour,
     view: 1,
     storage: prices[0]?.label,
     kesNew: prices[0]?.kes,
-    kesExUk: prices[0] ? Math.max(999, Math.round((prices[0].kes * 0.88) / 1000) * 1000 - 1) : 0,
-    channel: "new",
     tour: null,
   };
 
   function activeKes() {
-    return state.channel === "ex-uk" ? Number(state.kesExUk) || 0 : Number(state.kesNew) || 0;
-  }
-
-  function channelLabel() {
-    return state.channel === "ex-uk" ? "EX-UK" : "New";
+    return Number(state.kesNew) || 0;
   }
 
   const img = document.querySelector("[data-gallery-img]");
@@ -502,34 +666,21 @@ const galleryPayload = {
       monthlyEl.textContent = `or KES ${monthly.toLocaleString("en-KE")} a month for ${months} months after a KES ${deposit.toLocaleString("en-KE")} deposit`;
 
     document.querySelectorAll("[data-storage]").forEach((btn) => {
-      const newKes = Number(btn.getAttribute("data-kes-new") || btn.getAttribute("data-kes") || 0);
-      const exUkKes = Number(btn.getAttribute("data-kes-ex-uk") || newKes);
-      const shown = state.channel === "ex-uk" ? exUkKes : newKes;
+      const shown = Number(btn.getAttribute("data-kes-new") || btn.getAttribute("data-kes") || 0);
       const span = btn.querySelector("[data-storage-price]");
       if (span) span.textContent = `KES ${shown.toLocaleString("en-KE")}`;
     });
 
     if (wa instanceof HTMLAnchorElement) {
       const c = colourEntry()?.label || "overview";
+      const sheetId = document.querySelector("[data-storage].is-active")?.getAttribute("data-sheet-id");
+      const itemBit = sheetId ? ` Item ${sheetId}.` : "";
       const msg = encodeURIComponent(
-        `Hi Gadget Hub, I'm interested in the ${modelName} (${channelLabel()}), ${c}, ${state.storage}. Price: KES ${kes.toLocaleString("en-KE")}.`,
+        `Hi Gadget Hub, I'm interested in the ${modelName}, ${c}, ${state.storage}.${itemBit} Price: KES ${kes.toLocaleString("en-KE")}.`,
       );
       wa.href = `${waBase}${msg}`;
     }
   }
-
-  document.querySelectorAll("[data-stock-channel] [data-channel]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const next = btn.getAttribute("data-channel") || "new";
-      state.channel = next;
-      document.querySelectorAll("[data-stock-channel] [data-channel]").forEach((b) => {
-        const on = b === btn;
-        b.classList.toggle("is-active", on);
-        b.setAttribute("aria-pressed", on ? "true" : "false");
-      });
-      updatePrice();
-    });
-  });
 
   function stopTour() {
     if (state.tour) {
@@ -562,7 +713,6 @@ const galleryPayload = {
       btn.classList.add("is-active");
       state.storage = btn.getAttribute("data-storage");
       state.kesNew = btn.getAttribute("data-kes-new") || btn.getAttribute("data-kes");
-      state.kesExUk = btn.getAttribute("data-kes-ex-uk") || state.kesNew;
       updatePrice();
     });
   });
@@ -682,13 +832,12 @@ const galleryPayload = {
     const cur = currentImage();
     const c = colourEntry();
     return {
-      id: `${galleryPayload.modelId}-${state.channel}`,
+      id: `${galleryPayload.modelId}-${state.storage}`,
       name: modelName,
       colour: c?.label || "Overview",
-      storage: `${state.storage} · ${channelLabel()}`,
+      storage: state.storage,
       kes: activeKes(),
       image: cur.src,
-      channel: channelLabel(),
       href: location.pathname,
       qty: 1,
     };
@@ -705,6 +854,7 @@ const galleryPayload = {
     });
   });
 </script>
+) : null}
 
 <style>
   .ipdp {

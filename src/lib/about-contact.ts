@@ -6,6 +6,8 @@
 
 import { policy, site, whatsappUrl } from "./site";
 import { ghImages, macProductPhotos } from "./images";
+import { SHOW_EX_UK } from "./iphone/seo/flags";
+
 /** Owner still needs to confirm these - keep off the live pages */
 export const pendingOwnerFacts = {
   founderStory: false,
@@ -28,7 +30,9 @@ export const aboutStory = {
   sticky:
     "Clear stock. Clear prices. A real person on WhatsApp.",
   paragraphs: [
-    "Gadget Hub Investments sells Apple products in Nairobi - New sealed units and EX-UK imports - with live prices shown up front.",
+    SHOW_EX_UK
+      ? "Gadget Hub Investments sells Apple products in Nairobi - New sealed units and EX-UK imports - with live prices shown up front."
+      : "Gadget Hub Investments sells Apple products in Nairobi - New sealed units with live prices shown up front.",
     "Pick a device on the site, message us on WhatsApp, then receive or collect at Norwich House, Suite 15, 4th Floor. Payment options include M-Pesa, card, and Lipa Mdogo Mdogo run in-house by Gadget Hub Investments.",
   ],
 } as const;
@@ -41,13 +45,17 @@ export const aboutChannels = {
     image: ghImages.iphone.proBlue,
     imageAlt: "iPhone - New sealed stock",
   },
-  "ex-uk": {
-    title: "EX-UK",
-    body: "Previously owned in the UK, sold at a lower price than New.",
-    note: "Ask us on WhatsApp for the condition of any EX-UK unit before you buy.",
-    image: ghImages.duo.openCamera,
-    imageAlt: "iPhone - EX-UK option",
-  },
+  ...(SHOW_EX_UK
+    ? {
+        "ex-uk": {
+          title: "EX-UK",
+          body: "Previously owned in the UK, sold at a lower price than New.",
+          note: "Ask us on WhatsApp for the condition of any EX-UK unit before you buy.",
+          image: ghImages.duo.openCamera,
+          imageAlt: "iPhone - EX-UK option",
+        },
+      }
+    : {}),
 } as const;
 
 /** Only principles we can back with site/policy copy */
@@ -57,11 +65,21 @@ export const aboutWhy = [
     title: "Apple across the lineup",
     body: "iPhone, Mac, iPad, Watch, AirPods, TV & Home, and Accessories - shopped in one place.",
   },
-  {
-    n: "02",
-    title: "New and EX-UK, side by side",
-    body: "Toggle New and EX-UK prices on the product display.",
-  },
+  ...(SHOW_EX_UK
+    ? [
+        {
+          n: "02",
+          title: "New and EX-UK, side by side",
+          body: "Toggle New and EX-UK prices on the product display.",
+        },
+      ]
+    : [
+        {
+          n: "02",
+          title: "Live prices on every product",
+          body: "See the from-price on each product page before you message us.",
+        },
+      ]),
   {
     n: "03",
     title: "1-year warranty on New",
@@ -83,7 +101,9 @@ export const aboutSteps = [
   {
     n: "01",
     title: "Pick your device",
-    body: "Browse New or EX-UK prices across the Apple lineup.",
+    body: SHOW_EX_UK
+      ? "Browse New or EX-UK prices across the Apple lineup."
+      : "Browse sealed New prices across the Apple lineup.",
   },
   {
     n: "02",
@@ -127,7 +147,9 @@ export const contactHero = {
 
 export const contactChips = [
   { label: "New iPhone", msg: "Hi Gadget Hub, I'm interested in a New iPhone." },
-  { label: "EX-UK iPhone", msg: "Hi Gadget Hub, I'm interested in an EX-UK iPhone." },
+  ...(SHOW_EX_UK
+    ? [{ label: "EX-UK iPhone", msg: "Hi Gadget Hub, I'm interested in an EX-UK iPhone." }]
+    : []),
   { label: "MacBook", msg: "Hi Gadget Hub, I'm interested in a MacBook." },
   { label: "iPad", msg: "Hi Gadget Hub, I'm interested in an iPad." },
   { label: "Watch", msg: "Hi Gadget Hub, I'm interested in an Apple Watch." },
@@ -139,10 +161,19 @@ export const contactChips = [
 
 /** FAQ - only answers backed by current site/policy */
 export const contactFaq = [
-  {
-    q: "Do you sell New and EX-UK?",
-    a: "Yes. New means sealed, straight from the box. EX-UK means previously owned in the UK and sold at a lower price. Toggle both on product pages.",
-  },
+  ...(SHOW_EX_UK
+    ? [
+        {
+          q: "Do you sell New and EX-UK?",
+          a: "Yes. New means sealed, straight from the box. EX-UK means previously owned in the UK and sold at a lower price. Toggle both on product pages.",
+        },
+      ]
+    : [
+        {
+          q: "Are your iPhones new and sealed?",
+          a: "Yes. We sell New sealed units with live prices on each product page.",
+        },
+      ]),
   {
     q: "Do New phones come with a warranty?",
     a: `${site.warranty.note} ${site.setup.note}`,

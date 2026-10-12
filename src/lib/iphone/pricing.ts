@@ -1,10 +1,39 @@
 import { iphoneConfig } from "./config";
+import { sheetRowsForProduct } from "../pricing/iphone-sheet";
 
-/** Storage option with computed sample KES price */
-export function storagePrices(baseKes: number, sizes: string[]): { label: string; kes: number }[] {
+export type StoragePrice = {
+  label: string;
+  kes: number;
+  sheetId?: string;
+  exUkKes?: number;
+};
+
+/**
+ * Storage prices for a model. Prefer the official sheet by model name;
+ * fall back to base + steps only when the sheet has no rows.
+ */
+export function storagePrices(
+  baseKes: number,
+  sizes: string[],
+  modelName?: string,
+): StoragePrice[] {
+  if (modelName) {
+    const rows = sheetRowsForProduct(modelName);
+    if (rows.length) {
+      return rows.map((r) => ({
+        label: r.storage,
+        kes: r.newKes,
+        sheetId: r.id,
+        exUkKes: r.exUkKes,
+      }));
+    }
+  }
   return sizes.map((label, i) => ({
     label,
-    kes: baseKes + (iphoneConfig.storageStepsKes[i] ?? iphoneConfig.storageStepsKes[iphoneConfig.storageStepsKes.length - 1]),
+    kes:
+      baseKes +
+      (iphoneConfig.storageStepsKes[i] ??
+        iphoneConfig.storageStepsKes[iphoneConfig.storageStepsKes.length - 1]),
   }));
 }
 

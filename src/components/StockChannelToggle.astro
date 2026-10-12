@@ -1,7 +1,10 @@
 ---
 /**
- * New | EX-UK stock-channel toggle - switches sample price only.
+ * New | Used (ex-UK) stock-channel toggle.
+ * Renders nothing while SHOW_EX_UK is false.
  */
+import { SHOW_EX_UK, EX_UK_CONDITION_LABEL } from "../lib/iphone/seo/flags";
+
 interface Props {
   /** Extra class on the root */
   class?: string;
@@ -10,15 +13,26 @@ interface Props {
 const { class: className } = Astro.props;
 ---
 
-<div class:list={["stock-channel", className]} data-stock-channel role="group" aria-label="Stock type">
-  <button type="button" class="stock-channel__btn is-active" data-channel="new" aria-pressed="true">
-    New
-  </button>
-  <button type="button" class="stock-channel__btn" data-channel="ex-uk" aria-pressed="false">
-    EX-UK
-  </button>
-</div>
-<p class="stock-channel__hint">New = sealed. EX-UK = ex-UK import.</p>
+{
+  SHOW_EX_UK ? (
+    <>
+      <div
+        class:list={["stock-channel", className]}
+        data-stock-channel
+        role="group"
+        aria-label="Stock type"
+      >
+        <button type="button" class="stock-channel__btn is-active" data-channel="new" aria-pressed="true">
+          New
+        </button>
+        <button type="button" class="stock-channel__btn" data-channel="ex-uk" aria-pressed="false">
+          {EX_UK_CONDITION_LABEL}
+        </button>
+      </div>
+      <p class="stock-channel__hint">New = sealed. {EX_UK_CONDITION_LABEL} = used import stock.</p>
+    </>
+  ) : null
+}
 
 <style>
   .stock-channel {

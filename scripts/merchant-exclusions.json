@@ -1,0 +1,44 @@
+[
+  {
+    "sheetId": "IP-086",
+    "model": "iPhone 17 Pro",
+    "storage": "256GB",
+    "reason": "no_photo"
+  },
+  {
+    "sheetId": "IP-087",
+    "model": "iPhone 17 Pro",
+    "storage": "512GB",
+    "reason": "no_photo"
+  },
+  {
+    "sheetId": "IP-088",
+    "model": "iPhone 17 Pro",
+    "storage": "1TB",
+    "reason": "no_photo"
+  },
+  {
+    "sheetId": "IP-089",
+    "model": "iPhone 17 Pro Max",
+    "storage": "256GB",
+    "reason": "no_photo"
+  },
+  {
+    "sheetId": "IP-090",
+    "model": "iPhone 17 Pro Max",
+    "storage": "512GB",
+    "reason": "no_photo"
+  },
+  {
+    "sheetId": "IP-091",
+    "model": "iPhone 17 Pro Max",
+    "storage": "1TB",
+    "reason": "no_photo"
+  },
+  {
+    "sheetId": "IP-092",
+    "model": "iPhone 17 Pro Max",
+    "storage": "2TB",
+    "reason": "no_photo"
+  }
+]

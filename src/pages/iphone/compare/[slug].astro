@@ -1,0 +1,127 @@
+---
+/**
+ * Side-by-side iPhone comparison pages driven by SEO catalog compareWith slugs.
+ */
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { listSeoModels, getSeoModel, formatKesSeo } from "../../../lib/iphone/seo";
+
+export function getStaticPaths() {
+  const slugs = new Set<string>();
+  for (const m of listSeoModels()) {
+    for (const c of m.compareWith) slugs.add(c);
+  }
+  return [...slugs].map((slug) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+const parts = (slug || "").split("-vs-");
+if (parts.length !== 2) {
+  return Astro.redirect("/iphone");
+}
+
+const left = getSeoModel(parts[0]!);
+const right = getSeoModel(parts[1]!);
+if (!left || !right) {
+  return Astro.redirect("/iphone");
+}
+
+const title = `${left.name} vs ${right.name} | Gadget Hub`;
+const description = `Compare ${left.name} and ${right.name} prices and specs in Kenya. From ${formatKesSeo(left.fromKes)} vs ${formatKesSeo(right.fromKes)} at Gadget Hub, Norwich House.`;
+
+const labels = [...new Set([...left.specs.map((s) => s.label), ...right.specs.map((s) => s.label)])];
+function specVal(model: typeof left, label: string) {
+  return model.specs.find((s) => s.label === label)?.value ?? "—";
+}
+
+const which =
+  left.fromKes === right.fromKes
+    ? `Both start at the same price point in our sheet. Choose by screen size, cameras and how you use the phone.`
+    : left.fromKes < right.fromKes
+      ? `Choose the ${left.name} if you want the lower starting price (${formatKesSeo(left.fromKes)}). Choose the ${right.name} if you want what it adds for ${formatKesSeo(right.fromKes)}.`
+      : `Choose the ${right.name} if you want the lower starting price (${formatKesSeo(right.fromKes)}). Choose the ${left.name} if you want what it adds for ${formatKesSeo(left.fromKes)}.`;
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="compare container">
+    <nav aria-label="Breadcrumb" class="compare__crumbs">
+      <a href="/">Home</a> / <a href="/iphone">iPhone</a> / <span>{left.name} vs {right.name}</span>
+    </nav>
+    <h1>{left.name} vs {right.name}</h1>
+    <p class="compare__intro">
+      Side-by-side specs and starting prices in Kenya. Prices are sealed new stock from the Gadget Hub sheet.
+    </p>
+
+    <table class="compare__table">
+      <thead>
+        <tr>
+          <th scope="col">Spec</th>
+          <th scope="col"><a href={`/iphone/${left.id}`}>{left.name}</a></th>
+          <th scope="col"><a href={`/iphone/${right.id}`}>{right.name}</a></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">From price</th>
+          <td>{formatKesSeo(left.fromKes)}</td>
+          <td>{formatKesSeo(right.fromKes)}</td>
+        </tr>
+        {
+          labels.map((label) => (
+            <tr>
+              <th scope="row">{label}</th>
+              <td>{specVal(left, label)}</td>
+              <td>{specVal(right, label)}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+
+    <h2>Which should you choose?</h2>
+    <p>{which}</p>
+    <p>
+      <a href={`/iphone/${left.id}`}>View {left.name}</a>
+      {" · "}
+      <a href={`/iphone/${right.id}`}>View {right.name}</a>
+      {" · "}
+      <a href="/iphone">All iPhones</a>
+    </p>
+  </article>
+</BaseLayout>
+
+<style>
+  .compare {
+    max-width: 52rem;
+    margin: 2rem auto 4rem;
+    padding: 0 1.25rem;
+  }
+  .compare__crumbs {
+    font-size: 0.85rem;
+    color: #6e6e73;
+    margin-bottom: 1rem;
+  }
+  .compare h1 {
+    font-size: 1.75rem;
+    margin: 0 0 0.75rem;
+  }
+  .compare__intro {
+    color: #424245;
+    line-height: 1.55;
+  }
+  .compare__table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.92rem;
+  }
+  .compare__table th,
+  .compare__table td {
+    text-align: left;
+    padding: 0.55rem 0.4rem;
+    border-bottom: 1px solid #e8e8ed;
+    vertical-align: top;
+  }
+  .compare__table thead th {
+    font-weight: 700;
+  }
+</style>

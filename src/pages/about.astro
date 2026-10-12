@@ -10,6 +10,7 @@ import {
   aboutStory,
   aboutWhy,
 } from "../lib/about-contact";
+import { SHOW_EX_UK } from "../lib/iphone/seo/flags";
 import { site } from "../lib/site";
 import "../styles/launch-pages.css";
 
@@ -68,62 +69,66 @@ const headlineWords = aboutHero.headline.split(" ");
       </div>
     </section>
 
-    <hr class="lp-hairline container" />
-
-    <!-- New | EX-UK -->
-    <section class="lp-section about-channel" data-channel-section>
-      <div class="container">
-        <p class="lp-eyebrow lp-fade">What we sell</p>
-        <h2 class="lp-h2 lp-fade">New or EX-UK</h2>
-        <p class="lp-lede lp-fade">
-          Two kinds of stock, shown clearly. Toggle to see the difference.
-        </p>
-
-        <div class="about-channel__panel lp-fade">
-          <div class="about-channel__toggle" role="tablist" aria-label="Stock type">
-            <button
-              type="button"
-              class="about-channel__tab is-active"
-              role="tab"
-              aria-selected="true"
-              data-channel="new"
-            >
-              New
-            </button>
-            <button
-              type="button"
-              class="about-channel__tab"
-              role="tab"
-              aria-selected="false"
-              data-channel="ex-uk"
-            >
-              EX-UK
-            </button>
-          </div>
-
-          <div class="about-channel__body">
-            <div class="about-channel__media">
-              <img
-                data-channel-img
-                src={aboutChannels.new.image}
-                alt={aboutChannels.new.imageAlt}
-                width="560"
-                height="560"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-            <div class="about-channel__text">
-              <h3 data-channel-title>{aboutChannels.new.title}</h3>
-              <p data-channel-body>{aboutChannels.new.body}</p>
-              <p class="about-channel__note" data-channel-note>
-                {aboutChannels.new.note}
+    {
+      SHOW_EX_UK ? (
+        <>
+          <hr class="lp-hairline container" />
+          <section class="lp-section about-channel" data-channel-section>
+            <div class="container">
+              <p class="lp-eyebrow lp-fade">What we sell</p>
+              <h2 class="lp-h2 lp-fade">New or EX-UK</h2>
+              <p class="lp-lede lp-fade">
+                Two kinds of stock, shown clearly. Toggle to see the difference.
               </p>
+
+              <div class="about-channel__panel lp-fade">
+                <div class="about-channel__toggle" role="tablist" aria-label="Stock type">
+                  <button
+                    type="button"
+                    class="about-channel__tab is-active"
+                    role="tab"
+                    aria-selected="true"
+                    data-channel="new"
+                  >
+                    New
+                  </button>
+                  <button
+                    type="button"
+                    class="about-channel__tab"
+                    role="tab"
+                    aria-selected="false"
+                    data-channel="ex-uk"
+                  >
+                    EX-UK
+                  </button>
+                </div>
+
+                <div class="about-channel__body">
+                  <div class="about-channel__media">
+                    <img
+                      data-channel-img
+                      src={aboutChannels.new.image}
+                      alt={aboutChannels.new.imageAlt}
+                      width="560"
+                      height="560"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                  <div class="about-channel__text">
+                    <h3 data-channel-title>{aboutChannels.new.title}</h3>
+                    <p data-channel-body>{aboutChannels.new.body}</p>
+                    <p class="about-channel__note" data-channel-note>
+                      {aboutChannels.new.note}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
+          </section>
+        </>
+      ) : null
+    }
 
     <hr class="lp-hairline container" />
 
