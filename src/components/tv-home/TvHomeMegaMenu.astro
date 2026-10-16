@@ -9,6 +9,7 @@ import {
   formatKes,
   type TvHomeModel,
 } from "../../lib/tv-home";
+import { homeOpt } from "../../lib/home-images";
 
 function previewFor(m: TvHomeModel) {
   const img = getTvHomeImage(m.id, "hero", m.name);
@@ -18,7 +19,7 @@ function previewFor(m: TvHomeModel) {
     href: `/tv-home/${m.id}`,
     priceKes: m.basePriceKes,
     priceLabel: formatKes(m.basePriceKes),
-    src: img.src,
+    src: homeOpt(img.src),
     alt: img.alt,
     isNew: Boolean(m.isNew),
   };

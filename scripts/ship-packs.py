@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Ship dist/client to Contabo in ~40 MB packs (resumable).
+"""Ship dist/client to DigitalOcean (do-new) in ~40 MB packs (resumable).
 
 Usage:
   python3 scripts/ship-packs.py              # build lists + ship
   python3 scripts/ship-packs.py --lists-only
   python3 scripts/ship-packs.py --ship-only  # use existing /tmp/gh-packs lists
+
+Remote: deploy@143.198.169.74 (Host do-new) → /var/www/sites/gadgethubke.com
 """
 from __future__ import annotations
 
@@ -20,32 +22,80 @@ ROOT = Path(__file__).resolve().parents[1]
 CLIENT = ROOT / "dist" / "client"
 PACK_DIR = Path("/tmp/gh-packs")
 TARGET_BYTES = 40 * 1024 * 1024
-REMOTE_HOST = "contabo"
+# Prefer SSH config Host "do-new"; fall back to explicit key + IP.
+REMOTE_HOST = os.environ.get("GH_REMOTE_HOST", "do-new")
 REMOTE_ROOT = "/var/www/sites/gadgethubke.com"
 REMOTE_CLIENT = f"{REMOTE_ROOT}/dist/client"
 REMOTE_PACKS = f"{REMOTE_ROOT}/.upload-packs"
+SSH_IDENTITY = os.path.expanduser(
+    os.environ.get("GH_SSH_IDENTITY", "~/.ssh/do_migration_ed25519")
+)
+REMOTE_USER_HOST = os.environ.get("GH_REMOTE", "deploy@143.198.169.74")
 
-SSH = [
-    "ssh",
-    "-o",
-    "ConnectTimeout=25",
-    "-o",
-    "ServerAliveInterval=15",
-    "-o",
-    "ServerAliveCountMax=8",
-    "-o",
-    "BatchMode=yes",
-    REMOTE_HOST,
-]
-SCP = [
-    "scp",
-    "-o",
-    "ConnectTimeout=25",
-    "-o",
-    "ServerAliveInterval=15",
-    "-o",
-    "BatchMode=yes",
-]
+def _ssh_base() -> list[str]:
+    # Use Host alias when set to do-new; otherwise key + user@ip.
+    if REMOTE_HOST == "do-new" or REMOTE_HOST.endswith("do-new"):
+        target = "do-new"
+        return [
+            "ssh",
+            "-o",
+            "ConnectTimeout=25",
+            "-o",
+            "ServerAliveInterval=15",
+            "-o",
+            "ServerAliveCountMax=8",
+            "-o",
+            "BatchMode=yes",
+            target,
+        ]
+    return [
+        "ssh",
+        "-i",
+        SSH_IDENTITY,
+        "-o",
+        "IdentitiesOnly=yes",
+        "-o",
+        "ConnectTimeout=25",
+        "-o",
+        "ServerAliveInterval=15",
+        "-o",
+        "ServerAliveCountMax=8",
+        "-o",
+        "BatchMode=yes",
+        REMOTE_USER_HOST,
+    ]
+
+
+def _scp_base() -> list[str]:
+    if REMOTE_HOST == "do-new" or REMOTE_HOST.endswith("do-new"):
+        return [
+            "scp",
+            "-o",
+            "ConnectTimeout=25",
+            "-o",
+            "ServerAliveInterval=15",
+            "-o",
+            "BatchMode=yes",
+        ]
+    return [
+        "scp",
+        "-i",
+        SSH_IDENTITY,
+        "-o",
+        "IdentitiesOnly=yes",
+        "-o",
+        "ConnectTimeout=25",
+        "-o",
+        "ServerAliveInterval=15",
+        "-o",
+        "BatchMode=yes",
+    ]
+
+
+SSH = _ssh_base()
+SCP = _scp_base()
+# scp remote path prefix (host alias or user@ip)
+SCP_REMOTE = "do-new" if (REMOTE_HOST == "do-new" or REMOTE_HOST.endswith("do-new")) else REMOTE_USER_HOST
 
 
 def run(cmd: list[str], timeout: int = 600) -> subprocess.CompletedProcess:

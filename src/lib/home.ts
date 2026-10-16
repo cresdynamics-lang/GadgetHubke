@@ -64,7 +64,7 @@ export const heroPhones: [HeroPhone, HeroPhone, HeroPhone, HeroPhone] = [
     href: "/watch",
   },
   {
-    src: "/Hero/Gadget_Hub_Hero_Video_AirPods/03_Lifestyle_and_detail_JPG/L02_AirPods_Pro_3_open_case.jpg",
+    src: "/Hero/Gadget_Hub_Hero_Video_AirPods/02_Transparent_PNG_cutouts/P06_AirPods_Pro_3_with_case.w800.webp",
     alt: "AirPods Pro",
     href: "/airpods",
   },

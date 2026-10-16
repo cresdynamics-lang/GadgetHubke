@@ -9,6 +9,7 @@ import {
   formatKes,
   type MacModel,
 } from "../../lib/mac";
+import { homeOpt } from "../../lib/home-images";
 
 function previewFor(m: MacModel) {
   const colour = defaultMacColour(m);
@@ -19,7 +20,7 @@ function previewFor(m: MacModel) {
     href: `/mac/${m.id}`,
     priceKes: m.basePriceKes,
     priceLabel: formatKes(m.basePriceKes),
-    src: img.src,
+    src: homeOpt(img.src),
     alt: img.alt,
     isNew: Boolean(m.isNew),
   };

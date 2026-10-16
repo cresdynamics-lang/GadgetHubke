@@ -8,6 +8,7 @@ import {
   formatKes,
   type Accessory,
 } from "../../lib/accessories";
+import { homeOpt } from "../../lib/home-images";
 
 function previewFor(a: Accessory) {
   const img = getAccessoryImage(a.id, "hero");
@@ -16,7 +17,7 @@ function previewFor(a: Accessory) {
     name: a.name,
     href: `/accessories/${a.id}`,
     priceLabel: formatKes(a.basePriceKes),
-    src: img.src,
+    src: homeOpt(img.src),
     alt: img.alt,
   };
 }

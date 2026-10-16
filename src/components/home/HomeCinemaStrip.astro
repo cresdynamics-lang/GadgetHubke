@@ -2,6 +2,8 @@
 /**
  * Dual cinematic panels - Apple-style black hero frames for home.
  */
+import { homeOpt } from "../../lib/home-images";
+
 interface Shot {
   href: string;
   src: string;
@@ -25,12 +27,13 @@ const { shots } = Astro.props;
         <a class="home-cinema__panel" href={shot.href}>
           <img
             class="home-cinema__img"
-            src={shot.src}
+            src={homeOpt(shot.src)}
             alt={shot.alt}
             width="1024"
             height="235"
             loading="lazy"
             decoding="async"
+            sizes="(min-width: 48rem) 50vw, 100vw"
           />
           <span class="home-cinema__shade" aria-hidden="true" />
           <span class="home-cinema__copy">

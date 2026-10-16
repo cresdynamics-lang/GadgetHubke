@@ -4,7 +4,6 @@ import Footer from "../components/Footer.astro";
 import FloatingActions from "../components/FloatingActions.astro";
 import CookieBanner from "../components/CookieBanner.astro";
 import Analytics from "../components/Analytics.astro";
-import AnnouncementBar from "../components/AnnouncementBar.astro";
 import SiteSearch from "../components/SiteSearch.astro";
 import BagDrawer from "../components/iphone/BagDrawer.astro";
 import CatalogOverlay from "../components/CatalogOverlay.astro";
@@ -55,7 +54,6 @@ const hideFloatWhatsApp = path === "/contact";
   </head>
   <body>
     <a class="sr-only" href="#main">Skip to content</a>
-    <AnnouncementBar />
     <Header />
     <main id="main">
       <slot />

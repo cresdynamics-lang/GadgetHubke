@@ -6,6 +6,7 @@
  */
 import { whatsappUrl } from "../lib/site";
 import type { HeroPhone } from "../lib/home";
+import { homeOpt } from "../lib/home-images";
 
 interface Props {
   eyebrow?: string;
@@ -16,6 +17,9 @@ interface Props {
   primaryLabel?: string;
   secondaryHref?: string;
   secondaryLabel?: string;
+  /** Third CTA (replaces hero WhatsApp when set) */
+  tertiaryHref?: string;
+  tertiaryLabel?: string;
   phones: [HeroPhone, HeroPhone, HeroPhone, HeroPhone];
 }
 
@@ -26,8 +30,10 @@ const {
   lede = "iPhone, Mac, iPad, Watch, AirPods, and more - genuine, sealed, set up for you. Pay in full or Lipa Mdogo Mdogo.",
   primaryHref = "/shop",
   primaryLabel = "Shop Apple",
-  secondaryHref = "/lipa-mdogo-mdogo",
-  secondaryLabel = "See Lipa Mdogo Mdogo",
+  secondaryHref = "/trade-in",
+  secondaryLabel = "Trade-in",
+  tertiaryHref = "/lipa-mdogo-mdogo",
+  tertiaryLabel = "Lipa Mdogo Mdogo",
   phones,
 } = Astro.props;
 
@@ -36,6 +42,7 @@ const brandIdx = titleLine.indexOf("Gadget Hub");
 const punchBefore = brandIdx >= 0 ? titleLine.slice(0, brandIdx) : titleLine;
 const punchAfter = brandIdx >= 0 ? titleLine.slice(brandIdx + "Gadget Hub".length) : "";
 const punchHasBrand = brandIdx >= 0;
+const useTertiary = Boolean(tertiaryHref && tertiaryLabel);
 ---
 
 <section class="sig-hero" data-sig-hero aria-labelledby="sig-hero-title">
@@ -49,13 +56,14 @@ const punchHasBrand = brandIdx >= 0;
           data-sig-phone
         >
           <img
-            src={phone.src}
+            src={homeOpt(phone.src)}
             alt=""
             width="960"
             height="720"
             loading={i === 0 ? "eager" : "lazy"}
             decoding="async"
             fetchpriority={i === 0 ? "high" : "auto"}
+            sizes="(min-width: 64rem) 25vw, 50vw"
           />
         </a>
       ))
@@ -76,7 +84,15 @@ const punchHasBrand = brandIdx >= 0;
     <div class="sig-hero__actions">
       <a class="btn btn--primary" href={primaryHref}>{primaryLabel}</a>
       <a class="btn btn--secondary" href={secondaryHref}>{secondaryLabel}</a>
-      <a class="btn btn--whatsapp" href={wa} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+      {
+        useTertiary ? (
+          <a class="btn btn--secondary" href={tertiaryHref}>{tertiaryLabel}</a>
+        ) : (
+          <a class="btn btn--whatsapp" href={wa} target="_blank" rel="noopener noreferrer">
+            WhatsApp
+          </a>
+        )
+      }
     </div>
   </div>
 </section>
@@ -127,7 +143,7 @@ const punchHasBrand = brandIdx >= 0;
 <style>
   .sig-hero {
     --sig-disperse: 1.05s;
-    --sig-settle-w: min(30vw, 14.5rem);
+    --sig-settle-w: min(36vw, 17.5rem);
     --sig-settle-h: calc(var(--sig-settle-w) * 0.72);
     position: relative;
     isolation: isolate;
@@ -336,44 +352,92 @@ const punchHasBrand = brandIdx >= 0;
 
   .sig-hero__actions {
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3);
+    flex-wrap: nowrap;
+    align-items: center;
     justify-content: center;
+    gap: 0.45rem;
+    width: 100%;
+  }
+
+  .sig-hero__actions :global(.btn) {
+    flex: 0 1 auto;
+    white-space: nowrap;
+    font-size: 0.78rem;
+    padding: 0.4rem 0.7rem;
+    min-height: 2rem;
+    line-height: 1.2;
   }
 
   @media (max-width: 47.99rem) {
     .sig-hero {
-      --sig-settle-w: min(40vw, 9.75rem);
+      /* Corner tiles: slightly larger, still leave room for centre copy */
+      --sig-settle-w: min(36vw, 8.85rem);
       --sig-settle-h: calc(var(--sig-settle-w) * 0.72);
-      padding-block: var(--space-10) var(--space-8);
+      min-height: min(100dvh, 36rem);
+      padding-block: calc(var(--header-height) + 0.75rem) 1.25rem;
+      place-items: center;
     }
 
     .sig-hero.is-settled .sig-hero__tile--1 {
-      left: 2%;
-      top: 5%;
+      left: 3%;
+      top: calc(var(--header-height) + 0.35rem);
     }
 
     .sig-hero.is-settled .sig-hero__tile--2 {
-      right: 2%;
-      top: 6%;
+      right: 3%;
+      top: calc(var(--header-height) + 0.5rem);
     }
 
     .sig-hero.is-settled .sig-hero__tile--3 {
-      left: 2.5%;
-      bottom: 7%;
+      left: 3.5%;
+      bottom: 4%;
     }
 
     .sig-hero.is-settled .sig-hero__tile--4 {
-      right: 2.5%;
-      bottom: 8%;
+      right: 3.5%;
+      bottom: 4.5%;
     }
 
     .sig-hero__copy {
-      padding-inline: var(--space-4);
+      padding-inline: var(--space-3);
+      max-width: min(20.5rem, 100%);
     }
 
     .sig-hero__eyebrow {
+      font-size: 0.62rem;
       letter-spacing: 0.04em;
+      margin-bottom: 0.45rem;
+      max-width: 16rem;
+    }
+
+    .sig-hero h1 {
+      font-size: clamp(1.05rem, 5.2vw, 1.45rem);
+      line-height: 1.12;
+      margin-bottom: 0.55rem;
+    }
+
+    .sig-hero__title-line {
+      white-space: normal;
+    }
+
+    .sig-hero__lede {
+      font-size: 0.82rem;
+      line-height: 1.35;
+      margin-bottom: 0.85rem;
+      max-width: 17.5rem;
+    }
+
+    .sig-hero__actions {
+      gap: 0.28rem;
+      max-width: 100%;
+    }
+
+    .sig-hero__actions :global(.btn) {
+      flex: 1 1 0;
+      font-size: 0.62rem;
+      padding: 0.32rem 0.35rem;
+      min-height: 1.75rem;
+      letter-spacing: -0.01em;
     }
   }
 

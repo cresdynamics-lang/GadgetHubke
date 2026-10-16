@@ -100,7 +100,7 @@
   --container: 72rem;
   --container-wide: 90rem;
   --header-height: 3.5rem; /* 56px sticky nav */
-  --announce-height: 2.25rem;
+  --announce-height: 0px;
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;

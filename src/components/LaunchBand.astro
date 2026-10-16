@@ -2,6 +2,8 @@
 /**
  * Dark feature band - in-stock highlight (e.g. iPhone Duo).
  */
+import { homeOpt } from "../lib/home-images";
+
 interface Props {
   badge?: string;
   title: string;
@@ -21,12 +23,13 @@ const {
   body,
   href,
   learnHref,
-  imageSrc,
+  imageSrc: imageSrcRaw,
   imageAlt,
   launchAt,
   ctaLabel = "Shop now",
 } = Astro.props;
 
+const imageSrc = homeOpt(imageSrcRaw);
 const showCountdown = Boolean(launchAt);
 ---
 

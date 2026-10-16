@@ -9,6 +9,7 @@ import {
   formatKes,
   type AirpodsModel,
 } from "../../lib/airpods";
+import { homeOpt } from "../../lib/home-images";
 
 function previewFor(m: AirpodsModel) {
   const img = getAirpodsImage(m.id, "hero", m.name);
@@ -18,7 +19,7 @@ function previewFor(m: AirpodsModel) {
     href: `/airpods/${m.id}`,
     priceKes: m.basePriceKes,
     priceLabel: formatKes(m.basePriceKes),
-    src: img.src,
+    src: homeOpt(img.src),
     alt: img.alt,
     isNew: Boolean(m.isNew),
   };

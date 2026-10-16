@@ -8,6 +8,7 @@ import {
   formatKes,
   type WatchModel,
 } from "../../lib/watch";
+import { homeOpt } from "../../lib/home-images";
 
 function previewFor(m: WatchModel) {
   const img = getWatchImage(m.id, "main", m.name);
@@ -17,7 +18,7 @@ function previewFor(m: WatchModel) {
     href: `/watch/${m.id}`,
     priceKes: m.basePriceKes,
     priceLabel: formatKes(m.basePriceKes),
-    src: img.src,
+    src: homeOpt(img.src),
     alt: img.alt,
     isNew: Boolean(m.isNew),
   };

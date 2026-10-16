@@ -9,6 +9,7 @@ import {
   formatKes,
   type IpadModel,
 } from "../../lib/ipad";
+import { homeOpt } from "../../lib/home-images";
 
 function previewFor(m: IpadModel) {
   const colour = defaultIpadColour(m);
@@ -19,7 +20,7 @@ function previewFor(m: IpadModel) {
     href: `/ipad/${m.id}`,
     priceKes: m.basePriceKes,
     priceLabel: formatKes(m.basePriceKes),
-    src: img.src,
+    src: homeOpt(img.src),
     alt: img.alt,
     isNew: Boolean(m.isNew),
   };

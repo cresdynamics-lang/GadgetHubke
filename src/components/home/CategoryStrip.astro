@@ -1,5 +1,6 @@
 ---
 import { homeAppleProducts } from "../../lib/home";
+import { homeOpt } from "../../lib/home-images";
 ---
 
 <section class="home-section home-categories">
@@ -15,12 +16,13 @@ import { homeAppleProducts } from "../../lib/home";
             <a class="home-categories__tile" href={cat.href}>
               <span class="home-categories__media" aria-hidden="true">
                 <img
-                  src={cat.image.src}
+                  src={homeOpt(cat.image.src)}
                   alt=""
                   width="160"
                   height="160"
                   loading="lazy"
                   decoding="async"
+                  sizes="160px"
                 />
               </span>
               <span class="home-categories__label">{cat.label}</span>

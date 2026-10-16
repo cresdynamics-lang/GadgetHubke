@@ -1,15 +1,17 @@
 ---
+import { homeOpt } from "../../lib/home-images";
 ---
 
 <section class="lipa fade-up" data-fade-up aria-labelledby="lipa-heading">
   <div class="lipa__media">
     <img
-      src="/images/home/lipa-mdogo-pro.jpg"
+      src={homeOpt("/images/home/lipa-mdogo-pro.jpg")}
       alt="iPhone Pro camera system in deep burgundy"
-      width="1024"
-      height="676"
+      width="560"
+      height="370"
       loading="lazy"
       decoding="async"
+      sizes="(min-width: 48rem) 38vw, 100vw"
     />
   </div>
 

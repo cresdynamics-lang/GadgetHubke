@@ -4,6 +4,7 @@
  */
 import { formatKes } from "../../lib/iphone";
 import { latestByFamily, formatFromKes } from "../../lib/iphone/lineup";
+import { homeOpt } from "../../lib/home-images";
 
 const eighteen = latestByFamily(18);
 
@@ -13,7 +14,7 @@ const picks = eighteen.map((i) => ({
   href: i.href,
   priceLabel: formatKes(i.priceKes),
   badge: i.badge || "New",
-  src: i.image.src,
+  src: homeOpt(i.image.src),
   alt: i.image.alt,
   priceKes: i.priceKes,
 }));

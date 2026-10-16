@@ -4,6 +4,7 @@
  */
 import Price from "../Price.astro";
 import type { DealItem } from "../../lib/home";
+import { homeOpt } from "../../lib/home-images";
 
 interface Props {
   title: string;
@@ -45,12 +46,13 @@ const {
                 {item.badge ? <span class="badge home-row__badge">{item.badge}</span> : null}
                 {item.image ? (
                   <img
-                    src={item.image.src}
+                    src={homeOpt(item.image.src)}
                     alt={item.image.alt}
                     width="280"
                     height="240"
                     loading="lazy"
                     decoding="async"
+                    sizes="280px"
                   />
                 ) : (
                   <span class="home-row__placeholder" aria-hidden="true" />
