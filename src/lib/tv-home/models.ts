@@ -376,12 +376,12 @@ export const tvHomeModels: TvHomeModel[] = [
     whoItSuits: "Buyers watching the budget for big-room sound.",
     whyChoose: [
       "Lower sample price than HomePod 2.",
-      "No store photo - text only.",
-      "Confirm condition and battery/speaker health.",
+      "Uses HomePod lineup photo until a dedicated 1st-gen store shot is added.",
+      "Confirm condition and speaker health in store.",
     ],
-    noImage: true,
+    noImage: false,
     checkFinalSpecs: true,
-    notes: "Image not available. Show only if stock exists.",
+    notes: "Photo shared with HomePod 2 lineup until a 1st-gen shot is added.",
     pageFamily: "HomePod",
   }),
 ];

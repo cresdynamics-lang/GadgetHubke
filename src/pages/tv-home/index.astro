@@ -222,9 +222,14 @@ const bundlePayload = tvHomeBundles.map((b) => ({
 
 <style>
   .tvhome-choose { padding-block: 3rem; }
-  .tvhome-choose__grid { list-style: none; margin: 1.25rem 0 0; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
-  .tvhome-choose__card { text-decoration: none; color: inherit; display: grid; gap: 0.5rem; }
-  .tvhome-choose__card em { color: #6e6e73; font-style: normal; font-size: var(--text-sm); }
+  .tvhome-choose__grid {
+    list-style: none; margin: 1.25rem 0 0; padding: 0;
+    display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .tvhome-choose__card { text-decoration: none; color: inherit; display: grid; gap: 0.4rem; min-width: 0; }
+  .tvhome-choose__card h3 { margin: 0; font-size: 0.95rem; letter-spacing: -0.02em; }
+  .tvhome-choose__card p { margin: 0; font-size: 0.75rem; line-height: 1.35; color: #6e6e73; }
+  .tvhome-choose__card em { color: #6e6e73; font-style: normal; font-size: 0.75rem; }
   .tvhome-needs { padding-bottom: 2rem; }
   .tvhome-chips {
     display: flex;

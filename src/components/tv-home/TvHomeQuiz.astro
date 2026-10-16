@@ -121,23 +121,47 @@ const payload = tvHomeModels.map((m) => {
 </script>
 
 <style>
-  .thquiz { font-family: Inter, system-ui, sans-serif; padding-block: 2rem; }
-  .thquiz header h2 { margin: 0 0 0.35rem; letter-spacing: -0.02em; }
-  .thquiz header p { margin: 0 0 1.25rem; color: #6e6e73; }
-  .thquiz__q { margin-bottom: 1rem; }
-  .thquiz__q > p { font-weight: 600; margin: 0 0 0.5rem; }
-  .thquiz__opts { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  .thquiz {
+    font-family: var(--font-sans, Inter, system-ui, sans-serif);
+    padding: 1rem 1.1rem;
+    border: 1px solid #d2d2d7;
+    border-radius: 1.25rem;
+  }
+  .thquiz header h2 {
+    margin: 0 0 0.25rem;
+    letter-spacing: -0.02em;
+    font-size: 1.05rem;
+  }
+  .thquiz header p {
+    margin: 0 0 0.9rem;
+    color: #6e6e73;
+    font-size: 0.75rem;
+  }
+  .thquiz__q { margin-bottom: 0.85rem; }
+  .thquiz__q > p {
+    font-weight: 600;
+    margin: 0 0 0.4rem;
+    font-size: 0.72rem;
+  }
+  .thquiz__opts { display: flex; flex-wrap: wrap; gap: 0.35rem; }
   .thquiz__opts button {
-    border: 1px solid #d2d2d7; background: #fff; padding: 0.45rem 0.85rem; border-radius: 999px; cursor: pointer; font-size: var(--text-sm);
+    border: 1px solid #d2d2d7; background: #fff;
+    padding: 0.35rem 0.65rem; border-radius: 999px;
+    cursor: pointer; font-size: 0.7rem;
   }
   .thquiz__opts button.is-active { background: #000; color: #fff; border-color: #000; }
-  .thquiz__results ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; }
+  .thquiz__results h3 { margin: 0 0 0.5rem; font-size: 0.9rem; }
+  .thquiz__results ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
   .thquiz__results a {
-    display: grid; grid-template-columns: auto 1fr; gap: 0.75rem; align-items: center;
-    text-decoration: none; color: inherit; padding: 0.75rem; background: #f5f5f7; border-radius: 1rem;
+    display: grid; grid-template-columns: 3.5rem 1fr; gap: 0.55rem; align-items: center;
+    text-decoration: none; color: inherit; padding: 0.5rem; background: #f5f5f7; border-radius: 0.85rem;
   }
-  .thquiz__results img { mix-blend-mode: multiply; border-radius: 0.5rem; background: #fff; }
-  .thquiz__results em { display: block; font-style: normal; color: #6e6e73; font-size: var(--text-sm); }
-  .thquiz__results small { color: #6e6e73; font-size: var(--text-xs); }
-  .thquiz__note { font-size: var(--text-sm); color: #6e6e73; margin-top: 1rem; }
+  .thquiz__results img {
+    width: 3.5rem; height: 3.5rem; object-fit: contain;
+    mix-blend-mode: multiply; border-radius: 0.5rem; background: #fff;
+  }
+  .thquiz__results strong { font-size: 0.8rem; }
+  .thquiz__results em { display: block; font-style: normal; color: #6e6e73; font-size: 0.68rem; }
+  .thquiz__results small { color: #6e6e73; font-size: 0.68rem; }
+  .thquiz__note { font-size: 0.7rem; color: #6e6e73; margin-top: 0.85rem; }
 </style>

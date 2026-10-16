@@ -259,6 +259,11 @@ const caseGuide = airpodsModels
   }
   .airpods-consider__grid img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
   .airpods-consider__grid strong { padding: 0 0.65rem 0.65rem; font-size: var(--text-sm); }
+  .airpods-music h2 {
+    margin: 0 0 0.65rem;
+    font-size: 1.05rem;
+    letter-spacing: -0.02em;
+  }
   .airpods-music__row {
     display: grid; gap: 0.75rem; grid-template-columns: minmax(0, 1fr);
   }
@@ -281,20 +286,20 @@ const caseGuide = airpodsModels
   }
   .airpods-choose__grid {
     list-style: none; margin: 1.5rem 0 0; padding: 0;
-    display: grid; gap: 1rem; grid-template-columns: minmax(0, 1fr);
-  }
-  @media (min-width: 48rem) {
-    .airpods-choose__grid { grid-template-columns: 1fr 1fr 1fr; }
+    display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .airpods-choose__card {
-    display: grid; gap: 0.5rem; text-decoration: none; color: inherit;
+    display: grid; gap: 0.4rem; text-decoration: none; color: inherit;
     transition: transform 220ms ease;
+    min-width: 0;
   }
   @media (hover: hover) {
     .airpods-choose__card:hover { transform: translateY(-6px) scale(1.03); }
   }
-  .airpods-choose__card h3 { margin: 0; }
-  .airpods-choose__card p, .airpods-choose__card em { margin: 0; color: #6e6e73; font-style: normal; }
+  .airpods-choose__card h3 { margin: 0; font-size: 0.95rem; letter-spacing: -0.02em; }
+  .airpods-choose__card p, .airpods-choose__card em {
+    margin: 0; color: #6e6e73; font-style: normal; font-size: 0.75rem; line-height: 1.35;
+  }
   .airpods-grid-sec__head { display: grid; gap: 0.75rem; margin-bottom: 1.25rem; }
   .airpods-chips {
     display: flex;
