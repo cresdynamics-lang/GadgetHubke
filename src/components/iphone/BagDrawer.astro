@@ -13,15 +13,9 @@ const waPhone = iphoneConfig.whatsapp;
       <h2>Cart</h2>
       <button type="button" class="bag__close" data-bag-close aria-label="Close cart">Close</button>
     </header>
-    <p class="bag__note">Checkout with Stanbic. M-Pesa STK or card. WhatsApp help stays available.</p>
     <div class="bag__empty" data-bag-empty>
       <p>Your cart is empty.</p>
-      <a class="btn btn--primary btn--sm" href="/iphone">Shop iPhone</a>
-      <a class="btn btn--secondary btn--sm" href="/mac">Shop Mac</a>
-      <a class="btn btn--secondary btn--sm" href="/ipad">Shop iPad</a>
-      <a class="btn btn--secondary btn--sm" href="/watch">Shop Watch</a>
-      <a class="btn btn--secondary btn--sm" href="/airpods">Shop AirPods</a>
-      <a class="btn btn--secondary btn--sm" href="/tv-home">Shop TV &amp; Home</a>
+      <a class="btn btn--secondary btn--sm" href="/accessories">Shop accessories</a>
     </div>
     <ul class="bag__list" data-bag-list hidden></ul>
     <footer class="bag__foot" data-bag-foot hidden>
@@ -272,8 +266,8 @@ const waPhone = iphoneConfig.whatsapp;
     if (existing) existing.qty = (existing.qty || 1) + 1;
     else items.push(incoming);
     write(items);
-    showToast("Added to cart");
-    openBag();
+    showToast("Added — opening checkout");
+    location.href = "/checkout";
   });
 
   window.addEventListener("gh:cart", () => {
@@ -333,16 +327,17 @@ const waPhone = iphoneConfig.whatsapp;
     cursor: pointer;
   }
 
-  .bag__note {
-    margin: 0.75rem 0 1rem;
-    font-size: 0.8rem;
-    color: #6e6e73;
-  }
-
   .bag__empty {
     display: grid;
     gap: 0.85rem;
     justify-items: start;
+    padding-top: 0.75rem;
+  }
+
+  .bag__empty > p:first-child {
+    margin: 0;
+    color: #6e6e73;
+    font-size: 0.9rem;
   }
 
   .bag__list {

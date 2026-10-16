@@ -1,6 +1,6 @@
 /**
  * Official Gadget Hub iPhone price sheet (NEW + EX-UK, KES).
- * Source: Gadget_Hub_Price_List_Full PDF — IP-001 … IP-104.
+ * Source: Gadget_Hub_Price_List_Full PDF — IP-001 … IP-105.
  * Competitor benchmark notes stripped; colour stock notes kept separately.
  */
 
@@ -107,18 +107,19 @@ export const iphoneSheet: IphoneSheetRow[] = [
   { id: "IP-090", name: "iPhone 17 Pro Max", storage: "512GB", newKes: 198000, exUkKes: 155000 },
   { id: "IP-091", name: "iPhone 17 Pro Max", storage: "1TB", newKes: 245000, exUkKes: 198000 },
   { id: "IP-092", name: "iPhone 17 Pro Max", storage: "2TB", newKes: 305000, exUkKes: 250000 },
-  { id: "IP-093", name: "iPhone 18 Pro", storage: "256GB", newKes: 203000, exUkKes: 165000 },
-  { id: "IP-094", name: "iPhone 18 Pro", storage: "512GB", newKes: 225000, exUkKes: 180000 },
-  { id: "IP-095", name: "iPhone 18 Pro", storage: "1TB", newKes: 240000, exUkKes: 195000 },
-  { id: "IP-096", name: "iPhone 18 Pro", storage: "2TB", newKes: 258000, exUkKes: 205000 },
-  { id: "IP-097", name: "iPhone 18 Pro Max", storage: "256GB", newKes: 240000, exUkKes: 200000 },
-  { id: "IP-098", name: "iPhone 18 Pro Max", storage: "512GB", newKes: 255000, exUkKes: 215000 },
-  { id: "IP-099", name: "iPhone 18 Pro Max", storage: "1TB", newKes: 285000, exUkKes: 228000 },
-  { id: "IP-100", name: "iPhone 18 Pro Max", storage: "2TB", newKes: 358000, exUkKes: 235000 },
-  { id: "IP-101", name: "iPhone Duo", storage: "256GB", newKes: 350000, exUkKes: 295000 },
-  { id: "IP-102", name: "iPhone Duo", storage: "512GB", newKes: 370000, exUkKes: 315000 },
-  { id: "IP-103", name: "iPhone Duo", storage: "1TB", newKes: 385000, exUkKes: 330000 },
-  { id: "IP-104", name: "iPhone Duo", storage: "2TB", newKes: 400000, exUkKes: 345000 },
+  { id: "IP-093", name: "iPhone 18 Pro", storage: "128GB", newKes: 185000, exUkKes: 165000 },
+  { id: "IP-094", name: "iPhone 18 Pro", storage: "256GB", newKes: 203000, exUkKes: 172000 },
+  { id: "IP-095", name: "iPhone 18 Pro", storage: "512GB", newKes: 225000, exUkKes: 180000 },
+  { id: "IP-096", name: "iPhone 18 Pro", storage: "1TB", newKes: 240000, exUkKes: 195000 },
+  { id: "IP-097", name: "iPhone 18 Pro", storage: "2TB", newKes: 258000, exUkKes: 205000 },
+  { id: "IP-098", name: "iPhone 18 Pro Max", storage: "256GB", newKes: 218000, exUkKes: 200000 },
+  { id: "IP-099", name: "iPhone 18 Pro Max", storage: "512GB", newKes: 255000, exUkKes: 215000 },
+  { id: "IP-100", name: "iPhone 18 Pro Max", storage: "1TB", newKes: 285000, exUkKes: 228000 },
+  { id: "IP-101", name: "iPhone 18 Pro Max", storage: "2TB", newKes: 358000, exUkKes: 235000 },
+  { id: "IP-102", name: "iPhone Duo", storage: "256GB", newKes: 350000, exUkKes: 295000 },
+  { id: "IP-103", name: "iPhone Duo", storage: "512GB", newKes: 370000, exUkKes: 315000 },
+  { id: "IP-104", name: "iPhone Duo", storage: "1TB", newKes: 385000, exUkKes: 330000 },
+  { id: "IP-105", name: "iPhone Duo", storage: "2TB", newKes: 400000, exUkKes: 345000 },
 ];
 
 /** Sheet rows that look inverted or unusually stepped — flag in admin. */

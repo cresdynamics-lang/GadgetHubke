@@ -89,7 +89,18 @@ export function bagMetaLine(item: BagItem): string {
     .join(" · ");
 }
 
-export function whatsappOrderMessage(items: BagItem[], total: number): string {
+export function whatsappOrderMessage(
+  items: BagItem[],
+  total: number,
+  customer?: {
+    name?: string;
+    phone?: string;
+    email?: string;
+    fulfillment?: string;
+    notes?: string;
+  },
+  orderId?: string,
+): string {
   const lines = items.map((i) => {
     const bits = [
       i.name,
@@ -110,12 +121,19 @@ export function whatsappOrderMessage(items: BagItem[], total: number): string {
     ].filter(Boolean);
     return `• ${bits.join(" / ")} ×${i.qty} = ${formatKes(i.kes * i.qty)}`;
   });
-  return [
-    "Hi Gadget Hub, I'd like to order:",
-    ...lines,
-    `Total: ${formatKes(total)}`,
-    "(Sample prices)",
-  ].join("\n");
+  const parts = ["Hi Gadget Hub, I'd like to order:"];
+  if (orderId) parts.push(`Order: ${orderId}`);
+  if (customer?.name) parts.push(`Name: ${customer.name}`);
+  if (customer?.phone) parts.push(`Phone: ${customer.phone}`);
+  if (customer?.email) parts.push(`Email: ${customer.email}`);
+  if (customer?.fulfillment) {
+    parts.push(
+      `Fulfillment: ${customer.fulfillment === "delivery" ? "Delivery" : "Pickup"}`,
+    );
+  }
+  if (customer?.notes) parts.push(`Notes: ${customer.notes}`);
+  parts.push("", ...lines, "", `Total: ${formatKes(total)}`);
+  return parts.join("\n");
 }
 
 /** Browser-only helpers */

@@ -1,18 +1,22 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { site } from "../../lib/site";
+
+const waNumber = site.whatsapp;
 ---
 
 <BaseLayout
   title="Checkout - GadgetHub"
-  description={`Pay securely via Stanbic Bank. M-Pesa STK or card. ${site.address}.`}
+  description={`Complete your order. M-Pesa or card. ${site.address}.`}
+  hideFooter
 >
-  <section class="checkout container" data-checkout>
+  <section class="checkout container" data-checkout data-wa={waNumber}>
     <header class="checkout__intro">
+      <button type="button" class="checkout__back" data-checkout-back>← Back</button>
       <p class="checkout__eyebrow">Checkout</p>
       <h1 data-checkout-title>Review cart</h1>
       <p class="checkout__lede" data-checkout-lede>
-        Sample prices. Payment via Stanbic Bank. M-Pesa or card.
+        Confirm your items, then pay with M-Pesa or card.
       </p>
     </header>
 
@@ -24,7 +28,7 @@ import { site } from "../../lib/site";
 
     <div class="checkout__empty" data-checkout-empty hidden>
       <p>Your cart is empty.</p>
-      <a class="btn btn--primary" href="/shop">Continue shopping</a>
+      <a class="btn btn--secondary btn--sm" href="/accessories">Shop accessories</a>
     </div>
 
     <div data-checkout-flow>
@@ -33,8 +37,7 @@ import { site } from "../../lib/site";
         <ul class="checkout__lines" data-checkout-lines></ul>
         <p class="checkout__total">Total <strong data-checkout-total></strong></p>
         <div class="checkout__actions">
-          <a class="btn btn--secondary" href="/shop">Keep shopping</a>
-          <button type="button" class="btn btn--primary" data-next="details">Continue</button>
+          <a class="btn btn--secondary" href="/accessories">Shop accessories</a>
         </div>
       </div>
 
@@ -69,15 +72,14 @@ import { site } from "../../lib/site";
         </label>
         <p class="checkout__error" data-details-error hidden></p>
         <div class="checkout__actions">
-          <button type="button" class="btn btn--secondary" data-next="review">Back</button>
-          <button type="submit" class="btn btn--primary">Continue to pay</button>
+          <button type="submit" class="btn btn--whatsapp">Order on WhatsApp</button>
         </div>
       </form>
 
       <!-- Pay -->
       <div class="checkout__panel" data-panel="pay" hidden>
         <p class="checkout__pay-total">Pay <strong data-pay-total></strong></p>
-        <p class="checkout__hint">Order <span data-order-id></span> · Stanbic Bank</p>
+        <p class="checkout__hint">Order <span data-order-id></span></p>
 
         <div class="checkout__methods" role="radiogroup" aria-label="Payment method">
           <label class="checkout__method is-active">
@@ -91,7 +93,7 @@ import { site } from "../../lib/site";
             <input type="radio" name="method" value="card" />
             <span>
               <strong>Card</strong>
-              <em>Visa / Mastercard via Stanbic</em>
+              <em>Visa / Mastercard</em>
             </span>
           </label>
         </div>
@@ -101,23 +103,20 @@ import { site } from "../../lib/site";
             <span>M-Pesa number</span>
             <input type="tel" name="mpesaPhone" data-mpesa-phone placeholder="07XX XXX XXX" />
           </label>
-          <button type="button" class="btn btn--whatsapp checkout__pay-btn" data-pay-mpesa-btn>
+          <button type="button" class="btn btn--primary checkout__pay-btn" data-pay-mpesa-btn>
             Pay with M-Pesa
           </button>
           <p class="checkout__wait" data-mpesa-wait hidden>Check your phone for the M-Pesa prompt…</p>
         </div>
 
         <div data-pay-card hidden>
-          <p class="checkout__hint">You will complete payment on Stanbic’s secure page. We never store card numbers.</p>
+          <p class="checkout__hint">You’ll complete payment on a secure page. We never store card numbers.</p>
           <button type="button" class="btn btn--primary checkout__pay-btn" data-pay-card-btn>
             Pay with card
           </button>
         </div>
 
         <p class="checkout__error" data-pay-error hidden></p>
-        <div class="checkout__actions">
-          <button type="button" class="btn btn--secondary" data-next="details">Back</button>
-        </div>
       </div>
     </div>
   </section>
@@ -131,12 +130,20 @@ import { site } from "../../lib/site";
     formatKes,
     readBagFromStorage,
     readExpressItems,
+    whatsappOrderMessage,
     writeBagToStorage,
   } from "../../lib/checkout/bag";
   import { RECENT_ORDER_KEY } from "../../lib/checkout/types";
 
   const root = document.querySelector("[data-checkout]");
   if (!root) throw new Error("checkout missing");
+  const waNumber = root.getAttribute("data-wa") || "254729585471";
+
+  function openOrderWhatsApp() {
+    const msg = whatsappOrderMessage(items, bagTotal(items), customer, orderId || undefined);
+    const url = `https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`;
+    window.location.assign(url);
+  }
 
   const params = new URLSearchParams(location.search);
   const expressMode = params.get("mode") === "buy-now";
@@ -178,12 +185,15 @@ import { site } from "../../lib/site";
     pay: "Pay securely",
   };
   const ledes = {
-    review: "Sample prices. Payment via Stanbic Bank. M-Pesa or card.",
+    review: "Confirm your items, then pay with M-Pesa or card.",
     details: "We'll use these for pickup, delivery updates, and your receipt.",
-    pay: "M-Pesa STK Push or card through Stanbic Bank.",
+    pay: "Pay with M-Pesa STK Push or card.",
   };
 
+  let currentPanel = "review";
+
   function showPanel(id) {
+    currentPanel = id;
     root.querySelectorAll("[data-panel]").forEach((p) => {
       p.toggleAttribute("hidden", p.getAttribute("data-panel") !== id);
     });
@@ -193,6 +203,19 @@ import { site } from "../../lib/site";
     if (titleEl) titleEl.textContent = titles[id] || titles.review;
     if (ledeEl) ledeEl.textContent = ledes[id] || ledes.review;
   }
+
+  root.querySelector("[data-checkout-back]")?.addEventListener("click", () => {
+    if (currentPanel === "pay") {
+      showPanel("details");
+      return;
+    }
+    if (currentPanel === "details") {
+      showPanel("review");
+      return;
+    }
+    if (history.length > 1) history.back();
+    else location.href = "/";
+  });
 
   function renderLines() {
     if (!items.length) {
@@ -271,7 +294,7 @@ import { site } from "../../lib/site";
       const mpesa = root.querySelector("[data-mpesa-phone]");
       if (mpesa instanceof HTMLInputElement) mpesa.value = customer.phone;
       localStorage.setItem(RECENT_ORDER_KEY, orderId);
-      showPanel("pay");
+      openOrderWhatsApp();
     } catch (ex) {
       if (err) {
         err.textContent = ex instanceof Error ? ex.message : "Could not continue.";
@@ -394,7 +417,12 @@ import { site } from "../../lib/site";
   });
 
   renderLines();
-  showPanel("review");
+  if (items.length) {
+    fillDetailsForm();
+    showPanel("details");
+  } else {
+    showPanel("review");
+  }
   syncMethodUi();
 </script>
 
@@ -402,6 +430,24 @@ import { site } from "../../lib/site";
   .checkout {
     padding-block: var(--space-8) calc(var(--space-12) + var(--fab-clearance));
     max-width: 36rem;
+  }
+
+  .checkout__back {
+    display: inline-flex;
+    align-items: center;
+    margin: 0 0 var(--space-3);
+    padding: 0;
+    border: none;
+    background: none;
+    font: inherit;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-fg-muted);
+    cursor: pointer;
+  }
+
+  .checkout__back:hover {
+    color: var(--color-fg);
   }
 
   .checkout__eyebrow {

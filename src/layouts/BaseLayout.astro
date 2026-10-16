@@ -14,11 +14,13 @@ import { site } from "../lib/site";
 interface Props {
   title?: string;
   description?: string;
+  hideFooter?: boolean;
 }
 
 const {
   title = `${site.name} - Apple devices in Nairobi`,
   description = "Gadget Hub sells Apple products in Nairobi. iPhone, Mac, iPad, Watch, AirPods, and accessories. Trade-in and Lipa Mdogo Mdogo available.",
+  hideFooter = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, site.url).href;
@@ -58,7 +60,7 @@ const hideFloatWhatsApp = path === "/contact";
     <main id="main">
       <slot />
     </main>
-    <Footer />
+    {hideFooter ? null : <Footer />}
     <SiteSearch />
     <BagDrawer />
     <FloatingActions hideWhatsApp={hideFloatWhatsApp} />

@@ -12,19 +12,19 @@ const wa = whatsappUrl(
 
 <BaseLayout
   title="Order confirmed - GadgetHub"
-  description="Payment received via Stanbic Bank. We’ll confirm your order shortly."
+  description="Payment received. We’ll confirm your order shortly."
 >
   <section class="ok container" data-success data-order-id={orderId}>
     <p class="ok__eyebrow">Thank you</p>
     <h1>Payment received</h1>
     <p class="ok__lede">
-      Payment via Stanbic Bank · M-Pesa or card. We'll follow up on WhatsApp or email for pickup / delivery.
+      We’ll follow up on WhatsApp or email for pickup / delivery.
     </p>
     <p class="ok__meta" data-success-meta>Loading order…</p>
     <div class="ok__actions">
-      <a class="btn btn--primary" href="/shop">Continue shopping</a>
       <a class="btn btn--whatsapp" href={wa} target="_blank" rel="noopener noreferrer">WhatsApp help</a>
       <a class="btn btn--secondary" href="/account">Account</a>
+      <a class="btn btn--secondary" href="/accessories">Shop accessories</a>
     </div>
   </section>
 </BaseLayout>

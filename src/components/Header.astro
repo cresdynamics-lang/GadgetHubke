@@ -225,34 +225,38 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
           <details class="mobile-nav__details" open>
             <summary class="mobile-nav__summary">iPhone</summary>
             <ul class="mobile-nav__sub">
-              <li><a href="/iphone">All iPhone 11 - 18</a></li>
+              <li><a href="/iphone">iPhones</a></li>
               <li class="mobile-nav__gen">
-                <p>New</p>
-                <ul>
-                  {iphoneNewest.map((m) => (
-                    <li>
-                      <a href={m.href}>
-                        {m.name}
-                        <span>from {m.price}</span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
+                <details class="mobile-nav__details mobile-nav__details--nested" open>
+                  <summary class="mobile-nav__summary mobile-nav__summary--nested">New</summary>
+                  <ul>
+                    {iphoneNewest.map((m) => (
+                      <li>
+                        <a href={m.href}>
+                          {m.name}
+                          <span>from {m.price}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
               </li>
               {
                 iphoneGens.map((g) => (
                   <li class="mobile-nav__gen">
-                    <p>iPhone {g}</p>
-                    <ul>
-                      {modelsByFamily(g).map((m) => (
-                        <li>
-                          <a href={`/iphone/${m.id}`}>
-                            {m.name}
-                            <span>from {formatKes(m.basePriceKes)}</span>
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
+                    <details class="mobile-nav__details mobile-nav__details--nested">
+                      <summary class="mobile-nav__summary mobile-nav__summary--nested">iPhone {g}</summary>
+                      <ul>
+                        {modelsByFamily(g).map((m) => (
+                          <li>
+                            <a href={`/iphone/${m.id}`}>
+                              {m.name}
+                              <span>from {formatKes(m.basePriceKes)}</span>
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
                   </li>
                 ))
               }
@@ -556,16 +560,16 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
           ))
         }
         <li class="mobile-nav__item">
-          <a class="mobile-nav__link" href="/account">Sign in</a>
+          <a class="mobile-nav__link mobile-nav__link--util" href="/account">Sign in</a>
         </li>
         <li class="mobile-nav__item">
-          <a class="mobile-nav__link" href="/account?tab=create">Create account</a>
+          <a class="mobile-nav__link mobile-nav__link--util" href="/account?tab=create">Create account</a>
         </li>
         <li class="mobile-nav__item">
-          <a class="mobile-nav__link" href="/track-order">Track order</a>
+          <a class="mobile-nav__link mobile-nav__link--util" href="/track-order">Track order</a>
         </li>
         <li class="mobile-nav__item">
-          <a class="mobile-nav__link" href="/support">Support</a>
+          <a class="mobile-nav__link mobile-nav__link--util" href="/support">Support</a>
         </li>
       </ul>
       <a
@@ -982,7 +986,7 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
   }
 
   .mobile-nav__gen {
-    margin: 0.75rem 0;
+    margin: 0.25rem 0;
   }
 
   .mobile-nav__gen > p {
@@ -996,22 +1000,22 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
   .mobile-nav__gen ul {
     list-style: none;
     margin: 0;
-    padding: 0;
+    padding: 0 0 0.25rem var(--space-2);
   }
 
   .mobile-nav__gen a {
     display: flex;
     justify-content: space-between;
     gap: 0.5rem;
-    padding: 0.4rem 0;
+    padding: 0.35rem 0;
     color: var(--color-black);
     text-decoration: none;
-    font-size: var(--text-sm);
+    font-size: 0.8125rem;
   }
 
   .mobile-nav__gen a span {
     color: var(--color-grey);
-    font-size: 0.7rem;
+    font-size: 0.65rem;
   }
 
   .mobile-nav__list {
@@ -1022,7 +1026,10 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
 
   .mobile-nav__link,
   .mobile-nav__summary {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
     padding: 0.85rem 0;
     border-bottom: 1px solid var(--color-border);
     font-weight: var(--font-weight-medium);
@@ -1032,12 +1039,63 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
     cursor: pointer;
   }
 
+  /* Majors stay major: iPhone, Mac, iPad, … */
+  .mobile-nav__list > .mobile-nav__item > .mobile-nav__details > .mobile-nav__summary,
+  .mobile-nav__list > .mobile-nav__item > .mobile-nav__link:not(.mobile-nav__link--util) {
+    font-size: 1.05rem;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-black);
+  }
+
+  /* Gen numbers (New / iPhone 16…) stay smaller than majors */
+  .mobile-nav__summary.mobile-nav__summary--nested {
+    padding: 0.4rem 0;
+    border-bottom: none;
+    font-size: 0.62rem;
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-grey);
+  }
+
+  .mobile-nav__link--util {
+    padding: 0.5rem 0;
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-normal);
+    color: var(--color-fg-muted);
+  }
+
   .mobile-nav__summary {
     list-style: none;
   }
 
   .mobile-nav__summary::-webkit-details-marker {
     display: none;
+  }
+
+  .mobile-nav__summary::after {
+    content: "";
+    flex: 0 0 auto;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-right: 2px solid var(--color-black, #1d1d1f);
+    border-bottom: 2px solid var(--color-black, #1d1d1f);
+    transform: rotate(45deg);
+    transition: transform 0.2s var(--ease, ease);
+    margin-top: -0.2rem;
+    opacity: 0.55;
+  }
+
+  .mobile-nav__details[open] > .mobile-nav__summary::after {
+    transform: rotate(-135deg);
+    margin-top: 0.15rem;
+  }
+
+  .mobile-nav__summary--nested::after {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-color: var(--color-grey, #6e6e73);
+    opacity: 0.9;
   }
 
   .mobile-nav__sub {
@@ -1306,6 +1364,40 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
     syncAccountMenu();
   }
 
+  /** Accordion: one open dropdown at a time (majors among majors, gens among gens). */
+  function bindMobileAccordion() {
+    const nav = document.querySelector("[data-mobile-nav]");
+    if (!(nav instanceof HTMLElement)) return;
+    const prev = nav._ghAccordion;
+    if (typeof prev === "function") nav.removeEventListener("click", prev, true);
+    const onClick = (e) => {
+      const t = e.target;
+      if (!(t instanceof Element)) return;
+      const summary = t.closest("summary.mobile-nav__summary");
+      if (!summary || !nav.contains(summary)) return;
+      const details = summary.parentElement;
+      if (!(details instanceof HTMLDetailsElement)) return;
+      e.preventDefault();
+      const nested = details.classList.contains("mobile-nav__details--nested");
+      const willOpen = !details.open;
+      const siblings = nested
+        ? details.closest(".mobile-nav__sub")?.querySelectorAll("details.mobile-nav__details--nested")
+        : nav.querySelectorAll(
+            "nav > .mobile-nav__list > .mobile-nav__item > details.mobile-nav__details:not(.mobile-nav__details--nested)",
+          );
+      siblings?.forEach((other) => {
+        if (other instanceof HTMLDetailsElement) other.open = false;
+      });
+      details.open = willOpen;
+    };
+    nav._ghAccordion = onClick;
+    nav.addEventListener("click", onClick, true);
+  }
+
   setupHeader();
-  document.addEventListener("astro:page-load", setupHeader);
+  bindMobileAccordion();
+  document.addEventListener("astro:page-load", () => {
+    setupHeader();
+    bindMobileAccordion();
+  });
 </script>

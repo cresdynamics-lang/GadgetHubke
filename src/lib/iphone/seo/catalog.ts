@@ -978,8 +978,8 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     aliases: ["iphone 18 pro", "iphone18pro", "18 pro", "18pro"],
     seoTitle: "iPhone 18 Pro Price in Kenya | Gadget Hub",
     h1: "iPhone 18 Pro",
-    metaDescription: "Buy the iPhone 18 Pro in Nairobi from KES 203,000. 256GB, 512GB, 1TB, 2TB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich House.",
-    intro: "Shop the iPhone 18 Pro at Gadget Hub in Nairobi. From KES 203,000 sealed new, with storage options 256GB, 512GB, 1TB, 2TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    metaDescription: "Buy the iPhone 18 Pro in Nairobi from KES 185,000. 128GB, 256GB, 512GB, 1TB, 2TB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich House.",
+    intro: "Shop the iPhone 18 Pro at Gadget Hub in Nairobi. From KES 185,000 sealed new, with storage options 128GB, 256GB, 512GB, 1TB, 2TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "buyers who want the newest Pro iPhone in a compact size.",
     specs: [
       { label: "Display", value: "6.3-inch Super Retina XDR OLED with ProMotion" },
@@ -990,12 +990,12 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
       { label: "Water resistance", value: "IP68, 6 m for up to 30 minutes" },
       { label: "5G", value: "Supported (bands vary by model)" },
       { label: "Weight", value: "211 g" },
-      { label: "Storage", value: "256GB, 512GB, 1TB, 2TB" }
+      { label: "Storage", value: "128GB, 256GB, 512GB, 1TB, 2TB" }
     ],
     colours: ["Glacier", "Black", "White", "Gold"],
     faq: [
       { question: "Is the iPhone 18 Pro available in Nairobi?", answer: "Ask us on WhatsApp for current stock and a quote on the iPhone 18 Pro." },
-      { question: "What is the iPhone 18 Pro price in Kenya?", answer: "Sealed new iPhone 18 Pro starts from KES 203,000 at Gadget Hub. Options: 256GB, 512GB, 1TB, 2TB." }
+      { question: "What is the iPhone 18 Pro price in Kenya?", answer: "Sealed new iPhone 18 Pro starts from KES 185,000 (128GB) at Gadget Hub. Options: 128GB, 256GB, 512GB, 1TB, 2TB." }
     ],
     compareWith: ["iphone-18-pro-vs-iphone-18-pro-max", "iphone-17-pro-vs-iphone-18-pro"],
     related: ["iphone-18-pro-max", "iphone-17-pro"],
@@ -1010,8 +1010,8 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     aliases: ["iphone 18 pro max", "iphone18promax", "18 pro max", "18promax"],
     seoTitle: "iPhone 18 Pro Max Price in Kenya | Gadget Hub",
     h1: "iPhone 18 Pro Max",
-    metaDescription: "Buy the iPhone 18 Pro Max in Nairobi from KES 240,000. 256GB, 512GB, 1TB, 2TB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich House.",
-    intro: "Shop the iPhone 18 Pro Max at Gadget Hub in Nairobi. From KES 240,000 sealed new, with storage options 256GB, 512GB, 1TB, 2TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    metaDescription: "Buy the iPhone 18 Pro Max in Nairobi from KES 218,000. 256GB, 512GB, 1TB, 2TB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich House.",
+    intro: "Shop the iPhone 18 Pro Max at Gadget Hub in Nairobi. From KES 218,000 sealed new, with storage options 256GB, 512GB, 1TB, 2TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "power users who want the largest newest Pro iPhone.",
     specs: [
       { label: "Display", value: "6.9-inch Super Retina XDR OLED with ProMotion" },
@@ -1027,7 +1027,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     colours: ["Glacier", "Black", "White", "Gold"],
     faq: [
       { question: "iPhone 18 Pro or 18 Pro Max?", answer: "Ask us on WhatsApp for current stock and a quote on the iPhone 18 Pro Max." },
-      { question: "What is the iPhone 18 Pro Max price in Kenya?", answer: "Sealed new iPhone 18 Pro Max starts from KES 240,000 at Gadget Hub. Options: 256GB, 512GB, 1TB, 2TB." }
+      { question: "What is the iPhone 18 Pro Max price in Kenya?", answer: "Sealed new iPhone 18 Pro Max starts from KES 218,000 at Gadget Hub. Options: 256GB, 512GB, 1TB, 2TB." }
     ],
     compareWith: ["iphone-18-pro-vs-iphone-18-pro-max"],
     related: ["iphone-18-pro", "iphone-duo"],

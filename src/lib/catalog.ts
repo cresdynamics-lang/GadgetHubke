@@ -25,24 +25,12 @@ export type ShopCategory = {
 
 export const iphoneSubcategories: Subcategory[] = [
   {
-    id: "iphone-duo",
-    label: "iPhone Duo",
-    href: "/shop/iphone/iphone-duo",
-    blurb: "Fold",
-    badge: "New",
-    fromPriceKes: 279999,
-    image: {
-      src: ghImages.duo.foldTop,
-      alt: "iPhone Duo",
-    },
-  },
-  {
     id: "iphone-pro",
     label: "iPhone 18 Pro",
     href: "/shop/iphone/iphone-pro",
     blurb: "6.3″",
     badge: "New",
-    fromPriceKes: 190000,
+    fromPriceKes: 185000,
     image: {
       src: ghImages.iphone.proBlue,
       alt: "iPhone 18 Pro",
@@ -54,10 +42,22 @@ export const iphoneSubcategories: Subcategory[] = [
     href: "/shop/iphone/iphone-pro-max",
     blurb: "6.9″",
     badge: "New",
-    fromPriceKes: 220000,
+    fromPriceKes: 218000,
     image: {
       src: ghImages.iphone.proSilver,
       alt: "iPhone 18 Pro Max",
+    },
+  },
+  {
+    id: "iphone-duo",
+    label: "iPhone Duo",
+    href: "/shop/iphone/iphone-duo",
+    blurb: "Fold",
+    badge: "New",
+    fromPriceKes: 279999,
+    image: {
+      src: ghImages.duo.foldTop,
+      alt: "iPhone Duo",
     },
   },
   {

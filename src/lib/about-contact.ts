@@ -13,7 +13,7 @@ export const pendingOwnerFacts = {
   founderStory: false,
   replyMinutes: false,
   walkInShop: true, // address exists in site.ts - treat as pickup/visit available
-  socialHandles: false, // site.social URLs are placeholders
+  socialHandles: true, // Instagram + Facebook live; TikTok / X still placeholders
   exUkGradingDetail: false,
   deliveryAreasFees: false,
   payOnDelivery: false,

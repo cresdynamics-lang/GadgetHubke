@@ -43,8 +43,8 @@ export const site = {
     note: "New devices include a 1-year warranty. Keep your GadgetHub invoice for support.",
   },
   social: {
-    facebook: "https://www.facebook.com/",
-    instagram: "https://www.instagram.com/",
+    facebook: "https://www.facebook.com/profile.php?id=61580617706515",
+    instagram: "https://www.instagram.com/gadgethub.ke/",
     tiktok: "https://www.tiktok.com/",
     x: "https://x.com/",
   },

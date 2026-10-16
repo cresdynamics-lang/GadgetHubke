@@ -111,9 +111,24 @@ export type MegaNewLink = {
   };
 };
 
+/** New mega/hamburger order: iPhone 18, then Duo, then the rest. */
+const MEGA_NEW_ORDER = [
+  "iphone-pro",
+  "iphone-pro-max",
+  "iphone-duo",
+  "iphone-air",
+  "iphone-17",
+  "iphone-17e",
+] as const;
+
 export function megaNewIphones(): MegaNewLink[] {
+  const rank = (id: string) => {
+    const i = (MEGA_NEW_ORDER as readonly string[]).indexOf(id);
+    return i === -1 ? 100 + id.length : i;
+  };
   return listIphones()
     .filter((i) => i.id !== "iphone-16")
+    .sort((a, b) => rank(a.id) - rank(b.id))
     .map((i) => ({
       id: i.id,
       name: i.name,
