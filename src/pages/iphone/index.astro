@@ -8,7 +8,6 @@ import IphoneQuiz from "../../components/iphone/IphoneQuiz.astro";
 import ProductCard from "../../components/ProductCard.astro";
 import {
   models,
-  formatKes,
   getImage,
   defaultColourForModel,
   modelSubline,
@@ -18,16 +17,9 @@ import {
   IPHONE_ALL_GENS,
   latestByFamily,
 } from "../../lib/iphone/lineup";
-import {
-  listSeoModels,
-  listSeriesHubs,
-  formatKesSeo,
-} from "../../lib/iphone/seo";
 import { site } from "../../lib/site";
 import CategoryHero from "../../components/hero/CategoryHero.astro";
 
-const seoModels = listSeoModels().sort((a, b) => b.family - a.family || a.fromKes - b.fromKes);
-const seriesHubs = listSeriesHubs();
 const hubJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -74,46 +66,8 @@ const comparePayload = list.map((m) => {
         <span>iPhone</span>
       </nav>
       <header class="ishop__intro">
-        <h1 class="ishop__page-title">iPhone price in Kenya</h1>
-        <p>
-          Every model from iPhone 11 to iPhone 18 at Gadget Hub, Norwich House. Starting prices are sealed new stock from our price sheet. Open a model page for storage options, or browse by series.
-        </p>
+        <h1 class="ishop__page-title">iPhone</h1>
       </header>
-
-      <div class="ishop__series-links">
-        <h2 class="ishop__subhead">Browse by series</h2>
-        <ul>
-          {seriesHubs.map((s) => (
-            <li>
-              <a href={`/iphone/${s.slug}`}>{s.name}</a>
-              {" · from "}
-              {formatKesSeo(Math.min(...s.models.map((m) => m.fromKes)))}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div class="ishop__price-table">
-        <h2 class="ishop__subhead">All models and starting prices</h2>
-        <table>
-          <thead>
-            <tr>
-              <th scope="col">Model</th>
-              <th scope="col">Series</th>
-              <th scope="col">From</th>
-            </tr>
-          </thead>
-          <tbody>
-            {seoModels.map((m) => (
-              <tr>
-                <td><a href={`/iphone/${m.id}`}>{m.name}</a></td>
-                <td><a href={`/iphone/iphone-${m.family}-series`}>{m.series}</a></td>
-                <td>{formatKesSeo(m.fromKes)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
 
       <div class="ishop__chips" data-filter-family role="group" aria-label="Filter by generation">
         <button type="button" class="is-active" data-family="all">All</button>
@@ -501,9 +455,17 @@ const comparePayload = list.map((m) => {
 
   .ishop__chips {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    flex-wrap: nowrap;
+    gap: 0.4rem;
     margin-bottom: var(--space-3);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 0.15rem;
+  }
+
+  .ishop__chips::-webkit-scrollbar {
+    display: none;
   }
 
   .ishop__chips--secondary {
@@ -511,13 +473,15 @@ const comparePayload = list.map((m) => {
   }
 
   .ishop__chips button {
+    flex: 0 0 auto;
     border: 1px solid var(--color-border);
     background: var(--color-bg);
     color: var(--color-fg);
     border-radius: 999px;
-    padding: 0.45rem 0.9rem;
+    padding: 0.4rem 0.75rem;
     font: inherit;
-    font-size: var(--text-sm);
+    font-size: 0.78rem;
+    white-space: nowrap;
     cursor: pointer;
   }
 
@@ -728,26 +692,4 @@ const comparePayload = list.map((m) => {
     font-size: var(--text-sm);
   }
 
-  .ishop__series-links ul {
-    padding-left: 1.1rem;
-    line-height: 1.7;
-  }
-
-  .ishop__price-table {
-    margin: 1.5rem 0 2.5rem;
-    overflow-x: auto;
-  }
-
-  .ishop__price-table table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.95rem;
-  }
-
-  .ishop__price-table th,
-  .ishop__price-table td {
-    text-align: left;
-    padding: 0.55rem 0.4rem;
-    border-bottom: 1px solid var(--color-border);
-  }
 </style>

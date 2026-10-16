@@ -52,26 +52,18 @@ const waDefault = whatsappUrl(
           <th scope="col">Storage</th>
           <th scope="col">Condition</th>
           <th scope="col">Price</th>
-          <th scope="col">Stock</th>
           <th scope="col">Order</th>
         </tr>
       </thead>
       <tbody>
         {
           model.variants.flatMap((v) => {
-            const stock =
-              v.stockStatus === "in_stock"
-                ? "In stock"
-                : v.stockStatus === "out_of_stock"
-                  ? "Out of stock"
-                  : "Ask on WhatsApp";
             const rows = [
               {
                 storage: v.storage,
                 condition: "New",
                 price: v.newKes,
                 sheetId: v.sheetId,
-                stock,
               },
             ];
             if (SHOW_EX_UK) {
@@ -80,7 +72,6 @@ const waDefault = whatsappUrl(
                 condition: EX_UK_CONDITION_LABEL,
                 price: v.exUkKes,
                 sheetId: `${v.sheetId}-EXUK`,
-                stock,
               });
             }
             return rows.map((row) => {
@@ -92,7 +83,6 @@ const waDefault = whatsappUrl(
                   <td>{row.storage}</td>
                   <td>{row.condition}</td>
                   <td>{formatKesSeo(row.price)}</td>
-                  <td>{stock}</td>
                   <td>
                     <a class="seo-blocks__wa" href={wa} target="_blank" rel="noopener noreferrer">
                       Order on WhatsApp
@@ -271,7 +261,7 @@ const waDefault = whatsappUrl(
   }
   .seo-blocks table {
     width: 100%;
-    min-width: 28rem;
+    min-width: 22rem;
     border-collapse: collapse;
     font-size: 0.95rem;
   }

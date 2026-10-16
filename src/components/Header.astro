@@ -221,13 +221,14 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
     </div>
     <nav aria-label="Mobile">
       <ul class="mobile-nav__list">
-        <li class="mobile-nav__item">
-          <details class="mobile-nav__details" open>
-            <summary class="mobile-nav__summary">iPhone</summary>
-            <ul class="mobile-nav__sub">
-              <li><a href="/iphone">iPhones</a></li>
+        <li class="mobile-nav__item" data-mobile-cat>
+          <div class="mobile-nav__cat">
+            <a class="mobile-nav__cat-link" href="/iphone">iPhone</a>
+            <button type="button" class="mobile-nav__cat-toggle" data-mobile-cat-toggle aria-expanded="false" aria-label="Show iPhone menu"></button>
+          </div>
+          <ul class="mobile-nav__sub" data-mobile-cat-panel hidden>
               <li class="mobile-nav__gen">
-                <details class="mobile-nav__details mobile-nav__details--nested" open>
+                <details class="mobile-nav__details mobile-nav__details--nested">
                   <summary class="mobile-nav__summary mobile-nav__summary--nested">New</summary>
                   <ul>
                     {iphoneNewest.map((m) => (
@@ -260,14 +261,14 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
                   </li>
                 ))
               }
-            </ul>
-          </details>
+          </ul>
         </li>
-        <li class="mobile-nav__item">
-          <details class="mobile-nav__details">
-            <summary class="mobile-nav__summary">Mac</summary>
-            <ul class="mobile-nav__sub">
-              <li><a href="/mac">Mac home</a></li>
+        <li class="mobile-nav__item" data-mobile-cat>
+          <div class="mobile-nav__cat">
+            <a class="mobile-nav__cat-link" href="/mac">Mac</a>
+            <button type="button" class="mobile-nav__cat-toggle" data-mobile-cat-toggle aria-expanded="false" aria-label="Show Mac menu"></button>
+          </div>
+          <ul class="mobile-nav__sub" data-mobile-cat-panel hidden>
               <li><a href="/mac/shop">Shop all MacBook</a></li>
               <li class="mobile-nav__gen">
                 <p>MacBook Air</p>
@@ -299,14 +300,14 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
               <li><a href="/mac/compare">Compare</a></li>
               <li><a href="/trade-in">Trade-In</a></li>
               <li><a href="/accessories">Accessories</a></li>
-            </ul>
-          </details>
+          </ul>
         </li>
-        <li class="mobile-nav__item">
-          <details class="mobile-nav__details">
-            <summary class="mobile-nav__summary">iPad</summary>
-            <ul class="mobile-nav__sub">
-              <li><a href="/ipad">iPad home</a></li>
+        <li class="mobile-nav__item" data-mobile-cat>
+          <div class="mobile-nav__cat">
+            <a class="mobile-nav__cat-link" href="/ipad">iPad</a>
+            <button type="button" class="mobile-nav__cat-toggle" data-mobile-cat-toggle aria-expanded="false" aria-label="Show iPad menu"></button>
+          </div>
+          <ul class="mobile-nav__sub" data-mobile-cat-panel hidden>
               <li><a href="/ipad/shop">Shop all iPad</a></li>
               <li class="mobile-nav__gen">
                 <p>iPad Pro</p>
@@ -364,14 +365,14 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
               <li><a href="/ipad/shop?need=school">Shop by need</a></li>
               <li><a href="/ipad/compare">Compare</a></li>
               <li><a href="/trade-in">Trade-In</a></li>
-            </ul>
-          </details>
+          </ul>
         </li>
-        <li class="mobile-nav__item">
-          <details class="mobile-nav__details">
-            <summary class="mobile-nav__summary">Watch</summary>
-            <ul class="mobile-nav__sub">
-              <li><a href="/watch">Watch home</a></li>
+        <li class="mobile-nav__item" data-mobile-cat>
+          <div class="mobile-nav__cat">
+            <a class="mobile-nav__cat-link" href="/watch">Watch</a>
+            <button type="button" class="mobile-nav__cat-toggle" data-mobile-cat-toggle aria-expanded="false" aria-label="Show Watch menu"></button>
+          </div>
+          <ul class="mobile-nav__sub" data-mobile-cat-panel hidden>
               <li><a href="/watch/shop">Shop all Watch</a></li>
               <li class="mobile-nav__gen">
                 <p>Series</p>
@@ -416,14 +417,14 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
               <li><a href="/watch/shop?need=fitness">Shop by need</a></li>
               <li><a href="/watch/compare">Compare</a></li>
               <li><a href="/trade-in">Trade-In</a></li>
-            </ul>
-          </details>
+          </ul>
         </li>
-        <li class="mobile-nav__item">
-          <details class="mobile-nav__details">
-            <summary class="mobile-nav__summary">AirPods</summary>
-            <ul class="mobile-nav__sub">
-              <li><a href="/airpods">AirPods home</a></li>
+        <li class="mobile-nav__item" data-mobile-cat>
+          <div class="mobile-nav__cat">
+            <a class="mobile-nav__cat-link" href="/airpods">AirPods</a>
+            <button type="button" class="mobile-nav__cat-toggle" data-mobile-cat-toggle aria-expanded="false" aria-label="Show AirPods menu"></button>
+          </div>
+          <ul class="mobile-nav__sub" data-mobile-cat-panel hidden>
               <li><a href="/airpods/shop">Shop all AirPods</a></li>
               <li class="mobile-nav__gen">
                 <p>Pro</p>
@@ -467,14 +468,14 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
               <li><a href="/airpods/shop?need=commute">Shop by need</a></li>
               <li><a href="/airpods/compare">Compare</a></li>
               <li><a href="/trade-in">Trade-In</a></li>
-            </ul>
-          </details>
+          </ul>
         </li>
-        <li class="mobile-nav__item">
-          <details class="mobile-nav__details">
-            <summary class="mobile-nav__summary">TV &amp; Home</summary>
-            <ul class="mobile-nav__sub">
-              <li><a href="/tv-home">TV &amp; Home home</a></li>
+        <li class="mobile-nav__item" data-mobile-cat>
+          <div class="mobile-nav__cat">
+            <a class="mobile-nav__cat-link" href="/tv-home">TV &amp; Home</a>
+            <button type="button" class="mobile-nav__cat-toggle" data-mobile-cat-toggle aria-expanded="false" aria-label="Show TV and Home menu"></button>
+          </div>
+          <ul class="mobile-nav__sub" data-mobile-cat-panel hidden>
               <li><a href="/tv-home/shop">Shop all</a></li>
               <li class="mobile-nav__gen">
                 <p>Apple TV</p>
@@ -517,14 +518,14 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
               </li>
               <li><a href="/tv-home/shop?need=movies">Shop by need</a></li>
               <li><a href="/tv-home/compare">Compare</a></li>
-            </ul>
-          </details>
+          </ul>
         </li>
-        <li class="mobile-nav__item">
-          <details class="mobile-nav__details">
-            <summary class="mobile-nav__summary">Accessories</summary>
-            <ul class="mobile-nav__sub">
-              <li><a href="/accessories">Accessories home</a></li>
+        <li class="mobile-nav__item" data-mobile-cat>
+          <div class="mobile-nav__cat">
+            <a class="mobile-nav__cat-link" href="/accessories">Accessories</a>
+            <button type="button" class="mobile-nav__cat-toggle" data-mobile-cat-toggle aria-expanded="false" aria-label="Show Accessories menu"></button>
+          </div>
+          <ul class="mobile-nav__sub" data-mobile-cat-panel hidden>
               <li><a href="/accessories/apple-pencil">Apple Pencil</a></li>
               <li><a href="/accessories/magic-keyboard">Magic Keyboard</a></li>
               <li><a href="/accessories/magic-mouse">Magic Mouse</a></li>
@@ -536,8 +537,7 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
               <li><a href="/accessories/power#finder">What charger do I need?</a></li>
               <li><a href="/accessories/cases#finder">Which case fits?</a></li>
               <li><a href="/accessories/compare">Compare</a></li>
-            </ul>
-          </details>
+          </ul>
         </li>
         {
           productNav
@@ -1039,8 +1039,54 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
     cursor: pointer;
   }
 
+  .mobile-nav__cat {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .mobile-nav__cat-link {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: block;
+    padding: 0.85rem 0;
+    font-size: 1.05rem;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-black);
+    text-decoration: none;
+  }
+
+  .mobile-nav__cat-toggle {
+    flex: 0 0 auto;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .mobile-nav__cat-toggle::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-right: 2px solid var(--color-black, #1d1d1f);
+    border-bottom: 2px solid var(--color-black, #1d1d1f);
+    transform: rotate(45deg);
+    transition: transform 0.2s var(--ease, ease);
+    opacity: 0.55;
+  }
+
+  .mobile-nav__cat-toggle[aria-expanded="true"]::after {
+    transform: rotate(-135deg);
+    margin-top: 0.35rem;
+  }
+
   /* Majors stay major: iPhone, Mac, iPad, … */
-  .mobile-nav__list > .mobile-nav__item > .mobile-nav__details > .mobile-nav__summary,
   .mobile-nav__list > .mobile-nav__item > .mobile-nav__link:not(.mobile-nav__link--util) {
     font-size: 1.05rem;
     font-weight: var(--font-weight-semibold);
@@ -1364,7 +1410,7 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
     syncAccountMenu();
   }
 
-  /** Accordion: one open dropdown at a time (majors among majors, gens among gens). */
+  /** Accordion: category chevrons + one nested gen open at a time. Category labels navigate. */
   function bindMobileAccordion() {
     const nav = document.querySelector("[data-mobile-nav]");
     if (!(nav instanceof HTMLElement)) return;
@@ -1373,21 +1419,42 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
     const onClick = (e) => {
       const t = e.target;
       if (!(t instanceof Element)) return;
+
+      const catToggle = t.closest("[data-mobile-cat-toggle]");
+      if (catToggle instanceof HTMLButtonElement && nav.contains(catToggle)) {
+        e.preventDefault();
+        const item = catToggle.closest("[data-mobile-cat]");
+        const panel = item?.querySelector("[data-mobile-cat-panel]");
+        if (!(panel instanceof HTMLElement)) return;
+        const willOpen = panel.hasAttribute("hidden");
+        nav.querySelectorAll("[data-mobile-cat]").forEach((other) => {
+          if (!(other instanceof HTMLElement) || other === item) return;
+          other.querySelector("[data-mobile-cat-panel]")?.setAttribute("hidden", "");
+          other.querySelector("[data-mobile-cat-toggle]")?.setAttribute("aria-expanded", "false");
+        });
+        if (willOpen) {
+          panel.removeAttribute("hidden");
+          catToggle.setAttribute("aria-expanded", "true");
+        } else {
+          panel.setAttribute("hidden", "");
+          catToggle.setAttribute("aria-expanded", "false");
+        }
+        return;
+      }
+
       const summary = t.closest("summary.mobile-nav__summary");
       if (!summary || !nav.contains(summary)) return;
       const details = summary.parentElement;
       if (!(details instanceof HTMLDetailsElement)) return;
+      if (!details.classList.contains("mobile-nav__details--nested")) return;
       e.preventDefault();
-      const nested = details.classList.contains("mobile-nav__details--nested");
       const willOpen = !details.open;
-      const siblings = nested
-        ? details.closest(".mobile-nav__sub")?.querySelectorAll("details.mobile-nav__details--nested")
-        : nav.querySelectorAll(
-            "nav > .mobile-nav__list > .mobile-nav__item > details.mobile-nav__details:not(.mobile-nav__details--nested)",
-          );
-      siblings?.forEach((other) => {
-        if (other instanceof HTMLDetailsElement) other.open = false;
-      });
+      details
+        .closest(".mobile-nav__sub")
+        ?.querySelectorAll("details.mobile-nav__details--nested")
+        .forEach((other) => {
+          if (other instanceof HTMLDetailsElement) other.open = false;
+        });
       details.open = willOpen;
     };
     nav._ghAccordion = onClick;

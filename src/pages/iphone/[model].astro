@@ -48,6 +48,8 @@ import { site, whatsappUrl } from "../../lib/site";
 import StockChannelToggle from "../../components/StockChannelToggle.astro";
 import ProductReviews from "../../components/ProductReviews.astro";
 import StickyBuyBar from "../../components/StickyBuyBar.astro";
+import BackButton from "../../components/BackButton.astro";
+import TrackProductView from "../../components/TrackProductView.astro";
 import SeriesHub from "../../components/iphone/SeriesHub.astro";
 
 assertExUkWarrantyConfigured();
@@ -181,9 +183,19 @@ if (seo) {
 {seo && jsonLd ? (
 <BaseLayout title={seo.seoTitle} description={seo.metaDescription}>
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <TrackProductView
+    id={seo.id}
+    name={seo.name}
+    href={`/iphone/${seo.id}`}
+    image={initialImg.src}
+    priceKes={seo.fromKes}
+  />
 
   {!hasLegacyGallery ? (
     <article class="ipdp ipdp--seo-only">
+      <div class="container">
+        <BackButton fallbackHref="/iphone" />
+      </div>
       <div class="container ipdp__grid">
         <div class="ipdp__gallery">
           <div class="ipdp__stage-wrap">
@@ -239,6 +251,9 @@ if (seo) {
     </article>
   ) : (
   <article class="ipdp" data-ipdp>
+    <div class="container">
+      <BackButton fallbackHref="/iphone" />
+    </div>
     <div class="container ipdp__grid">
       <div class="ipdp__gallery" data-gallery>
         <div class="ipdp__stage-wrap">
@@ -361,16 +376,17 @@ if (seo) {
         </p>
 
         <div class="ipdp__cta" data-pdp-cta>
-          <button type="button" class="btn btn--primary" data-add-bag data-pdp-cart>Add to Cart</button>
-          <button type="button" class="btn btn--primary" data-buy-now-checkout data-pdp-buy>Buy now</button>
+          <button type="button" class="btn btn--primary btn--xs" data-add-bag data-pdp-cart>Add to Cart</button>
+          <button type="button" class="btn btn--primary btn--xs" data-buy-now-checkout data-pdp-buy>Buy now</button>
+          <a class="btn btn--secondary btn--xs" href="/trade-in">Trade In</a>
           <a
-            class="btn btn--whatsapp"
+            class="btn btn--whatsapp btn--xs"
             data-wa-link
-            href={whatsappUrl(`Hi Gadget Hub, I'm interested in the ${model.name}.`)}
+            href={whatsappUrl(`Hi Gadget Hub, I'd like to order the ${model.name}.`)}
             target="_blank"
             rel="noopener noreferrer"
           >
-            Ask on WhatsApp
+            Order on WhatsApp
           </a>
         </div>
         <p class="ipdp__fine">{iphoneConfig.samplePriceDisclaimer}</p>
@@ -1043,11 +1059,17 @@ if (seo) {
 
   .ipdp__swatches {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 0.65rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 0.15rem;
   }
+  .ipdp__swatches::-webkit-scrollbar { display: none; }
 
   .ipdp__swatch {
+    flex: 0 0 auto;
     width: 2.375rem;
     height: 2.375rem;
     border-radius: 50%;
@@ -1154,9 +1176,23 @@ if (seo) {
   }
 
   .ipdp__cta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.65rem;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.35rem;
+    width: 100%;
+  }
+
+  .ipdp__cta .btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 2rem;
+    justify-content: center;
+    padding: 0.4rem 0.2rem;
+    font-size: clamp(0.55rem, 2.1vw, 0.7rem);
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   :global(.btn--whatsapp) {

@@ -4,11 +4,10 @@ import {
   type AirpodsModel,
   getAirpodsImage,
   defaultAirpodsColour,
-  formatKes,
-  lipaMonthly,
   colourHex,
   colourLabel,
 } from "../../lib/airpods";
+import { whatsappUrl } from "../../lib/site";
 
 interface Props {
   model: AirpodsModel;
@@ -26,7 +25,7 @@ const hoverSrc =
         const hero = getAirpodsImage(model.id, "hero", model.name);
         return !hero.fallback && hero.src !== img.src ? hero.src : "";
       })();
-const lipa = lipaMonthly(model.basePriceKes);
+const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}.`);
 ---
 
 <article class="acard" data-airpods-card data-id={model.id}>
@@ -72,13 +71,10 @@ const lipa = lipaMonthly(model.basePriceKes);
         ))
       }
     </div>
-    <p class="acard__price">
-      <span data-live-price={model.id} data-live-prefix="From ">From {formatKes(model.basePriceKes)}</span>
-      <small>or {formatKes(lipa.monthlyKes)} / mo</small>
-    </p>
-    <p class="acard__fine" data-live-stock={model.id}>Sealed · 1-year warranty · serial on invoice</p>
-    <div class="acard__actions">
-      <a class="btn btn--primary btn--xs" href={`/airpods/${model.id}`}>View</a>
+    <div class="acard__row acard__row--price">
+      <p class="acard__price">
+        <span data-live-price={model.id} data-live-prefix="">{`KSh ${Math.round(model.basePriceKes).toLocaleString("en-KE")}`}</span>
+      </p>
       <button
         type="button"
         class="btn btn--secondary btn--xs"
@@ -93,15 +89,19 @@ const lipa = lipaMonthly(model.basePriceKes);
       >
         Add to Cart
       </button>
-      {
-        compare ? (
-          <label class="acard__compare">
-            <input type="checkbox" data-airpods-compare value={model.id} />
-            Compare
-          </label>
-        ) : null
-      }
     </div>
+    <div class="acard__row acard__row--links">
+      <a class="btn btn--primary btn--xs" href={`/airpods/${model.id}`}>Details</a>
+      <a class="btn btn--whatsapp btn--xs" href={wa} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+    </div>
+    {
+      compare ? (
+        <label class="acard__compare">
+          <input type="checkbox" data-airpods-compare value={model.id} />
+          Compare
+        </label>
+      ) : null
+    }
   </div>
 </article>
 
@@ -184,21 +184,40 @@ const lipa = lipaMonthly(model.basePriceKes);
     border: 1px solid #d2d2d7; background: var(--dot); padding: 0; cursor: pointer;
   }
   .acard__colours button.is-active { outline: 2px solid #000; outline-offset: 2px; }
+  .acard__row {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.65rem;
+  }
+  .acard__row--links {
+    margin-top: 0.4rem;
+  }
   .acard__price {
-    margin: 0.55rem 0 0;
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
     font-weight: 700;
     letter-spacing: -0.02em;
+    font-size: 0.85rem;
+    white-space: nowrap;
   }
-  .acard__price small {
-    display: block;
-    font-weight: 400;
-    color: #6e6e73;
+  .acard__row .btn {
+    flex: 1 1 0;
+    min-width: 0;
+    justify-content: center;
+    white-space: nowrap;
   }
-  .acard__actions {
-    display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center; margin-top: 0.65rem;
+  .acard__row--price .btn {
+    flex: 0 0 auto;
   }
   .acard__compare {
-    display: inline-flex; align-items: center; gap: 0.3rem;
-    font-size: var(--text-sm); cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-top: 0.45rem;
+    font-size: var(--text-sm);
+    cursor: pointer;
   }
 </style>

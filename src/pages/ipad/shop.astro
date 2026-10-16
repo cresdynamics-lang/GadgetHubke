@@ -7,9 +7,6 @@ import IpadCard from "../../components/ipad/IpadCard.astro";
 import {
   ipadModels,
   ipadConfig,
-  getIpadImage,
-  defaultIpadColour,
-  formatKes,
   type IpadFamily,
   type IpadChipGen,
 } from "../../lib/ipad";
@@ -59,32 +56,6 @@ const qs = (extra: Record<string, string | null>) => {
   return s ? `/ipad/shop?${s}` : "/ipad/shop";
 };
 
-const compareCards = Object.fromEntries(
-  ipadModels.map((m) => {
-    const c = defaultIpadColour(m);
-    const img = getIpadImage(m.id, c, "product", m.name);
-    return [
-      m.id,
-      {
-        id: m.id,
-        name: m.name,
-        href: `/ipad/${m.id}`,
-        price: m.basePriceKes,
-        priceLabel: formatKes(m.basePriceKes),
-        imageSrc: img.src,
-        chip: m.chip,
-        display: `${m.display.diagonal}″ ${m.display.panel}`,
-        pencil: m.pencils.join(", "),
-        keyboard: m.keyboards.join(", "),
-        camera: m.frontCamera,
-        battery: `${m.batteryHours} h`,
-        weight: `${m.weightG} g`,
-        size: `${m.screenInches}″`,
-        ai: m.appleIntelligence ? "Yes" : "No",
-      },
-    ];
-  }),
-);
 ---
 
 <BaseLayout title="Shop iPad - GadgetHub" description="Filter iPad Pro, Air, mini and iPad by size, chip and need.">
@@ -144,156 +115,27 @@ const compareCards = Object.fromEntries(
     </div>
 
     <p class="ipad-shop__count">{list.length} models</p>
-    <ul class="ipad-shop__grid">
+    <ul class="ipad-shop__grid" data-ipad-shop-grid>
       {list.map((m) => (
         <li>
-          <IpadCard model={m} />
+          <IpadCard model={m} compare={false} />
         </li>
       ))}
     </ul>
   </section>
-
-  <div class="ipad-compare-tray" data-ipad-compare-tray hidden>
-    <p><span data-ipad-compare-count>0</span> selected · max 3</p>
-    <button type="button" class="btn btn--primary btn--sm" data-ipad-compare-open>Compare</button>
-    <a class="btn btn--secondary btn--sm" data-ipad-compare-page href="/ipad/compare">Open page</a>
-    <button type="button" class="btn btn--secondary btn--sm" data-ipad-compare-clear>Clear</button>
-  </div>
-
-  <dialog class="ipad-compare-modal" data-ipad-compare-modal aria-label="Compare iPads">
-    <div class="ipad-compare-modal__panel">
-      <header>
-        <h2>Compare</h2>
-        <button type="button" data-ipad-compare-close>Close</button>
-      </header>
-      <div data-ipad-compare-body></div>
-    </div>
-  </dialog>
 </BaseLayout>
 
-<script define:vars={{ compareCards }}>
-  const selected = new Set();
-  const tray = document.querySelector("[data-ipad-compare-tray]");
-  const countEl = document.querySelector("[data-ipad-compare-count]");
-  const modal = document.querySelector("[data-ipad-compare-modal]");
-  const body = document.querySelector("[data-ipad-compare-body]");
-  const pageLink = document.querySelector("[data-ipad-compare-page]");
-  let diffsOnly = true;
+<script>
+  import { bindLandingViewState } from "../../scripts/landingViewState";
+  import { repairProductImages } from "../../scripts/safeSwapImage";
 
-  const toast = (msg) => {
-    let t = document.querySelector("[data-ipad-toast]");
-    if (!t) {
-      t = document.createElement("div");
-      t.setAttribute("data-ipad-toast");
-      t.className = "ipad-toast";
-      document.body.appendChild(t);
-    }
-    t.textContent = msg;
-    t.hidden = false;
-    setTimeout(() => (t.hidden = true), 1800);
-  };
-
-  function sync() {
-    if (tray) tray.hidden = selected.size === 0;
-    if (countEl) countEl.textContent = String(selected.size);
-    if (pageLink instanceof HTMLAnchorElement) {
-      const ids = [...selected].join(",");
-      pageLink.href = ids ? `/ipad/compare?ids=${encodeURIComponent(ids)}` : "/ipad/compare";
-    }
-  }
-
-  function honest(cards) {
-    const points = [];
-    const families = new Set(cards.map((c) => c.name.split(" ")[1] || c.name));
-    const chips = new Set(cards.map((c) => c.chip));
-    if (chips.size > 1) points.push(`Chip differs: ${[...chips].join(" vs ")}.`);
-    const pencils = new Set(cards.map((c) => c.pencil));
-    if (pencils.size > 1) points.push("Apple Pencil support is not the same - check before you buy.");
-    const ais = new Set(cards.map((c) => c.ai));
-    if (ais.size > 1) points.push("Apple Intelligence support differs across these models.");
-    const prices = cards.map((c) => c.price);
-    if (Math.max(...prices) - Math.min(...prices) >= 20000) {
-      points.push(`Sample price gap about KES ${(Math.max(...prices) - Math.min(...prices)).toLocaleString("en-KE")}.`);
-    }
-    return points.slice(0, 3).join(" ") || "These iPads are close - compare Pencil and keyboard fit carefully.";
-  }
-
-  function renderModal() {
-    if (!(modal instanceof HTMLDialogElement) || !body) return;
-    const cards = [...selected].map((id) => compareCards[id]).filter(Boolean);
-    if (!cards.length) return;
-    const rows = [
-      { group: "Chip", label: "Chip", values: cards.map((c) => c.chip) },
-      { group: "Display", label: "Display", values: cards.map((c) => c.display) },
-      { group: "Apple Pencil", label: "Pencil", values: cards.map((c) => c.pencil) },
-      { group: "Keyboard", label: "Keyboard", values: cards.map((c) => c.keyboard) },
-      { group: "Camera", label: "Front camera", values: cards.map((c) => c.camera) },
-      { group: "Battery", label: "Battery", values: cards.map((c) => c.battery) },
-      { group: "Size and weight", label: "Size", values: cards.map((c) => c.size) },
-      { group: "Size and weight", label: "Weight", values: cards.map((c) => c.weight) },
-      { group: "Software", label: "Apple Intelligence", values: cards.map((c) => c.ai) },
-      { group: "Price", label: "From (sample)", values: cards.map((c) => c.priceLabel) },
-    ];
-    const visible = diffsOnly ? rows.filter((r) => new Set(r.values).size > 1) : rows;
-    let last = "";
-    const tbody = visible
-      .map((r) => {
-        const group =
-          r.group !== last
-            ? `<tr class="ipad-compare-group"><th colspan="${cards.length + 1}">${r.group}</th></tr>`
-            : "";
-        last = r.group;
-        return `${group}<tr><th>${r.label}</th>${r.values.map((v) => `<td>${v}</td>`).join("")}</tr>`;
-      })
-      .join("");
-
-    body.innerHTML = `
-      <p class="ipad-compare-honest"><strong>The honest difference.</strong> ${honest(cards)}</p>
-      <label class="ipad-compare-toggle"><input type="checkbox" data-ipad-diff-only ${diffsOnly ? "checked" : ""} /> Show only differences</label>
-      <div class="ipad-compare-scroll">
-        <table>
-          <thead><tr><th></th>${cards
-            .map(
-              (c) => `<th><a href="${c.href}"><img src="${c.imageSrc}" alt="" width="120" height="120" loading="lazy" /><span>${c.name}</span></a><small>From ${c.priceLabel}</small></th>`,
-            )
-            .join("")}</tr></thead>
-          <tbody>${tbody}</tbody>
-        </table>
-      </div>`;
-    body.querySelector("[data-ipad-diff-only]")?.addEventListener("change", (e) => {
-      diffsOnly = e.target instanceof HTMLInputElement ? e.target.checked : true;
-      renderModal();
-    });
-    modal.showModal();
-  }
-
-  document.querySelectorAll("[data-compare]").forEach((input) => {
-    input.addEventListener("change", () => {
-      const id = input.getAttribute("data-compare");
-      if (!(input instanceof HTMLInputElement) || !id) return;
-      if (input.checked) {
-        if (selected.size >= 3) {
-          input.checked = false;
-          toast("Compare up to 3 iPads");
-          return;
-        }
-        selected.add(id);
-      } else selected.delete(id);
-      sync();
-    });
+  bindLandingViewState({
+    storageKey: "gh-shop-ipad",
+    gridSelector: "[data-ipad-shop-grid]",
+    withGenFilter: false,
   });
-
-  document.querySelector("[data-ipad-compare-clear]")?.addEventListener("click", () => {
-    selected.clear();
-    document.querySelectorAll("[data-compare]").forEach((i) => {
-      if (i instanceof HTMLInputElement) i.checked = false;
-    });
-    sync();
-  });
-  document.querySelector("[data-ipad-compare-open]")?.addEventListener("click", renderModal);
-  document.querySelector("[data-ipad-compare-close]")?.addEventListener("click", () => {
-    if (modal instanceof HTMLDialogElement) modal.close();
-  });
+  repairProductImages();
+  window.addEventListener("pageshow", () => repairProductImages());
 </script>
 
 <style>
@@ -317,18 +159,28 @@ const compareCards = Object.fromEntries(
   .ipad-shop__filters,
   .ipad-shop__toggles {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
+    flex-wrap: nowrap;
+    gap: 0.4rem;
     margin: 0.85rem 0;
     align-items: center;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 0.15rem;
+  }
+  .ipad-shop__filters::-webkit-scrollbar,
+  .ipad-shop__toggles::-webkit-scrollbar {
+    display: none;
   }
   .ipad-chip {
+    flex: 0 0 auto;
+    white-space: nowrap;
     border: 1px solid var(--color-border);
     border-radius: 999px;
-    padding: 0.4rem 0.8rem;
+    padding: 0.4rem 0.75rem;
     text-decoration: none;
     color: inherit;
-    font-size: var(--text-sm);
+    font-size: 0.78rem;
   }
   .ipad-chip.is-active,
   .ipad-chip:hover {
@@ -352,109 +204,6 @@ const compareCards = Object.fromEntries(
     padding: 0;
     display: grid;
     gap: 1rem;
-    grid-template-columns: 1fr;
-  }
-  @media (min-width: 40rem) {
-    .ipad-shop__grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-  @media (min-width: 64rem) {
-    .ipad-shop__grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-  }
-  .ipad-compare-tray {
-    position: fixed;
-    left: 50%;
-    bottom: 1.25rem;
-    transform: translateX(-50%);
-    z-index: 80;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    background: #000;
-    color: #fff;
-    padding: 0.65rem 1rem;
-    border-radius: 999px;
-  }
-  .ipad-compare-tray p {
-    margin: 0;
-    font-size: var(--text-sm);
-  }
-  .ipad-compare-modal {
-    width: min(100% - 1.5rem, 56rem);
-    max-height: 90vh;
-    border: none;
-    border-radius: 1rem;
-    padding: 0;
-  }
-  .ipad-compare-modal__panel {
-    padding: 1rem;
-  }
-  .ipad-compare-modal header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .ipad-compare-honest {
-    margin: 0.75rem 0;
-    font-size: var(--text-sm);
-    color: var(--color-fg-muted);
-  }
-  .ipad-compare-toggle {
-    display: inline-flex;
-    gap: 0.4rem;
-    font-size: var(--text-sm);
-    margin-bottom: 0.75rem;
-  }
-  .ipad-compare-scroll {
-    overflow-x: auto;
-  }
-  .ipad-compare-modal table {
-    width: 100%;
-    min-width: 28rem;
-    border-collapse: collapse;
-    font-size: var(--text-sm);
-  }
-  .ipad-compare-modal th,
-  .ipad-compare-modal td {
-    border-bottom: 1px solid var(--color-border);
-    padding: 0.55rem;
-    text-align: left;
-    vertical-align: top;
-  }
-  .ipad-compare-modal thead img {
-    width: 5.5rem;
-    height: 5.5rem;
-    object-fit: contain;
-    background: #f5f5f7;
-    border-radius: 0.75rem;
-    mix-blend-mode: multiply;
-  }
-  .ipad-compare-modal thead a {
-    display: grid;
-    gap: 0.35rem;
-    text-decoration: none;
-    color: inherit;
-  }
-  :global(.ipad-compare-group th) {
-    background: var(--color-bg-subtle);
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--color-fg-muted);
-  }
-  :global(.ipad-toast) {
-    position: fixed;
-    bottom: 5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #1d1d1f;
-    color: #fff;
-    padding: 0.55rem 0.9rem;
-    border-radius: 999px;
-    z-index: 90;
-    font-size: var(--text-sm);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 </style>

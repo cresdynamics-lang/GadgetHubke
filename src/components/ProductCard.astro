@@ -1,6 +1,6 @@
 ---
 /**
- * Blueprint product card: stage image, New|EX-UK price toggle, from price, Bag + WhatsApp.
+ * Blueprint product card: stage image, price + cart row, Details + WhatsApp row.
  */
 import Price from "./Price.astro";
 import StockChannelToggle from "./StockChannelToggle.astro";
@@ -92,12 +92,14 @@ const hoverSrc =
         </div>
       ) : null
     }
-    <p class="pcard__price" data-pcard-price data-live-price={liveId} data-live-prefix="From ">
-      <Price kes={priceKes} prefix="From" />
-    </p>
-    <div class="pcard__actions">
-      <a class="btn btn--primary btn--xs" href={href}>View</a>
+    <div class="pcard__row pcard__row--price">
+      <p class="pcard__price" data-pcard-price data-live-price={liveId} data-live-prefix="">
+        <Price kes={priceKes} />
+      </p>
       <a class="btn btn--secondary btn--xs" href={href}>Add to Cart</a>
+    </div>
+    <div class="pcard__row pcard__row--links">
+      <a class="btn btn--primary btn--xs" href={href}>Details</a>
       <a class="btn btn--whatsapp btn--xs" href={wa} target="_blank" rel="noopener noreferrer" data-pcard-wa>
         WhatsApp
       </a>
@@ -131,7 +133,7 @@ const hoverSrc =
       }
       if (wa instanceof HTMLAnchorElement) {
         const base = card.getAttribute("data-wa-base") || "https://wa.me/";
-        const msg = `Hello Gadget Hub, I'm interested in the ${name}. From KSh ${Math.round(kes).toLocaleString("en-KE")}.`;
+        const msg = `Hello Gadget Hub, I'm interested in the ${name}. KSh ${Math.round(kes).toLocaleString("en-KE")}.`;
         const sep = base.includes("?") ? "&" : "?";
         wa.href = `${base}${sep}text=${encodeURIComponent(msg)}`;
       }
@@ -271,15 +273,38 @@ const hoverSrc =
     outline-offset: 2px;
   }
 
-  .pcard__price {
-    margin-bottom: var(--space-4);
+  .pcard__row {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: auto;
   }
 
-  .pcard__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-    margin-top: auto;
+  .pcard__row--links {
+    margin-top: 0.4rem;
+  }
+
+  .pcard__price {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: var(--font-weight-semibold);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .pcard__row .btn {
+    flex: 1 1 0;
+    min-width: 0;
+    justify-content: center;
+    white-space: nowrap;
+  }
+
+  .pcard__row--price .btn {
+    flex: 0 0 auto;
   }
 
   @media (prefers-reduced-motion: reduce) {

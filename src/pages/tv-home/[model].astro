@@ -1,5 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import BackButton from "../../components/BackButton.astro";
+import TrackProductView from "../../components/TrackProductView.astro";
 import TvHomeStage from "../../components/tv-home/TvHomeStage.astro";
 import TvHomeFeel from "../../components/tv-home/TvHomeFeel.astro";
 import TvHomeLipaCalc from "../../components/tv-home/TvHomeLipaCalc.astro";
@@ -49,7 +51,17 @@ const showPair = model.stereoPairCapable;
 ---
 
 <BaseLayout title={`${model.name} - GadgetHub`} description={model.tagline}>
+  <TrackProductView
+    id={model.id}
+    name={model.name}
+    href={`/tv-home/${model.id}`}
+    image={model.noImage ? "" : img.src}
+    priceKes={model.basePriceKes}
+  />
   <article class="thpdp">
+    <div class="container">
+      <BackButton fallbackHref="/tv-home" />
+    </div>
     <div class="container thpdp__top">
       <div class="thpdp__viewer" data-viewer>
         {
@@ -169,7 +181,7 @@ const showPair = model.stereoPairCapable;
         <div class="thpdp__cta" data-pdp-cta>
           <button
             type="button"
-            class="btn btn--primary"
+            class="btn btn--primary btn--xs"
             data-tvhome-bag
             data-pdp-cart
             data-id={model.id}
@@ -183,9 +195,10 @@ const showPair = model.stereoPairCapable;
           >
             Add to Cart
           </button>
-          <button type="button" class="btn btn--primary" data-buy-now-checkout data-pdp-buy>Buy now</button>
-          <a class="btn btn--whatsapp" data-wa href={`https://wa.me/${tvHomeConfig.whatsapp}`} target="_blank" rel="noopener noreferrer">
-            Ask on WhatsApp
+          <button type="button" class="btn btn--primary btn--xs" data-buy-now-checkout data-pdp-buy>Buy now</button>
+          <a class="btn btn--secondary btn--xs" href="/trade-in">Trade In</a>
+          <a class="btn btn--whatsapp btn--xs" data-wa data-wa-link href={`https://wa.me/${tvHomeConfig.whatsapp}`} target="_blank" rel="noopener noreferrer">
+            Order on WhatsApp
           </a>
         </div>
 
@@ -463,7 +476,25 @@ const showPair = model.stereoPairCapable;
   .thpdp__addons label { display: block; font-size: var(--text-sm); margin: 0.35rem 0; }
   .thpdp__price span { font-size: 1.5rem; font-weight: 700; }
   .thpdp__dot { display: inline-block; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: #34c759; margin-right: 0.35rem; }
-  .thpdp__cta { display: flex; flex-wrap: wrap; gap: 0.65rem; margin: 1rem 0; }
+  .thpdp__cta {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.35rem;
+    width: 100%;
+    margin: 1rem 0;
+  }
+  .thpdp__cta .btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 2rem;
+    justify-content: center;
+    padding: 0.4rem 0.2rem;
+    font-size: clamp(0.55rem, 2.1vw, 0.7rem);
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   .thpdp__highlights { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.5rem; font-size: var(--text-sm); }
   .thpdp__highlights strong { display: block; }
   .thpdp__highlights span { color: #6e6e73; }

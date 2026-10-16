@@ -1,0 +1,158 @@
+---
+/**
+ * Full recently viewed list (localStorage) + create-account CTA for fits alerts.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Recently viewed - GadgetHub"
+  description="Products you looked at on GadgetHub. Create an account to track new products that fit you as they arrive."
+>
+  <section class="rvp container">
+    <header class="rvp__head">
+      <h1>Recently viewed</h1>
+    </header>
+
+    <ul class="rvp__grid" data-rv-page-list></ul>
+    <p class="rvp__empty" data-rv-page-empty hidden>No recently viewed products yet. Browse the store and they’ll show up here.</p>
+
+    <aside class="rvp__cta" aria-label="Create account">
+      <h2>Create an account</h2>
+      <p>
+        Create an account to track new products that fit you as they arrive.
+      </p>
+      <a class="btn btn--primary" href="/account?tab=create">Create account</a>
+    </aside>
+  </section>
+</BaseLayout>
+
+<script>
+  const KEY = "gh-recently-viewed";
+
+  function read() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function render() {
+    const list = document.querySelector("[data-rv-page-list]");
+    const empty = document.querySelector("[data-rv-page-empty]");
+    if (!(list instanceof HTMLElement) || !(empty instanceof HTMLElement)) return;
+
+    const items = read().filter((x) => x && x.id && x.href && x.name);
+    if (!items.length) {
+      list.innerHTML = "";
+      empty.hidden = false;
+      return;
+    }
+
+    empty.hidden = true;
+    list.innerHTML = items
+      .map((item) => {
+        const img = item.image
+          ? `<img src="${item.image}" alt="" width="96" height="96" loading="lazy" decoding="async" />`
+          : "";
+        return `<li>
+          <a class="rvp__item" href="${item.href}">
+            <span class="rvp__media">${img}</span>
+            <span class="rvp__name">${item.name}</span>
+          </a>
+        </li>`;
+      })
+      .join("");
+  }
+
+  render();
+  document.addEventListener("astro:page-load", render);
+</script>
+
+<style>
+  .rvp {
+    padding-block: 2rem 3rem;
+    color: var(--color-black);
+    background: var(--color-white);
+  }
+
+  .rvp__head h1 {
+    margin: 0 0 1.25rem;
+    font-size: var(--text-2xl);
+    font-weight: var(--font-weight-display);
+    letter-spacing: -0.03em;
+    color: var(--color-black);
+  }
+
+  .rvp :global(.rvp__grid) {
+    list-style: none;
+    margin: 0 0 2rem;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  @media (min-width: 40rem) {
+    .rvp :global(.rvp__grid) {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .rvp :global(.rvp__item) {
+    display: grid;
+    gap: 0.4rem;
+    text-decoration: none;
+    color: var(--color-black);
+    min-width: 0;
+  }
+
+  .rvp :global(.rvp__media) {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    background: var(--color-white);
+    overflow: hidden;
+  }
+
+  .rvp :global(.rvp__media img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .rvp :global(.rvp__name) {
+    font-size: var(--text-sm);
+    color: var(--color-black);
+    line-height: 1.3;
+  }
+
+  .rvp__empty {
+    margin: 0 0 2rem;
+    font-size: var(--text-sm);
+    color: var(--color-black);
+  }
+
+  .rvp__cta {
+    border-top: 1px solid var(--color-black);
+    padding-top: 1.5rem;
+  }
+
+  .rvp__cta h2 {
+    margin: 0 0 0.4rem;
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-black);
+  }
+
+  .rvp__cta p {
+    margin: 0 0 1rem;
+    font-size: var(--text-sm);
+    color: var(--color-black);
+    max-width: 32rem;
+  }
+</style>

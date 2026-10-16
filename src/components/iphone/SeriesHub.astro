@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import BackButton from "../BackButton.astro";
 import {
   formatKesSeo,
   buildSeriesHubJsonLd,
@@ -23,6 +24,7 @@ const jsonLd = buildSeriesHubJsonLd({
 <BaseLayout title={hub.title} description={hub.metaDescription}>
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <article class="series-hub container">
+    <BackButton fallbackHref="/iphone" />
     <nav class="series-hub__crumbs" aria-label="Breadcrumb">
       <ol>
         <li><a href="/">Home</a></li>

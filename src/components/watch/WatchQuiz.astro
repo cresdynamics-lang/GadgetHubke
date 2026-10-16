@@ -139,30 +139,57 @@ const payload = watchModels.map((m) => {
 
 <style>
   .wquiz {
-    padding: 1.5rem;
+    padding: 1rem 1.1rem;
     border: 1px solid var(--color-border, #d2d2d7);
     border-radius: var(--watch-radius, 1.5rem);
   }
-  .wquiz header h2 { margin: 0 0 0.35rem; letter-spacing: -0.02em; }
-  .wquiz header p { margin: 0 0 1.25rem; color: #6e6e73; }
-  .wquiz__q { margin-bottom: 1.1rem; }
-  .wquiz__q p { margin: 0 0 0.5rem; font-weight: 600; }
-  .wquiz__opts { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  .wquiz header h2 {
+    margin: 0 0 0.25rem;
+    letter-spacing: -0.02em;
+    font-size: 1.05rem;
+  }
+  .wquiz header p {
+    margin: 0 0 0.9rem;
+    color: #6e6e73;
+    font-size: 0.75rem;
+  }
+  .wquiz__q { margin-bottom: 0.85rem; }
+  .wquiz__q p {
+    margin: 0 0 0.4rem;
+    font-weight: 600;
+    font-size: 0.72rem;
+  }
+  .wquiz__opts { display: flex; flex-wrap: wrap; gap: 0.35rem; }
   .wquiz__opts button {
-    border: 1px solid #d2d2d7; background: #fff; border-radius: 999px;
-    padding: 0.45rem 0.85rem; font: inherit; font-size: var(--text-sm); cursor: pointer;
+    border: 1px solid #d2d2d7;
+    background: #fff;
+    border-radius: 999px;
+    padding: 0.35rem 0.65rem;
+    font: inherit;
+    font-size: 0.7rem;
+    cursor: pointer;
   }
   .wquiz__opts button.is-active { background: #000; color: #fff; border-color: #000; }
-  .wquiz__results ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.65rem; }
+  .wquiz__results h3 {
+    margin: 0 0 0.5rem;
+    font-size: 0.9rem;
+  }
+  .wquiz__results ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
   .wquiz__results a {
-    display: grid; grid-template-columns: 4.5rem 1fr auto; gap: 0.75rem; align-items: center;
-    text-decoration: none; color: inherit; border: 1px solid #d2d2d7; border-radius: 1rem; padding: 0.65rem;
+    display: grid; grid-template-columns: 3.5rem 1fr auto; gap: 0.55rem; align-items: center;
+    text-decoration: none; color: inherit; border: 1px solid #d2d2d7; border-radius: 0.85rem; padding: 0.5rem;
   }
   .wquiz__results img {
-    width: 4.5rem; height: 3.4rem; object-fit: contain; background: #f5f5f7;
-    border-radius: 0.65rem; mix-blend-mode: multiply;
+    width: 3.5rem; height: 2.6rem; object-fit: contain; background: #f5f5f7;
+    border-radius: 0.5rem; mix-blend-mode: multiply;
+  }
+  .wquiz__results strong {
+    font-size: 0.8rem;
   }
   .wquiz__results em, .wquiz__results small {
-    display: block; font-style: normal; font-size: var(--text-sm); color: #6e6e73;
+    display: block; font-style: normal; font-size: 0.68rem; color: #6e6e73;
+  }
+  .wquiz__results b {
+    font-size: 0.72rem;
   }
 </style>

@@ -3,8 +3,6 @@
  * CategoryHero - silent image-loop hero for category landings.
  * Images from public/Hero packs. Playback: src/scripts/categoryHero.ts.
  */
-import SocialIcon from "../SocialIcon.astro";
-import { whatsappUrl } from "../../lib/site";
 import {
   getHeroCategory,
   heroVariantUrls,
@@ -15,15 +13,13 @@ import type { HeroScene } from "../../lib/hero";
 
 interface Props {
   category: string;
-  whatsappMessage?: string;
 }
 
-const { category: slug, whatsappMessage } = Astro.props;
+const { category: slug } = Astro.props;
 
 validateHeroScenes();
 
 const cat = getHeroCategory(slug);
-const waHref = whatsappUrl(whatsappMessage ?? cat.whatsappMessage);
 const poster = cat.scenes[0];
 const posterVars = heroVariantUrls(poster.src);
 
@@ -187,22 +183,6 @@ function cutoutSrcset(src: string) {
         <h1 class="ch__title" data-ch-title>{poster.title}</h1>
         <p class="ch__subtitle is-on" data-ch-subtitle>{poster.subtitle}</p>
         <p class="sr-only" data-ch-live aria-live="polite" aria-atomic="true"></p>
-
-        <div class="ch__cta">
-          <a
-            class="ch__wa"
-            href={waHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-ch-wa
-          >
-            <SocialIcon name="whatsapp" class="ch__wa-icon" />
-            Order on WhatsApp
-          </a>
-          <a class="ch__shop" href={cat.shopHref} data-ch-shop>
-            {cat.shopLabel}
-          </a>
-        </div>
       </div>
     </div>
   </div>
@@ -231,9 +211,6 @@ function cutoutSrcset(src: string) {
     --ch-bg: #000;
     --ch-ink: #fff;
     --ch-muted: #a1a1a6;
-    --ch-wa-a: #2ee46f;
-    --ch-wa-b: #0e9f6e;
-    --ch-wa-c: #075e54;
     position: relative;
     background: var(--ch-bg);
     color: var(--ch-ink);
@@ -469,80 +446,6 @@ function cutoutSrcset(src: string) {
 
   .ch__subtitle.is-on {
     opacity: 1;
-  }
-
-  .ch__cta {
-    margin-top: 1.25rem;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: stretch;
-    gap: 0.5rem;
-  }
-
-  .ch__wa,
-  .ch__shop {
-    flex: 1 1 0;
-    min-width: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-    min-height: 2.75rem;
-    padding: 0.65rem 0.7rem;
-    border-radius: 999px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.82rem;
-    white-space: nowrap;
-  }
-
-  @media (min-width: 48rem) {
-    .ch__cta {
-      flex-wrap: wrap;
-      gap: 0.65rem;
-    }
-
-    .ch__wa,
-    .ch__shop {
-      flex: 0 1 auto;
-      min-height: 3rem;
-      padding: 0.8rem 1.35rem;
-      font-size: 1rem;
-    }
-  }
-
-  .ch__wa {
-    color: #fff !important;
-    background: linear-gradient(135deg, var(--ch-wa-a), var(--ch-wa-b) 55%, var(--ch-wa-c));
-    box-shadow: 0 10px 24px rgb(14 159 110 / 0.35);
-  }
-
-  .ch__wa:hover {
-    color: #fff !important;
-  }
-
-  .ch__wa :global(.ch__wa-icon) {
-    width: 1.05rem;
-    height: 1.05rem;
-    flex: 0 0 auto;
-  }
-
-  .ch__shop {
-    border: 1px solid rgb(255 255 255 / 0.85);
-    color: #fff !important;
-    background: transparent;
-  }
-
-  .ch__shop:hover {
-    color: #fff !important;
-    background: rgb(255 255 255 / 0.08);
-  }
-
-  .ch__wa:focus-visible,
-  .ch__shop:focus-visible {
-    outline: 2px solid #fff;
-    outline-offset: 3px;
   }
 
   .ch__video-fallback {

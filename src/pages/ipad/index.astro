@@ -157,7 +157,7 @@ const wa = whatsappUrl("Hi Gadget Hub, I want to visit and try an iPad / Apple P
       {
         newest.slice(0, 12).map((m) => (
           <li data-chip-gen={["M1", "M2", "M3", "M4", "M5"].includes(m.chipGen) ? m.chipGen : "A-series"}>
-            <IpadCard model={m} />
+            <IpadCard model={m} compare={false} />
           </li>
         ))
       }
@@ -190,7 +190,7 @@ const wa = whatsappUrl("Hi Gadget Hub, I want to visit and try an iPad / Apple P
                 data-kes={total}
                 data-extras={`${b.label}`}
               >
-                Add bundle to bag
+                Add to Cart
               </button>
             </li>
           );
@@ -235,18 +235,15 @@ const wa = whatsappUrl("Hi Gadget Hub, I want to visit and try an iPad / Apple P
 </BaseLayout>
 
 <script>
-  // Gen chips
-  document.querySelectorAll("[data-gen]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll("[data-gen]").forEach((b) => b.classList.remove("is-active"));
-      btn.classList.add("is-active");
-      const gen = btn.getAttribute("data-gen");
-      document.querySelectorAll("[data-ipad-landing-grid] [data-chip-gen]").forEach((li) => {
-        if (!(li instanceof HTMLElement)) return;
-        li.hidden = gen !== "all" && li.getAttribute("data-chip-gen") !== gen;
-      });
-    });
+  import { bindLandingViewState } from "../../scripts/landingViewState";
+  import { repairProductImages } from "../../scripts/safeSwapImage";
+
+  bindLandingViewState({
+    storageKey: "gh-landing-ipad",
+    gridSelector: "[data-ipad-landing-grid]",
   });
+  repairProductImages();
+  window.addEventListener("pageshow", () => repairProductImages());
 
   document.querySelectorAll("[data-bundle]").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -293,23 +290,28 @@ const wa = whatsappUrl("Hi Gadget Hub, I want to visit and try an iPad / Apple P
     margin: 1.25rem 0 0;
     padding: 0;
     display: grid;
-    gap: 0.85rem;
-    grid-template-columns: 1fr;
-  }
-  @media (min-width: 40rem) {
-    .ipad-os__grid { grid-template-columns: 1fr 1fr 1fr; }
-    .ipad-org__grid { grid-template-columns: 1fr 1fr; }
+    gap: 0.75rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .ipad-os__grid li,
   .ipad-org__card {
     border: 1px solid var(--color-border);
     border-radius: var(--ipad-radius);
-    padding: 1rem;
+    padding: 0.75rem;
+    min-width: 0;
   }
   .ipad-os__grid h3,
-  .ipad-org__card h3 { margin: 0 0 0.35rem; font-size: 1.05rem; }
+  .ipad-org__card h3 {
+    margin: 0 0 0.3rem;
+    font-size: clamp(0.85rem, 2.4vw, 1.05rem);
+  }
   .ipad-os__grid p,
-  .ipad-org__card p { margin: 0; color: var(--color-fg-muted); font-size: var(--text-sm); }
+  .ipad-org__card p {
+    margin: 0;
+    color: var(--color-fg-muted);
+    font-size: clamp(0.68rem, 2vw, 0.85rem);
+    line-height: 1.35;
+  }
   .ipad-org__card { display: block; text-decoration: none; color: inherit; }
   .ipad-plan__grid { display: grid; gap: 1rem; }
   @media (min-width: 40rem) {
@@ -320,27 +322,18 @@ const wa = whatsappUrl("Hi Gadget Hub, I want to visit and try an iPad / Apple P
     margin: 1.5rem 0 0;
     padding: 0;
     display: grid;
-    gap: 1rem;
-    grid-template-columns: 1fr;
-  }
-  @media (min-width: 48rem) {
-    .ipad-choose__grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-  @media (min-width: 64rem) {
-    .ipad-choose__grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
+    gap: 0.75rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .ipad-choose__card {
     display: grid;
-    gap: 0.45rem;
+    gap: 0.4rem;
     text-decoration: none;
     color: inherit;
     border: 1px solid var(--color-border);
     border-radius: var(--ipad-radius);
-    padding: 0.85rem;
+    padding: 0.7rem;
+    min-width: 0;
     transition: transform 180ms var(--ease-out);
   }
   .ipad-choose__card:hover {
@@ -353,14 +346,16 @@ const wa = whatsappUrl("Hi Gadget Hub, I want to visit and try an iPad / Apple P
     transform: scale(1.05);
   }
   .ipad-choose__card h3 {
-    margin: 0.35rem 0 0;
+    margin: 0.25rem 0 0;
+    font-size: clamp(0.9rem, 2.6vw, 1.2rem);
   }
   .ipad-choose__card p,
   .ipad-choose__card em {
     margin: 0;
-    font-size: var(--text-sm);
+    font-size: clamp(0.68rem, 2vw, 0.85rem);
     color: var(--color-fg-muted);
     font-style: normal;
+    line-height: 1.35;
   }
   .ipad-grid-sec__head {
     display: flex;
@@ -372,16 +367,25 @@ const wa = whatsappUrl("Hi Gadget Hub, I want to visit and try an iPad / Apple P
   }
   .ipad-chips {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 0.4rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 0.15rem;
+  }
+  .ipad-chips::-webkit-scrollbar {
+    display: none;
   }
   .ipad-chips button {
+    flex: 0 0 auto;
     border: 1px solid var(--color-border);
     background: var(--color-bg);
     border-radius: 999px;
     padding: 0.35rem 0.75rem;
     font: inherit;
-    font-size: var(--text-sm);
+    font-size: 0.78rem;
+    white-space: nowrap;
     cursor: pointer;
   }
   .ipad-chips button.is-active {
@@ -395,11 +399,6 @@ const wa = whatsappUrl("Hi Gadget Hub, I want to visit and try an iPad / Apple P
     display: grid;
     gap: 1rem;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  @media (min-width: 64rem) {
-    .ipad-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
   }
   .ipad-bundles__grid,
   .ipad-acc ul {

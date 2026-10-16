@@ -123,9 +123,9 @@ export async function listReviews(productId: string): Promise<ReviewsPayload> {
   const byId = new Map<string, ProductReview>();
   for (const r of seed) byId.set(r.id, r);
   for (const r of stored) byId.set(r.id, r);
-  const reviews = [...byId.values()].sort(
-    (a, b) => +new Date(b.createdAt) - +new Date(a.createdAt),
-  );
+  const reviews = [...byId.values()]
+    .sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt))
+    .map(publicReview);
   return {
     productId,
     summary: summarize(reviews),
@@ -141,7 +141,13 @@ export type NewReviewInput = {
   title: string;
   body: string;
   city?: string;
+  email?: string;
 };
+
+function publicReview(r: ProductReview): ProductReview {
+  const { email: _email, ...rest } = r;
+  return rest;
+}
 
 function cleanText(value: string, max: number) {
   return value.replace(/\s+/g, " ").trim().slice(0, max);
@@ -152,14 +158,18 @@ export function validateReview(input: NewReviewInput): string | null {
   const title = cleanText(input.title || "", 80);
   const body = cleanText(input.body || "", 800);
   const city = cleanText(input.city || "", 40);
+  const email = cleanText(input.email || "", 120);
   if (!input.productId || !/^[a-z0-9][a-z0-9-]{1,80}$/i.test(input.productId)) {
     return "Invalid product.";
   }
-  if (author.length < 2) return "Please enter your name (at least 2 characters).";
+  if (author.length < 2) return "Please enter a display name (at least 2 characters).";
   if (!Number.isFinite(input.rating) || input.rating < 1 || input.rating > 5) {
     return "Choose a rating from 1 to 5 stars.";
   }
   if (body.length < 12) return "Tell us a bit more (at least 12 characters).";
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return "Please enter a valid email (it won’t be shown publicly).";
+  }
   if (/https?:\/\/|www\./i.test(`${title} ${body}`)) {
     return "Links are not allowed in reviews.";
   }
@@ -179,6 +189,7 @@ export async function addReview(input: NewReviewInput): Promise<ProductReview> {
     title: cleanText(input.title || "Customer review", 80) || "Customer review",
     body: cleanText(input.body, 800),
     city: cleanText(input.city || "", 40) || undefined,
+    email: cleanText(input.email || "", 120) || undefined,
     createdAt: new Date().toISOString(),
     approved: true,
   };
@@ -186,7 +197,7 @@ export async function addReview(input: NewReviewInput): Promise<ProductReview> {
   const all = await loadStored();
   all.push(review);
   await saveStored(all);
-  return review;
+  return publicReview(review);
 }
 
 /** Admin: all stored + seed reviews (including unapproved). */

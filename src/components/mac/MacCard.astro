@@ -8,14 +8,12 @@ import {
   getMacImage,
   defaultMacColour,
   macSubline,
-  formatKes,
-  lipaMonthly,
   colourHex,
   colourLabel,
   isLightColour,
-  macConfig,
   macViewerTabs,
 } from "../../lib/mac";
+import { whatsappUrl } from "../../lib/site";
 
 interface Props {
   model: MacModel;
@@ -25,8 +23,8 @@ interface Props {
 const { model, compare = true } = Astro.props;
 const colour = defaultMacColour(model);
 const img = getMacImage(model.id, colour, "product", model.name);
-const lipa = lipaMonthly(model.basePriceKes);
 const href = `/mac/${model.id}`;
+const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}.`);
 const viewerTabs = macViewerTabs(model, colour);
 const hoverFromTabs = viewerTabs.length > 1 ? viewerTabs[1] : null;
 
@@ -123,15 +121,10 @@ const hoverSrc =
       )
     }
 
-    <p class="mcard__price">
-      <span data-live-price={model.id} data-live-prefix="From ">From {formatKes(model.basePriceKes)}</span>
-      <span class="mcard__sample" data-live-stock={model.id}>1-year warranty</span>
-    </p>
-    <p class="mcard__lipa">
-      or {formatKes(lipa.monthlyKes)} a month for {lipa.months} months after a {macConfig.lipa.depositDefaultPct}% deposit
-    </p>
-    <div class="mcard__actions">
-      <a class="btn btn--primary btn--xs" href={href}>View</a>
+    <div class="mcard__row mcard__row--price">
+      <p class="mcard__price">
+        <span data-live-price={model.id} data-live-prefix="">{`KSh ${Math.round(model.basePriceKes).toLocaleString("en-KE")}`}</span>
+      </p>
       <button
         type="button"
         class="btn btn--secondary btn--xs"
@@ -147,6 +140,10 @@ const hoverSrc =
       >
         Add to Cart
       </button>
+    </div>
+    <div class="mcard__row mcard__row--links">
+      <a class="btn btn--primary btn--xs" href={href}>Details</a>
+      <a class="btn btn--whatsapp btn--xs" href={wa} target="_blank" rel="noopener noreferrer">WhatsApp</a>
     </div>
   </div>
 </article>
@@ -167,7 +164,10 @@ const hoverSrc =
         const hover = btn.getAttribute("data-hover") || "";
         if (img && src) {
           img.style.opacity = "0";
-          window.setTimeout(() => {
+          let done = false;
+          const finish = () => {
+            if (done) return;
+            done = true;
             img.src = src;
             if (webpSource) {
               if (webp) webpSource.srcset = webp;
@@ -175,7 +175,9 @@ const hoverSrc =
             }
             if (alt) img.alt = alt;
             img.style.opacity = "1";
-          }, 120);
+          };
+          window.setTimeout(finish, 120);
+          window.setTimeout(finish, 700);
         }
         if (altImg && hover && hover !== src) {
           altImg.src = hover;
@@ -333,21 +335,34 @@ const hoverSrc =
   .mcard__dot--light {
     box-shadow: inset 0 0 0 1px #d2d2d7;
   }
-  .mcard__price {
-    margin: 0.35rem 0 0;
-    font-weight: 600;
-  }
-  .mcard__sample {
-    display: block;
-    font-weight: 400;
-    font-size: 0.7rem;
-    color: var(--color-fg-muted);
-  }
-  .mcard__actions {
-    margin-top: auto;
-    padding-top: 0.75rem;
+  .mcard__row {
     display: flex;
-    gap: 0.45rem;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: auto;
+    padding-top: 0.55rem;
+  }
+  .mcard__row--links {
+    margin-top: 0.4rem;
+    padding-top: 0;
+  }
+  .mcard__price {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    font-weight: 600;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+  .mcard__row .btn {
+    flex: 1 1 0;
+    min-width: 0;
+    justify-content: center;
+    white-space: nowrap;
+  }
+  .mcard__row--price .btn {
+    flex: 0 0 auto;
   }
   @media (prefers-reduced-motion: reduce) {
     .mcard:hover {

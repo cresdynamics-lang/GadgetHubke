@@ -167,9 +167,26 @@ if (needQ === "budget") filtered = filtered.sort((a, b) => a.basePriceKes - b.ba
 
 <style>
   .thshop { padding-block: 2rem 4rem; font-family: Inter, system-ui, sans-serif; }
-  .thshop__chips { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 0.75rem; }
+  .thshop__chips {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 0.15rem;
+  }
+  .thshop__chips::-webkit-scrollbar { display: none; }
   .thshop__chips a {
-    padding: 0.35rem 0.75rem; border-radius: 999px; border: 1px solid #d2d2d7; text-decoration: none; color: inherit; font-size: var(--text-sm);
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid #d2d2d7;
+    text-decoration: none;
+    color: inherit;
+    font-size: 0.78rem;
   }
   .thshop__chips a.is-active { background: #000; color: #fff; border-color: #000; }
   .thshop__toggles { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-bottom: 1.5rem; font-size: var(--text-sm); }

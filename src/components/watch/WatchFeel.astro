@@ -238,23 +238,21 @@ const materialGroups = ["aluminum", "titanium", "ceramic", "stainless"] as const
 <section class="wfeel" id="feel-colour" data-feel="colour">
   <div class="container wfeel__inner">
     <h2>Finishes</h2>
-    {materialGroups.map((mat) => {
-      const cols = model.colours.filter((c) => colourMaterial(c) === mat);
-      if (!cols.length) return null;
-      return (
-        <div class="wfeel__mat">
-          <h3>{mat[0].toUpperCase() + mat.slice(1)}</h3>
-          <div class="wfeel__colours">
-            {cols.map((c) => (
-              <button type="button" data-feel-colour={c} style={`--swatch:${colourHex(c)}`}>
-                <span class="wfeel__swatch" />
-                <span>{colourLabel(c)}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      );
-    })}
+    <div class="wfeel__colours" role="group" aria-label="Case finishes">
+      {
+        materialGroups.flatMap((mat) => {
+          const cols = model.colours.filter((c) => colourMaterial(c) === mat);
+          const matLabel = mat[0].toUpperCase() + mat.slice(1);
+          return cols.map((c) => (
+            <button type="button" data-feel-colour={c} style={`--swatch:${colourHex(c)}`}>
+              <span class="wfeel__swatch" />
+              <span>{matLabel}</span>
+              <span>{colourLabel(c)}</span>
+            </button>
+          ));
+        })
+      }
+    </div>
   </div>
 </section>
 
@@ -647,13 +645,26 @@ const materialGroups = ["aluminum", "titanium", "ceramic", "stainless"] as const
     font: inherit; cursor: pointer; display: grid; gap: 0.2rem; text-align: left;
   }
   .wfeel__bands button.is-active { background: #000; color: #fff; border-color: #000; }
-  .wfeel__mat { margin-top: 1.25rem; }
-  .wfeel__mat h3 { margin: 0 0 0.5rem; font-size: 1rem; }
-  .wfeel__colours { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-  .wfeel__colours button {
-    border: 1px solid #d2d2d7; background: #fff; border-radius: 999px; padding: 0.4rem 0.75rem;
-    font: inherit; font-size: var(--text-sm); cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;
+  .wfeel__colours {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.4rem;
+    margin-top: 0.85rem;
+    max-width: 100%;
+    min-width: 0;
   }
-  .wfeel__swatch { width: 0.9rem; height: 0.9rem; border-radius: 50%; background: var(--swatch); border: 1px solid #d2d2d7; }
+  .wfeel__colours button {
+    min-width: 0;
+    width: 100%;
+    border: 1px solid #d2d2d7; background: #fff; border-radius: 0.75rem; padding: 0.45rem 0.6rem;
+    font: inherit; font-size: 0.75rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;
+    text-align: left; white-space: normal; line-height: 1.25;
+  }
+  .wfeel__colours button.is-active {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+  }
+  .wfeel__swatch { width: 0.9rem; height: 0.9rem; border-radius: 50%; background: var(--swatch); border: 1px solid #d2d2d7; flex: 0 0 auto; }
   .wfeel__caption { font-size: var(--text-sm); color: #6e6e73; }
 </style>

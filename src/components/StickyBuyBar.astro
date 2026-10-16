@@ -27,8 +27,10 @@ const {
     <p class="float-buy__desc" data-float-desc>{description}</p>
   </div>
   <div class="float-buy__actions">
-    <button type="button" class="btn btn--secondary btn--sm" data-sticky-cart>Add to Cart</button>
-    <button type="button" class="btn btn--primary btn--sm" data-sticky-buy-now>Buy now</button>
+    <button type="button" class="btn btn--secondary btn--xs" data-sticky-cart>Add to Cart</button>
+    <button type="button" class="btn btn--primary btn--xs" data-sticky-buy-now>Buy now</button>
+    <a class="btn btn--secondary btn--xs" href="/trade-in">Trade In</a>
+    <a class="btn btn--whatsapp btn--xs" data-sticky-wa href="#">Order on WhatsApp</a>
   </div>
 </div>
 
@@ -62,6 +64,18 @@ const {
       const source = document.querySelector("[data-pdp-buy], [data-buy-now]");
       if (source instanceof HTMLElement) source.click();
     });
+
+    const stickyWa = bar.querySelector("[data-sticky-wa]");
+    if (stickyWa instanceof HTMLAnchorElement) {
+      const pageWa = document.querySelector("[data-pdp-wa], [data-wa-link], [data-wa]");
+      if (pageWa instanceof HTMLAnchorElement && pageWa.href) {
+        stickyWa.href = pageWa.href;
+        stickyWa.target = "_blank";
+        stickyWa.rel = "noopener noreferrer";
+      } else {
+        stickyWa.hidden = true;
+      }
+    }
   }
 </script>
 
@@ -72,12 +86,13 @@ const {
     left: 50%;
     bottom: max(0.85rem, env(safe-area-inset-bottom));
     transform: translateX(-50%);
-    width: min(calc(100vw - 1.75rem), 36rem);
+    width: min(calc(100vw - 1.25rem), 42rem);
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 0.65rem;
-    padding: 0.45rem 0.5rem 0.45rem 0.45rem;
-    border-radius: 999px;
+    gap: 0.5rem 0.65rem;
+    padding: 0.55rem 0.6rem;
+    border-radius: 1.35rem;
     background: rgb(255 255 255 / 0.95);
     border: 1px solid rgb(0 0 0 / 0.08);
     box-shadow: 0 12px 36px rgb(0 0 0 / 0.14);
@@ -90,8 +105,8 @@ const {
   }
 
   .float-buy__media {
-    width: 2.85rem;
-    height: 2.85rem;
+    width: 2.55rem;
+    height: 2.55rem;
     border-radius: 999px;
     overflow: hidden;
     background: var(--color-stage, #f5f5f7);
@@ -108,7 +123,7 @@ const {
 
   .float-buy__copy {
     min-width: 0;
-    flex: 1 1 auto;
+    flex: 1 1 calc(100% - 3.4rem);
   }
 
   .float-buy__name {
@@ -132,45 +147,24 @@ const {
   }
 
   .float-buy__actions {
-    display: flex;
-    gap: 0.35rem;
-    flex: 0 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.25rem;
+    width: 100%;
+    flex: 1 1 100%;
   }
 
   .float-buy__actions :global(.btn) {
-    min-height: 2.1rem;
+    width: 100%;
+    min-width: 0;
+    min-height: 1.85rem;
     border-radius: 999px;
-    font-size: 0.72rem;
-    padding-inline: 0.7rem;
+    font-size: clamp(0.5rem, 1.8vw, 0.62rem);
+    padding: 0.3rem 0.15rem;
     white-space: nowrap;
-  }
-
-  @media (max-width: 39.99rem) {
-    .float-buy {
-      flex-wrap: wrap;
-      width: min(calc(100vw - 1.25rem), 22rem);
-      padding: 0.55rem 0.6rem;
-      border-radius: 1.35rem;
-      gap: 0.5rem 0.65rem;
-    }
-
-    .float-buy__media {
-      width: 2.55rem;
-      height: 2.55rem;
-    }
-
-    .float-buy__copy {
-      flex: 1 1 calc(100% - 3.4rem);
-    }
-
-    .float-buy__actions {
-      width: 100%;
-    }
-
-    .float-buy__actions :global(.btn) {
-      flex: 1 1 auto;
-      font-size: 0.75rem;
-    }
+    overflow: hidden;
+    text-overflow: ellipsis;
+    justify-content: center;
   }
 
   @media (min-width: 40rem) {
@@ -185,11 +179,6 @@ const {
 
     .float-buy__desc {
       font-size: 0.7rem;
-    }
-
-    .float-buy__actions :global(.btn) {
-      font-size: 0.78rem;
-      padding-inline: 0.85rem;
     }
   }
 

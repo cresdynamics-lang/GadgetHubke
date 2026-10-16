@@ -9,6 +9,8 @@ import ProductReviews from "../components/ProductReviews.astro";
 import StickyBuyBar from "../components/StickyBuyBar.astro";
 import StockChannelToggle from "../components/StockChannelToggle.astro";
 import SeoProductBlocks from "../components/iphone/SeoProductBlocks.astro";
+import BackButton from "../components/BackButton.astro";
+import TrackProductView from "../components/TrackProductView.astro";
 import type { Product } from "../lib/products";
 import { site, whatsappUrl } from "../lib/site";
 import {
@@ -60,7 +62,17 @@ const pageDescription = seo?.metaDescription ?? product.tagline;
   description={pageDescription}
 >
   {jsonLd ? <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} /> : null}
+  <TrackProductView
+    id={product.id}
+    name={product.name}
+    href={product.overviewHref}
+    image={product.image.src}
+    priceKes={basePrice}
+  />
   <article class="pdp" data-product-id={product.id} data-product-name={product.name}>
+    <div class="container pdp__back">
+      <BackButton fallbackHref={product.categoryHref} />
+    </div>
     <div class="container pdp__hero">
       <div class="pdp__media" data-gallery>
         <div class="pdp__stage">
@@ -196,10 +208,10 @@ const pageDescription = seo?.metaDescription ?? product.tagline;
           </div>
         </fieldset>
 
-        <div class="pdp__actions">
+        <div class="pdp__actions" data-pdp-cta>
           <button
             type="button"
-            class="btn btn--primary"
+            class="btn btn--primary btn--xs"
             data-add-cart
             data-pdp-cart
             data-storage={defaultStorage?.id}
@@ -208,10 +220,19 @@ const pageDescription = seo?.metaDescription ?? product.tagline;
           >
             Add to Cart
           </button>
-          <button type="button" class="btn btn--primary" data-buy-now data-pdp-buy data-buy-now-checkout>
+          <button type="button" class="btn btn--primary btn--xs" data-buy-now data-pdp-buy data-buy-now-checkout>
             Buy now
           </button>
-          <a class="btn btn--secondary" href="/trade-in">Trade In</a>
+          <a class="btn btn--secondary btn--xs" href="/trade-in">Trade In</a>
+          <a
+            class="btn btn--whatsapp btn--xs"
+            data-pdp-wa
+            href={whatsappUrl(`Hi Gadget Hub, I'd like to order the ${product.name}.`)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Order on WhatsApp
+          </a>
         </div>
         <p class="pdp__specs-link">
           <a href={product.specsHref}>Tech Specs</a>
@@ -302,13 +323,22 @@ const pageDescription = seo?.metaDescription ?? product.tagline;
     <section class="container pdp__section pdp__close">
       <h2>Ready to buy?</h2>
       <p>
-        Configure storage and finish above. Add to Cart, Buy on WhatsApp{" "}
+        Configure storage and finish above. Add to Cart, Buy now, Order on WhatsApp{" "}
         {site.phoneDisplay}, or Trade In toward {product.name}.
       </p>
       <div class="pdp__actions" data-pdp-cta>
-        <button type="button" class="btn btn--primary" data-add-cart data-pdp-cart>Add to Cart</button>
-        <button type="button" class="btn btn--primary" data-buy-now data-pdp-buy data-buy-now-checkout>Buy now</button>
-        <a class="btn btn--secondary" href="/trade-in">Trade In</a>
+        <button type="button" class="btn btn--primary btn--xs" data-add-cart data-pdp-cart>Add to Cart</button>
+        <button type="button" class="btn btn--primary btn--xs" data-buy-now data-pdp-buy data-buy-now-checkout>Buy now</button>
+        <a class="btn btn--secondary btn--xs" href="/trade-in">Trade In</a>
+        <a
+          class="btn btn--whatsapp btn--xs"
+          data-pdp-wa
+          href={whatsappUrl(`Hi Gadget Hub, I'd like to order the ${product.name}.`)}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Order on WhatsApp
+        </a>
       </div>
     </section>
 
@@ -492,10 +522,14 @@ const pageDescription = seo?.metaDescription ?? product.tagline;
     padding-bottom: calc(var(--space-16) + var(--fab-clearance) + 4rem);
   }
 
+  .pdp__back {
+    padding-top: var(--space-4);
+  }
+
   .pdp__hero {
     display: grid;
     gap: var(--space-8);
-    padding-block: var(--space-8) var(--space-10);
+    padding-block: var(--space-4) var(--space-10);
   }
 
   @media (min-width: 64rem) {
@@ -672,17 +706,22 @@ const pageDescription = seo?.metaDescription ?? product.tagline;
   }
 
   .pdp__swatches {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: 0.4rem;
+    width: 100%;
   }
 
   .pdp__swatch {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: var(--space-3);
+    gap: 0.3rem;
     cursor: pointer;
-    padding: 0.35rem 0;
+    padding: 0.2rem 0.1rem;
+    min-width: 0;
+    text-align: center;
   }
 
   .pdp__swatch input {
@@ -692,11 +731,12 @@ const pageDescription = seo?.metaDescription ?? product.tagline;
   }
 
   .pdp__swatch-chip {
-    width: 1.35rem;
-    height: 1.35rem;
+    width: 1.4rem;
+    height: 1.4rem;
     border-radius: 50%;
     border: 1px solid var(--color-border-strong);
     box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
   }
 
   .pdp__swatch input:checked + .pdp__swatch-chip {
@@ -705,20 +745,33 @@ const pageDescription = seo?.metaDescription ?? product.tagline;
   }
 
   .pdp__swatch-label {
-    font-size: var(--text-sm);
+    font-size: clamp(0.58rem, 2.2vw, 0.72rem);
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
   }
 
   .pdp__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3);
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.35rem;
+    width: 100%;
     margin-bottom: var(--space-4);
   }
 
   .pdp__actions .btn {
-    flex: 1 1 auto;
-    min-width: min(100%, 8.5rem);
+    width: 100%;
+    min-width: 0;
+    min-height: 2rem;
     justify-content: center;
+    padding: 0.4rem 0.2rem;
+    font-size: clamp(0.55rem, 2.1vw, 0.7rem);
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .pdp__specs-link {

@@ -15,15 +15,13 @@ import {
   isValueTag,
   modelSubline,
   storagePrices,
-  formatKes,
-  lipaMonthly,
   colourHex,
   isLightColour,
   colourLabel,
 } from "../../lib/iphone";
-import { iphoneConfig } from "../../lib/iphone/config";
 import { SHOW_EX_UK } from "../../lib/iphone/seo/flags";
 import { sheetRowsForProduct } from "../../lib/pricing/iphone-sheet";
+import { whatsappUrl } from "../../lib/site";
 
 interface Props {
   model: IphoneModel;
@@ -39,8 +37,8 @@ const price = storagePrices(model.basePriceKes, model.storage, model.name)[0];
 const sheetEx = SHOW_EX_UK
   ? sheetRowsForProduct(model.name).find((r) => r.storage === price.label)?.exUkKes
   : undefined;
-const lipa = lipaMonthly(price.kes);
 const href = `/iphone/${model.id}`;
+const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}.`);
 const tag = isLatestTag(model) ? "Latest" : isValueTag(model) ? "Value" : null;
 
 const colourPayload = colours.map((key) => {
@@ -138,15 +136,10 @@ const hoverSrc =
         </div>
       )
     }
-    <p class="icard__price">
-      <span class="icard__from" data-icard-price data-live-price={model.id} data-live-prefix="From ">From {formatKes(price.kes)}</span>
-      <span class="icard__sample" data-live-stock={model.id}>1-year warranty</span>
-    </p>
-    <p class="icard__lipa" data-icard-lipa>
-      or {formatKes(lipa.monthlyKes)} a month for {lipa.months} months after a {iphoneConfig.lipa.depositDefaultPct}% deposit
-    </p>
-    <div class="icard__actions">
-      <a class="btn btn--primary btn--xs" href={href}>View</a>
+    <div class="icard__row icard__row--price">
+      <p class="icard__price">
+        <span class="icard__from" data-icard-price data-live-price={model.id} data-live-prefix="">{`KSh ${Math.round(price.kes).toLocaleString("en-KE")}`}</span>
+      </p>
       <button
         type="button"
         class="btn btn--secondary btn--xs"
@@ -160,6 +153,10 @@ const hoverSrc =
         Add to Cart
       </button>
     </div>
+    <div class="icard__row icard__row--links">
+      <a class="btn btn--primary btn--xs" href={href}>Details</a>
+      <a class="btn btn--whatsapp btn--xs" href={wa} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+    </div>
   </div>
 </article>
 
@@ -168,10 +165,7 @@ const hoverSrc =
     const img = card.querySelector(".pstage__img");
     const webpSource = card.querySelector(".pstage source");
     const priceEl = card.querySelector("[data-icard-price]");
-    const lipaEl = card.querySelector("[data-icard-lipa]");
     const bag = card.querySelector("[data-add-bag]");
-    const depositPct = 40;
-    const months = 6;
 
     function channelKes() {
       const ch = card.getAttribute("data-channel") || "new";
@@ -183,12 +177,7 @@ const hoverSrc =
     function syncChannelPrice() {
       const kes = channelKes();
       const ch = card.getAttribute("data-channel") || "new";
-      if (priceEl) priceEl.textContent = `From KES ${kes.toLocaleString("en-KE")}`;
-      if (lipaEl) {
-        const deposit = Math.round((kes * depositPct) / 100);
-        const monthly = Math.round((kes - deposit) / months);
-        lipaEl.textContent = `or KES ${monthly.toLocaleString("en-KE")} a month for ${months} months after a ${depositPct}% deposit`;
-      }
+      if (priceEl) priceEl.textContent = `KSh ${kes.toLocaleString("en-KE")}`;
       if (bag) bag.setAttribute("data-kes", String(kes));
       card.setAttribute("data-price", String(kes));
       if (channelOn) {
@@ -416,37 +405,42 @@ const hoverSrc =
     outline-offset: 2px;
   }
 
-  .icard__price {
-    margin: 0.5rem 0 0;
+  .icard__row {
     display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
+    flex-wrap: nowrap;
+    align-items: center;
     gap: 0.4rem;
+    margin-top: auto;
+    padding-top: 0.55rem;
+  }
+
+  .icard__row--links {
+    margin-top: 0.4rem;
+    padding-top: 0;
+  }
+
+  .icard__price {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
   }
 
   .icard__from {
     font-weight: var(--font-weight-display);
     letter-spacing: -0.02em;
+    font-size: 0.85rem;
+    white-space: nowrap;
   }
 
-  .icard__sample {
-    font-size: 0.7rem;
-    color: var(--color-fg-muted);
+  .icard__row .btn {
+    flex: 1 1 0;
+    min-width: 0;
+    justify-content: center;
+    white-space: nowrap;
   }
 
-  .icard__lipa {
-    margin: 0;
-    font-size: 0.75rem;
-    color: var(--color-fg-muted);
-    line-height: 1.35;
-  }
-
-  .icard__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: auto;
-    padding-top: 0.75rem;
+  .icard__row--price .btn {
+    flex: 0 0 auto;
   }
 
   @media (prefers-reduced-motion: reduce) {

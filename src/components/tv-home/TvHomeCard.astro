@@ -4,12 +4,11 @@ import {
   type TvHomeModel,
   getTvHomeImage,
   defaultTvHomeColour,
-  formatKes,
-  lipaMonthly,
   colourHex,
   colourLabel,
   isSpeaker,
 } from "../../lib/tv-home";
+import { whatsappUrl } from "../../lib/site";
 
 interface Props {
   model: TvHomeModel;
@@ -25,7 +24,7 @@ const hoverImg = secondColour
   : getTvHomeImage(model.id, "hero", model.name);
 const hoverSrc =
   !model.noImage && !hoverImg.fallback && hoverImg.src !== img.src ? hoverImg.src : "";
-const lipa = lipaMonthly(model.basePriceKes);
+const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}.`);
 const square = isSpeaker(model);
 ---
 
@@ -86,13 +85,10 @@ const square = isSpeaker(model);
         </div>
       ) : null
     }
-    <p class="thcard__price">
-      <span data-live-price={model.id} data-live-prefix="From ">From {formatKes(model.basePriceKes)}</span>
-      <small>or {formatKes(lipa.monthlyKes)} / mo</small>
-    </p>
-    <p class="thcard__fine" data-live-stock={model.id}>Sealed · 1-year warranty · serial on invoice</p>
-    <div class="thcard__actions">
-      <a class="btn btn--primary btn--xs" href={`/tv-home/${model.id}`}>View</a>
+    <div class="thcard__row thcard__row--price">
+      <p class="thcard__price">
+        <span data-live-price={model.id} data-live-prefix="">{`KSh ${Math.round(model.basePriceKes).toLocaleString("en-KE")}`}</span>
+      </p>
       <button
         type="button"
         class="btn btn--secondary btn--xs"
@@ -108,15 +104,19 @@ const square = isSpeaker(model);
       >
         Add to Cart
       </button>
-      {
-        compare ? (
-          <label class="thcard__compare">
-            <input type="checkbox" data-tvhome-compare value={model.id} />
-            Compare
-          </label>
-        ) : null
-      }
     </div>
+    <div class="thcard__row thcard__row--links">
+      <a class="btn btn--primary btn--xs" href={`/tv-home/${model.id}`}>Details</a>
+      <a class="btn btn--whatsapp btn--xs" href={wa} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+    </div>
+    {
+      compare ? (
+        <label class="thcard__compare">
+          <input type="checkbox" data-tvhome-compare value={model.id} />
+          Compare
+        </label>
+      ) : null
+    }
   </div>
 </article>
 
@@ -248,8 +248,34 @@ const square = isSpeaker(model);
     border: 1px solid #d2d2d7; background: var(--dot); padding: 0; cursor: pointer;
   }
   .thcard__colours button.is-active { outline: 2px solid #000; outline-offset: 2px; }
-  .thcard__price { margin: 0.55rem 0 0; font-weight: 600; }
-  .thcard__price small { display: block; font-weight: 400; color: #6e6e73; font-size: var(--text-sm); }
-  .thcard__actions { display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center; margin-top: 0.65rem; }
-  .thcard__compare { font-size: var(--text-sm); display: flex; align-items: center; gap: 0.25rem; }
+  .thcard__row {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.65rem;
+  }
+  .thcard__row--links { margin-top: 0.4rem; }
+  .thcard__price {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    font-weight: 600;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+  .thcard__row .btn {
+    flex: 1 1 0;
+    min-width: 0;
+    justify-content: center;
+    white-space: nowrap;
+  }
+  .thcard__row--price .btn { flex: 0 0 auto; }
+  .thcard__compare {
+    font-size: var(--text-sm);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-top: 0.45rem;
+  }
 </style>

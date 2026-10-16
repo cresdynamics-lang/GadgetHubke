@@ -193,24 +193,30 @@ const accessories = homeMacAccessories();
   .mac-choose__grid {
     margin-top: 2rem;
     display: grid;
-    gap: 1.25rem;
-  }
-  @media (min-width: 48rem) {
-    .mac-choose__grid {
-      grid-template-columns: 1fr 1fr;
-    }
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
   }
   .mac-choose__card {
     display: block;
     text-decoration: none;
     color: inherit;
-    padding: 1rem;
-    border-radius: 1.5rem;
+    padding: 0.75rem;
+    border-radius: 1.25rem;
     background: var(--color-bg);
     border: 1px solid var(--color-border);
+    min-width: 0;
     transition:
       transform var(--duration) var(--ease-out),
       border-color var(--duration) var(--ease);
+  }
+  @media (min-width: 48rem) {
+    .mac-choose__grid {
+      gap: 1.25rem;
+    }
+    .mac-choose__card {
+      padding: 1rem;
+      border-radius: 1.5rem;
+    }
   }
   .mac-choose__card:hover {
     transform: translateY(-6px);
@@ -224,18 +230,21 @@ const accessories = homeMacAccessories();
     transform: scale(1.05);
   }
   .mac-choose__card h3 {
-    margin: 1rem 0 0.35rem;
+    margin: 0.65rem 0 0.25rem;
     letter-spacing: -0.02em;
+    font-size: clamp(0.95rem, 2.8vw, 1.35rem);
   }
   .mac-choose__card p {
     margin: 0;
     color: var(--color-fg-muted);
-    font-size: var(--text-sm);
+    font-size: clamp(0.68rem, 2vw, 0.875rem);
+    line-height: 1.35;
   }
   .mac-choose__price {
     display: inline-block;
-    margin-top: 0.75rem;
+    margin-top: 0.55rem;
     font-weight: 600;
+    font-size: clamp(0.75rem, 2.2vw, 1rem);
   }
   .mac-grid-wrap__head p,
   .mac-plan__lede,
@@ -249,17 +258,26 @@ const accessories = homeMacAccessories();
   }
   .mac-chips {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    flex-wrap: nowrap;
+    gap: 0.4rem;
     margin: 1.25rem 0 1.5rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 0.15rem;
+  }
+  .mac-chips::-webkit-scrollbar {
+    display: none;
   }
   .mac-chip {
+    flex: 0 0 auto;
     border: 1px solid var(--color-border);
     border-radius: 999px;
-    padding: 0.4rem 0.85rem;
+    padding: 0.4rem 0.75rem;
     text-decoration: none;
     color: inherit;
-    font-size: var(--text-sm);
+    font-size: 0.78rem;
+    white-space: nowrap;
   }
   .mac-chip:hover,
   .mac-chip--all {
@@ -304,17 +322,7 @@ const accessories = homeMacAccessories();
     padding: 0;
     display: grid;
     gap: 0.75rem;
-    grid-template-columns: 1fr;
-  }
-  @media (min-width: 40rem) {
-    .mac-acc__grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-  @media (min-width: 64rem) {
-    .mac-acc__grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .mac-acc__grid a {
     display: grid;

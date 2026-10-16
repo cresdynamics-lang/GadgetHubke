@@ -43,6 +43,7 @@ export const POST: APIRoute = async ({ request }) => {
     title: String(body.title || ""),
     body: String(body.body || ""),
     city: body.city != null ? String(body.city) : undefined,
+    email: body.email != null ? String(body.email) : undefined,
   };
 
   const validation = validateReview(input);

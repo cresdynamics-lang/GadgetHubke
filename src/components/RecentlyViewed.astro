@@ -1,0 +1,207 @@
+---
+/**
+ * Last-viewed products strip above the footer (localStorage).
+ * Record a view with <span hidden data-rv-track ...> on product pages.
+ */
+---
+
+<section class="rv" data-recently-viewed hidden aria-label="Recently viewed">
+  <div class="container">
+    <div class="rv__head">
+      <h2 class="rv__title">Recently viewed</h2>
+      <a class="rv__all" href="/recently-viewed">View all</a>
+    </div>
+    <ul class="rv__grid" data-rv-list></ul>
+  </div>
+</section>
+
+<script>
+  const KEY = "gh-recently-viewed";
+  const MAX = 8;
+
+  /** @typedef {{ id: string; name: string; href: string; image: string; priceKes: number; viewedAt: number }} RvItem */
+
+  function read() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+  /** @param {RvItem[]} items */
+  function write(items) {
+    try {
+      localStorage.setItem(KEY, JSON.stringify(items.slice(0, MAX)));
+    } catch {
+      /* quota / private mode */
+    }
+  }
+
+  function trackCurrent() {
+    const el = document.querySelector("[data-rv-track]");
+    if (!(el instanceof HTMLElement)) return;
+    const id = el.getAttribute("data-id") || "";
+    const name = el.getAttribute("data-name") || "";
+    const href = el.getAttribute("data-href") || "";
+    const image = el.getAttribute("data-image") || "";
+    const priceKes = Number(el.getAttribute("data-price") || 0);
+    if (!id || !name || !href) return;
+
+    const next = /** @type {RvItem[]} */ (
+      [{ id, name, href, image, priceKes, viewedAt: Date.now() }].concat(
+        read().filter((x) => x && x.id !== id),
+      )
+    );
+    write(next);
+  }
+
+  function render() {
+    const section = document.querySelector("[data-recently-viewed]");
+    const list = document.querySelector("[data-rv-list]");
+    if (!(section instanceof HTMLElement) || !(list instanceof HTMLElement)) return;
+
+    const items = read().filter((x) => x && x.id && x.href && x.name);
+    if (!items.length) {
+      section.hidden = true;
+      list.innerHTML = "";
+      return;
+    }
+
+    const currentPath = window.location.pathname.replace(/\/$/, "") || "/";
+    const shown = items.filter((x) => {
+      const path = String(x.href).replace(/\/$/, "") || "/";
+      return path !== currentPath;
+    });
+
+    if (!shown.length) {
+      section.hidden = true;
+      list.innerHTML = "";
+      return;
+    }
+
+    const row = shown.slice(0, 3);
+    list.dataset.count = String(row.length);
+    list.innerHTML = row
+      .map((item) => {
+        const img = item.image
+          ? `<img src="${item.image}" alt="" width="64" height="64" loading="lazy" decoding="async" />`
+          : "";
+        return `<li>
+          <a class="rv__item" href="${item.href}">
+            <span class="rv__media">${img}</span>
+            <span class="rv__name">${item.name}</span>
+          </a>
+        </li>`;
+      })
+      .join("");
+
+    section.hidden = false;
+  }
+
+  function boot() {
+    trackCurrent();
+    render();
+  }
+
+  boot();
+  document.addEventListener("astro:page-load", boot);
+</script>
+
+<style>
+  .rv {
+    padding: 1.25rem 0 1.5rem;
+    background: var(--color-white);
+    color: var(--color-black);
+  }
+
+  .rv[hidden] {
+    display: none;
+  }
+
+  .rv__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .rv__title {
+    margin: 0;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-black);
+  }
+
+  .rv__all {
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-black);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+    white-space: nowrap;
+  }
+
+  /* Injected client-side — needs :global */
+  .rv :global(.rv__grid) {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+
+  .rv :global(.rv__grid[data-count="2"]) {
+    grid-template-columns: repeat(2, minmax(0, 4.25rem));
+  }
+
+  .rv :global(.rv__grid[data-count="3"]) {
+    grid-template-columns: repeat(3, minmax(0, 4.25rem));
+  }
+
+  .rv :global(.rv__grid[data-count="1"]) {
+    grid-template-columns: minmax(0, 4.25rem);
+  }
+
+  .rv :global(.rv__item) {
+    display: grid;
+    gap: 0.25rem;
+    text-decoration: none;
+    color: var(--color-black);
+    min-width: 0;
+    width: 100%;
+  }
+
+  .rv :global(.rv__media) {
+    display: grid;
+    place-items: center;
+    width: 4.25rem;
+    height: 4.25rem;
+    background: var(--color-white);
+    overflow: hidden;
+  }
+
+  .rv :global(.rv__media img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .rv :global(.rv__name) {
+    font-size: 0.6rem;
+    font-weight: var(--font-weight-regular);
+    line-height: 1.2;
+    color: var(--color-black);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-align: center;
+  }
+</style>

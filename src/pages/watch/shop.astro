@@ -176,8 +176,21 @@ const payload = filtered.map((m) => ({
   .wshop { padding-block: 2rem 4rem; }
   .wshop__head h1 { margin: 0 0 0.35rem; letter-spacing: -0.03em; }
   .wshop__head p { margin: 0 0 1.5rem; color: #6e6e73; }
-  .wshop__chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
+  .wshop__chips {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 0.15rem;
+  }
+  .wshop__chips::-webkit-scrollbar { display: none; }
   .wshop__chips a {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    font-size: 0.78rem;
     border: 1px solid #d2d2d7; border-radius: 999px; padding: 0.35rem 0.7rem;
     text-decoration: none; color: inherit; font-size: var(--text-sm);
   }

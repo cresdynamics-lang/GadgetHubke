@@ -162,17 +162,15 @@ const genChips = ["Series 12", "Series 11", "Series 10", "Series 9", "Series 8",
 </BaseLayout>
 
 <script>
-  document.querySelectorAll("[data-gen]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll("[data-gen]").forEach((b) => b.classList.remove("is-active"));
-      btn.classList.add("is-active");
-      const gen = btn.getAttribute("data-gen");
-      document.querySelectorAll("[data-watch-landing-grid] [data-chip-gen]").forEach((li) => {
-        if (!(li instanceof HTMLElement)) return;
-        li.hidden = gen !== "all" && li.getAttribute("data-chip-gen") !== gen;
-      });
-    });
+  import { bindLandingViewState } from "../../scripts/landingViewState";
+  import { repairProductImages } from "../../scripts/safeSwapImage";
+
+  bindLandingViewState({
+    storageKey: "gh-landing-watch",
+    gridSelector: "[data-watch-landing-grid]",
   });
+  repairProductImages();
+  window.addEventListener("pageshow", () => repairProductImages());
 
   document.querySelectorAll("[data-land-band]").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -208,10 +206,7 @@ const genChips = ["Series 12", "Series 11", "Series 10", "Series 9", "Series 8",
   }
   .watch-choose__grid {
     list-style: none; margin: 1.5rem 0 0; padding: 0;
-    display: grid; gap: 1rem; grid-template-columns: 1fr;
-  }
-  @media (min-width: 48rem) {
-    .watch-choose__grid { grid-template-columns: 1fr 1fr 1fr; }
+    display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .watch-choose__card {
     display: grid; gap: 0.5rem; text-decoration: none; color: inherit;
@@ -223,10 +218,26 @@ const genChips = ["Series 12", "Series 11", "Series 10", "Series 9", "Series 8",
   .watch-choose__card h3 { margin: 0; }
   .watch-choose__card p, .watch-choose__card em { margin: 0; color: #6e6e73; font-style: normal; }
   .watch-grid-sec__head { display: grid; gap: 0.75rem; margin-bottom: 1.25rem; }
-  .watch-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .watch-chips {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.4rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 0.15rem;
+  }
+  .watch-chips::-webkit-scrollbar { display: none; }
   .watch-chips button {
-    border: 1px solid #d2d2d7; background: #fff; border-radius: 999px;
-    padding: 0.35rem 0.7rem; font: inherit; font-size: var(--text-sm); cursor: pointer;
+    flex: 0 0 auto;
+    white-space: nowrap;
+    border: 1px solid #d2d2d7;
+    background: #fff;
+    border-radius: 999px;
+    padding: 0.35rem 0.7rem;
+    font: inherit;
+    font-size: 0.78rem;
+    cursor: pointer;
   }
   .watch-chips button.is-active { background: #000; color: #fff; }
   .watch-grid {

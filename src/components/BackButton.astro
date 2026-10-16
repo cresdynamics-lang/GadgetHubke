@@ -1,0 +1,64 @@
+---
+/**
+ * Top-of-page back control for product views.
+ * Prefers history.back(); falls back to fallbackHref.
+ */
+interface Props {
+  fallbackHref: string;
+  label?: string;
+}
+
+const { fallbackHref, label = "Back" } = Astro.props;
+---
+
+<button
+  type="button"
+  class="gh-back"
+  data-gh-back
+  data-fallback={fallbackHref}
+>
+  ← {label}
+</button>
+
+<script>
+  document.querySelectorAll("[data-gh-back]").forEach((btn) => {
+    if (!(btn instanceof HTMLButtonElement) || btn.dataset.bound === "1") return;
+    btn.dataset.bound = "1";
+    btn.addEventListener("click", () => {
+      const fallback = btn.getAttribute("data-fallback") || "/";
+      const ref = document.referrer;
+      let sameOrigin = false;
+      try {
+        sameOrigin = Boolean(ref) && new URL(ref).origin === location.origin;
+      } catch {
+        sameOrigin = false;
+      }
+      // Prefer real history back so listing scroll/filters can restore.
+      if (sameOrigin && window.history.length > 1) {
+        window.history.back();
+        return;
+      }
+      window.location.href = fallback;
+    });
+  });
+</script>
+
+<style>
+  .gh-back {
+    display: inline-flex;
+    align-items: center;
+    margin: 0 0 0.85rem;
+    padding: 0;
+    border: none;
+    background: none;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-fg-muted, #6e6e73);
+    cursor: pointer;
+  }
+
+  .gh-back:hover {
+    color: var(--color-fg, #1d1d1f);
+  }
+</style>

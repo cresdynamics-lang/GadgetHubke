@@ -3,6 +3,8 @@
  * iPad PDP - sticky viewer + buy panel + feel hooks + specs/FAQ.
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import BackButton from "../../components/BackButton.astro";
+import TrackProductView from "../../components/TrackProductView.astro";
 import IpadStage from "../../components/ipad/IpadStage.astro";
 import IpadFeel from "../../components/ipad/IpadFeel.astro";
 import IpadLipaCalc from "../../components/ipad/IpadLipaCalc.astro";
@@ -61,8 +63,16 @@ const wa = whatsappUrl(
 ---
 
 <BaseLayout title={`${model.name} - GadgetHub`} description={model.tagline}>
+  <TrackProductView
+    id={model.id}
+    name={model.name}
+    href={`/ipad/${model.id}`}
+    image={img.src}
+    priceKes={model.basePriceKes}
+  />
   <article class="ipdp" data-ipdp>
     <div class="container">
+      <BackButton fallbackHref="/ipad" />
       <nav class="ipdp__crumb" aria-label="Breadcrumb">
         <a href="/">Home</a> / <a href="/ipad">iPad</a> / <a href={`/ipad/shop?family=${model.family}`}>{model.family}</a> / {model.name}
       </nav>
@@ -100,7 +110,6 @@ const wa = whatsappUrl(
           </div>
           <div class="ipdp__viewer-actions">
             <button type="button" class="btn btn--secondary btn--sm" data-orient-toggle>Rotate</button>
-            <button type="button" class="btn btn--secondary btn--sm" data-lightbox-open>Full screen</button>
           </div>
           {
             model.overviewOnly ? (
@@ -228,7 +237,7 @@ const wa = whatsappUrl(
           <div class="ipdp__actions" data-pdp-cta>
             <button
               type="button"
-              class="btn btn--primary"
+              class="btn btn--primary btn--xs"
               data-add-bag
               data-pdp-cart
               data-id={model.id}
@@ -243,9 +252,10 @@ const wa = whatsappUrl(
             >
               Add to Cart
             </button>
-            <button type="button" class="btn btn--primary" data-buy-now-checkout data-pdp-buy>Buy now</button>
-            <a class="btn btn--whatsapp" href={wa} target="_blank" rel="noopener noreferrer" data-wa-link>
-              Ask on WhatsApp
+            <button type="button" class="btn btn--primary btn--xs" data-buy-now-checkout data-pdp-buy>Buy now</button>
+            <a class="btn btn--secondary btn--xs" href="/trade-in">Trade In</a>
+            <a class="btn btn--whatsapp btn--xs" href={wa} target="_blank" rel="noopener noreferrer" data-wa-link>
+              Order on WhatsApp
             </a>
           </div>
           <p class="ipdp__fine">{ipadConfig.samplePriceDisclaimer}</p>
@@ -466,12 +476,6 @@ const wa = whatsappUrl(
     description={model.tagline}
   />
 
-  <dialog class="ipdp-lb" data-lightbox aria-label="Full screen photo">
-    <button type="button" data-lb-close aria-label="Close">Close</button>
-    <button type="button" data-lb-prev aria-label="Previous">‹</button>
-    <img data-lb-img src={img.src} alt={img.alt} />
-    <button type="button" data-lb-next aria-label="Next">›</button>
-  </dialog>
 </BaseLayout>
 
 <script define:vars={{
@@ -488,6 +492,7 @@ const wa = whatsappUrl(
   initialColour: colour,
   nanoAllowed: Boolean(model.display.nanoTextureOptional),
 }}>
+  const viewKey = `gh-pdp-ipad:${modelName}`;
   const state = { storage: 0, cellular: 0, nano: false, colour: initialColour, kes: base, tabIndex: 0, addons: 0 };
   const priceEl = document.querySelector("[data-ipad-price]");
   const lipaEl = document.querySelector("[data-ipad-lipa]");
@@ -499,6 +504,21 @@ const wa = whatsappUrl(
   const tabsRoot = document.querySelector(".ipdp__tabs");
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  function saveView() {
+    try {
+      sessionStorage.setItem(
+        viewKey,
+        JSON.stringify({
+          colour: state.colour,
+          tabIndex: state.tabIndex,
+          orient: stage?.getAttribute("data-orient") || "portrait",
+        }),
+      );
+    } catch {
+      /* ignore */
+    }
+  }
+
   function currentTabs() {
     return colourViews[state.colour] || colourViews[initialColour] || [];
   }
@@ -509,14 +529,26 @@ const wa = whatsappUrl(
       viewerImg.src = src;
       if (alt) viewerImg.alt = alt;
       viewerImg.style.opacity = "1";
-      viewerImg.style.transform = stage?.getAttribute("data-orient") === "landscape" ? "rotate(90deg) scale(1)" : "scale(1)";
+      const landscape = stage?.getAttribute("data-orient") === "landscape";
+      viewerImg.style.transform = landscape ? "rotate(90deg) scale(0.86)" : "scale(1)";
     };
-    if (animate && !reduce) {
-      viewerImg.style.opacity = "0";
-      const pre = new Image();
-      pre.onload = () => setTimeout(apply, 170);
-      pre.src = src;
-    } else apply();
+    if (!src || !animate || reduce) {
+      apply();
+      return;
+    }
+    viewerImg.style.opacity = "0";
+    const pre = new Image();
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      apply();
+    };
+    pre.onload = () => setTimeout(finish, 160);
+    pre.onerror = finish;
+    pre.src = src;
+    if (pre.complete) setTimeout(finish, 160);
+    setTimeout(finish, 700);
   }
 
   function rebuildTabs() {
@@ -544,6 +576,7 @@ const wa = whatsappUrl(
         state.tabIndex = i;
         setViewer(btn.getAttribute("data-src") || "", btn.getAttribute("data-alt") || "", true);
         bag?.setAttribute("data-image", btn.getAttribute("data-src") || "");
+        saveView();
       });
     });
   }
@@ -595,6 +628,7 @@ const wa = whatsappUrl(
       bag?.setAttribute("data-colour", label);
       rebuildTabs();
       refresh();
+      saveView();
     });
   });
 
@@ -666,7 +700,54 @@ const wa = whatsappUrl(
     const next = stage.getAttribute("data-orient") === "portrait" ? "landscape" : "portrait";
     stage.setAttribute("data-orient", next);
     viewerImg.style.transition = reduce ? "none" : "transform 400ms ease";
+    viewerImg.style.opacity = "1";
     viewerImg.style.transform = next === "landscape" ? "rotate(90deg) scale(0.86)" : "rotate(0deg) scale(1)";
+    saveView();
+  });
+
+  // Restore colour / angle / orientation after back-navigation
+  try {
+    const raw = sessionStorage.getItem(viewKey);
+    if (raw) {
+      const saved = JSON.parse(raw);
+      if (saved && typeof saved.colour === "string" && colourViews[saved.colour]) {
+        state.colour = saved.colour;
+        const swatch = document.querySelector(`[data-ipad-swatch][data-colour="${saved.colour}"]`);
+        if (swatch instanceof HTMLElement) {
+          document.querySelectorAll("[data-ipad-swatch]").forEach((b) => b.classList.remove("is-active"));
+          swatch.classList.add("is-active");
+          const label = swatch.getAttribute("aria-label") || "";
+          if (colourName) colourName.textContent = label;
+          bag?.setAttribute("data-colour", label);
+        }
+        rebuildTabs();
+        const tabs = currentTabs();
+        const idx = Math.min(Math.max(0, Number(saved.tabIndex) || 0), Math.max(0, tabs.length - 1));
+        const tabBtn = tabsRoot?.querySelectorAll("[data-view-tab]")[idx];
+        if (tabBtn instanceof HTMLElement) {
+          tabsRoot.querySelectorAll("[data-view-tab]").forEach((b) => b.classList.remove("is-active"));
+          tabBtn.classList.add("is-active");
+          state.tabIndex = idx;
+          setViewer(tabBtn.getAttribute("data-src") || "", tabBtn.getAttribute("data-alt") || "", false);
+          bag?.setAttribute("data-image", tabBtn.getAttribute("data-src") || "");
+        }
+        if (stage instanceof HTMLElement && (saved.orient === "landscape" || saved.orient === "portrait")) {
+          stage.setAttribute("data-orient", saved.orient);
+          if (viewerImg instanceof HTMLElement) {
+            viewerImg.style.opacity = "1";
+            viewerImg.style.transform =
+              saved.orient === "landscape" ? "rotate(90deg) scale(0.86)" : "scale(1)";
+          }
+        }
+        refresh();
+      }
+    }
+  } catch {
+    /* ignore */
+  }
+
+  window.addEventListener("pageshow", () => {
+    if (viewerImg instanceof HTMLImageElement) viewerImg.style.opacity = "1";
   });
 
   // Zoom 2.1×
@@ -686,28 +767,6 @@ const wa = whatsappUrl(
       } else viewerImg.style.transform = "scale(1)";
     });
   }
-
-  // Lightbox
-  const lb = document.querySelector("[data-lightbox]");
-  const lbImg = document.querySelector("[data-lb-img]");
-  function showLb(i) {
-    const tabs = currentTabs();
-    state.tabIndex = (i + tabs.length) % tabs.length;
-    const t = tabs[state.tabIndex];
-    if (lbImg instanceof HTMLImageElement && t) {
-      lbImg.src = t.src;
-      lbImg.alt = t.alt;
-    }
-  }
-  document.querySelector("[data-lightbox-open]")?.addEventListener("click", () => {
-    if (lb instanceof HTMLDialogElement) {
-      showLb(state.tabIndex);
-      lb.showModal();
-    }
-  });
-  document.querySelector("[data-lb-close]")?.addEventListener("click", () => lb?.close());
-  document.querySelector("[data-lb-prev]")?.addEventListener("click", () => showLb(state.tabIndex - 1));
-  document.querySelector("[data-lb-next]")?.addEventListener("click", () => showLb(state.tabIndex + 1));
 
   // Display nits
   const displayImg = document.querySelector("[data-display-img]");
@@ -820,15 +879,32 @@ const wa = whatsappUrl(
   .ipdp__suits { margin: 0.35rem 0 1.25rem; color: var(--color-fg-muted); font-size: var(--text-sm); }
   .ipdp__colour-label, .ipdp__cfg-label { margin: 1rem 0 0.45rem; font-size: var(--text-sm); font-weight: 600; }
   .ipdp__colours-text { margin: 0; font-size: var(--text-sm); color: var(--color-fg-muted); }
-  .ipdp__swatches { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  .ipdp__buy { min-width: 0; max-width: 100%; }
+  .ipdp__swatches, .ipdp__opts {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.45rem;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 0.15rem;
+  }
+  .ipdp__swatches::-webkit-scrollbar,
+  .ipdp__opts::-webkit-scrollbar { display: none; }
   .ipdp__dot {
+    flex: 0 0 auto;
     width: 1.75rem; height: 1.75rem; border-radius: 50%; border: none;
     background: var(--swatch); cursor: pointer; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12);
   }
   .ipdp__dot.is-active { outline: 2px solid var(--color-fg); outline-offset: 2px; }
   .ipdp__dot--light { box-shadow: inset 0 0 0 1px #d2d2d7; }
-  .ipdp__opts { display: flex; flex-wrap: wrap; gap: 0.4rem; }
   .ipdp__opts button, .ipdp__opts a {
+    flex: 0 0 auto;
+    white-space: nowrap;
     border: 1px solid var(--color-border); background: var(--color-bg); border-radius: 0.65rem;
     padding: 0.55rem 0.75rem; font: inherit; font-size: var(--text-sm); cursor: pointer;
     text-decoration: none; color: inherit;
@@ -844,7 +920,25 @@ const wa = whatsappUrl(
     0%, 100% { box-shadow: 0 0 0 0 rgb(52 199 89 / 0.45); }
     50% { box-shadow: 0 0 0 6px rgb(52 199 89 / 0); }
   }
-  .ipdp__actions { display: flex; flex-wrap: wrap; gap: 0.65rem; margin: 1rem 0; }
+  .ipdp__actions {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.35rem;
+    width: 100%;
+    margin: 1rem 0;
+  }
+  .ipdp__actions .btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 2rem;
+    justify-content: center;
+    padding: 0.4rem 0.2rem;
+    font-size: clamp(0.55rem, 2.1vw, 0.7rem);
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   .ipdp__fine { font-size: 0.75rem; color: var(--color-fg-muted); }
   .ipdp__highlights {
     list-style: none; margin: 1.5rem 0 0; padding: 0;
@@ -930,17 +1024,6 @@ const wa = whatsappUrl(
     border: 1px solid var(--color-border); border-radius: var(--ipad-radius); padding: 1rem;
     text-decoration: none; color: inherit; font-weight: 600;
   }
-  .ipdp-lb {
-    width: min(96vw, 50rem); max-height: 92vh; border: none; border-radius: 1rem; padding: 0; background: #000;
-  }
-  .ipdp-lb img { width: 100%; height: auto; max-height: 80vh; object-fit: contain; }
-  .ipdp-lb button {
-    position: absolute; background: rgb(255 255 255 / 0.12); color: #fff; border: none;
-    border-radius: 999px; padding: 0.5rem 0.85rem; cursor: pointer;
-  }
-  .ipdp-lb [data-lb-close] { top: 0.75rem; right: 0.75rem; }
-  .ipdp-lb [data-lb-prev] { left: 0.75rem; top: 50%; }
-  .ipdp-lb [data-lb-next] { right: 0.75rem; top: 50%; }
   @media (prefers-reduced-motion: reduce) {
     .ipdp__pulse { animation: none; }
     .ipdp__stage img { transition: none; }

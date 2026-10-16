@@ -45,7 +45,7 @@ export const site = {
   social: {
     facebook: "https://www.facebook.com/profile.php?id=61580617706515",
     instagram: "https://www.instagram.com/gadgethub.ke/",
-    tiktok: "https://www.tiktok.com/",
+    tiktok: "https://www.tiktok.com/@gadgethub.kenya",
     x: "https://x.com/",
   },
 } as const;

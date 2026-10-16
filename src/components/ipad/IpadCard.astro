@@ -8,25 +8,23 @@ import {
   getIpadImage,
   defaultIpadColour,
   ipadSubline,
-  formatKes,
-  lipaMonthly,
   colourHex,
   colourLabel,
   isLightColour,
-  ipadConfig,
   ipadViewerTabs,
 } from "../../lib/ipad";
+import { whatsappUrl } from "../../lib/site";
 
 interface Props {
   model: IpadModel;
   compare?: boolean;
 }
 
-const { model, compare = true } = Astro.props;
+const { model, compare = false } = Astro.props;
 const colour = defaultIpadColour(model);
 const img = getIpadImage(model.id, colour, "product", model.name);
-const lipa = lipaMonthly(model.basePriceKes);
 const href = `/ipad/${model.id}`;
+const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}.`);
 const tabs = ipadViewerTabs(model, colour);
 
 const colourPayload = model.colours.map((key) => {
@@ -122,17 +120,13 @@ const hoverSrc =
       )
     }
 
-    <p class="icard__price">
-      <span data-live-price={model.id} data-live-prefix="From ">From {formatKes(model.basePriceKes)}</span>
-      <span>or {formatKes(lipa.monthlyKes)} / mo</span>
-    </p>
-    <p class="icard__fine" data-live-stock={model.id}>{ipadConfig.samplePriceDisclaimer}</p>
-
-    <div class="icard__actions">
-      <a class="btn btn--secondary btn--xs" href={href}>View</a>
+    <div class="icard__row icard__row--price">
+      <p class="icard__price">
+        <span data-live-price={model.id} data-live-prefix="">{`KSh ${Math.round(model.basePriceKes).toLocaleString("en-KE")}`}</span>
+      </p>
       <button
         type="button"
-        class="btn btn--primary btn--xs"
+        class="btn btn--secondary btn--xs"
         data-add-bag
         data-id={model.id}
         data-name={model.name}
@@ -145,6 +139,10 @@ const hoverSrc =
       >
         Add to Cart
       </button>
+    </div>
+    <div class="icard__row icard__row--links">
+      <a class="btn btn--primary btn--xs" href={href}>Details</a>
+      <a class="btn btn--whatsapp btn--xs" href={wa} target="_blank" rel="noopener noreferrer">WhatsApp</a>
     </div>
   </div>
 </article>
@@ -168,7 +166,10 @@ const hoverSrc =
         if (img instanceof HTMLImageElement && src) {
           img.style.opacity = "0";
           const pre = new Image();
-          pre.onload = () => {
+          let done = false;
+          const finish = () => {
+            if (done) return;
+            done = true;
             if (webpSource instanceof HTMLSourceElement) {
               if (webp) webpSource.srcset = webp;
               else webpSource.removeAttribute("srcset");
@@ -177,7 +178,11 @@ const hoverSrc =
             if (alt) img.alt = alt;
             img.style.opacity = "1";
           };
+          pre.onload = finish;
+          pre.onerror = finish;
           pre.src = src;
+          if (pre.complete) finish();
+          setTimeout(finish, 700);
         }
         if (altImg instanceof HTMLImageElement && hover && hover !== src) {
           altImg.src = hover;
@@ -318,22 +323,33 @@ const hoverSrc =
   .icard__dot--light {
     box-shadow: inset 0 0 0 1px #d2d2d7;
   }
+  .icard__row {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.65rem;
+  }
+  .icard__row--links {
+    margin-top: 0.4rem;
+  }
   .icard__price {
-    margin: 0.85rem 0 0;
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
     font-weight: 700;
     letter-spacing: -0.02em;
+    font-size: 0.85rem;
+    white-space: nowrap;
   }
-  .icard__price span {
-    display: block;
-    font-weight: 400;
-    font-size: 0.8rem;
-    color: var(--color-fg-muted);
+  .icard__row .btn {
+    flex: 1 1 0;
+    min-width: 0;
+    justify-content: center;
+    white-space: nowrap;
   }
-  .icard__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
-    margin-top: 0.85rem;
+  .icard__row--price .btn {
+    flex: 0 0 auto;
   }
   @media (prefers-reduced-motion: reduce) {
     .icard,

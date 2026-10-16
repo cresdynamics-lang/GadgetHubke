@@ -6,6 +6,8 @@ export type ProductReview = {
   title: string;
   body: string;
   city?: string;
+  /** Private contact — never returned on public list endpoints. */
+  email?: string;
   createdAt: string;
   approved: boolean;
 };

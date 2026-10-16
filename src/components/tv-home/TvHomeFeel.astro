@@ -254,7 +254,16 @@ if (model.colours.length > 1) feelIds.push("colour");
   .thfeel__strip strong { display: block; font-size: 1rem; }
   .thfeel__strip span { color: #6e6e73; }
   .thfeel--black .thfeel__strip span { color: #a1a1a6; }
-  .thfeel__swatches { display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 1rem; }
+  .thfeel__swatches {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.65rem;
+    margin-top: 1rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .thfeel__swatches::-webkit-scrollbar { display: none; }
   .thfeel__swatches button {
     border: none; background: transparent; cursor: pointer; text-align: center; font-size: var(--text-xs);
   }

@@ -169,10 +169,26 @@ if (needQ === "hearing") filtered = filtered.filter((m) => hasHearing(m));
   .ashop { padding-block: 2rem 4rem; overflow-x: hidden; }
   .ashop__head h1 { margin: 0 0 0.35rem; letter-spacing: -0.03em; }
   .ashop__head p { margin: 0 0 1.5rem; color: #6e6e73; }
-  .ashop__chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
+  .ashop__chips {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 0.15rem;
+  }
+  .ashop__chips::-webkit-scrollbar { display: none; }
   .ashop__chips a {
-    border: 1px solid #d2d2d7; border-radius: 999px; padding: 0.35rem 0.7rem;
-    text-decoration: none; color: inherit; font-size: var(--text-sm);
+    flex: 0 0 auto;
+    white-space: nowrap;
+    border: 1px solid #d2d2d7;
+    border-radius: 999px;
+    padding: 0.35rem 0.7rem;
+    text-decoration: none;
+    color: inherit;
+    font-size: 0.78rem;
   }
   .ashop__chips a.is-active { background: #000; color: #fff; border-color: #000; }
   .ashop__toggles {

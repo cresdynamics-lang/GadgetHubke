@@ -7,6 +7,8 @@ import AccessoryTrademark from "../../components/accessories/AccessoryTrademark.
 import AccessoryCard from "../../components/accessories/AccessoryCard.astro";
 import ProductReviews from "../../components/ProductReviews.astro";
 import StickyBuyBar from "../../components/StickyBuyBar.astro";
+import BackButton from "../../components/BackButton.astro";
+import TrackProductView from "../../components/TrackProductView.astro";
 import {
   accessories,
   getAccessory,
@@ -136,7 +138,15 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
 ---
 
 <BaseLayout title={`${product.name} - GadgetHub`} description={product.tagline}>
+  <TrackProductView
+    id={product.id}
+    name={product.name}
+    href={`/accessories/${product.id}`}
+    image={activeHero.src}
+    priceKes={product.basePriceKes}
+  />
   <section class="xpdp container">
+    <BackButton fallbackHref="/accessories" />
     <div class="xpdp__viewer">
       {
         product.earlierGeneration ? (
@@ -244,7 +254,7 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
       <div class="xpdp__actions" data-pdp-cta>
         <button
           type="button"
-          class="btn btn--primary"
+          class="btn btn--primary btn--xs"
           data-accessory-bag
           data-pdp-cart
           data-id={product.id}
@@ -258,8 +268,9 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
         >
           Add to Cart
         </button>
-        <button type="button" class="btn btn--primary" data-buy-now-checkout data-pdp-buy>Buy now</button>
-        <a class="btn btn--whatsapp" href={wa} rel="noopener" data-wa-link>Ask on WhatsApp</a>
+        <button type="button" class="btn btn--primary btn--xs" data-buy-now-checkout data-pdp-buy>Buy now</button>
+        <a class="btn btn--secondary btn--xs" href="/trade-in">Trade In</a>
+        <a class="btn btn--whatsapp btn--xs" href={wa} rel="noopener" data-wa-link target="_blank">Order on WhatsApp</a>
       </div>
       <div class="xpdp__tiles">
         <div><strong>Connection</strong><span>{product.connection}</span></div>
@@ -474,6 +485,10 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
     padding: 2rem 1.25rem 3rem;
     align-items: start;
   }
+  .xpdp :global(.gh-back) {
+    grid-column: 1 / -1;
+    margin-bottom: 0;
+  }
   @media (max-width: 900px) {
     .xpdp {
       grid-template-columns: 1fr;
@@ -657,10 +672,23 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
     }
   }
   .xpdp__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.65rem;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.35rem;
+    width: 100%;
     margin: 1rem 0;
+  }
+  .xpdp__actions .btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 2rem;
+    justify-content: center;
+    padding: 0.4rem 0.2rem;
+    font-size: clamp(0.55rem, 2.1vw, 0.7rem);
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .xpdp__tiles {
     display: grid;

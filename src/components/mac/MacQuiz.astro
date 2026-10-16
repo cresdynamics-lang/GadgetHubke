@@ -165,39 +165,43 @@ const payload = macModels.map((m) => {
 <style>
   .mquiz {
     margin: var(--mac-section-gap) 0;
-    padding: var(--space-8);
+    padding: 1.1rem 1.15rem;
     background: var(--color-stage);
     color: #1d1d1f;
-    border-radius: 1.5rem;
+    border-radius: 1.15rem;
   }
   .mquiz header h2 {
-    margin: 0 0 0.35rem;
+    margin: 0 0 0.25rem;
+    font-size: 1.05rem;
     letter-spacing: -0.02em;
   }
   .mquiz header p {
-    margin: 0 0 1.25rem;
+    margin: 0 0 0.9rem;
     color: #6e6e73;
+    font-size: 0.75rem;
+    line-height: 1.35;
   }
   .mquiz__q {
-    margin-bottom: 1.1rem;
+    margin-bottom: 0.85rem;
   }
   .mquiz__q p {
-    margin: 0 0 0.5rem;
+    margin: 0 0 0.4rem;
     font-weight: 600;
-    font-size: var(--text-sm);
+    font-size: 0.72rem;
   }
   .mquiz__opts {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.45rem;
+    gap: 0.35rem;
   }
   .mquiz__opts button {
     border: 1px solid #d2d2d7;
     background: #fff;
     border-radius: 999px;
-    padding: 0.45rem 0.85rem;
+    padding: 0.32rem 0.65rem;
     font: inherit;
-    font-size: var(--text-sm);
+    font-size: 0.7rem;
+    line-height: 1.2;
     cursor: pointer;
   }
   .mquiz__opts button.is-active,
@@ -207,28 +211,29 @@ const payload = macModels.map((m) => {
     color: #fff;
   }
   .mquiz__results h3 {
-    margin: 1rem 0 0.75rem;
+    margin: 0.75rem 0 0.55rem;
+    font-size: 0.9rem;
   }
   .mquiz__results ul {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 0.65rem;
+    gap: 0.5rem;
   }
   .mquiz__results a {
     display: grid;
-    grid-template-columns: 6rem 1fr;
-    gap: 0.75rem;
+    grid-template-columns: 4.5rem 1fr;
+    gap: 0.55rem;
     align-items: center;
     text-decoration: none;
     color: inherit;
     background: #fff;
-    border-radius: 1rem;
-    padding: 0.65rem;
+    border-radius: 0.85rem;
+    padding: 0.5rem;
   }
   .mquiz__results img {
-    width: 6rem;
+    width: 4.5rem;
     height: auto;
     object-fit: contain;
     background: #f5f5f7;
@@ -237,17 +242,18 @@ const payload = macModels.map((m) => {
   .mquiz__results strong {
     display: block;
     letter-spacing: -0.02em;
+    font-size: 0.8rem;
   }
   .mquiz__results em,
   .mquiz__results i {
     display: block;
     font-style: normal;
-    font-size: 0.8rem;
+    font-size: 0.68rem;
     color: #6e6e73;
   }
   .mquiz__results b {
     display: block;
-    margin-top: 0.2rem;
-    font-size: 0.85rem;
+    margin-top: 0.15rem;
+    font-size: 0.72rem;
   }
 </style>

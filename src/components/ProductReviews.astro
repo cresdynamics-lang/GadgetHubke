@@ -63,7 +63,32 @@ const { productId, productName } = Astro.props;
 
       <form class="reviews-sheet__form" data-reviews-form novalidate>
         <label>
-          <span>Your name</span>
+          <span>Your review</span>
+          <textarea
+            name="body"
+            rows="5"
+            maxlength="800"
+            required
+            placeholder="How was the device, packaging, and pickup or delivery?"
+          ></textarea>
+        </label>
+
+        <fieldset class="reviews__rating">
+          <legend>Rating</legend>
+          <div class="reviews__rating-row" role="radiogroup" aria-label="Rating from 1 to 5 stars">
+            {/* DOM 5→1 + row-reverse: visual left→right 1→5, fill rises LTR */}
+            {[5, 4, 3, 2, 1].map((n) => (
+              <label>
+                <input type="radio" name="rating" value={String(n)} required={n === 1} />
+                <span aria-hidden="true">★</span>
+                <span class="sr-only">{n} star{n === 1 ? "" : "s"}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <label>
+          <span>Display name</span>
           <input
             type="text"
             name="author"
@@ -75,42 +100,16 @@ const { productId, productName } = Astro.props;
         </label>
 
         <label>
-          <span>City (optional)</span>
+          <span>Email</span>
           <input
-            type="text"
-            name="city"
-            maxlength="40"
-            autocomplete="address-level2"
-            placeholder="Nairobi"
-          />
-        </label>
-
-        <fieldset class="reviews__rating">
-          <legend>Rating</legend>
-          <div class="reviews__rating-row">
-            {[5, 4, 3, 2, 1].map((n) => (
-              <label>
-                <input type="radio" name="rating" value={String(n)} required={n === 5} />
-                <span>{n}★</span>
-              </label>
-            ))}
-          </div>
-        </fieldset>
-
-        <label>
-          <span>Title (optional)</span>
-          <input type="text" name="title" maxlength="80" placeholder="Short headline" />
-        </label>
-
-        <label>
-          <span>Your review</span>
-          <textarea
-            name="body"
-            rows="5"
-            maxlength="800"
+            type="email"
+            name="email"
+            maxlength="120"
             required
-            placeholder="How was the device, packaging, and pickup or delivery?"
-          ></textarea>
+            autocomplete="email"
+            placeholder="you@email.com"
+          />
+          <small class="reviews__hint">Won’t be disclosed — for verification only.</small>
         </label>
 
         <p class="reviews__form-error" data-reviews-error hidden></p>
@@ -176,7 +175,7 @@ const { productId, productName } = Astro.props;
       sheet.hidden = false;
       document.documentElement.classList.add("reviews-sheet-open");
       document.body.style.overflow = "hidden";
-      const first = form?.querySelector("input, textarea, button");
+      const first = form?.querySelector('textarea[name="body"]');
       if (first instanceof HTMLElement) first.focus();
     }
 
@@ -266,9 +265,9 @@ const { productId, productName } = Astro.props;
       const payload = {
         productId,
         author: String(fd.get("author") || ""),
-        city: String(fd.get("city") || ""),
+        email: String(fd.get("email") || ""),
         rating: Number(fd.get("rating")),
-        title: String(fd.get("title") || ""),
+        title: "",
         body: String(fd.get("body") || ""),
       };
       if (submitBtn instanceof HTMLButtonElement) {
@@ -339,7 +338,7 @@ const { productId, productName } = Astro.props;
   }
   .reviews__stars {
     margin: 0.2rem 0 0;
-    color: #1d1d1f;
+    color: #f5c518;
     letter-spacing: 0.08em;
   }
   .reviews__count {
@@ -376,6 +375,7 @@ const { productId, productName } = Astro.props;
   .reviews__item-stars {
     letter-spacing: 0.06em;
     font-size: 0.9rem;
+    color: #f5c518;
   }
   .reviews__item-title {
     margin: 0.4rem 0 0.25rem;
@@ -499,20 +499,33 @@ const { productId, productName } = Astro.props;
   }
   .reviews__rating-row {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 0.15rem;
   }
   .reviews__rating-row label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.4rem 0.6rem;
-    border-radius: 999px;
-    border: 1px solid rgba(0, 0, 0, 0.12);
+    display: grid;
+    place-items: center;
     cursor: pointer;
+    padding: 0.15rem;
+    font-size: 1.85rem;
+    line-height: 1;
+    color: #d2d2d7;
   }
   .reviews__rating-row input {
-    margin: 0;
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .reviews__rating-row label:hover,
+  .reviews__rating-row label:hover ~ label,
+  .reviews__rating-row label:has(input:checked),
+  .reviews__rating-row label:has(input:checked) ~ label {
+    color: #f5c518;
+  }
+  .reviews__hint {
+    font-size: 0.75rem;
+    color: #6e6e73;
   }
   .reviews-sheet__actions {
     display: flex;
