@@ -2,10 +2,17 @@
  * Owner-supplied pack imagery.
  * MacBook merchandising uses the real .jpg select shots under
  * Gadget_Hub_MacBook_1_Products_and_Colours/01_Product_photos/{MacBook_Air,MacBook_Pro}/…
+ *
+ * Production nginx returns 403 for /Gadget_Hub_Images/* (directory mode 700).
+ * homeOpt() remaps those (and other pack paths) to /images/home/opt/*.webp when available.
  */
+
+import { homeOpt } from "./home-images";
 
 const ROOT = "/Gadget_Hub_Images";
 const MAC1 = "/Gadget_Hub_MacBook_1_Products_and_Colours/01_Product_photos";
+/** Prefer live-safe optimized URL when the opt map has an entry. */
+const o = (src: string) => homeOpt(src);
 
 /** Confirmed .jpg select shots from the MacBook product pack (not .jpeg) */
 export const macProductPhotos = {
@@ -70,60 +77,69 @@ export const macProductPhotos = {
 
 export const ghImages = {
   iphone: {
-    proBlue: `${ROOT}/01_iPhones/iphone_pro-3cam_blue_angle.jpg`,
-    proSilver: `${ROOT}/01_iPhones/iphone_pro-3cam_silver_back-and-side.jpg`,
-    cam2Pink: `${ROOT}/01_iPhones/iphone_2cam_pink_angle.jpg`,
-    cam2Teal: `${ROOT}/01_iPhones/iphone_2cam_teal_back-lower.jpg`,
-    cam2Blue: `${ROOT}/01_iPhones/iphone_2cam_blue_angle.jpg`,
-    cam2Green: `${ROOT}/01_iPhones/iphone_2cam_green_back-and-side.jpg`,
-    lineup: `${ROOT}/01_iPhones/iphone_lineup_five-colours.jpg`,
-    thinSide: `${ROOT}/01_iPhones/iphone_thin-side-view_with-finger.jpg`,
-    fanColours: `${ROOT}/01_iPhones/iphone_fan-of-colours_side.png`,
-    singleCamPink: `${ROOT}/01_iPhones/iphone_single-camera_pink-stack.png`,
+    proBlue: o(`${ROOT}/01_iPhones/iphone_pro-3cam_blue_angle.jpg`),
+    proSilver: o(`${ROOT}/01_iPhones/iphone_pro-3cam_silver_back-and-side.jpg`),
+    cam2Pink: o(`${ROOT}/01_iPhones/iphone_2cam_pink_angle.jpg`),
+    cam2Teal: o(`${ROOT}/01_iPhones/iphone_2cam_teal_back-lower.jpg`),
+    cam2Blue: o(`${ROOT}/01_iPhones/iphone_2cam_blue_angle.jpg`),
+    cam2Green: o(`${ROOT}/01_iPhones/iphone_2cam_green_back-and-side.jpg`),
+    lineup: o(`${ROOT}/01_iPhones/iphone_lineup_five-colours.jpg`),
+    thinSide: o(`${ROOT}/01_iPhones/iphone_thin-side-view_with-finger.jpg`),
+    fanColours: o(`${ROOT}/01_iPhones/iphone_fan-of-colours_side.png`),
+    singleCamPink: o(`${ROOT}/01_iPhones/iphone_single-camera_pink-stack.png`),
   },
   accessories: {
-    magsafeCharger: `${ROOT}/02_Cases_and_Accessories/accessory_magsafe-charger_with-wallet-case.jpg`,
-    casesMagSafe: `${ROOT}/02_Cases_and_Accessories/case_ultramarine-black-clear_magsafe.jpg`,
-    casesSilicone: `${ROOT}/02_Cases_and_Accessories/case_cream-green-blue_silicone-strap.jpg`,
-    batteryPack: `${ROOT}/02_Cases_and_Accessories/accessory_magsafe-battery-pack.jpg`,
-    crossbody: `${ROOT}/02_Cases_and_Accessories/accessory_crossbody-strap.jpg`,
-    airtag: `${ROOT}/02_Cases_and_Accessories/accessory_airtag.png`,
-    applePencil: `${ROOT}/02_Cases_and_Accessories/accessory_apple-pencil_with-ipads.png`,
+    magsafeCharger: o(`${ROOT}/02_Cases_and_Accessories/accessory_magsafe-charger_with-wallet-case.jpg`),
+    casesMagSafe: o(`${ROOT}/02_Cases_and_Accessories/case_ultramarine-black-clear_magsafe.jpg`),
+    casesSilicone: o(`${ROOT}/02_Cases_and_Accessories/case_cream-green-blue_silicone-strap.jpg`),
+    batteryPack: o(`${ROOT}/02_Cases_and_Accessories/accessory_magsafe-battery-pack.jpg`),
+    crossbody: o(`${ROOT}/02_Cases_and_Accessories/accessory_crossbody-strap.jpg`),
+    airtag: o(`${ROOT}/02_Cases_and_Accessories/accessory_airtag.png`),
+    applePencil: o(`${ROOT}/02_Cases_and_Accessories/accessory_apple-pencil_with-ipads.png`),
   },
   duo: {
-    foldTop: `${ROOT}/03_iPhone_Duo_foldable/duo_fold-top_library-screen.jpg`,
-    openCamera: `${ROOT}/03_iPhone_Duo_foldable/duo_open-camera-screen.jpg`,
-    standCase: `${ROOT}/03_iPhone_Duo_foldable/duo_stand-case_dark-green.jpg`,
+    foldTop: o(`${ROOT}/03_iPhone_Duo_foldable/duo_fold-top_library-screen.jpg`),
+    openCamera: o(`${ROOT}/03_iPhone_Duo_foldable/duo_open-camera-screen.jpg`),
+    standCase: o(`${ROOT}/03_iPhone_Duo_foldable/duo_stand-case_dark-green.jpg`),
   },
   mac: {
-    air: macProductPhotos.air13M4.skyBlue,
-    air13M3: macProductPhotos.air13M3.midnight,
-    air13M4: macProductPhotos.air13M4.skyBlue,
-    air15M2: macProductPhotos.air15M2.starlight,
-    air15M4: macProductPhotos.air15M4.midnight,
-    pro: macProductPhotos.pro14M4.spaceBlack,
-    pro13M2: macProductPhotos.pro13M2.spaceGray,
-    pro14M3: macProductPhotos.pro14M3.silver,
-    pro14M4: macProductPhotos.pro14M4.spaceBlack,
-    pro16M4: macProductPhotos.pro16M4.spaceBlack,
-    neo: `${ROOT}/04_Mac/macbook-neo_yellow_in-hand.png`,
-    imac: `${ROOT}/04_Mac/imac_colour-range.png`,
-    mini: `${ROOT}/04_Mac/mac-mini_in-hand.jpg`,
+    air: o(macProductPhotos.air13M4.skyBlue),
+    air13M3: o(macProductPhotos.air13M3.midnight),
+    air13M4: o(macProductPhotos.air13M4.skyBlue),
+    air15M2: o(macProductPhotos.air15M2.starlight),
+    air15M4: o(macProductPhotos.air15M4.midnight),
+    pro: o(macProductPhotos.pro14M4.spaceBlack),
+    pro13M2: o(macProductPhotos.pro13M2.spaceGray),
+    pro14M3: o(macProductPhotos.pro14M3.silver),
+    pro14M4: o(macProductPhotos.pro14M4.spaceBlack),
+    pro16M4: o(macProductPhotos.pro16M4.spaceBlack),
+    neo: o(`${ROOT}/04_Mac/macbook-neo_yellow_in-hand.png`),
+    imac: o(`${ROOT}/04_Mac/imac_colour-range.png`),
+    mini: o(`${ROOT}/04_Mac/mac-mini_in-hand.jpg`),
   },
   ipad: {
-    air: "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-select-11in-wifi-blue-202405.jpg",
-    pro: "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Pro_11in_and_13in_M4_M5_(same_design)/ipad-pro-11-select-wificell-spaceblack-202405.jpg",
-    mini: "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_mini_A17_Pro_2024/ipad-mini-select-wifi-spacegray-202410.jpg",
+    air: o(
+      "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Air_11in_and_13in_M2_M3_M4_(same_design)/ipad-air-select-11in-wifi-blue-202405.jpg",
+    ),
+    pro: o(
+      "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_Pro_11in_and_13in_M4_M5_(same_design)/ipad-pro-11-select-wificell-spaceblack-202405.jpg",
+    ),
+    mini: o(
+      "/Gadget_Hub_iPad_1_Product_photos/01_Product_photos/iPad_mini_A17_Pro_2024/ipad-mini-select-wifi-spacegray-202410.jpg",
+    ),
   },
   watchAirPods: {
-    watch:
+    watch: o(
       "/Gadget_Hub_Watch_1_Product_photos_and_swatches_part1/01_Product_photos/Series_12_2026/s12-case-unselect-gallery-1-202609.jpg",
-    airpodsPro:
+    ),
+    airpodsPro: o(
       "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_4_and_Pro_2_(2024)/airpods-pro-2-hero-select-202409.jpg",
-    airpodsFamily: `${ROOT}/06_Watch_and_AirPods/airpods_family.jpg`,
-    airpods4:
+    ),
+    airpodsFamily: o(`${ROOT}/06_Watch_and_AirPods/airpods_family.jpg`),
+    airpods4: o(
       "/Gadget_Hub_AirPods_1_Product_photos_cases_and_compare/01_Product_photos/AirPods_4_and_Pro_2_(2024)/airpods-4-hero-select-202409.jpg",
-    airpodsMax: `${ROOT}/06_Watch_and_AirPods/airpods-max_colourful.png`,
+    ),
+    airpodsMax: o(`${ROOT}/06_Watch_and_AirPods/airpods-max_colourful.png`),
   },
-  logo: `${ROOT}/07_Logo/gadget-hub-logo_supplied.jpg`,
+  logo: o(`${ROOT}/07_Logo/gadget-hub-logo_supplied.jpg`),
 } as const;

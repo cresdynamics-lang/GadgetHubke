@@ -3,6 +3,7 @@
  */
 import generated from "./generated-manifest.json";
 import type { AirpodsModel } from "./models";
+import { homeOpt } from "../home-images";
 
 export type AirpodsManifest = typeof generated;
 export const airpodsManifest = generated as AirpodsManifest;
@@ -89,7 +90,9 @@ export function compareSrc(feat: string): string | undefined {
 }
 
 export function marketingSrc(which: string): string | undefined {
-  return airpodsManifest.marketing[which as keyof typeof airpodsManifest.marketing];
+  const src = airpodsManifest.marketing[which as keyof typeof airpodsManifest.marketing];
+  // Production returns 403 for /Gadget_Hub_Images/* — prefer home/opt WebP when mapped.
+  return src ? homeOpt(src) : undefined;
 }
 
 /** Page asset by full key e.g. pro/welcome/hero_startframe */

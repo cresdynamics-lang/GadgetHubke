@@ -15,8 +15,20 @@ import {
   genKey,
 } from "./manifest";
 import { getWatchModel, type WatchModel } from "./models";
+import { homeOpt } from "../home-images";
 
 export const WATCH_PLACEHOLDER = "/images/placeholder-watch.svg";
+
+/** Production nginx 403s this pack (dir was mode 700). Prefer opt/overview instead. */
+const WATCH_PART1_PREFIX = "/Gadget_Hub_Watch_1_Product_photos_and_swatches_part1/";
+
+function liveSafeSrc(src: string): string {
+  return homeOpt(src);
+}
+
+function isBlockedWatchPack(src: string): boolean {
+  return src.startsWith(WATCH_PART1_PREFIX);
+}
 
 export type ResolvedWatchImage = {
   src: string;
@@ -40,14 +52,29 @@ function widthForKind(kind: string): number {
 }
 
 function finish(src: string, alt: string, kind: string, fallback: boolean): ResolvedWatchImage {
+  const safe = liveSafeSrc(src);
   return {
-    src,
-    srcWebp: fallback ? undefined : webpSibling(src),
+    src: safe,
+    srcWebp: fallback ? undefined : webpSibling(safe),
     alt,
     kind,
     fallback,
     width: widthForKind(kind),
   };
+}
+
+function lineupOrOverview(modelId: string, model: WatchModel | undefined, name: string): ResolvedWatchImage {
+  const cases = model ? productCases(modelId, model) : productCases(modelId);
+  if (cases[0]) {
+    const candidate = liveSafeSrc(cases[0]);
+    if (!isBlockedWatchPack(candidate)) {
+      return finish(cases[0], `${name}, lineup view`, "lineup", candidate !== cases[0]);
+    }
+  }
+  const ov = model ? overviewSrc(model) : undefined;
+  if (ov) return finish(ov, `${name}, colour overview`, "overview", true);
+  if (cases[0]) return finish(cases[0], `${name}, lineup view`, "lineup", true);
+  return finish(WATCH_PLACEHOLDER, name, "lineup", true);
 }
 
 export function getWatchImage(
@@ -60,13 +87,18 @@ export function getWatchImage(
   const pageFam = model?.pageFamily || "Series";
 
   if (kind === "main" || kind === "lineup" || kind === "product" || kind === "front") {
-    const cases = model ? productCases(modelId, model) : productCases(modelId);
-    if (cases[0]) return finish(cases[0], `${name}, lineup view`, "lineup", false);
+    return lineupOrOverview(modelId, model, name);
   }
 
   if (kind === "bands" || kind === "band") {
     const bands = model ? productBands(modelId, model) : productBands(modelId);
-    if (bands[0]) return finish(bands[0], `${name}, band gallery`, "bands", false);
+    if (bands[0]) {
+      const candidate = liveSafeSrc(bands[0]);
+      if (!isBlockedWatchPack(candidate)) {
+        return finish(bands[0], `${name}, band gallery`, "bands", candidate !== bands[0]);
+      }
+    }
+    return lineupOrOverview(modelId, model, name);
   }
 
   if (kind === "swatch" || kind === "finishes") {
@@ -100,12 +132,8 @@ export function getWatchImage(
     return finish(src, `${name}, ${kind.replace(/_/g, " ")}`, kind, false);
   }
 
-  // Fallbacks
-  const cases = model ? productCases(modelId, model) : productCases(modelId);
-  if (cases[0]) return finish(cases[0], `${name}, lineup view`, "lineup", true);
-  const ov = model ? overviewSrc(model) : undefined;
-  if (ov) return finish(ov, `${name}, overview`, "overview", true);
-  return finish(WATCH_PLACEHOLDER, name, kind, true);
+  // Fallbacks — avoid part1 pack URLs that 403 on production.
+  return lineupOrOverview(modelId, model, name);
 }
 
 export function defaultWatchColour(model: WatchModel): string {

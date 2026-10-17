@@ -19,13 +19,32 @@ export type IphoneListItem = {
   tags: ("camera" | "thin" | "value" | "fold" | "size")[];
 };
 
+/** Card art: prefer product galleries that are readable on production (Gadget_Hub_Images is 403). */
 const packById: Record<string, { src: string; alt: string }> = {
-  "iphone-duo": { src: ghImages.duo.foldTop, alt: "iPhone Duo" },
-  "iphone-pro": { src: ghImages.iphone.proBlue, alt: "iPhone 18 Pro" },
-  "iphone-pro-max": { src: ghImages.iphone.proSilver, alt: "iPhone 18 Pro Max" },
-  "iphone-air": { src: ghImages.iphone.thinSide, alt: "iPhone Air" },
-  "iphone-17": { src: ghImages.iphone.fanColours, alt: "iPhone 17" },
-  "iphone-17e": { src: ghImages.iphone.singleCamPink, alt: "iPhone 17e" },
+  "iphone-duo": {
+    src: "/iPhone-Duo/iphone-duo-digitalmat-gallery-1-202609.jpeg",
+    alt: "iPhone Duo",
+  },
+  "iphone-pro": {
+    src: "/iPhone-18/iphone-18pro-digitalmat-gallery-1-202609.jpeg",
+    alt: "iPhone 18 Pro",
+  },
+  "iphone-pro-max": {
+    src: "/iPhone-18/iphone-18pro-digitalmat-gallery-2-202609.jpeg",
+    alt: "iPhone 18 Pro Max",
+  },
+  "iphone-air": {
+    src: "/iPhone-Air/iphone-air-digitalmat-gallery-1-202509.jpeg",
+    alt: "iPhone Air",
+  },
+  "iphone-17": {
+    src: "/iPhone-17/iphone-17-digitalmat-gallery-5-202509.jpeg",
+    alt: "iPhone 17",
+  },
+  "iphone-17e": {
+    src: "/iPhone-17e/iphone-17e-digitalmat-gallery-5-202603.jpeg",
+    alt: "iPhone 17e",
+  },
   "iphone-16": { src: ghImages.iphone.cam2Pink, alt: "iPhone 16" },
 };
 
