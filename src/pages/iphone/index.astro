@@ -17,6 +17,7 @@ import {
   IPHONE_ALL_GENS,
   latestByFamily,
 } from "../../lib/iphone/lineup";
+import { cardImageSrc } from "../../lib/card-images";
 import { site } from "../../lib/site";
 import CategoryHero from "../../components/hero/CategoryHero.astro";
 
@@ -30,6 +31,17 @@ const hubJsonLd = {
 };
 
 const list = models;
+const latest18 = latestByFamily(18);
+const latest17 = latestByFamily(17);
+/** Preload latest lineup + first legacy row so every above-fold card paints immediately. */
+const preloadCardImgs = [
+  ...[...latest18, ...latest17].map((i) => cardImageSrc(i.id, i.image.src)),
+  ...list.slice(0, 8).map((m) => {
+    const colour = defaultColourForModel(m.id, m.defaultColour ?? undefined);
+    const img = getImage(m.id, colour, 1, m.name);
+    return cardImageSrc(m.id, img.src);
+  }),
+].filter((src, i, arr) => src && arr.indexOf(src) === i);
 const comparePayload = list.map((m) => {
   const colour = defaultColourForModel(m.id, m.defaultColour ?? undefined);
   const img = getImage(m.id, colour, 1, m.name);
@@ -55,6 +67,17 @@ const comparePayload = list.map((m) => {
   title={`iPhone Price in Kenya | 11 to 18 | ${site.name}`}
   description="Compare iPhone 11 to iPhone 18 prices in Nairobi at Gadget Hub. Starting prices from the sheet. Pay in full or Lipa Mdogo Mdogo. Norwich House."
 >
+  <Fragment slot="head">
+    {
+      preloadCardImgs.map((href, i) =>
+        i < 2 ? (
+          <link rel="preload" as="image" href={href} type="image/webp" fetchpriority="high" />
+        ) : (
+          <link rel="preload" as="image" href={href} type="image/webp" />
+        ),
+      )
+    }
+  </Fragment>
   <script type="application/ld+json" set:html={JSON.stringify(hubJsonLd)} />
   <CategoryHero category="iphone" />
 
@@ -80,7 +103,7 @@ const comparePayload = list.map((m) => {
         <h2 class="ishop__subhead">iPhone 18 lineup</h2>
         <ul class="ishop__latest-grid">
           {
-            latestByFamily(18).map((item) => (
+            latest18.map((item, i) => (
               <li data-latest-card data-family="18">
                 <ProductCard
                   id={item.id}
@@ -89,6 +112,8 @@ const comparePayload = list.map((m) => {
                   priceKes={item.priceKes}
                   badge={item.badge}
                   image={{ src: item.image.src, alt: item.image.alt }}
+                  eager
+                  priority={i < 2}
                 />
               </li>
             ))
@@ -100,7 +125,7 @@ const comparePayload = list.map((m) => {
         <h2 class="ishop__subhead">iPhone 17</h2>
         <ul class="ishop__latest-grid">
           {
-            latestByFamily(17).map((item) => (
+            latest17.map((item, i) => (
               <li data-latest-card data-family="17">
                 <ProductCard
                   id={item.id}
@@ -109,6 +134,8 @@ const comparePayload = list.map((m) => {
                   priceKes={item.priceKes}
                   badge={item.badge}
                   image={{ src: item.image.src, alt: item.image.alt }}
+                  eager
+                  priority={i === 0 && latest18.length === 0}
                 />
               </li>
             ))
@@ -150,7 +177,7 @@ const comparePayload = list.map((m) => {
               data-battery={model.batteryVideoHours}
               style={`--i: ${Math.min(i, 11)}`}
             >
-              <IphoneCard model={model} />
+              <IphoneCard model={model} eager={i < 12} />
             </li>
           ))
         }

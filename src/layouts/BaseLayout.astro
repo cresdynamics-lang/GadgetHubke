@@ -54,6 +54,7 @@ const hideFloatWhatsApp = path === "/contact";
     <meta property="og:image" content={new URL("/images/logo.png", site.url).href} />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <slot name="head" />
   </head>
   <body>
     <a class="sr-only" href="#main">Skip to content</a>

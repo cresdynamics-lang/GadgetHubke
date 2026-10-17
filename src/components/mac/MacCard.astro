@@ -14,15 +14,23 @@ import {
   macViewerTabs,
 } from "../../lib/mac";
 import { whatsappUrl } from "../../lib/site";
+import { cardImageSrc } from "../../lib/card-images";
 
 interface Props {
   model: MacModel;
   compare?: boolean;
+  eager?: boolean;
 }
 
-const { model, compare = true } = Astro.props;
+const { model, compare = true, eager = false } = Astro.props;
 const colour = defaultMacColour(model);
-const img = getMacImage(model.id, colour, "product", model.name);
+const resolved = getMacImage(model.id, colour, "product", model.name);
+const cardSrc = cardImageSrc(model.id, resolved.src);
+const img = {
+  ...resolved,
+  src: cardSrc,
+  srcWebp: cardSrc.endsWith(".webp") ? cardSrc : resolved.srcWebp,
+};
 const href = `/mac/${model.id}`;
 const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}.`);
 const viewerTabs = macViewerTabs(model, colour);
@@ -76,7 +84,15 @@ const hoverSrc =
   
 
   <a class:list={["mcard__media", { "mcard__media--swap": Boolean(hoverSrc) }]} href={href}>
-    <MacStage src={img.src} srcWebp={img.srcWebp} alt={img.alt} width={img.width} height={Math.round(img.width * 0.625)} />
+    <MacStage
+      src={img.src}
+      srcWebp={img.srcWebp}
+      alt={img.alt}
+      width={img.width}
+      height={Math.round(img.width * 0.625)}
+      eager={eager}
+      highPriority={eager}
+    />
     {
       hoverSrc ? (
         <img

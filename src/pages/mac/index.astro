@@ -18,53 +18,81 @@ import {
   macConfig,
   homeMacAccessories,
 } from "../../lib/mac";
+import { cardImageSrc } from "../../lib/card-images";
 import CategoryHero from "../../components/hero/CategoryHero.astro";
 
 const air = macModelsByFamily("Air");
 const pro = macModelsByFamily("Pro");
 const accessories = homeMacAccessories();
+const chooseAir = air.find((x) => x.id === "macbook-air-13-m4") || air[0];
+const choosePro = pro.find((x) => x.id === "macbook-pro-14-m4") || pro[0];
+const chooseAirImg = (() => {
+  const img = getMacImage(chooseAir.id, defaultMacColour(chooseAir), "product", chooseAir.name);
+  const src = cardImageSrc(chooseAir.id, img.src);
+  return { ...img, src, srcWebp: src.endsWith(".webp") ? src : img.srcWebp };
+})();
+const chooseProImg = (() => {
+  const img = getMacImage(choosePro.id, defaultMacColour(choosePro), "product", choosePro.name);
+  const src = cardImageSrc(choosePro.id, img.src);
+  return { ...img, src, srcWebp: src.endsWith(".webp") ? src : img.srcWebp };
+})();
+const preloadMacCards = [
+  chooseAirImg.src,
+  chooseProImg.src,
+  ...macModels.slice(0, 6).map((m) => {
+    const img = getMacImage(m.id, defaultMacColour(m), "product", m.name);
+    return cardImageSrc(m.id, img.src);
+  }),
+].filter((src, i, arr) => src && arr.indexOf(src) === i);
 ---
 
 <BaseLayout
   title="MacBook - GadgetHub"
   description="MacBook Air and MacBook Pro, M1 to M5. Sealed stock in Nairobi. Sample prices until admin is live."
 >
+  <Fragment slot="head">
+    {
+      preloadMacCards.map((href, i) =>
+        i < 2 ? (
+          <link rel="preload" as="image" href={href} type="image/webp" fetchpriority="high" />
+        ) : (
+          <link rel="preload" as="image" href={href} type="image/webp" />
+        ),
+      )
+    }
+  </Fragment>
   <CategoryHero category="macbook" />
 
   <section class="mac-choose container">
     <h2>Choose your MacBook</h2>
     <div class="mac-choose__grid">
       <a class="mac-choose__card" href="/mac/shop?family=Air">
-        {
-          (() => {
-            const m = air.find((x) => x.id === "macbook-air-13-m4") || air[0];
-            const img = getMacImage(m.id, defaultMacColour(m), "product", m.name);
-            return (
-              <>
-                <MacStage src={img.src} srcWebp={img.srcWebp} alt={img.alt} width={img.width} height={Math.round(img.width * 0.625)} />
-                <h3>MacBook Air</h3>
-                <p>Thin, silent, all-day battery. From students to everyday work.</p>
-                <span class="mac-choose__price">From {formatKes(lowestMacPrice("Air"))}</span>
-              </>
-            );
-          })()
-        }
+        <MacStage
+          src={chooseAirImg.src}
+          srcWebp={chooseAirImg.srcWebp}
+          alt={chooseAirImg.alt}
+          width={chooseAirImg.width}
+          height={Math.round(chooseAirImg.width * 0.625)}
+          eager
+          highPriority
+        />
+        <h3>MacBook Air</h3>
+        <p>Thin, silent, all-day battery. From students to everyday work.</p>
+        <span class="mac-choose__price">From {formatKes(lowestMacPrice("Air"))}</span>
       </a>
       <a class="mac-choose__card" href="/mac/shop?family=Pro">
-        {
-          (() => {
-            const m = pro.find((x) => x.id === "macbook-pro-14-m4") || pro[0];
-            const img = getMacImage(m.id, defaultMacColour(m), "product", m.name);
-            return (
-              <>
-                <MacStage src={img.src} srcWebp={img.srcWebp} alt={img.alt} width={img.width} height={Math.round(img.width * 0.625)} />
-                <h3>MacBook Pro</h3>
-                <p>XDR screens, active cooling, ports for real work.</p>
-                <span class="mac-choose__price">From {formatKes(lowestMacPrice("Pro"))}</span>
-              </>
-            );
-          })()
-        }
+        <MacStage
+          src={chooseProImg.src}
+          srcWebp={chooseProImg.srcWebp}
+          alt={chooseProImg.alt}
+          width={chooseProImg.width}
+          height={Math.round(chooseProImg.width * 0.625)}
+          eager
+          highPriority
+        />
+        <h3>MacBook Pro</h3>
+        <p>XDR screens, active cooling, ports for real work.</p>
+        <span class="mac-choose__price">From {formatKes(lowestMacPrice("Pro"))}</span>
       </a>
     </div>
   </section>
@@ -85,9 +113,9 @@ const accessories = homeMacAccessories();
       <a class="mac-chip mac-chip--all" href="/mac/shop">All</a>
     </div>
     <ul class="mac-grid">
-      {macModels.slice(0, 8).map((m) => (
+      {macModels.slice(0, 8).map((m, i) => (
         <li>
-          <MacCard model={m} />
+          <MacCard model={m} eager={i < 8} />
         </li>
       ))}
     </ul>

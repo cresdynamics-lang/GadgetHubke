@@ -109,9 +109,9 @@ const compareCards = Object.fromEntries(macModels.map((m) => [m.id, macCompareCa
     <p class="mac-shop__count">{list.length} models</p>
 
     <ul class="mac-shop__grid">
-      {list.map((m) => (
+      {list.map((m, i) => (
         <li>
-          <MacCard model={m} />
+          <MacCard model={m} eager={i < 12} />
         </li>
       ))}
     </ul>

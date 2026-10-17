@@ -3,6 +3,7 @@
 import { products, type Product } from "./products";
 import { ghImages } from "./images";
 import { iphoneSubcategories } from "./catalog";
+import { cardImageSrc } from "./card-images";
 
 export type IphoneListItem = {
   id: string;
@@ -19,33 +20,21 @@ export type IphoneListItem = {
   tags: ("camera" | "thin" | "value" | "fold" | "size")[];
 };
 
-/** Card art: prefer product galleries that are readable on production (Gadget_Hub_Images is 403). */
+/**
+ * Card art: tiny WebP thumbs from card-image-map (build-card-images.mjs).
+ * Full-res galleries stay on PDPs.
+ */
 const packById: Record<string, { src: string; alt: string }> = {
-  "iphone-duo": {
-    src: "/iPhone-Duo/iphone-duo-digitalmat-gallery-1-202609.jpeg",
-    alt: "iPhone Duo",
-  },
-  "iphone-pro": {
-    src: "/iPhone-18/iphone-18pro-digitalmat-gallery-1-202609.jpeg",
-    alt: "iPhone 18 Pro",
-  },
+  "iphone-duo": { src: cardImageSrc("iphone-duo", "/iPhone-Duo/iphone-duo-digitalmat-gallery-1-202609.jpeg"), alt: "iPhone Duo" },
+  "iphone-pro": { src: cardImageSrc("iphone-pro", "/iPhone-18/iphone-18pro-digitalmat-gallery-1-202609.jpeg"), alt: "iPhone 18 Pro" },
   "iphone-pro-max": {
-    src: "/iPhone-18/iphone-18pro-digitalmat-gallery-2-202609.jpeg",
+    src: cardImageSrc("iphone-pro-max", "/iPhone-18/iphone-18pro-digitalmat-gallery-2-202609.jpeg"),
     alt: "iPhone 18 Pro Max",
   },
-  "iphone-air": {
-    src: "/iPhone-Air/iphone-air-digitalmat-gallery-1-202509.jpeg",
-    alt: "iPhone Air",
-  },
-  "iphone-17": {
-    src: "/iPhone-17/iphone-17-digitalmat-gallery-5-202509.jpeg",
-    alt: "iPhone 17",
-  },
-  "iphone-17e": {
-    src: "/iPhone-17e/iphone-17e-digitalmat-gallery-5-202603.jpeg",
-    alt: "iPhone 17e",
-  },
-  "iphone-16": { src: ghImages.iphone.cam2Pink, alt: "iPhone 16" },
+  "iphone-air": { src: cardImageSrc("iphone-air", "/iPhone-Air/iphone-air-digitalmat-gallery-1-202509.jpeg"), alt: "iPhone Air" },
+  "iphone-17": { src: cardImageSrc("iphone-17", "/iPhone-17/iphone-17-digitalmat-gallery-5-202509.jpeg"), alt: "iPhone 17" },
+  "iphone-17e": { src: cardImageSrc("iphone-17e", "/iPhone-17e/iphone-17e-digitalmat-gallery-5-202603.jpeg"), alt: "iPhone 17e" },
+  "iphone-16": { src: cardImageSrc("iphone-16", ghImages.iphone.cam2Pink), alt: "iPhone 16" },
 };
 
 const tagsById: Record<string, IphoneListItem["tags"]> = {

@@ -19,6 +19,7 @@ import {
   isLightColour,
   colourLabel,
 } from "../../lib/iphone";
+import { cardImageSrc } from "../../lib/card-images";
 import { SHOW_EX_UK } from "../../lib/iphone/seo/flags";
 import { sheetRowsForProduct } from "../../lib/pricing/iphone-sheet";
 import { whatsappUrl } from "../../lib/site";
@@ -26,11 +27,15 @@ import { whatsappUrl } from "../../lib/site";
 interface Props {
   model: IphoneModel;
   compare?: boolean;
+  /** Above-the-fold cards should paint immediately. */
+  eager?: boolean;
 }
 
-const { model, compare = true } = Astro.props;
+const { model, compare = true, eager = false } = Astro.props;
 const colour = defaultColourForModel(model.id, model.defaultColour ?? undefined);
-const img = getImage(model.id, colour, 1, model.name);
+const resolved = getImage(model.id, colour, 1, model.name);
+const cardSrc = cardImageSrc(model.id, resolved.src);
+const img = { ...resolved, src: cardSrc, srcWebp: cardSrc.endsWith(".webp") ? cardSrc : resolved.srcWebp };
 const colours = availableColours(model.id);
 const overviewOnly = isOverviewOnly(model.id);
 const price = storagePrices(model.basePriceKes, model.storage, model.name)[0];
@@ -93,7 +98,15 @@ const hoverSrc =
     tag ? <span class="icard__tag">{tag}</span> : null
   }
   <a class:list={["icard__media", { "icard__media--swap": Boolean(hoverSrc) }]} href={href}>
-    <ProductStage src={img.src} srcWebp={img.srcWebp} alt={img.alt} width={img.width} height={img.width} />
+    <ProductStage
+      src={img.src}
+      srcWebp={img.srcWebp}
+      alt={img.alt}
+      width={img.width}
+      height={img.width}
+      eager={eager}
+      highPriority={eager}
+    />
     {
       hoverSrc ? (
         <img

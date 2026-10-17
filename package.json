@@ -23,7 +23,8 @@
     "tvhome:manifest": "node scripts/build-tv-home-manifest.mjs",
     "images:tvhome-webp": "node scripts/process-tv-home-webp.mjs",
     "accessories:manifest": "node scripts/build-accessories-manifest.mjs",
-    "images:accessories-webp": "node scripts/process-accessories-webp.mjs"
+    "images:accessories-webp": "node scripts/process-accessories-webp.mjs",
+    "images:cards": "npx tsx scripts/build-card-images.mjs"
   },
   "dependencies": {
     "@astrojs/node": "^11.1.7",

@@ -68,12 +68,19 @@ const genChips = ["Series 12", "Series 11", "Series 10", "Series 9", "Series 8",
     <p>Three families. One honest fit for fitness, health or adventure.</p>
     <ul class="watch-choose__grid">
       {
-        choose.map((c) => {
+        choose.map((c, i) => {
           const img = getWatchImage(c.model.id, "main", c.model.name);
           return (
             <li>
               <a class="watch-choose__card" href={c.href}>
-                <WatchStage src={img.src} srcWebp={img.srcWebp} alt={img.alt} width={760} height={570} />
+                <WatchStage
+                  src={img.src}
+                  srcWebp={img.srcWebp}
+                  alt={img.alt}
+                  width={760}
+                  height={570}
+                  priority={i < 2}
+                />
                 <h3>{c.title}</h3>
                 <p>{c.body}</p>
                 <em>From {formatKes(c.price)}</em>

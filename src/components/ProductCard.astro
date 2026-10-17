@@ -17,9 +17,25 @@ interface Props {
   blurb?: string;
   badge?: "New" | "Pre-order" | "Coming soon";
   colors?: { id: string; label: string; hex: string; imageSrc?: string }[];
+  /** Load image immediately (above-the-fold / first-screen cards). */
+  eager?: boolean;
+  /** Highest fetch priority — use for the first 1–2 LCP candidates only. */
+  priority?: boolean;
 }
 
-const { id: productId, name, href, priceKes, image, blurb, badge, colors = [] } = Astro.props;
+const {
+  id: productId,
+  name,
+  href,
+  priceKes,
+  image,
+  blurb,
+  badge,
+  colors = [],
+  eager = false,
+  priority = false,
+} = Astro.props;
+const loadEager = eager || priority;
 const liveId = productId || href.split("/").filter(Boolean).pop() || "";
 const sheetEx = SHOW_EX_UK ? sheetRowsForProduct(name)[0]?.exUkKes : undefined;
 const waBase = whatsappUrl();
@@ -50,8 +66,10 @@ const hoverSrc =
       alt={image.alt}
       width="440"
       height="400"
-      loading="lazy"
-      decoding="async"
+      sizes="(max-width: 40rem) 46vw, 220px"
+      loading={loadEager ? "eager" : "lazy"}
+      decoding={priority ? "sync" : "async"}
+      fetchpriority={priority ? "high" : "auto"}
     />
     {
       hoverSrc ? (
