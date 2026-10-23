@@ -69,6 +69,9 @@ export const GET: APIRoute = () => {
   for (const s of listSeriesHubs()) urls.add(abs(`/iphone/${s.slug}`));
   urls.add(abs("/iphone"));
   urls.add(abs("/feeds/google-merchant-iphone.xml"));
+  urls.add(abs("/feeds/google-merchant.xml"));
+  urls.add(abs("/feeds/meta-catalog.csv"));
+
 
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

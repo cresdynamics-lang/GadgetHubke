@@ -189,6 +189,7 @@ if (seo) {
     href={`/iphone/${seo.id}`}
     image={initialImg.src}
     priceKes={seo.fromKes}
+    contentIds={seo.variants.map((v) => v.sheetId)}
   />
 
   {!hasLegacyGallery ? (
@@ -847,8 +848,13 @@ if (seo) {
   function currentLine() {
     const cur = currentImage();
     const c = colourEntry();
+    const sheetId =
+      document.querySelector("[data-storage].is-active")?.getAttribute("data-sheet-id") ||
+      "";
     return {
       id: `${galleryPayload.modelId}-${state.storage}`,
+      catalogId: sheetId || undefined,
+      sheetId: sheetId || undefined,
       name: modelName,
       colour: c?.label || "Overview",
       storage: state.storage,

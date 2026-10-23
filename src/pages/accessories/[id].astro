@@ -416,8 +416,10 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
 
   function accessoryLine(el) {
     if (!(el instanceof HTMLElement)) return null;
+    const id = el.dataset.id;
     return {
-      id: el.dataset.id,
+      id,
+      catalogId: id,
       name: el.dataset.name,
       colour: el.dataset.colour,
       kes: Number(el.dataset.kes),

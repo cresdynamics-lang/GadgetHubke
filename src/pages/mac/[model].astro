@@ -538,8 +538,10 @@ const wa = whatsappUrl(
 
   function macLine() {
     if (!(bag instanceof HTMLElement)) return null;
+    const id = bag.getAttribute("data-id");
     return {
-      id: bag.getAttribute("data-id"),
+      id,
+      catalogId: id,
       name: bag.getAttribute("data-name"),
       chip: bag.getAttribute("data-chip"),
       memory: bag.getAttribute("data-memory"),

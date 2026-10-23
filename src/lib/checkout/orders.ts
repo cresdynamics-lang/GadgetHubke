@@ -98,7 +98,13 @@ export async function createOrder(input: {
 
 export async function getOrder(id: string): Promise<CheckoutOrder | null> {
   const all = await readAll();
-  return all.find((o) => o.id === id) || null;
+  const needle = id.trim();
+  if (!needle) return null;
+  return (
+    all.find((o) => o.id === needle) ||
+    all.find((o) => o.paymentRef && o.paymentRef === needle) ||
+    null
+  );
 }
 
 export async function updateOrder(

@@ -1,47 +1,115 @@
 ---
 /**
- * Single analytics loader - Plausible only, gated by cookie consent.
- * Set PUBLIC_PLAUSIBLE_DOMAIN (e.g. gadgethubke.com) to enable.
+ * Analytics + ads pixels.
+ * - Meta Pixel + Google tag: installed as provided (always on for tag verification)
+ * - Plausible: only after analytics cookie consent
+ * - Extra Google Ads / GA4 IDs from env are also configured on the same gtag
  */
-const domain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN as string | undefined;
+const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN as string | undefined;
+const metaPixelId =
+  (import.meta.env.PUBLIC_META_PIXEL_ID as string | undefined)?.trim() || "971017782717953";
+/** Google tag from Google (gtag.js) — GT-… */
+const googleTagId =
+  (import.meta.env.PUBLIC_GOOGLE_TAG_ID as string | undefined)?.trim() || "GT-TWQKGRD3";
+const googleAdsId = (import.meta.env.PUBLIC_GOOGLE_ADS_ID as string | undefined)?.trim() || "";
+const gaId = (import.meta.env.PUBLIC_GA_MEASUREMENT_ID as string | undefined)?.trim() || "";
+const extraGtagIds = [googleAdsId, gaId].filter(Boolean);
 ---
 
-{
-  domain ? (
-    <script define:vars={{ domain }}>
-      const SRC = "https://plausible.io/js/script.js";
-      let loaded = false;
+{/* Meta Pixel Code — Events Manager (ID 971017782717953) */}
+<script is:inline define:vars={{ metaPixelId }}>
+  !(function (f, b, e, v, n, t, s) {
+    if (f.fbq) return;
+    n = f.fbq = function () {
+      n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+    };
+    if (!f._fbq) f._fbq = n;
+    n.push = n;
+    n.loaded = !0;
+    n.version = "2.0";
+    n.queue = [];
+    t = b.createElement(e);
+    t.async = !0;
+    t.src = v;
+    s = b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t, s);
+  })(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
+  fbq("init", metaPixelId);
+  fbq("track", "PageView");
+</script>
+<noscript>
+  <img
+    height="1"
+    width="1"
+    style="display:none"
+    src={`https://www.facebook.com/tr?id=${metaPixelId}&ev=PageView&noscript=1`}
+    alt=""
+  />
+</noscript>
+{/* End Meta Pixel Code */}
 
-      function load() {
-        if (loaded) return;
-        if (document.querySelector(`script[data-domain="${domain}"]`)) {
-          loaded = true;
-          return;
-        }
-        const s = document.createElement("script");
-        s.defer = true;
-        s.dataset.domain = domain;
-        s.src = SRC;
-        document.head.appendChild(s);
-        loaded = true;
-      }
+{/* Google tag (gtag.js) — GT-TWQKGRD3 */}
+<script is:inline define:vars={{ googleTagId, extraGtagIds }}>
+  (function () {
+    var s = document.createElement("script");
+    s.async = true;
+    s.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(googleTagId);
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    window.gtag = gtag;
+    gtag("js", new Date());
+    gtag("config", googleTagId);
+    for (var i = 0; i < extraGtagIds.length; i++) {
+      gtag("config", extraGtagIds[i]);
+    }
+  })();
+</script>
+{/* End Google tag */}
 
-      function maybeLoad() {
-        try {
-          const raw = localStorage.getItem("gh-cookie-consent");
-          if (!raw) return;
-          const consent = JSON.parse(raw);
-          if (consent?.analytics === true) load();
-        } catch {
-          /* ignore */
-        }
-      }
 
-      maybeLoad();
-      window.addEventListener("gh:consent", (event) => {
-        const detail = /** @type {CustomEvent} */ (event).detail;
-        if (detail?.analytics) load();
-      });
-    </script>
-  ) : null
-}
+<script
+  define:vars={{
+    plausibleDomain: plausibleDomain || "",
+  }}
+>
+  const CONSENT_KEY = "gh-cookie-consent";
+
+  function readConsent() {
+    try {
+      const raw = localStorage.getItem(CONSENT_KEY);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  }
+
+  let plausibleLoaded = false;
+
+  function loadPlausible() {
+    if (!plausibleDomain || plausibleLoaded) return;
+    if (document.querySelector(`script[data-domain="${plausibleDomain}"]`)) {
+      plausibleLoaded = true;
+      return;
+    }
+    const s = document.createElement("script");
+    s.defer = true;
+    s.dataset.domain = plausibleDomain;
+    s.src = "https://plausible.io/js/script.js";
+    document.head.appendChild(s);
+    plausibleLoaded = true;
+  }
+
+  function applyConsent(consent) {
+    if (!consent) return;
+    if (consent.analytics) loadPlausible();
+  }
+
+  applyConsent(readConsent());
+  window.addEventListener("gh:consent", (event) => {
+    applyConsent(/** @type {CustomEvent} */ (event).detail);
+  });
+</script>

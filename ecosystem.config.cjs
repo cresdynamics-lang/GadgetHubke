@@ -1,4 +1,30 @@
-/** PM2 process file for Contabo (/var/www/sites/gadgethubke.com) */
+/** PM2 process file for the VPS (/var/www/sites/gadgethubke.com) */
+const fs = require("node:fs");
+const path = require("node:path");
+
+function loadDotEnv(file) {
+  if (!fs.existsSync(file)) return {};
+  const out = {};
+  for (const line of fs.readFileSync(file, "utf8").split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+    const eq = trimmed.indexOf("=");
+    if (eq < 1) continue;
+    const key = trimmed.slice(0, eq).trim();
+    let value = trimmed.slice(eq + 1).trim();
+    if (
+      (value.startsWith('"') && value.endsWith('"')) ||
+      (value.startsWith("'") && value.endsWith("'"))
+    ) {
+      value = value.slice(1, -1);
+    }
+    out[key] = value;
+  }
+  return out;
+}
+
+const fileEnv = loadDotEnv(path.join(__dirname, ".env"));
+
 module.exports = {
   apps: [
     {
@@ -13,7 +39,16 @@ module.exports = {
         HOST: "127.0.0.1",
         PORT: "3030",
         REVIEWS_LOCAL_FILE: "1",
-        PAYMENTS_MODE: "mock",
+        PAYMENTS_MODE: fileEnv.PAYMENTS_MODE || "sandbox",
+        STANBIC_API_BASE:
+          fileEnv.STANBIC_API_BASE ||
+          "https://api.connect.stanbicbank.co.ke/api/sandbox",
+        STANBIC_TOKEN_URL: fileEnv.STANBIC_TOKEN_URL || "",
+        STANBIC_STK_PATH: fileEnv.STANBIC_STK_PATH || "",
+        STANBIC_BILL_ACCOUNT_REF: fileEnv.STANBIC_BILL_ACCOUNT_REF || "0100013199528",
+        STANBIC_CLIENT_ID: fileEnv.STANBIC_CLIENT_ID || "",
+        STANBIC_CLIENT_SECRET: fileEnv.STANBIC_CLIENT_SECRET || "",
+        STANBIC_WEBHOOK_SECRET: fileEnv.STANBIC_WEBHOOK_SECRET || "",
       },
     },
   ],

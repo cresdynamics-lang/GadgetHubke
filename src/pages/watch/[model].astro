@@ -574,8 +574,10 @@ const scaleVbH = scaleMidY + Math.max(scaleWatchR, scaleCoinR) + 18;
 
   function watchLine() {
     if (!(bag instanceof HTMLElement)) return null;
+    const id = bag.getAttribute("data-id");
     return {
-      id: bag.getAttribute("data-id"),
+      id,
+      catalogId: id,
       name: bag.getAttribute("data-name"),
       size: bag.getAttribute("data-size"),
       material: bag.getAttribute("data-material"),

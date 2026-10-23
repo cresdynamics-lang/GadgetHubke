@@ -7,7 +7,7 @@ const waNumber = site.whatsapp;
 
 <BaseLayout
   title="Checkout - GadgetHub"
-  description={`Complete your order. M-Pesa or card. ${site.address}.`}
+  description={`Complete your order with M-Pesa. ${site.address}.`}
   hideFooter
 >
   <section class="checkout container" data-checkout data-wa={waNumber}>
@@ -16,7 +16,7 @@ const waNumber = site.whatsapp;
       <p class="checkout__eyebrow">Checkout</p>
       <h1 data-checkout-title>Review cart</h1>
       <p class="checkout__lede" data-checkout-lede>
-        Confirm your items, then pay with M-Pesa or card.
+        Confirm your items, then pay with M-Pesa.
       </p>
     </header>
 
@@ -89,14 +89,8 @@ const waNumber = site.whatsapp;
               <em>We prompt, you enter PIN</em>
             </span>
           </label>
-          <label class="checkout__method">
-            <input type="radio" name="method" value="card" />
-            <span>
-              <strong>Card</strong>
-              <em>Visa / Mastercard</em>
-            </span>
-          </label>
         </div>
+        <p class="checkout__hint">Card is not available yet. Pay with M-Pesa STK Push into Gadget Hub’s Stanbic account.</p>
 
         <div data-pay-mpesa>
           <label class="checkout__field">
@@ -107,13 +101,6 @@ const waNumber = site.whatsapp;
             Pay with M-Pesa
           </button>
           <p class="checkout__wait" data-mpesa-wait hidden>Check your phone for the M-Pesa prompt…</p>
-        </div>
-
-        <div data-pay-card hidden>
-          <p class="checkout__hint">You’ll complete payment on a secure page. We never store card numbers.</p>
-          <button type="button" class="btn btn--primary checkout__pay-btn" data-pay-card-btn>
-            Pay with card
-          </button>
         </div>
 
         <p class="checkout__error" data-pay-error hidden></p>
@@ -185,9 +172,9 @@ const waNumber = site.whatsapp;
     pay: "Pay securely",
   };
   const ledes = {
-    review: "Confirm your items, then pay with M-Pesa or card.",
+    review: "Confirm your items, then pay with M-Pesa.",
     details: "We'll use these for pickup, delivery updates, and your receipt.",
-    pay: "Pay with M-Pesa STK Push or card.",
+    pay: "Pay with M-Pesa STK Push. Funds settle to Gadget Hub’s Stanbic account.",
   };
 
   let currentPanel = "review";
@@ -294,7 +281,24 @@ const waNumber = site.whatsapp;
       const mpesa = root.querySelector("[data-mpesa-phone]");
       if (mpesa instanceof HTMLInputElement) mpesa.value = customer.phone;
       localStorage.setItem(RECENT_ORDER_KEY, orderId);
+      if (typeof window.fbq === "function") {
+        const contentIds = items
+          .map((i) => String(i.catalogId || i.sheetId || i.id || "").trim())
+          .filter(Boolean);
+        window.fbq("track", "InitiateCheckout", {
+          content_ids: contentIds,
+          content_type: "product",
+          value: items.reduce((n, i) => n + (Number(i.kes) || 0) * (Number(i.qty) || 1), 0),
+          currency: "KES",
+          num_items: items.reduce((n, i) => n + (Number(i.qty) || 1), 0),
+          contents: items.map((i) => ({
+            id: String(i.catalogId || i.sheetId || i.id || ""),
+            quantity: Number(i.qty) || 1,
+          })),
+        });
+      }
       openOrderWhatsApp();
+
     } catch (ex) {
       if (err) {
         err.textContent = ex instanceof Error ? ex.message : "Could not continue.";
@@ -304,18 +308,11 @@ const waNumber = site.whatsapp;
   });
 
   function syncMethodUi() {
-    const method = root.querySelector('input[name="method"]:checked')?.value || "mpesa";
     root.querySelectorAll(".checkout__method").forEach((el) => {
-      const input = el.querySelector('input[name="method"]');
-      el.classList.toggle("is-active", input instanceof HTMLInputElement && input.checked);
+      el.classList.add("is-active");
     });
-    root.querySelector("[data-pay-mpesa]")?.toggleAttribute("hidden", method !== "mpesa");
-    root.querySelector("[data-pay-card]")?.toggleAttribute("hidden", method !== "card");
+    root.querySelector("[data-pay-mpesa]")?.removeAttribute("hidden");
   }
-
-  root.querySelectorAll('input[name="method"]').forEach((el) => {
-    el.addEventListener("change", syncMethodUi);
-  });
 
   let pollTimer = null;
   function stopPoll() {
@@ -337,7 +334,8 @@ const waNumber = site.whatsapp;
           stopPoll();
           if (!expressMode) writeBagToStorage([]);
           clearExpressItems();
-          location.href = `/checkout/success?order=${encodeURIComponent(orderId)}`;
+          location.href = `/checkout/success?order=${encodeURIComponent(orderId)}&paid=1`;
+
         } else if (data.status === "failed") {
           stopPoll();
           if (wait) wait.hidden = true;
@@ -381,36 +379,6 @@ const waNumber = site.whatsapp;
     } catch (ex) {
       if (err) {
         err.textContent = ex instanceof Error ? ex.message : "STK failed.";
-        err.hidden = false;
-      }
-    }
-  });
-
-  root.querySelector("[data-pay-card-btn]")?.addEventListener("click", async () => {
-    const err = root.querySelector("[data-pay-error]");
-    if (err) err.hidden = true;
-    if (!orderId) {
-      if (err) {
-        err.textContent = "Create the order from details first.";
-        err.hidden = false;
-      }
-      return;
-    }
-    try {
-      const res = await fetch("/api/checkout/card/session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderId }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Card session failed.");
-      if (!expressMode) writeBagToStorage([]);
-      clearExpressItems();
-      const url = data.card?.redirectUrl || `/checkout/success?order=${encodeURIComponent(orderId)}`;
-      location.href = url;
-    } catch (ex) {
-      if (err) {
-        err.textContent = ex instanceof Error ? ex.message : "Card payment failed.";
         err.hidden = false;
       }
     }

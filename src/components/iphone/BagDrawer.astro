@@ -48,8 +48,11 @@ const waPhone = iphoneConfig.whatsapp;
     const qty = Math.max(1, Number(raw.qty) || 1);
     const id = String(raw.id || raw.productId || "");
     if (!id && !raw.name) return null;
+    const catalogId = String(raw.catalogId || raw.sheetId || "").trim();
     return {
       id: id || String(raw.name),
+      catalogId: catalogId || undefined,
+      sheetId: catalogId || undefined,
       name: String(raw.name || "Item"),
       colour: raw.colour || raw.color || "",
       storage: raw.storage || "",
@@ -73,6 +76,26 @@ const waPhone = iphoneConfig.whatsapp;
       qty,
     };
   }
+
+  /** Meta catalogue id — must match feed `id` (IP-074, macbook-air-13-m2, …). */
+  function metaCatalogId(item) {
+    return String(item.catalogId || item.sheetId || item.id || "").trim();
+  }
+
+  function trackMetaAddToCart(item) {
+    if (typeof window.fbq !== "function") return;
+    const contentId = metaCatalogId(item);
+    if (!contentId) return;
+    window.fbq("track", "AddToCart", {
+      content_ids: [contentId],
+      content_name: item.name,
+      content_type: "product",
+      value: Number(item.kes) || 0,
+      currency: "KES",
+      contents: [{ id: contentId, quantity: item.qty || 1 }],
+    });
+  }
+
 
   function lineKey(item) {
     return [
@@ -266,6 +289,7 @@ const waPhone = iphoneConfig.whatsapp;
     if (existing) existing.qty = (existing.qty || 1) + 1;
     else items.push(incoming);
     write(items);
+    trackMetaAddToCart(incoming);
     showToast("Added — opening checkout");
     location.href = "/checkout";
   });

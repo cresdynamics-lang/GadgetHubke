@@ -2,6 +2,9 @@
 
 export type BagItem = {
   id: string;
+  /** Meta / Google catalogue retailer id (must match feed `id`) */
+  catalogId?: string;
+  sheetId?: string;
   name: string;
   colour?: string;
   storage?: string;

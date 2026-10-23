@@ -409,8 +409,10 @@ const showPair = model.stereoPairCapable;
 
   function tvLine() {
     if (!(bag instanceof HTMLElement)) return null;
+    const id = bag.getAttribute("data-id");
     return {
-      id: bag.getAttribute("data-id"),
+      id,
+      catalogId: id,
       name: bag.getAttribute("data-name"),
       colour: bag.getAttribute("data-colour"),
       storage: bag.getAttribute("data-storage"),

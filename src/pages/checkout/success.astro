@@ -1,6 +1,13 @@
 ---
+/**
+ * Successful payment page — only after order status is `paid`.
+ * Google Tag purchase URL: https://gadgethubke.com/checkout/success
+ * Customers are sent here only after M-Pesa payment succeeds; this page
+ * also re-checks the order and redirects away if payment is not confirmed.
+ */
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { site, whatsappUrl } from "../../lib/site";
+import { whatsappUrl } from "../../lib/site";
+
 
 const orderId = Astro.url.searchParams.get("order") || "";
 const wa = whatsappUrl(
@@ -11,21 +18,36 @@ const wa = whatsappUrl(
 ---
 
 <BaseLayout
-  title="Order confirmed - GadgetHub"
-  description="Payment received. We’ll confirm your order shortly."
+  title="Payment successful - GadgetHub"
+  description="Your payment was received. We’ll confirm your order shortly."
 >
-  <section class="ok container" data-success data-order-id={orderId}>
-    <p class="ok__eyebrow">Thank you</p>
-    <h1>Payment received</h1>
+  <section
+    class="ok container"
+    data-success
+    data-order-id={orderId}
+    data-paid="0"
+    hidden
+  >
+    <p class="ok__eyebrow">Payment successful</p>
+    <h1>Thank you — payment received</h1>
     <p class="ok__lede">
-      We’ll follow up on WhatsApp or email for pickup / delivery.
+      Your order is confirmed. We’ll follow up on WhatsApp or email for pickup / delivery.
     </p>
-    <p class="ok__meta" data-success-meta>Loading order…</p>
+    <p class="ok__meta" data-success-meta></p>
     <div class="ok__actions">
       <a class="btn btn--whatsapp" href={wa} target="_blank" rel="noopener noreferrer">WhatsApp help</a>
       <a class="btn btn--secondary" href="/account">Account</a>
-      <a class="btn btn--secondary" href="/accessories">Shop accessories</a>
+      <a class="btn btn--secondary" href="/accessories">Continue shopping</a>
     </div>
+  </section>
+
+  <section class="ok container" data-success-wait>
+    <p class="ok__eyebrow">Checkout</p>
+    <h1>Confirming your payment…</h1>
+    <p class="ok__lede">
+      Please wait a moment while we verify the payment with the bank.
+    </p>
+    <p class="ok__meta" data-wait-meta>Checking order…</p>
   </section>
 </BaseLayout>
 
@@ -34,48 +56,141 @@ const wa = whatsappUrl(
   import { RECENT_ORDER_KEY } from "../../lib/checkout/types";
 
   const root = document.querySelector("[data-success]");
+  const wait = document.querySelector("[data-success-wait]");
   const meta = document.querySelector("[data-success-meta]");
+  const waitMeta = document.querySelector("[data-wait-meta]");
+
+  const params = new URLSearchParams(location.search);
   const orderId =
     root?.getAttribute("data-order-id") ||
-    new URLSearchParams(location.search).get("order") ||
+    params.get("order") ||
     localStorage.getItem(RECENT_ORDER_KEY) ||
     "";
 
-  async function load() {
+  function goCancel(reason) {
+    const q = new URLSearchParams();
+    if (orderId) q.set("order", orderId);
+    if (reason) q.set("reason", reason);
+    location.replace(`/checkout/cancel?${q.toString()}`);
+  }
+
+  function showPaid(order) {
+    if (wait) wait.hidden = true;
+    if (root instanceof HTMLElement) {
+      root.hidden = false;
+      root.dataset.paid = "1";
+    }
+    // Canonical success URL for ads tags (paid confirmed)
+    const next = new URL(location.href);
+    next.searchParams.set("order", order.id);
+    next.searchParams.set("paid", "1");
+    history.replaceState({}, "", next.pathname + next.search);
+
+    if (meta) {
+      meta.textContent = [
+        `Order ${order.id}`,
+        "Paid",
+        formatKes(order.subtotalKes),
+        order.paymentMethod === "card" ? "Card" : order.paymentMethod === "mpesa" ? "M-Pesa" : "",
+        order.customer?.fulfillment === "delivery" ? "Delivery" : "Pickup",
+        order.mock ? "Sandbox" : "",
+      ]
+        .filter(Boolean)
+        .join(" · ");
+    }
+    trackPurchase(order);
+  }
+
+  function trackPurchase(order) {
+    if (!order || order.status !== "paid") return;
+    const key = `gh-purchase-${order.id}`;
+    if (sessionStorage.getItem(key)) return;
+    const items = Array.isArray(order.items) ? order.items : [];
+    const value = Number(order.subtotalKes) || 0;
+    const contentIds = items
+      .map((i) => String(i.catalogId || i.sheetId || i.id || "").trim())
+      .filter(Boolean);
+
+    if (typeof window.fbq === "function" && contentIds.length) {
+      window.fbq("track", "Purchase", {
+        content_ids: contentIds,
+        content_type: "product",
+        value,
+        currency: "KES",
+        contents: items.map((i) => ({
+          id: String(i.catalogId || i.sheetId || i.id || ""),
+          quantity: Number(i.qty) || 1,
+          item_price: Number(i.kes) || 0,
+        })),
+        num_items: items.reduce((n, i) => n + (Number(i.qty) || 1), 0),
+      });
+    }
+
+    if (typeof window.gtag === "function") {
+      window.gtag("event", "purchase", {
+        transaction_id: String(order.id),
+        value,
+        currency: "KES",
+        items: items.map((i) => ({
+          item_id: String(i.catalogId || i.sheetId || i.id || ""),
+          item_name: String(i.name || ""),
+          price: Number(i.kes) || 0,
+          quantity: Number(i.qty) || 1,
+        })),
+      });
+    }
+
+    sessionStorage.setItem(key, "1");
+  }
+
+  async function fetchOrder() {
+    const res = await fetch(`/api/checkout/order?id=${encodeURIComponent(orderId)}`);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Order not found");
+    return data.order;
+  }
+
+  async function confirmPaid() {
     if (!orderId) {
-      if (meta) meta.textContent = "No order id found. Check your email or WhatsApp us.";
+      goCancel("missing_order");
       return;
     }
     localStorage.setItem(RECENT_ORDER_KEY, orderId);
-    try {
-      const res = await fetch(`/api/checkout/order?id=${encodeURIComponent(orderId)}`);
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Order not found");
-      const o = data.order;
-      if (meta) {
-        meta.textContent = [
-          `Order ${o.id}`,
-          o.status === "paid" ? "Paid" : o.status,
-          formatKes(o.subtotalKes),
-          o.paymentMethod === "card" ? "Card" : o.paymentMethod === "mpesa" ? "M-Pesa" : "",
-          o.customer?.fulfillment === "delivery" ? "Delivery" : "Pickup",
-          o.mock ? "Sandbox" : "",
-        ]
-          .filter(Boolean)
-          .join(" · ");
+
+    const maxAttempts = 40; // ~60s at 1.5s
+    for (let i = 0; i < maxAttempts; i++) {
+      try {
+        const order = await fetchOrder();
+        if (order.status === "paid") {
+          showPaid(order);
+          return;
+        }
+        if (order.status === "failed" || order.status === "cancelled") {
+          goCancel(order.status);
+          return;
+        }
+        if (waitMeta) {
+          waitMeta.textContent = `Waiting for payment confirmation… (${order.status || "pending"})`;
+        }
+      } catch {
+        if (waitMeta) waitMeta.textContent = "Looking up your order…";
       }
-    } catch {
-      if (meta) meta.textContent = `Order ${orderId} - we'll confirm shortly.`;
+      await new Promise((r) => setTimeout(r, 1500));
     }
+    goCancel("timeout");
   }
 
-  load();
+  confirmPaid();
 </script>
 
 <style>
   .ok {
     padding-block: var(--space-10) calc(var(--space-12) + var(--fab-clearance));
     max-width: 32rem;
+  }
+
+  .ok[hidden] {
+    display: none !important;
   }
 
   .ok__eyebrow {

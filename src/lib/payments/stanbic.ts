@@ -1,24 +1,55 @@
 /**
  * Stanbic Bank Kenya payment adapter.
- * - Live: OAuth + STK Push / card session when credentials exist
- * - Sandbox/mock: deterministic success path for UX demos
+ * Sandbox product: STK Push – M-Pesa Checkout only.
+ * Card is not available (Stanbic email, Oct 2026).
  *
  * Portal: https://sandbox.stanbicbank.co.ke/
+ * API:    https://api.connect.stanbicbank.co.ke/api/sandbox/
+ *
+ * Bank whitelist:
+ * - Website: https://gadgethubke.com
+ * - Server IP: 143.198.169.74
+ * - Callback: https://gadgethubke.com/api/checkout/webhook
  */
+
+import { site } from "../site";
+
+export const STANBIC_WEBHOOK_URL = `${site.url}/api/checkout/webhook`;
+
+/** Gadget Hub Investments — Stanbic current account (bill / credit account). */
+export const STANBIC_ACCOUNT_NUMBER = "0100013199528";
+
+const SANDBOX_API = "https://api.connect.stanbicbank.co.ke/api/sandbox";
 
 export type StanbicMode = "live" | "sandbox" | "mock";
 
 export function paymentsMode(): StanbicMode {
   const forced = (process.env.PAYMENTS_MODE || "").toLowerCase();
   if (forced === "live" || forced === "sandbox" || forced === "mock") return forced;
-  if (
-    process.env.STANBIC_CLIENT_ID &&
-    process.env.STANBIC_CLIENT_SECRET &&
-    process.env.STANBIC_BILL_ACCOUNT_REF
-  ) {
+  if (process.env.STANBIC_CLIENT_ID && process.env.STANBIC_CLIENT_SECRET) {
     return "sandbox";
   }
   return "mock";
+}
+
+export function cardPaymentsEnabled(): boolean {
+  return false;
+}
+
+function apiBase(): string {
+  return (process.env.STANBIC_API_BASE || SANDBOX_API).replace(/\/$/, "");
+}
+
+function tokenUrl(): string {
+  return process.env.STANBIC_TOKEN_URL || `${apiBase()}/auth/oauth2/token`;
+}
+
+function stkUrl(): string {
+  return process.env.STANBIC_STK_PATH || `${apiBase()}/mpesa-checkout`;
+}
+
+function billAccountRef(): string {
+  return process.env.STANBIC_BILL_ACCOUNT_REF || STANBIC_ACCOUNT_NUMBER;
 }
 
 export function toMsisdn(phone: string): string {
@@ -29,6 +60,16 @@ export function toMsisdn(phone: string): string {
   return digits;
 }
 
+/** Stanbic dbsReferenceId: 13 chars, A–Z / 2–9 (no 0, 1, I, O). */
+function dbsReferenceId(): string {
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let out = "";
+  for (let i = 0; i < 13; i++) {
+    out += alphabet[Math.floor(Math.random() * alphabet.length)];
+  }
+  return out;
+}
+
 type TokenCache = { token: string; expiresAt: number };
 let tokenCache: TokenCache | null = null;
 
@@ -36,27 +77,46 @@ async function getAccessToken(): Promise<string> {
   if (tokenCache && tokenCache.expiresAt > Date.now() + 30_000) {
     return tokenCache.token;
   }
-  const base = process.env.STANBIC_API_BASE || "https://sandbox.stanbicbank.co.ke";
-  const id = process.env.STANBIC_CLIENT_ID!;
-  const secret = process.env.STANBIC_CLIENT_SECRET!;
-  const res = await fetch(`${base.replace(/\/$/, "")}/oauth2/token`, {
+  const id = process.env.STANBIC_CLIENT_ID;
+  const secret = process.env.STANBIC_CLIENT_SECRET;
+  if (!id || !secret) {
+    throw new Error("Stanbic sandbox credentials are not configured.");
+  }
+
+  const body = new URLSearchParams({
+    grant_type: "client_credentials",
+    client_id: id,
+    client_secret: secret,
+    scope: "payments",
+  });
+
+  const res = await fetch(tokenUrl(), {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
-      Authorization: `Basic ${Buffer.from(`${id}:${secret}`).toString("base64")}`,
+      Accept: "application/json",
     },
-    body: "grant_type=client_credentials",
+    body,
   });
-  if (!res.ok) {
-    throw new Error(`Stanbic auth failed (${res.status})`);
+
+  const data = (await res.json().catch(() => ({}))) as {
+    access_token?: string;
+    expires_in?: number;
+    error?: string;
+    error_description?: string;
+    description?: string;
+  };
+
+  if (!res.ok || !data.access_token || data.access_token === "None") {
+    const detail = data.error_description || data.description || data.error || `HTTP ${res.status}`;
+    throw new Error(`Stanbic auth failed (${detail})`);
   }
-  const data = (await res.json()) as { access_token?: string; expires_in?: number };
-  if (!data.access_token) throw new Error("Stanbic auth missing access_token");
+
   tokenCache = {
     token: data.access_token,
     expiresAt: Date.now() + (Number(data.expires_in) || 3600) * 1000,
   };
-  return data.access_token;
+  return tokenCache.token;
 }
 
 export type StkResult = {
@@ -88,52 +148,52 @@ export async function initiateStkPush(input: {
     };
   }
 
-  const base = process.env.STANBIC_API_BASE || "https://sandbox.stanbicbank.co.ke";
-  const billAccountRef = process.env.STANBIC_BILL_ACCOUNT_REF!;
   const token = await getAccessToken();
+  const reference = dbsReferenceId();
+  const payload = {
+    dbsReferenceId: reference,
+    billAccountRef: billAccountRef(),
+    amount: String(Math.round(input.amountKes)),
+    mobileNumber: msisdn,
+    callBackUrl: STANBIC_WEBHOOK_URL,
+    callbackUrl: STANBIC_WEBHOOK_URL,
+    externalReference: input.orderId,
+  };
 
-  // Path may vary by Stanbic product subscription — confirm exact route after onboarding.
-  const url =
-    process.env.STANBIC_STK_PATH ||
-    `${base.replace(/\/$/, "")}/api/v1/payments/stk-push`;
-
-  const res = await fetch(url, {
+  const res = await fetch(stkUrl(), {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
       Accept: "application/json",
     },
-    body: JSON.stringify({
-      billAccountRef,
-      amount: String(Math.round(input.amountKes)),
-      mobileNumber: msisdn,
-      externalReference: input.orderId,
-    }),
+    body: JSON.stringify(payload),
   });
 
   const raw = await res.json().catch(() => ({}));
   if (!res.ok) {
-    throw new Error(
+    const message =
       typeof (raw as { message?: string }).message === "string"
         ? (raw as { message: string }).message
-        : `Stanbic STK failed (${res.status})`,
-    );
+        : typeof (raw as { description?: string }).description === "string"
+          ? (raw as { description: string }).description
+          : `Stanbic STK failed (${res.status})`;
+    throw new Error(message);
   }
 
-  const reference =
-    String(
-      (raw as { transactionId?: string; reference?: string; ConversationID?: string })
-        .transactionId ||
-        (raw as { reference?: string }).reference ||
-        (raw as { ConversationID?: string }).ConversationID ||
-        `STK-${input.orderId}`,
-    );
+  const bankRef = String(
+    (raw as { transactionId?: string; reference?: string; ConversationID?: string; dbsReferenceId?: string })
+      .transactionId ||
+      (raw as { reference?: string }).reference ||
+      (raw as { ConversationID?: string }).ConversationID ||
+      (raw as { dbsReferenceId?: string }).dbsReferenceId ||
+      reference,
+  );
 
   return {
     ok: true,
     mock: false,
-    reference,
+    reference: bankRef,
     message: "STK push sent. Enter your M-Pesa PIN on your phone.",
     raw,
   };
@@ -147,7 +207,7 @@ export type CardSessionResult = {
   message: string;
 };
 
-export async function initiateCardSession(input: {
+export async function initiateCardSession(_input: {
   orderId: string;
   amountKes: number;
   customerEmail: string;
@@ -155,76 +215,9 @@ export async function initiateCardSession(input: {
   returnUrl: string;
   cancelUrl: string;
 }): Promise<CardSessionResult> {
-  const mode = paymentsMode();
-  if (input.amountKes < 1) throw new Error("Invalid amount.");
-
-  if (mode === "mock") {
-    const reference = `MOCK-CARD-${input.orderId}`;
-    const redirectUrl = `${input.returnUrl}${input.returnUrl.includes("?") ? "&" : "?"}order=${encodeURIComponent(input.orderId)}&ref=${encodeURIComponent(reference)}&mock=1`;
-    return {
-      ok: true,
-      mock: true,
-      reference,
-      redirectUrl,
-      message: "Sandbox mock card session — confirming without a bank redirect.",
-    };
-  }
-
-  const base = process.env.STANBIC_API_BASE || "https://sandbox.stanbicbank.co.ke";
-  const token = await getAccessToken();
-  const url =
-    process.env.STANBIC_CARD_PATH ||
-    `${base.replace(/\/$/, "")}/api/v1/payments/card-session`;
-
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify({
-      amount: String(Math.round(input.amountKes)),
-      currency: "KES",
-      externalReference: input.orderId,
-      customerEmail: input.customerEmail,
-      customerName: input.customerName,
-      returnUrl: input.returnUrl,
-      cancelUrl: input.cancelUrl,
-      billAccountRef: process.env.STANBIC_BILL_ACCOUNT_REF,
-    }),
-  });
-
-  const raw = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    throw new Error(
-      typeof (raw as { message?: string }).message === "string"
-        ? (raw as { message: string }).message
-        : `Stanbic card session failed (${res.status})`,
-    );
-  }
-
-  const redirectUrl = String(
-    (raw as { redirectUrl?: string; paymentUrl?: string }).redirectUrl ||
-      (raw as { paymentUrl?: string }).paymentUrl ||
-      "",
+  throw new Error(
+    "Card payments are not available. Stanbic is not supporting card integrations at this time. Please pay with M-Pesa.",
   );
-  if (!redirectUrl) throw new Error("Stanbic card session missing redirect URL.");
-
-  const reference = String(
-    (raw as { reference?: string; sessionId?: string }).reference ||
-      (raw as { sessionId?: string }).sessionId ||
-      `CARD-${input.orderId}`,
-  );
-
-  return {
-    ok: true,
-    mock: false,
-    reference,
-    redirectUrl,
-    message: "Redirecting to Stanbic secure card payment.",
-    ...{},
-  };
 }
 
 /** Mock STK becomes paid ~4s after initiate (tracked by paymentRef timestamp in order). */

@@ -16,8 +16,11 @@ export function normalizeBagItem(raw: Record<string, unknown>): BagItem | null {
   const id = String(raw.id || raw.productId || "");
   const name = String(raw.name || "");
   if (!id && !name) return null;
+  const catalogId = String(raw.catalogId || raw.sheetId || "").trim();
   return {
     id: id || name,
+    catalogId: catalogId || undefined,
+    sheetId: catalogId || undefined,
     name: name || "Item",
     colour: String(raw.colour || raw.color || ""),
     storage: String(raw.storage || ""),

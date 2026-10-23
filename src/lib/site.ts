@@ -10,9 +10,9 @@ export const site = {
   phoneE164: "+254729585471",
   phoneRaw: "0729585471",
   whatsapp: "254729585471",
-  email: "hello@gadgethubke.com",
+  email: "info@gadgethubke.com",
   /** Data Protection / privacy requests */
-  privacyEmail: "hello@gadgethubke.com",
+  privacyEmail: "info@gadgethubke.com",
   location: "Nairobi, Kenya",
   /** Short line for footer / compact UI */
   address: "Norwich House, Suite 15, 4th Floor",

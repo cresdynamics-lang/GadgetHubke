@@ -1,6 +1,7 @@
 ---
 /**
- * Marks the current page as a product view for RecentlyViewed (localStorage).
+ * RecentlyViewed marker + Meta ViewContent / Google view_item.
+ * contentIds must match Meta catalogue `id` values (e.g. IP-074), not page slugs.
  */
 interface Props {
   id: string;
@@ -8,17 +9,75 @@ interface Props {
   href: string;
   image?: string;
   priceKes?: number;
+  /** Meta catalogue retailer ids — required for catalogue match rate */
+  contentIds?: string[];
 }
 
-const { id, name, href, image = "", priceKes = 0 } = Astro.props;
+const { id, name, href, image = "", priceKes = 0, contentIds } = Astro.props;
+const metaIds = (contentIds?.length ? contentIds : [id]).filter(Boolean);
 ---
 
 <span
   hidden
   data-rv-track
+  data-ads-view
   data-id={id}
   data-name={name}
   data-href={href}
   data-image={image}
   data-price={String(priceKes)}
+  data-content-ids={JSON.stringify(metaIds)}
 ></span>
+
+<script>
+  let firedMeta = false;
+  let firedGoogle = false;
+
+  function fireViewContent() {
+    const el = document.querySelector("[data-ads-view]");
+    if (!el) return;
+    const contentName = el.getAttribute("data-name") || "";
+    const value = Number(el.getAttribute("data-price") || "0") || 0;
+    let contentIds = [];
+    try {
+      contentIds = JSON.parse(el.getAttribute("data-content-ids") || "[]");
+    } catch {
+      contentIds = [];
+    }
+    if (!Array.isArray(contentIds) || !contentIds.length) {
+      const fallback = el.getAttribute("data-id");
+      if (fallback) contentIds = [fallback];
+    }
+    if (!contentIds.length) return;
+
+    if (!firedMeta && typeof window.fbq === "function") {
+      window.fbq("track", "ViewContent", {
+        content_ids: contentIds,
+        content_name: contentName,
+        content_type: "product",
+        value,
+        currency: "KES",
+      });
+      firedMeta = true;
+    }
+
+    if (!firedGoogle && typeof window.gtag === "function") {
+      window.gtag("event", "view_item", {
+        currency: "KES",
+        value,
+        items: contentIds.map((item_id) => ({
+          item_id,
+          item_name: contentName,
+          price: value,
+          quantity: 1,
+        })),
+      });
+      firedGoogle = true;
+    }
+  }
+
+  fireViewContent();
+  window.addEventListener("gh:consent", () => setTimeout(fireViewContent, 50));
+  setTimeout(fireViewContent, 400);
+  setTimeout(fireViewContent, 1200);
+</script>

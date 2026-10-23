@@ -30,6 +30,27 @@ export type JournalPost = {
 
 const REDIS_KEY = "gh:journal:v1";
 
+/** Safe in-article links: `[label](/relative-path)`. */
+export type JournalInline =
+  | { type: "text"; value: string }
+  | { type: "link"; href: string; label: string };
+
+export function parseJournalParagraph(text: string): JournalInline[] {
+  const parts: JournalInline[] = [];
+  const re = /\[([^\]]+)\]\((\/[a-zA-Z0-9/?#._\-]*)\)/g;
+  let last = 0;
+  let match: RegExpExecArray | null;
+  while ((match = re.exec(text))) {
+    if (match.index > last) {
+      parts.push({ type: "text", value: text.slice(last, match.index) });
+    }
+    parts.push({ type: "link", href: match[2], label: match[1] });
+    last = match.index + match[0].length;
+  }
+  if (last < text.length) parts.push({ type: "text", value: text.slice(last) });
+  return parts.length ? parts : [{ type: "text", value: text }];
+}
+
 function formatDateLabel(iso: string) {
   try {
     return new Intl.DateTimeFormat("en-GB", {
@@ -46,27 +67,124 @@ function formatDateLabel(iso: string) {
 /** Seed posts: existing blog content + PDF sample rows */
 export const journalSeedPosts: JournalPost[] = [
   {
-    id: "j-iphone-15-or-16",
-    slug: "iphone-15-or-iphone-16",
-    title: "How to choose between an iPhone 15 and an iPhone 16",
-    excerpt: "Real differences that matter for Nairobi buyers - storage, camera, and longevity.",
-    seoTitle: "iPhone 15 or iPhone 16? How to choose | Gadget Hub",
+    id: "j-iphone-16-price-kenya",
+    slug: "iphone-16-price-in-kenya",
+    title: "iPhone 16 price in Kenya (2026): Nairobi stock, storage, and how to buy",
+    excerpt:
+      "What Kenyans actually search: iPhone 16 price in Kenya, 128GB vs 256GB, Pro vs Pro Max — with Gadget Hub Nairobi prices and product links.",
+    seoTitle: "iPhone 16 Price in Kenya 2026 | 128GB, Pro, Pro Max | Gadget Hub Nairobi",
     seoDescription:
-      "Compare iPhone 15 and iPhone 16 for everyday use in Kenya - camera, battery, and which models we stock.",
+      "iPhone 16 price in Kenya from KES 99,000 at Gadget Hub, Norwich House. Compare 16, 16e, Plus, Pro and Pro Max. Pay with M-Pesa STK or Lipa Mdogo Mdogo.",
     category: "Buying guides",
-    tags: ["iPhone", "iPhone 15", "iPhone 16"],
+    tags: ["iPhone 16", "iPhone 16 price in Kenya", "Nairobi", "iPhone 16 Pro Max"],
     author: "GadgetHub",
     status: "published",
-    date: "2026-10-02",
-    dateLabel: "2 Oct 2026",
-    views: 1204,
-    coverAlt: "Two iPhones side by side",
+    date: "2026-10-23",
+    dateLabel: "23 Oct 2026",
+    views: 86,
+    coverAlt: "iPhone 16 lineup",
     paragraphs: [
-      "Which one fits you? The iPhone 15 and iPhone 16 both make sense depending on how long you want to keep the phone and which camera features you actually use.",
-      "We stock sealed units only. Compare storage and colour options on the iPhone pages, then WhatsApp us if you want a side-by-side recommendation for your budget.",
-      "Trade-in credit can bring the jump to a newer model within reach - start on Trade-In if you are moving from an older Android or iPhone.",
+      "If you typed “iPhone 16 price in Kenya”, “iPhone 16 128GB Nairobi”, “buy iPhone 16 original Kenya”, or “iPhone 16 Pro Max how much”, you are not looking for a rumour thread. You want a sealed phone, a Kenyan shilling figure you can trust, and a shop you can walk into on Nairobi’s CBD. That is what this page is for. Gadget Hub sells new Apple devices at Norwich House, Suite 15, 4th Floor. Below are the starting prices we publish on the site today, then the storage, Pro vs non-Pro, and payment questions people actually send on WhatsApp.",
+      "Start with the standard [iPhone 16](/iphone/iphone-16). In our shop it begins at KES 99,000 for 128GB, KES 110,000 for 256GB, and KES 121,000 for 512GB. Those three SKUs cover most Nairobi buyers. Open that page, pick storage and colour, and you can pay from the site with M-Pesa STK Push — no screenshot of a till number, no “pay the rider”.",
+      "“iPhone 16 128GB vs 256GB Kenya” is the next most common follow-up, and the answer is practical rather than technical. Choose 128GB if you stream Netflix and YouTube, offload photos to iCloud or Google Photos, and clear WhatsApp every few months. Choose 256GB if you shoot 4K, keep years of chat media, download maps for upcountry trips, or use the phone as a work camera. Choose 512GB if the phone is also your archive. In Kenya, 256GB is the SKU people regret not buying when status videos and client work pile up. The extra from 128GB to 256GB on 16 is KES 11,000 here — cheaper than a storage panic a year later.",
+      "People also search “iPhone 16e price Kenya” when they want a 16-generation chip, USB-C, and Apple updates without paying Pro money. The [iPhone 16e](/iphone/iphone-16e) starts at KES 79,000 (128GB), then KES 93,000 (256GB) and KES 108,000 (512GB). If your budget sits under a lakh and you still want a current-shape iPhone, 16e is the result that should land on our shop — not a grey-market listing with no invoice.",
+      "Bigger screen searches (“iPhone 16 Plus Kenya”, “iPhone 16 Plus 128GB price”) map to the [iPhone 16 Plus](/iphone/iphone-16-plus): from KES 116,000 (128GB), KES 128,000 (256GB), KES 145,000 (512GB). Plus is the phone for video, maps, and split WhatsApp + Safari. If your query was “is Plus worth it over 16”, the honest Nairobi answer is: yes if you hate a small canvas and read a lot on the phone; no if you want the same cameras in a pocket that fits a matatu seat.",
+      "Pro searches are a different intent. “iPhone 16 Pro price Kenya” and “iPhone 16 Pro 256GB Nairobi” should go to the [iPhone 16 Pro](/iphone/iphone-16-pro): from KES 111,000 (128GB), KES 125,000 (256GB), KES 145,000 (512GB), KES 160,000 (1TB). “iPhone 16 Pro Max price in Kenya” is the [iPhone 16 Pro Max](/iphone/iphone-16-pro-max): from KES 124,000 (256GB — there is no 128GB Pro Max), KES 165,000 (512GB), KES 211,000 (1TB). Pro and Pro Max are the telephoto, the brighter display, and the phone you keep five years. If you already know you want Pro Max, skip the comparison posts and open that page.",
+      "A word on “original iPhone 16 Kenya” versus UK used. Gadget Hub lists new sealed units with a one-year warranty on the invoice. UK-used / “ex-UK” prices exist on the street and in classifieds; they are not what this shop sells on the website. If a Facebook ad is KES 20,000 under our 128GB price and asks you to send money to a personal M-Pesa, that is not a deal — that is the risk you came here to avoid. Confirm the model on our page, pay on gadgethubke.com, collect at Norwich House or wait for confirmed Nairobi delivery.",
+      "Dual SIM in Kenya: current iPhones use eSIM plus physical nano-SIM, which is how most Nairobi buyers run Safaricom and Airtel together. If your search was “iPhone 16 dual SIM Kenya”, you do not need a special SKU — you need a sealed unit and a shop that can help you scan the eSIM QR after pickup. Ask at the counter; we can set the phone up before you leave (fee confirmed when you engage).",
+      "Kenya traffic also asks “iPhone 16 vs iPhone 16 Pro” and “should I buy Pro Max or save for 17”. If you are still deciding between generations, read [iPhone 17 vs iPhone 16 in Kenya](/journal/iphone-17-vs-iphone-16-kenya). If you are weighing last year’s 15, use [iPhone 15 vs iPhone 16](/journal/iphone-15-or-iphone-16). If the search was simply “cheapest iPhone in Nairobi”, go to [the budget iPhone guide](/journal/cheapest-iphone-in-kenya) — 16 is not the cheapest sealed iPhone we sell.",
+      "How to buy once the price looks right: add the storage you want on the product page, go to [checkout](/checkout), and pay with M-Pesa. We prompt your phone; you enter PIN; funds settle to Gadget Hub. Pickup is at Norwich House, Suite 15, 4th Floor. Nairobi delivery is confirmed after payment. If cash-up-front is tight, [Lipa Mdogo Mdogo](/lipa-mdogo-mdogo) is in-house — deposit and schedule with us, not a third-party app. Have an old iPhone or Samsung? Start [trade-in](/trade-in) so the 16 price is net of credit.",
+      "Quick answers we get every week. What is the iPhone 16 price in Kenya at Gadget Hub? From KES 99,000 for sealed 128GB. Is 16 still worth buying with 17 in stock? Yes, if 99k is the budget — see the 17 vs 16 guide. Do you sell on Jumia only? No — buy on this site or walk in. Can I pay in instalments? Yes, Lipa Mdogo Mdogo. Do prices include VAT? Displayed shop prices include VAT where VAT applies.",
+      "Prices move with stock. The numbers above match the live shop today; always confirm on the model page before you pay. Browse the full [iPhone lineup](/iphone), or WhatsApp 0729 585 471 with the exact search you typed (“16 Pro 256 desert titanium”) and we will send the matching sealed unit.",
     ],
   },
+  {
+    id: "j-iphone-17-vs-16",
+    slug: "iphone-17-vs-iphone-16-kenya",
+    title: "iPhone 17 vs iPhone 16 in Kenya: which one is worth buying now?",
+    excerpt:
+      "The comparison Kenyans search after every launch — 17 vs 16, 17 Pro vs 16 Pro, and whether to wait, with Nairobi prices.",
+    seoTitle: "iPhone 17 vs iPhone 16 in Kenya (2026) | Prices & Verdict | Gadget Hub",
+    seoDescription:
+      "Compare iPhone 17 and iPhone 16 in Kenya. 16 from KES 99,000, 17 from KES 125,000. Pro and Pro Max prices, who should upgrade, buy in Nairobi at Gadget Hub.",
+    category: "Buying guides",
+    tags: ["iPhone 17", "iPhone 16", "iPhone 17 vs 16", "Kenya"],
+    author: "GadgetHub",
+    status: "published",
+    date: "2026-10-23",
+    dateLabel: "23 Oct 2026",
+    views: 64,
+    coverAlt: "iPhone 17 and iPhone 16",
+    paragraphs: [
+      "“iPhone 17 vs iPhone 16”, “is iPhone 17 worth it in Kenya”, “iPhone 17 price in Kenya”, “should I skip 16 for 17” — those queries spike the week a new Apple event lands, then they stay for a year while Nairobi buyers wait for a salary, a trade-in, or Lipa approval. This guide is written for people who will pay in shillings, pick up in town, and keep the phone through two more iOS cycles. We stock both generations as new, sealed units. You can open the [iPhone 16](/iphone/iphone-16) or the [iPhone 17](/iphone/iphone-17) and buy from the same checkout.",
+      "Price is the first filter, and it should be. Standard [iPhone 16](/iphone/iphone-16) starts at KES 99,000 (128GB). Standard [iPhone 17](/iphone/iphone-17) starts at KES 125,000 (256GB) and KES 156,000 (512GB) — 17 in our sheet begins at 256GB, there is no 128GB 17. That gap is not small. If your search was “iPhone 16 128GB Kenya” because KES 100k is the ceiling, 17 is not the answer — 16 (or [16e from KES 79,000](/iphone/iphone-16e)) is. If your search was “latest iPhone Kenya” or “buy iPhone 17 Nairobi” and 256GB is already in the budget, 17 is the cleaner long-term buy.",
+      "What you actually feel day to day: both take excellent daylight photos, both have USB-C, both run current iOS. 17 is the one to choose if you specifically searched “best iPhone camera Kenya 2026”, shoot a lot of low-light video, or want the newest photographic styles for client work. 16 is enough if you mainly need a sharp camera for WhatsApp status, school, church, and travel. Do not upgrade 16 → 17 for a spec-sheet megapixel unless you feel the limit every week. The software features you use (iMessage, WhatsApp, Maps, Safari) work on both.",
+      "Battery and heat in Nairobi traffic: both generations are fine for a full day of maps plus calls if you are not gaming. If your complaint on an old 11 or 12 is “dead by 4pm”, either 16 or 17 is the upgrade. If you already have 15 or 16 and battery is healthy, 17 will not feel like a new phone in that one dimension. Charge with a proper USB-C brick; cheap stalls on Tom Mboya Street are why people think “iPhones die fast in Kenya”.",
+      "Pro line searches (“iPhone 17 Pro vs 16 Pro Kenya”, “17 Pro Max price Nairobi”, “iPhone 17 Pro Max 256GB”) are where the money actually moves. [iPhone 16 Pro](/iphone/iphone-16-pro) from KES 111,000; [iPhone 16 Pro Max](/iphone/iphone-16-pro-max) from KES 124,000. [iPhone 17 Pro](/iphone/iphone-17-pro) from KES 151,000 (256GB); [iPhone 17 Pro Max](/iphone/iphone-17-pro-max) from KES 163,000 (256GB), KES 198,000 (512GB), KES 245,000 (1TB), KES 305,000 (2TB). If you already decided Pro Max, buy the generation you can pay for this month. Waiting six months “for a deal” in Kenya usually means you keep using a cracked 13 while prices on the new one barely move.",
+      "There is also “iPhone 17e vs iPhone 16” and “iPhone Air Kenya”. [iPhone 17e](/iphone/iphone-17e) starts at KES 115,000 (256GB). [iPhone Air](/iphone/iphone-air) starts at KES 124,000 (256GB). Those pages exist because people search the names Apple put on the box. 17e is the value 17; Air is the thin one. Neither replaces Pro Max. If you landed here from a “which iPhone in 2026” roundup, pick a family first (e / standard / Pro / Air), then a generation, then storage.",
+      "Upgrade rule we use at the counter. Coming from iPhone 11, 12 or 13 — either 16 or 17 is a real jump: USB-C, a modern chip, a camera that does not look dated, and years of updates. Coming from 14 — 16 is the value move; 17 if you want the newest. Coming from 15 or 16 — only move to 17 if you have a feature you can name (camera, display, storage, or you simply want the latest). Coming from Android — start on [trade-in](/trade-in) so the Kenya price is net of your Samsung credit, then choose 16 for budget or 17 if the extra is comfortable.",
+      "Should you wait for the next launch? Search interest always jumps around rumours of iPhone 18. If you do not have a working phone this week, waiting is how Nairobi buyers lose another six months on a dying battery. If your 16 Pro Max is fine and you are only shopping out of FOMO, keep the money. If you are on 11–13 and you have the cash or a Lipa plan, buy 16 or 17 now and stop refreshing Twitter.",
+      "How to buy: open the model, pick storage, pay M-Pesa STK on [checkout](/checkout). Lipa Mdogo Mdogo is in-house on [the Lipa page](/lipa-mdogo-mdogo). Pickup at Norwich House, Suite 15. See every model on [iPhone](/iphone). For the exact 16 shilling breakdown (128 / 256 / 512 and Pro Max), read [iPhone 16 price in Kenya](/journal/iphone-16-price-in-kenya). Still comparing last year? [iPhone 15 vs iPhone 16](/journal/iphone-15-or-iphone-16). WhatsApp 0729 585 471 with your current phone and budget and we will answer in one line.",
+    ],
+  },
+  {
+    id: "j-cheapest-iphone-kenya",
+    slug: "cheapest-iphone-in-kenya",
+    title: "Cheapest iPhone in Kenya right now: Nairobi prices from iPhone 11 up",
+    excerpt:
+      "“Cheapest iPhone in Kenya”, “iPhone 11 price Nairobi”, “iPhone 13 128GB” — sealed stock from KES 36,000, with links to buy.",
+    seoTitle: "Cheapest iPhone in Kenya 2026 | From KES 36,000 | Gadget Hub Nairobi",
+    seoDescription:
+      "Cheapest new iPhone in Kenya: iPhone 11 from KES 36,000 at Gadget Hub Nairobi. Compare 12, 13, 14, 15 and 16e prices. M-Pesa and Lipa Mdogo Mdogo.",
+    category: "Buying guides",
+    tags: ["cheapest iPhone Kenya", "iPhone 11", "iPhone 13", "Nairobi"],
+    author: "GadgetHub",
+    status: "published",
+    date: "2026-10-23",
+    dateLabel: "23 Oct 2026",
+    views: 71,
+    coverAlt: "Affordable iPhones in Nairobi",
+    paragraphs: [
+      "Kenya search is blunt: “cheapest iPhone in Kenya”, “cheapest iPhone in Nairobi”, “iPhone 11 price in Nairobi”, “iPhone 12 64GB how much”, “iPhone 13 128GB original”, “iPhone for students Kenya”. Those queries are not looking for a 17 Pro Max. They want a genuine Apple phone that still gets apps, still takes a decent photo, and still has a shop behind the listing. Gadget Hub only sells new sealed devices on this website — the cheap ads you see with “UK used, slight shadow, Face ID 100%” are a different market. If you want sealed + invoice + warranty path, start here.",
+      "First, decode the word cheap. On Jumia, Facebook, and WhatsApp groups, “cheap iPhone Kenya” often means a used import with a battery at 78% and a story. On this site it means the lowest sealed new price we will put on an invoice. That number will always be higher than a used 11 from Ngara. It will also still work in two years. If your budget is under KES 30,000, a new iPhone is not honest — talk to us about accessories or wait. From the mid-30s upward, we have sealed stock.",
+      "The lowest sealed full-size iPhone on our floor is the [iPhone 11](/iphone/iphone-11), from KES 36,000 (64GB), KES 42,000 (128GB), KES 48,000 (256GB). That is the phone people mean when they search “first iPhone Kenya”, “iPhone for mum Nairobi”, or “iPhone 11 original price”. It does not do 5G. It still does iMessage, WhatsApp, maps, and years of iOS that a random Android at the same price will not match. [iPhone 11 Pro](/iphone/iphone-11-pro) from KES 40,000 and [iPhone 11 Pro Max](/iphone/iphone-11-pro-max) from KES 46,000 if you want the older Pro cameras without a 16 Pro bill. 64GB fills up if the owner shoots video; 128GB is the 11 we recommend for a parent.",
+      "Next band — “iPhone 12 price Kenya”, “iPhone 12 mini Nairobi”, “iPhone 12 64GB original”: [iPhone 12 mini](/iphone/iphone-12-mini) from KES 34,000 (the smallest sealed price in the shop), [iPhone 12](/iphone/iphone-12) from KES 42,000, [iPhone 12 Pro](/iphone/iphone-12-pro) from KES 50,000, [iPhone 12 Pro Max](/iphone/iphone-12-pro-max) from KES 60,000. 12 is the first 5G iPhone in this list. If Safaricom 5G is a real reason you searched, do not buy 11. Mini is the pocket phone; Pro Max 12 is still a serious camera for the money.",
+      "“iPhone 13 128GB Kenya” is one of the stickiest local keywords, and for good reason. [iPhone 13](/iphone/iphone-13) from KES 62,000 (128GB), KES 70,000 (256GB), KES 78,000 (512GB). Mini from KES 48,000. [iPhone 13 Pro](/iphone/iphone-13-pro) from KES 65,000. [iPhone 13 Pro Max](/iphone/iphone-13-pro-max) from KES 78,000. 13 is the sweet spot we recommend when someone says “I don’t want the oldest, I don’t want 100k”. Battery, cameras, and app support are still comfortable in 2026. If you can stretch from 11 money to 13 money, do it.",
+      "One step up: “iPhone 14 price Kenya” and “iPhone 14 Plus Nairobi”. [iPhone 14](/iphone/iphone-14) from KES 85,000 (128GB), [iPhone 14 Plus](/iphone/iphone-14-plus) from KES 92,000, [iPhone 14 Pro](/iphone/iphone-14-pro) from KES 110,000, [iPhone 14 Pro Max](/iphone/iphone-14-pro-max) from KES 120,000. 14 is crash detection and a newer look without jumping to 15. It is not the cheapest in the shop; it is the cheapest Dynamic Island-adjacent generation before 15.",
+      "If the search was “iPhone 15 price in Kenya cheap” or “iPhone 15 128GB Nairobi”, [iPhone 15](/iphone/iphone-15) starts at KES 82,000 (128GB) — USB-C, Dynamic Island, and the model you keep if 16’s extra is not in the budget. [iPhone 16e](/iphone/iphone-16e) from KES 79,000 is often cheaper than people expect for a 16-generation phone, and it is the best “cheap current iPhone” we sell. Full 16 prices (99k and up) are in [the iPhone 16 Kenya price guide](/journal/iphone-16-price-in-kenya). Comparing 15 and 16 directly: [iPhone 15 vs iPhone 16](/journal/iphone-15-or-iphone-16).",
+      "Who should buy which budget phone. Student / first iPhone: 11 128GB or 12 mini, then save. Parent who only WhatsApps: 11 128GB. Someone on Safaricom 5G: 12 or newer. Someone who hates charging twice a day: 13. Someone who wants USB-C so they share a laptop charger: 15 or 16e. Someone who said “cheapest” but actually has 100k: do not buy 11 — buy 16e or 16 and keep it four years.",
+      "How to buy a cheap iPhone without getting a story: open the model, confirm storage, pay M-Pesa STK on [checkout](/checkout), collect at Norwich House, Suite 15 or arrange Nairobi delivery. Do not pay a personal number. [Lipa Mdogo Mdogo](/lipa-mdogo-mdogo) can split a 13 or 15 if the cash price is the blocker. [Trade-in](/trade-in) an old Samsung so the cheapest iPhone is even cheaper net. See the whole [iPhone shop](/iphone). WhatsApp 0729 585 471 with your budget in shillings (“50k sealed”) and we will point at the exact SKU.",
+    ],
+  },
+  {
+    id: "j-iphone-15-or-16",
+    slug: "iphone-15-or-iphone-16",
+    title: "iPhone 15 vs iPhone 16 in Kenya: price, USB-C, and who should still buy 15",
+    excerpt:
+      "Still one of the most searched iPhone comparisons in Kenya — 15 vs 16, Plus vs Pro, with current Nairobi prices.",
+    seoTitle: "iPhone 15 vs iPhone 16 in Kenya 2026 | Prices | Gadget Hub Nairobi",
+    seoDescription:
+      "iPhone 15 vs iPhone 16 in Kenya: 15 from KES 82,000, 16 from KES 99,000. Camera, battery, storage. Buy sealed in Nairobi at Gadget Hub, Norwich House.",
+    category: "Buying guides",
+    tags: ["iPhone 15", "iPhone 16", "iPhone 15 vs 16", "Kenya"],
+    author: "GadgetHub",
+    status: "published",
+    date: "2026-10-23",
+    dateLabel: "23 Oct 2026",
+    views: 1204,
+    coverAlt: "iPhone 15 and iPhone 16",
+    paragraphs: [
+      "“iPhone 15 vs iPhone 16”, “is iPhone 15 still worth it 2026”, “iPhone 15 128GB price Kenya”, “should I buy iPhone 15 or 16 in Nairobi” — this comparison did not die when 16 launched. In Kenya it is still the fork in the road for buyers who have about KES 80–120k, want USB-C (Lightning chargers are done), and do not want to overpay for Pro. Both phones are new and sealed at Gadget Hub. You can open [iPhone 15](/iphone/iphone-15) or [iPhone 16](/iphone/iphone-16) and pay with M-Pesa from the page.",
+      "Price first, because that is what the search is. [iPhone 15](/iphone/iphone-15) starts at KES 82,000 (128GB), KES 98,000 (256GB), KES 118,000 (512GB). [iPhone 15 Plus](/iphone/iphone-15-plus) from KES 88,000 (128GB). [iPhone 15 Pro](/iphone/iphone-15-pro) from KES 128,000. [iPhone 15 Pro Max](/iphone/iphone-15-pro-max) from KES 150,000. [iPhone 16](/iphone/iphone-16) starts at KES 99,000 (128GB), KES 110,000 (256GB), KES 121,000 (512GB). The jump from 15 128GB to 16 128GB is KES 17,000 in our shop — small if you keep the phone four years, large if this is a one-year handset you will flip.",
+      "What you actually feel in the hand: both have USB-C, Dynamic Island, and a chip that will run apps for years. 16 adds Camera Control and the newer-generation stack Apple will support longer. 15 is not a compromise phone; it is last year’s excellent phone at this year’s Kenya price. Action button lives on 15 Pro, not on standard 15 — if that is why you watched a YouTube comparison, you are comparing the wrong SKUs. Standard 15 vs standard 16 is USB-C vs USB-C, Island vs Island, with 16 a year newer.",
+      "Buy 15 if you searched “iPhone 15 128GB Nairobi” because 82k is the number that fits, or if you are moving from Lightning (11–14) and USB-C is the whole point. Buy 16 if you searched “iPhone 16 128GB Kenya” and can clear 99k without stretching Lipa into pain. Buy [16e](/iphone/iphone-16e) from KES 79,000 if you want 16-generation without paying the 16 tax — it undercuts 15 128GB in our shop on some days, which surprises people who only Googled “iPhone 15 vs 16”.",
+      "Plus and Pro searches need their own links, because a “15 vs 16” thumbnail often mixes them. “iPhone 15 Plus vs 16 Plus”: [15 Plus](/iphone/iphone-15-plus) from KES 88,000 versus [16 Plus](/iphone/iphone-16-plus) from KES 116,000 — same logic as the small phones, bigger canvas for maps and video. “15 Pro vs 16 Pro Kenya”: [15 Pro](/iphone/iphone-15-pro) from KES 128,000 versus [16 Pro](/iphone/iphone-16-pro) from KES 111,000. Yes — 16 Pro can start below 15 Pro in our current sheet. That is why you should check live pages instead of a 2024 YouTube thumbnail. [15 Pro Max](/iphone/iphone-15-pro-max) from KES 150,000 versus [16 Pro Max](/iphone/iphone-16-pro-max) from KES 124,000. If you want Pro, look at 16 Pro first.",
+      "Cameras in real Nairobi light: both 15 and 16 take the photo you will send on WhatsApp. 16 is better if you shoot a lot of video or use Camera Control as a shutter. 15 is enough for school, church, travel, and status. Do not spend the extra 17k only because a reviewer said “computational photography”. Spend it if you will still own the phone in 2029 and want the newer base.",
+      "Coming from an older iPhone. 11 or 12 → 15 or 16 is a huge jump (5G if you skip 11, USB-C, cameras, battery). 13 or 14 → 15 is the USB-C move; 16 if you can. Already on 15 → stay, unless you want Camera Control or a Pro. Already deciding against 17? Read [iPhone 17 vs iPhone 16](/journal/iphone-17-vs-iphone-16-kenya) before you pay; 17 starts at KES 125,000 for 256GB.",
+      "How to buy: open [iPhone 15](/iphone/iphone-15) or [iPhone 16](/iphone/iphone-16), pick 128 or 256, pay M-Pesa on [checkout](/checkout), collect at Norwich House, Suite 15. Stretching every shilling? [Cheapest iPhone in Kenya](/journal/cheapest-iphone-in-kenya). Full 16 ladder including 16e, Plus, Pro, Pro Max: [iPhone 16 price in Kenya](/journal/iphone-16-price-in-kenya). Trade in on [trade-in](/trade-in), split payments on [Lipa Mdogo Mdogo](/lipa-mdogo-mdogo), or message 0729 585 471 with “15 or 16, 100k budget”.",
+    ],
+  },
+
   {
     id: "j-macbook-air-or-pro",
     slug: "macbook-air-or-macbook-pro",
