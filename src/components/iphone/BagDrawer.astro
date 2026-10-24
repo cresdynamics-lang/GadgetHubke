@@ -157,6 +157,61 @@ const waPhone = iphoneConfig.whatsapp;
     return merged;
   }
 
+  function visitorId() {
+    try {
+      let id = localStorage.getItem("gh-visitor");
+      if (!id) {
+        id = (crypto.randomUUID && crypto.randomUUID()) || `v-${Date.now().toString(36)}`;
+        localStorage.setItem("gh-visitor", id);
+      }
+      return id;
+    } catch {
+      return "";
+    }
+  }
+
+  function accountContact() {
+    try {
+      const acc = JSON.parse(localStorage.getItem("gh-account") || "null");
+      if (!acc || typeof acc !== "object") return {};
+      return {
+        name: String(acc.name || "").trim(),
+        email: String(acc.email || "").trim(),
+        phone: String(acc.phone || "").trim(),
+      };
+    } catch {
+      return {};
+    }
+  }
+
+  let leadTimer = 0;
+  function pingCart(items) {
+    window.clearTimeout(leadTimer);
+    leadTimer = window.setTimeout(() => {
+      const contact = accountContact();
+      fetch("/api/leads/cart", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        keepalive: true,
+        body: JSON.stringify({
+          visitorId: visitorId(),
+          source: "cart",
+          href: location.pathname,
+          items: (items || []).map((i) => ({
+            id: i.id,
+            name: i.name,
+            kes: i.kes,
+            qty: i.qty,
+            href: i.href,
+          })),
+          name: contact.name || "",
+          email: contact.email || "",
+          phone: contact.phone || "",
+        }),
+      }).catch(() => {});
+    }, 500);
+  }
+
   function write(items) {
     try {
       localStorage.setItem(KEY, JSON.stringify(items));
@@ -165,6 +220,7 @@ const waPhone = iphoneConfig.whatsapp;
       /* ignore quota */
     }
     window.dispatchEvent(new CustomEvent("gh:bag", { detail: { items } }));
+    pingCart(items);
     render();
   }
 
@@ -299,6 +355,8 @@ const waPhone = iphoneConfig.whatsapp;
   });
 
   render();
+  const existing = read();
+  if (existing.length) pingCart(existing);
 </script>
 
 <style>

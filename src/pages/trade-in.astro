@@ -91,14 +91,25 @@ const waBase = whatsappUrl();
               placeholder="07…"
             />
           </label>
+          <label class="tradein__field">
+            <span>Email</span>
+            <input
+              type="email"
+              name="email"
+              required
+              autocomplete="email"
+              placeholder="you@email.com"
+            />
+          </label>
         </fieldset>
 
         <p class="tradein__note">
-          Submitting opens WhatsApp to {site.phoneDisplay} with your details. No
-          commitment until we inspect the device.
+          We’ll email a trade-in confirmation (not a payment invoice) and open WhatsApp
+          to {site.phoneDisplay}. No commitment until we inspect the device.
         </p>
+        <p class="tradein__note" data-tradein-status hidden></p>
 
-        <button class="btn btn--primary" type="submit">Continue on WhatsApp</button>
+        <button class="btn btn--primary" type="submit">Send trade-in request</button>
       </form>
 
       <aside class="tradein__aside">
@@ -117,32 +128,67 @@ const waBase = whatsappUrl();
 
 <script define:vars={{ waBase }}>
   const form = document.querySelector("[data-tradein-form]");
-  form?.addEventListener("submit", (event) => {
+  form?.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (!(form instanceof HTMLFormElement)) return;
+    const status = document.querySelector("[data-tradein-status]");
+    const btn = form.querySelector('button[type="submit"]');
     const data = new FormData(form);
-    const brand = String(data.get("brand") || "").trim();
-    const model = String(data.get("model") || "").trim();
-    const storage = String(data.get("storage") || "").trim();
-    const condition = String(data.get("condition") || "").trim();
-    const name = String(data.get("name") || "").trim();
-    const phone = String(data.get("phone") || "").trim();
+    const payload = {
+      brand: String(data.get("brand") || "").trim(),
+      model: String(data.get("model") || "").trim(),
+      storage: String(data.get("storage") || "").trim(),
+      condition: String(data.get("condition") || "").trim(),
+      name: String(data.get("name") || "").trim(),
+      phone: String(data.get("phone") || "").trim(),
+      email: String(data.get("email") || "").trim(),
+    };
+    if (btn instanceof HTMLButtonElement) btn.disabled = true;
+    if (status instanceof HTMLElement) {
+      status.hidden = false;
+      status.textContent = "Saving your request…";
+    }
+    let savedId = "";
+    try {
+      const res = await fetch("/api/trade-in", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Could not save.");
+      savedId = json.id || "";
+    } catch (err) {
+      if (status instanceof HTMLElement) {
+        status.textContent = err instanceof Error ? err.message : "Could not save. Continuing on WhatsApp.";
+      }
+    }
 
     const message = [
       "Hi GadgetHub - Trade-In enquiry",
+      savedId ? `Reference: ${savedId}` : "",
       "",
-      `Name: ${name}`,
-      `Phone: ${phone}`,
-      `Brand: ${brand}`,
-      `Model: ${model}`,
-      `Storage: ${storage}`,
-      `Condition: ${condition}`,
+      `Name: ${payload.name}`,
+      `Phone: ${payload.phone}`,
+      `Email: ${payload.email}`,
+      `Brand: ${payload.brand}`,
+      `Model: ${payload.model}`,
+      `Storage: ${payload.storage}`,
+      `Condition: ${payload.condition}`,
       "",
       "I'd like an estimate / to bring it in for inspection.",
-    ].join("\n");
+    ]
+      .filter((line) => line !== "")
+      .join("\n");
 
     const url = `${waBase}?text=${encodeURIComponent(message)}`;
     window.open(url, "_blank", "noopener,noreferrer");
+    if (status instanceof HTMLElement) {
+      status.textContent = savedId
+        ? `Saved ${savedId}. We emailed a trade-in confirmation — this is not a payment.`
+        : "Opened WhatsApp. We’ll follow up from there.";
+    }
+    if (btn instanceof HTMLButtonElement) btn.disabled = false;
   });
 </script>
 

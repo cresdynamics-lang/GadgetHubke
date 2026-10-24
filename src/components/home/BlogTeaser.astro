@@ -1,5 +1,13 @@
 ---
-import { homeBlog } from "../../lib/home";
+import { latestJournalPosts } from "../../lib/journal";
+
+const homeBlog = (await latestJournalPosts(3)).map((post) => ({
+  id: post.slug,
+  title: post.title,
+  href: `/journal/${post.slug}`,
+  excerpt: post.excerpt,
+  dateLabel: post.category || post.tags[0] || post.dateLabel,
+}));
 ---
 
 <section class="home-section home-blog">

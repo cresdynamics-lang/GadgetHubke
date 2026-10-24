@@ -1,8 +1,10 @@
 ---
+export const prerender = false;
+
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { homeCategories } from "../lib/home";
 import { productNav, secondaryNav } from "../lib/catalog";
-import { journalSeedPosts } from "../lib/journal";
+import { listPublishedJournalPosts } from "../lib/journal";
 
 const company = [
   { label: "About", href: "/about" },
@@ -16,7 +18,7 @@ const company = [
   { label: "Newsletter", href: "/newsletter" },
 ] as const;
 
-const journalLinks = journalSeedPosts.filter((p) => p.status === "published");
+const journalLinks = await listPublishedJournalPosts();
 
 const care = [
   { label: "Trade-In", href: "/trade-in" },

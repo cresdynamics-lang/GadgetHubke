@@ -29,12 +29,13 @@ const wa = whatsappUrl(
     hidden
   >
     <p class="ok__eyebrow">Payment successful</p>
-    <h1>Thank you — payment received</h1>
-    <p class="ok__lede">
+    <h1 data-success-title>Thank you — payment received</h1>
+    <p class="ok__lede" data-success-lede>
       Your order is confirmed. We’ll follow up on WhatsApp or email for pickup / delivery.
     </p>
     <p class="ok__meta" data-success-meta></p>
     <div class="ok__actions">
+      <a class="btn btn--primary" data-receipt-download hidden href="#">Download receipt PDF</a>
       <a class="btn btn--whatsapp" href={wa} target="_blank" rel="noopener noreferrer">WhatsApp help</a>
       <a class="btn btn--secondary" href="/account">Account</a>
       <a class="btn btn--secondary" href="/accessories">Continue shopping</a>
@@ -86,10 +87,19 @@ const wa = whatsappUrl(
     next.searchParams.set("paid", "1");
     history.replaceState({}, "", next.pathname + next.search);
 
+    const lipa = order.intent === "lipa";
+    const titleEl = document.querySelector("[data-success-title]");
+    const ledeEl = document.querySelector("[data-success-lede]");
+    if (titleEl) titleEl.textContent = lipa ? "Lipa deposit received" : "Thank you — payment received";
+    if (ledeEl) {
+      ledeEl.textContent = lipa
+        ? `We received your Lipa Mdogo Mdogo deposit of ${formatKes(order.subtotalKes)}. Remaining ${formatKes(order.lipa?.remainingKes || 0)} over ${order.lipa?.months || 6} months after we confirm the schedule.`
+        : "Your purchase is confirmed. We’ll follow up on WhatsApp or email for pickup / delivery.";
+    }
     if (meta) {
       meta.textContent = [
         `Order ${order.id}`,
-        "Paid",
+        lipa ? "Deposit paid" : "Paid",
         formatKes(order.subtotalKes),
         order.paymentMethod === "card" ? "Card" : order.paymentMethod === "mpesa" ? "M-Pesa" : "",
         order.customer?.fulfillment === "delivery" ? "Delivery" : "Pickup",
@@ -97,6 +107,11 @@ const wa = whatsappUrl(
       ]
         .filter(Boolean)
         .join(" · ");
+    }
+    const receiptA = document.querySelector("[data-receipt-download]");
+    if (receiptA instanceof HTMLAnchorElement && order.receiptUrl) {
+      receiptA.href = order.receiptUrl;
+      receiptA.hidden = false;
     }
     trackPurchase(order);
   }

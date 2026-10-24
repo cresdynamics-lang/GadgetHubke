@@ -22,7 +22,7 @@ const previewUrl = `gadgethubke.com › journal › ${post.slug}`;
   <section>
     <p class="mgmt-muted" style="margin-bottom:0.5rem;">
       <a class="mgmt-link" href="/management/journal">‹ Back to Journal</a>
-      · draft saved automatically
+      · Save writes to the live Journal immediately
     </p>
     <header style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.75rem;align-items:end;margin-bottom:1rem;">
       <h1 class="mgmt-page-title">Write a journal post</h1>
@@ -30,6 +30,7 @@ const previewUrl = `gadgethubke.com › journal › ${post.slug}`;
         <a class="mgmt-btn mgmt-btn--ghost" href={`/journal/${post.slug}`} target="_blank" rel="noopener">Preview on site</a>
         <button class="mgmt-btn mgmt-btn--ghost" type="button" data-action="review">Send for review</button>
         <button class="mgmt-btn" type="button" data-action="publish">Publish</button>
+        <button class="mgmt-btn mgmt-btn--danger" type="button" data-action="delete">Delete</button>
       </div>
     </header>
 
@@ -53,7 +54,7 @@ const previewUrl = `gadgethubke.com › journal › ${post.slug}`;
       <div class="mgmt-card">
         <h2 style="font-size:1rem;">Writing area</h2>
         <label style="display:grid;gap:0.3rem;margin-top:0.75rem;">
-          <span class="mgmt-muted">Body (paragraphs separated by a blank line)</span>
+          <span class="mgmt-muted">Body (blank line between paragraphs). Shop links: [iPhone 16](/iphone/iphone-16)</span>
           <textarea class="mgmt-textarea" name="body" required rows="12">{body}</textarea>
         </label>
       </div>
@@ -208,5 +209,27 @@ const previewUrl = `gadgethubke.com › journal › ${post.slug}`;
     void save();
   });
   document.querySelector('[data-action="review"]')?.addEventListener("click", () => void save("review"));
-  document.querySelector('[data-action="publish"]')?.addEventListener("click", () => void save("published"));
+  document.querySelector('[data-action="publish"]')?.addEventListener("click", () => {
+    const dateEl = form.elements.namedItem("date") as HTMLInputElement | null;
+    if (dateEl && !dateEl.value) dateEl.value = new Date().toISOString().slice(0, 10);
+    void save("published");
+  });
+  document.querySelector('[data-action="delete"]')?.addEventListener("click", async () => {
+    const id = String((form.elements.namedItem("id") as HTMLInputElement)?.value || "");
+    if (!id || !confirm("Delete this post from the Journal?")) return;
+    const res = await fetch("/api/management/journal", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      if (err) {
+        err.textContent = data.error || "Delete failed";
+        err.removeAttribute("hidden");
+      }
+      return;
+    }
+    location.href = "/management/journal";
+  });
 </script>

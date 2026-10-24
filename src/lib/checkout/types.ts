@@ -32,6 +32,17 @@ export type Fulfillment = "pickup" | "delivery";
 
 export type PaymentMethod = "mpesa" | "card";
 
+/** What the customer is settling — drives invoice/receipt copy and the amount due today. */
+export type OrderIntent = "purchase" | "lipa";
+
+export type LipaTerms = {
+  depositPct: number;
+  months: number;
+  catalogKes: number;
+  depositKes: number;
+  remainingKes: number;
+};
+
 export type OrderStatus =
   | "pending"
   | "awaiting_payment"
@@ -55,7 +66,12 @@ export type CheckoutOrder = {
   status: OrderStatus;
   items: BagItem[];
   customer: CheckoutCustomer;
+  /** Amount due today (full purchase, or Lipa deposit). */
   subtotalKes: number;
+  /** Full cart value before Lipa split. Defaults to subtotalKes for purchases. */
+  catalogKes?: number;
+  intent?: OrderIntent;
+  lipa?: LipaTerms;
   currency: "KES";
   paymentMethod?: PaymentMethod;
   paymentRef?: string;
@@ -63,6 +79,8 @@ export type CheckoutOrder = {
   mock?: boolean;
   paidAt?: string;
   error?: string;
+  invoiceSentAt?: string;
+  receiptSentAt?: string;
 };
 
 export const BAG_KEY = "gh-bag";

@@ -1,0 +1,116 @@
+---
+export const prerender = false;
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { site } from "../../lib/site";
+
+const token = Astro.url.searchParams.get("token") || "";
+---
+
+<BaseLayout
+  title="Choose a new password - GadgetHub"
+  description={`Reset your Gadget Hub account password. Help: ${site.phoneDisplay}.`}
+>
+  <section class="reset container" data-reset data-token={token}>
+    <p class="reset__eyebrow">Account</p>
+    <h1>Choose a new password</h1>
+    <p class="reset__lede">
+      This link was emailed to you and expires after two hours.
+    </p>
+    {
+      token ? (
+        <form data-reset-form novalidate>
+          <label class="reset__field">
+            <span>New password</span>
+            <input type="password" name="password" required minlength="6" autocomplete="new-password" placeholder="At least 6 characters" />
+          </label>
+          <p class="reset__error" data-form-error hidden></p>
+          <button class="btn btn--primary" type="submit">Save password</button>
+        </form>
+      ) : (
+        <p class="reset__lede">
+          Missing reset token. <a href="/account?tab=forgot">Request a new link</a>.
+        </p>
+      )
+    }
+  </section>
+</BaseLayout>
+
+<script>
+  const root = document.querySelector("[data-reset]");
+  const form = document.querySelector("[data-reset-form]");
+  const token = root?.getAttribute("data-token") || "";
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!(form instanceof HTMLFormElement)) return;
+    const err = form.querySelector("[data-form-error]");
+    const password = String(new FormData(form).get("password") || "");
+    if (err instanceof HTMLElement) err.hidden = true;
+    try {
+      const res = await fetch("/api/account/reset", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Could not reset password.");
+      if (data.customer) {
+        localStorage.setItem(
+          "gh-account",
+          JSON.stringify({
+            email: data.customer.email,
+            name: data.customer.name,
+            phone: data.customer.phone,
+            signedInAt: Date.now(),
+          }),
+        );
+      }
+      location.href = "/account";
+    } catch (ex) {
+      if (err instanceof HTMLElement) {
+        err.textContent = ex instanceof Error ? ex.message : "Could not reset password.";
+        err.hidden = false;
+      }
+    }
+  });
+</script>
+
+<style>
+  .reset {
+    padding-block: var(--space-8) calc(var(--space-12) + var(--fab-clearance));
+    max-width: 28rem;
+  }
+  .reset__eyebrow {
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+  }
+  .reset h1 {
+    margin: 0 0 var(--space-2);
+  }
+  .reset__lede {
+    color: var(--color-fg-muted);
+    font-size: var(--text-sm);
+  }
+  .reset__field {
+    display: grid;
+    gap: 0.35rem;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    margin: var(--space-5) 0 var(--space-3);
+  }
+  .reset__field input {
+    font: inherit;
+    font-weight: 400;
+    border: 1px solid var(--color-border);
+    border-radius: 0.65rem;
+    padding: 0.7rem 0.85rem;
+  }
+  .reset__error {
+    color: #b00020;
+    font-size: var(--text-sm);
+  }
+</style>

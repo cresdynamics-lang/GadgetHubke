@@ -31,9 +31,14 @@
     "@astrojs/vercel": "^11.0.12",
     "@fontsource-variable/inter": "^5.2.8",
     "astro": "^7.3.5",
+    "nodemailer": "^10.2.1",
+    "pdf-lib": "^1.17.1",
     "sharp": "^0.35.5"
   },
   "allowScripts": {
     "esbuild": true
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^8.0.2"
   }
 }

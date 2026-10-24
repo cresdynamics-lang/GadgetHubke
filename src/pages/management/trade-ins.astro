@@ -3,17 +3,38 @@ export const prerender = false;
 
 import ManagementLayout from "../../layouts/ManagementLayout.astro";
 import { isAdminAuthed } from "../../lib/admin";
-import { sampleStaff, sampleTradeIns } from "../../lib/management/sample";
+import { formatKes } from "../../lib/checkout/bag";
+import { sampleStaff } from "../../lib/management/sample";
+import { listTradeIns } from "../../lib/management/trade-ins";
+import { site } from "../../lib/site";
 
 const authed = await isAdminAuthed(Astro.cookies);
 if (!authed) return Astro.redirect("/management");
+
+const rows = await listTradeIns();
+
+function when(iso: string) {
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Africa/Nairobi",
+  }).format(new Date(iso));
+}
+
+function waHref(row: (typeof rows)[number]) {
+  const phone = (row.phone || "").replace(/\D/g, "");
+  const to = phone.length >= 9 ? phone.replace(/^0/, "254") : site.whatsapp;
+  const text = `Hi ${row.customer} — following up on trade-in ${row.id} (${row.device}).`;
+  return `https://wa.me/${to}?text=${encodeURIComponent(text)}`;
+}
 ---
 
 <ManagementLayout title="Trade-ins - Management" authed active="trade-ins" staffName={sampleStaff.name} staffRole={sampleStaff.role}>
-  <p class="mgmt-banner">Sample data - connect `/trade-in` form in Phase F.</p>
   <header style="margin-bottom:1rem;">
     <h1 class="mgmt-page-title">Trade-ins</h1>
-    <p class="mgmt-muted">Device requests, quotes and credit toward a new device</p>
+    <p class="mgmt-muted">Live requests from /trade-in. These are quotes, not payments — follow up after inspection.</p>
   </header>
   <div class="mgmt-card">
     <table class="mgmt-table">
@@ -25,22 +46,35 @@ if (!authed) return Astro.redirect("/management");
           <th>Status</th>
           <th>Quote</th>
           <th>Submitted</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
         {
-          sampleTradeIns.map((t) => (
+          rows.length ? (
+            rows.map((t) => (
+              <tr>
+                <td>{t.id}</td>
+                <td>
+                  {t.customer}
+                  <div class="mgmt-muted">{t.phone || "—"}{t.email ? ` · ${t.email}` : ""}</div>
+                </td>
+                <td>{t.device}</td>
+                <td>
+                  <span class:list={["mgmt-tag", { "mgmt-tag--new": t.status.includes("Waiting") }]}>{t.status}</span>
+                </td>
+                <td>{t.quoteKes ? formatKes(t.quoteKes) : "-"}</td>
+                <td class="mgmt-muted">{when(t.submittedAt)}</td>
+                <td>
+                  <a class="mgmt-link" href={waHref(t)} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                </td>
+              </tr>
+            ))
+          ) : (
             <tr>
-              <td>{t.id}</td>
-              <td>{t.customer}</td>
-              <td>{t.device}</td>
-              <td>
-                <span class:list={["mgmt-tag", { "mgmt-tag--new": t.status.includes("Waiting") }]}>{t.status}</span>
-              </td>
-              <td>{t.quote || "-"}</td>
-              <td class="mgmt-muted">{t.submitted}</td>
+              <td colspan="7" class="mgmt-muted">No trade-in requests yet.</td>
             </tr>
-          ))
+          )
         }
       </tbody>
     </table>

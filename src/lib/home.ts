@@ -1,6 +1,5 @@
 /** Homepage merchandising content - KES base prices */
 
-import { latestPosts } from "./journal";
 import { ghImages, macProductPhotos } from "./images";
 
 export type HeroPhone = {
@@ -16,14 +15,6 @@ export type DealItem = {
   priceKes: number;
   badge?: string;
   image?: { src: string; srcWebp?: string; alt: string };
-};
-
-export type BlogTeaser = {
-  id: string;
-  title: string;
-  href: string;
-  excerpt: string;
-  dateLabel: string;
 };
 
 /** Cinematic Apple frames for the home spotlight strip */
@@ -274,14 +265,6 @@ export const homeDeals: DealItem[] = [
     },
   },
 ];
-
-export const homeBlog: BlogTeaser[] = latestPosts(3).map((post) => ({
-  id: post.slug,
-  title: post.title,
-  href: `/journal/${post.slug}`,
-  excerpt: post.excerpt,
-  dateLabel: post.category || post.tags[0] || post.dateLabel,
-}));
 
 /** Accessories strip - Pencil or Keyboard, Pointers, Power, Cases */
 export const homeAccessories = [

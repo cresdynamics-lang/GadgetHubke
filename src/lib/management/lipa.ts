@@ -1,17 +1,22 @@
 import { kvGetJson, kvSetJson } from "../admin/kv";
 
-export type LipaStatus = "On track" | "Due today" | "Missed" | "Completed";
+export type LipaStatus = "Awaiting deposit" | "On track" | "Due today" | "Missed" | "Completed";
 
 export type LipaPlan = {
   id: string;
   customer: string;
   phone?: string;
+  email?: string;
   device: string;
   status: LipaStatus;
   nextDue: string;
   remainingKes: number;
   createdAt: string;
   notes?: string;
+  orderId?: string;
+  depositKes?: number;
+  months?: number;
+  catalogKes?: number;
 };
 
 const KEY = "gh:lipa-plans:v1";
@@ -39,12 +44,17 @@ export async function addLipaPlan(
     id: newId(),
     customer: input.customer,
     phone: input.phone,
+    email: input.email,
     device: input.device,
     status: input.status || "On track",
     nextDue: input.nextDue,
     remainingKes: input.remainingKes,
     createdAt: new Date().toISOString(),
     notes: input.notes,
+    orderId: input.orderId,
+    depositKes: input.depositKes,
+    months: input.months,
+    catalogKes: input.catalogKes,
   };
   const all = await listLipaPlans();
   all.unshift(plan);

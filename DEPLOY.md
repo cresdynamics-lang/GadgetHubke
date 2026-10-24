@@ -24,6 +24,20 @@ Script loads only when the visitor opts into analytics cookies.
 **Google tag** defaults to `GT-TWQKGRD3` (override with `PUBLIC_GOOGLE_TAG_ID`).
 Optional extras: `PUBLIC_GOOGLE_ADS_ID` (AW-…) and/or `PUBLIC_GA_MEASUREMENT_ID` (G-…).
 
+**Email (invoices, receipts, password reset):**
+Set SMTP on the host from Namecheap Private Email (never commit the app password):
+
+```
+SMTP_HOST=mail.privateemail.com
+SMTP_PORT=465
+SMTP_SECURE=true
+SMTP_USER=info@gadgethubke.com
+SMTP_PASS=
+MAIL_FROM=Gadget Hub <info@gadgethubke.com>
+```
+
+Checkout emails an invoice PDF (with a pay link) before M-Pesa, then a receipt PDF after payment.
+
 **Catalog feeds (live shop prices):**
 - Meta Commerce Manager CSV: `https://gadgethubke.com/feeds/meta-catalog.csv`
 - Google Merchant Center XML: `https://gadgethubke.com/feeds/google-merchant.xml`

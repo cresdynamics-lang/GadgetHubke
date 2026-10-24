@@ -1,15 +1,17 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { iphoneConfig } from "../lib/iphone/config";
 import { site, whatsappUrl } from "../lib/site";
 
 const waHref = whatsappUrl(
   "Hi GadgetHub - I'd like to ask about Lipa Mdogo Mdogo.",
 );
+const lipa = iphoneConfig.lipa;
 ---
 
 <BaseLayout
   title="Lipa Mdogo Mdogo - GadgetHub"
-  description={`${site.lipa.label} installment plans from ${site.legalName}. Pay in smaller amounts - no external finance partner.`}
+  description={`${site.lipa.label} installment plans from ${site.legalName}. Pay a deposit, then the rest in smaller amounts - no external finance partner.`}
 >
   <section class="page container">
     <p class="page__eyebrow">Pay your way</p>
@@ -19,17 +21,117 @@ const waHref = whatsappUrl(
       {site.legalName}. There is no third-party financing partner - you deal with us.
     </p>
     <ul class="page__points">
-      <li>Minimum deposit is 40% of the device price</li>
+      <li>Minimum deposit is {lipa.depositMinPct}% of the device price</li>
       <li>Available on qualifying new devices, subject to approval</li>
       <li>Terms and schedule are confirmed with you before you commit</li>
       <li>Corporate and bulk purchases can be settled by separate agreement</li>
     </ul>
     <p class="page__note">{site.lipa.note}</p>
-    <a class="btn btn--primary" href={waHref} target="_blank" rel="noopener noreferrer">
-      Ask on WhatsApp
-    </a>
+
+    <form class="page__form" data-lipa-form>
+      <h2>Apply for a plan</h2>
+      <p class="page__note">We’ll email a Lipa confirmation (not a full-purchase invoice) and keep your details for follow-up.</p>
+      <label class="page__field">
+        <span>Your name</span>
+        <input type="text" name="name" required autocomplete="name" />
+      </label>
+      <label class="page__field">
+        <span>Phone / WhatsApp</span>
+        <input type="tel" name="phone" required autocomplete="tel" placeholder="07…" />
+      </label>
+      <label class="page__field">
+        <span>Email</span>
+        <input type="email" name="email" required autocomplete="email" />
+      </label>
+      <label class="page__field">
+        <span>Device you want</span>
+        <input type="text" name="device" required placeholder="e.g. iPhone 16 128GB" />
+      </label>
+      <label class="page__field">
+        <span>Indicative price (KES, optional)</span>
+        <input type="number" name="catalogKes" min="0" step="1000" placeholder="e.g. 120000" />
+      </label>
+      <div class="page__row">
+        <label class="page__field">
+          <span>Deposit</span>
+          <select name="depositPct">
+            {
+              Array.from(
+                { length: Math.floor((lipa.depositMaxPct - lipa.depositMinPct) / lipa.depositStepPct) + 1 },
+                (_, i) => lipa.depositMinPct + i * lipa.depositStepPct,
+              ).map((pct) => (
+                <option value={pct} selected={pct === lipa.depositDefaultPct}>
+                  {pct}%
+                </option>
+              ))
+            }
+          </select>
+        </label>
+        <label class="page__field">
+          <span>Months</span>
+          <select name="months">
+            {
+              lipa.monthOptions.map((m) => (
+                <option value={m} selected={m === lipa.monthsDefault}>
+                  {m} months
+                </option>
+              ))
+            }
+          </select>
+        </label>
+      </div>
+      <p class="page__note" data-lipa-status hidden></p>
+      <div class="page__actions">
+        <button class="btn btn--primary" type="submit">Send Lipa application</button>
+        <a class="btn btn--secondary" href={waHref} target="_blank" rel="noopener noreferrer">
+          Ask on WhatsApp
+        </a>
+      </div>
+    </form>
   </section>
 </BaseLayout>
+
+<script>
+  const form = document.querySelector("[data-lipa-form]");
+  form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!(form instanceof HTMLFormElement)) return;
+    const status = document.querySelector("[data-lipa-status]");
+    const btn = form.querySelector('button[type="submit"]');
+    const data = new FormData(form);
+    if (btn instanceof HTMLButtonElement) btn.disabled = true;
+    if (status instanceof HTMLElement) {
+      status.hidden = false;
+      status.textContent = "Saving your Lipa application…";
+    }
+    try {
+      const res = await fetch("/api/lipa/apply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: String(data.get("name") || "").trim(),
+          phone: String(data.get("phone") || "").trim(),
+          email: String(data.get("email") || "").trim(),
+          device: String(data.get("device") || "").trim(),
+          catalogKes: Number(data.get("catalogKes") || 0),
+          depositPct: Number(data.get("depositPct") || 40),
+          months: Number(data.get("months") || 6),
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Could not save.");
+      if (status instanceof HTMLElement) {
+        status.textContent = `Saved ${json.id}. We emailed a Lipa Mdogo Mdogo confirmation — pay the deposit when the invoice arrives, not the full device price.`;
+      }
+      form.reset();
+    } catch (err) {
+      if (status instanceof HTMLElement) {
+        status.textContent = err instanceof Error ? err.message : "Could not save. Try WhatsApp.";
+      }
+    }
+    if (btn instanceof HTMLButtonElement) btn.disabled = false;
+  });
+</script>
 
 <style>
   .page {
@@ -51,6 +153,11 @@ const waHref = whatsappUrl(
     margin-bottom: var(--space-3);
   }
 
+  .page h2 {
+    font-size: var(--text-lg);
+    margin: 0 0 var(--space-2);
+  }
+
   .page__lede {
     color: var(--color-fg-muted);
     margin-bottom: var(--space-6);
@@ -68,5 +175,44 @@ const waHref = whatsappUrl(
     font-size: var(--text-sm);
     color: var(--color-fg-muted);
     margin-bottom: var(--space-6);
+  }
+
+  .page__form {
+    display: grid;
+    gap: var(--space-4);
+    margin-top: var(--space-8);
+    padding: var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-subtle);
+  }
+
+  .page__field {
+    display: grid;
+    gap: 0.35rem;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .page__field input,
+  .page__field select {
+    min-height: 2.75rem;
+    padding: 0.65rem 0.85rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    background: var(--color-white);
+    font-weight: var(--font-weight-regular);
+  }
+
+  .page__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+
+  .page__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
   }
 </style>

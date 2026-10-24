@@ -1,0 +1,247 @@
+---
+/**
+ * Payment landing page from invoice email / PDF.
+ * Query: /checkout/pay?order=GH-…&t=TOKEN
+ */
+export const prerender = false;
+
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getOrder, publicOrder } from "../../lib/checkout/orders";
+import { formatKes } from "../../lib/checkout/bag";
+import { verifyPayToken } from "../../lib/documents/pay-link";
+import { site } from "../../lib/site";
+
+const orderId = Astro.url.searchParams.get("order")?.trim() || "";
+const token = Astro.url.searchParams.get("t")?.trim() || "";
+const found = orderId ? await getOrder(orderId) : null;
+const valid = found && verifyPayToken(found.id, token);
+const order = valid && found ? publicOrder(found) : null;
+const paid = order?.status === "paid";
+const lipa = order?.intent === "lipa";
+const dueLabel = lipa ? "Lipa Mdogo Mdogo deposit" : "Invoice";
+---
+
+<BaseLayout
+  title={order ? `Pay ${formatKes(order.subtotalKes)} - GadgetHub` : "Pay invoice - GadgetHub"}
+  description={`Pay your Gadget Hub invoice with M-Pesa. ${site.address}.`}
+>
+  <section class="pay container" data-pay-page data-order-id={order?.id || ""}>
+    {
+      !order ? (
+        <div>
+          <p class="pay__eyebrow">Invoice</p>
+          <h1>This payment link is not valid</h1>
+          <p class="pay__lede">
+            Open the link from your invoice email, or WhatsApp {site.phoneDisplay} with your order number.
+          </p>
+          <a class="btn btn--secondary" href="/checkout">Go to checkout</a>
+        </div>
+      ) : paid ? (
+        <div>
+          <p class="pay__eyebrow">Paid</p>
+          <h1>{lipa ? "This Lipa deposit is already paid" : "This invoice is already paid"}</h1>
+          <p class="pay__lede">
+            Order {order.id} · {formatKes(order.subtotalKes)}. A {lipa ? "deposit receipt" : "receipt"} was emailed to {order.customer.email}.
+          </p>
+          <div class="pay__actions">
+            {order.receiptUrl ? (
+              <a class="btn btn--primary" href={order.receiptUrl}>Download receipt</a>
+            ) : null}
+            <a class="btn btn--secondary" href={`/checkout/success?order=${order.id}&paid=1`}>View confirmation</a>
+          </div>
+        </div>
+      ) : (
+        <div>
+          <p class="pay__eyebrow">{dueLabel} {order.id}</p>
+          <h1>Pay {formatKes(order.subtotalKes)}</h1>
+          <p class="pay__lede">
+            {order.customer.name} · {order.customer.email}. Pickup at {site.address} unless you chose delivery.
+            {lipa
+              ? `This is the Lipa Mdogo Mdogo deposit (${order.lipa?.depositPct || 40}%), not the full device price. Remaining ${formatKes(order.lipa?.remainingKes || 0)} over ${order.lipa?.months || 6} months after we confirm the plan.`
+              : "We emailed this purchase invoice; download the PDF, then pay with M-Pesa."}
+          </p>
+          <ul class="pay__lines">
+            {order.items.map((item) => (
+              <li>
+                <span>
+                  {item.name}
+                  <em>×{item.qty}</em>
+                </span>
+                <strong>{formatKes(item.kes * item.qty)}</strong>
+              </li>
+            ))}
+          </ul>
+          <p class="pay__total">{lipa ? "Deposit due today" : "Total"} <strong>{formatKes(order.subtotalKes)}</strong></p>
+          <div class="pay__actions">
+            {order.invoiceUrl ? (
+              <a class="btn btn--secondary" href={order.invoiceUrl}>Download invoice PDF</a>
+            ) : null}
+          </div>
+          <label class="pay__field">
+            <span>M-Pesa number</span>
+            <input type="tel" data-mpesa-phone value={order.customer.phone} placeholder="07XX XXX XXX" />
+          </label>
+          <button type="button" class="btn btn--primary pay__btn" data-pay-mpesa-btn>
+            Pay {formatKes(order.subtotalKes)} with M-Pesa
+          </button>
+          <p class="pay__wait" data-mpesa-wait hidden>Check your phone for the M-Pesa prompt…</p>
+          <p class="pay__error" data-pay-error hidden></p>
+          <p class="pay__hint">
+            Funds settle to Gadget Hub’s Stanbic account. Card is not available. WhatsApp {site.phoneDisplay} if the prompt does not arrive.
+          </p>
+        </div>
+      )
+    }
+  </section>
+</BaseLayout>
+
+{
+  order && !paid ? (
+    <script>
+      const root = document.querySelector("[data-pay-page]");
+      const orderId = root?.getAttribute("data-order-id") || "";
+
+      let pollTimer = null;
+      function stopPoll() {
+        if (pollTimer) {
+          clearInterval(pollTimer);
+          pollTimer = null;
+        }
+      }
+
+      async function poll() {
+        const wait = root?.querySelector("[data-mpesa-wait]");
+        const err = root?.querySelector("[data-pay-error]");
+        stopPoll();
+        pollTimer = setInterval(async () => {
+          try {
+            const res = await fetch(`/api/checkout/mpesa/status?orderId=${encodeURIComponent(orderId)}`);
+            const data = await res.json();
+            if (data.status === "paid") {
+              stopPoll();
+              location.href = `/checkout/success?order=${encodeURIComponent(orderId)}&paid=1`;
+            } else if (data.status === "failed") {
+              stopPoll();
+              if (wait instanceof HTMLElement) wait.hidden = true;
+              if (err instanceof HTMLElement) {
+                err.textContent = data.order?.error || "Payment failed. Try again.";
+                err.hidden = false;
+              }
+            }
+          } catch {
+            /* keep polling */
+          }
+        }, 1500);
+      }
+
+      root?.querySelector("[data-pay-mpesa-btn]")?.addEventListener("click", async () => {
+        const err = root.querySelector("[data-pay-error]");
+        const wait = root.querySelector("[data-mpesa-wait]");
+        const phoneEl = root.querySelector("[data-mpesa-phone]");
+        const mobileNumber = phoneEl instanceof HTMLInputElement ? phoneEl.value.trim() : "";
+        if (err instanceof HTMLElement) err.hidden = true;
+        try {
+          const res = await fetch("/api/checkout/mpesa/stk", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ orderId, mobileNumber }),
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || "STK failed.");
+          if (data.alreadyPaid) {
+            location.href = `/checkout/success?order=${encodeURIComponent(orderId)}&paid=1`;
+            return;
+          }
+          if (wait instanceof HTMLElement) {
+            wait.textContent = data.stk?.message || "Check your phone for the M-Pesa prompt…";
+            wait.hidden = false;
+          }
+          await poll();
+        } catch (ex) {
+          if (err instanceof HTMLElement) {
+            err.textContent = ex instanceof Error ? ex.message : "STK failed.";
+            err.hidden = false;
+          }
+        }
+      });
+    </script>
+  ) : null
+}
+
+<style>
+  .pay {
+    padding-block: var(--space-8) calc(var(--space-12) + var(--fab-clearance));
+    max-width: 32rem;
+  }
+  .pay__eyebrow {
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+  }
+  .pay h1 {
+    margin: 0 0 var(--space-2);
+    letter-spacing: -0.03em;
+  }
+  .pay__lede,
+  .pay__hint,
+  .pay__wait {
+    color: var(--color-fg-muted);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+  }
+  .pay__lines {
+    list-style: none;
+    margin: var(--space-5) 0;
+    padding: 0;
+  }
+  .pay__lines li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid var(--color-border);
+    font-size: var(--text-sm);
+  }
+  .pay__lines em {
+    font-style: normal;
+    color: var(--color-fg-muted);
+    margin-left: 0.35rem;
+  }
+  .pay__total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.05rem;
+  }
+  .pay__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin: var(--space-4) 0;
+  }
+  .pay__field {
+    display: grid;
+    gap: 0.35rem;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    margin-top: var(--space-4);
+  }
+  .pay__field input {
+    font: inherit;
+    font-weight: 400;
+    border: 1px solid var(--color-border);
+    border-radius: 0.65rem;
+    padding: 0.7rem 0.85rem;
+  }
+  .pay__btn {
+    width: 100%;
+    justify-content: center;
+    margin-top: var(--space-3);
+  }
+  .pay__error {
+    color: #b00020;
+    font-size: var(--text-sm);
+  }
+</style>

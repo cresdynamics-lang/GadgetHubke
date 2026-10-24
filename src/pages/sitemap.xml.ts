@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { site } from "../lib/site";
 import { homeCategories } from "../lib/home";
 import { productNav } from "../lib/catalog";
-import { journalSeedPosts } from "../lib/journal";
+import { listPublishedJournalPosts } from "../lib/journal";
 import { products } from "../lib/products";
 import { tvHomeModels } from "../lib/tv-home";
 import { listSeoModels, listSeriesHubs } from "../lib/iphone/seo";
@@ -45,7 +45,7 @@ function abs(path: string) {
   return new URL(path, site.url).href;
 }
 
-export const GET: APIRoute = () => {
+export const GET: APIRoute = async () => {
   const urls = new Set<string>();
 
   for (const p of staticPaths) urls.add(abs(p));
@@ -54,7 +54,7 @@ export const GET: APIRoute = () => {
     urls.add(abs(cat.href));
     for (const child of cat.children ?? []) urls.add(abs(child.href));
   }
-  for (const post of journalSeedPosts.filter((p) => p.status === "published")) {
+  for (const post of await listPublishedJournalPosts()) {
     urls.add(abs(`/journal/${post.slug}`));
   }
   for (const product of products) {

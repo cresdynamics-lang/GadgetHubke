@@ -1,0 +1,109 @@
+---
+export const prerender = false;
+
+import ManagementLayout from "../../layouts/ManagementLayout.astro";
+import { isAdminAuthed } from "../../lib/admin";
+import { formatKes } from "../../lib/checkout/bag";
+import { listCartLeads } from "../../lib/leads/carts";
+import { sampleStaff } from "../../lib/management/sample";
+import { site } from "../../lib/site";
+
+const authed = await isAdminAuthed(Astro.cookies);
+if (!authed) return Astro.redirect("/management");
+
+const filter = Astro.url.searchParams.get("filter") || "open";
+const all = await listCartLeads();
+const rows = all.filter((row) => {
+  if (filter === "converted") return Boolean(row.convertedOrderId);
+  if (filter === "contact") return Boolean(row.email || row.phone) && !row.convertedOrderId;
+  return !row.convertedOrderId;
+});
+
+function waHref(row: (typeof rows)[number]) {
+  const lines = [
+    `Hi ${row.name || "there"} — following up on the cart on gadgethubke.com.`,
+    row.items.map((i) => `• ${i.name} ×${i.qty}`).join("\n"),
+    `Total ${formatKes(row.totalKes)}`,
+  ].filter(Boolean);
+  const phone = (row.phone || "").replace(/\D/g, "");
+  const to = phone.length >= 9 ? phone.replace(/^0/, "254") : site.whatsapp;
+  return `https://wa.me/${to}?text=${encodeURIComponent(lines.join("\n"))}`;
+}
+
+function when(iso: string) {
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Africa/Nairobi",
+  }).format(new Date(iso));
+}
+---
+
+<ManagementLayout title="Cart follow-up - Management" authed active="follow-up" staffName={sampleStaff.name} staffRole={sampleStaff.role}>
+  <header style="margin-bottom:1rem;">
+    <h1 class="mgmt-page-title">Cart follow-up</h1>
+    <p class="mgmt-muted">
+      Name, email and phone saved when someone adds to cart or starts checkout — so you can help if they stall. Passwords are never stored.
+    </p>
+  </header>
+
+  <div class="mgmt-tabs">
+    <a class:list={["mgmt-tab", { "is-active": filter === "open" }]} href="/management/follow-up">Open {all.filter((r) => !r.convertedOrderId).length}</a>
+    <a class:list={["mgmt-tab", { "is-active": filter === "contact" }]} href="/management/follow-up?filter=contact">Has contact</a>
+    <a class:list={["mgmt-tab", { "is-active": filter === "converted" }]} href="/management/follow-up?filter=converted">Converted</a>
+  </div>
+
+  <div class="mgmt-card">
+    <table class="mgmt-table">
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Contact</th>
+          <th>Cart</th>
+          <th>Total</th>
+          <th>Updated</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          rows.length ? (
+            rows.map((row) => (
+              <tr>
+                <td>
+                  {row.name || "Visitor"}
+                  <div class="mgmt-muted">{row.source}{row.convertedOrderId ? ` · ${row.convertedOrderId}` : ""}</div>
+                </td>
+                <td>
+                  {row.phone || "—"}
+                  <div class="mgmt-muted">{row.email || "no email yet"}</div>
+                </td>
+                <td>
+                  {row.items.slice(0, 3).map((i) => `${i.name} ×${i.qty}`).join(", ")}
+                  {row.items.length > 3 ? ` +${row.items.length - 3}` : ""}
+                </td>
+                <td>{formatKes(row.totalKes)}</td>
+                <td class="mgmt-muted">{when(row.updatedAt)}</td>
+                <td>
+                  {row.phone || row.name ? (
+                    <a class="mgmt-link" href={waHref(row)} target="_blank" rel="noopener noreferrer">
+                      WhatsApp
+                    </a>
+                  ) : (
+                    <span class="mgmt-muted">Waiting for details</span>
+                  )}
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colspan="6" class="mgmt-muted">No carts in this view yet.</td>
+            </tr>
+          )
+        }
+      </tbody>
+    </table>
+  </div>
+</ManagementLayout>

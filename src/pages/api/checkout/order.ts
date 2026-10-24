@@ -62,7 +62,14 @@ export const POST: APIRoute = async ({ request }) => {
   if (!items.length) return json({ error: "Your cart is empty." }, 400);
 
   try {
-    const order = await createOrder({ items, customer });
+    const order = await createOrder({
+      items,
+      customer,
+      intent: String(body.intent || "purchase"),
+      depositPct: Number(body.depositPct) || undefined,
+      months: Number(body.months) || undefined,
+      visitorId: String(body.visitorId || "").trim() || undefined,
+    });
     return json({ order: publicOrder(order) }, 201);
   } catch (e) {
     return json({ error: e instanceof Error ? e.message : "Could not create order." }, 500);

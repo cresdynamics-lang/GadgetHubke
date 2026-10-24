@@ -3,16 +3,18 @@ export const prerender = false;
 
 import ManagementLayout from "../../../layouts/ManagementLayout.astro";
 import { isAdminAuthed } from "../../../lib/admin";
-import { sampleLipa, sampleStaff } from "../../../lib/management/sample";
+import { formatKes } from "../../../lib/checkout/bag";
+import { getLipaPlan } from "../../../lib/management/lipa";
+import { sampleStaff } from "../../../lib/management/sample";
 
 const authed = await isAdminAuthed(Astro.cookies);
 if (!authed) return Astro.redirect("/management");
 
-const plan = sampleLipa.find((p) => p.id === Astro.params.id) || sampleLipa[0];
+const plan = await getLipaPlan(String(Astro.params.id || ""));
+if (!plan) return Astro.redirect("/management/lipa");
 ---
 
 <ManagementLayout title={`Plan ${plan.id} - Management`} authed active="lipa" staffName={sampleStaff.name} staffRole={sampleStaff.role}>
-  <p class="mgmt-banner">Sample plan detail - record payment + reminders in Phase H.</p>
   <p class="mgmt-muted" style="margin-bottom:0.5rem;">
     <a class="mgmt-link" href="/management/lipa">‹ Back to Lipa</a>
   </p>
@@ -22,16 +24,18 @@ const plan = sampleLipa.find((p) => p.id === Astro.params.id) || sampleLipa[0];
   <div class="mgmt-grid mgmt-grid--2">
     <div class="mgmt-card">
       <h2 style="font-size:1.05rem;">Schedule</h2>
-      <p style="margin-top:0.75rem;">Next due: <strong>{plan.nextDue}</strong></p>
-      <p class="mgmt-muted">Remaining: {plan.remaining}</p>
-      <p class="mgmt-muted">Status: {plan.status}</p>
+      <p style="margin-top:0.75rem;">Status: <strong>{plan.status}</strong></p>
+      <p>Next due: <strong>{plan.nextDue}</strong></p>
+      <p class="mgmt-muted">Device total: {plan.catalogKes ? formatKes(plan.catalogKes) : "—"}</p>
+      <p class="mgmt-muted">Deposit: {plan.depositKes ? formatKes(plan.depositKes) : "—"}{plan.months ? ` · ${plan.months} months` : ""}</p>
+      <p class="mgmt-muted">Remaining: {formatKes(plan.remainingKes)}</p>
+      {plan.orderId ? <p class="mgmt-muted">Checkout {plan.orderId}</p> : null}
+      {plan.notes ? <p class="mgmt-muted">{plan.notes}</p> : null}
     </div>
     <div class="mgmt-card">
-      <h2 style="font-size:1.05rem;">Actions</h2>
-      <div class="mgmt-actions" style="margin-top:0.75rem;">
-        <button class="mgmt-btn" type="button" disabled>Record payment</button>
-        <button class="mgmt-btn mgmt-btn--ghost" type="button" disabled>Send reminder</button>
-      </div>
+      <h2 style="font-size:1.05rem;">Contact</h2>
+      <p style="margin-top:0.75rem;">{plan.phone || "No phone"}</p>
+      <p class="mgmt-muted">{plan.email || "No email"}</p>
     </div>
   </div>
 </ManagementLayout>

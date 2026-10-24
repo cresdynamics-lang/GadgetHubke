@@ -1,8 +1,10 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { iphoneConfig } from "../../lib/iphone/config";
 import { site } from "../../lib/site";
 
 const waNumber = site.whatsapp;
+const lipa = iphoneConfig.lipa;
 ---
 
 <BaseLayout
@@ -10,7 +12,13 @@ const waNumber = site.whatsapp;
   description={`Complete your order with M-Pesa. ${site.address}.`}
   hideFooter
 >
-  <section class="checkout container" data-checkout data-wa={waNumber}>
+  <section
+    class="checkout container"
+    data-checkout
+    data-wa={waNumber}
+    data-lipa-pct={lipa.depositDefaultPct}
+    data-lipa-months={lipa.monthsDefault}
+  >
     <header class="checkout__intro">
       <button type="button" class="checkout__back" data-checkout-back>← Back</button>
       <p class="checkout__eyebrow">Checkout</p>
@@ -56,6 +64,47 @@ const waNumber = site.whatsapp;
           <input type="email" name="email" required autocomplete="email" placeholder="you@email.com" />
         </label>
         <fieldset class="checkout__fulfill">
+          <legend>How you’ll pay</legend>
+          <label>
+            <input type="radio" name="intent" value="purchase" checked />
+            Pay in full today
+          </label>
+          <label>
+            <input type="radio" name="intent" value="lipa" />
+            Lipa Mdogo Mdogo — {lipa.depositDefaultPct}% deposit today, rest over {lipa.monthsDefault} months
+          </label>
+        </fieldset>
+        <div class="checkout__lipa" data-lipa-fields hidden>
+          <label class="checkout__field">
+            <span>Deposit</span>
+            <select name="depositPct">
+              {
+                Array.from(
+                  { length: Math.floor((lipa.depositMaxPct - lipa.depositMinPct) / lipa.depositStepPct) + 1 },
+                  (_, i) => lipa.depositMinPct + i * lipa.depositStepPct,
+                ).map((pct) => (
+                  <option value={pct} selected={pct === lipa.depositDefaultPct}>
+                    {pct}%
+                  </option>
+                ))
+              }
+            </select>
+          </label>
+          <label class="checkout__field">
+            <span>Months</span>
+            <select name="months">
+              {
+                lipa.monthOptions.map((m) => (
+                  <option value={m} selected={m === lipa.monthsDefault}>
+                    {m} months
+                  </option>
+                ))
+              }
+            </select>
+          </label>
+        </div>
+        <p class="checkout__hint" data-intent-hint></p>
+        <fieldset class="checkout__fulfill">
           <legend>Fulfillment</legend>
           <label>
             <input type="radio" name="fulfillment" value="pickup" checked />
@@ -72,14 +121,18 @@ const waNumber = site.whatsapp;
         </label>
         <p class="checkout__error" data-details-error hidden></p>
         <div class="checkout__actions">
-          <button type="submit" class="btn btn--whatsapp">Order on WhatsApp</button>
+          <button type="submit" class="btn btn--primary">Continue to invoice</button>
         </div>
       </form>
 
       <!-- Pay -->
       <div class="checkout__panel" data-panel="pay" hidden>
-        <p class="checkout__pay-total">Pay <strong data-pay-total></strong></p>
-        <p class="checkout__hint">Order <span data-order-id></span></p>
+        <p class="checkout__pay-total"><span data-pay-kind>Pay</span> <strong data-pay-total></strong></p>
+        <p class="checkout__hint">Order <span data-order-id></span> · <span data-pay-mail-kind>invoice</span> emailed to <span data-order-email></span></p>
+        <div class="checkout__actions">
+          <a class="btn btn--secondary btn--sm" data-invoice-download href="#" hidden>Download invoice PDF</a>
+          <a class="btn btn--secondary btn--sm" data-pay-link href="#" hidden>Open pay link</a>
+        </div>
 
         <div class="checkout__methods" role="radiogroup" aria-label="Payment method">
           <label class="checkout__method is-active">
@@ -104,6 +157,7 @@ const waNumber = site.whatsapp;
         </div>
 
         <p class="checkout__error" data-pay-error hidden></p>
+        <p class="checkout__hint">Need help? <button type="button" class="checkout__text-btn" data-order-wa>WhatsApp this order</button></p>
       </div>
     </div>
   </section>
@@ -133,6 +187,11 @@ const waNumber = site.whatsapp;
   }
 
   const params = new URLSearchParams(location.search);
+  const resumeOrder = params.get("order") || "";
+  const resumeToken = params.get("t") || params.get("pay") || "";
+  if (resumeOrder && resumeToken) {
+    location.replace(`/checkout/pay?order=${encodeURIComponent(resumeOrder)}&t=${encodeURIComponent(resumeToken)}`);
+  }
   const expressMode = params.get("mode") === "buy-now";
 
   let items = expressMode ? readExpressItems() : readBagFromStorage();
@@ -173,9 +232,96 @@ const waNumber = site.whatsapp;
   };
   const ledes = {
     review: "Confirm your items, then pay with M-Pesa.",
-    details: "We'll use these for pickup, delivery updates, and your receipt.",
-    pay: "Pay with M-Pesa STK Push. Funds settle to Gadget Hub’s Stanbic account.",
+    details: "We'll use these for pickup, delivery updates, and your receipt. Choose pay-in-full or Lipa Mdogo Mdogo.",
+    pay: "Download the invoice, then pay with M-Pesa STK Push. Funds settle to Gadget Hub’s Stanbic account.",
   };
+
+  function visitorId() {
+    try {
+      let id = localStorage.getItem("gh-visitor");
+      if (!id) {
+        id = (crypto.randomUUID && crypto.randomUUID()) || `v-${Date.now().toString(36)}`;
+        localStorage.setItem("gh-visitor", id);
+      }
+      return id;
+    } catch {
+      return "";
+    }
+  }
+
+  function pingLead(source, extra = {}) {
+    try {
+      const acc = JSON.parse(localStorage.getItem("gh-account") || "null");
+      fetch("/api/leads/cart", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        keepalive: true,
+        body: JSON.stringify({
+          visitorId: visitorId(),
+          source,
+          href: location.pathname,
+          items: items.map((i) => ({
+            id: i.id,
+            name: i.name,
+            kes: i.kes,
+            qty: i.qty,
+            href: i.href,
+          })),
+          name: extra.name || customer.name || acc?.name || "",
+          email: extra.email || customer.email || acc?.email || "",
+          phone: extra.phone || customer.phone || acc?.phone || "",
+        }),
+      }).catch(() => {});
+    } catch {
+      /* ignore */
+    }
+  }
+
+  function detailsForm() {
+    return root.querySelector('[data-panel="details"]');
+  }
+
+  function selectedIntent() {
+    const form = detailsForm();
+    if (!(form instanceof HTMLFormElement)) return "purchase";
+    const checked = form.querySelector('input[name="intent"]:checked');
+    return checked instanceof HTMLInputElement && checked.value === "lipa" ? "lipa" : "purchase";
+  }
+
+  function lipaInputs() {
+    const form = detailsForm();
+    if (!(form instanceof HTMLFormElement)) return { pct: 40, months: 6 };
+    const pctEl = form.querySelector('[name="depositPct"]');
+    const monthsEl = form.querySelector('[name="months"]');
+    const pct =
+      pctEl instanceof HTMLSelectElement || pctEl instanceof HTMLInputElement ? Number(pctEl.value) : 40;
+    const months =
+      monthsEl instanceof HTMLSelectElement || monthsEl instanceof HTMLInputElement
+        ? Number(monthsEl.value)
+        : 6;
+    return { pct: Number.isFinite(pct) ? pct : 40, months: Number.isFinite(months) ? months : 6 };
+  }
+
+  function dueKes() {
+    const total = bagTotal(items);
+    if (selectedIntent() !== "lipa") return total;
+    const { pct } = lipaInputs();
+    return Math.round(total * (pct / 100));
+  }
+
+  function syncIntentUi() {
+    const lipa = selectedIntent() === "lipa";
+    root.querySelectorAll("[data-lipa-fields]").forEach((el) => {
+      el.toggleAttribute("hidden", !lipa);
+    });
+    const hint = root.querySelector("[data-intent-hint]");
+    const total = bagTotal(items);
+    if (hint) {
+      hint.textContent = lipa
+        ? `Deposit due today ${formatKes(dueKes())}. Remaining ${formatKes(total - dueKes())} after we confirm your plan.`
+        : `Full amount due today ${formatKes(total)}.`;
+    }
+  }
 
   let currentPanel = "review";
 
@@ -230,7 +376,8 @@ const waNumber = site.whatsapp;
     }
     const total = formatKes(bagTotal(items));
     if (totalEl) totalEl.textContent = total;
-    if (payTotalEl) payTotalEl.textContent = total;
+    if (payTotalEl) payTotalEl.textContent = formatKes(dueKes());
+    syncIntentUi();
   }
 
   function fillDetailsForm() {
@@ -265,22 +412,61 @@ const waNumber = site.whatsapp;
       fulfillment: String(fd.get("fulfillment") || "pickup") === "delivery" ? "delivery" : "pickup",
       notes: String(fd.get("notes") || "").trim(),
     };
+    const intent = String(fd.get("intent") || "purchase") === "lipa" ? "lipa" : "purchase";
+    const depositPct = Number(fd.get("depositPct") || 40);
+    const months = Number(fd.get("months") || 6);
+
+    pingLead("checkout", customer);
 
     if (err) err.hidden = true;
     try {
       const res = await fetch("/api/checkout/order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items, customer }),
+        body: JSON.stringify({
+          items,
+          customer,
+          intent,
+          depositPct,
+          months,
+          visitorId: visitorId(),
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Could not create order.");
       orderId = data.order.id;
       const oid = root.querySelector("[data-order-id]");
       if (oid) oid.textContent = orderId;
+      const emailEl = root.querySelector("[data-order-email]");
+      if (emailEl) emailEl.textContent = customer.email;
+      const invoiceA = root.querySelector("[data-invoice-download]");
+      if (invoiceA instanceof HTMLAnchorElement && data.order.invoiceUrl) {
+        invoiceA.href = data.order.invoiceUrl;
+        invoiceA.hidden = false;
+      }
+      const payA = root.querySelector("[data-pay-link]");
+      if (payA instanceof HTMLAnchorElement && data.order.payUrl) {
+        payA.href = data.order.payUrl;
+        payA.hidden = false;
+      }
       const mpesa = root.querySelector("[data-mpesa-phone]");
       if (mpesa instanceof HTMLInputElement) mpesa.value = customer.phone;
+      const lipaOrder = data.order.intent === "lipa";
+      const due = formatKes(Number(data.order.subtotalKes) || dueKes());
+      if (payTotalEl) payTotalEl.textContent = due;
+      const kindEl = root.querySelector("[data-pay-kind]");
+      if (kindEl) kindEl.textContent = lipaOrder ? "Deposit due today" : "Pay";
+      const mailKind = root.querySelector("[data-pay-mail-kind]");
+      if (mailKind) mailKind.textContent = lipaOrder ? "deposit invoice" : "invoice";
+      const payBtn = root.querySelector("[data-pay-mpesa-btn]");
+      if (payBtn) payBtn.textContent = lipaOrder ? `Pay deposit ${due} with M-Pesa` : "Pay with M-Pesa";
+      if (ledeEl) {
+        ledeEl.textContent = lipaOrder
+          ? "This invoice is the Lipa Mdogo Mdogo deposit, not the full device price. Pay with M-Pesa STK Push."
+          : ledes.pay;
+      }
       localStorage.setItem(RECENT_ORDER_KEY, orderId);
+      showPanel("pay");
       if (typeof window.fbq === "function") {
         const contentIds = items
           .map((i) => String(i.catalogId || i.sheetId || i.id || "").trim())
@@ -297,8 +483,6 @@ const waNumber = site.whatsapp;
           })),
         });
       }
-      openOrderWhatsApp();
-
     } catch (ex) {
       if (err) {
         err.textContent = ex instanceof Error ? ex.message : "Could not continue.";
@@ -350,6 +534,8 @@ const waNumber = site.whatsapp;
     }, 1500);
   }
 
+  root.querySelector("[data-order-wa]")?.addEventListener("click", () => openOrderWhatsApp());
+
   root.querySelector("[data-pay-mpesa-btn]")?.addEventListener("click", async () => {
     const err = root.querySelector("[data-pay-error]");
     const wait = root.querySelector("[data-mpesa-wait]");
@@ -384,14 +570,35 @@ const waNumber = site.whatsapp;
     }
   });
 
+  detailsForm()?.addEventListener("change", () => {
+    syncIntentUi();
+    if (payTotalEl && currentPanel !== "pay") payTotalEl.textContent = formatKes(dueKes());
+  });
+
+  let leadTimer = 0;
+  detailsForm()?.addEventListener("input", () => {
+    window.clearTimeout(leadTimer);
+    leadTimer = window.setTimeout(() => {
+      const form = detailsForm();
+      if (!(form instanceof HTMLFormElement)) return;
+      pingLead("checkout", {
+        name: String(form.name?.value || "").trim(),
+        email: String(form.email?.value || "").trim(),
+        phone: String(form.phone?.value || "").trim(),
+      });
+    }, 800);
+  });
+
   renderLines();
   if (items.length) {
     fillDetailsForm();
     showPanel("details");
+    pingLead("checkout");
   } else {
     showPanel("review");
   }
   syncMethodUi();
+  syncIntentUi();
 </script>
 
 <style>
@@ -546,9 +753,24 @@ const waNumber = site.whatsapp;
     align-items: flex-start;
   }
 
-  .checkout__methods {
+  .checkout__lipa {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .checkout__field select {
+    font: inherit;
+    font-weight: 400;
+    border: 1px solid var(--color-border);
+    border-radius: 0.65rem;
+    padding: 0.7rem 0.85rem;
+    background: #fff;
+  }
+
+  .checkout__methods {
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 0.5rem;
   }
 
@@ -594,6 +816,16 @@ const waNumber = site.whatsapp;
     margin: 0;
     font-size: var(--text-sm);
     color: #b00020;
+  }
+
+  .checkout__text-btn {
+    border: 0;
+    background: none;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    text-decoration: underline;
+    cursor: pointer;
   }
 
   .checkout__empty p {

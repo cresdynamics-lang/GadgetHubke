@@ -32,7 +32,7 @@ const statusTag: Record<string, string> = {
     <header style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.75rem;align-items:end;margin-bottom:1rem;">
       <div>
         <h1 class="mgmt-page-title">Journal</h1>
-        <p class="mgmt-muted">Guides, tips and news that appear on the website’s Journal page</p>
+        <p class="mgmt-muted">Create, edit, publish, or delete posts. Saves appear on /journal immediately.</p>
       </div>
       <a class="mgmt-btn" href="/management/journal/new">+ New post</a>
     </header>
@@ -81,7 +81,7 @@ const statusTag: Record<string, string> = {
           <tbody>
             {
               posts.map((p) => (
-                <tr>
+                <tr data-id={p.id} data-title={p.title}>
                   <td>
                     <strong>{p.title}</strong>
                   </td>
@@ -93,9 +93,21 @@ const statusTag: Record<string, string> = {
                   <td>{p.dateLabel}</td>
                   <td>{p.views || "-"}</td>
                   <td>
-                    <a class="mgmt-link" href={`/management/journal/${p.id}`}>
-                      Edit ›
-                    </a>
+                    <div class="mgmt-actions">
+                      <a class="mgmt-link" href={`/management/journal/${p.id}`}>
+                        Edit
+                      </a>
+                      {
+                        p.status === "published" ? (
+                          <a class="mgmt-link" href={`/journal/${p.slug}`} target="_blank" rel="noopener">
+                            View
+                          </a>
+                        ) : null
+                      }
+                      <button type="button" class="mgmt-btn mgmt-btn--danger mgmt-btn--sm" data-delete>
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))
@@ -106,3 +118,25 @@ const statusTag: Record<string, string> = {
     </div>
   </section>
 </ManagementLayout>
+
+<script>
+  document.querySelectorAll("[data-delete]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const row = (btn as HTMLElement).closest("tr");
+      const id = row?.getAttribute("data-id");
+      const title = row?.getAttribute("data-title") || "this post";
+      if (!id || !confirm(`Delete “${title}”? It will leave the public Journal.`)) return;
+      const res = await fetch("/api/management/journal", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || "Delete failed");
+        return;
+      }
+      location.reload();
+    });
+  });
+</script>

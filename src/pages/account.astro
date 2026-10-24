@@ -92,7 +92,7 @@ const initialPanel =
             <input type="email" name="email" autocomplete="email" required placeholder="you@email.com" />
           </label>
           <p class="account__hint">
-            We will send a reset link when email delivery is connected. For now, WhatsApp us and we will help.
+            We email a reset link to this address from {site.email}. Check spam if it is not in your inbox within a minute.
           </p>
           <p class="account__error" data-form-error hidden></p>
           <p class="account__ok" data-form-ok hidden></p>
@@ -195,6 +195,37 @@ const initialPanel =
 
   function writeSession(user) {
     localStorage.setItem(KEY, JSON.stringify(user));
+    try {
+      const bag = JSON.parse(localStorage.getItem("gh-bag") || "[]");
+      if (!Array.isArray(bag) || !bag.length) return;
+      let visitorId = localStorage.getItem("gh-visitor");
+      if (!visitorId) {
+        visitorId = (crypto.randomUUID && crypto.randomUUID()) || `v-${Date.now().toString(36)}`;
+        localStorage.setItem("gh-visitor", visitorId);
+      }
+      fetch("/api/leads/cart", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        keepalive: true,
+        body: JSON.stringify({
+          visitorId,
+          source: "account",
+          href: location.pathname,
+          items: bag.map((i) => ({
+            id: i.id,
+            name: i.name,
+            kes: i.kes,
+            qty: i.qty,
+            href: i.href,
+          })),
+          name: user?.name || "",
+          email: user?.email || "",
+          phone: user?.phone || "",
+        }),
+      }).catch(() => {});
+    } catch {
+      /* ignore */
+    }
   }
 
   function clearSession() {
@@ -254,7 +285,7 @@ const initialPanel =
     btn.addEventListener("click", () => showPanel(btn.getAttribute("data-goto") || "signin"));
   });
 
-  root.querySelector("[data-account-form='signin']")?.addEventListener("submit", (e) => {
+  root.querySelector("[data-account-form='signin']")?.addEventListener("submit", async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
     if (!(form instanceof HTMLFormElement)) return;
@@ -270,17 +301,30 @@ const initialPanel =
       return;
     }
     if (err) err.hidden = true;
-    const existing = readSession();
-    writeSession({
-      email,
-      name: existing?.name || email.split("@")[0],
-      phone: existing?.phone || "",
-      signedInAt: Date.now(),
-    });
-    render();
+    try {
+      const res = await fetch("/api/account/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Sign in failed.");
+      writeSession({
+        email: data.customer.email,
+        name: data.customer.name,
+        phone: data.customer.phone,
+        signedInAt: Date.now(),
+      });
+      render();
+    } catch (ex) {
+      if (err) {
+        err.textContent = ex instanceof Error ? ex.message : "Sign in failed.";
+        err.hidden = false;
+      }
+    }
   });
 
-  root.querySelector("[data-account-form='create']")?.addEventListener("submit", (e) => {
+  root.querySelector("[data-account-form='create']")?.addEventListener("submit", async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
     if (!(form instanceof HTMLFormElement)) return;
@@ -299,11 +343,30 @@ const initialPanel =
       return;
     }
     if (err) err.hidden = true;
-    writeSession({ name, email, phone, signedInAt: Date.now() });
-    render();
+    try {
+      const res = await fetch("/api/account/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, phone, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Could not create account.");
+      writeSession({
+        name: data.customer.name,
+        email: data.customer.email,
+        phone: data.customer.phone,
+        signedInAt: Date.now(),
+      });
+      render();
+    } catch (ex) {
+      if (err) {
+        err.textContent = ex instanceof Error ? ex.message : "Could not create account.";
+        err.hidden = false;
+      }
+    }
   });
 
-  root.querySelector("[data-account-form='forgot']")?.addEventListener("submit", (e) => {
+  root.querySelector("[data-account-form='forgot']")?.addEventListener("submit", async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
     if (!(form instanceof HTMLFormElement)) return;
@@ -319,13 +382,32 @@ const initialPanel =
       return;
     }
     if (err) err.hidden = true;
-    if (ok) {
-      ok.textContent = `If an account exists for ${email}, we will follow up. Prefer faster help? Message us on WhatsApp.`;
-      ok.hidden = false;
+    try {
+      const res = await fetch("/api/account/forgot", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Could not send reset email.");
+      if (ok) {
+        ok.textContent = data.message || `If an account exists for ${email}, we sent a reset link.`;
+        ok.hidden = false;
+      }
+    } catch (ex) {
+      if (err) {
+        err.textContent = ex instanceof Error ? ex.message : "Could not send reset email.";
+        err.hidden = false;
+      }
     }
   });
 
-  root.querySelector("[data-account-signout]")?.addEventListener("click", () => {
+  root.querySelector("[data-account-signout]")?.addEventListener("click", async () => {
+    try {
+      await fetch("/api/account/logout", { method: "POST" });
+    } catch {
+      /* local sign-out still proceeds */
+    }
     clearSession();
     render();
     showPanel("signin");

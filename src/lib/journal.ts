@@ -395,7 +395,12 @@ export async function saveJournalPost(input: Partial<JournalPost> & { title: str
   const existing = all.find((p) => p.id === id);
   const slug = (input.slug || existing?.slug || slugifyTitle(input.title)).replace(/^\/+/, "").replace(/^journal\//, "");
   const status = (input.status || existing?.status || "draft") as JournalStatus;
-  const date = input.date ?? existing?.date ?? (status === "published" ? new Date().toISOString().slice(0, 10) : "");
+  const today = new Date().toISOString().slice(0, 10);
+  const requestedDate = typeof input.date === "string" ? input.date.trim() : "";
+  const date =
+    requestedDate ||
+    existing?.date ||
+    (status === "published" || status === "scheduled" ? today : "");
   const post: JournalPost = {
     id,
     slug,
