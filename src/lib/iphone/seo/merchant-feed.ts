@@ -3,6 +3,7 @@
  * EX-UK variants are excluded while SHOW_EX_UK is false.
  */
 import fs from "node:fs";
+import { seoModelGallery } from "./gallery";
 import path from "node:path";
 import { site } from "../../site";
 import { iphoneSeoCatalog } from "./catalog";
@@ -54,6 +55,11 @@ function resolveImage(modelId: string, name: string): string | undefined {
       const disk = path.join(process.cwd(), "public", img.src.replace(/^\//, ""));
       if (fs.existsSync(disk)) return new URL(img.src, site.url).href;
     }
+  }
+  const gallery = seoModelGallery[modelId]?.[0];
+  if (gallery) {
+    const disk = path.join(process.cwd(), "public", gallery.src.replace(/^\//, ""));
+    if (fs.existsSync(disk)) return new URL(gallery.src, site.url).href;
   }
   const shop = getProduct(seoIdToShopProductId[modelId] ?? modelId);
   if (shop?.image?.src) {

@@ -2,7 +2,11 @@
 /**
  * iPad landing - hero light-up, choose cards, gen chips, grid, plan purchase, visit.
  */
+export const prerender = false;
+
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { livePricedCatalog } from "../../lib/pricing/live";
+import { buildCategorySeo, formatKes as formatKesSeoHub } from "../../lib/seo/product-seo";
 import IpadStage from "../../components/ipad/IpadStage.astro";
 import IpadCard from "../../components/ipad/IpadCard.astro";
 import IpadQuiz from "../../components/ipad/IpadQuiz.astro";
@@ -66,12 +70,18 @@ const choose = [
 
 const genChips = ["M5", "M4", "M3", "M2", "M1", "A-series"] as const;
 const wa = whatsappUrl("Hi Gadget Hub, I want to visit and try an iPad / Apple Pencil.");
+const hubProducts = (await livePricedCatalog()).filter((p) => ["iPad"].includes(p.group));
+const hubSeo = buildCategorySeo({ label: "iPad", path: "/ipad", products: hubProducts });
+const hubFrom = formatKesSeoHub(hubSeo.fromKes);
 ---
 
 <BaseLayout
-  title="iPad - GadgetHub"
-  description="iPad Pro, Air, mini and iPad. Sealed stock in Nairobi. 1-year warranty. Norwich House, Suite 15."
+  title="iPad Price in Kenya | iPad Pro M5, Air, mini | Gadget Hub"
+  description={`iPad prices in Nairobi from ${hubFrom}: iPad Pro M5, iPad Air M4, iPad mini and iPad A16. Genuine sealed, 1-year warranty. Pay by M-Pesa or Lipa Mdogo Mdogo.`}
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(hubSeo.jsonLd)} />
+  </Fragment>
   <CategoryHero category="ipad" />
 
   <section class="container ipad-choose">

@@ -2,7 +2,12 @@
 /**
  * iPhone shop - latest (17/18/Air/Duo) + generations 11 - 16.
  */
+export const prerender = false;
+
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { livePricedCatalog, iphoneLiveId } from "../../lib/pricing/live";
+import { buildCategorySeo, formatKes as formatKesSeoHub } from "../../lib/seo/product-seo";
+import { listSeoModels } from "../../lib/iphone/seo";
 import IphoneCard from "../../components/iphone/IphoneCard.astro";
 import IphoneQuiz from "../../components/iphone/IphoneQuiz.astro";
 import ProductCard from "../../components/ProductCard.astro";
@@ -61,12 +66,25 @@ const comparePayload = list.map((m) => {
     family: m.family,
   };
 });
+// One ItemList entry per iPhone model page, priced live, newest first.
+const liveById = new Map((await livePricedCatalog()).map((p) => [p.id, p]));
+const iphoneHubProducts = listSeoModels()
+  .map((m) => {
+    const live = liveById.get(iphoneLiveId(m.id));
+    return live ? { ...live, name: m.name, href: `/iphone/${m.id}` } : undefined;
+  })
+  .filter((p): p is NonNullable<typeof p> => Boolean(p));
+const hubSeo = buildCategorySeo({ label: "iPhone", path: "/iphone", products: iphoneHubProducts });
+const hubFrom = formatKesSeoHub(hubSeo.fromKes);
 ---
 
 <BaseLayout
-  title={`iPhone Price in Kenya | 11 to 18 | ${site.name}`}
-  description="Compare iPhone 11 to iPhone 18 prices in Nairobi at Gadget Hub. Starting prices from the sheet. Pay in full or Lipa Mdogo Mdogo. Norwich House."
+  title="iPhone Price in Kenya | iPhone 18 Pro, 17 Pro Max, 16 | Gadget Hub"
+  description={`Latest iPhone prices in Nairobi: iPhone 18 Pro, 17 Pro Max, 17, Air, 16 and older from ${hubFrom}. Genuine sealed, 1-year warranty. M-Pesa or Lipa Mdogo Mdogo.`}
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({ ...hubSeo.jsonLd, "@graph": hubSeo.jsonLd["@graph"].filter((n) => n["@type"] !== "BreadcrumbList") })} />
+  </Fragment>
   <Fragment slot="head">
     {
       preloadCardImgs.map((href, i) =>

@@ -1,5 +1,9 @@
 ---
+export const prerender = false;
+
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { livePricedCatalog } from "../../lib/pricing/live";
+import { buildCategorySeo, formatKes as formatKesSeoHub } from "../../lib/seo/product-seo";
 import AccessoryCard from "../../components/accessories/AccessoryCard.astro";
 import CompatibilityFinder from "../../components/accessories/CompatibilityFinder.astro";
 import AccessoryLipaCalc from "../../components/accessories/AccessoryLipaCalc.astro";
@@ -93,12 +97,18 @@ function bundleKes(ids: string[]) {
 
 const wa = whatsappUrl("Hi Gadget Hub, I want to visit and try accessories.");
 const corp = whatsappUrl("Corporate accessories order");
+const hubProducts = (await livePricedCatalog()).filter((p) => ["Accessories"].includes(p.group));
+const hubSeo = buildCategorySeo({ label: "Accessories", path: "/accessories", products: hubProducts });
+const hubFrom = formatKesSeoHub(hubSeo.fromKes);
 ---
 
 <BaseLayout
-  title="Accessories - GadgetHub"
-  description="Apple Pencil, Magic Keyboard, Pointers, Power and Cases in Nairobi. Compatibility checked before you pay."
+  title="Apple Accessories Price in Kenya | Pencil, Keyboard, Chargers"
+  description={`Original Apple accessories in Nairobi from ${hubFrom}: Apple Pencil, Magic Keyboard, MagSafe and USB-C chargers, cases and cables. Compatibility checked before you pay.`}
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(hubSeo.jsonLd)} />
+  </Fragment>
   <CategoryHero category="accessories" />
 
   <section class="xland-groups container">

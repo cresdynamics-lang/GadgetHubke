@@ -1,5 +1,9 @@
 ---
+export const prerender = false;
+
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { livePricedCatalog } from "../../lib/pricing/live";
+import { buildCategorySeo, formatKes as formatKesSeoHub } from "../../lib/seo/product-seo";
 import TvHomeStage from "../../components/tv-home/TvHomeStage.astro";
 import TvHomeCard from "../../components/tv-home/TvHomeCard.astro";
 import TvHomeQuiz from "../../components/tv-home/TvHomeQuiz.astro";
@@ -73,12 +77,18 @@ const bundlePayload = tvHomeBundles.map((b) => ({
     return n + p.kes;
   }, 0),
 }));
+const hubProducts = (await livePricedCatalog()).filter((p) => ["TV & Home"].includes(p.group));
+const hubSeo = buildCategorySeo({ label: "TV & Home", path: "/tv-home", products: hubProducts });
+const hubFrom = formatKesSeoHub(hubSeo.fromKes);
 ---
 
 <BaseLayout
-  title="TV & Home - GadgetHub"
-  description="Apple TV 4K, HomePod and HomePod mini. Sealed stock in Nairobi. Sample prices until admin is live."
+  title="Apple TV & HomePod Price in Kenya | Gadget Hub Nairobi"
+  description={`Apple TV 4K, HomePod and HomePod mini prices in Nairobi from ${hubFrom}. Genuine sealed, 1-year warranty. Pay by M-Pesa or Lipa Mdogo Mdogo at Gadget Hub.`}
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(hubSeo.jsonLd)} />
+  </Fragment>
   <CategoryHero category="tv-home" />
 
   <section class="container tvhome-choose">

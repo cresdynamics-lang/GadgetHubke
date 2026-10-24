@@ -16,15 +16,51 @@ interface Props {
   title?: string;
   description?: string;
   hideFooter?: boolean;
+  /** Share / preview image (site-relative or absolute). Defaults to the logo. */
+  image?: string;
+  /** Site-relative canonical path when this page duplicates another. */
+  canonicalPath?: string;
 }
 
 const {
   title = `${site.name} - Apple devices in Nairobi`,
   description = "Gadget Hub sells Apple products in Nairobi. iPhone, Mac, iPad, Watch, AirPods, and accessories. Trade-in and Lipa Mdogo Mdogo available.",
   hideFooter = false,
+  image,
+  canonicalPath,
 } = Astro.props;
+const ogImage = new URL(image || "/images/logo.png", site.url).href;
+// Store details on every page so Google can tie products and articles to the Nairobi shop.
+const storeJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ElectronicsStore",
+  "@id": `${site.url}/#store`,
+  name: site.legalName,
+  alternateName: ["Gadget Hub", "GadgetHub Kenya", "Gadget Hub Nairobi"],
+  url: site.url,
+  logo: new URL("/images/logo.png", site.url).href,
+  image: new URL("/images/logo.png", site.url).href,
+  telephone: site.phoneE164,
+  email: site.email,
+  priceRange: "KES 3,000 - KES 600,000",
+  currenciesAccepted: "KES",
+  paymentAccepted: "M-Pesa, Lipa Mdogo Mdogo",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: `${site.address}`,
+    addressLocality: "Nairobi",
+    addressRegion: "Nairobi County",
+    addressCountry: "KE",
+  },
+  areaServed: { "@type": "Country", name: "Kenya" },
+  openingHoursSpecification: [
+    { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], opens: "08:00", closes: "20:00" },
+    { "@type": "OpeningHoursSpecification", dayOfWeek: "Sunday", opens: "10:00", closes: "20:00" },
+  ],
+  sameAs: [site.social.facebook, site.social.instagram, site.social.tiktok],
+};
 
-const canonical = new URL(Astro.url.pathname, site.url).href;
+const canonical = new URL(canonicalPath || Astro.url.pathname, site.url).href;
 const path = Astro.url.pathname.replace(/\/$/, "") || "/";
 const hideFloatWhatsApp = path === "/contact";
 ---
@@ -51,7 +87,16 @@ const hideFloatWhatsApp = path === "/contact";
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={new URL("/images/logo.png", site.url).href} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content="Gadget Hub Kenya" />
+    <meta property="og:locale" content="en_KE" />
+    <meta name="twitter:card" content={image ? "summary_large_image" : "summary"} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="geo.region" content="KE-110" />
+    <meta name="geo.placename" content="Nairobi" />
+    <script type="application/ld+json" set:html={JSON.stringify(storeJsonLd)} />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <slot name="head" />

@@ -29,6 +29,8 @@ import {
   defaultAirpodsColour,
 } from "../../lib/airpods";
 import { livePricedProduct, variantPriceMap } from "../../lib/pricing/live";
+import { buildProductSeo } from "../../lib/seo/product-seo";
+import ProductSeoBlock from "../../components/ProductSeoBlock.astro";
 
 export const prerender = false;
 
@@ -40,6 +42,19 @@ const model = liveBase != null ? { ...airpodsDefault, basePriceKes: liveBase } :
 
 const tabs = airpodsViewerTabs(model);
 const img = tabs[0] || getAirpodsImage(model.id, "hero", model.name);
+const liveProduct = await livePricedProduct(model.id);
+const pageSeo = liveProduct
+  ? buildProductSeo({
+      product: liveProduct,
+      categoryLabel: "AirPods",
+      categoryHref: "/airpods",
+      path: `/airpods/${model.id}`,
+      images: [img.src],
+      summary: [model.tagline, model.whoItSuits].filter(Boolean).join(" "),
+      alsoKnownAs: [`original ${model.name}`, `${model.name} Nairobi`],
+      extraFaq: [{ question: `How do I know my ${model.name} are not fake?`, answer: "Buy sealed from a shop that gives an invoice, then check the serial number on Apple's coverage page and in Settings > Bluetooth after pairing. Copies are common in Nairobi; ours are genuine Apple with a 1-year warranty." }],
+    })
+  : undefined;
 const price = airpodsConfigurePrice(model);
 const lipa = lipaMonthly(price.kes);
 const notes = airpodsBuyingNotes(model);
@@ -66,7 +81,7 @@ if (model.id === "airpods-pro-3") {
 const showPageHero = Boolean(heroStartSrc && heroEndSrc);
 ---
 
-<BaseLayout title={`${model.name} - GadgetHub`} description={model.tagline}>
+<BaseLayout title={pageSeo?.title ?? `${model.name} - GadgetHub`} description={pageSeo?.description ?? model.tagline} image={pageSeo?.image}>
   <TrackProductView
     id={model.id}
     name={model.name}
@@ -322,6 +337,7 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
       <AirpodsTrademark />
     </section>
   </article>
+  {pageSeo ? <ProductSeoBlock seo={pageSeo} links={[{ href: "/airpods", label: "All AirPods" }, { href: "/journal/airpods-price-in-kenya", label: "AirPods price guide" }]} /> : null}
 </BaseLayout>
 
 <script define:vars={{

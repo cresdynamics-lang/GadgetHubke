@@ -13,6 +13,7 @@ import BackButton from "../components/BackButton.astro";
 import TrackProductView from "../components/TrackProductView.astro";
 import type { Product } from "../lib/products";
 import { site, whatsappUrl } from "../lib/site";
+import { withLiveSeoPrices } from "../lib/iphone/seo/live";
 import { livePricedProduct } from "../lib/pricing/live";
 import { storageIdFromLabel } from "../lib/pricing/iphone-sheet";
 import {
@@ -31,15 +32,7 @@ const { product } = Astro.props;
 const live = await livePricedProduct(product.id);
 const liveByKey = new Map((live?.variants ?? []).map((v) => [v.key, v]));
 const seoDefault = getSeoModelByName(product.name);
-const seo = seoDefault
-  ? (() => {
-      const variants = seoDefault.variants.map((v) => {
-        const l = liveByKey.get(storageIdFromLabel(v.storage));
-        return l ? { ...v, newKes: l.priceKes, exUkKes: l.exUkKes ?? v.exUkKes } : v;
-      });
-      return { ...seoDefault, variants, fromKes: Math.min(...variants.map((v) => v.newKes)) };
-    })()
-  : undefined;
+const seo = seoDefault ? withLiveSeoPrices(seoDefault, live) : undefined;
 const storages = seo
   ? seo.variants.map((v) => ({
       id: v.storage.toLowerCase().replace(/\s+/g, ""),
@@ -63,7 +56,7 @@ const gallery =
 const lipaMonths = product.lipaMonths ?? 0;
 const lipaFrom =
   lipaMonths > 0 ? Math.ceil(basePrice / lipaMonths) : 0;
-const pageUrl = new URL(product.overviewHref, site.url).href;
+const pageUrl = new URL(seo ? `/iphone/${seo.id}` : product.overviewHref, site.url).href;
 const jsonLd = seo
   ? buildIphoneProductJsonLd(seo, {
       pageUrl,
@@ -77,6 +70,8 @@ const pageDescription = seo?.metaDescription ?? product.tagline;
 <BaseLayout
   title={pageTitle}
   description={pageDescription}
+  image={product.image.src}
+  canonicalPath={seo ? `/iphone/${seo.id}` : undefined}
 >
   {jsonLd ? <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} /> : null}
   <TrackProductView

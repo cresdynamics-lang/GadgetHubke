@@ -6,6 +6,7 @@ export { sharedProductFaq, buyingBlock } from "./shared";
 export { buildIphoneProductJsonLd, buildSeriesHubJsonLd } from "./jsonld";
 export { variantsFromSheet } from "./prices";
 export { iphoneSeoCatalog } from "./catalog";
+export { seoModelGallery, type SeoGalleryImage } from "./gallery";
 export {
   listSeriesHubs,
   getSeriesHub,

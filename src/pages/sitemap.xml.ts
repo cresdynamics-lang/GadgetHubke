@@ -5,7 +5,8 @@ import { productNav } from "../lib/catalog";
 import { listPublishedJournalPosts } from "../lib/journal";
 import { products } from "../lib/products";
 import { tvHomeModels } from "../lib/tv-home";
-import { listSeoModels, listSeriesHubs } from "../lib/iphone/seo";
+import { listSeoModels, listSeriesHubs, getSeoModelByName } from "../lib/iphone/seo";
+import { defaultPricedCatalog } from "../lib/pricing/live";
 
 const staticPaths = [
   "/",
@@ -23,8 +24,6 @@ const staticPaths = [
   "/careers",
   "/newsletter",
   "/compare",
-  "/cart",
-  "/account",
   "/sitemap",
   "/terms",
   "/privacy",
@@ -32,7 +31,6 @@ const staticPaths = [
   "/cookies",
   "/warranty-repairs",
   "/shipping-delivery",
-  "/track-order",
   "/corporate-bulk",
   "/shop/watch",
   "/shop/airpods",
@@ -45,8 +43,11 @@ function abs(path: string) {
   return new URL(path, site.url).href;
 }
 
+export const prerender = false;
+
 export const GET: APIRoute = async () => {
   const urls = new Set<string>();
+  const lastmod = new Map<string, string>();
 
   for (const p of staticPaths) urls.add(abs(p));
   for (const c of homeCategories) urls.add(abs(c.href));
@@ -55,11 +56,20 @@ export const GET: APIRoute = async () => {
     for (const child of cat.children ?? []) urls.add(abs(child.href));
   }
   for (const post of await listPublishedJournalPosts()) {
-    urls.add(abs(`/journal/${post.slug}`));
+    const loc = abs(`/journal/${post.slug}`);
+    urls.add(loc);
+    const mod = (post.updatedAt || post.date || "").slice(0, 10);
+    if (mod) lastmod.set(loc, mod);
   }
   for (const product of products) {
-    urls.add(abs(product.overviewHref));
+    // iPhone shop pages point Google at /iphone/<model>; list only the main page.
+    if (!getSeoModelByName(product.name)) urls.add(abs(product.overviewHref));
     urls.add(abs(product.specsHref));
+  }
+  // Every product page: iPad, Mac, Watch, AirPods, TV & Home, accessories, iPhone models.
+  for (const p of defaultPricedCatalog()) {
+    if (p.group === "Shop iPhone") continue;
+    urls.add(abs(p.href));
   }
   for (const m of tvHomeModels) urls.add(abs(`/tv-home/${m.id}`));
   for (const m of listSeoModels()) {
@@ -68,10 +78,12 @@ export const GET: APIRoute = async () => {
   }
   for (const s of listSeriesHubs()) urls.add(abs(`/iphone/${s.slug}`));
   urls.add(abs("/iphone"));
-  urls.add(abs("/feeds/google-merchant-iphone.xml"));
-  urls.add(abs("/feeds/google-merchant.xml"));
-  urls.add(abs("/feeds/meta-catalog.csv"));
 
+
+  // Shop iPhone pages canonicalise to /iphone/<model>; keep duplicates out of the sitemap.
+  for (const product of products) {
+    if (getSeoModelByName(product.name)) urls.delete(abs(product.overviewHref));
+  }
 
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -79,7 +91,7 @@ ${[...urls]
   .sort()
   .map(
     (loc) => `  <url>
-    <loc>${loc}</loc>
+    <loc>${loc}</loc>${lastmod.has(loc) ? `\n    <lastmod>${lastmod.get(loc)}</lastmod>` : ""}
   </url>`,
   )
   .join("\n")}

@@ -2,7 +2,11 @@
 /**
  * Watch landing - hero wake-up, choose cards, quiz, gen chips, grid, band studio, plan, visit.
  */
+export const prerender = false;
+
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { livePricedCatalog } from "../../lib/pricing/live";
+import { buildCategorySeo, formatKes as formatKesSeoHub } from "../../lib/seo/product-seo";
 import WatchStage from "../../components/watch/WatchStage.astro";
 import WatchCard from "../../components/watch/WatchCard.astro";
 import WatchQuiz from "../../components/watch/WatchQuiz.astro";
@@ -55,12 +59,18 @@ const choose = [
 ];
 
 const genChips = ["Series 12", "Series 11", "Series 10", "Series 9", "Series 8", "Series 7", "Series 6", "SE", "Ultra"] as const;
+const hubProducts = (await livePricedCatalog()).filter((p) => ["Watch"].includes(p.group));
+const hubSeo = buildCategorySeo({ label: "Apple Watch", path: "/watch", products: hubProducts });
+const hubFrom = formatKesSeoHub(hubSeo.fromKes);
 ---
 
 <BaseLayout
-  title="Apple Watch - GadgetHub"
-  description="Apple Watch Series, Ultra and SE. Sealed stock in Nairobi. Sample prices until admin is live."
+  title="Apple Watch Price in Kenya | Series 12, Ultra, SE | Gadget Hub"
+  description={`Apple Watch (iWatch) prices in Nairobi from ${hubFrom}: Series 12, Series 11, Ultra and SE 3. Genuine sealed, 1-year warranty. Pay by M-Pesa or Lipa Mdogo Mdogo.`}
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(hubSeo.jsonLd)} />
+  </Fragment>
   <CategoryHero category="watch" />
 
   <section class="container watch-choose">

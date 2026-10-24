@@ -31,6 +31,8 @@ import {
   productGeoUs,
 } from "../../lib/accessories";
 import { livePricedProduct } from "../../lib/pricing/live";
+import { buildProductSeo } from "../../lib/seo/product-seo";
+import ProductSeoBlock from "../../components/ProductSeoBlock.astro";
 import { ipadModels } from "../../lib/ipad";
 import { macModels } from "../../lib/mac";
 import { whatsappUrl } from "../../lib/site";
@@ -70,6 +72,18 @@ const livePrice = (await livePricedProduct(accessoryDefault.id))?.priceKes;
 const product = livePrice != null ? { ...accessoryDefault, basePriceKes: livePrice } : accessoryDefault;
 
 const hero = getAccessoryImage(product.id, "hero");
+const liveProduct = await livePricedProduct(product.id);
+const pageSeo = liveProduct
+  ? buildProductSeo({
+      product: liveProduct,
+      categoryLabel: "Accessories",
+      categoryHref: "/accessories",
+      path: `/accessories/${product.id}`,
+      images: [hero.src],
+      summary: [product.tagline, product.whoItSuits].filter(Boolean).join(" "),
+      alsoKnownAs: [`original ${product.name}`],
+    })
+  : undefined;
 const angles = angleSrcs(product.id);
 const galleries = storeGallerySrcs(product.id);
 const hasSwatch = Boolean(swatchSrc(product.id));
@@ -139,7 +153,7 @@ const wa = whatsappUrl(
 const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.designOnly);
 ---
 
-<BaseLayout title={`${product.name} - GadgetHub`} description={product.tagline}>
+<BaseLayout title={pageSeo?.title ?? `${product.name} - GadgetHub`} description={pageSeo?.description ?? product.tagline} image={pageSeo?.image}>
   <TrackProductView
     id={product.id}
     name={product.name}
@@ -400,6 +414,7 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
 
   <AccessoryLipaCalc productId={product.id} />
   <AccessoryTrademark />
+  {pageSeo ? <ProductSeoBlock seo={pageSeo} links={[{ href: "/accessories", label: "All accessories" }]} /> : null}
 </BaseLayout>
 
 <script>

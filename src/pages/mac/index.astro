@@ -2,7 +2,11 @@
 /**
  * Mac landing - Air/Pro choose, quiz, grid, plan purchase, Windows, accessories, visit.
  */
+export const prerender = false;
+
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { livePricedCatalog } from "../../lib/pricing/live";
+import { buildCategorySeo, formatKes as formatKesSeoHub } from "../../lib/seo/product-seo";
 import MacStage from "../../components/mac/MacStage.astro";
 import MacCard from "../../components/mac/MacCard.astro";
 import MacQuiz from "../../components/mac/MacQuiz.astro";
@@ -44,12 +48,18 @@ const preloadMacCards = [
     return cardImageSrc(m.id, img.src);
   }),
 ].filter((src, i, arr) => src && arr.indexOf(src) === i);
+const hubProducts = (await livePricedCatalog()).filter((p) => ["Mac"].includes(p.group));
+const hubSeo = buildCategorySeo({ label: "Mac", path: "/mac", products: hubProducts });
+const hubFrom = formatKesSeoHub(hubSeo.fromKes);
 ---
 
 <BaseLayout
-  title="MacBook - GadgetHub"
-  description="MacBook Air and MacBook Pro, M1 to M5. Sealed stock in Nairobi. Sample prices until admin is live."
+  title="MacBook Price in Kenya | MacBook Air & Pro M5 | Gadget Hub"
+  description={`MacBook prices in Nairobi from ${hubFrom}: MacBook Air and MacBook Pro, M1 to M5. Genuine sealed, 1-year warranty. Pay by M-Pesa or Lipa Mdogo Mdogo at Gadget Hub.`}
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(hubSeo.jsonLd)} />
+  </Fragment>
   <Fragment slot="head">
     {
       preloadMacCards.map((href, i) =>

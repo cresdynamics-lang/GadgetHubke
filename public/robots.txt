@@ -7,5 +7,9 @@ Allow: /journal/
 Disallow: /management
 Disallow: /api/management
 Disallow: /api/admin
+Disallow: /api/
+Disallow: /cart
+Disallow: /checkout
+Disallow: /account
 
 Sitemap: https://gadgethubke.com/sitemap.xml

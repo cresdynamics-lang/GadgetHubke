@@ -34,6 +34,8 @@ import {
 } from "../../lib/ipad";
 import { whatsappUrl } from "../../lib/site";
 import { livePricedProduct, variantPriceMap } from "../../lib/pricing/live";
+import { buildProductSeo } from "../../lib/seo/product-seo";
+import ProductSeoBlock from "../../components/ProductSeoBlock.astro";
 
 export const prerender = false;
 
@@ -43,6 +45,23 @@ if (!model) return Astro.redirect("/ipad");
 const colour = defaultIpadColour(model);
 const tabs = ipadViewerTabs(model, colour);
 const img = tabs[0] || getIpadImage(model.id, colour, "product", model.name);
+const liveProduct = await livePricedProduct(model.id);
+const pageSeo = liveProduct
+  ? buildProductSeo({
+      product: liveProduct,
+      categoryLabel: "iPad",
+      categoryHref: "/ipad",
+      path: `/ipad/${model.id}`,
+      images: [img.src],
+      summary: [model.tagline, model.whoItSuits].filter(Boolean).join(" "),
+      optionsSummary: `${model.storageOptions.join(", ")}${model.cellular ? ", Wi-Fi or Wi-Fi + Cellular (5G)" : ", Wi-Fi"}`,
+      alsoKnownAs: [model.name.replace("″", " inch"), `${model.name.replace("″", "")} price Nairobi`],
+      variesBy: ["https://schema.org/storageCapacity"],
+      extraFaq: model.cellular
+        ? [{ question: `Should I get the Wi-Fi or Cellular ${model.name}?`, answer: "Wi-Fi is enough if you use it at home, the office or on a hotspot. The Cellular (5G) model takes a Safaricom or Airtel SIM or eSIM so it stays online anywhere, and it costs more." }]
+        : [],
+    })
+  : undefined;
 const price = ipadConfigurePrice(model, model.storageOptions[0]);
 // Live admin prices per storage + connectivity ("256gb", "256gb-cell").
 const exactPrices = variantPriceMap(await livePricedProduct(model.id));
@@ -68,7 +87,7 @@ const wa = whatsappUrl(
 );
 ---
 
-<BaseLayout title={`${model.name} - GadgetHub`} description={model.tagline}>
+<BaseLayout title={pageSeo?.title ?? `${model.name} - GadgetHub`} description={pageSeo?.description ?? model.tagline} image={pageSeo?.image}>
   <TrackProductView
     id={model.id}
     name={model.name}
@@ -482,6 +501,7 @@ const wa = whatsappUrl(
     description={model.tagline}
   />
 
+  {pageSeo ? <ProductSeoBlock seo={pageSeo} links={[{ href: "/ipad", label: "All iPads" }, { href: "/journal/ipad-price-in-kenya", label: "iPad price guide" }, { href: "/accessories/apple-pencil", label: "Apple Pencil" }]} /> : null}
 </BaseLayout>
 
 <script define:vars={{

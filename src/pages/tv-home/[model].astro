@@ -28,6 +28,8 @@ import {
   isSpeaker,
 } from "../../lib/tv-home";
 import { livePricedProduct, variantPriceMap } from "../../lib/pricing/live";
+import { buildProductSeo } from "../../lib/seo/product-seo";
+import ProductSeoBlock from "../../components/ProductSeoBlock.astro";
 
 export const prerender = false;
 
@@ -41,6 +43,17 @@ const model = liveBase != null ? { ...tvDefault, basePriceKes: liveBase } : tvDe
 
 const tabs = tvHomeViewerTabs(model);
 const img = tabs[0] || getTvHomeImage(model.id, "hero", model.name);
+const pageSeo = live
+  ? buildProductSeo({
+      product: live,
+      categoryLabel: "TV & Home",
+      categoryHref: "/tv-home",
+      path: `/tv-home/${model.id}`,
+      images: [img.src],
+      summary: [model.tagline, model.whoItSuits].filter(Boolean).join(" "),
+      alsoKnownAs: [`${model.name} Nairobi`],
+    })
+  : undefined;
 const price = tvHomeConfigurePrice(model);
 const lipa = lipaMonthly(price.kes);
 const notes = tvHomeBuyingNotes(model);
@@ -57,7 +70,7 @@ const showStorage = model.family === "Apple TV" && model.storageOptions.length >
 const showPair = model.stereoPairCapable;
 ---
 
-<BaseLayout title={`${model.name} - GadgetHub`} description={model.tagline}>
+<BaseLayout title={pageSeo?.title ?? `${model.name} - GadgetHub`} description={pageSeo?.description ?? model.tagline} image={pageSeo?.image}>
   <TrackProductView
     id={model.id}
     name={model.name}
@@ -308,6 +321,7 @@ const showPair = model.stereoPairCapable;
 
     <section class="container"><TvHomeTrademark /></section>
   </article>
+  {pageSeo ? <ProductSeoBlock seo={pageSeo} links={[{ href: "/tv-home", label: "All TV & Home" }]} /> : null}
 </BaseLayout>
 
 <script define:vars={{

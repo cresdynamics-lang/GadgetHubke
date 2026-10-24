@@ -42,8 +42,10 @@ import {
   seriesHubForModel,
   assertExUkWarrantyConfigured,
   seoIdToShopProductId,
+  seoModelGallery,
 } from "../../lib/iphone/seo";
 import { getProduct } from "../../lib/products";
+import { withLiveSeoPrices } from "../../lib/iphone/seo/live";
 import { livePricedProduct, iphoneLiveId } from "../../lib/pricing/live";
 import { storageIdFromLabel } from "../../lib/pricing/iphone-sheet";
 import { site, whatsappUrl } from "../../lib/site";
@@ -73,15 +75,7 @@ const seoDefault = kind === "model" ? getSeoModel(modelId!) : undefined;
 // Live admin prices override the repo sheet for every storage option.
 const live = seoDefault ? await livePricedProduct(iphoneLiveId(seoDefault.id)) : undefined;
 const liveByKey = new Map((live?.variants ?? []).map((v) => [v.key, v]));
-const seo = seoDefault && live
-  ? (() => {
-      const variants = seoDefault.variants.map((v) => {
-        const l = liveByKey.get(storageIdFromLabel(v.storage));
-        return l ? { ...v, newKes: l.priceKes, exUkKes: l.exUkKes ?? v.exUkKes } : v;
-      });
-      return { ...seoDefault, variants, fromKes: Math.min(...variants.map((v) => v.newKes)) };
-    })()
-  : seoDefault;
+const seo = seoDefault ? withLiveSeoPrices(seoDefault, live) : undefined;
 
 let hasLegacyGallery = false;
 let model: ReturnType<typeof getModel>;
@@ -135,7 +129,9 @@ if (seo) {
           alt: shopProduct.image.alt,
           width: 800,
         }
-      : { src: "/images/logo.png", srcWebp: undefined, alt: seo.name, width: 800 };
+      : seoModelGallery[seo.id]?.[0]
+        ? { ...seoModelGallery[seo.id][0], width: 1280 }
+        : { src: "/images/logo.png", srcWebp: undefined, alt: seo.name, width: 800 };
   prices = storagePrices(
     model?.basePriceKes ?? seo.fromKes,
     model?.storage ?? seo.variants.map((v) => v.storage),
@@ -193,7 +189,7 @@ if (seo) {
 
 {seriesPage ? <SeriesHub hub={seriesPage} /> : null}
 {seo && jsonLd ? (
-<BaseLayout title={seo.seoTitle} description={seo.metaDescription}>
+<BaseLayout title={seo.seoTitle} description={seo.metaDescription} image={initialImg.src}>
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <TrackProductView
     id={seo.id}
@@ -213,18 +209,31 @@ if (seo) {
         <div class="ipdp__gallery">
           <div class="ipdp__stage-wrap">
             <picture>
+              {initialImg.srcWebp ? <source srcset={initialImg.srcWebp} type="image/webp" /> : null}
               <img
                 class="ipdp__img"
                 src={initialImg.src}
                 alt={initialImg.alt}
                 width={initialImg.width}
-                height={initialImg.width}
+                height={Math.round(initialImg.width * (seoModelGallery[seo.id] ? 1080 / 1280 : 1))}
                 fetchpriority="high"
                 loading="eager"
                 decoding="async"
               />
             </picture>
           </div>
+          {(seoModelGallery[seo.id] ?? []).length > 1 ? (
+            <ul class="ipdp__seo-gallery">
+              {seoModelGallery[seo.id].slice(1).map((g) => (
+                <li>
+                  <picture>
+                    <source srcset={g.srcWebp} type="image/webp" />
+                    <img src={g.src} alt={g.alt} width="320" height="270" loading="lazy" decoding="async" />
+                  </picture>
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </div>
         <div class="ipdp__buy">
           <h1>{seo.h1}</h1>
@@ -1540,4 +1549,6 @@ if (seo) {
   .ipdp-lb__next {
     right: 0.25rem;
   }
+  .ipdp__seo-gallery { list-style: none; margin: 0.75rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 0.5rem; }
+  .ipdp__seo-gallery img { width: 100%; height: auto; border-radius: 12px; background: #f5f5f7; }
 </style>

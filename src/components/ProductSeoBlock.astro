@@ -1,0 +1,87 @@
+---
+/**
+ * Visible "price in Kenya" section + JSON-LD for non-iPhone product pages.
+ * The FAQ schema mirrors the questions rendered here, as Google requires.
+ */
+import type { ProductSeo } from "../lib/seo/product-seo";
+import { formatKes } from "../lib/seo/product-seo";
+
+interface Props {
+  seo: ProductSeo;
+  links?: { href: string; label: string }[];
+}
+
+const { seo, links = [] } = Astro.props;
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(seo.jsonLd)} />
+<section class="pseo container" aria-labelledby="pseo-title">
+  <h2 id="pseo-title">{seo.heading}</h2>
+  <p class="pseo__intro">{seo.intro}</p>
+
+  <div class="pseo__table-wrap">
+    <table class="pseo__table">
+      <caption>Prices updated {seo.updatedLabel}. Shop prices include VAT where it applies.</caption>
+      <thead>
+        <tr><th scope="col">Configuration</th><th scope="col">Price (KES)</th><th scope="col">Availability</th></tr>
+      </thead>
+      <tbody>
+        {seo.rows.map((r) => (
+          <tr>
+            <th scope="row">{r.label}</th>
+            <td>{formatKes(r.priceKes)}</td>
+            <td>{r.inStock ? "In stock" : "Ask on WhatsApp"}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Buying in Nairobi</h3>
+  <ul class="pseo__list">
+    <li>Genuine, sealed Apple stock with a 1-year warranty and a Gadget Hub invoice.</li>
+    <li>Pay by M-Pesa at checkout, or spread the cost with <a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo</a>.</li>
+    <li>Collect at Norwich House, Suite 15, 4th Floor, Nairobi CBD, or get <a href="/shipping-delivery">delivery</a>.</li>
+    <li>Have an old device? <a href="/trade-in">Trade it in</a> for credit toward this one.</li>
+  </ul>
+
+  <h3>Questions Kenyans ask</h3>
+  <div class="pseo__faq">
+    {seo.faq.map((f) => (
+      <details>
+        <summary>{f.question}</summary>
+        <p>{f.answer}</p>
+      </details>
+    ))}
+  </div>
+
+  {links.length ? (
+    <p class="pseo__links">
+      Related: {links.map((l, i) => (
+        <>
+          {i > 0 ? " · " : ""}
+          <a href={l.href}>{l.label}</a>
+        </>
+      ))}
+    </p>
+  ) : null}
+</section>
+
+<style>
+  .pseo { margin: 3rem auto; max-width: 860px; }
+  .pseo h2 { font-size: clamp(1.4rem, 3vw, 1.9rem); letter-spacing: -0.02em; margin: 0 0 0.75rem; }
+  .pseo h3 { font-size: 1.1rem; margin: 1.75rem 0 0.5rem; }
+  .pseo__intro { color: #3a3a3c; line-height: 1.6; }
+  .pseo__table-wrap { overflow-x: auto; margin-top: 1rem; }
+  .pseo__table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+  .pseo__table caption { caption-side: bottom; text-align: left; color: #6e6e73; font-size: 0.8rem; padding-top: 0.5rem; }
+  .pseo__table th, .pseo__table td { text-align: left; padding: 0.6rem 0.5rem; border-bottom: 1px solid #e5e5ea; }
+  .pseo__table thead th { color: #6e6e73; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; }
+  .pseo__table td:nth-child(2) { font-weight: 600; white-space: nowrap; }
+  .pseo__list { padding-left: 1.1rem; line-height: 1.7; color: #3a3a3c; }
+  .pseo__faq details { border-bottom: 1px solid #e5e5ea; padding: 0.75rem 0; }
+  .pseo__faq summary { cursor: pointer; font-weight: 600; }
+  .pseo__faq p { margin: 0.5rem 0 0; color: #3a3a3c; line-height: 1.6; }
+  .pseo__links { margin-top: 1.5rem; color: #6e6e73; font-size: 0.9rem; }
+  .pseo a { color: #0066cc; }
+</style>

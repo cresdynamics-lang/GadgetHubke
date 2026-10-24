@@ -30,6 +30,8 @@ import {
   watchFaq,
 } from "../../lib/watch";
 import { livePricedProduct, variantPriceMap } from "../../lib/pricing/live";
+import { buildProductSeo } from "../../lib/seo/product-seo";
+import ProductSeoBlock from "../../components/ProductSeoBlock.astro";
 
 export const prerender = false;
 
@@ -44,6 +46,22 @@ const model = liveBase != null ? { ...watchDefault, basePriceKes: liveBase - (wa
 
 const tabs = watchViewerTabs(model);
 const img = tabs[0] || getWatchImage(model.id, "main", model.name);
+const liveProduct = await livePricedProduct(model.id);
+const pageSeo = liveProduct
+  ? buildProductSeo({
+      product: liveProduct,
+      categoryLabel: "Apple Watch",
+      categoryHref: "/watch",
+      path: `/watch/${model.id}`,
+      images: [img.src],
+      summary: [model.tagline, model.whoItSuits].filter(Boolean).join(" "),
+      optionsSummary: `${model.materials.map((m) => ({ aluminum: "Aluminium", titanium: "Titanium", ceramic: "Ceramic", stainless: "Stainless steel" })[m] ?? m).join(", ")}${model.cellularAvailable ? ", GPS or GPS + Cellular" : ", GPS"}`,
+      alsoKnownAs: [model.name.replace("Apple Watch", "iWatch"), `${model.name.replace("Apple Watch ", "")} smartwatch`],
+      extraFaq: model.cellularAvailable
+        ? [{ question: `Does the cellular ${model.name} work in Kenya?`, answer: watchConfig.cellularKenyaNote }]
+        : [],
+    })
+  : undefined;
 const price = watchConfigurePrice(model);
 const lipa = lipaMonthly(price.kes);
 const notes = watchBuyingNotes(model);
@@ -71,7 +89,7 @@ const scaleVbW = scaleCoinCx + scaleCoinR + scalePadX;
 const scaleVbH = scaleMidY + Math.max(scaleWatchR, scaleCoinR) + 18;
 ---
 
-<BaseLayout title={`${model.name} - GadgetHub`} description={model.tagline}>
+<BaseLayout title={pageSeo?.title ?? `${model.name} - GadgetHub`} description={pageSeo?.description ?? model.tagline} image={pageSeo?.image}>
   <TrackProductView
     id={model.id}
     name={model.name}
@@ -436,6 +454,7 @@ const scaleVbH = scaleMidY + Math.max(scaleWatchR, scaleCoinR) + 18;
     <button type="button" data-lb-close aria-label="Close">Close</button>
     <img data-lb-img src={img.src} alt={img.alt} />
   </dialog>
+  {pageSeo ? <ProductSeoBlock seo={pageSeo} links={[{ href: "/watch", label: "All Apple Watch models" }, { href: "/journal/apple-watch-price-in-kenya", label: "Apple Watch price guide" }]} /> : null}
 </BaseLayout>
 
 <script define:vars={{

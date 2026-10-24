@@ -31,6 +31,8 @@ import {
   macFaq,
 } from "../../lib/mac";
 import { livePricedProduct, variantPriceMap } from "../../lib/pricing/live";
+import { buildProductSeo } from "../../lib/seo/product-seo";
+import ProductSeoBlock from "../../components/ProductSeoBlock.astro";
 import { whatsappUrl } from "../../lib/site";
 
 export const prerender = false;
@@ -46,6 +48,21 @@ const colour = defaultMacColour(model);
 const tabs = macViewerTabs(model, colour);
 const lid = macLidFrames(model);
 const img = tabs[0] || getMacImage(model.id, colour, "product", model.name);
+const liveProduct = await livePricedProduct(model.id);
+const pageSeo = liveProduct
+  ? buildProductSeo({
+      product: liveProduct,
+      categoryLabel: "Mac",
+      categoryHref: "/mac",
+      path: `/mac/${model.id}`,
+      images: [img.src],
+      summary: [model.tagline, model.whoItSuits].filter(Boolean).join(" "),
+      optionsSummary: `${model.chip}, ${model.memoryOptionsGb.join("/")}GB memory, ${model.storageOptions.join(" to ")
+        .replace(/ to .* to /, " to ")} storage`,
+      alsoKnownAs: [model.name.replace("″", " inch"), `${model.chip} MacBook`],
+      variesBy: ["https://schema.org/storageCapacity"],
+    })
+  : undefined;
 const price = macConfigurePrice(model, model.memoryOptionsGb[0], model.storageOptions[0]);
 const firstExact = exact[exactKey(model.memoryOptionsGb[0], model.storageOptions[0])];
 if (firstExact != null) price.kes = firstExact;
@@ -63,7 +80,7 @@ const wa = whatsappUrl(
 );
 ---
 
-<BaseLayout title={`${model.name} - GadgetHub`} description={model.tagline}>
+<BaseLayout title={pageSeo?.title ?? `${model.name} - GadgetHub`} description={pageSeo?.description ?? model.tagline} image={pageSeo?.image}>
   <TrackProductView
     id={model.id}
     name={model.name}
@@ -402,6 +419,7 @@ const wa = whatsappUrl(
     <img data-lb-img src={img.src} alt={img.alt} />
     <button type="button" data-lb-next aria-label="Next">›</button>
   </dialog>
+  {pageSeo ? <ProductSeoBlock seo={pageSeo} links={[{ href: "/mac", label: "All Macs" }, { href: "/journal/macbook-price-in-kenya", label: "MacBook price guide" }, { href: "/journal/macbook-air-or-macbook-pro", label: "Air or Pro?" }]} /> : null}
 </BaseLayout>
 
 <script define:vars={{
