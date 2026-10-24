@@ -14,12 +14,7 @@ export type ModelImageEntry = {
   overviewOnly: boolean;
 };
 
-export const OVERVIEW_ONLY_MODELS = [
-  "iphone-11",
-  "iphone-12-pro",
-  "iphone-12-pro-max",
-  "iphone-16e",
-] as const;
+export const OVERVIEW_ONLY_MODELS = ["iphone-duo"] as const;
 
 /** Colours listed for marketing but no image yet */
 export const TEXT_ONLY_COLOURS: Record<string, string[]> = {
@@ -592,3 +587,231 @@ export const imageManifest: Record<string, ModelImageEntry> = {
   },
 };
 
+/** Angle sets from Apple's online store (Gadget_Hub_iPhone_Apple_Store_Images). Wins over the older packs. */
+const appleStoreManifest: Record<string, ModelImageEntry> = {
+  "iphone-11": {
+    overview: "/Gadget_Hub_iPhone_11-13_Images/All_colours_overview/iphone-11_all-colours_back-view.jpg",
+    overviewOnly: false,
+    colours: {
+      "black": [1],
+      "green": [1],
+      "purple": [1],
+      "red": [1],
+      "white": [1],
+      "yellow": [1],
+    },
+    files: {
+      "black|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-11/iphone-11_black_view1.jpg",
+      "green|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-11/iphone-11_green_view1.jpg",
+      "purple|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-11/iphone-11_purple_view1.jpg",
+      "red|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-11/iphone-11_red_view1.jpg",
+      "white|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-11/iphone-11_white_view1.jpg",
+      "yellow|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-11/iphone-11_yellow_view1.jpg",
+    },
+  },
+  "iphone-12-pro": {
+    overview: "/Gadget_Hub_iPhone_11-13_Images/All_colours_overview/iphone-12-pro_all-colours_back-view.jpg",
+    overviewOnly: false,
+    colours: {
+      "blue": [1],
+      "gold": [1],
+      "graphite": [1],
+      "silver": [1],
+    },
+    files: {
+      "blue|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-12-pro/iphone-12-pro_blue_view1.jpg",
+      "gold|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-12-pro/iphone-12-pro_gold_view1.jpg",
+      "graphite|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-12-pro/iphone-12-pro_graphite_view1.jpg",
+      "silver|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-12-pro/iphone-12-pro_silver_view1.jpg",
+    },
+  },
+  "iphone-12-pro-max": {
+    overview: "/Gadget_Hub_iPhone_11-13_Images/All_colours_overview/iphone-12-pro-max_all-colours_back-view.jpg",
+    overviewOnly: false,
+    colours: {
+      "blue": [1],
+      "gold": [1],
+      "graphite": [1],
+      "silver": [1],
+    },
+    files: {
+      "blue|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-12-pro-max/iphone-12-pro-max_blue_view1.jpg",
+      "gold|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-12-pro-max/iphone-12-pro-max_gold_view1.jpg",
+      "graphite|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-12-pro-max/iphone-12-pro-max_graphite_view1.jpg",
+      "silver|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-12-pro-max/iphone-12-pro-max_silver_view1.jpg",
+    },
+  },
+  "iphone-16e": {
+    overview: "/Gadget_Hub_iPhone_11-13_Images/All_colours_overview/iphone-16e_all-colours_back-view.png",
+    overviewOnly: false,
+    colours: {
+      "black": [1, 2, 3],
+      "white": [1, 2, 3],
+    },
+    files: {
+      "black|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-16e/iphone-16e_black_view1.jpg",
+      "black|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-16e/iphone-16e_black_view2.jpg",
+      "black|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-16e/iphone-16e_black_view3.jpg",
+      "white|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-16e/iphone-16e_white_view1.jpg",
+      "white|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-16e/iphone-16e_white_view2.jpg",
+      "white|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-16e/iphone-16e_white_view3.jpg",
+    },
+  },
+  "iphone-17": {
+    overview: "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17/iphone-17_black_view1.jpg",
+    overviewOnly: false,
+    colours: {
+      "black": [1, 2, 3],
+      "lavender": [1, 2, 3],
+      "mistblue": [1, 2, 3],
+      "sage": [1, 2, 3],
+      "white": [1, 2, 3],
+    },
+    files: {
+      "black|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17/iphone-17_black_view1.jpg",
+      "black|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17/iphone-17_black_view2.jpg",
+      "black|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17/iphone-17_black_view3.jpg",
+      "lavender|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17/iphone-17_lavender_view1.jpg",
+      "lavender|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17/iphone-17_lavender_view2.jpg",
+      "lavender|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17/iphone-17_lavender_view3.jpg",
+      "mistblue|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17/iphone-17_mistblue_view1.jpg",
+      "mistblue|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17/iphone-17_mistblue_view2.jpg",
+      "mistblue|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17/iphone-17_mistblue_view3.jpg",
+      "sage|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17/iphone-17_sage_view1.jpg",
+      "sage|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17/iphone-17_sage_view2.jpg",
+      "sage|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17/iphone-17_sage_view3.jpg",
+      "white|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17/iphone-17_white_view1.jpg",
+      "white|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17/iphone-17_white_view2.jpg",
+      "white|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17/iphone-17_white_view3.jpg",
+    },
+  },
+  "iphone-17-pro": {
+    overview: "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17-pro/iphone-17-pro_cosmicorange_view1.jpg",
+    overviewOnly: false,
+    colours: {
+      "cosmicorange": [1, 2, 3],
+      "deepblue": [1, 2, 3],
+      "silver": [1, 2, 3],
+    },
+    files: {
+      "cosmicorange|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17-pro/iphone-17-pro_cosmicorange_view1.jpg",
+      "cosmicorange|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17-pro/iphone-17-pro_cosmicorange_view2.jpg",
+      "cosmicorange|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17-pro/iphone-17-pro_cosmicorange_view3.jpg",
+      "deepblue|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17-pro/iphone-17-pro_deepblue_view1.jpg",
+      "deepblue|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17-pro/iphone-17-pro_deepblue_view2.jpg",
+      "deepblue|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17-pro/iphone-17-pro_deepblue_view3.jpg",
+      "silver|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17-pro/iphone-17-pro_silver_view1.jpg",
+      "silver|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17-pro/iphone-17-pro_silver_view2.jpg",
+      "silver|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17-pro/iphone-17-pro_silver_view3.jpg",
+    },
+  },
+  "iphone-17-pro-max": {
+    overview: "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17-pro-max/iphone-17-pro-max_cosmicorange_view1.jpg",
+    overviewOnly: false,
+    colours: {
+      "cosmicorange": [1, 2, 3],
+      "deepblue": [1, 2, 3],
+      "silver": [1, 2, 3],
+    },
+    files: {
+      "cosmicorange|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17-pro-max/iphone-17-pro-max_cosmicorange_view1.jpg",
+      "cosmicorange|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17-pro-max/iphone-17-pro-max_cosmicorange_view2.jpg",
+      "cosmicorange|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17-pro-max/iphone-17-pro-max_cosmicorange_view3.jpg",
+      "deepblue|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17-pro-max/iphone-17-pro-max_deepblue_view1.jpg",
+      "deepblue|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17-pro-max/iphone-17-pro-max_deepblue_view2.jpg",
+      "deepblue|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17-pro-max/iphone-17-pro-max_deepblue_view3.jpg",
+      "silver|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17-pro-max/iphone-17-pro-max_silver_view1.jpg",
+      "silver|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17-pro-max/iphone-17-pro-max_silver_view2.jpg",
+      "silver|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17-pro-max/iphone-17-pro-max_silver_view3.jpg",
+    },
+  },
+  "iphone-17e": {
+    overview: "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17e/iphone-17e_black_view1.jpg",
+    overviewOnly: false,
+    colours: {
+      "black": [1, 2, 3],
+      "white": [1, 2, 3],
+    },
+    files: {
+      "black|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17e/iphone-17e_black_view1.jpg",
+      "black|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17e/iphone-17e_black_view2.jpg",
+      "black|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17e/iphone-17e_black_view3.jpg",
+      "white|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17e/iphone-17e_white_view1.jpg",
+      "white|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17e/iphone-17e_white_view2.jpg",
+      "white|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17e/iphone-17e_white_view3.jpg",
+    },
+  },
+  "iphone-18-pro": {
+    overview: "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro/iphone-18-pro_black_view1.jpg",
+    overviewOnly: false,
+    colours: {
+      "black": [1, 2, 3],
+      "glacier": [1, 2, 3],
+      "silver": [1, 2, 3],
+    },
+    files: {
+      "black|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro/iphone-18-pro_black_view1.jpg",
+      "black|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro/iphone-18-pro_black_view2.jpg",
+      "black|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro/iphone-18-pro_black_view3.jpg",
+      "glacier|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro/iphone-18-pro_glacier_view1.jpg",
+      "glacier|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro/iphone-18-pro_glacier_view2.jpg",
+      "glacier|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro/iphone-18-pro_glacier_view3.jpg",
+      "silver|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro/iphone-18-pro_silver_view1.jpg",
+      "silver|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro/iphone-18-pro_silver_view2.jpg",
+      "silver|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro/iphone-18-pro_silver_view3.jpg",
+    },
+  },
+  "iphone-18-pro-max": {
+    overview: "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro-max/iphone-18-pro-max_black_view1.jpg",
+    overviewOnly: false,
+    colours: {
+      "black": [1, 2, 3],
+      "glacier": [1, 2, 3],
+      "silver": [1, 2, 3],
+    },
+    files: {
+      "black|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro-max/iphone-18-pro-max_black_view1.jpg",
+      "black|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro-max/iphone-18-pro-max_black_view2.jpg",
+      "black|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro-max/iphone-18-pro-max_black_view3.jpg",
+      "glacier|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro-max/iphone-18-pro-max_glacier_view1.jpg",
+      "glacier|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro-max/iphone-18-pro-max_glacier_view2.jpg",
+      "glacier|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro-max/iphone-18-pro-max_glacier_view3.jpg",
+      "silver|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro-max/iphone-18-pro-max_silver_view1.jpg",
+      "silver|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro-max/iphone-18-pro-max_silver_view2.jpg",
+      "silver|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro-max/iphone-18-pro-max_silver_view3.jpg",
+    },
+  },
+  "iphone-air": {
+    overview: "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-air/iphone-air_cloudwhite_view1.jpg",
+    overviewOnly: false,
+    colours: {
+      "cloudwhite": [1, 2, 3],
+      "lightgold": [1, 2, 3],
+      "skyblue": [1, 2, 3],
+      "spaceblack": [1, 2, 3],
+    },
+    files: {
+      "cloudwhite|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-air/iphone-air_cloudwhite_view1.jpg",
+      "cloudwhite|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-air/iphone-air_cloudwhite_view2.jpg",
+      "cloudwhite|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-air/iphone-air_cloudwhite_view3.jpg",
+      "lightgold|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-air/iphone-air_lightgold_view1.jpg",
+      "lightgold|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-air/iphone-air_lightgold_view2.jpg",
+      "lightgold|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-air/iphone-air_lightgold_view3.jpg",
+      "skyblue|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-air/iphone-air_skyblue_view1.jpg",
+      "skyblue|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-air/iphone-air_skyblue_view2.jpg",
+      "skyblue|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-air/iphone-air_skyblue_view3.jpg",
+      "spaceblack|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-air/iphone-air_spaceblack_view1.jpg",
+      "spaceblack|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-air/iphone-air_spaceblack_view2.jpg",
+      "spaceblack|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-air/iphone-air_spaceblack_view3.jpg",
+    },
+  },
+  "iphone-duo": {
+    overview: "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-duo/iphone-duo_overview.jpg",
+    overviewOnly: true,
+    colours: {
+    },
+    files: {
+    },
+  },
+};
+Object.assign(imageManifest, appleStoreManifest);

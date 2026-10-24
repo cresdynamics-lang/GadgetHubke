@@ -46,6 +46,16 @@ export const colourMetaByKey: Record<string, ColourMeta> = {
   "sierra-blue": C("sierra-blue", "Sierra Blue", "#A7C1D9"),
   space: C("space", "Space Grey", "#535353"),
   "midnight-green": C("midnight-green", "Midnight Green", "#3E4A3D"),
+  // iPhone 17 / Air / 18 finishes
+  cosmicorange: C("cosmicorange", "Cosmic Orange", "#E8742E"),
+  deepblue: C("deepblue", "Deep Blue", "#2E3A55"),
+  lavender: C("lavender", "Lavender", "#C9B8E0", true),
+  mistblue: C("mistblue", "Mist Blue", "#A8C4DE", true),
+  sage: C("sage", "Sage", "#B4C3A0"),
+  skyblue: C("skyblue", "Sky Blue", "#BCD8EE", true),
+  lightgold: C("lightgold", "Light Gold", "#EEDFC2", true),
+  cloudwhite: C("cloudwhite", "Cloud White", "#F4F4F2", true),
+  glacier: C("glacier", "Glacier", "#AFC6E0", true),
 };
 
 export function colourLabel(key: string): string {

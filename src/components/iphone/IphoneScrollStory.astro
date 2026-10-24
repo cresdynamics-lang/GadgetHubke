@@ -1,0 +1,135 @@
+---
+/**
+ * Apple-style scroll story: each scene fades in and plays its clip once when it
+ * scrolls into view, then holds on the last frame. Phones get the small clip;
+ * reduced-motion visitors see the end frame only. Clips load lazily (preload="none").
+ */
+import type { ScrollScene } from "../../lib/iphone/scroll-scenes";
+
+interface Props {
+  scenes: ScrollScene[];
+  modelName: string;
+}
+
+const { scenes, modelName } = Astro.props;
+---
+
+{scenes.length ? (
+  <section class="istory" aria-label={`${modelName} highlights`} data-istory>
+    {scenes.map((s, i) => (
+      <article class:list={["istory__scene", `istory__scene--${s.tone}`]} data-istory-scene>
+        <div class="istory__copy">
+          <p class="istory__eyebrow">{s.eyebrow}</p>
+          {i === 0 ? <h2 class="istory__title">{s.title}</h2> : <h3 class="istory__title">{s.title}</h3>}
+          <p class="istory__body">{s.body}</p>
+        </div>
+        <div class="istory__media">
+          <picture class="istory__still">
+            <source srcset={s.end ?? s.start} type="image/webp" />
+            <img src={s.end ?? s.start} alt={`${modelName}: ${s.title}`} loading="lazy" decoding="async" width="1600" height="900" />
+          </picture>
+          <video
+            class="istory__video"
+            muted
+            playsinline
+            preload="none"
+            poster={s.start}
+            data-large={s.videoLarge}
+            data-small={s.videoSmall ?? s.videoLarge}
+            aria-hidden="true"
+          ></video>
+          <button type="button" class="istory__replay" data-istory-replay aria-label={`Replay: ${s.title}`} hidden>↺ Replay</button>
+        </div>
+      </article>
+    ))}
+  </section>
+) : null}
+
+<style>
+  .istory { display: grid; gap: clamp(1rem, 3vw, 2rem); margin: clamp(2.5rem, 6vw, 5rem) auto; max-width: 1200px; padding: 0 16px; }
+  .istory__scene {
+    border-radius: 28px; overflow: hidden; display: grid; grid-template-rows: auto 1fr;
+    opacity: 0; transform: translateY(28px); transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .istory__scene.is-in { opacity: 1; transform: none; }
+  .istory__scene--dark { background: #000; color: #f5f5f7; }
+  .istory__scene--light { background: #f5f5f7; color: #1d1d1f; }
+  .istory__copy { padding: clamp(1.5rem, 4vw, 3rem) clamp(1.25rem, 4vw, 3rem) 0; max-width: 46rem; }
+  .istory__eyebrow { margin: 0 0 0.4rem; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.02em; opacity: 0.7; }
+  .istory__title { margin: 0; font-size: clamp(1.6rem, 4.5vw, 3rem); line-height: 1.05; letter-spacing: -0.03em; }
+  .istory__body { margin: 0.75rem 0 0; font-size: clamp(1rem, 2vw, 1.2rem); line-height: 1.45; opacity: 0.85; }
+  .istory__media { position: relative; aspect-ratio: 16 / 9; margin-top: 1rem; }
+  .istory__still img, .istory__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+  .istory__video { opacity: 0; transition: opacity 0.4s ease; }
+  .istory__video.is-ready { opacity: 1; }
+  .istory__still { transition: opacity 0.4s ease; }
+  .istory__media:has(.istory__video.is-ready) .istory__still { opacity: 0; }
+  .istory__scene--dark .istory__video, .istory__scene--dark .istory__still img { background: #000; }
+  .istory__replay {
+    position: absolute; right: 1rem; bottom: 1rem; border: 0; border-radius: 999px; padding: 0.45rem 0.9rem;
+    font: inherit; font-size: 0.85rem; cursor: pointer; background: rgba(128, 128, 128, 0.25); color: inherit; backdrop-filter: blur(8px);
+  }
+  @media (max-width: 733px) {
+    .istory__scene { border-radius: 20px; }
+    .istory__media { aspect-ratio: 4 / 3; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .istory__scene { opacity: 1; transform: none; transition: none; }
+    .istory__video, .istory__replay { display: none; }
+  }
+</style>
+
+<script>
+  function initStory() {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const small = window.matchMedia("(max-width: 733px)").matches;
+    const scenes = document.querySelectorAll<HTMLElement>("[data-istory-scene]");
+    if (!scenes.length || !("IntersectionObserver" in window)) {
+      scenes.forEach((s) => s.classList.add("is-in"));
+      return;
+    }
+
+    const play = (scene: HTMLElement) => {
+      const video = scene.querySelector<HTMLVideoElement>("video");
+      if (!video || reduce) return;
+      if (!video.src) {
+        video.src = (small ? video.dataset.small : video.dataset.large) || "";
+        video.addEventListener("playing", () => video.classList.add("is-ready"), { once: true });
+        video.addEventListener("ended", () => {
+          scene.querySelector<HTMLButtonElement>("[data-istory-replay]")?.removeAttribute("hidden");
+        });
+      }
+      if (video.ended) return;
+      video.play().catch(() => {
+        /* autoplay blocked: the still frame stays visible */
+      });
+    };
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          const scene = e.target as HTMLElement;
+          if (e.isIntersecting && e.intersectionRatio >= 0.45) {
+            scene.classList.add("is-in");
+            play(scene);
+          } else if (!e.isIntersecting) {
+            scene.querySelector<HTMLVideoElement>("video")?.pause();
+          }
+        }
+      },
+      { threshold: [0, 0.45] },
+    );
+    scenes.forEach((s) => io.observe(s));
+
+    document.querySelectorAll<HTMLButtonElement>("[data-istory-replay]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const video = btn.parentElement?.querySelector<HTMLVideoElement>("video");
+        if (!video) return;
+        btn.setAttribute("hidden", "");
+        video.currentTime = 0;
+        video.play().catch(() => {});
+      });
+    });
+  }
+  initStory();
+</script>

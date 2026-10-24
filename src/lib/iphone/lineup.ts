@@ -3,7 +3,10 @@
  * plus catalog generations 11 - 16.
  */
 import { listIphones, type IphoneListItem } from "../iphone-list";
-import { modelsByFamily, type IphoneModel } from "./models";
+import { modelsByFamily, newerModels, type IphoneModel } from "./models";
+import { baseNewKes } from "../pricing/iphone-sheet";
+import { colourLabel, colourHex } from "./colours";
+import { availableColours } from "./images";
 import { getImage, defaultColourForModel } from "./images";
 import { formatKes } from "./pricing";
 
@@ -31,7 +34,28 @@ export function latestByFamily(family: 17 | 18): IphoneListItem[] {
       /iphone-pro|iphone-pro-max|iphone-air|iphone-duo/.test(i.id),
     );
   }
-  return items.filter((i) => i.id === "iphone-17" || i.id === "iphone-17e");
+  // 17 Pro and 17 Pro Max have no shop page; their cards point at the model pages.
+  const pros = ["iphone-17-pro", "iphone-17-pro-max"]
+    .map((id) => newerModels.find((m) => m.id === id))
+    .filter((m): m is IphoneModel => Boolean(m))
+    .map((m): IphoneListItem => {
+      const colour = defaultColourForModel(m.id, m.defaultColour ?? undefined);
+      const img = getImage(m.id, colour, 1, m.name);
+      return {
+        id: m.id,
+        name: m.name,
+        href: `/iphone/${m.id}`,
+        priceKes: baseNewKes(m.name) ?? m.basePriceKes,
+        badge: "New",
+        blurb: m.tagline,
+        image: { src: img.srcWebp ?? img.src, alt: img.alt },
+        colors: availableColours(m.id).map((c) => ({ id: c, label: colourLabel(c), hex: colourHex(c) })),
+        storages: m.storage,
+        stock: "in",
+        tags: ["camera"],
+      };
+    });
+  return [...pros, ...items.filter((i) => i.id === "iphone-17" || i.id === "iphone-17e")];
 }
 
 export function genHref(family: number): string {

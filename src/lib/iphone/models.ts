@@ -4,17 +4,18 @@
  * Base prices are lowest NEW sheet prices in KES (iphone-sheet.ts).
  */
 
-export type IphoneTier = "Standard" | "Plus" | "Pro" | "Pro Max" | "mini" | "e";
+export type IphoneTier = "Standard" | "Plus" | "Pro" | "Pro Max" | "mini" | "e" | "Air";
 
 export type IphoneModel = {
   id: string;
   name: string;
-  family: 11 | 12 | 13 | 14 | 15 | 16;
+  family: 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18;
   tier: IphoneTier;
   year: number;
   displayInches: number;
-  resolution: string;
-  ppi: number;
+  /** Optional where Apple figures are not on file yet; the spec table hides empty rows. */
+  resolution?: string;
+  ppi?: number;
   refreshHz: number;
   chip: string;
   rearCameras: string[];
@@ -23,12 +24,12 @@ export type IphoneModel = {
   storage: string[];
   /** Sample base price KES (lowest storage) */
   basePriceKes: number;
-  frame: string;
-  glass: string;
+  frame?: string;
+  glass?: string;
   waterResistance: string;
   port: "Lightning" | "USB-C" | "USB-C (USB 3)";
   magsafe: boolean;
-  cutout: "Notch" | "Dynamic Island";
+  cutout?: "Notch" | "Dynamic Island";
   tagline: string;
   defaultColour: string | null;
   note?: string;
@@ -40,7 +41,7 @@ export type IphoneModel = {
   actionButton: boolean;
   crashDetection: boolean;
   appleIntelligence: boolean;
-  wifi: string;
+  wifi?: string;
   displayNote?: string;
 };
 
@@ -859,8 +860,88 @@ export const models: IphoneModel[] = [
   },
 ];
 
+/**
+ * iPhone 17 and 18 series. Used by the model pages (colour gallery, cart, Lipa, trade-in);
+ * kept out of `models` so the legacy 11–16 grid, search and compare stay as they are.
+ * Prices come from the price sheet / admin; specs from the SEO catalog and Apple.
+ */
+const base17 = {
+  cellular: "5G" as const,
+  faceId: true,
+  cameraControl: true,
+  actionButton: true,
+  crashDetection: true,
+  appleIntelligence: true,
+  magsafe: true,
+  waterResistance: "IP68 (6 m for 30 min)",
+};
+
+export const newerModels: IphoneModel[] = [
+  {
+    ...base17,
+    id: "iphone-18-pro-max", name: "iPhone 18 Pro Max", family: 18, tier: "Pro Max", year: 2026,
+    displayInches: 6.9, refreshHz: 120, chip: "A20 Pro",
+    rearCameras: ["48MP Pro Fusion camera system"], frontCamera: "18MP Center Stage",
+    batteryVideoHours: 45, weightGrams: 249, storage: ["256GB", "512GB", "1TB", "2TB"],
+    basePriceKes: 219000, port: "USB-C", tagline: "The biggest, newest Pro iPhone.", defaultColour: "glacier",
+  },
+  {
+    ...base17,
+    id: "iphone-18-pro", name: "iPhone 18 Pro", family: 18, tier: "Pro", year: 2026,
+    displayInches: 6.3, refreshHz: 120, chip: "A20 Pro",
+    rearCameras: ["48MP Pro Fusion camera system"], frontCamera: "18MP Center Stage",
+    batteryVideoHours: 36, weightGrams: 211, storage: ["128GB", "256GB", "512GB", "1TB", "2TB"],
+    basePriceKes: 185000, port: "USB-C", tagline: "The newest Pro iPhone, in the compact size.", defaultColour: "glacier",
+  },
+  {
+    ...base17,
+    id: "iphone-17-pro-max", name: "iPhone 17 Pro Max", family: 17, tier: "Pro Max", year: 2025,
+    displayInches: 6.9, resolution: "2868×1320", ppi: 460, refreshHz: 120, chip: "A19 Pro",
+    rearCameras: ["48MP Fusion", "48MP Ultra Wide", "48MP Telephoto"], frontCamera: "18MP Center Stage",
+    batteryVideoHours: 39, weightGrams: 233, storage: ["256GB", "512GB", "1TB", "2TB"],
+    basePriceKes: 170000, frame: "Aluminium unibody", glass: "Ceramic Shield 2", port: "USB-C (USB 3)",
+    cutout: "Dynamic Island", tagline: "Pro cameras, the biggest battery.", defaultColour: "cosmicorange", wifi: "Wi-Fi 7",
+  },
+  {
+    ...base17,
+    id: "iphone-17-pro", name: "iPhone 17 Pro", family: 17, tier: "Pro", year: 2025,
+    displayInches: 6.3, resolution: "2622×1206", ppi: 460, refreshHz: 120, chip: "A19 Pro",
+    rearCameras: ["48MP Fusion", "48MP Ultra Wide", "48MP Telephoto"], frontCamera: "18MP Center Stage",
+    batteryVideoHours: 33, weightGrams: 206, storage: ["256GB", "512GB", "1TB"],
+    basePriceKes: 158000, frame: "Aluminium unibody", glass: "Ceramic Shield 2", port: "USB-C (USB 3)",
+    cutout: "Dynamic Island", tagline: "Pro cameras in the compact size.", defaultColour: "cosmicorange", wifi: "Wi-Fi 7",
+  },
+  {
+    ...base17,
+    id: "iphone-air", name: "iPhone Air", family: 17, tier: "Air", year: 2025,
+    displayInches: 6.5, refreshHz: 120, chip: "A19 Pro",
+    rearCameras: ["48MP Fusion"], frontCamera: "18MP Center Stage",
+    batteryVideoHours: 27, weightGrams: 165, storage: ["256GB", "512GB", "1TB"],
+    basePriceKes: 125000, frame: "Titanium", port: "USB-C", cutout: "Dynamic Island",
+    tagline: "The thinnest, lightest iPhone.", defaultColour: "skyblue", wifi: "Wi-Fi 7",
+  },
+  {
+    ...base17,
+    id: "iphone-17", name: "iPhone 17", family: 17, tier: "Standard", year: 2025,
+    displayInches: 6.3, resolution: "2622×1206", ppi: 460, refreshHz: 120, chip: "A19",
+    rearCameras: ["48MP Fusion", "48MP Ultra Wide"], frontCamera: "18MP Center Stage",
+    batteryVideoHours: 30, weightGrams: 177, storage: ["256GB", "512GB"],
+    basePriceKes: 124000, frame: "Aluminium", glass: "Ceramic Shield 2", port: "USB-C",
+    cutout: "Dynamic Island", tagline: "ProMotion comes to the standard iPhone.", defaultColour: "lavender", wifi: "Wi-Fi 7",
+  },
+  {
+    ...base17,
+    id: "iphone-17e", name: "iPhone 17e", family: 17, tier: "e", year: 2026,
+    displayInches: 6.1, refreshHz: 60, chip: "A19",
+    rearCameras: ["48MP Fusion"], frontCamera: "12MP TrueDepth",
+    batteryVideoHours: 26, weightGrams: 169, storage: ["256GB", "512GB"],
+    basePriceKes: 115000, port: "USB-C", cameraControl: false,
+    tagline: "The current-generation iPhone at the lowest price.", defaultColour: "black",
+  },
+];
+
 export function getModel(id: string): IphoneModel | undefined {
-  return models.find((m) => m.id === id);
+  return models.find((m) => m.id === id) ?? newerModels.find((m) => m.id === id);
 }
 
 export function modelsByFamily(family: IphoneModel["family"]): IphoneModel[] {

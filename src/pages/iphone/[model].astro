@@ -55,6 +55,8 @@ import StickyBuyBar from "../../components/StickyBuyBar.astro";
 import BackButton from "../../components/BackButton.astro";
 import TrackProductView from "../../components/TrackProductView.astro";
 import SeriesHub from "../../components/iphone/SeriesHub.astro";
+import IphoneScrollStory from "../../components/iphone/IphoneScrollStory.astro";
+import { scrollScenesFor } from "../../lib/iphone/scroll-scenes";
 
 assertExUkWarrantyConfigured();
 
@@ -486,6 +488,8 @@ if (seo) {
       ) : null
     }
 
+    <IphoneScrollStory scenes={scrollScenesFor(model!.id)} modelName={model!.name} />
+
     <section class="container ipdp__specs">
       <h2>Full specifications</h2>
       <p class="ipdp__footnote">{iphoneConfig.appleSpecsFootnote}</p>
@@ -493,9 +497,9 @@ if (seo) {
         <summary>Display</summary>
         <table>
           <tr><th>Size</th><td>{model.displayInches}″</td></tr>
-          <tr><th>Resolution</th><td>{model.resolution} ({model.ppi} ppi)</td></tr>
+          {model.resolution ? <tr><th>Resolution</th><td>{model.resolution}{model.ppi ? ` (${model.ppi} ppi)` : ""}</td></tr> : null}
           <tr><th>Refresh</th><td>{model.refreshHz}Hz</td></tr>
-          <tr><th>Cutout</th><td>{model.cutout}</td></tr>
+          {model.cutout ? <tr><th>Cutout</th><td>{model.cutout}</td></tr> : null}
           {model.displayNote ? <tr><th>Note</th><td>{model.displayNote}</td></tr> : null}
         </table>
       </details>
@@ -527,8 +531,8 @@ if (seo) {
         <summary>Design and durability</summary>
         <table>
           <tr><th>Weight</th><td>{model.weightGrams} g</td></tr>
-          <tr><th>Frame</th><td>{model.frame}</td></tr>
-          <tr><th>Glass</th><td>{model.glass}</td></tr>
+          {model.frame ? <tr><th>Frame</th><td>{model.frame}</td></tr> : null}
+          {model.glass ? <tr><th>Glass</th><td>{model.glass}</td></tr> : null}
           <tr><th>Water resistance</th><td>{model.waterResistance}</td></tr>
           <tr><th>Action button</th><td>{model.actionButton ? "Yes" : "No"}</td></tr>
         </table>
@@ -536,7 +540,7 @@ if (seo) {
       <details class="ipdp__acc">
         <summary>Connectivity</summary>
         <table>
-          <tr><th>Wi-Fi</th><td>{model.wifi}</td></tr>
+          {model.wifi ? <tr><th>Wi-Fi</th><td>{model.wifi}</td></tr> : null}
           <tr><th>Face ID</th><td>{model.faceId ? "Yes" : "No"}</td></tr>
           <tr><th>Crash Detection</th><td>{model.crashDetection ? "Yes" : "No"}</td></tr>
         </table>
