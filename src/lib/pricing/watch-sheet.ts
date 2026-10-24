@@ -56,7 +56,7 @@ export const watchSheet: WatchSheetRow[] = [
   { id: "WA-039", product: "Apple Watch SE 2 2022 44mm", config: "Apple Watch SE 2 2022 44mm \u00b7 Aluminium \u00b7 GPS", newKes: 32000, exUkKes: 22000, modelId: "watch-se2-44", caseMm: 44, material: "aluminum", cellular: false },
   { id: "WA-040", product: "Apple Watch SE 2 2022 44mm", config: "Apple Watch SE 2 2022 44mm \u00b7 Aluminium \u00b7 GPS Cellular", newKes: 32000, exUkKes: 22000, modelId: "watch-se2-44", caseMm: 44, material: "aluminum", cellular: true },
   { id: "WA-041", product: "Apple Watch Ultra 4 49mm", config: "Apple Watch Ultra 4 49mm \u00b7 Titanium \u00b7 GPS Cellular", newKes: 135000, exUkKes: 110000, modelId: "watch-ultra-4", caseMm: 49, material: "titanium", cellular: true },
-  { id: "WA-042", product: "Apple Watch Ultra 3 49mm", config: "Apple Watch Ultra 3 49mm \u00b7 Titanium \u00b7 GPS Cellular", newKes: 107000, exUkKes: 85000, modelId: "watch-ultra-3", caseMm: 49, material: "titanium", cellular: true },
+  { id: "WA-042", product: "Apple Watch Ultra 3 49mm", config: "Apple Watch Ultra 3 49mm \u00b7 Titanium \u00b7 GPS Cellular", newKes: 105000, exUkKes: 85000, modelId: "watch-ultra-3", caseMm: 49, material: "titanium", cellular: true },
   { id: "WA-043", product: "Apple Watch Ultra 2 49mm", config: "Apple Watch Ultra 2 49mm \u00b7 Titanium \u00b7 GPS Cellular", newKes: 99000, exUkKes: 78000, modelId: "watch-ultra-2", caseMm: 49, material: "titanium", cellular: true },
   { id: "WA-044", product: "Apple Watch Ultra 1st gen) 49mm", config: "Apple Watch Ultra 1st gen) 49mm \u00b7 Titanium \u00b7 GPS Cellular", newKes: 85000, exUkKes: 65000, modelId: "watch-ultra-1", caseMm: 49, material: "titanium", cellular: true },
 ];

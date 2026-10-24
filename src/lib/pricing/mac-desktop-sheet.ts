@@ -12,7 +12,7 @@ export const macDesktopSheet: MacDesktopSheetRow[] = [
   { id: "mac-mini-m2-256", newKes: 85000, exUkKes: 65000 },
   { id: "mac-mini-m2-512", newKes: 105000, exUkKes: 78000 },
   { id: "mac-mini-m2-pro-512", newKes: 225000, exUkKes: 165000 },
-  { id: "mac-mini-m4-256", newKes: 103000, exUkKes: 78000 },
+  { id: "mac-mini-m4-256", newKes: 99000, exUkKes: 78000 },
   { id: "mac-mini-m4-pro-512", newKes: 222000, exUkKes: 175000 },
   { id: "mac-studio-m1-max-512", newKes: 288000, exUkKes: 195000 },
   { id: "mac-studio-m2-max-512", newKes: 320000, exUkKes: 240000 },

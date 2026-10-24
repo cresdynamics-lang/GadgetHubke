@@ -104,7 +104,7 @@ export const macBasePricesKes = {
   "macbook-air-15-m3": 160000,
   "macbook-air-13-m4": 148000,
   "macbook-air-15-m4": 180000,
-  "macbook-air-13-m5": 190000,
+  "macbook-air-13-m5": 177000,
   "macbook-air-15-m5": 225000,
   "macbook-pro-13-m1": 110000,
   "macbook-pro-13-m2": 135000,

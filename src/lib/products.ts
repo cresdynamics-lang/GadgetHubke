@@ -355,7 +355,7 @@ export const products: Product[] = [
     storages: [
       { id: "128", label: "128GB", priceKes: 185000 },
       { id: "256", label: "256GB", priceKes: 203000 },
-      { id: "512", label: "512GB", priceKes: 225000 },
+      { id: "512", label: "512GB", priceKes: 230000 },
       { id: "1tb", label: "1TB", priceKes: 240000 },
       { id: "2tb", label: "2TB", priceKes: 258000 },
     ],
@@ -566,8 +566,8 @@ export const products: Product[] = [
     gallery: [...pro18GalleryShots("iPhone 18 Pro Max")],
     finishesLabel: "Available in 4 finishes",
     storages: [
-      { id: "256", label: "256GB", priceKes: 218000 },
-      { id: "512", label: "512GB", priceKes: 255000 },
+      { id: "256", label: "256GB", priceKes: 219000 },
+      { id: "512", label: "512GB", priceKes: 245000 },
       { id: "1tb", label: "1TB", priceKes: 285000 },
       { id: "2tb", label: "2TB", priceKes: 358000 }
     ],
@@ -842,8 +842,8 @@ export const products: Product[] = [
     ],
     finishesLabel: "Available in 4 finishes",
     storages: [
-      { id: "256", label: "256GB", priceKes: 124000 },
-      { id: "512", label: "512GB", priceKes: 145000 },
+      { id: "256", label: "256GB", priceKes: 125000 },
+      { id: "512", label: "512GB", priceKes: 149000 },
       { id: "1tb", label: "1TB", priceKes: 170000 }
     ],
     colors: [
@@ -1095,7 +1095,7 @@ export const products: Product[] = [
     finishesLabel: "Available in 5 finishes",
     storages: [
       { id: "256", label: "256GB", priceKes: 124000 },
-      { id: "512", label: "512GB", priceKes: 156000 }
+      { id: "512", label: "512GB", priceKes: 145000 }
     ],
     colors: [
       { id: "lavender", label: "Lavender", hex: "#C8B8D8" },

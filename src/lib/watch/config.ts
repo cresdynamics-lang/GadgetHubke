@@ -95,7 +95,7 @@ export const watchBasePricesKes = {
   "watch-se2-44": 32000,
   "watch-se1-40": 36500,
   "watch-se1-44": 40500,
-  "watch-ultra-3": 107000,
+  "watch-ultra-3": 105000,
   "watch-ultra-2": 99000,
   "watch-ultra-1": 85000,
   "watch-s12-hermes-42": 165000,
