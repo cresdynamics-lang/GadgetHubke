@@ -3,8 +3,7 @@
  * Product select shots under Gadget_Hub_iPad_1_…/01_Product_photos prefer .jpg.
  */
 
-import fs from "node:fs";
-import path from "node:path";
+import { publicFileExists } from "../public-file";
 import { colourLabel } from "./colours";
 import {
   gallerySrcs,
@@ -32,8 +31,7 @@ function webpSibling(src: string): string | undefined {
   if (!src || src === IPAD_PLACEHOLDER) return undefined;
   if (/\.webp$/i.test(src)) return src;
   const webp = src.replace(/\.(jpe?g|png)$/i, ".webp");
-  const disk = path.join(process.cwd(), "public", webp.replace(/^\//, ""));
-  return fs.existsSync(disk) ? webp : undefined;
+  return publicFileExists(webp) ? webp : undefined;
 }
 
 function widthForKind(kind: string): number {

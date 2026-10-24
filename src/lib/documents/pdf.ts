@@ -1,8 +1,8 @@
 /**
  * One-page branded invoice / receipt PDF (A4).
  */
+import { publicFilePath } from "../public-file";
 import fs from "node:fs";
-import path from "node:path";
 import { PDFDocument, PDFPage, PDFString, rgb, StandardFonts } from "pdf-lib";
 import { bagMetaLine, formatKes } from "../checkout/bag";
 import { catalogAmount, dueTodayAmount, isLipa } from "../checkout/intent";
@@ -41,11 +41,7 @@ function addLink(page: PDFPage, x: number, y: number, w: number, h: number, url:
 }
 
 function logoPath() {
-  const mark = path.join(process.cwd(), "public/images/logo-mark.png");
-  const full = path.join(process.cwd(), "public/images/logo.png");
-  if (fs.existsSync(mark)) return mark;
-  if (fs.existsSync(full)) return full;
-  return "";
+  return publicFilePath("/images/logo-mark.png") ?? publicFilePath("/images/logo.png") ?? "";
 }
 
 export async function buildOrderPdf(

@@ -2,8 +2,7 @@
  * Unified product catalog for Meta Commerce Manager + Google Merchant Center.
  * Prices come from the same sheet / model base prices as the live shop.
  */
-import fs from "node:fs";
-import path from "node:path";
+import { publicFileExists } from "../public-file";
 import { site } from "../site";
 import { buildIphoneMerchantFeed } from "../iphone/seo/merchant-feed";
 import { macModels } from "../mac/models";
@@ -47,8 +46,7 @@ function priceKes(kes: number): string {
 }
 
 function diskExists(publicPath: string): boolean {
-  const disk = path.join(process.cwd(), "public", publicPath.replace(/^\//, ""));
-  return fs.existsSync(disk);
+  return publicFileExists(publicPath);
 }
 
 function imageLink(publicPath: string | undefined, fallbackId?: string): string | undefined {

@@ -1,4 +1,3 @@
-import { existsSync } from "node:fs";
 import path from "node:path";
 
 /** Turn a public URL path into sibling variant URLs. */
@@ -17,10 +16,7 @@ export function heroVariantUrls(src: string) {
   };
 }
 
-export function publicFileExists(publicUrl: string): boolean {
-  const rel = publicUrl.replace(/^\//, "");
-  return existsSync(path.join(process.cwd(), "public", rel));
-}
+export { publicFileExists } from "../public-file";
 
 export function colourNameFromPath(src: string): string | null {
   const base = path.basename(src, path.extname(src));

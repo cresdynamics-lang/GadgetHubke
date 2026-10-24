@@ -2,9 +2,8 @@
  * Google Merchant Center feed rows from the same SEO + sheet data as the pages.
  * EX-UK variants are excluded while SHOW_EX_UK is false.
  */
-import fs from "node:fs";
 import { seoModelGallery } from "./gallery";
-import path from "node:path";
+import { publicFileExists } from "../../public-file";
 import { site } from "../../site";
 import { iphoneSeoCatalog } from "./catalog";
 import { SHOW_EX_UK } from "./flags";
@@ -52,19 +51,16 @@ function resolveImage(modelId: string, name: string): string | undefined {
       legacy.name,
     );
     if (img?.src && img.src !== "/images/logo.png") {
-      const disk = path.join(process.cwd(), "public", img.src.replace(/^\//, ""));
-      if (fs.existsSync(disk)) return new URL(img.src, site.url).href;
+      if (publicFileExists(img.src)) return new URL(img.src, site.url).href;
     }
   }
   const gallery = seoModelGallery[modelId]?.[0];
   if (gallery) {
-    const disk = path.join(process.cwd(), "public", gallery.src.replace(/^\//, ""));
-    if (fs.existsSync(disk)) return new URL(gallery.src, site.url).href;
+    if (publicFileExists(gallery.src)) return new URL(gallery.src, site.url).href;
   }
   const shop = getProduct(seoIdToShopProductId[modelId] ?? modelId);
   if (shop?.image?.src) {
-    const disk = path.join(process.cwd(), "public", shop.image.src.replace(/^\//, ""));
-    if (fs.existsSync(disk)) return new URL(shop.image.src, site.url).href;
+    if (publicFileExists(shop.image.src)) return new URL(shop.image.src, site.url).href;
   }
   return undefined;
 }

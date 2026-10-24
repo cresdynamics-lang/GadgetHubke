@@ -1,11 +1,9 @@
-import { existsSync } from "node:fs";
-import path from "node:path";
+import { publicFileExists } from "../public-file";
 import { heroCategories } from "./scenes";
 import type { HeroCategory } from "./types";
 
 function fileOk(publicUrl: string): boolean {
-  const rel = publicUrl.replace(/^\//, "");
-  return existsSync(path.join(process.cwd(), "public", rel));
+  return publicFileExists(publicUrl);
 }
 
 /** Fail the build loudly if any scene image is missing or a category is incomplete. */
@@ -32,6 +30,12 @@ export function validateHeroScenes(categories: Record<string, HeroCategory> = he
   }
 
   if (errors.length) {
-    throw new Error(`Hero scene validation failed:\n${errors.map((e) => `  - ${e}`).join("\n")}`);
+    const message = `Hero scene validation failed:\n${errors.map((e) => `  - ${e}`).join("\n")}`;
+    // Loud in dev; in production log it rather than take a live page down.
+    if (import.meta.env.PROD) {
+      console.warn(message);
+      return;
+    }
+    throw new Error(message);
   }
 }

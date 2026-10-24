@@ -3,8 +3,7 @@
  * kind: hero | angle:n | swatch | feature:name | gallery:n | gesture:name | overview | manifest key
  */
 
-import fs from "node:fs";
-import path from "node:path";
+import { publicFileExists } from "../public-file";
 import {
   angleSrcs,
   featureSrc,
@@ -54,8 +53,7 @@ function webpSibling(src: string): string | undefined {
   if (/\.webp$/i.test(src)) return src;
   const webp = src.replace(/\.(jpe?g|png)$/i, ".webp");
   if (webp === src) return undefined;
-  const disk = path.join(process.cwd(), "public", webp.replace(/^\//, ""));
-  return fs.existsSync(disk) ? webp : undefined;
+  return publicFileExists(webp) ? webp : undefined;
 }
 
 function widthForKind(kind: string): number {
