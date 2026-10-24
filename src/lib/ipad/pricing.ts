@@ -1,4 +1,4 @@
-import { ipadConfig } from "./config";
+import { ipadConfig, ipadExactPricesKes } from "./config";
 import type { IpadModel } from "./models";
 
 export function formatKes(amount: number): string {
@@ -13,6 +13,8 @@ export function ipadConfigurePrice(
   const storIdx = Math.max(0, model.storageOptions.indexOf(storageLabel));
   let kes = model.basePriceKes + storIdx * ipadConfig.storageStepKes;
   if (opts.cellular) kes += ipadConfig.cellularStepKes;
+  const exact = ipadExactPricesKes[model.id]?.[`${storageLabel}|${opts.cellular ? "cell" : "wifi"}`];
+  if (exact != null) kes = exact;
   if (opts.nanoTexture && model.display.nanoTextureOptional) {
     const high = /1 TB|2 TB/i.test(storageLabel);
     if (high) kes += ipadConfig.nanoTextureStepKes;

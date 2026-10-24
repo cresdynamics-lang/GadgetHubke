@@ -74,13 +74,13 @@ export const watchConfig = {
 
 /** Sample base prices in KES - aluminum GPS base unless noted. */
 export const watchBasePricesKes = {
-  "watch-s12-42": 78000,
-  "watch-s12-46": 85000,
+  "watch-s12-42": 60000,
+  "watch-s12-46": 67000,
   "watch-ultra-4": 135000,
-  "watch-se3-40": 36000,
-  "watch-se3-44": 42000,
-  "watch-s11-42": 48000,
-  "watch-s11-46": 52000,
+  "watch-se3-40": 38000,
+  "watch-se3-44": 43000,
+  "watch-s11-42": 50000,
+  "watch-s11-46": 55000,
   "watch-s10-42": 42000,
   "watch-s10-46": 46000,
   "watch-s9-41": 34000,

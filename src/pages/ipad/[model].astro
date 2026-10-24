@@ -22,6 +22,7 @@ import {
   ipadConfigurePrice,
   lipaMonthly,
   ipadConfig,
+  ipadExactPricesKes,
   colourHex,
   colourLabel,
   isLightColour,
@@ -45,6 +46,8 @@ const colour = defaultIpadColour(model);
 const tabs = ipadViewerTabs(model, colour);
 const img = tabs[0] || getIpadImage(model.id, colour, "product", model.name);
 const price = ipadConfigurePrice(model, model.storageOptions[0]);
+const exactPrices = ipadExactPricesKes[model.id] || {};
+const hasExact = Object.keys(exactPrices).length > 0;
 const lipa = lipaMonthly(price.kes);
 const notes = ipadBuyingNotes(model);
 const faq = ipadFaq();
@@ -179,7 +182,7 @@ const wa = whatsappUrl(
           <p class="ipdp__cfg-label">Connectivity</p>
           <div class="ipdp__opts" data-ipad-conn>
             <button type="button" class="is-active" data-cellular="0">Wi-Fi</button>
-            {model.cellular ? <button type="button" data-cellular="1">Wi-Fi + Cellular · +{formatKes(ipadConfig.cellularStepKes)}</button> : null}
+            {model.cellular ? <button type="button" data-cellular="1">Wi-Fi + Cellular{hasExact ? "" : ` · +${formatKes(ipadConfig.cellularStepKes)}`}</button> : null}
           </div>
 
           <p class="ipdp__cfg-label">Storage</p>
@@ -187,7 +190,7 @@ const wa = whatsappUrl(
             {
               model.storageOptions.map((s, i) => (
                 <button type="button" class:list={{ "is-active": i === 0 }} data-storage={s} data-step={i}>
-                  {s}{i > 0 ? ` · +${formatKes(i * ipadConfig.storageStepKes)}` : ""}
+                  {s}{i > 0 && !hasExact ? ` · +${formatKes(i * ipadConfig.storageStepKes)}` : ""}
                 </button>
               ))
             }
@@ -483,6 +486,7 @@ const wa = whatsappUrl(
   storStep: ipadConfig.storageStepKes,
   cellStep: ipadConfig.cellularStepKes,
   nanoStep: ipadConfig.nanoTextureStepKes,
+  exactPrices,
   depositPct: ipadConfig.lipa.depositDefaultPct,
   months: ipadConfig.lipa.monthsDefault,
   waBase: `https://wa.me/${ipadConfig.whatsapp}?text=`,
@@ -597,7 +601,8 @@ const wa = whatsappUrl(
   function refresh() {
     const storBtn = document.querySelector("[data-ipad-storage] .is-active");
     const storLabel = storBtn?.getAttribute("data-storage") || "";
-    let kes = base + state.storage * storStep + state.cellular * cellStep + state.addons;
+    const exactKes = exactPrices[`${storLabel}|${state.cellular ? "cell" : "wifi"}`];
+    let kes = (exactKes ?? base + state.storage * storStep + state.cellular * cellStep) + state.addons;
     if (state.nano && nanoAllowed && /1 TB|2 TB/i.test(storLabel)) kes += nanoStep;
     state.kes = kes;
     if (priceEl) priceEl.textContent = `KES ${kes.toLocaleString("en-KE")}`;
