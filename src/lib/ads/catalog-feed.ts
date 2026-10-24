@@ -19,6 +19,9 @@ import { getTvHomeImage } from "../tv-home";
 import { accessories } from "../accessories/models";
 import { getAccessoryImage } from "../accessories";
 import { cardImageSrc } from "../card-images";
+import { iphoneSheet, storageIdFromLabel } from "../pricing/iphone-sheet";
+import { getSeoModelByName } from "../iphone/seo";
+import { livePricedCatalog, iphoneLiveId } from "../pricing/live";
 
 export type CatalogRow = {
   id: string;
@@ -312,4 +315,43 @@ function escXml(s: string): string {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+/** iPhone sheet id ("IP-081") → live product id + storage key. */
+function iphoneSheetLiveIndex(): Map<string, { id: string; key: string }> {
+  const out = new Map<string, { id: string; key: string }>();
+  for (const r of iphoneSheet) {
+    const seo = getSeoModelByName(r.name);
+    if (!seo) continue;
+    out.set(r.id, { id: iphoneLiveId(seo.id), key: storageIdFromLabel(r.storage) });
+  }
+  return out;
+}
+
+/**
+ * Feed rows with live admin prices, so ad prices always match the product pages.
+ * Works for both the full catalog and the iPhone-only feed (ids ending -EXUK use Ex-UK prices).
+ */
+export async function applyLivePrices<T extends { id: string; price: string; availability: string }>(
+  rows: T[],
+): Promise<T[]> {
+  const live = new Map((await livePricedCatalog()).map((p) => [p.id, p]));
+  const bySheet = iphoneSheetLiveIndex();
+  return rows.map((r) => {
+    const exUk = r.id.endsWith("-EXUK");
+    const sheetHit = bySheet.get(exUk ? r.id.slice(0, -5) : r.id);
+    if (sheetHit) {
+      const v = live.get(sheetHit.id)?.variants.find((x) => x.key === sheetHit.key);
+      const kes = v ? (exUk ? v.exUkKes : v.priceKes) : undefined;
+      if (!v || kes == null) return r;
+      return { ...r, price: priceKes(kes), availability: v.inStock ? r.availability : "out_of_stock" };
+    }
+    const p = live.get(r.id);
+    if (!p) return r;
+    return { ...r, price: priceKes(p.priceKes), availability: p.inStock ? r.availability : "out_of_stock" };
+  });
+}
+
+export async function buildAdsCatalogLive(): Promise<CatalogRow[]> {
+  return applyLivePrices(buildAdsCatalog());
 }

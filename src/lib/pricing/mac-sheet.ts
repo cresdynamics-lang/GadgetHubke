@@ -141,7 +141,7 @@ export function macConfigStorageLabel(memoryGb: number | null, storage: string |
 export function macBaseFromSheet(modelId: string): number | undefined {
   const rows = macSheetForModel(modelId);
   if (!rows.length) return undefined;
-  return Math.min(..rows.map((r) => r.newKes));
+  return Math.min(...rows.map((r) => r.newKes));
 }
 
 export function macSheetPrice(

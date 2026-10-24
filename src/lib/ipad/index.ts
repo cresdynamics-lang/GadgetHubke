@@ -1,6 +1,6 @@
 /** iPad Pro / Air / mini / standard module - data, images, pricing. */
 
-export { ipadConfig, ipadBasePricesKes, ipadExactPricesKes } from "./config";
+export { ipadConfig, ipadBasePricesKes } from "./config";
 export {
   colourLabel,
   colourHex,

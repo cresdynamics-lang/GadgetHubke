@@ -13,6 +13,8 @@ import BackButton from "../components/BackButton.astro";
 import TrackProductView from "../components/TrackProductView.astro";
 import type { Product } from "../lib/products";
 import { site, whatsappUrl } from "../lib/site";
+import { livePricedProduct } from "../lib/pricing/live";
+import { storageIdFromLabel } from "../lib/pricing/iphone-sheet";
 import {
   getSeoModelByName,
   buildIphoneProductJsonLd,
@@ -25,8 +27,19 @@ interface Props {
 }
 
 const { product } = Astro.props;
-const seo = getSeoModelByName(product.name);
-const basePrice = seo?.fromKes ?? product.storages[0]?.priceKes ?? 0;
+// Live admin prices override repo prices for every storage option.
+const live = await livePricedProduct(product.id);
+const liveByKey = new Map((live?.variants ?? []).map((v) => [v.key, v]));
+const seoDefault = getSeoModelByName(product.name);
+const seo = seoDefault
+  ? (() => {
+      const variants = seoDefault.variants.map((v) => {
+        const l = liveByKey.get(storageIdFromLabel(v.storage));
+        return l ? { ...v, newKes: l.priceKes, exUkKes: l.exUkKes ?? v.exUkKes } : v;
+      });
+      return { ...seoDefault, variants, fromKes: Math.min(...variants.map((v) => v.newKes)) };
+    })()
+  : undefined;
 const storages = seo
   ? seo.variants.map((v) => ({
       id: v.storage.toLowerCase().replace(/\s+/g, ""),
@@ -35,7 +48,11 @@ const storages = seo
       sheetId: v.sheetId,
       exUkKes: v.exUkKes,
     }))
-  : product.storages;
+  : product.storages.map((st) => {
+      const l = liveByKey.get(st.id);
+      return l ? { ...st, priceKes: l.priceKes, exUkKes: l.exUkKes ?? st.exUkKes } : st;
+    });
+const basePrice = seo?.fromKes ?? storages[0]?.priceKes ?? 0;
 const defaultStorage = storages[0];
 const defaultColor = product.colors[0];
 const waBase = whatsappUrl();

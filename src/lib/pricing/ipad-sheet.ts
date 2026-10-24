@@ -56,9 +56,9 @@ export const ipadSheet: IpadSheetRow[] = [
   { id: "PAD-039", product: "iPad Air 13-inch (M4)", config: "1TB \u00b7 Wi-Fi", newKes: 210000, exUkKes: 168000, modelId: "ipad-air-13-m4", storage: "1TB", cellular: false },
   { id: "PAD-040", product: "iPad Air 13-inch (M4)", config: "1TB \u00b7 Wi-Fi Cellular", newKes: 225000, exUkKes: 180000, modelId: "ipad-air-13-m4", storage: "1TB", cellular: true },
   { id: "PAD-041", product: "iPad Air 11-inch (M4)", config: "128GB \u00b7 Wi-Fi", newKes: 100000, exUkKes: 80000, modelId: "ipad-air-11-m4", storage: "128GB", cellular: false },
-  { id: "PAD-042", product: "iPad Air 11-inch (M4)", config: "128GB \u00b7 Wi-Fi Cellular", newKes: 115000, exUkKes: 92000, modelId: "ipad-air-11-m4", storage: "128GB", cellular: true },
+  { id: "PAD-042", product: "iPad Air 11-inch (M4)", config: "128GB \u00b7 Wi-Fi Cellular", newKes: 125000, exUkKes: 92000, modelId: "ipad-air-11-m4", storage: "128GB", cellular: true },
   { id: "PAD-043", product: "iPad Air 11-inch (M4)", config: "256GB \u00b7 Wi-Fi", newKes: 120000, exUkKes: 96000, modelId: "ipad-air-11-m4", storage: "256GB", cellular: false },
-  { id: "PAD-044", product: "iPad Air 11-inch (M4)", config: "256GB \u00b7 Wi-Fi Cellular", newKes: 128000, exUkKes: 102000, modelId: "ipad-air-11-m4", storage: "256GB", cellular: true },
+  { id: "PAD-044", product: "iPad Air 11-inch (M4)", config: "256GB \u00b7 Wi-Fi Cellular", newKes: 148000, exUkKes: 102000, modelId: "ipad-air-11-m4", storage: "256GB", cellular: true },
   { id: "PAD-045", product: "iPad Air 11-inch (M4)", config: "512GB \u00b7 Wi-Fi", newKes: 138000, exUkKes: 110000, modelId: "ipad-air-11-m4", storage: "512GB", cellular: false },
   { id: "PAD-046", product: "iPad Air 11-inch (M4)", config: "512GB \u00b7 Wi-Fi Cellular", newKes: 150000, exUkKes: 120000, modelId: "ipad-air-11-m4", storage: "512GB", cellular: true },
   { id: "PAD-047", product: "iPad Air 11-inch (M4)", config: "1TB \u00b7 Wi-Fi", newKes: 160000, exUkKes: 128000, modelId: "ipad-air-11-m4", storage: "1TB", cellular: false },
@@ -135,7 +135,7 @@ export function ipadSheetForModel(modelId: string): IpadSheetRow[] {
 export function ipadBaseFromSheet(modelId: string): number | undefined {
   const wifi = ipadSheetForModel(modelId).filter((r) => !r.cellular);
   if (!wifi.length) return undefined;
-  return Math.min(..wifi.map((r) => r.newKes));
+  return Math.min(...wifi.map((r) => r.newKes));
 }
 
 export function ipadBaseExUkFromSheet(modelId: string): number | undefined {

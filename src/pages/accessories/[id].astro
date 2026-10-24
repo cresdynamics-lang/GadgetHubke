@@ -30,6 +30,7 @@ import {
   getCaseVariants,
   productGeoUs,
 } from "../../lib/accessories";
+import { livePricedProduct } from "../../lib/pricing/live";
 import { ipadModels } from "../../lib/ipad";
 import { macModels } from "../../lib/mac";
 import { whatsappUrl } from "../../lib/site";
@@ -57,15 +58,16 @@ function gestureKindFromFeatureId(fid: string, group: "mouse" | "trackpad"): str
   return `gesture:${slug}`;
 }
 
-export function getStaticPaths() {
-  return accessories.map((a) => ({ params: { id: a.id } }));
-}
+export const prerender = false;
 
 const { id } = Astro.params;
-const product = getAccessory(id!);
-if (!product) {
+const accessoryDefault = getAccessory(id!);
+if (!accessoryDefault) {
   return Astro.redirect("/accessories");
 }
+// Live admin price.
+const livePrice = (await livePricedProduct(accessoryDefault.id))?.priceKes;
+const product = livePrice != null ? { ...accessoryDefault, basePriceKes: livePrice } : accessoryDefault;
 
 const hero = getAccessoryImage(product.id, "hero");
 const angles = angleSrcs(product.id);

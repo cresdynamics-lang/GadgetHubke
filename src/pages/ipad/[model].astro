@@ -22,7 +22,6 @@ import {
   ipadConfigurePrice,
   lipaMonthly,
   ipadConfig,
-  ipadExactPricesKes,
   colourHex,
   colourLabel,
   isLightColour,
@@ -34,10 +33,9 @@ import {
   fits,
 } from "../../lib/ipad";
 import { whatsappUrl } from "../../lib/site";
+import { livePricedProduct, variantPriceMap } from "../../lib/pricing/live";
 
-export function getStaticPaths() {
-  return ipadModels.map((m) => ({ params: { model: m.id } }));
-}
+export const prerender = false;
 
 const model = getIpadModel(Astro.params.model!);
 if (!model) return Astro.redirect("/ipad");
@@ -46,8 +44,13 @@ const colour = defaultIpadColour(model);
 const tabs = ipadViewerTabs(model, colour);
 const img = tabs[0] || getIpadImage(model.id, colour, "product", model.name);
 const price = ipadConfigurePrice(model, model.storageOptions[0]);
-const exactPrices = ipadExactPricesKes[model.id] || {};
+// Live admin prices per storage + connectivity ("256gb", "256gb-cell").
+const exactPrices = variantPriceMap(await livePricedProduct(model.id));
 const hasExact = Object.keys(exactPrices).length > 0;
+const exactKey = (storage: string, cellular: boolean) =>
+  `${storage.replace(/\s+/g, "").toLowerCase()}${cellular ? "-cell" : ""}`;
+const firstExact = exactPrices[exactKey(model.storageOptions[0], false)];
+if (firstExact != null) price.kes = firstExact;
 const lipa = lipaMonthly(price.kes);
 const notes = ipadBuyingNotes(model);
 const faq = ipadFaq();
@@ -601,7 +604,7 @@ const wa = whatsappUrl(
   function refresh() {
     const storBtn = document.querySelector("[data-ipad-storage] .is-active");
     const storLabel = storBtn?.getAttribute("data-storage") || "";
-    const exactKes = exactPrices[`${storLabel}|${state.cellular ? "cell" : "wifi"}`];
+    const exactKes = exactPrices[`${storLabel.replace(/\s+/g, "").toLowerCase()}${state.cellular ? "-cell" : ""}`];
     let kes = (exactKes ?? base + state.storage * storStep + state.cellular * cellStep) + state.addons;
     if (state.nano && nanoAllowed && /1 TB|2 TB/i.test(storLabel)) kes += nanoStep;
     state.kes = kes;

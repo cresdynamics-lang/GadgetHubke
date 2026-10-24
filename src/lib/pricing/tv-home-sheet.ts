@@ -36,7 +36,7 @@ export function tvHomeSheetForModel(modelId: string): TvHomeSheetRow[] {
 export function tvHomeBaseFromSheet(modelId: string): number | undefined {
   const rows = tvHomeSheetForModel(modelId);
   if (!rows.length) return undefined;
-  return Math.min(..rows.map((r) => r.newKes));
+  return Math.min(...rows.map((r) => r.newKes));
 }
 
 export function tvHomeBaseExUkFromSheet(modelId: string): number | undefined {

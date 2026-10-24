@@ -79,7 +79,7 @@ export const accessoryBasePricesKes = {
   "pencil-1": 14000,
   "keyboard-ipad-pro-11": 47000,
   "keyboard-ipad-pro-13": 53000,
-  "keyboard-ipad-air-11": 43000,
+  "keyboard-ipad-air-11": 50000,
   "keyboard-ipad-air-13": 50000,
   "keyboard-folio": 36000,
   "keyboard-mac-usbc": 16000,

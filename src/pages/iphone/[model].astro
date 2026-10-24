@@ -44,6 +44,8 @@ import {
   seoIdToShopProductId,
 } from "../../lib/iphone/seo";
 import { getProduct } from "../../lib/products";
+import { livePricedProduct, iphoneLiveId } from "../../lib/pricing/live";
+import { storageIdFromLabel } from "../../lib/pricing/iphone-sheet";
 import { site, whatsappUrl } from "../../lib/site";
 import StockChannelToggle from "../../components/StockChannelToggle.astro";
 import ProductReviews from "../../components/ProductReviews.astro";
@@ -54,26 +56,32 @@ import SeriesHub from "../../components/iphone/SeriesHub.astro";
 
 assertExUkWarrantyConfigured();
 
-type Props = { kind: "model" | "series" };
-
-export function getStaticPaths() {
-  return [
-    ...listSeoModels().map((m) => ({ params: { model: m.id }, props: { kind: "model" as const } })),
-    ...listSeriesHubs().map((s) => ({ params: { model: s.slug }, props: { kind: "series" as const } })),
-  ];
-}
+export const prerender = false;
 
 const { model: modelId } = Astro.params;
-const { kind } = Astro.props as Props;
+const kind: "model" | "series" | undefined = getSeoModel(modelId!)
+  ? "model"
+  : getSeriesHub(modelId!)
+    ? "series"
+    : undefined;
+if (!kind) {
+  return Astro.redirect("/iphone");
+}
 const seriesPage = kind === "series" ? getSeriesHub(modelId!) : undefined;
-if (kind === "series" && !seriesPage) {
-  return Astro.redirect("/iphone");
-}
 
-const seo = kind === "model" ? getSeoModel(modelId!) : undefined;
-if (kind === "model" && !seo) {
-  return Astro.redirect("/iphone");
-}
+const seoDefault = kind === "model" ? getSeoModel(modelId!) : undefined;
+// Live admin prices override the repo sheet for every storage option.
+const live = seoDefault ? await livePricedProduct(iphoneLiveId(seoDefault.id)) : undefined;
+const liveByKey = new Map((live?.variants ?? []).map((v) => [v.key, v]));
+const seo = seoDefault && live
+  ? (() => {
+      const variants = seoDefault.variants.map((v) => {
+        const l = liveByKey.get(storageIdFromLabel(v.storage));
+        return l ? { ...v, newKes: l.priceKes, exUkKes: l.exUkKes ?? v.exUkKes } : v;
+      });
+      return { ...seoDefault, variants, fromKes: Math.min(...variants.map((v) => v.newKes)) };
+    })()
+  : seoDefault;
 
 let hasLegacyGallery = false;
 let model: ReturnType<typeof getModel>;
@@ -133,6 +141,10 @@ if (seo) {
     model?.storage ?? seo.variants.map((v) => v.storage),
     seo.name,
   );
+  prices = prices.map((p) => {
+    const l = liveByKey.get(storageIdFromLabel(p.label));
+    return l ? { ...p, kes: l.priceKes, exUkKes: l.exUkKes ?? p.exUkKes } : p;
+  });
   firstPrice = prices[0] ?? { label: "", kes: seo.fromKes };
   lipa = lipaMonthly(firstPrice.kes);
   tag = model ? (isLatestTag(model) ? "Latest" : isValueTag(model) ? "Value" : null) : null;

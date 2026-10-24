@@ -71,7 +71,7 @@ export function watchBaseFromSheet(modelId: string): number | undefined {
   );
   const pool = wifiAlu.length ? wifiAlu : watchSheetForModel(modelId);
   if (!pool.length) return undefined;
-  return Math.min(..pool.map((r) => r.newKes));
+  return Math.min(...pool.map((r) => r.newKes));
 }
 
 export function watchBaseExUkFromSheet(modelId: string): number | undefined {

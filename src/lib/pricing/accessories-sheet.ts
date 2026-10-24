@@ -114,7 +114,7 @@ export const accessoriesSheet: AccessoriesSheetRow[] = [
   { id: "AC-100", product: "Magic Keyboard for iPad Pro 13-inch M5 US English; confirm layout", config: "Magic Keyboard for iPad Pro 13-inch M5 US English; confirm layout", newKes: 53000, exUkKes: 37000, modelId: "keyboard-ipad-pro-13" },
   { id: "AC-101", product: "Magic Keyboard for iPad Pro 11-inch M5 US English; confirm layout", config: "Magic Keyboard for iPad Pro 11-inch M5 US English; confirm layout", newKes: 47000, exUkKes: 33000, modelId: "keyboard-ipad-pro-11" },
   { id: "AC-102", product: "Magic Keyboard for iPad Air 13-inch M4 US English; confirm layout", config: "Magic Keyboard for iPad Air 13-inch M4 US English; confirm layout", newKes: 50000, exUkKes: 35000, modelId: "keyboard-ipad-air-13" },
-  { id: "AC-103", product: "Magic Keyboard for iPad Air 11-inch M4 US English; confirm layout", config: "Magic Keyboard for iPad Air 11-inch M4 US English; confirm layout", newKes: 43000, exUkKes: 30000, modelId: "keyboard-ipad-air-11" },
+  { id: "AC-103", product: "Magic Keyboard for iPad Air 11-inch M4 US English; confirm layout", config: "Magic Keyboard for iPad Air 11-inch M4 US English; confirm layout", newKes: 50000, exUkKes: 30000, modelId: "keyboard-ipad-air-11" },
   { id: "AC-104", product: "Magic Keyboard Folio for iPad A16 US English; confirm layout", config: "Magic Keyboard Folio for iPad A16 US English; confirm layout", newKes: 36000, exUkKes: 25000, modelId: "keyboard-folio" },
   { id: "AC-105", product: "Magic Keyboard with Touch ID Mac with Apple silicon", config: "Magic Keyboard with Touch ID Mac with Apple silicon", newKes: 21000, exUkKes: 14500, modelId: "keyboard-mac-touchid" },
   { id: "AC-106", product: "Magic Keyboard with Touch ID and Numeric Keypad Mac with Apple silicon", config: "Magic Keyboard with Touch ID and Numeric Keypad Mac with Apple silicon", newKes: 25000, exUkKes: 17500, modelId: "keyboard-mac-touchid-num-white" },
@@ -138,7 +138,7 @@ export function accessoriesSheetForModel(modelId: string): AccessoriesSheetRow[]
 export function accessoryBaseFromSheet(modelId: string): number | undefined {
   const rows = accessoriesSheetForModel(modelId);
   if (!rows.length) return undefined;
-  return Math.min(..rows.map((r) => r.newKes));
+  return Math.min(...rows.map((r) => r.newKes));
 }
 
 export function accessoryBaseExUkFromSheet(modelId: string): number | undefined {

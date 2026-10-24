@@ -30,20 +30,25 @@ import {
   macBuyingNotes,
   macFaq,
 } from "../../lib/mac";
+import { livePricedProduct, variantPriceMap } from "../../lib/pricing/live";
 import { whatsappUrl } from "../../lib/site";
 
-export function getStaticPaths() {
-  return macModels.map((m) => ({ params: { model: m.id } }));
-}
+export const prerender = false;
 
 const model = getMacModel(Astro.params.model!);
 if (!model) return Astro.redirect("/mac");
+// Live admin prices per memory + storage ("16gb-512gb").
+const exact = variantPriceMap(await livePricedProduct(model.id));
+const exactKey = (gb: number, storage: string) => `${gb}gb-${storage.replace(/\s+/g, "").toLowerCase()}`;
+const hasExact = Object.keys(exact).length > 0;
 
 const colour = defaultMacColour(model);
 const tabs = macViewerTabs(model, colour);
 const lid = macLidFrames(model);
 const img = tabs[0] || getMacImage(model.id, colour, "product", model.name);
 const price = macConfigurePrice(model, model.memoryOptionsGb[0], model.storageOptions[0]);
+const firstExact = exact[exactKey(model.memoryOptionsGb[0], model.storageOptions[0])];
+if (firstExact != null) price.kes = firstExact;
 const lipa = lipaMonthly(price.kes);
 const notes = macBuyingNotes(model);
 const faq = macFaq();
@@ -173,7 +178,7 @@ const wa = whatsappUrl(
             {
               model.memoryOptionsGb.map((gb, i) => (
                 <button type="button" class:list={{ "is-active": i === 0 }} data-gb={gb} data-step={i}>
-                  {gb} GB{i > 0 ? ` · +${formatKes(i * macConfig.memoryStepKes)}` : ""}
+                  {gb} GB{i > 0 && !hasExact ? ` · +${formatKes(i * macConfig.memoryStepKes)}` : ""}
                 </button>
               ))
             }
@@ -184,7 +189,7 @@ const wa = whatsappUrl(
             {
               model.storageOptions.map((s, i) => (
                 <button type="button" class:list={{ "is-active": i === 0 }} data-storage={s} data-step={i}>
-                  {s}{i > 0 ? ` · +${formatKes(i * macConfig.storageStepKes)}` : ""}
+                  {s}{i > 0 && !hasExact ? ` · +${formatKes(i * macConfig.storageStepKes)}` : ""}
                 </button>
               ))
             }
@@ -400,7 +405,8 @@ const wa = whatsappUrl(
 </BaseLayout>
 
 <script define:vars={{
-  base: model.basePriceKes,
+  base: firstExact ?? model.basePriceKes,
+  exact,
   memStep: macConfig.memoryStepKes,
   storStep: macConfig.storageStepKes,
   depositPct: macConfig.lipa.depositDefaultPct,
@@ -488,7 +494,10 @@ const wa = whatsappUrl(
   wireTabs();
 
   function refresh() {
-    state.kes = base + state.memory * memStep + state.storage * storStep;
+    const memGb = document.querySelector("[data-mac-memory] .is-active")?.getAttribute("data-gb") || "";
+    const storLabel = document.querySelector("[data-mac-storage] .is-active")?.getAttribute("data-storage") || "";
+    const hit = exact[`${memGb}gb-${storLabel.replace(/\s+/g, "").toLowerCase()}`];
+    state.kes = hit ?? base + state.memory * memStep + state.storage * storStep;
     if (priceEl) priceEl.textContent = `KES ${state.kes.toLocaleString("en-KE")}`;
     const deposit = Math.round((state.kes * depositPct) / 100);
     const monthly = Math.round((state.kes - deposit) / months);

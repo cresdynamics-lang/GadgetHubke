@@ -126,15 +126,6 @@ export const ipadBasePricesKes = {
   "ipad-a16": 63000,
 } as const;
 
-/**
- * Exact quoted prices (KES) that win over base + storage/cellular steps.
- * Key: "<storage label>|wifi" or "<storage label>|cell".
- */
-export const ipadExactPricesKes: Partial<Record<string, Record<string, number>>> = {
-  "ipad-pro-11-m5": { "256 GB|wifi": 157000, "256 GB|cell": 165000, "512 GB|cell": 215000 },
-  "ipad-pro-13-m5": { "256 GB|cell": 180000, "512 GB|cell": 215000, "1 TB|cell": 258000 },
-};
-
 /** EX-UK base prices from sheet. */
 export const ipadBaseExUkKes = {
   "ipad-pro-13-m5": 142000,

@@ -28,13 +28,15 @@ import {
   airpodsFaq,
   defaultAirpodsColour,
 } from "../../lib/airpods";
+import { livePricedProduct, variantPriceMap } from "../../lib/pricing/live";
 
-export function getStaticPaths() {
-  return airpodsModels.map((m) => ({ params: { model: m.id } }));
-}
+export const prerender = false;
 
-const model = getAirpodsModel(Astro.params.model!);
-if (!model) return Astro.redirect("/airpods");
+const airpodsDefault = getAirpodsModel(Astro.params.model!);
+if (!airpodsDefault) return Astro.redirect("/airpods");
+// Live admin price ("base").
+const liveBase = variantPriceMap(await livePricedProduct(airpodsDefault.id)).base;
+const model = liveBase != null ? { ...airpodsDefault, basePriceKes: liveBase } : airpodsDefault;
 
 const tabs = airpodsViewerTabs(model);
 const img = tabs[0] || getAirpodsImage(model.id, "hero", model.name);

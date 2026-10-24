@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { normalizeBagItem } from "../../../lib/checkout/bag";
 import { createOrder, getOrder, publicOrder } from "../../../lib/checkout/orders";
+import { repriceBagItems } from "../../../lib/checkout/reprice";
 import type { BagItem, CheckoutCustomer, Fulfillment } from "../../../lib/checkout/types";
 
 export const prerender = false;
@@ -32,9 +33,12 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   const rawItems = Array.isArray(body.items) ? body.items : [];
-  const items = rawItems
-    .map((r) => normalizeBagItem(r as Record<string, unknown>))
-    .filter((x): x is BagItem => Boolean(x));
+  // Prices come from live admin prices, not from the browser.
+  const items = await repriceBagItems(
+    rawItems
+      .map((r) => normalizeBagItem(r as Record<string, unknown>))
+      .filter((x): x is BagItem => Boolean(x)),
+  );
 
   const customerRaw = (body.customer || {}) as Record<string, unknown>;
   const fulfillment = (String(customerRaw.fulfillment || "pickup") === "delivery"

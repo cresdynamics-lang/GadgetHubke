@@ -31,7 +31,7 @@ export function airpodsSheetForModel(modelId: string): AirpodsSheetRow[] {
 export function airpodsBaseFromSheet(modelId: string): number | undefined {
   const rows = airpodsSheetForModel(modelId);
   if (!rows.length) return undefined;
-  return Math.min(..rows.map((r) => r.newKes));
+  return Math.min(...rows.map((r) => r.newKes));
 }
 
 export function airpodsBaseExUkFromSheet(modelId: string): number | undefined {

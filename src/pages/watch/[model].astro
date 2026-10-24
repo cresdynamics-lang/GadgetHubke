@@ -29,13 +29,18 @@ import {
   watchBuyingNotes,
   watchFaq,
 } from "../../lib/watch";
+import { livePricedProduct, variantPriceMap } from "../../lib/pricing/live";
 
-export function getStaticPaths() {
-  return watchModels.map((m) => ({ params: { model: m.id } }));
-}
+export const prerender = false;
 
-const model = getWatchModel(Astro.params.model!);
-if (!model) return Astro.redirect("/watch");
+const watchDefault = getWatchModel(Astro.params.model!);
+if (!watchDefault) return Astro.redirect("/watch");
+// Live admin prices per material + connectivity ("aluminum-gps", "titanium-cell").
+const exact = variantPriceMap(await livePricedProduct(watchDefault.id));
+const defaultMaterial = watchDefault.materials[0] || "aluminum";
+const liveBase = exact[`${defaultMaterial}-gps`] ?? exact[`${defaultMaterial}-cell`];
+const hasExact = Object.keys(exact).length > 0;
+const model = liveBase != null ? { ...watchDefault, basePriceKes: liveBase - (watchConfig.materialStepKes[defaultMaterial] || 0) } : watchDefault;
 
 const tabs = watchViewerTabs(model);
 const img = tabs[0] || getWatchImage(model.id, "main", model.name);
@@ -170,7 +175,7 @@ const scaleVbH = scaleMidY + Math.max(scaleWatchR, scaleCoinR) + 18;
           <div class="wpdp__opts" data-material>
             {materials.map((m, i) => (
               <button type="button" class:list={{ "is-active": i === 0 }} data-material-val={m} data-step={watchConfig.materialStepKes[m]}>
-                {m}{watchConfig.materialStepKes[m] ? ` (+${formatKes(watchConfig.materialStepKes[m]).replace("KES ", "")})` : ""}
+                {m}{watchConfig.materialStepKes[m] && !hasExact ? ` (+${formatKes(watchConfig.materialStepKes[m]).replace("KES ", "")})` : ""}
               </button>
             ))}
           </div>
@@ -201,7 +206,7 @@ const scaleVbH = scaleMidY + Math.max(scaleWatchR, scaleCoinR) + 18;
             <legend>Connectivity</legend>
             <div class="wpdp__opts" data-conn>
               <button type="button" class="is-active" data-cellular="0">GPS</button>
-              <button type="button" data-cellular="1">GPS + Cellular (+{formatKes(watchConfig.cellularStepKes)})</button>
+              <button type="button" data-cellular="1">GPS + Cellular{hasExact ? "" : ` (+${formatKes(watchConfig.cellularStepKes)})`}</button>
             </div>
             <p class="wpdp__fine">{watchConfig.cellularKenyaNote}</p>
           </fieldset>
@@ -436,6 +441,8 @@ const scaleVbH = scaleMidY + Math.max(scaleWatchR, scaleCoinR) + 18;
 <script define:vars={{
   base: model.basePriceKes,
   cellStep: watchConfig.cellularStepKes,
+  exact,
+  defaultMaterial,
   depositPct: watchConfig.lipa.depositDefaultPct,
   months: watchConfig.lipa.monthsDefault,
   waBase: `https://wa.me/${watchConfig.whatsapp}?text=`,
@@ -451,6 +458,8 @@ const scaleVbH = scaleMidY + Math.max(scaleWatchR, scaleCoinR) + 18;
   const stage = document.querySelector("[data-stage]");
 
   function total() {
+    const hit = exact[`${state.material || defaultMaterial}-${state.cellular ? "cell" : "gps"}`];
+    if (hit != null) return hit + state.bandKes;
     return base + state.materialStep + (state.cellular ? cellStep : 0) + state.bandKes;
   }
   function refresh() {

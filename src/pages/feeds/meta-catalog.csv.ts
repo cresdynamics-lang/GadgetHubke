@@ -1,9 +1,11 @@
 import type { APIRoute } from "astro";
-import { buildAdsCatalog, catalogToCsv } from "../../lib/ads/catalog-feed";
+import { buildAdsCatalogLive, catalogToCsv } from "../../lib/ads/catalog-feed";
 
 /** Meta Commerce Manager scheduled feed (CSV). */
-export const GET: APIRoute = () => {
-  const csv = catalogToCsv(buildAdsCatalog());
+export const prerender = false;
+
+export const GET: APIRoute = async () => {
+  const csv = catalogToCsv(await buildAdsCatalogLive());
   return new Response(csv, {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",

@@ -27,13 +27,17 @@ import {
   defaultTvHomeColour,
   isSpeaker,
 } from "../../lib/tv-home";
+import { livePricedProduct, variantPriceMap } from "../../lib/pricing/live";
 
-export function getStaticPaths() {
-  return tvHomeModels.map((m) => ({ params: { model: m.id } }));
-}
+export const prerender = false;
 
-const model = getTvHomeModel(Astro.params.model!);
-if (!model) return Astro.redirect("/tv-home");
+const tvDefault = getTvHomeModel(Astro.params.model!);
+if (!tvDefault) return Astro.redirect("/tv-home");
+// Live admin prices ("64gb-wifi", "128gb-ethernet", "32gb", or a single price).
+const live = await livePricedProduct(tvDefault.id);
+const exact = variantPriceMap(live);
+const liveBase = exact["64gb-wifi"] ?? live?.priceKes;
+const model = liveBase != null ? { ...tvDefault, basePriceKes: liveBase } : tvDefault;
 
 const tabs = tvHomeViewerTabs(model);
 const img = tabs[0] || getTvHomeImage(model.id, "hero", model.name);
@@ -45,7 +49,10 @@ const fitAcc = accessoriesForTvHome(model).filter((a) => a.category !== "cross")
 const related = relatedTvHomeModels(model, tvHomeModels);
 const defaultColour = defaultTvHomeColour(model);
 const square = isSpeaker(model);
-const ethernetStep = tvHomeConfig.ethernetStorageStepKes;
+const ethernetStep =
+  exact["64gb-wifi"] != null && exact["128gb-ethernet"] != null
+    ? exact["128gb-ethernet"] - exact["64gb-wifi"]
+    : tvHomeConfig.ethernetStorageStepKes;
 const showStorage = model.family === "Apple TV" && model.storageOptions.length > 1;
 const showPair = model.stereoPairCapable;
 ---

@@ -4,6 +4,7 @@ export type ProductStorage = {
   id: string;
   label: string;
   priceKes: number;
+  exUkKes?: number;
 };
 
 export type ProductColor = {
