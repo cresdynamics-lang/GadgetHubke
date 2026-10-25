@@ -5,6 +5,7 @@
 
 import { publicFileExists } from "../public-file";
 import { colourLabel } from "./colours";
+import { storeAngleTabs } from "../store-angles";
 import {
   gallerySrcs,
   missingStoreShot,
@@ -179,8 +180,13 @@ export function defaultIpadColour(model: IpadModel): string {
 
 export function ipadViewerTabs(model: IpadModel, colourKey: string) {
   const tabs: { id: string; label: string; src: string; alt: string }[] = [];
-  const front = getIpadImage(model.id, colourKey, "product", model.name);
-  tabs.push({ id: "front", label: "Front", src: front.src, alt: front.alt });
+  // Apple store angles for this finish (front, back, side) lead, like iPhone pages.
+  const angles = storeAngleTabs(model.id, colourKey, model.name, colourLabel(colourKey));
+  if (angles.length) tabs.push(...angles);
+  else {
+    const front = getIpadImage(model.id, colourKey, "product", model.name);
+    tabs.push({ id: "front", label: "Front", src: front.src, alt: front.alt });
+  }
 
   const box = getIpadImage(model.id, colourKey, "box", model.name);
   if (!box.fallback || box.kind === "box") {

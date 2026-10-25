@@ -2,7 +2,7 @@
 /**
  * Apple-style scroll story: each scene fades in and plays its clip once when it
  * scrolls into view, then holds on the last frame. Phones get the small clip;
- * reduced-motion visitors see the end frame only. Clips load lazily (preload="none").
+ * reduced-motion and data-saver visitors see the still frame only. Clips load only after scrolling.
  */
 import type { ScrollScene } from "../../lib/iphone/scroll-scenes";
 
@@ -81,46 +81,95 @@ const { scenes, modelName } = Astro.props;
 </style>
 
 <script>
+  /**
+   * Clips never load with the page. After the visitor has scrolled a little, each
+   * clip starts buffering ~1.5 screens before its scene arrives, and plays only when
+   * the scene is in view and enough has downloaded to play smoothly.
+   */
   function initStory() {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const small = window.matchMedia("(max-width: 733px)").matches;
-    const scenes = document.querySelectorAll<HTMLElement>("[data-istory-scene]");
-    if (!scenes.length || !("IntersectionObserver" in window)) {
+    const saveData = Boolean((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData);
+    const scenes = [...document.querySelectorAll<HTMLElement>("[data-istory-scene]")];
+    if (!scenes.length) return;
+    if (!("IntersectionObserver" in window)) {
       scenes.forEach((s) => s.classList.add("is-in"));
       return;
     }
 
+    let userScrolled = window.scrollY > 200;
+    const pendingPreload = new Set<HTMLElement>();
+    const inView = new Set<HTMLElement>();
+
+    const load = (scene: HTMLElement) => {
+      const video = scene.querySelector<HTMLVideoElement>("video");
+      if (!video || reduce || saveData || video.src) return;
+      video.preload = "auto";
+      video.src = (small ? video.dataset.small : video.dataset.large) || "";
+      video.addEventListener("playing", () => video.classList.add("is-ready"), { once: true });
+      video.addEventListener("canplaythrough", () => {
+        if (inView.has(scene)) play(scene);
+      });
+      video.addEventListener("ended", () => {
+        scene.querySelector<HTMLButtonElement>("[data-istory-replay]")?.removeAttribute("hidden");
+      });
+      video.load();
+    };
+
     const play = (scene: HTMLElement) => {
       const video = scene.querySelector<HTMLVideoElement>("video");
-      if (!video || reduce) return;
-      if (!video.src) {
-        video.src = (small ? video.dataset.small : video.dataset.large) || "";
-        video.addEventListener("playing", () => video.classList.add("is-ready"), { once: true });
-        video.addEventListener("ended", () => {
-          scene.querySelector<HTMLButtonElement>("[data-istory-replay]")?.removeAttribute("hidden");
-        });
-      }
-      if (video.ended) return;
+      if (!video || !video.src || video.ended || !video.paused) return;
+      if (video.readyState < 3) return; // HAVE_FUTURE_DATA: wait for canplaythrough
       video.play().catch(() => {
         /* autoplay blocked: the still frame stays visible */
       });
     };
 
-    const io = new IntersectionObserver(
+    const startLoading = () => {
+      if (userScrolled) return;
+      userScrolled = true;
+      pendingPreload.forEach(load);
+      pendingPreload.clear();
+    };
+    window.addEventListener("scroll", () => window.scrollY > 200 && startLoading(), { passive: true });
+
+    // Buffer early: scenes within 1.5 screens below the viewport.
+    const preloadIo = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          const scene = e.target as HTMLElement;
+          preloadIo.unobserve(scene);
+          if (userScrolled) load(scene);
+          else pendingPreload.add(scene);
+        }
+      },
+      { rootMargin: "0px 0px 150% 0px" },
+    );
+
+    // Reveal and play when the scene is properly in view.
+    const viewIo = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
           const scene = e.target as HTMLElement;
           if (e.isIntersecting && e.intersectionRatio >= 0.45) {
             scene.classList.add("is-in");
+            inView.add(scene);
+            startLoading();
+            load(scene);
             play(scene);
           } else if (!e.isIntersecting) {
+            inView.delete(scene);
             scene.querySelector<HTMLVideoElement>("video")?.pause();
           }
         }
       },
       { threshold: [0, 0.45] },
     );
-    scenes.forEach((s) => io.observe(s));
+    scenes.forEach((s) => {
+      preloadIo.observe(s);
+      viewIo.observe(s);
+    });
 
     document.querySelectorAll<HTMLButtonElement>("[data-istory-replay]").forEach((btn) => {
       btn.addEventListener("click", () => {

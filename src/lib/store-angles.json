@@ -1,0 +1,2776 @@
+{
+ "airpods-max-2": {
+  "blue": [
+   {
+    "label": "Front",
+    "source": "airpods-max-select-202409-blue",
+    "src": "/Gadget_Hub_Store_Angles/airpods-max-2/blue-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/airpods-max-2/blue-1.webp"
+   }
+  ],
+  "midnight": [
+   {
+    "label": "Front",
+    "source": "airpods-max-select-202409-midnight",
+    "src": "/Gadget_Hub_Store_Angles/airpods-max-2/midnight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/airpods-max-2/midnight-1.webp"
+   }
+  ],
+  "orange": [
+   {
+    "label": "Front",
+    "source": "airpods-max-select-202409-orange",
+    "src": "/Gadget_Hub_Store_Angles/airpods-max-2/orange-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/airpods-max-2/orange-1.webp"
+   }
+  ],
+  "purple": [
+   {
+    "label": "Front",
+    "source": "airpods-max-select-202409-purple",
+    "src": "/Gadget_Hub_Store_Angles/airpods-max-2/purple-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/airpods-max-2/purple-1.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "airpods-max-select-202409-starlight",
+    "src": "/Gadget_Hub_Store_Angles/airpods-max-2/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/airpods-max-2/starlight-1.webp"
+   }
+  ]
+ },
+ "airpods-max-2020": {
+  "green": [
+   {
+    "label": "Front",
+    "source": "airpods-max-select-green-202011",
+    "src": "/Gadget_Hub_Store_Angles/airpods-max-2020/green-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/airpods-max-2020/green-1.webp"
+   }
+  ],
+  "pink": [
+   {
+    "label": "Front",
+    "source": "airpods-max-select-pink-202011",
+    "src": "/Gadget_Hub_Store_Angles/airpods-max-2020/pink-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/airpods-max-2020/pink-1.webp"
+   }
+  ],
+  "silver": [
+   {
+    "label": "Front",
+    "source": "airpods-max-select-silver-202011",
+    "src": "/Gadget_Hub_Store_Angles/airpods-max-2020/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/airpods-max-2020/silver-1.webp"
+   }
+  ],
+  "sky-blue": [
+   {
+    "label": "Front",
+    "source": "airpods-max-select-skyblue-202011",
+    "src": "/Gadget_Hub_Store_Angles/airpods-max-2020/sky-blue-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/airpods-max-2020/sky-blue-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "airpods-max-select-spacegray-202011",
+    "src": "/Gadget_Hub_Store_Angles/airpods-max-2020/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/airpods-max-2020/space-gray-1.webp"
+   }
+  ]
+ },
+ "airpods-max-usbc": {
+  "blue": [
+   {
+    "label": "Front",
+    "source": "airpods-max-select-202409-blue",
+    "src": "/Gadget_Hub_Store_Angles/airpods-max-usbc/blue-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/airpods-max-usbc/blue-1.webp"
+   }
+  ],
+  "midnight": [
+   {
+    "label": "Front",
+    "source": "airpods-max-select-202409-midnight",
+    "src": "/Gadget_Hub_Store_Angles/airpods-max-usbc/midnight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/airpods-max-usbc/midnight-1.webp"
+   }
+  ],
+  "orange": [
+   {
+    "label": "Front",
+    "source": "airpods-max-select-202409-orange",
+    "src": "/Gadget_Hub_Store_Angles/airpods-max-usbc/orange-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/airpods-max-usbc/orange-1.webp"
+   }
+  ],
+  "purple": [
+   {
+    "label": "Front",
+    "source": "airpods-max-select-202409-purple",
+    "src": "/Gadget_Hub_Store_Angles/airpods-max-usbc/purple-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/airpods-max-usbc/purple-1.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "airpods-max-select-202409-starlight",
+    "src": "/Gadget_Hub_Store_Angles/airpods-max-usbc/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/airpods-max-usbc/starlight-1.webp"
+   }
+  ]
+ },
+ "homepod-2": {
+  "midnight": [
+   {
+    "label": "Front",
+    "source": "homepod-select-midnight-202610",
+    "src": "/Gadget_Hub_Store_Angles/homepod-2/midnight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/homepod-2/midnight-1.webp"
+   }
+  ],
+  "white": [
+   {
+    "label": "Front",
+    "source": "homepod-select-white-202610",
+    "src": "/Gadget_Hub_Store_Angles/homepod-2/white-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/homepod-2/white-1.webp"
+   }
+  ]
+ },
+ "homepod-mini": {
+  "blue": [
+   {
+    "label": "Front",
+    "source": "homepod-mini-select-blue-202610_FV1",
+    "src": "/Gadget_Hub_Store_Angles/homepod-mini/blue-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/homepod-mini/blue-1.webp"
+   }
+  ],
+  "midnight": [
+   {
+    "label": "Front",
+    "source": "homepod-mini-select-midnight-202610_FV1",
+    "src": "/Gadget_Hub_Store_Angles/homepod-mini/midnight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/homepod-mini/midnight-1.webp"
+   }
+  ],
+  "orange": [
+   {
+    "label": "Front",
+    "source": "homepod-mini-select-orange-202110",
+    "src": "/Gadget_Hub_Store_Angles/homepod-mini/orange-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/homepod-mini/orange-1.webp"
+   }
+  ],
+  "white": [
+   {
+    "label": "Front",
+    "source": "homepod-mini-select-white-202610_FV1",
+    "src": "/Gadget_Hub_Store_Angles/homepod-mini/white-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/homepod-mini/white-1.webp"
+   }
+  ],
+  "yellow": [
+   {
+    "label": "Front",
+    "source": "homepod-mini-select-yellow-202110",
+    "src": "/Gadget_Hub_Store_Angles/homepod-mini/yellow-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/homepod-mini/yellow-1.webp"
+   }
+  ]
+ },
+ "ipad-10": {
+  "blue": [
+   {
+    "label": "Front",
+    "source": "ipad-10th-gen-finish-select-202212-blue",
+    "src": "/Gadget_Hub_Store_Angles/ipad-10/blue-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-10/blue-1.webp"
+   },
+   {
+    "label": "Back",
+    "source": "ipad-10th-gen-finish-select-202212-blue_AV1",
+    "src": "/Gadget_Hub_Store_Angles/ipad-10/blue-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-10/blue-2.webp"
+   },
+   {
+    "label": "Side",
+    "source": "ipad-10th-gen-finish-select-202212-blue_AV2",
+    "src": "/Gadget_Hub_Store_Angles/ipad-10/blue-3.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-10/blue-3.webp"
+   }
+  ],
+  "pink": [
+   {
+    "label": "Front",
+    "source": "ipad-10th-gen-finish-select-202212-pink",
+    "src": "/Gadget_Hub_Store_Angles/ipad-10/pink-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-10/pink-1.webp"
+   },
+   {
+    "label": "Back",
+    "source": "ipad-10th-gen-finish-select-202212-pink_AV1",
+    "src": "/Gadget_Hub_Store_Angles/ipad-10/pink-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-10/pink-2.webp"
+   },
+   {
+    "label": "Side",
+    "source": "ipad-10th-gen-finish-select-202212-pink_AV2",
+    "src": "/Gadget_Hub_Store_Angles/ipad-10/pink-3.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-10/pink-3.webp"
+   }
+  ],
+  "silver": [
+   {
+    "label": "Front",
+    "source": "ipad-10th-gen-finish-select-202212-silver",
+    "src": "/Gadget_Hub_Store_Angles/ipad-10/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-10/silver-1.webp"
+   },
+   {
+    "label": "Back",
+    "source": "ipad-10th-gen-finish-select-202212-silver_AV1",
+    "src": "/Gadget_Hub_Store_Angles/ipad-10/silver-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-10/silver-2.webp"
+   },
+   {
+    "label": "Side",
+    "source": "ipad-10th-gen-finish-select-202212-silver_AV2",
+    "src": "/Gadget_Hub_Store_Angles/ipad-10/silver-3.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-10/silver-3.webp"
+   }
+  ],
+  "yellow": [
+   {
+    "label": "Front",
+    "source": "ipad-10th-gen-finish-select-202212-yellow",
+    "src": "/Gadget_Hub_Store_Angles/ipad-10/yellow-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-10/yellow-1.webp"
+   },
+   {
+    "label": "Back",
+    "source": "ipad-10th-gen-finish-select-202212-yellow_AV1",
+    "src": "/Gadget_Hub_Store_Angles/ipad-10/yellow-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-10/yellow-2.webp"
+   },
+   {
+    "label": "Side",
+    "source": "ipad-10th-gen-finish-select-202212-yellow_AV2",
+    "src": "/Gadget_Hub_Store_Angles/ipad-10/yellow-3.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-10/yellow-3.webp"
+   }
+  ]
+ },
+ "ipad-8": {
+  "gold": [
+   {
+    "label": "Front",
+    "source": "ipad-2020-hero-gold-wifi-select",
+    "src": "/Gadget_Hub_Store_Angles/ipad-8/gold-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-8/gold-1.webp"
+   }
+  ],
+  "silver": [
+   {
+    "label": "Front",
+    "source": "ipad-2020-hero-silver-wifi-select",
+    "src": "/Gadget_Hub_Store_Angles/ipad-8/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-8/silver-1.webp"
+   }
+  ]
+ },
+ "ipad-9": {
+  "silver": [
+   {
+    "label": "Front",
+    "source": "ipad-2021-hero-silver-wifi-select",
+    "src": "/Gadget_Hub_Store_Angles/ipad-9/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-9/silver-1.webp"
+   }
+  ]
+ },
+ "ipad-a16": {
+  "blue": [
+   {
+    "label": "Front",
+    "source": "ipad-finish-select-202503-blue",
+    "src": "/Gadget_Hub_Store_Angles/ipad-a16/blue-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-a16/blue-1.webp"
+   },
+   {
+    "label": "Back",
+    "source": "ipad-finish-select-202503-blue_AV1",
+    "src": "/Gadget_Hub_Store_Angles/ipad-a16/blue-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-a16/blue-2.webp"
+   },
+   {
+    "label": "Side",
+    "source": "ipad-finish-select-202503-blue_AV2",
+    "src": "/Gadget_Hub_Store_Angles/ipad-a16/blue-3.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-a16/blue-3.webp"
+   }
+  ],
+  "pink": [
+   {
+    "label": "Front",
+    "source": "ipad-finish-select-202503-pink",
+    "src": "/Gadget_Hub_Store_Angles/ipad-a16/pink-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-a16/pink-1.webp"
+   },
+   {
+    "label": "Back",
+    "source": "ipad-finish-select-202503-pink_AV1",
+    "src": "/Gadget_Hub_Store_Angles/ipad-a16/pink-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-a16/pink-2.webp"
+   },
+   {
+    "label": "Side",
+    "source": "ipad-finish-select-202503-pink_AV2",
+    "src": "/Gadget_Hub_Store_Angles/ipad-a16/pink-3.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-a16/pink-3.webp"
+   }
+  ],
+  "silver": [
+   {
+    "label": "Front",
+    "source": "ipad-finish-select-202503-silver",
+    "src": "/Gadget_Hub_Store_Angles/ipad-a16/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-a16/silver-1.webp"
+   },
+   {
+    "label": "Back",
+    "source": "ipad-finish-select-202503-silver_AV1",
+    "src": "/Gadget_Hub_Store_Angles/ipad-a16/silver-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-a16/silver-2.webp"
+   },
+   {
+    "label": "Side",
+    "source": "ipad-finish-select-202503-silver_AV2",
+    "src": "/Gadget_Hub_Store_Angles/ipad-a16/silver-3.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-a16/silver-3.webp"
+   }
+  ],
+  "yellow": [
+   {
+    "label": "Front",
+    "source": "ipad-finish-select-202503-yellow",
+    "src": "/Gadget_Hub_Store_Angles/ipad-a16/yellow-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-a16/yellow-1.webp"
+   },
+   {
+    "label": "Back",
+    "source": "ipad-finish-select-202503-yellow_AV1",
+    "src": "/Gadget_Hub_Store_Angles/ipad-a16/yellow-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-a16/yellow-2.webp"
+   },
+   {
+    "label": "Side",
+    "source": "ipad-finish-select-202503-yellow_AV2",
+    "src": "/Gadget_Hub_Store_Angles/ipad-a16/yellow-3.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-a16/yellow-3.webp"
+   }
+  ]
+ },
+ "ipad-air-11-m2": {
+  "blue": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-11in-wifi-blue-202405",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-11-m2/blue-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-11-m2/blue-1.webp"
+   }
+  ],
+  "purple": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-11in-wifi-purple-202405",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-11-m2/purple-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-11-m2/purple-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-11in-wifi-spacegray-202405",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-11-m2/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-11-m2/space-gray-1.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-11in-wifi-starlight-202405",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-11-m2/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-11-m2/starlight-1.webp"
+   }
+  ]
+ },
+ "ipad-air-11-m3": {
+  "blue": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-11in-wifi-blue-202405",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-11-m3/blue-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-11-m3/blue-1.webp"
+   }
+  ],
+  "purple": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-11in-wifi-purple-202405",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-11-m3/purple-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-11-m3/purple-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-11in-wifi-spacegray-202405",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-11-m3/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-11-m3/space-gray-1.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-11in-wifi-starlight-202405",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-11-m3/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-11-m3/starlight-1.webp"
+   }
+  ]
+ },
+ "ipad-air-11-m4": {
+  "blue": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-11in-wifi-blue-202405",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-11-m4/blue-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-11-m4/blue-1.webp"
+   }
+  ],
+  "purple": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-11in-wifi-purple-202405",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-11-m4/purple-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-11-m4/purple-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-11in-wifi-spacegray-202405",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-11-m4/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-11-m4/space-gray-1.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-11in-wifi-starlight-202405",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-11-m4/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-11-m4/starlight-1.webp"
+   }
+  ]
+ },
+ "ipad-air-13-m2": {
+  "blue": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-13in-wifi-blue-202405",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-13-m2/blue-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-13-m2/blue-1.webp"
+   }
+  ],
+  "purple": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-13in-wifi-purple-202405",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-13-m2/purple-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-13-m2/purple-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-13in-wifi-spacegray-202405",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-13-m2/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-13-m2/space-gray-1.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-13in-wifi-starlight-202405",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-13-m2/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-13-m2/starlight-1.webp"
+   }
+  ]
+ },
+ "ipad-air-13-m3": {
+  "blue": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-13in-wifi-blue-202405",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-13-m3/blue-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-13-m3/blue-1.webp"
+   }
+  ],
+  "purple": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-13in-wifi-purple-202405",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-13-m3/purple-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-13-m3/purple-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-13in-wifi-spacegray-202405",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-13-m3/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-13-m3/space-gray-1.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-13in-wifi-starlight-202405",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-13-m3/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-13-m3/starlight-1.webp"
+   }
+  ]
+ },
+ "ipad-air-13-m4": {
+  "blue": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-13in-wifi-blue-202405",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-13-m4/blue-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-13-m4/blue-1.webp"
+   }
+  ],
+  "purple": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-13in-wifi-purple-202405",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-13-m4/purple-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-13-m4/purple-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-13in-wifi-spacegray-202405",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-13-m4/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-13-m4/space-gray-1.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-13in-wifi-starlight-202405",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-13-m4/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-13-m4/starlight-1.webp"
+   }
+  ]
+ },
+ "ipad-air-4": {
+  "green": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-wifi-green-202009",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-4/green-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-4/green-1.webp"
+   }
+  ],
+  "silver": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-wifi-silver-202009",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-4/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-4/silver-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-wifi-spacegray-202009",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-4/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-4/space-gray-1.webp"
+   }
+  ]
+ },
+ "ipad-air-5": {
+  "blue": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-wifi-blue-202203",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-5/blue-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-5/blue-1.webp"
+   }
+  ],
+  "pink": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-wifi-pink-202203",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-5/pink-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-5/pink-1.webp"
+   }
+  ],
+  "purple": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-wifi-purple-202203",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-5/purple-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-5/purple-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-wifi-spacegray-202203",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-5/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-5/space-gray-1.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "ipad-air-select-wifi-starlight-202203",
+    "src": "/Gadget_Hub_Store_Angles/ipad-air-5/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-air-5/starlight-1.webp"
+   }
+  ]
+ },
+ "ipad-mini-6": {
+  "pink": [
+   {
+    "label": "Front",
+    "source": "ipad-mini-select-wifi-pink-202109",
+    "src": "/Gadget_Hub_Store_Angles/ipad-mini-6/pink-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-mini-6/pink-1.webp"
+   }
+  ],
+  "purple": [
+   {
+    "label": "Front",
+    "source": "ipad-mini-select-wifi-purple-202109",
+    "src": "/Gadget_Hub_Store_Angles/ipad-mini-6/purple-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-mini-6/purple-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "ipad-mini-select-wifi-space-gray-202109",
+    "src": "/Gadget_Hub_Store_Angles/ipad-mini-6/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-mini-6/space-gray-1.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "ipad-mini-select-wifi-starlight-202109",
+    "src": "/Gadget_Hub_Store_Angles/ipad-mini-6/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-mini-6/starlight-1.webp"
+   }
+  ]
+ },
+ "ipad-mini-a17-pro": {
+  "blue": [
+   {
+    "label": "Front",
+    "source": "ipad-mini-select-wifi-blue-202410",
+    "src": "/Gadget_Hub_Store_Angles/ipad-mini-a17-pro/blue-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-mini-a17-pro/blue-1.webp"
+   }
+  ],
+  "purple": [
+   {
+    "label": "Front",
+    "source": "ipad-mini-select-wifi-purple-202410",
+    "src": "/Gadget_Hub_Store_Angles/ipad-mini-a17-pro/purple-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-mini-a17-pro/purple-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "ipad-mini-select-wifi-spacegray-202410",
+    "src": "/Gadget_Hub_Store_Angles/ipad-mini-a17-pro/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-mini-a17-pro/space-gray-1.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "ipad-mini-select-wifi-starlight-202410",
+    "src": "/Gadget_Hub_Store_Angles/ipad-mini-a17-pro/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-mini-a17-pro/starlight-1.webp"
+   }
+  ]
+ },
+ "ipad-pro-11-2020": {
+  "silver": [
+   {
+    "label": "Front",
+    "source": "ipad-pro-11-select-wifi-silver-202003",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-11-2020/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-11-2020/silver-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "ipad-pro-11-select-wifi-spacegray-202003",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-11-2020/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-11-2020/space-gray-1.webp"
+   }
+  ]
+ },
+ "ipad-pro-11-m1": {
+  "silver": [
+   {
+    "label": "Front",
+    "source": "ipad-pro-11-select-wifi-silver-202104",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-11-m1/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-11-m1/silver-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "ipad-pro-11-select-wifi-spacegray-202104",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-11-m1/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-11-m1/space-gray-1.webp"
+   }
+  ]
+ },
+ "ipad-pro-11-m2": {
+  "silver": [
+   {
+    "label": "Front",
+    "source": "ipad-pro-11-select-wifi-silver-202210",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-11-m2/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-11-m2/silver-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "ipad-pro-11-select-wifi-spacegray-202210",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-11-m2/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-11-m2/space-gray-1.webp"
+   }
+  ]
+ },
+ "ipad-pro-11-m4": {
+  "silver": [
+   {
+    "label": "Front",
+    "source": "ipad-pro-finish-select-202405-11inch-silver",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-11-m4/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-11-m4/silver-1.webp"
+   },
+   {
+    "label": "Back",
+    "source": "ipad-pro-finish-select-202405-11inch-silver_AV1",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-11-m4/silver-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-11-m4/silver-2.webp"
+   },
+   {
+    "label": "Side",
+    "source": "ipad-pro-finish-select-202405-11inch-silver_AV2",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-11-m4/silver-3.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-11-m4/silver-3.webp"
+   }
+  ],
+  "space-black": [
+   {
+    "label": "Front",
+    "source": "ipad-pro-finish-select-202405-11inch-spaceblack",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-11-m4/space-black-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-11-m4/space-black-1.webp"
+   },
+   {
+    "label": "Back",
+    "source": "ipad-pro-finish-select-202405-11inch-spaceblack_AV1",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-11-m4/space-black-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-11-m4/space-black-2.webp"
+   },
+   {
+    "label": "Side",
+    "source": "ipad-pro-finish-select-202405-11inch-spaceblack_AV2",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-11-m4/space-black-3.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-11-m4/space-black-3.webp"
+   }
+  ]
+ },
+ "ipad-pro-11-m5": {
+  "silver": [
+   {
+    "label": "Front",
+    "source": "ipad-pro-finish-select-202405-11inch-silver",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-11-m5/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-11-m5/silver-1.webp"
+   },
+   {
+    "label": "Back",
+    "source": "ipad-pro-finish-select-202405-11inch-silver_AV1",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-11-m5/silver-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-11-m5/silver-2.webp"
+   },
+   {
+    "label": "Side",
+    "source": "ipad-pro-finish-select-202405-11inch-silver_AV2",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-11-m5/silver-3.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-11-m5/silver-3.webp"
+   }
+  ],
+  "space-black": [
+   {
+    "label": "Front",
+    "source": "ipad-pro-finish-select-202405-11inch-spaceblack",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-11-m5/space-black-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-11-m5/space-black-1.webp"
+   },
+   {
+    "label": "Back",
+    "source": "ipad-pro-finish-select-202405-11inch-spaceblack_AV1",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-11-m5/space-black-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-11-m5/space-black-2.webp"
+   },
+   {
+    "label": "Side",
+    "source": "ipad-pro-finish-select-202405-11inch-spaceblack_AV2",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-11-m5/space-black-3.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-11-m5/space-black-3.webp"
+   }
+  ]
+ },
+ "ipad-pro-12-9-2020": {
+  "silver": [
+   {
+    "label": "Front",
+    "source": "ipad-pro-12-select-wifi-silver-202003",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-12-9-2020/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-12-9-2020/silver-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "ipad-pro-12-select-wifi-spacegray-202003",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-12-9-2020/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-12-9-2020/space-gray-1.webp"
+   }
+  ]
+ },
+ "ipad-pro-12-9-m1": {
+  "silver": [
+   {
+    "label": "Front",
+    "source": "ipad-pro-12-select-wifi-silver-202104",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-12-9-m1/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-12-9-m1/silver-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "ipad-pro-12-select-wifi-spacegray-202104",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-12-9-m1/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-12-9-m1/space-gray-1.webp"
+   }
+  ]
+ },
+ "ipad-pro-12-9-m2": {
+  "silver": [
+   {
+    "label": "Front",
+    "source": "ipad-pro-13-select-wifi-silver-202210",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-12-9-m2/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-12-9-m2/silver-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "ipad-pro-13-select-wifi-spacegray-202210",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-12-9-m2/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-12-9-m2/space-gray-1.webp"
+   }
+  ]
+ },
+ "ipad-pro-13-m4": {
+  "silver": [
+   {
+    "label": "Front",
+    "source": "ipad-pro-finish-select-202405-13inch-silver",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-13-m4/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-13-m4/silver-1.webp"
+   },
+   {
+    "label": "Back",
+    "source": "ipad-pro-finish-select-202405-13inch-silver_AV1",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-13-m4/silver-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-13-m4/silver-2.webp"
+   },
+   {
+    "label": "Side",
+    "source": "ipad-pro-finish-select-202405-13inch-silver_AV2",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-13-m4/silver-3.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-13-m4/silver-3.webp"
+   }
+  ],
+  "space-black": [
+   {
+    "label": "Front",
+    "source": "ipad-pro-finish-select-202405-13inch-spaceblack",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-13-m4/space-black-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-13-m4/space-black-1.webp"
+   },
+   {
+    "label": "Back",
+    "source": "ipad-pro-finish-select-202405-13inch-spaceblack_AV1",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-13-m4/space-black-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-13-m4/space-black-2.webp"
+   },
+   {
+    "label": "Side",
+    "source": "ipad-pro-finish-select-202405-13inch-spaceblack_AV2",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-13-m4/space-black-3.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-13-m4/space-black-3.webp"
+   }
+  ]
+ },
+ "ipad-pro-13-m5": {
+  "silver": [
+   {
+    "label": "Front",
+    "source": "ipad-pro-finish-select-202405-13inch-silver",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-13-m5/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-13-m5/silver-1.webp"
+   },
+   {
+    "label": "Back",
+    "source": "ipad-pro-finish-select-202405-13inch-silver_AV1",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-13-m5/silver-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-13-m5/silver-2.webp"
+   },
+   {
+    "label": "Side",
+    "source": "ipad-pro-finish-select-202405-13inch-silver_AV2",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-13-m5/silver-3.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-13-m5/silver-3.webp"
+   }
+  ],
+  "space-black": [
+   {
+    "label": "Front",
+    "source": "ipad-pro-finish-select-202405-13inch-spaceblack",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-13-m5/space-black-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-13-m5/space-black-1.webp"
+   },
+   {
+    "label": "Back",
+    "source": "ipad-pro-finish-select-202405-13inch-spaceblack_AV1",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-13-m5/space-black-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-13-m5/space-black-2.webp"
+   },
+   {
+    "label": "Side",
+    "source": "ipad-pro-finish-select-202405-13inch-spaceblack_AV2",
+    "src": "/Gadget_Hub_Store_Angles/ipad-pro-13-m5/space-black-3.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-pro-13-m5/space-black-3.webp"
+   }
+  ]
+ },
+ "macbook-air-13-m2": {
+  "midnight": [
+   {
+    "label": "Front",
+    "source": "macbook-air-midnight-select-20220606",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-13-m2/midnight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-13-m2/midnight-1.webp"
+   }
+  ],
+  "silver": [
+   {
+    "label": "Front",
+    "source": "macbook-air-silver-select-20220606",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-13-m2/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-13-m2/silver-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "macbook-air-spacegray-select-20220606",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-13-m2/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-13-m2/space-gray-1.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "macbook-air-starlight-select-20220606",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-13-m2/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-13-m2/starlight-1.webp"
+   }
+  ]
+ },
+ "macbook-air-13-m3": {
+  "midnight": [
+   {
+    "label": "Front",
+    "source": "mba13-midnight-select-202402",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-13-m3/midnight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-13-m3/midnight-1.webp"
+   }
+  ],
+  "silver": [
+   {
+    "label": "Front",
+    "source": "mba13-silver-select-202402",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-13-m3/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-13-m3/silver-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "mba13-spacegray-select-202402",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-13-m3/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-13-m3/space-gray-1.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "mba13-starlight-select-202402",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-13-m3/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-13-m3/starlight-1.webp"
+   }
+  ]
+ },
+ "macbook-air-13-m4": {
+  "midnight": [
+   {
+    "label": "Front",
+    "source": "mba13-midnight-select-202503",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-13-m4/midnight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-13-m4/midnight-1.webp"
+   }
+  ],
+  "silver": [
+   {
+    "label": "Front",
+    "source": "mba13-silver-select-202503",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-13-m4/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-13-m4/silver-1.webp"
+   }
+  ],
+  "sky-blue": [
+   {
+    "label": "Front",
+    "source": "mba13-skyblue-select-202503",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-13-m4/sky-blue-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-13-m4/sky-blue-1.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "mba13-starlight-select-202503",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-13-m4/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-13-m4/starlight-1.webp"
+   }
+  ]
+ },
+ "macbook-air-13-m5": {
+  "midnight": [
+   {
+    "label": "Front",
+    "source": "mba13-midnight-select-202503",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-13-m5/midnight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-13-m5/midnight-1.webp"
+   }
+  ],
+  "silver": [
+   {
+    "label": "Front",
+    "source": "mba13-silver-select-202503",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-13-m5/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-13-m5/silver-1.webp"
+   }
+  ],
+  "sky-blue": [
+   {
+    "label": "Front",
+    "source": "mba13-skyblue-select-202503",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-13-m5/sky-blue-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-13-m5/sky-blue-1.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "mba13-starlight-select-202503",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-13-m5/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-13-m5/starlight-1.webp"
+   }
+  ]
+ },
+ "macbook-air-15-m2": {
+  "midnight": [
+   {
+    "label": "Front",
+    "source": "mba15-midnight-select-202306",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-15-m2/midnight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-15-m2/midnight-1.webp"
+   }
+  ],
+  "silver": [
+   {
+    "label": "Front",
+    "source": "mba15-silver-select-202306",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-15-m2/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-15-m2/silver-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "mba15-spacegray-select-202306",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-15-m2/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-15-m2/space-gray-1.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "mba15-starlight-select-202306",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-15-m2/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-15-m2/starlight-1.webp"
+   }
+  ]
+ },
+ "macbook-air-15-m3": {
+  "midnight": [
+   {
+    "label": "Front",
+    "source": "mba15-midnight-select-202306",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-15-m3/midnight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-15-m3/midnight-1.webp"
+   }
+  ],
+  "silver": [
+   {
+    "label": "Front",
+    "source": "mba15-silver-select-202306",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-15-m3/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-15-m3/silver-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "mba15-spacegray-select-202306",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-15-m3/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-15-m3/space-gray-1.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "mba15-starlight-select-202306",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-15-m3/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-15-m3/starlight-1.webp"
+   }
+  ]
+ },
+ "macbook-air-15-m4": {
+  "midnight": [
+   {
+    "label": "Front",
+    "source": "mba15-midnight-select-202503",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-15-m4/midnight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-15-m4/midnight-1.webp"
+   }
+  ],
+  "silver": [
+   {
+    "label": "Front",
+    "source": "mba15-silver-select-202503",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-15-m4/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-15-m4/silver-1.webp"
+   }
+  ],
+  "sky-blue": [
+   {
+    "label": "Front",
+    "source": "mba15-skyblue-select-202503",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-15-m4/sky-blue-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-15-m4/sky-blue-1.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "mba15-starlight-select-202503",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-15-m4/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-15-m4/starlight-1.webp"
+   }
+  ]
+ },
+ "macbook-air-15-m5": {
+  "midnight": [
+   {
+    "label": "Front",
+    "source": "mba15-midnight-select-202503",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-15-m5/midnight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-15-m5/midnight-1.webp"
+   }
+  ],
+  "silver": [
+   {
+    "label": "Front",
+    "source": "mba15-silver-select-202503",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-15-m5/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-15-m5/silver-1.webp"
+   }
+  ],
+  "sky-blue": [
+   {
+    "label": "Front",
+    "source": "mba15-skyblue-select-202503",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-15-m5/sky-blue-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-15-m5/sky-blue-1.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "mba15-starlight-select-202503",
+    "src": "/Gadget_Hub_Store_Angles/macbook-air-15-m5/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-air-15-m5/starlight-1.webp"
+   }
+  ]
+ },
+ "macbook-pro-14-m1-pro": {
+  "silver": [
+   {
+    "label": "Front",
+    "source": "mbp14-silver-select-202110",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-14-m1-pro/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-14-m1-pro/silver-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "mbp14-spacegray-select-202110",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-14-m1-pro/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-14-m1-pro/space-gray-1.webp"
+   }
+  ]
+ },
+ "macbook-pro-14-m2-pro": {
+  "silver": [
+   {
+    "label": "Front",
+    "source": "mbp14-silver-select-202301",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-14-m2-pro/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-14-m2-pro/silver-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "mbp14-spacegray-select-202301",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-14-m2-pro/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-14-m2-pro/space-gray-1.webp"
+   }
+  ]
+ },
+ "macbook-pro-14-m3": {
+  "silver": [
+   {
+    "label": "Front",
+    "source": "mbp14-silver-select-202310",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-14-m3/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-14-m3/silver-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "mbp14-spacegray-select-202310",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-14-m3/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-14-m3/space-gray-1.webp"
+   }
+  ]
+ },
+ "macbook-pro-14-m3-pro": {
+  "silver": [
+   {
+    "label": "Front",
+    "source": "mbp14-m3-max-pro-silver-select-202310",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-14-m3-pro/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-14-m3-pro/silver-1.webp"
+   }
+  ],
+  "space-black": [
+   {
+    "label": "Front",
+    "source": "mbp14-m3-max-pro-spaceblack-select-202310",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-14-m3-pro/space-black-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-14-m3-pro/space-black-1.webp"
+   }
+  ]
+ },
+ "macbook-pro-14-m4": {
+  "silver": [
+   {
+    "label": "Front",
+    "source": "mbp14-silver-select-202410",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-14-m4/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-14-m4/silver-1.webp"
+   }
+  ],
+  "space-black": [
+   {
+    "label": "Front",
+    "source": "mbp14-spaceblack-select-202410",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-14-m4/space-black-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-14-m4/space-black-1.webp"
+   }
+  ]
+ },
+ "macbook-pro-14-m4-pro": {
+  "silver": [
+   {
+    "label": "Front",
+    "source": "mbp14-silver-select-202410",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-14-m4-pro/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-14-m4-pro/silver-1.webp"
+   }
+  ],
+  "space-black": [
+   {
+    "label": "Front",
+    "source": "mbp14-spaceblack-select-202410",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-14-m4-pro/space-black-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-14-m4-pro/space-black-1.webp"
+   }
+  ]
+ },
+ "macbook-pro-14-m5": {
+  "silver": [
+   {
+    "label": "Front",
+    "source": "mbp14-silver-select-202410",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-14-m5/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-14-m5/silver-1.webp"
+   }
+  ],
+  "space-black": [
+   {
+    "label": "Front",
+    "source": "mbp14-spaceblack-select-202410",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-14-m5/space-black-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-14-m5/space-black-1.webp"
+   }
+  ]
+ },
+ "macbook-pro-14-m5-pro": {
+  "silver": [
+   {
+    "label": "Front",
+    "source": "mbp14-silver-select-202410",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-14-m5-pro/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-14-m5-pro/silver-1.webp"
+   }
+  ],
+  "space-black": [
+   {
+    "label": "Front",
+    "source": "mbp14-spaceblack-select-202410",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-14-m5-pro/space-black-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-14-m5-pro/space-black-1.webp"
+   }
+  ]
+ },
+ "macbook-pro-16-m1-pro": {
+  "silver": [
+   {
+    "label": "Front",
+    "source": "mbp16-silver-select-202110",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-16-m1-pro/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-16-m1-pro/silver-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "mbp16-spacegray-select-202110",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-16-m1-pro/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-16-m1-pro/space-gray-1.webp"
+   }
+  ]
+ },
+ "macbook-pro-16-m2-pro": {
+  "silver": [
+   {
+    "label": "Front",
+    "source": "mbp16-silver-select-202301",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-16-m2-pro/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-16-m2-pro/silver-1.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "mbp16-spacegray-select-202301",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-16-m2-pro/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-16-m2-pro/space-gray-1.webp"
+   }
+  ]
+ },
+ "macbook-pro-16-m3-pro": {
+  "silver": [
+   {
+    "label": "Front",
+    "source": "mbp16-silver-select-202310",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-16-m3-pro/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-16-m3-pro/silver-1.webp"
+   }
+  ],
+  "space-black": [
+   {
+    "label": "Front",
+    "source": "mbp16-spaceblack-select-202310",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-16-m3-pro/space-black-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-16-m3-pro/space-black-1.webp"
+   }
+  ]
+ },
+ "macbook-pro-16-m4-pro": {
+  "silver": [
+   {
+    "label": "Front",
+    "source": "mbp16-silver-select-202410",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-16-m4-pro/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-16-m4-pro/silver-1.webp"
+   }
+  ],
+  "space-black": [
+   {
+    "label": "Front",
+    "source": "mbp16-spaceblack-select-202410",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-16-m4-pro/space-black-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-16-m4-pro/space-black-1.webp"
+   }
+  ]
+ },
+ "macbook-pro-16-m5-pro": {
+  "silver": [
+   {
+    "label": "Front",
+    "source": "mbp16-silver-select-202410",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-16-m5-pro/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-16-m5-pro/silver-1.webp"
+   }
+  ],
+  "space-black": [
+   {
+    "label": "Front",
+    "source": "mbp16-spaceblack-select-202410",
+    "src": "/Gadget_Hub_Store_Angles/macbook-pro-16-m5-pro/space-black-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/macbook-pro-16-m5-pro/space-black-1.webp"
+   }
+  ]
+ },
+ "watch-s10-42": {
+  "gold": [
+   {
+    "label": "Front",
+    "source": "composite:MK0A4ref+watch-case-42-titanium-gold-nc-s10_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s10-42/gold-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s10-42/gold-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MK0A4ref+watch-case-42-titanium-gold-nc-s10_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s10-42/gold-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s10-42/gold-2.webp"
+   }
+  ],
+  "jet-black": [
+   {
+    "label": "Front",
+    "source": "composite:MY7N3ref+watch-case-42-aluminum-jetblack-nc-s10_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s10-42/jet-black-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s10-42/jet-black-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MY7N3ref+watch-case-42-aluminum-jetblack-nc-s10_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s10-42/jet-black-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s10-42/jet-black-2.webp"
+   }
+  ],
+  "natural": [
+   {
+    "label": "Front",
+    "source": "composite:MK0A4ref+watch-case-42-titanium-natural-nc-s10_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s10-42/natural-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s10-42/natural-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MK0A4ref+watch-case-42-titanium-natural-nc-s10_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s10-42/natural-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s10-42/natural-2.webp"
+   }
+  ],
+  "rose-gold": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-42-aluminum-rosegold-nc-s10_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s10-42/rose-gold-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s10-42/rose-gold-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-42-aluminum-rosegold-nc-s10_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s10-42/rose-gold-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s10-42/rose-gold-2.webp"
+   }
+  ],
+  "silver": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-42-aluminum-silver-nc-s10_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s10-42/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s10-42/silver-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-42-aluminum-silver-nc-s10_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s10-42/silver-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s10-42/silver-2.webp"
+   }
+  ],
+  "slate": [
+   {
+    "label": "Front",
+    "source": "composite:MK0F4ref+watch-case-42-titanium-slate-nc-s10_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s10-42/slate-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s10-42/slate-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MK0F4ref+watch-case-42-titanium-slate-nc-s10_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s10-42/slate-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s10-42/slate-2.webp"
+   }
+  ]
+ },
+ "watch-s10-46": {
+  "gold": [
+   {
+    "label": "Front",
+    "source": "composite:MK0A4ref+watch-case-46-titanium-gold-nc-s10_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s10-46/gold-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s10-46/gold-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MK0A4ref+watch-case-46-titanium-gold-nc-s10_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s10-46/gold-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s10-46/gold-2.webp"
+   }
+  ],
+  "jet-black": [
+   {
+    "label": "Front",
+    "source": "composite:MY7N3ref+watch-case-46-aluminum-jetblack-nc-s10_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s10-46/jet-black-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s10-46/jet-black-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MY7N3ref+watch-case-46-aluminum-jetblack-nc-s10_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s10-46/jet-black-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s10-46/jet-black-2.webp"
+   }
+  ],
+  "natural": [
+   {
+    "label": "Front",
+    "source": "composite:MK0A4ref+watch-case-46-titanium-natural-nc-s10_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s10-46/natural-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s10-46/natural-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MK0A4ref+watch-case-46-titanium-natural-nc-s10_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s10-46/natural-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s10-46/natural-2.webp"
+   }
+  ],
+  "rose-gold": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-46-aluminum-rosegold-nc-s10_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s10-46/rose-gold-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s10-46/rose-gold-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-46-aluminum-rosegold-nc-s10_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s10-46/rose-gold-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s10-46/rose-gold-2.webp"
+   }
+  ],
+  "silver": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-46-aluminum-silver-nc-s10_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s10-46/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s10-46/silver-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-46-aluminum-silver-nc-s10_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s10-46/silver-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s10-46/silver-2.webp"
+   }
+  ],
+  "slate": [
+   {
+    "label": "Front",
+    "source": "composite:MK0F4ref+watch-case-46-titanium-slate-nc-s10_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s10-46/slate-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s10-46/slate-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MK0F4ref+watch-case-46-titanium-slate-nc-s10_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s10-46/slate-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s10-46/slate-2.webp"
+   }
+  ]
+ },
+ "watch-s11-42": {
+  "gold": [
+   {
+    "label": "Front",
+    "source": "composite:MK0A4ref+watch-case-42-titanium-gold-nc-s11_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-42/gold-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-42/gold-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MK0A4ref+watch-case-42-titanium-gold-nc-s11_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-42/gold-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-42/gold-2.webp"
+   }
+  ],
+  "jet-black": [
+   {
+    "label": "Front",
+    "source": "composite:MY7N3ref+watch-case-42-aluminum-jetblack-nc-s11_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-42/jet-black-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-42/jet-black-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MY7N3ref+watch-case-42-aluminum-jetblack-nc-s11_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-42/jet-black-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-42/jet-black-2.webp"
+   }
+  ],
+  "natural": [
+   {
+    "label": "Front",
+    "source": "composite:MK0A4ref+watch-case-42-titanium-natural-nc-s11_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-42/natural-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-42/natural-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MK0A4ref+watch-case-42-titanium-natural-nc-s11_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-42/natural-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-42/natural-2.webp"
+   }
+  ],
+  "rose-gold": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-42-aluminum-rosegold-nc-s11_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-42/rose-gold-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-42/rose-gold-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-42-aluminum-rosegold-nc-s11_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-42/rose-gold-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-42/rose-gold-2.webp"
+   }
+  ],
+  "silver": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-42-aluminum-silver-nc-s11_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-42/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-42/silver-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-42-aluminum-silver-nc-s11_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-42/silver-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-42/silver-2.webp"
+   }
+  ],
+  "slate": [
+   {
+    "label": "Front",
+    "source": "composite:MK0F4ref+watch-case-42-titanium-slate-nc-s11_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-42/slate-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-42/slate-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MK0F4ref+watch-case-42-titanium-slate-nc-s11_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-42/slate-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-42/slate-2.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "composite:MY7N3ref+watch-case-42-aluminum-spacegray-nc-s11_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-42/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-42/space-gray-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MY7N3ref+watch-case-42-aluminum-spacegray-nc-s11_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-42/space-gray-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-42/space-gray-2.webp"
+   }
+  ]
+ },
+ "watch-s11-46": {
+  "gold": [
+   {
+    "label": "Front",
+    "source": "composite:MK0A4ref+watch-case-46-titanium-gold-nc-s11_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-46/gold-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-46/gold-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MK0A4ref+watch-case-46-titanium-gold-nc-s11_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-46/gold-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-46/gold-2.webp"
+   }
+  ],
+  "jet-black": [
+   {
+    "label": "Front",
+    "source": "composite:MY7N3ref+watch-case-46-aluminum-jetblack-nc-s11_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-46/jet-black-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-46/jet-black-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MY7N3ref+watch-case-46-aluminum-jetblack-nc-s11_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-46/jet-black-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-46/jet-black-2.webp"
+   }
+  ],
+  "natural": [
+   {
+    "label": "Front",
+    "source": "composite:MK0A4ref+watch-case-46-titanium-natural-nc-s11_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-46/natural-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-46/natural-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MK0A4ref+watch-case-46-titanium-natural-nc-s11_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-46/natural-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-46/natural-2.webp"
+   }
+  ],
+  "rose-gold": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-46-aluminum-rosegold-nc-s11_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-46/rose-gold-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-46/rose-gold-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-46-aluminum-rosegold-nc-s11_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-46/rose-gold-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-46/rose-gold-2.webp"
+   }
+  ],
+  "silver": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-46-aluminum-silver-nc-s11_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-46/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-46/silver-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-46-aluminum-silver-nc-s11_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-46/silver-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-46/silver-2.webp"
+   }
+  ],
+  "slate": [
+   {
+    "label": "Front",
+    "source": "composite:MK0F4ref+watch-case-46-titanium-slate-nc-s11_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-46/slate-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-46/slate-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MK0F4ref+watch-case-46-titanium-slate-nc-s11_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-46/slate-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-46/slate-2.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "composite:MY7N3ref+watch-case-46-aluminum-spacegray-nc-s11_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-46/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-46/space-gray-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MY7N3ref+watch-case-46-aluminum-spacegray-nc-s11_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s11-46/space-gray-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s11-46/space-gray-2.webp"
+   }
+  ]
+ },
+ "watch-s12-42": {
+  "black": [
+   {
+    "label": "Front",
+    "source": "composite:MY7N3ref+watch-case-42-aluminum-black-nc-s12_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-42/black-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-42/black-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MY7N3ref+watch-case-42-aluminum-black-nc-s12_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-42/black-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-42/black-2.webp"
+   }
+  ],
+  "dark-bronze": [
+   {
+    "label": "Front",
+    "source": "composite:MY7N3ref+watch-case-42-aluminum-darkbronze-nc-s12_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-42/dark-bronze-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-42/dark-bronze-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MY7N3ref+watch-case-42-aluminum-darkbronze-nc-s12_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-42/dark-bronze-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-42/dark-bronze-2.webp"
+   }
+  ],
+  "light-gold": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-42-aluminum-lightgold-nc-s12_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-42/light-gold-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-42/light-gold-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-42-aluminum-lightgold-nc-s12_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-42/light-gold-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-42/light-gold-2.webp"
+   }
+  ],
+  "natural": [
+   {
+    "label": "Front",
+    "source": "composite:MK0A4ref+watch-case-42-titanium-natural-nc-s12_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-42/natural-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-42/natural-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MK0A4ref+watch-case-42-titanium-natural-nc-s12_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-42/natural-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-42/natural-2.webp"
+   }
+  ],
+  "night-blue": [
+   {
+    "label": "Front",
+    "source": "composite:MY7N3ref+watch-case-42-ceramic-nightblue-nc-s12_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-42/night-blue-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-42/night-blue-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MY7N3ref+watch-case-42-ceramic-nightblue-nc-s12_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-42/night-blue-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-42/night-blue-2.webp"
+   }
+  ],
+  "pearl-white": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-42-ceramic-pearlwhite-nc-s12_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-42/pearl-white-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-42/pearl-white-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-42-ceramic-pearlwhite-nc-s12_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-42/pearl-white-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-42/pearl-white-2.webp"
+   }
+  ],
+  "radiant-gold": [
+   {
+    "label": "Front",
+    "source": "composite:MK0A4ref+watch-case-42-titanium-radiantgold-nc-s12_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-42/radiant-gold-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-42/radiant-gold-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MK0A4ref+watch-case-42-titanium-radiantgold-nc-s12_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-42/radiant-gold-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-42/radiant-gold-2.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "composite:MY7N3ref+watch-case-42-aluminum-spacegray-nc-s12_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-42/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-42/space-gray-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MY7N3ref+watch-case-42-aluminum-spacegray-nc-s12_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-42/space-gray-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-42/space-gray-2.webp"
+   }
+  ]
+ },
+ "watch-s12-46": {
+  "black": [
+   {
+    "label": "Front",
+    "source": "composite:MY7N3ref+watch-case-46-aluminum-black-nc-s12_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-46/black-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-46/black-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MY7N3ref+watch-case-46-aluminum-black-nc-s12_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-46/black-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-46/black-2.webp"
+   }
+  ],
+  "dark-bronze": [
+   {
+    "label": "Front",
+    "source": "composite:MY7N3ref+watch-case-46-aluminum-darkbronze-nc-s12_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-46/dark-bronze-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-46/dark-bronze-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MY7N3ref+watch-case-46-aluminum-darkbronze-nc-s12_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-46/dark-bronze-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-46/dark-bronze-2.webp"
+   }
+  ],
+  "light-gold": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-46-aluminum-lightgold-nc-s12_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-46/light-gold-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-46/light-gold-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-46-aluminum-lightgold-nc-s12_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-46/light-gold-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-46/light-gold-2.webp"
+   }
+  ],
+  "natural": [
+   {
+    "label": "Front",
+    "source": "composite:MK0A4ref+watch-case-46-titanium-natural-nc-s12_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-46/natural-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-46/natural-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MK0A4ref+watch-case-46-titanium-natural-nc-s12_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-46/natural-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-46/natural-2.webp"
+   }
+  ],
+  "night-blue": [
+   {
+    "label": "Front",
+    "source": "composite:MY7N3ref+watch-case-46-ceramic-nightblue-nc-s12_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-46/night-blue-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-46/night-blue-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MY7N3ref+watch-case-46-ceramic-nightblue-nc-s12_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-46/night-blue-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-46/night-blue-2.webp"
+   }
+  ],
+  "pearl-white": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-46-ceramic-pearlwhite-nc-s12_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-46/pearl-white-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-46/pearl-white-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-46-ceramic-pearlwhite-nc-s12_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-46/pearl-white-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-46/pearl-white-2.webp"
+   }
+  ],
+  "radiant-gold": [
+   {
+    "label": "Front",
+    "source": "composite:MK0A4ref+watch-case-46-titanium-radiantgold-nc-s12_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-46/radiant-gold-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-46/radiant-gold-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MK0A4ref+watch-case-46-titanium-radiantgold-nc-s12_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-46/radiant-gold-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-46/radiant-gold-2.webp"
+   }
+  ],
+  "space-gray": [
+   {
+    "label": "Front",
+    "source": "composite:MY7N3ref+watch-case-46-aluminum-spacegray-nc-s12_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-46/space-gray-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-46/space-gray-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MY7N3ref+watch-case-46-aluminum-spacegray-nc-s12_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s12-46/space-gray-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s12-46/space-gray-2.webp"
+   }
+  ]
+ },
+ "watch-s7-41": {
+  "midnight": [
+   {
+    "label": "Front",
+    "source": "same design as watch-s9-41",
+    "src": "/Gadget_Hub_Store_Angles/watch-s7-41/midnight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s7-41/midnight-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "same design as watch-s9-41",
+    "src": "/Gadget_Hub_Store_Angles/watch-s7-41/midnight-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s7-41/midnight-2.webp"
+   }
+  ],
+  "red": [
+   {
+    "label": "Front",
+    "source": "same design as watch-s9-41",
+    "src": "/Gadget_Hub_Store_Angles/watch-s7-41/red-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s7-41/red-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "same design as watch-s9-41",
+    "src": "/Gadget_Hub_Store_Angles/watch-s7-41/red-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s7-41/red-2.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "same design as watch-s9-41",
+    "src": "/Gadget_Hub_Store_Angles/watch-s7-41/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s7-41/starlight-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "same design as watch-s9-41",
+    "src": "/Gadget_Hub_Store_Angles/watch-s7-41/starlight-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s7-41/starlight-2.webp"
+   }
+  ]
+ },
+ "watch-s7-45": {
+  "midnight": [
+   {
+    "label": "Front",
+    "source": "same design as watch-s9-45",
+    "src": "/Gadget_Hub_Store_Angles/watch-s7-45/midnight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s7-45/midnight-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "same design as watch-s9-45",
+    "src": "/Gadget_Hub_Store_Angles/watch-s7-45/midnight-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s7-45/midnight-2.webp"
+   }
+  ],
+  "red": [
+   {
+    "label": "Front",
+    "source": "same design as watch-s9-45",
+    "src": "/Gadget_Hub_Store_Angles/watch-s7-45/red-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s7-45/red-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "same design as watch-s9-45",
+    "src": "/Gadget_Hub_Store_Angles/watch-s7-45/red-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s7-45/red-2.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "same design as watch-s9-45",
+    "src": "/Gadget_Hub_Store_Angles/watch-s7-45/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s7-45/starlight-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "same design as watch-s9-45",
+    "src": "/Gadget_Hub_Store_Angles/watch-s7-45/starlight-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s7-45/starlight-2.webp"
+   }
+  ]
+ },
+ "watch-s8-41": {
+  "midnight": [
+   {
+    "label": "Front",
+    "source": "same design as watch-s9-41",
+    "src": "/Gadget_Hub_Store_Angles/watch-s8-41/midnight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s8-41/midnight-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "same design as watch-s9-41",
+    "src": "/Gadget_Hub_Store_Angles/watch-s8-41/midnight-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s8-41/midnight-2.webp"
+   }
+  ],
+  "red": [
+   {
+    "label": "Front",
+    "source": "same design as watch-s9-41",
+    "src": "/Gadget_Hub_Store_Angles/watch-s8-41/red-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s8-41/red-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "same design as watch-s9-41",
+    "src": "/Gadget_Hub_Store_Angles/watch-s8-41/red-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s8-41/red-2.webp"
+   }
+  ],
+  "silver": [
+   {
+    "label": "Front",
+    "source": "same design as watch-s9-41",
+    "src": "/Gadget_Hub_Store_Angles/watch-s8-41/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s8-41/silver-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "same design as watch-s9-41",
+    "src": "/Gadget_Hub_Store_Angles/watch-s8-41/silver-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s8-41/silver-2.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "same design as watch-s9-41",
+    "src": "/Gadget_Hub_Store_Angles/watch-s8-41/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s8-41/starlight-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "same design as watch-s9-41",
+    "src": "/Gadget_Hub_Store_Angles/watch-s8-41/starlight-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s8-41/starlight-2.webp"
+   }
+  ]
+ },
+ "watch-s8-45": {
+  "midnight": [
+   {
+    "label": "Front",
+    "source": "same design as watch-s9-45",
+    "src": "/Gadget_Hub_Store_Angles/watch-s8-45/midnight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s8-45/midnight-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "same design as watch-s9-45",
+    "src": "/Gadget_Hub_Store_Angles/watch-s8-45/midnight-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s8-45/midnight-2.webp"
+   }
+  ],
+  "red": [
+   {
+    "label": "Front",
+    "source": "same design as watch-s9-45",
+    "src": "/Gadget_Hub_Store_Angles/watch-s8-45/red-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s8-45/red-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "same design as watch-s9-45",
+    "src": "/Gadget_Hub_Store_Angles/watch-s8-45/red-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s8-45/red-2.webp"
+   }
+  ],
+  "silver": [
+   {
+    "label": "Front",
+    "source": "same design as watch-s9-45",
+    "src": "/Gadget_Hub_Store_Angles/watch-s8-45/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s8-45/silver-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "same design as watch-s9-45",
+    "src": "/Gadget_Hub_Store_Angles/watch-s8-45/silver-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s8-45/silver-2.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "same design as watch-s9-45",
+    "src": "/Gadget_Hub_Store_Angles/watch-s8-45/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s8-45/starlight-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "same design as watch-s9-45",
+    "src": "/Gadget_Hub_Store_Angles/watch-s8-45/starlight-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s8-45/starlight-2.webp"
+   }
+  ]
+ },
+ "watch-s9-41": {
+  "midnight": [
+   {
+    "label": "Front",
+    "source": "composite:MY7N3ref+watch-case-41-aluminum-midnight-nc-s9_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s9-41/midnight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s9-41/midnight-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MY7N3ref+watch-case-41-aluminum-midnight-nc-s9_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s9-41/midnight-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s9-41/midnight-2.webp"
+   }
+  ],
+  "pink": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-41-aluminum-pink-nc-s9_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s9-41/pink-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s9-41/pink-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-41-aluminum-pink-nc-s9_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s9-41/pink-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s9-41/pink-2.webp"
+   }
+  ],
+  "red": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-41-aluminum-red-nc-s9_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s9-41/red-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s9-41/red-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-41-aluminum-red-nc-s9_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s9-41/red-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s9-41/red-2.webp"
+   }
+  ],
+  "silver": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-41-aluminum-silver-nc-s9_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s9-41/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s9-41/silver-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-41-aluminum-silver-nc-s9_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s9-41/silver-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s9-41/silver-2.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-41-aluminum-starlight-nc-s9_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s9-41/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s9-41/starlight-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-41-aluminum-starlight-nc-s9_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s9-41/starlight-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s9-41/starlight-2.webp"
+   }
+  ]
+ },
+ "watch-s9-45": {
+  "midnight": [
+   {
+    "label": "Front",
+    "source": "composite:MY7N3ref+watch-case-45-aluminum-midnight-nc-s9_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s9-45/midnight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s9-45/midnight-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MY7N3ref+watch-case-45-aluminum-midnight-nc-s9_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s9-45/midnight-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s9-45/midnight-2.webp"
+   }
+  ],
+  "pink": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-45-aluminum-pink-nc-s9_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s9-45/pink-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s9-45/pink-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-45-aluminum-pink-nc-s9_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s9-45/pink-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s9-45/pink-2.webp"
+   }
+  ],
+  "red": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-45-aluminum-red-nc-s9_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s9-45/red-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s9-45/red-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-45-aluminum-red-nc-s9_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s9-45/red-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s9-45/red-2.webp"
+   }
+  ],
+  "silver": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-45-aluminum-silver-nc-s9_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s9-45/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s9-45/silver-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-45-aluminum-silver-nc-s9_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s9-45/silver-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s9-45/silver-2.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-45-aluminum-starlight-nc-s9_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-s9-45/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s9-45/starlight-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-45-aluminum-starlight-nc-s9_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-s9-45/starlight-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-s9-45/starlight-2.webp"
+   }
+  ]
+ },
+ "watch-se1-40": {
+  "midnight": [
+   {
+    "label": "Front",
+    "source": "same design as watch-se2-40",
+    "src": "/Gadget_Hub_Store_Angles/watch-se1-40/midnight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se1-40/midnight-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "same design as watch-se2-40",
+    "src": "/Gadget_Hub_Store_Angles/watch-se1-40/midnight-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se1-40/midnight-2.webp"
+   }
+  ],
+  "silver": [
+   {
+    "label": "Front",
+    "source": "same design as watch-se2-40",
+    "src": "/Gadget_Hub_Store_Angles/watch-se1-40/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se1-40/silver-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "same design as watch-se2-40",
+    "src": "/Gadget_Hub_Store_Angles/watch-se1-40/silver-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se1-40/silver-2.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "same design as watch-se2-40",
+    "src": "/Gadget_Hub_Store_Angles/watch-se1-40/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se1-40/starlight-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "same design as watch-se2-40",
+    "src": "/Gadget_Hub_Store_Angles/watch-se1-40/starlight-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se1-40/starlight-2.webp"
+   }
+  ]
+ },
+ "watch-se1-44": {
+  "midnight": [
+   {
+    "label": "Front",
+    "source": "same design as watch-se2-44",
+    "src": "/Gadget_Hub_Store_Angles/watch-se1-44/midnight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se1-44/midnight-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "same design as watch-se2-44",
+    "src": "/Gadget_Hub_Store_Angles/watch-se1-44/midnight-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se1-44/midnight-2.webp"
+   }
+  ],
+  "silver": [
+   {
+    "label": "Front",
+    "source": "same design as watch-se2-44",
+    "src": "/Gadget_Hub_Store_Angles/watch-se1-44/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se1-44/silver-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "same design as watch-se2-44",
+    "src": "/Gadget_Hub_Store_Angles/watch-se1-44/silver-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se1-44/silver-2.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "same design as watch-se2-44",
+    "src": "/Gadget_Hub_Store_Angles/watch-se1-44/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se1-44/starlight-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "same design as watch-se2-44",
+    "src": "/Gadget_Hub_Store_Angles/watch-se1-44/starlight-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se1-44/starlight-2.webp"
+   }
+  ]
+ },
+ "watch-se2-40": {
+  "midnight": [
+   {
+    "label": "Front",
+    "source": "composite:MY7N3ref+watch-case-40-aluminum-midnight-nc-se_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-se2-40/midnight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se2-40/midnight-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MY7N3ref+watch-case-40-aluminum-midnight-nc-se_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-se2-40/midnight-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se2-40/midnight-2.webp"
+   }
+  ],
+  "silver": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-40-aluminum-silver-nc-se_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-se2-40/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se2-40/silver-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-40-aluminum-silver-nc-se_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-se2-40/silver-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se2-40/silver-2.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-40-aluminum-starlight-nc-se_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-se2-40/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se2-40/starlight-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-40-aluminum-starlight-nc-se_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-se2-40/starlight-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se2-40/starlight-2.webp"
+   }
+  ]
+ },
+ "watch-se2-44": {
+  "midnight": [
+   {
+    "label": "Front",
+    "source": "composite:MY7N3ref+watch-case-44-aluminum-midnight-nc-se_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-se2-44/midnight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se2-44/midnight-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MY7N3ref+watch-case-44-aluminum-midnight-nc-se_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-se2-44/midnight-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se2-44/midnight-2.webp"
+   }
+  ],
+  "silver": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-44-aluminum-silver-nc-se_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-se2-44/silver-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se2-44/silver-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-44-aluminum-silver-nc-se_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-se2-44/silver-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se2-44/silver-2.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-44-aluminum-starlight-nc-se_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-se2-44/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se2-44/starlight-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-44-aluminum-starlight-nc-se_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-se2-44/starlight-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se2-44/starlight-2.webp"
+   }
+  ]
+ },
+ "watch-se3-40": {
+  "midnight": [
+   {
+    "label": "Front",
+    "source": "composite:MY7N3ref+watch-case-40-aluminum-midnight-nc-se3_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-se3-40/midnight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se3-40/midnight-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MY7N3ref+watch-case-40-aluminum-midnight-nc-se3_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-se3-40/midnight-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se3-40/midnight-2.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-40-aluminum-starlight-nc-se3_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-se3-40/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se3-40/starlight-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-40-aluminum-starlight-nc-se3_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-se3-40/starlight-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se3-40/starlight-2.webp"
+   }
+  ]
+ },
+ "watch-se3-44": {
+  "midnight": [
+   {
+    "label": "Front",
+    "source": "composite:MY7N3ref+watch-case-44-aluminum-midnight-nc-se3_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-se3-44/midnight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se3-44/midnight-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MY7N3ref+watch-case-44-aluminum-midnight-nc-se3_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-se3-44/midnight-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se3-44/midnight-2.webp"
+   }
+  ],
+  "starlight": [
+   {
+    "label": "Front",
+    "source": "composite:MJUC4ref+watch-case-44-aluminum-starlight-nc-se3_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-se3-44/starlight-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se3-44/starlight-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MJUC4ref+watch-case-44-aluminum-starlight-nc-se3_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-se3-44/starlight-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-se3-44/starlight-2.webp"
+   }
+  ]
+ },
+ "watch-ultra-2": {
+  "black": [
+   {
+    "label": "Front",
+    "source": "composite:MKAY4+watch-case-49-titanium-black-ultra2_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-ultra-2/black-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-ultra-2/black-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MKAY4+watch-case-49-titanium-black-ultra2_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-ultra-2/black-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-ultra-2/black-2.webp"
+   }
+  ],
+  "natural": [
+   {
+    "label": "Front",
+    "source": "composite:MKAQ4+watch-case-49-titanium-natural-ultra2_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-ultra-2/natural-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-ultra-2/natural-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MKAQ4+watch-case-49-titanium-natural-ultra2_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-ultra-2/natural-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-ultra-2/natural-2.webp"
+   }
+  ]
+ },
+ "watch-ultra-3": {
+  "black": [
+   {
+    "label": "Front",
+    "source": "composite:MKAY4+watch-case-49-titanium-black-ultra3_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-ultra-3/black-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-ultra-3/black-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MKAY4+watch-case-49-titanium-black-ultra3_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-ultra-3/black-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-ultra-3/black-2.webp"
+   }
+  ],
+  "natural": [
+   {
+    "label": "Front",
+    "source": "composite:MKAQ4+watch-case-49-titanium-natural-ultra3_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-ultra-3/natural-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-ultra-3/natural-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MKAQ4+watch-case-49-titanium-natural-ultra3_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-ultra-3/natural-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-ultra-3/natural-2.webp"
+   }
+  ]
+ },
+ "watch-ultra-4": {
+  "black": [
+   {
+    "label": "Front",
+    "source": "composite:MKAY4+watch-case-49-titanium-black-ultra4_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-ultra-4/black-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-ultra-4/black-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MKAY4+watch-case-49-titanium-black-ultra4_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-ultra-4/black-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-ultra-4/black-2.webp"
+   }
+  ],
+  "natural": [
+   {
+    "label": "Front",
+    "source": "composite:MKAQ4+watch-case-49-titanium-natural-ultra4_VW_34FR",
+    "src": "/Gadget_Hub_Store_Angles/watch-ultra-4/natural-1.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-ultra-4/natural-1.webp"
+   },
+   {
+    "label": "Profile",
+    "source": "composite:MKAQ4+watch-case-49-titanium-natural-ultra4_VW_PF",
+    "src": "/Gadget_Hub_Store_Angles/watch-ultra-4/natural-2.jpg",
+    "srcWebp": "/Gadget_Hub_Store_Angles/watch-ultra-4/natural-2.webp"
+   }
+  ]
+ }
+}

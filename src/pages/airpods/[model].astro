@@ -28,6 +28,7 @@ import {
   airpodsFaq,
   defaultAirpodsColour,
 } from "../../lib/airpods";
+import { storeAngleTabs } from "../../lib/store-angles";
 import { livePricedProduct, variantPriceMap } from "../../lib/pricing/live";
 import { buildProductSeo } from "../../lib/seo/product-seo";
 import ProductSeoBlock from "../../components/ProductSeoBlock.astro";
@@ -40,7 +41,11 @@ if (!airpodsDefault) return Astro.redirect("/airpods");
 const liveBase = variantPriceMap(await livePricedProduct(airpodsDefault.id)).base;
 const model = liveBase != null ? { ...airpodsDefault, basePriceKes: liveBase } : airpodsDefault;
 
-const tabs = airpodsViewerTabs(model);
+const baseTabs = airpodsViewerTabs(model);
+const colourViews = Object.fromEntries(
+  model.colours.map((c) => [c, [...storeAngleTabs(model.id, c, model.name, colourLabel(c)), ...baseTabs]]),
+);
+const tabs = colourViews[model.colours[0]] ?? baseTabs;
 const img = tabs[0] || getAirpodsImage(model.id, "hero", model.name);
 const liveProduct = await livePricedProduct(model.id);
 const pageSeo = liveProduct
@@ -114,7 +119,7 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
             <img data-viewer-img src={img.src} alt={img.alt} width="1200" height="1200" />
           </picture>
         </div>
-        <div class="apdp__tabs" role="tablist">
+        <div class="apdp__tabs" role="tablist" data-colour-views={JSON.stringify(colourViews)}>
           {tabs.map((t, i) => (
             <button
               type="button"
@@ -162,7 +167,7 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
                   data-airpods-swatch
                   data-colour={c}
                   data-label={colourLabel(c)}
-                  data-src={getAirpodsImage(model.id, `colour:${c}`, model.name).src}
+                  data-src={storeAngleTabs(model.id, c, model.name, colourLabel(c))[0]?.src ?? getAirpodsImage(model.id, `colour:${c}`, model.name).src}
                   style={`--swatch:${colourHex(c)}`}
                   aria-label={colourLabel(c)}
                 >
@@ -537,8 +542,9 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
   }
   .apdp__stage {
     background: #f5f5f7; border-radius: 1.5rem; aspect-ratio: 1; display: grid; place-items: center;
+    grid-template-rows: 100%; grid-template-columns: 100%;
   }
-  .apdp__stage img { width: 88%; height: auto; mix-blend-mode: multiply; }
+  .apdp__stage img { width: auto; height: auto; max-width: 88%; max-height: 88%; object-fit: contain; mix-blend-mode: multiply; }
   .apdp__tabs { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.75rem; }
   .apdp__tabs button {
     border: 1px solid #d2d2d7; background: #fff; border-radius: 999px;
@@ -662,3 +668,10 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
   .apdp__tools { display: grid; gap: 1rem; padding-bottom: 2rem; }
   @media (min-width: 40rem) { .apdp__tools { grid-template-columns: 1fr 1fr; } }
 </style>
+
+<script>
+  import { initColourGallery } from "../../scripts/colourGallery";
+  const tablist = document.querySelector<HTMLElement>("[data-colour-views]");
+  const viewer = document.querySelector<HTMLImageElement>("[data-viewer-img]");
+  if (tablist && viewer) initColourGallery({ tablist, img: viewer, swatches: "[data-airpods-swatch]" });
+</script>

@@ -684,9 +684,11 @@ const wa = whatsappUrl(
     display: grid;
     place-items: center;
     cursor: zoom-in;
+    grid-template-rows: 100%; grid-template-columns: 100%;
   }
   .mpdp__stage img {
-    width: 92%;
+    width: auto;
+    max-width: 92%;
     height: auto;
     max-height: 94%;
     object-fit: contain;

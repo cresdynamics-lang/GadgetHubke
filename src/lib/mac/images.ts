@@ -5,6 +5,7 @@
 
 import { publicFileExists } from "../public-file";
 import { colourLabel } from "./colours";
+import { storeAngleTabs } from "../store-angles";
 import {
   overviewSrc,
   pageAsset,
@@ -176,8 +177,13 @@ export function macViewerTabs(model: MacModel, colourKey: string) {
   const name = model.name;
   const tabs: { id: string; label: string; src: string; alt: string; srcWebp?: string }[] = [];
 
-  const front = getMacImage(id, colourKey, "product", name);
-  tabs.push({ id: "front", label: "Front", src: front.src, alt: front.alt, srcWebp: front.srcWebp });
+  // Apple store photo of this exact finish leads, so the colour always matches the swatch.
+  const angles = storeAngleTabs(id, colourKey, name, colourLabel(colourKey));
+  if (angles.length) tabs.push(...angles);
+  else {
+    const front = getMacImage(id, colourKey, "product", name);
+    tabs.push({ id: "front", label: "Front", src: front.src, alt: front.alt, srcWebp: front.srcWebp });
+  }
 
   const top = getMacImage(id, colourKey, "design_top", name);
   const side = getMacImage(id, colourKey, "design_side", name);

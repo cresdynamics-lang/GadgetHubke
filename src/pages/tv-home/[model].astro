@@ -27,6 +27,7 @@ import {
   defaultTvHomeColour,
   isSpeaker,
 } from "../../lib/tv-home";
+import { storeAngleTabs } from "../../lib/store-angles";
 import { livePricedProduct, variantPriceMap } from "../../lib/pricing/live";
 import { buildProductSeo } from "../../lib/seo/product-seo";
 import ProductSeoBlock from "../../components/ProductSeoBlock.astro";
@@ -41,7 +42,11 @@ const exact = variantPriceMap(live);
 const liveBase = exact["64gb-wifi"] ?? live?.priceKes;
 const model = liveBase != null ? { ...tvDefault, basePriceKes: liveBase } : tvDefault;
 
-const tabs = tvHomeViewerTabs(model);
+const baseTabs = tvHomeViewerTabs(model);
+const colourViews = Object.fromEntries(
+  model.colours.map((c) => [c, [...storeAngleTabs(model.id, c, model.name, colourLabel(c)), ...baseTabs]]),
+);
+const tabs = colourViews[model.colours[0]] ?? baseTabs;
 const img = tabs[0] || getTvHomeImage(model.id, "hero", model.name);
 const pageSeo = live
   ? buildProductSeo({
@@ -98,7 +103,7 @@ const showPair = model.stereoPairCapable;
                   <img data-viewer-img src={img.src} alt={img.alt} width="1200" height="1200" style="mix-blend-mode: multiply;" />
                 </picture>
               </div>
-              <div class="thpdp__tabs" role="tablist">
+              <div class="thpdp__tabs" role="tablist" data-colour-views={JSON.stringify(colourViews)}>
                 {tabs.map((t, i) => (
                   <button
                     type="button"
@@ -142,7 +147,7 @@ const showPair = model.stereoPairCapable;
                   data-tvhome-swatch
                   data-colour={c}
                   data-label={colourLabel(c)}
-                  data-src={getTvHomeImage(model.id, `colour:${c}`, model.name).src}
+                  data-src={storeAngleTabs(model.id, c, model.name, colourLabel(c))[0]?.src ?? getTvHomeImage(model.id, `colour:${c}`, model.name).src}
                   style={`--swatch:${colourHex(c)}`}
                   aria-label={colourLabel(c)}
                 >
@@ -580,3 +585,10 @@ const showPair = model.stereoPairCapable;
   }
   .thpdp__tools { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); padding-block: 2rem; }
 </style>
+
+<script>
+  import { initColourGallery } from "../../scripts/colourGallery";
+  const tablist = document.querySelector<HTMLElement>("[data-colour-views]");
+  const viewer = document.querySelector<HTMLImageElement>("[data-viewer-img]");
+  if (tablist && viewer) initColourGallery({ tablist, img: viewer, swatches: "[data-tvhome-swatch]" });
+</script>

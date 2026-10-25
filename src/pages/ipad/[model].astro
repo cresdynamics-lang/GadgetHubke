@@ -878,9 +878,11 @@ const wa = whatsappUrl(
     display: grid;
     place-items: center;
     cursor: zoom-in;
+    grid-template-rows: 100%; grid-template-columns: 100%;
   }
   .ipdp__stage img {
-    width: 82%;
+    width: auto;
+    max-width: 82%;
     height: auto;
     max-height: 90%;
     object-fit: contain;
