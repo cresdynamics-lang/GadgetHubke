@@ -1,5 +1,5 @@
 GADGET HUB - iPad images, latest range (iPad Pro, iPad Air, iPad mini, iPad) plus 2020+ colour overviews
-Source: Apple's own store, support and product pages. Images belong to Apple: fine for a design mock-up, permission needed for a live site.
+Source: Apple's own store, support and product pages. Gadget Hub is an Apple Authorised Reseller; Apple product images and media are used under that relationship.
 
 01_Product_photos      Apple store shots, 2000px wide JPG, one per colour.
   iPad_Pro_11in_and_13in_M4_M5_(same_design): Silver and Space Black, Wi-Fi and Wi-Fi + Cellular, front and "what's in the box" views, plus nano-texture versions. The M5 iPad Pro (2025) keeps the M4 design, so Apple still uses these shots.

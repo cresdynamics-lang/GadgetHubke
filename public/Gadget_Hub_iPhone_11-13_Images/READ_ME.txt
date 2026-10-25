@@ -17,4 +17,4 @@ Coverage notes:
 - iPhone 13 and 13 mini include green and (PRODUCT)RED. iPhone 14 and 14 Plus include yellow.
 - Titanium colours on the 15 Pro and 16 Pro families are named blacktitanium, whitetitanium, bluetitanium, naturaltitanium, deserttitanium.
 
-Rights: these pictures belong to Apple. They are fine for mock-ups. Before they go on a live website the shop should have permission from Apple or its supplier.
+Rights: Gadget Hub is an Apple Authorised Reseller; Apple product images and media are used under that relationship.

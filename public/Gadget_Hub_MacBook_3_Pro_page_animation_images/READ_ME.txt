@@ -1,5 +1,5 @@
 GADGET HUB - MacBook images, 2020 and newer (Air and Pro)
-Source: Apple's own store, support and product pages. Images belong to Apple: fine for a design mock-up, permission needed for a live site.
+Source: Apple's own store, support and product pages. Gadget Hub is an Apple Authorised Reseller; Apple product images and media are used under that relationship.
 
 01_Product_photos      Apple store product shots, 2000px wide, one per colour.
   MacBook_Air:  Air 2018-2020 chassis (M1, 2020, uses this same design; Apple's image is labelled 2018), 15in M2 2023, 13in M3 2024, 13in and 15in M4 2025, size comparison.
