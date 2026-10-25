@@ -893,7 +893,7 @@ export const newerModels: IphoneModel[] = [
     displayInches: 6.9, refreshHz: 120, chip: "A20 Pro",
     rearCameras: ["48MP Pro Fusion camera system"], frontCamera: "18MP Center Stage",
     batteryVideoHours: 45, weightGrams: 249, storage: ["256GB", "512GB", "1TB", "2TB"],
-    basePriceKes: 219000, port: "USB-C", tagline: "The biggest, newest Pro iPhone.", defaultColour: "glacier",
+    basePriceKes: 218000, port: "USB-C", tagline: "The biggest, newest Pro iPhone.", defaultColour: "glacier",
   },
   {
     ...base17,

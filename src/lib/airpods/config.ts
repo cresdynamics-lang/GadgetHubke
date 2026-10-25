@@ -95,7 +95,7 @@ export const airpodsBasePricesKes = {
   "airpods-3": 21000,
   "airpods-2": 16000,
   "airpods-pro-1": 27500,
-  "airpods-max-2020": 67000,
+  "airpods-max-2020": 70000,
 } as const;
 
 /** EX-UK base prices from sheet. */

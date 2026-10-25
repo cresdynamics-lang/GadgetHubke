@@ -1,6 +1,7 @@
 /**
  * Live storefront prices.
- * Repo price sheets are the defaults; admin "Prices & stock" overlays win.
+ * Repo price sheets are the defaults, corrected by price-baseline.json;
+ * admin "Prices & stock" overlays win.
  * Product pages, feeds and checkout all read prices through here.
  */
 import { products } from "../products";
@@ -12,6 +13,7 @@ import { airpodsModels } from "../airpods";
 import { tvHomeModels } from "../tv-home";
 import { accessories } from "../accessories/models";
 import { getOverlayMap, type CatalogOverlayEntry, type CatalogOverlayMap } from "../admin/overlay";
+import priceBaseline from "./price-baseline.json";
 import { sheetRowsForProduct, storageIdFromLabel } from "./iphone-sheet";
 import { macSheetForModel, macConfigStorageId, macConfigStorageLabel } from "./mac-sheet";
 import { ipadSheetForModel, ipadConfigStorageId, ipadConfigStorageLabel } from "./ipad-sheet";
@@ -51,6 +53,13 @@ function product(
   variants: PriceVariant[] = [],
   inStock = true,
 ): PricedProduct {
+  const base = (priceBaseline.products as Record<string, Record<string, { priceKes?: number; exUkKes?: number }>>)[id];
+  if (base) {
+    variants = variants.map((v) => {
+      const b = base[v.key];
+      return b ? { ...v, priceKes: b.priceKes ?? v.priceKes, exUkKes: b.exUkKes ?? v.exUkKes } : v;
+    });
+  }
   const priceKes = variants.length ? Math.min(...variants.map((v) => v.priceKes)) : basePriceKes;
   return { id, name, group, href, priceKes, basePriceKes: priceKes, inStock, variants, sample: true };
 }

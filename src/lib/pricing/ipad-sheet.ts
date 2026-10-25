@@ -49,7 +49,7 @@ export const ipadSheet: IpadSheetRow[] = [
   { id: "PAD-032", product: "iPad Pro 11-inch (M4, 2024)", config: "2TB \u00b7 Wi-Fi Cellular", newKes: 230000, exUkKes: 175000, modelId: "ipad-pro-11-m4", storage: "2TB", cellular: true },
   { id: "PAD-033", product: "iPad Air 13-inch (M4)", config: "128GB \u00b7 Wi-Fi", newKes: 143000, exUkKes: 114000, modelId: "ipad-air-13-m4", storage: "128GB", cellular: false },
   { id: "PAD-034", product: "iPad Air 13-inch (M4)", config: "128GB \u00b7 Wi-Fi Cellular", newKes: 155000, exUkKes: 124000, modelId: "ipad-air-13-m4", storage: "128GB", cellular: true },
-  { id: "PAD-035", product: "iPad Air 13-inch (M4)", config: "256GB \u00b7 Wi-Fi", newKes: 158000, exUkKes: 126000, modelId: "ipad-air-13-m4", storage: "256GB", cellular: false },
+  { id: "PAD-035", product: "iPad Air 13-inch (M4)", config: "256GB \u00b7 Wi-Fi", newKes: 143000, exUkKes: 126000, modelId: "ipad-air-13-m4", storage: "256GB", cellular: false },
   { id: "PAD-036", product: "iPad Air 13-inch (M4)", config: "256GB \u00b7 Wi-Fi Cellular", newKes: 170000, exUkKes: 136000, modelId: "ipad-air-13-m4", storage: "256GB", cellular: true },
   { id: "PAD-037", product: "iPad Air 13-inch (M4)", config: "512GB \u00b7 Wi-Fi", newKes: 180000, exUkKes: 144000, modelId: "ipad-air-13-m4", storage: "512GB", cellular: false },
   { id: "PAD-038", product: "iPad Air 13-inch (M4)", config: "512GB \u00b7 Wi-Fi Cellular", newKes: 195000, exUkKes: 156000, modelId: "ipad-air-13-m4", storage: "512GB", cellular: true },
