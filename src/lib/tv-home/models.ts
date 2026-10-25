@@ -131,7 +131,7 @@ export const tvHomeModels: TvHomeModel[] = [
     whyChoose: [
       "128 GB with Ethernet and Thread - on request.",
       "Same A15 picture stack as the Wi-Fi model.",
-      "Sample price includes the Ethernet storage step.",
+      "Price includes the Ethernet storage step.",
     ],
     isNew: true,
     checkFinalSpecs: true,
@@ -250,7 +250,7 @@ export const tvHomeModels: TvHomeModel[] = [
     stereoPairCapable: false,
     dolbyVision: true,
     tagline: "Also in stock - earlier 4K box.",
-    whoItSuits: "Buyers who want 4K at a lower sample price.",
+    whoItSuits: "Buyers who want 4K at a lower price.",
     whyChoose: [
       "A12 Bionic with 4K and Dolby Vision - on request.",
       "Siri Remote 2nd generation (Lightning).",
@@ -293,7 +293,7 @@ export const tvHomeModels: TvHomeModel[] = [
     tagline: "Also in stock - check condition.",
     whoItSuits: "Tight budgets who accept an older 4K box.",
     whyChoose: [
-      "Lowest 4K sample price in the shop.",
+      "Lowest 4K price in the shop.",
       "Overview image only.",
       "Confirm condition and remote generation on the invoice.",
     ],
@@ -334,7 +334,7 @@ export const tvHomeModels: TvHomeModel[] = [
     tagline: "Also in stock - HD only.",
     whoItSuits: "Basic streaming when 4K is not needed.",
     whyChoose: [
-      "Lowest sample price.",
+      "Lowest price.",
       "HD picture only - not 4K.",
       "Check condition carefully.",
     ],
@@ -375,7 +375,7 @@ export const tvHomeModels: TvHomeModel[] = [
     tagline: "Also in stock - original HomePod.",
     whoItSuits: "Buyers watching the budget for big-room sound.",
     whyChoose: [
-      "Lower sample price than HomePod 2.",
+      "Lower price than HomePod 2.",
       "Uses HomePod lineup photo until a dedicated 1st-gen store shot is added.",
       "Confirm condition and speaker health in store.",
     ],

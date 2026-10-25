@@ -108,7 +108,7 @@ export function watchBuyingNotes(model: WatchModel): { title: string; body: stri
     },
     {
       title: "Material",
-      body: `${model.materials.join(", ")} available. Aluminum is lightest and lowest price; titanium and ceramic (where offered) raise scratch resistance and sample price.`,
+      body: `${model.materials.join(", ")} available. Aluminum is lightest and lowest price; titanium and ceramic (where offered) raise scratch resistance and price.`,
     },
     {
       title: "GPS or Cellular",

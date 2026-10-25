@@ -3,15 +3,11 @@
  * Side-by-side iPhone comparison pages driven by SEO catalog compareWith slugs.
  */
 import BaseLayout from "../../../layouts/BaseLayout.astro";
-import { listSeoModels, getSeoModel, formatKesSeo } from "../../../lib/iphone/seo";
+import { getSeoModel, formatKesSeo } from "../../../lib/iphone/seo";
+import { withLiveSeoPrices } from "../../../lib/iphone/seo/live";
+import { livePricedProduct, iphoneLiveId } from "../../../lib/pricing/live";
 
-export function getStaticPaths() {
-  const slugs = new Set<string>();
-  for (const m of listSeoModels()) {
-    for (const c of m.compareWith) slugs.add(c);
-  }
-  return [...slugs].map((slug) => ({ params: { slug } }));
-}
+export const prerender = false;
 
 const { slug } = Astro.params;
 const parts = (slug || "").split("-vs-");
@@ -19,13 +15,16 @@ if (parts.length !== 2) {
   return Astro.redirect("/iphone");
 }
 
-const left = getSeoModel(parts[0]!);
-const right = getSeoModel(parts[1]!);
-if (!left || !right) {
+const leftDefault = getSeoModel(parts[0]!);
+const rightDefault = getSeoModel(parts[1]!);
+if (!leftDefault || !rightDefault) {
   return Astro.redirect("/iphone");
 }
+// Live admin prices, so comparisons never quote stale numbers.
+const left = withLiveSeoPrices(leftDefault, await livePricedProduct(iphoneLiveId(leftDefault.id)));
+const right = withLiveSeoPrices(rightDefault, await livePricedProduct(iphoneLiveId(rightDefault.id)));
 
-const title = `${left.name} vs ${right.name} | Gadget Hub`;
+const title = `${left.name} vs ${right.name}: Price in Kenya & Specs | Gadget Hub`;
 const description = `Compare ${left.name} and ${right.name} prices and specs in Kenya. From ${formatKesSeo(left.fromKes)} vs ${formatKesSeo(right.fromKes)} at Gadget Hub, Norwich House.`;
 
 const labels = [...new Set([...left.specs.map((s) => s.label), ...right.specs.map((s) => s.label)])];
@@ -35,7 +34,7 @@ function specVal(model: typeof left, label: string) {
 
 const which =
   left.fromKes === right.fromKes
-    ? `Both start at the same price point in our sheet. Choose by screen size, cameras and how you use the phone.`
+    ? `Both start at the same price. Choose by screen size, cameras and how you use the phone.`
     : left.fromKes < right.fromKes
       ? `Choose the ${left.name} if you want the lower starting price (${formatKesSeo(left.fromKes)}). Choose the ${right.name} if you want what it adds for ${formatKesSeo(right.fromKes)}.`
       : `Choose the ${right.name} if you want the lower starting price (${formatKesSeo(right.fromKes)}). Choose the ${left.name} if you want what it adds for ${formatKesSeo(left.fromKes)}.`;
@@ -48,7 +47,7 @@ const which =
     </nav>
     <h1>{left.name} vs {right.name}</h1>
     <p class="compare__intro">
-      Side-by-side specs and starting prices in Kenya. Prices are sealed new stock from the Gadget Hub sheet.
+      Side-by-side specs and live starting prices in Kenya for sealed new stock at Gadget Hub, Nairobi.
     </p>
 
     <table class="compare__table">

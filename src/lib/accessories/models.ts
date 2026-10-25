@@ -173,7 +173,7 @@ export const accessories: Accessory[] = [
     tagline: "Lightning Pencil - adapter for USB-C iPads.",
     whoItSuits: "iPad 6th - 10th gen and iPad A16 with the right adapter.",
     whyChoose: [
-      "Lowest Pencil sample price.",
+      "Lowest Pencil price.",
       "Needs USB-C adapter on 10th gen and A16 - flag check.",
       "No store photo - overview image only.",
     ],
@@ -445,7 +445,7 @@ export const accessories: Accessory[] = [
     tagline: "Older numeric-keypad Magic Keyboard.",
     whoItSuits: "Mac buyers watching the budget.",
     whyChoose: [
-      "Lower sample price.",
+      "Lower price.",
       "Ask us to confirm the MQ052 generation.",
       "No Touch ID.",
     ],
@@ -564,7 +564,7 @@ export const accessories: Accessory[] = [
     tagline: "Earlier generation Magic Mouse.",
     whoItSuits: "Budget buyers when stock exists - check condition.",
     whyChoose: [
-      "Lower sample price when stocked.",
+      "Lower price when stocked.",
       "Ask us to confirm generation and connector.",
       "Check battery and condition on the invoice.",
     ],
@@ -714,7 +714,7 @@ export const accessories: Accessory[] = [
     tagline: "Earlier generation Magic Trackpad.",
     whoItSuits: "Budget Trackpad buyers when stock exists.",
     whyChoose: [
-      "Lower sample price when stocked.",
+      "Lower price when stocked.",
       "Ask us to confirm generation and connector.",
       "Check condition on the invoice.",
     ],
@@ -761,7 +761,7 @@ export const accessories: Accessory[] = [
     tagline: "Earlier generation white Magic Trackpad.",
     whoItSuits: "Budget Trackpad buyers when stock exists.",
     whyChoose: [
-      "Lower sample price when stocked.",
+      "Lower price when stocked.",
       "Ask us to confirm generation and connector.",
       "Check condition on the invoice.",
     ],

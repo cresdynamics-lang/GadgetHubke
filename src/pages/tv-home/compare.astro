@@ -28,7 +28,7 @@ function honestDiff(list: typeof chosen): string {
   if (dolby.some(Boolean) && dolby.some((v) => !v)) bits.push("Dolby Vision is only on Apple TV models that list it.");
   const stereo = list.map((m) => m!.stereoPairCapable);
   if (stereo.some(Boolean) && stereo.some((v) => !v)) bits.push("Stereo pair only on listed HomePod models.");
-  return bits.slice(0, 3).join(" ") || "These models are close - check chip, connections and sample price.";
+  return bits.slice(0, 3).join(" ") || "These models are close - check  and price.";
 }
 
 const rows: { label: string; values: (string | number | boolean | null)[] }[] = [
@@ -40,7 +40,7 @@ const rows: { label: string; values: (string | number | boolean | null)[] }[] = 
   { label: "Intercom", values: chosen.map((m) => m!.intercom) },
   { label: "Storage / SKU", values: chosen.map((m) => m!.storageOptions.join(", ") || "-") },
   { label: "Speaker", values: chosen.map((m) => isSpeaker(m!)) },
-  { label: "From (KES sample)", values: chosen.map((m) => m!.basePriceKes) },
+  { label: "From (KES)", values: chosen.map((m) => m!.basePriceKes) },
 ];
 
 function cell(v: string | number | boolean | null): string {

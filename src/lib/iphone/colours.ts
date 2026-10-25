@@ -56,6 +56,7 @@ export const colourMetaByKey: Record<string, ColourMeta> = {
   lightgold: C("lightgold", "Light Gold", "#EEDFC2", true),
   cloudwhite: C("cloudwhite", "Cloud White", "#F4F4F2", true),
   glacier: C("glacier", "Glacier", "#AFC6E0", true),
+  burgundy: C("burgundy", "Burgundy", "#5E2230"),
 };
 
 export function colourLabel(key: string): string {

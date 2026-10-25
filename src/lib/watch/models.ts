@@ -441,7 +441,7 @@ export const watchModels: WatchModel[] = [
       tagline: `${gen} - also in stock.`,
       whoItSuits: "Value buyers who accept an older generation with condition notes.",
       whyChoose: [
-        "Lower sample price than current Series.",
+        "Lower price than current Series.",
         "Confirm battery health and screen on the invoice.",
         "Overview-only photos for Series 6 - 8.",
       ],
@@ -491,7 +491,7 @@ export const watchModels: WatchModel[] = [
       tagline: "Entry Watch - check condition.",
       whoItSuits: "Tightest budgets and first-time Watch buyers.",
       whyChoose: [
-        "Lowest sample prices in the shop.",
+        "Lowest prices in the shop.",
         "No Always-On on older SE models.",
         "Confirm battery health before collect.",
       ],
@@ -672,7 +672,7 @@ export const watchModels: WatchModel[] = [
     whyChoose: [
       "Special band included.",
       "Full Ultra 4 hardware.",
-      "Highest sample price in the Watch shop.",
+      "Highest price in the Watch shop.",
     ],
     isNew: true,
     specialBandIncluded: true,

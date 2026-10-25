@@ -175,8 +175,8 @@ export function tvHomeBuyingNotes(model: TvHomeModel): { title: string; body: st
       title: "HomePod vs HomePod mini",
       body:
         model.family === "HomePod"
-          ? "Full-size sound for larger rooms and music first. Higher sample price."
-          : "Compact for kitchen, bedroom or stereo pairs. Lower sample price.",
+          ? "Full-size sound for larger rooms and music first. Higher price."
+          : "Compact for kitchen, bedroom or stereo pairs. Lower price.",
     });
     notes.push({
       title: "Stereo pair",

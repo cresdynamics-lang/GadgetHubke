@@ -46,7 +46,7 @@ const rows: { group: string; label: string; values: (string | number | boolean |
   { group: "Battery", label: "Low Power hours", values: chosen.map((m) => m!.lowPowerHours) },
   { group: "Case and weight", label: "Case (mm)", values: chosen.map((m) => m!.defaultCaseMm) },
   { group: "Case and weight", label: "Weight (g)", values: chosen.map((m) => m!.weightG) },
-  { group: "Price", label: "From (KES sample)", values: chosen.map((m) => m!.basePriceKes) },
+  { group: "Price", label: "From (KES)", values: chosen.map((m) => m!.basePriceKes) },
 ];
 
 function cell(v: string | number | boolean | null): string {

@@ -285,7 +285,7 @@ const waPhone = iphoneConfig.whatsapp;
       .join("\n");
     if (wa instanceof HTMLAnchorElement) {
       wa.href = `https://wa.me/${waPhone}?text=${encodeURIComponent(
-        `Hi Gadget Hub, I'd like to order:\n${lines}\nTotal: ${formatKes(total)}\n(Sample prices)`,
+        `Hi Gadget Hub, I'd like to order:\n${lines}\nTotal: ${formatKes(total)}`,
       )}`;
     }
 

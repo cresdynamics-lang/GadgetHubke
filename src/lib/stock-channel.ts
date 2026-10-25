@@ -26,4 +26,4 @@ export const STOCK_CHANNEL_LABEL: Record<StockChannel, string> = {
 };
 
 export const STOCK_CHANNEL_HINT =
-  "New = sealed unit. EX-UK = ex-UK import. Sample prices - confirm on WhatsApp.";
+  "New = sealed unit. EX-UK = ex-UK import. Confirm stock on WhatsApp before you pay.";

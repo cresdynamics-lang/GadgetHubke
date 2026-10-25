@@ -13,9 +13,11 @@ import type { HeroScene } from "../../lib/hero";
 
 interface Props {
   category: string;
+  /** Page H1, shown as the small label above the slide title. Omit when the page has its own H1. */
+  heading?: string;
 }
 
-const { category: slug } = Astro.props;
+const { category: slug, heading } = Astro.props;
 
 validateHeroScenes();
 
@@ -179,8 +181,8 @@ function cutoutSrcset(src: string) {
 
     <div class="ch__ui">
       <div class="ch__copy">
-        <p class="ch__eyebrow">{cat.eyebrow}</p>
-        <h1 class="ch__title" data-ch-title>{poster.title}</h1>
+        {heading ? <h1 class="ch__eyebrow">{heading}</h1> : <p class="ch__eyebrow">{cat.eyebrow}</p>}
+        <p class="ch__title" data-ch-title>{poster.title}</p>
         <p class="ch__subtitle is-on" data-ch-subtitle>{poster.subtitle}</p>
         <p class="sr-only" data-ch-live aria-live="polite" aria-atomic="true"></p>
       </div>
@@ -401,6 +403,7 @@ function cutoutSrcset(src: string) {
 
   .ch__eyebrow {
     margin: 0 0 0.65rem;
+    font-weight: 600;
     font-size: 0.72rem;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -409,6 +412,7 @@ function cutoutSrcset(src: string) {
 
   .ch__title {
     margin: 0;
+    font-family: var(--font-display);
     font-size: 2.125rem;
     line-height: 1.02;
     letter-spacing: -0.035em;

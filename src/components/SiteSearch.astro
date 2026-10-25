@@ -829,7 +829,7 @@ const tvHomeAcc = Object.fromEntries(
             <span class="site-search__thumb"><img src="${hit.imageSrc}" alt="" width="56" height="56" loading="lazy" /></span>
             <span class="site-search__meta">
               <span class="site-search__name">${hit.name}</span>
-              <span class="site-search__sub">In stock (sample)</span>
+              <span class="site-search__sub">In stock</span>
             </span>
             <span class="site-search__price">From KES ${hit.priceKes.toLocaleString("en-KE")}</span>
           </a>
@@ -849,7 +849,7 @@ const tvHomeAcc = Object.fromEntries(
             .slice(0, 4)
             .map(
               (a) =>
-                `<li><span class="site-search__name">${a.name}</span> <span class="site-search__price">KES ${a.priceKes.toLocaleString("en-KE")} sample</span></li>`,
+                `<li><span class="site-search__name">${a.name}</span> <span class="site-search__price">KES ${a.priceKes.toLocaleString("en-KE")}</span></li>`,
             )
             .join("");
         } else {

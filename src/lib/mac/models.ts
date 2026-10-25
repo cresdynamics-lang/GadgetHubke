@@ -102,7 +102,7 @@ export const macModels: MacModel[] = [
     whyChoose: [
       "Still capable for browsing, docs, and streaming.",
       "Fanless and quiet.",
-      "Lowest sample price in the Air line - check battery health on older units.",
+      "Lowest price in the Air line - check battery health on older units.",
     ],
     basePriceKes: P["macbook-air-13-m1"],
     defaultColour: "space-gray",

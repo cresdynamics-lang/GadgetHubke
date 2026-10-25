@@ -51,7 +51,7 @@ const choose = [
   },
   {
     title: "Apple Watch SE",
-    body: "Essential features at the lowest current sample price.",
+    body: "Essential features at the lowest current price.",
     href: "/watch/shop?family=SE",
     price: lowestWatchPrice("SE"),
     model: se.find((m) => m.id === "watch-se3-44") || se[0],
@@ -71,7 +71,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(hubSeo.jsonLd)} />
   </Fragment>
-  <CategoryHero category="watch" />
+  <CategoryHero category="watch" heading="Apple Watch prices in Kenya" />
 
   <section class="container watch-choose">
     <h2>Choose your Watch</h2>
@@ -130,7 +130,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
 
   <section class="container watch-bands-studio" data-landing-bands>
     <h2>Band studio</h2>
-    <p>Pick a band - name and sample price. Images are gallery shots, not every colour combo.</p>
+    <p>Pick a band - name and price. Images are gallery shots, not every colour combo.</p>
     <div class="watch-bands-studio__row">
       {watchBands.slice(0, 8).map((b) => (
         <button type="button" data-land-band={b.id} data-name={b.name} data-price={b.priceKes} data-blurb={b.blurb}>

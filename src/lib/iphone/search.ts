@@ -2,7 +2,7 @@
  * Model-aware iPhone search: normalize, rank, iPhone 18+ alert path.
  */
 
-import { models, type IphoneModel } from "./models";
+import { models, getModel, type IphoneModel } from "./models";
 import { getImage, defaultColourForModel, isOverviewOnly } from "./images";
 import { accessoriesFor } from "./accessories";
 import { lipaMonthly } from "./pricing";
@@ -121,7 +121,7 @@ export function buildIphoneSearchIndex(): IphoneSearchHit[] {
   const byId = new Map<string, IphoneSearchHit>();
 
   for (const seo of listSeoModels()) {
-    const legacy = models.find((m) => m.id === seo.id);
+    const legacy = getModel(seo.id);
     const colour = legacy
       ? defaultColourForModel(legacy.id, legacy.defaultColour ?? undefined)
       : null;

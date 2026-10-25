@@ -7,12 +7,25 @@ import {
   type IphoneSeriesHub,
 } from "../../lib/iphone/seo";
 import { site } from "../../lib/site";
+import { livePricedCatalog, iphoneLiveId } from "../../lib/pricing/live";
+import { withLiveSeoPrices } from "../../lib/iphone/seo/live";
 
 interface Props {
   hub: IphoneSeriesHub;
 }
 
-const { hub } = Astro.props;
+const { hub: hubDefault } = Astro.props;
+// Live admin prices for every model in the series.
+const liveById = new Map((await livePricedCatalog()).map((p) => [p.id, p]));
+const liveModels = hubDefault.models
+  .map((m) => withLiveSeoPrices(m, liveById.get(iphoneLiveId(m.id))))
+  .sort((a, b) => a.fromKes - b.fromKes || a.name.localeCompare(b.name));
+const liveFrom = Math.min(...liveModels.map((m) => m.fromKes));
+const hub = {
+  ...hubDefault,
+  models: liveModels,
+  metaDescription: `Compare every ${hubDefault.name} model at Gadget Hub Nairobi. From KES ${liveFrom.toLocaleString("en-KE")}. Pay in full or Lipa Mdogo Mdogo.`,
+};
 const pageUrl = new URL(`/iphone/${hub.slug}`, site.url).href;
 const jsonLd = buildSeriesHubJsonLd({
   name: hub.name,

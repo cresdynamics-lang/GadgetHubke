@@ -1044,7 +1044,7 @@ export const ipadModels: IpadModel[] = [
     whyChoose: [
       "Familiar Home button.",
       "Apple Pencil (1st gen).",
-      "Lowest sample price in the range.",
+      "Lowest price in the range.",
     ],
     basePriceKes: P["ipad-8"],
     overviewOnly: true,

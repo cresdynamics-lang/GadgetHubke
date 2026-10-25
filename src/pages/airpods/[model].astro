@@ -101,7 +101,7 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
         </div>
         <div class="container apdp-hero__copy">
           <p class="apdp__pills"><span>{model.year}</span>{model.isNew ? <span>New</span> : null}</p>
-          <h1>{model.name}</h1>
+          <p class="apdp-hero__name">{model.name}</p>
           <p>{model.tagline}</p>
         </div>
       </section>
@@ -206,7 +206,7 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
           <p class="apdp__fine">{airpodsConfig.samplePriceDisclaimer}</p>
         </div>
 
-        <p class="apdp__stock"><span class="apdp__dot" /> In stock (sample) · Collect today in Nairobi</p>
+        <p class="apdp__stock"><span class="apdp__dot" /> In stock · Collect today in Nairobi</p>
 
         <div class="apdp__cta" data-pdp-cta>
           <button
@@ -519,6 +519,10 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
   .apdp-hero__frame {
     grid-area: 1 / 1; width: min(78vw, 40rem); object-fit: contain;
     mix-blend-mode: multiply; transition: opacity 80ms linear;
+  }
+  .apdp-hero__name {
+    font-family: var(--font-display); font-weight: var(--font-weight-display);
+    font-size: clamp(2.25rem, 6vw, 3.75rem); line-height: 1.02; letter-spacing: -0.035em;
   }
   .apdp-hero__copy {
     position: relative; z-index: 2; padding-block: 3rem 2rem; max-width: 36rem;

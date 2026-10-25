@@ -71,7 +71,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
       )
     }
   </Fragment>
-  <CategoryHero category="macbook" />
+  <CategoryHero category="macbook" heading="MacBook prices in Kenya" />
 
   <section class="mac-choose container">
     <h2>Choose your MacBook</h2>
@@ -114,7 +114,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
   <section class="mac-grid-wrap container" id="mac-shop-preview">
     <header class="mac-grid-wrap__head">
       <h2>Shop by generation</h2>
-      <p>All sample prices. {macConfig.samplePriceDisclaimer}</p>
+      <p>{macConfig.samplePriceDisclaimer}</p>
     </header>
     <div class="mac-chips" role="group" aria-label="Filter by chip">
       {(["M5", "M4", "M3", "M2", "M1"] as const).map((g) => (
@@ -161,7 +161,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
 
   <section class="mac-acc container">
     <h2>Accessories for Mac</h2>
-    <p class="mac-acc__lede">Sample prices. Fit rules filter on each product page.</p>
+    <p class="mac-acc__lede">Fit rules filter on each product page.</p>
     <ul class="mac-acc__grid">
       {
         accessories.map((a) => (
@@ -169,7 +169,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
             <a href={a.href}>
               <strong>{a.name}</strong>
               <span>{a.blurb}</span>
-              {a.priceKes > 0 ? <b>{formatKes(a.priceKes)} sample</b> : <b>See category</b>}
+              {a.priceKes > 0 ? <b>{formatKes(a.priceKes)}</b> : <b>See category</b>}
             </a>
           </li>
         ))

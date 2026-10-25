@@ -43,3 +43,23 @@ Checkout emails an invoice PDF (with a pay link) before M-Pesa, then a receipt P
 - Google Merchant Center XML: `https://gadgethubke.com/feeds/google-merchant.xml`
 - iPhone-only (legacy): `https://gadgethubke.com/feeds/google-merchant-iphone.xml`
 
+
+
+## VPS deploy (current: DigitalOcean, PM2)
+
+The live site runs on `deploy@143.198.169.74` from `/var/www/sites/gadgethubke.com`
+as PM2 app `gadgethub` (user `site_gadget`). Product pages, category pages, the
+sitemap and the Google/Meta feeds render on each request, so admin price edits
+show immediately.
+
+```
+npm run deploy
+```
+
+The script refuses to deploy uncommitted or unpushed code (the server always
+matches GitHub `main`), then builds, backs up `dist/server`, uploads with rsync,
+restarts PM2 and smoke-tests key pages and the Google feed. A failed smoke test
+prints the rollback command.
+
+Admin prices live on the server in `.data/gh:catalog-overlay:v1.json`; back it up
+before bulk edits. Never upload a local `.data/` folder over the server's.

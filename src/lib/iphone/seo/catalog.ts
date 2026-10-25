@@ -325,7 +325,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
       { question: "What is the iPhone 13 price in Kenya?", answer: "At Gadget Hub, iPhone 13 starts from KES 62,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
-    compareWith: [],
+    compareWith: ["iphone-13-vs-iphone-14", "iphone-13-vs-iphone-13-pro"],
     related: ["iphone-13-pro-max", "iphone-13-pro", "iphone-13-mini"],
     imageAlt: "iPhone 13 in {colour}, {angle} view",
   }),
@@ -357,7 +357,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
       { question: "What is the iPhone 13 Pro price in Kenya?", answer: "At Gadget Hub, iPhone 13 Pro starts from KES 65,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB, 1TB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
-    compareWith: [],
+    compareWith: ["iphone-13-pro-vs-iphone-13-pro-max", "iphone-13-pro-vs-iphone-14-pro"],
     related: ["iphone-13-pro-max", "iphone-13", "iphone-13-mini"],
     imageAlt: "iPhone 13 Pro in {colour}, {angle} view",
   }),
@@ -421,7 +421,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
       { question: "What is the iPhone 14 price in Kenya?", answer: "At Gadget Hub, iPhone 14 starts from KES 85,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
-    compareWith: [],
+    compareWith: ["iphone-14-vs-iphone-15", "iphone-14-vs-iphone-14-plus"],
     related: ["iphone-14-pro-max", "iphone-14-pro", "iphone-14-plus"],
     imageAlt: "iPhone 14 in {colour}, {angle} view",
   }),
@@ -517,7 +517,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
       { question: "What is the iPhone 14 Pro Max price in Kenya?", answer: "At Gadget Hub, iPhone 14 Pro Max starts from KES 120,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB, 1TB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
-    compareWith: [],
+    compareWith: ["iphone-14-pro-max-vs-iphone-15-pro-max"],
     related: ["iphone-14-pro", "iphone-14-plus", "iphone-14"],
     imageAlt: "iPhone 14 Pro Max in {colour}, {angle} view",
   }),
@@ -549,7 +549,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
       { question: "What is the iPhone 15 price in Kenya?", answer: "At Gadget Hub, iPhone 15 starts from KES 90,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
-    compareWith: [],
+    compareWith: ["iphone-15-vs-iphone-16"],
     related: ["iphone-15-pro-max", "iphone-15-pro", "iphone-15-plus"],
     imageAlt: "iPhone 15 in {colour}, {angle} view",
   }),
@@ -645,7 +645,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
       { question: "What is the iPhone 15 Pro Max price in Kenya?", answer: "At Gadget Hub, iPhone 15 Pro Max starts from KES 150,000 for sealed new stock. Storage options: 256GB, 512GB, 1TB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
-    compareWith: [],
+    compareWith: ["iphone-15-pro-max-vs-iphone-16-pro-max"],
     related: ["iphone-15-pro", "iphone-15-plus", "iphone-15"],
     imageAlt: "iPhone 15 Pro Max in {colour}, {angle} view",
   }),
@@ -709,7 +709,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
       { question: "What is the iPhone 16 price in Kenya?", answer: "At Gadget Hub, iPhone 16 starts from KES 93,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
-    compareWith: [],
+    compareWith: ["iphone-16-vs-iphone-17", "iphone-16-vs-iphone-16-pro", "iphone-16e-vs-iphone-16"],
     related: ["iphone-16-pro-max", "iphone-16-pro", "iphone-16-plus"],
     imageAlt: "iPhone 16 in {colour}, {angle} view",
   }),
@@ -773,7 +773,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
       { question: "What is the iPhone 16 Pro price in Kenya?", answer: "At Gadget Hub, iPhone 16 Pro starts from KES 111,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB, 1TB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
-    compareWith: [],
+    compareWith: ["iphone-16-pro-vs-iphone-17-pro", "iphone-16-pro-vs-iphone-16-pro-max"],
     related: ["iphone-16-pro-max", "iphone-16-plus", "iphone-16"],
     imageAlt: "iPhone 16 Pro in {colour}, {angle} view",
   }),
@@ -805,7 +805,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
       { question: "What is the iPhone 16 Pro Max price in Kenya?", answer: "At Gadget Hub, iPhone 16 Pro Max starts from KES 155,000 for sealed new stock. Storage options: 256GB, 512GB, 1TB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
-    compareWith: [],
+    compareWith: ["iphone-16-pro-max-vs-iphone-17-pro-max"],
     related: ["iphone-16-pro", "iphone-16-plus", "iphone-16"],
     imageAlt: "iPhone 16 Pro Max in {colour}, {angle} view",
   }),
@@ -901,7 +901,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
       { question: "How thin is the iPhone Air?", answer: "Ask us on WhatsApp for current stock and a quote on the iPhone Air." },
       { question: "What is the iPhone Air price in Kenya?", answer: "Sealed new iPhone Air starts from KES 125,000 at Gadget Hub. Options: 256GB, 512GB, 1TB." }
     ],
-    compareWith: ["iphone-air-vs-iphone-17"],
+    compareWith: ["iphone-air-vs-iphone-17", "iphone-air-vs-iphone-17-pro"],
     related: ["iphone-17", "iphone-17-pro"],
     imageAlt: "iPhone Air in {colour}, {angle} view",
   }),
@@ -965,7 +965,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
       { question: "iPhone 17 Pro or 17 Pro Max?", answer: "Ask us on WhatsApp for current stock and a quote on the iPhone 17 Pro Max." },
       { question: "What is the iPhone 17 Pro Max price in Kenya?", answer: "Sealed new iPhone 17 Pro Max starts from KES 170,000 at Gadget Hub. Options: 256GB, 512GB, 1TB, 2TB." }
     ],
-    compareWith: ["iphone-17-pro-vs-iphone-17-pro-max"],
+    compareWith: ["iphone-17-pro-vs-iphone-17-pro-max", "iphone-17-pro-max-vs-iphone-18-pro-max"],
     related: ["iphone-17-pro", "iphone-18-pro-max"],
     imageAlt: "iPhone 17 Pro Max in {colour}, {angle} view",
   }),
@@ -992,7 +992,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
       { label: "Weight", value: "211 g" },
       { label: "Storage", value: "128GB, 256GB, 512GB, 1TB, 2TB" }
     ],
-    colours: ["Glacier", "Black", "White", "Gold"],
+    colours: ["Burgundy", "Glacier", "Silver", "Black"],
     faq: [
       { question: "Is the iPhone 18 Pro available in Nairobi?", answer: "Ask us on WhatsApp for current stock and a quote on the iPhone 18 Pro." },
       { question: "What is the iPhone 18 Pro price in Kenya?", answer: "Sealed new iPhone 18 Pro starts from KES 185,000 (128GB) at Gadget Hub. Options: 128GB, 256GB, 512GB, 1TB, 2TB." }
@@ -1024,7 +1024,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
       { label: "Weight", value: "249 g" },
       { label: "Storage", value: "256GB, 512GB, 1TB, 2TB" }
     ],
-    colours: ["Glacier", "Black", "White", "Gold"],
+    colours: ["Burgundy", "Glacier", "Silver", "Black"],
     faq: [
       { question: "iPhone 18 Pro or 18 Pro Max?", answer: "Ask us on WhatsApp for current stock and a quote on the iPhone 18 Pro Max." },
       { question: "What is the iPhone 18 Pro Max price in Kenya?", answer: "Sealed new iPhone 18 Pro Max starts from KES 219,000 at Gadget Hub. Options: 256GB, 512GB, 1TB, 2TB." }

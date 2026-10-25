@@ -101,7 +101,7 @@ export function macCompareRows(cards: MacCompareCard[]): MacCompareRow[] {
     { group: "Size and weight", label: "Size", values: col("screen") },
     { group: "Size and weight", label: "Weight", values: col("weight") },
     { group: "Size and weight", label: "Thickness", values: col("thickness") },
-    { group: "Price", label: "From (sample)", values: col("priceLabel") },
+    { group: "Price", label: "From", values: col("priceLabel") },
   ];
 }
 
@@ -153,7 +153,7 @@ export function honestMacDifference(models: MacModel[]): string {
   }
   if (Math.max(...prices) - Math.min(...prices) >= 30000) {
     points.push(
-      `Sample price gap is about ${formatKes(Math.max(...prices) - Math.min(...prices))} between the cheapest and dearest here.`,
+      `Price gap is about ${formatKes(Math.max(...prices) - Math.min(...prices))} between the cheapest and dearest here.`,
     );
   }
 

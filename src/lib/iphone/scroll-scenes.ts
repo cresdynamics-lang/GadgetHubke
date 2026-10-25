@@ -11,12 +11,14 @@ export type ScrollScene = {
   eyebrow: string;
   title: string;
   body: string;
-  videoLarge: string;
+  /** Omitted for image-only scenes. */
+  videoLarge?: string;
   videoSmall?: string;
   start: string;
   end?: string;
+  alt?: string;
   /** dark scenes get light text */
-  tone: "dark" | "light";
+  tone: "dark" | "light" | "white";
 };
 
 const ROOT = "/Gadget_Hub_iPhone_Scroll_Scenes";
@@ -77,7 +79,86 @@ function pro18(modelId: "iphone-18-pro" | "iphone-18-pro-max"): ScrollScene[] {
   ];
 }
 
+/** Image-only scene from an Apple gallery image (no clip). */
+function still(
+  src: string,
+  alt: string,
+  copy: { eyebrow: string; title: string; body: string },
+  tone: ScrollScene["tone"] = "white",
+): ScrollScene {
+  return { key: src, tone, ...copy, start: src, alt };
+}
+
+function pro17(modelId: "iphone-17-pro" | "iphone-17-pro-max"): ScrollScene[] {
+  const m = getModel(modelId)!;
+  const dir = modelId === "iphone-17-pro" ? "/iPhone-17-Pro/iphone-17pro" : "/iPhone-17-Pro-Max/iphone-17promax";
+  const img = (n: number) => `${dir}-digitalmat-gallery-${n}-202509.webp`;
+  return [
+    still(img(1), `${m.name} in Silver, Cosmic Orange and Deep Blue`, {
+      eyebrow: m.name,
+      title: "Pro, in three bold finishes.",
+      body: "Cosmic Orange, Deep Blue and Silver, with 256GB to start.",
+    }),
+    still(img(2), `${m.name} held in hand`, {
+      eyebrow: "Display",
+      title: `${m.displayInches}-inch ProMotion display.`,
+      body: "Up to 120Hz for smooth scrolling, gaming and video.",
+    }),
+    still(img(4), `${m.name} camera close-up in Cosmic Orange`, {
+      eyebrow: "Camera",
+      title: "Three 48MP cameras.",
+      body: "Fusion, Ultra Wide and Telephoto — sharp photos and Pro video from every lens.",
+    }),
+    still(img(3), `${m.name} in Deep Blue`, {
+      eyebrow: "Performance",
+      title: `${m.chip}.`,
+      body: `Pro speed with up to ${m.batteryVideoHours} hours of video playback (Apple claim).`,
+    }),
+    still(img(5), `${m.name} in Silver, side profile`, {
+      eyebrow: "Design",
+      title: "Aluminium unibody.",
+      body: "Ceramic Shield 2 on the front and IP68 water resistance.",
+    }),
+    still(img(6), `${m.name} with MagSafe cases`, {
+      eyebrow: "Accessories",
+      title: "Made for MagSafe.",
+      body: "Snap on cases, chargers and wallets — all available at Gadget Hub.",
+    }),
+  ];
+}
+
+const duoImg = (n: number) => `/iPhone-Duo/iphone-duo-digitalmat-gallery-${n}-202609.webp`;
+
 const scenesById: Record<string, () => ScrollScene[]> = {
+  "iphone-17-pro": () => pro17("iphone-17-pro"),
+  "iphone-17-pro-max": () => pro17("iphone-17-pro-max"),
+  "iphone-duo": () => [
+    still(duoImg(1), "iPhone Duo folded and open", {
+      eyebrow: "iPhone Duo",
+      title: "An iPhone that unfolds.",
+      body: "Fold it to phone size, open it for a much bigger screen.",
+    }),
+    still(duoImg(2), "iPhone Duo open in two hands", {
+      eyebrow: "Open",
+      title: "A big screen for apps.",
+      body: "Open it up for reading, maps, video and two apps side by side.",
+    }),
+    still(duoImg(3), "iPhone Duo half-folded on a table playing a workout video", {
+      eyebrow: "Half-folded",
+      title: "It stands on its own.",
+      body: "Half-fold it on a table for video calls, workouts and Netflix.",
+    }),
+    still(duoImg(4), "iPhone Duo dual camera close-up", {
+      eyebrow: "Camera",
+      title: "Dual camera.",
+      body: "Ask us on WhatsApp for full camera details before you buy.",
+    }),
+    still(duoImg(6), "iPhone Duo in a case with a stand", {
+      eyebrow: "Accessories",
+      title: "Cases that stand it up.",
+      body: "Ask about cases and chargers when you order.",
+    }),
+  ],
   "iphone-18-pro": () => pro18("iphone-18-pro"),
   "iphone-18-pro-max": () => pro18("iphone-18-pro-max"),
   "iphone-17": () => [

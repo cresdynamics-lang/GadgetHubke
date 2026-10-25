@@ -108,7 +108,7 @@ const worksWithDevices = isPointer
     : product.group === "power"
       ? chargerAdvice("iphone-17-pro")
           .filter((x) => x.productId === product.id)
-          .map((x) => ({ id: "iphone-17-pro", label: "iPhone 17 Pro (sample)", fit: { status: "note" as const, reason: x.reason, checkFinalSpecs: true as const } }))
+          .map((x) => ({ id: "iphone-17-pro", label: "Example: iPhone 17 Pro", fit: { status: "note" as const, reason: x.reason, checkFinalSpecs: true as const } }))
       : [];
 const gestureTiles =
   isPointer &&
@@ -266,7 +266,7 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
         <small>or {formatKes(lipa.monthlyKes)} / mo</small>
       </p>
       <p class="xpdp__fine">{accessoriesConfig.samplePriceDisclaimer}</p>
-      <p class="xpdp__stock"><span class="dot" aria-hidden="true" /> In stock (sample) · Collect today in Nairobi</p>
+      <p class="xpdp__stock"><span class="dot" aria-hidden="true" /> In stock · Collect today in Nairobi</p>
       <div class="xpdp__actions" data-pdp-cta>
         <button
           type="button"

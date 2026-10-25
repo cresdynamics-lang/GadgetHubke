@@ -4,7 +4,7 @@
  * Base prices are lowest NEW sheet prices in KES (iphone-sheet.ts).
  */
 
-export type IphoneTier = "Standard" | "Plus" | "Pro" | "Pro Max" | "mini" | "e" | "Air";
+export type IphoneTier = "Standard" | "Plus" | "Pro" | "Pro Max" | "mini" | "e" | "Air" | "Duo";
 
 export type IphoneModel = {
   id: string;
@@ -43,6 +43,8 @@ export type IphoneModel = {
   appleIntelligence: boolean;
   wifi?: string;
   displayNote?: string;
+  /** Apple's spec sheet not on file: page hides spec tables and highlights. */
+  specsPending?: boolean;
 };
 
 /**
@@ -877,6 +879,14 @@ const base17 = {
 };
 
 export const newerModels: IphoneModel[] = [
+  {
+    ...base17,
+    id: "iphone-duo", name: "iPhone Duo", family: 18, tier: "Duo", year: 2026,
+    displayInches: 0, refreshHz: 0, chip: "", rearCameras: [], frontCamera: "",
+    batteryVideoHours: 0, weightGrams: 0, storage: ["256GB", "512GB", "1TB", "2TB"],
+    basePriceKes: 350000, port: "USB-C", tagline: "Apple's newest iPhone.", defaultColour: null,
+    specsPending: true,
+  },
   {
     ...base17,
     id: "iphone-18-pro-max", name: "iPhone 18 Pro Max", family: 18, tier: "Pro Max", year: 2026,

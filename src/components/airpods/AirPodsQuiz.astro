@@ -46,7 +46,7 @@ const payload = airpodsModels.map((m) => {
     </div>
   </div>
   <div class="aquiz__q" data-q="budget">
-    <p>Budget band (sample prices)?</p>
+    <p>What is your budget?</p>
     <div class="aquiz__opts">
       <button type="button" data-val="tight">Under 25k</button>
       <button type="button" data-val="mid">25k - 45k</button>
@@ -72,10 +72,10 @@ const payload = airpodsModels.map((m) => {
         return "Strong noise control for buses, matatus and flights.";
       if (a.use === "gym" && m.family === "Pro") return "Secure tips and sweat resistance where rated - check IP on the model page.";
       if (a.use === "budget" && (m.id === "airpods-4" || m.id === "airpods-5"))
-        return "Lower sample price in the open-fit line.";
+        return "Lower price in the open-fit line.";
       if (a.fit === "over-ear" && m.family === "Max") return "Max 2 for over-ear comfort and ANC.";
       if (a.fit === "open" && m.family === "AirPods") return "Open-fit AirPods without silicone tips.";
-      if (a.budget === "tight") return "Lower sample price - confirm condition on older gens.";
+      if (a.budget === "tight") return "Lower price - confirm condition on older gens.";
       return "Solid fit for how you answered.";
     }
 

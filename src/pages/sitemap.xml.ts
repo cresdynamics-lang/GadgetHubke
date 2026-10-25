@@ -32,10 +32,11 @@ const staticPaths = [
   "/warranty-repairs",
   "/shipping-delivery",
   "/corporate-bulk",
-  "/shop/watch",
-  "/shop/airpods",
   "/tv-home",
   "/tv-home/shop",
+  "/ipad/shop",
+  "/mac/shop",
+  "/airpods/shop",
   "/tv-home/compare",
 ] as const;
 

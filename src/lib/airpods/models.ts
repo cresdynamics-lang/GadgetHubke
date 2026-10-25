@@ -166,7 +166,7 @@ export const airpodsModels: AirpodsModel[] = [
     whoItSuits: "Buyers who want a Qi / MagSafe-style drop charge.",
     whyChoose: [
       "Same earbuds as AirPods 5 with a wireless case.",
-      "Sample price includes the wireless case step.",
+      "Price includes the wireless case step.",
       "Check charger compatibility before launch.",
     ],
     isNew: true,
@@ -281,7 +281,7 @@ export const airpodsModels: AirpodsModel[] = [
     tagline: "Open-fit AirPods. Simple price.",
     whoItSuits: "Budget everyday listening without ANC.",
     whyChoose: [
-      "H2 chip at a lower sample price than ANC models.",
+      "H2 chip at a lower price than ANC models.",
       "USB-C case.",
       "No Active Noise Cancellation on this SKU.",
     ],
@@ -396,7 +396,7 @@ export const airpodsModels: AirpodsModel[] = [
     tagline: "Also in stock - check condition.",
     whoItSuits: "Tight budgets who accept an older open-fit model.",
     whyChoose: [
-      "Lower sample price.",
+      "Lower price.",
       "Spatial Audio on H1.",
       "No store photo - case overview and stand-in note.",
     ],
@@ -435,7 +435,7 @@ export const airpodsModels: AirpodsModel[] = [
     tagline: "Entry AirPods - check condition.",
     whoItSuits: "Lowest budget first pair.",
     whyChoose: [
-      "Lowest sample price in the shop.",
+      "Lowest price in the shop.",
       "Lightning case (wireless optional historically).",
       "No store photo - case overview only.",
     ],
@@ -474,7 +474,7 @@ export const airpodsModels: AirpodsModel[] = [
     tagline: "Also in stock - Pro tips on a budget.",
     whoItSuits: "Buyers who want silicone tips and ANC at a lower price.",
     whyChoose: [
-      "ANC with tips at a sample price below Pro 2.",
+      "ANC with tips at a price below Pro 2.",
       "No store photo - case overview.",
       "Confirm battery health on the invoice.",
     ],
@@ -513,7 +513,7 @@ export const airpodsModels: AirpodsModel[] = [
     tagline: "Original Max - Lightning. Text condition.",
     whoItSuits: "Over-ear buyers watching the budget.",
     whyChoose: [
-      "Lower sample price than USB-C Max.",
+      "Lower price than USB-C Max.",
       "No store colour photos - text chips only.",
       "Confirm condition and battery.",
     ],

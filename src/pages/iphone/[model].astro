@@ -391,12 +391,11 @@ if (seo) {
           <p class="ipdp__monthly" data-monthly-display>
             or {formatKes(lipa.monthlyKes)} a month for {lipa.months} months after a {formatKes(lipa.depositKes)} deposit
           </p>
-          <p class="ipdp__sample">Sample price</p>
         </div>
 
         <p class="ipdp__stock">
           <span class="ipdp__stock-dot" aria-hidden="true"></span>
-          In stock (sample) · Collect today in Nairobi
+          In stock · Collect today in Nairobi
         </p>
 
         <div class="ipdp__cta" data-pdp-cta>
@@ -415,7 +414,7 @@ if (seo) {
         </div>
         <p class="ipdp__fine">{iphoneConfig.samplePriceDisclaimer}</p>
 
-        <ul class="ipdp__highlights">
+        {model.specsPending ? null : <ul class="ipdp__highlights">
           <li><strong>{model.displayInches}″</strong><span>Display</span></li>
           <li><strong>{model.chip}</strong><span>Chip</span></li>
           <li><strong>{model.batteryVideoHours} h</strong><span>Video playback</span></li>
@@ -425,7 +424,7 @@ if (seo) {
             </strong>
             <span>Rear cameras</span>
           </li>
-        </ul>
+        </ul>}
       </div>
     </div>
 
@@ -453,7 +452,7 @@ if (seo) {
               <li>
                 <h3>{a.name}</h3>
                 <p>{a.blurb}</p>
-                <p class="ipdp__fits-price">{formatKes(a.priceKes)} <span>sample</span></p>
+                <p class="ipdp__fits-price">{formatKes(a.priceKes)}</p>
               </li>
             ))}
           </ul>
@@ -492,7 +491,8 @@ if (seo) {
 
     <section class="container ipdp__specs">
       <h2>Full specifications</h2>
-      <p class="ipdp__footnote">{iphoneConfig.appleSpecsFootnote}</p>
+      <p class="ipdp__footnote">{model.specsPending ? `Apple's full specifications for ${model.name} are not on file yet. Ask us on WhatsApp for any detail before you buy.` : iphoneConfig.appleSpecsFootnote}</p>
+      {model.specsPending ? null : <>
       <details class="ipdp__acc" open>
         <summary>Display</summary>
         <table>
@@ -545,7 +545,8 @@ if (seo) {
           <tr><th>Crash Detection</th><td>{model.crashDetection ? "Yes" : "No"}</td></tr>
         </table>
       </details>
-      <details class="ipdp__acc">
+      </>}
+      <details class="ipdp__acc" open={model.specsPending ? true : undefined}>
         <summary>Storage and colours</summary>
         <table>
           <tr><th>Storage</th><td>{model.storage.join(", ")}</td></tr>

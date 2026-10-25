@@ -89,7 +89,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(hubSeo.jsonLd)} />
   </Fragment>
-  <CategoryHero category="tv-home" />
+  <CategoryHero category="tv-home" heading="Apple TV and HomePod prices in Kenya" />
 
   <section class="container tvhome-choose">
     <h2>Choose your corner of home</h2>
@@ -145,7 +145,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
             <div>
               <strong>{b.name}</strong>
               <p>{b.blurb}</p>
-              <em>{formatKes(b.kes)} sample</em>
+              <em>{formatKes(b.kes)}</em>
             </div>
             <button
               type="button"

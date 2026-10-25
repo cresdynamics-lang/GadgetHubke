@@ -51,7 +51,7 @@ const payload = watchModels.map((m) => {
     </div>
   </div>
   <div class="wquiz__q" data-q="budget">
-    <p>Budget band (sample prices)?</p>
+    <p>What is your budget?</p>
     <div class="wquiz__opts">
       <button type="button" data-val="tight">Under 35k</button>
       <button type="button" data-val="mid">35k - 70k</button>
@@ -80,7 +80,7 @@ const payload = watchModels.map((m) => {
       if (a.do === "look" && (m.family === "Hermès" || /titanium|ceramic/i.test(m.sub)))
         return "Premium finish - Hermès or titanium/ceramic.";
       if (a.who === "kids" && m.family === "SE") return "Approachable SE - check condition on older gens.";
-      if (a.budget === "tight") return "Lower sample price - confirm condition if older.";
+      if (a.budget === "tight") return "Lower price - confirm condition if older.";
       return "Solid fit for how you answered.";
     }
 

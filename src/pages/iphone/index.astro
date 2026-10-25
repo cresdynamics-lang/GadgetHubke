@@ -107,7 +107,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
         <span>iPhone</span>
       </nav>
       <header class="ishop__intro">
-        <h1 class="ishop__page-title">iPhone</h1>
+        <h1 class="ishop__page-title">iPhone prices in Kenya</h1>
       </header>
 
       <div class="ishop__chips" data-filter-family role="group" aria-label="Filter by generation">
@@ -363,7 +363,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
       ["Rear cameras", (c) => c.cameras],
       ["Port", (c) => c.port],
       ["MagSafe", (c) => c.magsafe],
-      ["From (sample)", (c) => `KES ${c.priceKes.toLocaleString("en-KE")}`],
+      ["From", (c) => `KES ${c.priceKes.toLocaleString("en-KE")}`],
     ];
     table.innerHTML = `
       <table>

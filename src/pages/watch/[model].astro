@@ -248,7 +248,7 @@ const scaleVbH = scaleMidY + Math.max(scaleWatchR, scaleCoinR) + 18;
           <p class="wpdp__fine">{watchConfig.samplePriceDisclaimer}</p>
         </div>
 
-        <p class="wpdp__stock"><span class="wpdp__dot" /> In stock (sample) · Collect today in Nairobi</p>
+        <p class="wpdp__stock"><span class="wpdp__dot" /> In stock · Collect today in Nairobi</p>
 
         <div class="wpdp__cta" data-pdp-cta>
           <button
@@ -417,7 +417,7 @@ const scaleVbH = scaleMidY + Math.max(scaleWatchR, scaleCoinR) + 18;
         <h2>Fits this watch</h2>
         <ul class="wpdp__fits">
           {bands.slice(0, 8).map((b) => (
-            <li><h3>{b.name}</h3><p>{b.blurb}</p><p>{formatKes(b.priceKes)} sample</p></li>
+            <li><h3>{b.name}</h3><p>{b.blurb}</p><p>{formatKes(b.priceKes)}</p></li>
           ))}
           {fits.map((a) => (
             <li><h3>{a.name}</h3><p>{a.blurb}</p><p>{a.priceKes > 0 ? `${formatKes(a.priceKes)} sample` : "See category"}</p><a href={a.href}>View</a></li>

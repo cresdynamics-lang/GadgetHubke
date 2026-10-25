@@ -268,7 +268,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
       "Ask us about the Kenya plug variant.",
     ],
     platform: "both",
-    notes: "Sample price. Dual-port power sharing - on request.",
+    notes: "Dual-port power sharing - on request.",
     imageProductKey: "power-adapter-35w-dual",
   }),
   pc({
@@ -360,7 +360,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
       "Pair with a high-rated USB-C or MagSafe 3 cable.",
     ],
     platform: "mac",
-    notes: "GEO_US photos. Sample price.",
+    notes: "GEO_US photos.",
     imageProductKey: "power-adapter-96w",
   }),
   pc({
@@ -417,7 +417,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
       "Ask us about stock.",
     ],
     platform: "both",
-    notes: "Single photo. Sample price.",
+    notes: "Single photo.",
     imageProductKey: "power-extension-cable",
   }),
   pc({
@@ -445,7 +445,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
       "Pair with a USB-C adapter (often 20W+) - check.",
     ],
     platform: "both",
-    notes: "No charge-time or percentage claims. Sample price.",
+    notes: "No charge-time or percentage claims.",
     imageProductKey: "magsafe-charger-1m",
   }),
   pc({
@@ -473,7 +473,7 @@ export const powerAndCaseProducts: (AccLike & AccessoryVariantFields)[] = [
       "Needs a USB-C power adapter.",
     ],
     platform: "both",
-    notes: "Sample price.",
+    notes: "MagSafe iPhones (iPhone 12 and later). Needs a USB-C power adapter.",
     imageProductKey: "magsafe-charger-2m",
   }),
   pc({
@@ -717,7 +717,7 @@ function casePc(
     whoItSuits: opts.whoItSuits,
     whyChoose: opts.whyChoose,
     platform: opts.platform || "both",
-    notes: "Made for the exact model in the title. Colour names from Apple file names. Sample price.",
+    notes: "Made for the exact model in the title. Colour names from Apple file names.",
     imageProductKey: id,
     variants: vars,
   });
@@ -788,7 +788,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "Silicone for iPhone 18 Pro Max only.",
     whoItSuits: "iPhone 18 Pro Max owners.",
-    whyChoose: ["Pro Max only.", "MagSafe compatible.", "Sample price."],
+    whyChoose: ["Pro Max only.", "MagSafe compatible."],
   }),
   casePc("case-iphone-17-clear", "iPhone 17 Clear Case with MagSafe", {
     subgroup: "iphone-case",
@@ -824,7 +824,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "Clear case for iPhone 17e only.",
     whoItSuits: "iPhone 17e owners.",
-    whyChoose: ["Exact 17e fit.", "MagSafe compatible.", "Sample price."],
+    whyChoose: ["Exact 17e fit.", "MagSafe compatible."],
   }),
   casePc("case-iphone-18-pro-clear", "iPhone 18 Pro Clear Case with MagSafe", {
     subgroup: "iphone-case",
@@ -842,7 +842,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "Clear case for iPhone 18 Pro Max only.",
     whoItSuits: "iPhone 18 Pro Max owners.",
-    whyChoose: ["Pro Max only.", "MagSafe compatible.", "Sample price."],
+    whyChoose: ["Pro Max only.", "MagSafe compatible."],
   }),
   casePc("case-iphone-18-pro-techwoven", "iPhone 18 Pro TechWoven Case with MagSafe", {
     subgroup: "iphone-case",
@@ -860,7 +860,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: true,
     tagline: "TechWoven for iPhone 18 Pro Max only.",
     whoItSuits: "iPhone 18 Pro Max woven-case buyers.",
-    whyChoose: ["Pro Max only.", "MagSafe compatible.", "Sample price."],
+    whyChoose: ["Pro Max only.", "MagSafe compatible."],
   }),
   casePc("case-iphone-air-bumper", "iPhone Air Bumper", {
     subgroup: "iphone-case",
@@ -869,7 +869,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: false,
     tagline: "Bumper for iPhone Air only.",
     whoItSuits: "iPhone Air owners who want edge protection.",
-    whyChoose: ["Air only.", "Ask us about MagSafe interaction.", "Sample price."],
+    whyChoose: ["Air only.", "Ask us about MagSafe interaction."],
   }),
   casePc("case-iphone-air-case", "iPhone Air Case with MagSafe", {
     subgroup: "iphone-case",
@@ -903,7 +903,6 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     whyChoose: [
       "Fit list .",
       "Ask us which iPhone sizes we stock.",
-      "Sample price.",
     ],
   }),
   casePc("case-iphone-duo-folio", "iPhone Duo Folio with Kickstand", {
@@ -913,7 +912,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: false,
     tagline: "Duo Folio with kickstand - confirm model fit.",
     whoItSuits: "Buyers who want a folio kickstand — ask us to confirm fit.",
-    whyChoose: ["Confirm fit with us.", "Kickstand design.", "Sample price."],
+    whyChoose: ["Confirm fit with us.", "Kickstand design."],
   }),
   casePc("strap-crossbody", "Crossbody Strap", {
     subgroup: "strap",
@@ -935,7 +934,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     magSafe: false,
     tagline: "Wrist strap — ask us which cases it pairs with.",
     whoItSuits: "Short strap preference - confirm case loops.",
-    whyChoose: ["Confirm compatibility with us.", "Colours from files.", "Sample price."],
+    whyChoose: ["Confirm compatibility with us.", "Colours from files."],
   }),
   casePc("folio-ipad-a16", "Smart Folio for iPad (A16)", {
     subgroup: "folio",
@@ -955,7 +954,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     platform: "ipad",
     tagline: "Smart Folio for iPad mini (A17 Pro) only.",
     whoItSuits: "iPad mini (A17 Pro) owners.",
-    whyChoose: ["mini only.", "Not other iPads.", "Sample price."],
+    whyChoose: ["mini only.", "Not other iPads."],
   }),
   casePc("folio-ipad-air-11-m4", "Smart Folio for iPad Air 11-inch (M4)", {
     subgroup: "folio",
@@ -965,7 +964,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     platform: "ipad",
     tagline: "Smart Folio for iPad Air 11-inch (M4) only.",
     whoItSuits: "iPad Air 11-inch (M4) owners.",
-    whyChoose: ["11-inch Air only - not 13-inch.", "Exact M4 Air fit.", "Sample price."],
+    whyChoose: ["11-inch Air only - not 13-inch.", "Exact M4 Air fit."],
   }),
   casePc("folio-ipad-air-13-m4", "Smart Folio for iPad Air 13-inch (M4)", {
     subgroup: "folio",
@@ -975,7 +974,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     platform: "ipad",
     tagline: "Smart Folio for iPad Air 13-inch (M4) only.",
     whoItSuits: "iPad Air 13-inch (M4) owners.",
-    whyChoose: ["13-inch Air only - not 11-inch.", "Exact fit.", "Sample price."],
+    whyChoose: ["13-inch Air only - not 11-inch.", "Exact fit."],
   }),
   casePc("folio-ipad-pro-11-m5", "Smart Folio for iPad Pro 11-inch (M5)", {
     subgroup: "folio",
@@ -985,7 +984,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     platform: "ipad",
     tagline: "Smart Folio for iPad Pro 11-inch (M5) only.",
     whoItSuits: "iPad Pro 11-inch (M5) owners.",
-    whyChoose: ["11-inch Pro only.", "Not 13-inch.", "Sample price."],
+    whyChoose: ["11-inch Pro only.", "Not 13-inch."],
   }),
   casePc("folio-ipad-pro-13-m5", "Smart Folio for iPad Pro 13-inch (M5)", {
     subgroup: "folio",
@@ -995,7 +994,7 @@ export const caseProductsList: (AccLike & AccessoryVariantFields)[] = [
     platform: "ipad",
     tagline: "Smart Folio for iPad Pro 13-inch (M5) only.",
     whoItSuits: "iPad Pro 13-inch (M5) owners.",
-    whyChoose: ["13-inch Pro only.", "Not 11-inch.", "Sample price."],
+    whyChoose: ["13-inch Pro only.", "Not 11-inch."],
   }),
 ];
 

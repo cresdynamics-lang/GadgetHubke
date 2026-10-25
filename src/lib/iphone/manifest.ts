@@ -745,11 +745,15 @@ const appleStoreManifest: Record<string, ModelImageEntry> = {
     overview: "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro/iphone-18-pro_black_view1.jpg",
     overviewOnly: false,
     colours: {
+      "burgundy": [1, 2, 3],
       "black": [1, 2, 3],
       "glacier": [1, 2, 3],
       "silver": [1, 2, 3],
     },
     files: {
+      "burgundy|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro/iphone-18-pro_burgundy_view1.jpg",
+      "burgundy|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro/iphone-18-pro_burgundy_view2.jpg",
+      "burgundy|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro/iphone-18-pro_burgundy_view3.jpg",
       "black|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro/iphone-18-pro_black_view1.jpg",
       "black|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro/iphone-18-pro_black_view2.jpg",
       "black|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro/iphone-18-pro_black_view3.jpg",
@@ -765,11 +769,15 @@ const appleStoreManifest: Record<string, ModelImageEntry> = {
     overview: "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro-max/iphone-18-pro-max_black_view1.jpg",
     overviewOnly: false,
     colours: {
+      "burgundy": [1, 2, 3],
       "black": [1, 2, 3],
       "glacier": [1, 2, 3],
       "silver": [1, 2, 3],
     },
     files: {
+      "burgundy|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro-max/iphone-18-pro-max_burgundy_view1.jpg",
+      "burgundy|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro-max/iphone-18-pro-max_burgundy_view2.jpg",
+      "burgundy|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro-max/iphone-18-pro-max_burgundy_view3.jpg",
       "black|1": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro-max/iphone-18-pro-max_black_view1.jpg",
       "black|2": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro-max/iphone-18-pro-max_black_view2.jpg",
       "black|3": "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro-max/iphone-18-pro-max_black_view3.jpg",
