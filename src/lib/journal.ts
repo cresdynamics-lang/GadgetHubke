@@ -5,6 +5,7 @@
 import { kvGetJson, kvSetJson } from "./admin/kv";
 import { livePricedCatalog, iphoneLiveId, type PricedProduct } from "./pricing/live";
 import { journalGuidePosts } from "./journal-guides";
+import { journalSearchGuidePosts } from "./journal-search-guides";
 
 export type JournalStatus = "published" | "scheduled" | "review" | "draft";
 
@@ -25,7 +26,10 @@ export type JournalPost = {
   views: number;
   coverAlt?: string;
   coverUrl?: string;
+  /** Paragraphs; one starting with "## " renders as a subheading. */
   paragraphs: string[];
+  /** Questions shown under the article and sent to Google as FAQ data. */
+  faq?: { q: string; a: string }[];
   needsReview?: boolean;
   updatedAt?: string;
 };
@@ -71,10 +75,10 @@ export const journalSeedPosts: JournalPost[] = [
   {
     id: "j-iphone-16-price-kenya",
     slug: "iphone-16-price-in-kenya",
-    title: "iPhone 16 price in Kenya (2026): Nairobi stock, storage, and how to buy",
+    title: "iPhone 16 Price in Kenya 2026: iPhone 16, 16 Plus, 16e, 16 Pro and 16 Pro Max Prices in Nairobi, New and Ex-UK",
     excerpt:
       "What Kenyans actually search: iPhone 16 price in Kenya, 128GB vs 256GB, Pro vs Pro Max — with Gadget Hub Nairobi prices and product links.",
-    seoTitle: "iPhone 16 Price in Kenya 2026 | 128GB, Pro, Pro Max | Gadget Hub Nairobi",
+    seoTitle: "iPhone 16 Price in Kenya 2026 | iPhone 16, 16 Plus, 16e, 16 Pro & 16 Pro Max Prices in Nairobi | New & Ex-UK | Gadget Hub",
     seoDescription:
       "iPhone 16 price in Kenya from {{price:iphone-16}} at Gadget Hub, Norwich House. Compare 16, 16e, Plus, Pro and Pro Max. Pay with M-Pesa STK or Lipa Mdogo Mdogo.",
     category: "Buying guides",
@@ -103,10 +107,10 @@ export const journalSeedPosts: JournalPost[] = [
   {
     id: "j-iphone-17-vs-16",
     slug: "iphone-17-vs-iphone-16-kenya",
-    title: "iPhone 17 vs iPhone 16 in Kenya: which one is worth buying now?",
+    title: "iPhone 17 vs iPhone 16 in Kenya 2026: Price Difference, Camera, Battery and Which iPhone to Buy in Nairobi",
     excerpt:
       "The comparison Kenyans search after every launch — 17 vs 16, 17 Pro vs 16 Pro, and whether to wait, with Nairobi prices.",
-    seoTitle: "iPhone 17 vs iPhone 16 in Kenya (2026) | Prices & Verdict | Gadget Hub",
+    seoTitle: "iPhone 17 vs iPhone 16 in Kenya 2026 | Price Difference, Camera, Battery & Which to Buy | 17 Pro vs 16 Pro | Gadget Hub Nairobi",
     seoDescription:
       "Compare iPhone 17 and iPhone 16 in Kenya. 16 from {{price:iphone-16}}, 17 from {{price:iphone-17}}. Pro and Pro Max prices, who should upgrade, buy in Nairobi at Gadget Hub.",
     category: "Buying guides",
@@ -132,10 +136,10 @@ export const journalSeedPosts: JournalPost[] = [
   {
     id: "j-cheapest-iphone-kenya",
     slug: "cheapest-iphone-in-kenya",
-    title: "Cheapest iPhone in Kenya right now: Nairobi prices from iPhone 11 up",
+    title: "Cheapest iPhone in Kenya 2026: Affordable iPhone Prices in Nairobi from iPhone 11, 12 and 13, New and Ex-UK",
     excerpt:
       "“Cheapest iPhone in Kenya”, “iPhone 11 price Nairobi”, “iPhone 13 128GB” — sealed stock from {{price:iphone-11}}, with links to buy.",
-    seoTitle: "Cheapest iPhone in Kenya 2026 | From {{price:iphone-11}} | Gadget Hub Nairobi",
+    seoTitle: "Cheapest iPhone in Kenya 2026 | Affordable iPhones from {{exuk:iphone-11}} | iPhone 11, 12, 13 Ex-UK & New Prices in Nairobi | Gadget Hub",
     seoDescription:
       "Cheapest new iPhone in Kenya: iPhone 11 from {{price:iphone-11}} at Gadget Hub Nairobi. Compare 12, 13, 14, 15 and 16e prices. M-Pesa and Lipa Mdogo Mdogo.",
     category: "Buying guides",
@@ -161,10 +165,10 @@ export const journalSeedPosts: JournalPost[] = [
   {
     id: "j-iphone-15-or-16",
     slug: "iphone-15-or-iphone-16",
-    title: "iPhone 15 vs iPhone 16 in Kenya: price, USB-C, and who should still buy 15",
+    title: "iPhone 15 vs iPhone 16 in Kenya 2026: Prices, Differences and Whether iPhone 15 Is Still Worth Buying in Nairobi",
     excerpt:
       "Still one of the most searched iPhone comparisons in Kenya — 15 vs 16, Plus vs Pro, with current Nairobi prices.",
-    seoTitle: "iPhone 15 vs iPhone 16 in Kenya 2026 | Prices | Gadget Hub Nairobi",
+    seoTitle: "iPhone 15 vs iPhone 16 in Kenya 2026 | Price, Differences & Is iPhone 15 Still Worth It | 15 Pro Max vs 16 Pro Max | Gadget Hub Nairobi",
     seoDescription:
       "iPhone 15 vs iPhone 16 in Kenya: 15 from {{price:iphone-15}}, 16 from {{price:iphone-16}}. Camera, battery, storage. Buy sealed in Nairobi at Gadget Hub, Norwich House.",
     category: "Buying guides",
@@ -190,7 +194,8 @@ export const journalSeedPosts: JournalPost[] = [
   {
     id: "j-macbook-air-or-pro",
     slug: "macbook-air-or-macbook-pro",
-    title: "MacBook Air or MacBook Pro: which one fits you?",
+    title: "MacBook Air or MacBook Pro in Kenya 2026: Which MacBook to Buy for Students, Work and Video Editing in Nairobi",
+    seoTitle: "MacBook Air vs MacBook Pro in Kenya 2026 | Which MacBook to Buy for Students, Work & Editing | Prices in Nairobi | Gadget Hub",
     excerpt: "A practical guide to choosing between Air and Pro for school, work, and creative use.",
     category: "Buying guides",
     tags: ["Mac", "MacBook"],
@@ -208,7 +213,8 @@ export const journalSeedPosts: JournalPost[] = [
   {
     id: "j-android-trade-in-ready",
     slug: "android-phone-ready-for-trade-in",
-    title: "How to get your Android phone ready for a trade-in",
+    title: "How to Get Your Android Phone Ready for Trade-In in Nairobi: Samsung Backup, Reset and Getting the Best Value for an iPhone",
+    seoTitle: "How to Prepare Your Android or Samsung Phone for Trade-In in Kenya | Back Up, Reset & Swap for an iPhone in Nairobi | Gadget Hub",
     excerpt: "Back up, remove accounts, and bring the right accessories so your quote goes smoothly.",
     category: "Trade-ins",
     tags: ["Trade-in", "Android"],
@@ -226,7 +232,8 @@ export const journalSeedPosts: JournalPost[] = [
   {
     id: "j-ipad-setup",
     slug: "setting-up-your-new-ipad",
-    title: "Setting up your new iPad in ten minutes",
+    title: "Setting Up Your New iPad in Ten Minutes: Apple ID, iCloud, Apple Pencil and Apps for Students and Work in Kenya",
+    seoTitle: "How to Set Up a New iPad in Kenya | Apple ID, iCloud, Apple Pencil & Best Apps for Students and Work | Gadget Hub Nairobi",
     excerpt: "A short checklist for first boot, Apple ID, and essential settings.",
     category: "How-to",
     tags: ["iPad", "How-to"],
@@ -244,7 +251,8 @@ export const journalSeedPosts: JournalPost[] = [
   {
     id: "j-lipa-guide",
     slug: "a-guide-to-lipa-mdogo-mdogo",
-    title: "A guide to Lipa Mdogo Mdogo",
+    title: "A Guide to Lipa Mdogo Mdogo: How to Buy an iPhone, MacBook or iPad on Instalments in Kenya",
+    seoTitle: "Lipa Mdogo Mdogo iPhone Kenya | Buy iPhone, MacBook & iPad on Instalments in Nairobi | Deposit & Monthly Plan | Gadget Hub",
     excerpt: "How our in-house installment plans work - deposit, schedule, and what to expect.",
     category: "Lipa Mdogo Mdogo",
     tags: ["Lipa", "Financing"],
@@ -263,7 +271,8 @@ export const journalSeedPosts: JournalPost[] = [
   {
     id: "j-airpods-tips",
     slug: "getting-the-most-from-airpods-pro",
-    title: "Getting the most from AirPods Pro",
+    title: "Getting the Most from AirPods Pro in Kenya: Noise Cancellation, Fit, Battery Tips and How to Spot Fake AirPods",
+    seoTitle: "AirPods Pro Tips Kenya | Noise Cancellation, Fit, Battery & How to Spot Original vs Fake AirPods in Nairobi | Gadget Hub",
     excerpt: "Fit, ANC, and pairing tips for day-one owners.",
     category: "How-to",
     tags: ["AirPods", "How-to"],
@@ -282,7 +291,8 @@ export const journalSeedPosts: JournalPost[] = [
   {
     id: "j-how-trade-in-works",
     slug: "how-trade-in-works",
-    title: "How trade-in works at GadgetHub",
+    title: "How iPhone Trade-In Works in Nairobi: Swap Your Old iPhone or Samsung for a New iPhone at Gadget Hub",
+    seoTitle: "iPhone Trade-In Nairobi | Swap Your Old iPhone or Samsung for a New iPhone 17 or 18 in Kenya | How It Works | Gadget Hub",
     excerpt: "Bring your iPhone or Samsung, get credit toward any new device in stock.",
     category: "Trade-ins",
     tags: ["Trade-In", "Guide"],
@@ -301,7 +311,8 @@ export const journalSeedPosts: JournalPost[] = [
   {
     id: "j-lipa-plain",
     slug: "lipa-mdogo-mdogo-plain-language",
-    title: "Lipa Mdogo Mdogo, in plain language",
+    title: "Lipa Mdogo Mdogo in Plain Language: iPhone on Credit in Kenya, Deposits, Monthly Payments and What Happens If You Miss One",
+    seoTitle: "iPhone on Credit in Kenya Explained | Lipa Mdogo Mdogo Deposit, Monthly Payments & Terms in Plain Language | Gadget Hub Nairobi",
     excerpt: "Pay in smaller amounts - plans are with us, not a third-party bank.",
     category: "Lipa Mdogo Mdogo",
     tags: ["Financing", "Lipa"],
@@ -320,9 +331,9 @@ export const journalSeedPosts: JournalPost[] = [
   {
     id: "j-why-new",
     slug: "new-and-ex-uk-apple-devices",
-    title: "New or Ex-UK: how Gadget Hub sells Apple devices",
+    title: "New or Ex-UK iPhone in Kenya: What Ex-UK Means, Price Difference and How Gadget Hub Sells Both in Nairobi",
     excerpt: "Apple Authorised Reseller in Nairobi: sealed new stock with a 1-year warranty, or Ex-UK (UK-used) to save — both with an invoice.",
-    seoTitle: "New vs Ex-UK iPhone & Apple Devices in Kenya | Gadget Hub",
+    seoTitle: "New vs Ex-UK iPhone in Kenya | What Ex-UK Means, Price Difference & Warranty | Ex-UK iPhone, MacBook & iPad Prices Nairobi | Gadget Hub",
     seoDescription:
       "Gadget Hub, an Apple Authorised Reseller in Nairobi, sells sealed new and Ex-UK (UK-used) Apple devices. Ex-UK iPhones from {{exuk:iphone-11}}. What each option means.",
     category: "Trust",
@@ -354,7 +365,7 @@ async function loadOverrides(): Promise<JournalPost[]> {
 /** Merge seeds with persisted overrides (override wins by id). */
 export async function listJournalPosts(): Promise<JournalPost[]> {
   const overrides = await loadOverrides();
-  const map = byIdMap([...journalSeedPosts, ...journalGuidePosts]);
+  const map = byIdMap([...journalSeedPosts, ...journalGuidePosts, ...journalSearchGuidePosts]);
   for (const o of overrides) map.set(o.id, o);
   return [...map.values()].sort((a, b) => {
     const ad = a.date || "0000";
@@ -405,6 +416,7 @@ export async function withLivePrices(posts: JournalPost[]): Promise<JournalPost[
     seoTitle: r(p.seoTitle),
     seoDescription: r(p.seoDescription),
     paragraphs: p.paragraphs.map((x) => r(x)!),
+    faq: p.faq?.map((f) => ({ q: r(f.q)!, a: r(f.a)! })),
   }));
 }
 

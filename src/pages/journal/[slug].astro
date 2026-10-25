@@ -3,6 +3,7 @@ export const prerender = false;
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { site } from "../../lib/site";
+import { livePricedCatalog } from "../../lib/pricing/live";
 import {
   getPublishedJournalPost,
   listPublishedJournalPosts,
@@ -24,6 +25,8 @@ const related = [
   ...all.filter((p) => p.slug !== post.slug && p.category !== post.category),
 ].slice(0, 3);
 const description = post.seoDescription || post.excerpt;
+const liveById = new Map((await livePricedCatalog()).map((p) => [p.id, p]));
+const fromKes = (id: string) => `KES ${(liveById.get(id)?.priceKes ?? 0).toLocaleString("en-KE")}`;
 const pageTitle = post.seoTitle || `${post.title} - GadgetHub Journal`;
 const canonical = new URL(`/journal/${post.slug}`, site.url).href;
 const jsonLd = {
@@ -46,6 +49,18 @@ const jsonLd = {
       articleSection: post.category,
       keywords: post.tags.join(", "),
     },
+    ...(post.faq?.length
+      ? [
+          {
+            "@type": "FAQPage",
+            mainEntity: post.faq.map((f) => ({
+              "@type": "Question",
+              name: f.q,
+              acceptedAnswer: { "@type": "Answer", text: f.a.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") },
+            })),
+          },
+        ]
+      : []),
     {
       "@type": "BreadcrumbList",
       itemListElement: [
@@ -79,23 +94,45 @@ const jsonLd = {
 
     <div class="post__body">
       {
-        post.paragraphs.map((paragraph) => (
-          <p>
-            {parseJournalParagraph(paragraph).map((part) =>
-              part.type === "link" ? <a href={part.href}>{part.label}</a> : part.value,
-            )}
-          </p>
-        ))
+        post.paragraphs.map((paragraph) =>
+          paragraph.startsWith("## ") ? (
+            <h2>{paragraph.slice(3)}</h2>
+          ) : (
+            <p>
+              {parseJournalParagraph(paragraph).map((part) =>
+                part.type === "link" ? <a href={part.href}>{part.label}</a> : part.value,
+              )}
+            </p>
+          ),
+        )
       }
     </div>
+
+    {
+      post.faq?.length ? (
+        <section class="post__faq" aria-labelledby="post-faq-title">
+          <h2 id="post-faq-title">Questions Kenyans ask</h2>
+          {post.faq.map((f) => (
+            <details>
+              <summary>{f.q}</summary>
+              <p>
+                {parseJournalParagraph(f.a).map((part) =>
+                  part.type === "link" ? <a href={part.href}>{part.label}</a> : part.value,
+                )}
+              </p>
+            </details>
+          ))}
+        </section>
+      ) : null
+    }
 
     <p class="post__shop">
       Ready to buy sealed in Nairobi?
       <a href="/iphone">Shop iPhones</a>
       ·
-      <a href="/iphone/iphone-16">iPhone 16 from KES 99,000</a>
+      <a href="/iphone/iphone-16">iPhone 16 from {fromKes("iphone-16")}</a>
       ·
-      <a href="/iphone/iphone-17">iPhone 17 from KES 124,000</a>
+      <a href="/iphone/iphone-17">iPhone 17 from {fromKes("iphone-17")}</a>
       ·
       <a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo</a>
     </p>
@@ -165,6 +202,41 @@ const jsonLd = {
     font-weight: var(--font-weight-medium);
     text-decoration: underline;
     text-underline-offset: 0.12em;
+  }
+
+  .post__body h2 {
+    margin: var(--space-4) 0 0;
+    font-size: var(--text-xl);
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+  }
+
+  .post__faq {
+    margin-top: var(--space-8);
+  }
+
+  .post__faq h2 {
+    font-size: var(--text-xl);
+    margin: 0 0 var(--space-3);
+  }
+
+  .post__faq details {
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-3) 0;
+  }
+
+  .post__faq summary {
+    cursor: pointer;
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .post__faq p {
+    margin: var(--space-2) 0 0;
+    line-height: var(--leading-normal);
+  }
+
+  .post__faq a {
+    text-decoration: underline;
   }
 
   .post__shop {

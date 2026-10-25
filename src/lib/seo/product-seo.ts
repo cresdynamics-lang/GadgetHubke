@@ -6,7 +6,6 @@
 import { site, policy } from "../site";
 import type { PricedProduct } from "../pricing/live";
 import { offerExtras, type ReviewSchema } from "./offer-schema";
-import { tidyTitle } from "./title";
 
 export type SeoFaqItem = { question: string; answer: string };
 
@@ -89,7 +88,8 @@ export function buildProductSeo(input: ProductSeoInput): ProductSeo {
   const options = input.optionsSummary ? ` ${input.optionsSummary}.` : "";
 
   const longTitle = `${name} Price in Kenya | Gadget Hub Nairobi`;
-  const title = tidyTitle(longTitle);
+  // Full title, never shortened: long titles carry more of what Kenyans search.
+  const title = longTitle;
   const description = clip(
     `Buy the ${name} in Nairobi from ${formatKes(fromKes)}.${options} Genuine sealed Apple, ${site.warranty.years}-year warranty. Pay by M-Pesa or Lipa Mdogo Mdogo.`,
     158,

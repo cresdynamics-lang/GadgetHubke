@@ -1,5 +1,4 @@
 ---
-import { tidyTitle } from "../lib/seo/title";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import FloatingActions from "../components/FloatingActions.astro";
@@ -66,7 +65,7 @@ const storeJsonLd = {
 
 // One address per page: never a trailing slash (matches the sitemap), never a query string.
 const canonical = new URL((canonicalPath || Astro.url.pathname).replace(/(.)\/+$/, "$1"), site.url).href;
-const pageTitle = tidyTitle(title);
+const pageTitle = title;
 const path = Astro.url.pathname.replace(/\/$/, "") || "/";
 const hideFloatWhatsApp = path === "/contact";
 ---

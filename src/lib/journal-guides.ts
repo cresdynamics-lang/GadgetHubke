@@ -19,10 +19,10 @@ export const journalGuidePosts: JournalPost[] = [
     ...base,
     id: "j-iphone-18-pro-price-kenya",
     slug: "iphone-18-pro-price-in-kenya",
-    title: "iPhone 18 Pro and 18 Pro Max price in Kenya: Nairobi prices, storage and what is new",
+    title: "iPhone 18 Price in Kenya 2026: iPhone 18 Pro and iPhone 18 Pro Max Prices in Nairobi, Storage, Colours and What Is New",
     excerpt:
       "iPhone 18 Pro from {{price:iphone-18-pro}} and 18 Pro Max from {{price:iphone-18-pro-max}} at Gadget Hub Nairobi — every storage size, how they compare with 17 Pro, and how to buy.",
-    seoTitle: "iPhone 18 Pro & 18 Pro Max Price in Kenya | Gadget Hub Nairobi",
+    seoTitle: "iPhone 18 Price in Kenya 2026 | iPhone 18 Pro & iPhone 18 Pro Max Price in Nairobi | 256GB, 512GB, 1TB, 2TB | Original | Gadget Hub",
     seoDescription:
       "iPhone 18 Pro price in Kenya from {{price:iphone-18-pro}}, iPhone 18 Pro Max from {{price:iphone-18-pro-max}}. Sealed, 1-year warranty. Buy in Nairobi with M-Pesa or Lipa Mdogo Mdogo.",
     tags: ["iPhone 18", "iPhone 18 Pro price in Kenya", "iPhone 18 Pro Max price in Kenya", "latest iPhone Kenya", "Nairobi"],
@@ -42,10 +42,10 @@ export const journalGuidePosts: JournalPost[] = [
     ...base,
     id: "j-iphone-17-pro-price-kenya",
     slug: "iphone-17-pro-and-pro-max-price-in-kenya",
-    title: "iPhone 17 Pro and 17 Pro Max price in Kenya: every storage size, colours and which to buy",
+    title: "iPhone 17 Pro and iPhone 17 Pro Max Price in Kenya 2026: Every Storage Size, Colours, New and Ex-UK Prices in Nairobi",
     excerpt:
       "iPhone 17 Pro from {{price:iphone-17-pro}} and 17 Pro Max from {{price:iphone-17-pro-max}} in Nairobi — 256GB to 2TB, Cosmic Orange, Deep Blue and Silver, and Pro vs Pro Max explained.",
-    seoTitle: "iPhone 17 Pro & 17 Pro Max Price in Kenya | Gadget Hub Nairobi",
+    seoTitle: "iPhone 17 Pro Max Price in Kenya 2026 | iPhone 17 Pro Price in Nairobi | 256GB, 512GB, 1TB, 2TB | New & Ex-UK | Gadget Hub",
     seoDescription:
       "iPhone 17 Pro price in Kenya from {{price:iphone-17-pro}}; 17 Pro Max from {{price:iphone-17-pro-max}}. 256GB, 512GB, 1TB, 2TB. Sealed, 1-year warranty, M-Pesa or Lipa Mdogo Mdogo.",
     tags: ["iPhone 17 Pro price in Kenya", "iPhone 17 Pro Max price in Kenya", "17 Pro Max Nairobi", "iPhone 17 Pro vs Pro Max"],
@@ -65,10 +65,10 @@ export const journalGuidePosts: JournalPost[] = [
     ...base,
     id: "j-latest-iphone-kenya",
     slug: "latest-iphone-in-kenya",
-    title: "Latest iPhones in Kenya (2026): every new model and its Nairobi price",
+    title: "Latest iPhone in Kenya 2026: Every New iPhone and Its Price in Nairobi, from iPhone 18 Pro Max to iPhone 17e",
     excerpt:
       "The newest iPhones you can buy sealed in Nairobi — iPhone 18 Pro, 17 Pro, 17, Air, 17e and Duo — with live prices and who each one suits.",
-    seoTitle: "Latest iPhone in Kenya 2026 | New iPhone Prices Nairobi | Gadget Hub",
+    seoTitle: "Latest iPhone in Kenya 2026 | New iPhone Prices in Nairobi | iPhone 18 Pro Max, 18 Pro, iPhone Air, 17, 17e | Gadget Hub",
     seoDescription:
       "Latest iPhones in Kenya and their prices: iPhone 18 Pro from {{price:iphone-18-pro}}, 17 Pro Max from {{price:iphone-17-pro-max}}, iPhone 17 from {{price:iphone-17}}, 17e from {{price:iphone-17e}}. Sealed, Nairobi.",
     tags: ["latest iPhone Kenya", "new iPhone price Kenya", "iPhone 18", "iPhone 17", "iPhone Air", "Nairobi"],
@@ -87,10 +87,10 @@ export const journalGuidePosts: JournalPost[] = [
     ...base,
     id: "j-macbook-price-kenya",
     slug: "macbook-price-in-kenya",
-    title: "MacBook price in Kenya (2026): MacBook Air and MacBook Pro prices in Nairobi",
+    title: "MacBook Price in Kenya 2026: MacBook Air and MacBook Pro Prices in Nairobi, M5, M4, M3, New and Ex-UK",
     excerpt:
       "MacBook Air from {{price:macbook-air-13-m1}} and MacBook Pro from {{price:macbook-pro-13-m1}} at Gadget Hub — M1 to M5, which to buy for school, office and creative work.",
-    seoTitle: "MacBook Price in Kenya 2026 | MacBook Air & Pro M5, M4 | Gadget Hub",
+    seoTitle: "MacBook Price in Kenya 2026 | MacBook Air M5, M4 & MacBook Pro Prices in Nairobi | New & Ex-UK MacBooks | Gadget Hub",
     seoDescription:
       "MacBook prices in Kenya: Air M5 from {{price:macbook-air-13-m5}}, Air M4 from {{price:macbook-air-13-m4}}, Pro 14 M5 from {{price:macbook-pro-14-m5}}. Sealed, 1-year warranty, Nairobi.",
     tags: ["MacBook price in Kenya", "MacBook Air price Kenya", "MacBook Pro price Kenya", "MacBook Nairobi", "M5 MacBook"],
@@ -109,10 +109,10 @@ export const journalGuidePosts: JournalPost[] = [
     ...base,
     id: "j-ipad-price-kenya",
     slug: "ipad-price-in-kenya",
-    title: "iPad price in Kenya (2026): iPad Pro, Air, mini and iPad prices in Nairobi",
+    title: "iPad Price in Kenya 2026: iPad Pro, iPad Air, iPad mini and iPad Prices in Nairobi, New and Ex-UK",
     excerpt:
       "iPad from {{price:ipad-a16}}, iPad mini from {{price:ipad-mini-a17-pro}}, iPad Air from {{price:ipad-air-11-m4}} and iPad Pro M5 from {{price:ipad-pro-11-m5}} — which iPad to buy and Wi-Fi vs 5G.",
-    seoTitle: "iPad Price in Kenya 2026 | iPad Pro M5, Air M4, mini | Gadget Hub",
+    seoTitle: "iPad Price in Kenya 2026 | iPad Pro M5, iPad Air M4, iPad mini & iPad A16 Prices in Nairobi | New & Ex-UK | Gadget Hub",
     seoDescription:
       "iPad prices in Kenya: iPad (A16) from {{price:ipad-a16}}, iPad Air M4 from {{price:ipad-air-11-m4}}, iPad Pro M5 from {{price:ipad-pro-11-m5}}. Sealed, 1-year warranty, Nairobi.",
     tags: ["iPad price in Kenya", "iPad Pro price Kenya", "iPad Air price Kenya", "iPad mini Kenya", "iPad Nairobi"],
@@ -131,10 +131,10 @@ export const journalGuidePosts: JournalPost[] = [
     ...base,
     id: "j-apple-watch-price-kenya",
     slug: "apple-watch-price-in-kenya",
-    title: "Apple Watch price in Kenya (2026): Series 12, Ultra and SE prices in Nairobi",
+    title: "Apple Watch Price in Kenya 2026: Series 12, Series 11, Ultra 4 and SE 3 Prices in Nairobi",
     excerpt:
       "Apple Watch (iWatch) from {{price:watch-se3-40}} — SE 3, Series 11, Series 12 from {{price:watch-s12-42}} and Ultra from {{price:watch-ultra-3}}, sizes, GPS vs Cellular, and which to buy.",
-    seoTitle: "Apple Watch Price in Kenya 2026 | Series 12, Ultra, SE | Gadget Hub",
+    seoTitle: "Apple Watch Price in Kenya 2026 | Apple Watch Series 12, Series 11, Ultra & SE Prices in Nairobi | Original | Gadget Hub",
     seoDescription:
       "Apple Watch (iWatch) prices in Kenya: SE 3 from {{price:watch-se3-40}}, Series 12 from {{price:watch-s12-42}}, Ultra 3 from {{price:watch-ultra-3}}. Sealed, 1-year warranty, Nairobi.",
     tags: ["Apple Watch price in Kenya", "iWatch price in Kenya", "Apple Watch Series 12 Kenya", "Apple Watch Ultra Kenya", "Nairobi"],
@@ -153,10 +153,10 @@ export const journalGuidePosts: JournalPost[] = [
     ...base,
     id: "j-airpods-price-kenya",
     slug: "airpods-price-in-kenya",
-    title: "AirPods price in Kenya (2026): original AirPods Pro 3, AirPods 4 and Max in Nairobi",
+    title: "AirPods Price in Kenya 2026: Original AirPods Pro 3, AirPods 4, AirPods 5 and AirPods Max Prices in Nairobi",
     excerpt:
       "Original AirPods from {{price:airpods-4}} — AirPods 4, AirPods Pro 3 from {{price:airpods-pro-3}}, Pro 2 and AirPods Max, plus how to avoid fake AirPods in Nairobi.",
-    seoTitle: "AirPods Price in Kenya 2026 | Original AirPods Pro 3, AirPods 4 | Gadget Hub",
+    seoTitle: "AirPods Price in Kenya 2026 | Original AirPods Pro 3, AirPods 4, AirPods 5 & AirPods Max Prices in Nairobi | Gadget Hub",
     seoDescription:
       "Original AirPods prices in Kenya: AirPods 4 from {{price:airpods-4}}, AirPods Pro 3 from {{price:airpods-pro-3}}, AirPods Max from {{price:airpods-max-usbc}}. Sealed, 1-year warranty, Nairobi.",
     tags: ["AirPods price in Kenya", "original AirPods Kenya", "AirPods Pro 3 price Kenya", "AirPods Nairobi", "fake AirPods"],
