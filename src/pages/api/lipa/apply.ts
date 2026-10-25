@@ -65,7 +65,7 @@ export const POST: APIRoute = async ({ request }) => {
       months: terms.months,
       notes: plan.notes,
     });
-    await trySendMail({ to: site.email, subject: shop.subject, html: shop.html, text: shop.text });
+    await trySendMail({ stream: "orders", to: site.email, subject: shop.subject, html: shop.html, text: shop.text });
 
     if (email.includes("@")) {
       const customer = lipaApplicationEmail({
@@ -78,6 +78,7 @@ export const POST: APIRoute = async ({ request }) => {
         depositPct: terms.depositPct,
       });
       await trySendMail({
+        stream: "orders",
         to: email,
         subject: customer.subject,
         html: customer.html,

@@ -1,9 +1,11 @@
 /**
- * Outgoing email. Resend (HTTPS API) when RESEND_API_KEY is set — the VPS host
+ * Outgoing email. Resend (HTTPS API) when a Resend key is set — the VPS host
  * blocks SMTP ports — otherwise SMTP via nodemailer.
+ * Each stream can use its own Resend key (RESEND_API_KEY_ORDERS / _ACCOUNTS);
+ * notifications and anything unlabelled use RESEND_API_KEY.
  */
 import nodemailer from "nodemailer";
-import { mailFrom, mailReplyTo, resendConfigured, smtpConfigured, smtpOptions } from "./config";
+import { mailFrom, mailReplyTo, resendKey, smtpConfigured, smtpOptions, type MailStream } from "./config";
 
 let transporter: nodemailer.Transporter | null = null;
 
@@ -23,11 +25,11 @@ export type MailAttachment = {
   contentType?: string;
 };
 
-async function sendViaResend(input: Parameters<typeof sendMail>[0]) {
+async function sendViaResend(input: Parameters<typeof sendMail>[0], key: string) {
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+      Authorization: `Bearer ${key}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -54,8 +56,10 @@ export async function sendMail(input: {
   text: string;
   html: string;
   attachments?: MailAttachment[];
+  stream?: MailStream;
 }) {
-  if (resendConfigured()) return sendViaResend(input);
+  const key = resendKey(input.stream);
+  if (key) return sendViaResend(input, key);
   const info = await getTransport().sendMail({
     from: mailFrom(),
     replyTo: mailReplyTo(),
@@ -71,7 +75,7 @@ export async function sendMail(input: {
 export async function trySendMail(
   input: Parameters<typeof sendMail>[0],
 ): Promise<{ ok: true } | { ok: false; error: string }> {
-  if (!resendConfigured() && !smtpConfigured()) return { ok: false, error: "Email is not configured." };
+  if (!resendKey(input.stream) && !smtpConfigured()) return { ok: false, error: "Email is not configured." };
   try {
     await sendMail(input);
     return { ok: true };

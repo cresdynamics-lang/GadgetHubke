@@ -89,7 +89,7 @@ export async function registerCustomer(input: {
   all.unshift(record);
   await saveAll(all);
   const welcome = welcomeEmail(record.name);
-  void trySendMail({ to: record.email, ...welcome });
+  void trySendMail({ stream: "accounts", to: record.email, ...welcome });
   return publicCustomer(record);
 }
 
@@ -118,7 +118,7 @@ export async function requestPasswordReset(emailRaw: string) {
   const url = new URL("/account/reset", site.url);
   url.searchParams.set("token", token);
   const msg = passwordResetEmail(all[idx].name, url.href);
-  await trySendMail({ to: email, ...msg });
+  await trySendMail({ stream: "accounts", to: email, ...msg });
   return { ok: true as const };
 }
 

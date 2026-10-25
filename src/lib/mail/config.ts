@@ -25,8 +25,17 @@ function hydrateFromDotEnv() {
 
 hydrateFromDotEnv();
 
-export function resendConfigured() {
-  return Boolean(process.env.RESEND_API_KEY);
+export type MailStream = "notifications" | "orders" | "accounts";
+
+/** Resend key for a stream; orders and accounts fall back to the shared key. */
+export function resendKey(stream: MailStream = "notifications"): string {
+  const own =
+    stream === "orders"
+      ? process.env.RESEND_API_KEY_ORDERS
+      : stream === "accounts"
+        ? process.env.RESEND_API_KEY_ACCOUNTS
+        : undefined;
+  return own || process.env.RESEND_API_KEY || "";
 }
 
 export function smtpConfigured() {

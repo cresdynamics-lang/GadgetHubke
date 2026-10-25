@@ -8,6 +8,7 @@ export async function sendInvoiceForOrder(order: CheckoutOrder) {
   const pdf = Buffer.from(await buildOrderPdf(order, "invoice"));
   const msg = invoiceEmail(order);
   const customer = await trySendMail({
+    stream: "orders",
     to: order.customer.email,
     subject: msg.subject,
     html: msg.html,
@@ -16,6 +17,7 @@ export async function sendInvoiceForOrder(order: CheckoutOrder) {
   });
   const shop = orderNoticeToShop(order, "invoice");
   await trySendMail({
+    stream: "orders",
     to: site.email,
     subject: shop.subject,
     html: shop.html,
@@ -28,6 +30,7 @@ export async function sendReceiptForOrder(order: CheckoutOrder) {
   const pdf = Buffer.from(await buildOrderPdf(order, "receipt"));
   const msg = receiptEmail(order);
   const customer = await trySendMail({
+    stream: "orders",
     to: order.customer.email,
     subject: msg.subject,
     html: msg.html,
@@ -36,6 +39,7 @@ export async function sendReceiptForOrder(order: CheckoutOrder) {
   });
   const shop = orderNoticeToShop(order, "receipt");
   await trySendMail({
+    stream: "orders",
     to: site.email,
     subject: shop.subject,
     html: shop.html,
