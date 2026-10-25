@@ -27,7 +27,7 @@ export type CatalogRow = {
   title: string;
   description: string;
   availability: "in_stock" | "out_of_stock" | "preorder";
-  condition: "new";
+  condition: "new" | "used";
   price: string;
   link: string;
   image_link: string;
@@ -68,7 +68,8 @@ function pushRow(
   rows.push({
     ...row,
     brand: "Apple",
-    condition: "new",
+    // Ex-UK (UK-used) iPhone rows carry ids ending -EXUK.
+    condition: /-EXUK$/i.test(row.id) ? "used" : "new",
     availability: row.availability ?? "in_stock",
   });
 }

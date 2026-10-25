@@ -237,6 +237,18 @@ export function variantPriceMap(p: PricedProduct | undefined): Record<string, nu
   return out;
 }
 
+/** key → Ex-UK price (only options that have one). */
+export function variantExUkMap(p: PricedProduct | undefined): Record<string, number> {
+  const out: Record<string, number> = {};
+  for (const v of p?.variants ?? []) if (typeof v.exUkKes === "number" && v.exUkKes > 0) out[v.key] = v.exUkKes;
+  return out;
+}
+
+/** True when the product sells Ex-UK on at least one option. */
+export function hasExUk(p: PricedProduct | undefined): boolean {
+  return Object.keys(variantExUkMap(p)).length > 0 || (typeof p?.exUkKes === "number" && p.exUkKes > 0);
+}
+
 /** The admin/live id an iPhone SEO page prices against. */
 export function iphoneLiveId(seoId: string): string {
   return seoIdToShopProductId[seoId] ?? seoId;

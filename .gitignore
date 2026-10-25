@@ -47,3 +47,8 @@ public/images/iPhone 17 Pro and iPhone 17 Pro Max - Apple (KE)_files/
 /public/images/highlights_*.jpg
 /public/images/promo_*.jpg
 /public/images/iphone_*.jpg
+
+# Local tooling output (not part of the site)
+scripts/out/
+scripts/gh-pack-manifest.json
+scripts/preview-docs.mjs

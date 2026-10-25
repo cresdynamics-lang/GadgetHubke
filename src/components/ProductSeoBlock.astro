@@ -23,13 +23,14 @@ const { seo, links = [] } = Astro.props;
     <table class="pseo__table">
       <caption>Prices updated {seo.updatedLabel}. Shop prices include VAT where it applies.</caption>
       <thead>
-        <tr><th scope="col">Configuration</th><th scope="col">Price (KES)</th><th scope="col">Availability</th></tr>
+        <tr><th scope="col">Configuration</th><th scope="col">New (KES)</th>{seo.hasExUk ? <th scope="col">Ex-UK (KES)</th> : null}<th scope="col">Availability</th></tr>
       </thead>
       <tbody>
         {seo.rows.map((r) => (
           <tr>
             <th scope="row">{r.label}</th>
             <td>{formatKes(r.priceKes)}</td>
+            {seo.hasExUk ? <td>{r.exUkKes ? formatKes(r.exUkKes) : "—"}</td> : null}
             <td>{r.inStock ? "In stock" : "Ask on WhatsApp"}</td>
           </tr>
         ))}
@@ -39,7 +40,7 @@ const { seo, links = [] } = Astro.props;
 
   <h3>Buying in Nairobi</h3>
   <ul class="pseo__list">
-    <li>Genuine, sealed Apple stock with a 1-year warranty and a Gadget Hub invoice.</li>
+    <li>Apple Authorised Reseller: genuine Apple stock with a Gadget Hub invoice{seo.hasExUk ? " — sealed new (1-year warranty) or Ex-UK" : ", sealed with a 1-year warranty"}.</li>
     <li>Pay by M-Pesa at checkout, or spread the cost with <a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo</a>.</li>
     <li>Collect at Norwich House, Suite 15, 4th Floor, Nairobi CBD, or get <a href="/shipping-delivery">delivery</a>.</li>
     <li>Have an old device? <a href="/trade-in">Trade it in</a> for credit toward this one.</li>
@@ -77,7 +78,7 @@ const { seo, links = [] } = Astro.props;
   .pseo__table caption { caption-side: bottom; text-align: left; color: #6e6e73; font-size: 0.8rem; padding-top: 0.5rem; }
   .pseo__table th, .pseo__table td { text-align: left; padding: 0.6rem 0.5rem; border-bottom: 1px solid #e5e5ea; }
   .pseo__table thead th { color: #6e6e73; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; }
-  .pseo__table td:nth-child(2) { font-weight: 600; white-space: nowrap; }
+  .pseo__table td:nth-child(2), .pseo__table td:nth-child(3) { font-weight: 600; white-space: nowrap; }
   .pseo__list { padding-left: 1.1rem; line-height: 1.7; color: #3a3a3c; }
   .pseo__faq details { border-bottom: 1px solid #e5e5ea; padding: 0.75rem 0; }
   .pseo__faq summary { cursor: pointer; font-weight: 600; }

@@ -33,6 +33,8 @@ import {
   fits,
 } from "../../lib/ipad";
 import { whatsappUrl } from "../../lib/site";
+import { variantExUkMap } from "../../lib/pricing/live";
+import StockChannelToggle from "../../components/StockChannelToggle.astro";
 import { livePricedProduct, variantPriceMap } from "../../lib/pricing/live";
 import { buildProductSeo } from "../../lib/seo/product-seo";
 import ProductSeoBlock from "../../components/ProductSeoBlock.astro";
@@ -64,7 +66,9 @@ const pageSeo = liveProduct
   : undefined;
 const price = ipadConfigurePrice(model, model.storageOptions[0]);
 // Live admin prices per storage + connectivity ("256gb", "256gb-cell").
-const exactPrices = variantPriceMap(await livePricedProduct(model.id));
+const liveIpad = await livePricedProduct(model.id);
+const exactPrices = variantPriceMap(liveIpad);
+const exactExUk = variantExUkMap(liveIpad);
 const hasExact = Object.keys(exactPrices).length > 0;
 const exactKey = (storage: string, cellular: boolean) =>
   `${storage.replace(/\s+/g, "").toLowerCase()}${cellular ? "-cell" : ""}`;
@@ -250,6 +254,7 @@ const wa = whatsappUrl(
             ) : null
           }
 
+          <StockChannelToggle show={Object.keys(exactExUk).length > 0} />
           <p class="ipdp__price">
             <span data-ipad-price>{formatKes(price.kes)}</span>
           </p>
@@ -509,6 +514,7 @@ const wa = whatsappUrl(
   cellStep: ipadConfig.cellularStepKes,
   nanoStep: ipadConfig.nanoTextureStepKes,
   exactPrices,
+  exactExUk,
   depositPct: ipadConfig.lipa.depositDefaultPct,
   months: ipadConfig.lipa.monthsDefault,
   waBase: `https://wa.me/${ipadConfig.whatsapp}?text=`,
@@ -519,7 +525,7 @@ const wa = whatsappUrl(
   nanoAllowed: Boolean(model.display.nanoTextureOptional),
 }}>
   const viewKey = `gh-pdp-ipad:${modelName}`;
-  const state = { storage: 0, cellular: 0, nano: false, colour: initialColour, kes: base, tabIndex: 0, addons: 0 };
+  const state = { storage: 0, cellular: 0, nano: false, colour: initialColour, kes: base, tabIndex: 0, addons: 0, channel: "new" };
   const priceEl = document.querySelector("[data-ipad-price]");
   const lipaEl = document.querySelector("[data-ipad-lipa]");
   const viewerImg = document.querySelector("[data-viewer-img]");
@@ -620,19 +626,26 @@ const wa = whatsappUrl(
     bag?.setAttribute("data-extras", names.filter(Boolean).join(", "));
   }
 
+  document.addEventListener("gh:channel", (e) => {
+    state.channel = e.detail === "ex-uk" ? "ex-uk" : "new";
+    refresh();
+  });
+
   function refresh() {
     const storBtn = document.querySelector("[data-ipad-storage] .is-active");
     const storLabel = storBtn?.getAttribute("data-storage") || "";
-    const exactKes = exactPrices[`${storLabel.replace(/\s+/g, "").toLowerCase()}${state.cellular ? "-cell" : ""}`];
+    const optionKey = `${storLabel.replace(/\s+/g, "").toLowerCase()}${state.cellular ? "-cell" : ""}`;
+    const exactKes = (state.channel === "ex-uk" ? exactExUk[optionKey] : undefined) ?? exactPrices[optionKey];
     let kes = (exactKes ?? base + state.storage * storStep + state.cellular * cellStep) + state.addons;
     if (state.nano && nanoAllowed && /1 TB|2 TB/i.test(storLabel)) kes += nanoStep;
     state.kes = kes;
-    if (priceEl) priceEl.textContent = `KES ${kes.toLocaleString("en-KE")}`;
+    if (priceEl) priceEl.textContent = `${state.channel === "ex-uk" ? "Ex-UK · " : ""}KES ${kes.toLocaleString("en-KE")}`;
     const deposit = Math.round((kes * depositPct) / 100);
     const monthly = Math.round((kes - deposit) / months);
     if (lipaEl) lipaEl.textContent = `or KES ${monthly.toLocaleString("en-KE")} a month for ${months} months after a ${depositPct}% deposit`;
     if (bag instanceof HTMLElement) {
       bag.setAttribute("data-kes", String(kes));
+      bag.setAttribute("data-channel", state.channel === "ex-uk" ? "Ex-UK" : "New");
       if (storBtn) bag.setAttribute("data-storage", storLabel);
       bag.setAttribute("data-connectivity", state.cellular ? "Wi-Fi + Cellular" : "Wi-Fi");
     }
@@ -703,6 +716,7 @@ const wa = whatsappUrl(
       connectivity: bag.getAttribute("data-connectivity"),
       extras: bag.getAttribute("data-extras"),
       kes: Number(bag.getAttribute("data-kes") || 0),
+      channel: bag.getAttribute("data-channel") || "New",
       image: bag.getAttribute("data-image"),
       href: location.pathname,
       qty: 1,

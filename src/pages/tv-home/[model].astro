@@ -28,6 +28,8 @@ import {
   isSpeaker,
 } from "../../lib/tv-home";
 import { storeAngleTabs } from "../../lib/store-angles";
+import { variantExUkMap } from "../../lib/pricing/live";
+import StockChannelToggle from "../../components/StockChannelToggle.astro";
 import { livePricedProduct, variantPriceMap } from "../../lib/pricing/live";
 import { buildProductSeo } from "../../lib/seo/product-seo";
 import ProductSeoBlock from "../../components/ProductSeoBlock.astro";
@@ -39,6 +41,7 @@ if (!tvDefault) return Astro.redirect("/tv-home");
 // Live admin prices ("64gb-wifi", "128gb-ethernet", "32gb", or a single price).
 const live = await livePricedProduct(tvDefault.id);
 const exact = variantPriceMap(live);
+const exactExUk = variantExUkMap(live);
 const liveBase = exact["64gb-wifi"] ?? live?.priceKes;
 const model = liveBase != null ? { ...tvDefault, basePriceKes: liveBase } : tvDefault;
 
@@ -196,6 +199,7 @@ const showPair = model.stereoPairCapable;
         ) : null}
 
         <div class="thpdp__price">
+          <StockChannelToggle show={Object.keys(exactExUk).length > 0} />
           <p><span data-price>{formatKes(price.kes)}</span></p>
           <p data-lipa>or {formatKes(lipa.monthlyKes)} / mo</p>
           <p class="thpdp__fine">{tvHomeConfig.samplePriceDisclaimer}</p>
@@ -332,6 +336,7 @@ const showPair = model.stereoPairCapable;
 <script define:vars={{
   base: model.basePriceKes,
   ethernetStep,
+  exactExUk,
   depositPct: tvHomeConfig.lipa.depositDefaultPct,
   months: tvHomeConfig.lipa.monthsDefault,
   waBase: `https://wa.me/${tvHomeConfig.whatsapp}?text=`,
@@ -339,23 +344,34 @@ const showPair = model.stereoPairCapable;
   stereoCapable: model.stereoPairCapable,
 }}>
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const state = { ethernet: 0, addonsKes: 0, mult: 1, storage: "", pair: "", colour: "", extras: "" };
+  const state = { ethernet: 0, addonsKes: 0, mult: 1, storage: "", pair: "", colour: "", extras: "", channel: "new" };
   const priceEl = document.querySelector("[data-price]");
   const lipaEl = document.querySelector("[data-lipa]");
   const bag = document.querySelector("[data-tvhome-bag]");
   const wa = document.querySelector("[data-wa]");
   const viewerImg = document.querySelector("[data-viewer-img]");
 
+  document.addEventListener("gh:channel", (e) => {
+    state.channel = e.detail === "ex-uk" ? "ex-uk" : "new";
+    refresh();
+  });
   function total() {
+    if (state.channel === "ex-uk") {
+      const ex = state.ethernet
+        ? exactExUk["128gb-ethernet"]
+        : exactExUk["64gb-wifi"] ?? Object.values(exactExUk)[0];
+      if (ex) return ex * state.mult + state.addonsKes;
+    }
     return (base + state.ethernet) * state.mult + state.addonsKes;
   }
   function refresh() {
     const kes = total();
     const monthly = Math.round((kes * (1 - depositPct / 100)) / months);
-    if (priceEl) priceEl.textContent = `KES ${kes.toLocaleString("en-KE")}`;
+    if (priceEl) priceEl.textContent = `${state.channel === "ex-uk" ? "Ex-UK · " : ""}KES ${kes.toLocaleString("en-KE")}`;
     if (lipaEl) lipaEl.textContent = `or KES ${monthly.toLocaleString("en-KE")} / mo`;
     if (bag instanceof HTMLElement) {
       bag.setAttribute("data-kes", String(kes));
+      bag.setAttribute("data-channel", state.channel === "ex-uk" ? "Ex-UK" : "New");
       bag.setAttribute("data-colour", state.colour || bag.getAttribute("data-colour") || "");
       bag.setAttribute("data-storage", state.storage || bag.getAttribute("data-storage") || "");
       bag.setAttribute("data-pair", state.pair || "");
@@ -445,6 +461,7 @@ const showPair = model.stereoPairCapable;
       pair: bag.getAttribute("data-pair") || "",
       extras: bag.getAttribute("data-extras") || "",
       kes: Number(bag.getAttribute("data-kes") || 0),
+      channel: bag.getAttribute("data-channel") || "New",
       image: bag.getAttribute("data-image"),
       href: location.pathname,
       qty: 1,

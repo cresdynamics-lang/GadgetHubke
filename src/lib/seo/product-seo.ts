@@ -31,7 +31,8 @@ export type ProductSeo = {
   description: string;
   heading: string;
   intro: string;
-  rows: { label: string; priceKes: number; inStock: boolean }[];
+  rows: { label: string; priceKes: number; exUkKes?: number; inStock: boolean }[];
+  hasExUk: boolean;
   fromKes: number;
   topKes: number;
   updatedLabel: string;
@@ -76,7 +77,12 @@ export function buildProductSeo(input: ProductSeoInput): ProductSeo {
     : [{ key: "base", label: "Standard", priceKes: product.priceKes, inStock: product.inStock }]
   )
     .filter((v) => v.priceKes > 0)
-    .map((v) => ({ label: v.label, priceKes: v.priceKes, inStock: v.inStock && product.inStock }))
+    .map((v) => ({
+      label: v.label,
+      priceKes: v.priceKes,
+      exUkKes: typeof v.exUkKes === "number" && v.exUkKes > 0 ? v.exUkKes : undefined,
+      inStock: v.inStock && product.inStock,
+    }))
     .sort((a, b) => a.priceKes - b.priceKes);
   const fromKes = rows.length ? rows[0].priceKes : product.priceKes;
   const topKes = rows.length ? rows[rows.length - 1].priceKes : product.priceKes;
@@ -95,7 +101,13 @@ export function buildProductSeo(input: ProductSeoInput): ProductSeo {
     rows.length > 1
       ? `The ${name} price in Kenya at Gadget Hub starts at ${formatKes(fromKes)} and goes up to ${formatKes(topKes)} depending on the configuration.`
       : `The ${name} price in Kenya at Gadget Hub is ${formatKes(fromKes)}.`;
-  const intro = `${range} ${input.summary} Every unit is new and sealed, sold with a ${site.warranty.years}-year warranty and a Gadget Hub invoice, from our shop at ${site.address}, Nairobi CBD.${aka}`;
+  const exUkRows = rows.filter((r) => r.exUkKes);
+  const hasExUk = exUkRows.length > 0;
+  const exUkFrom = hasExUk ? Math.min(...exUkRows.map((r) => r.exUkKes!)) : 0;
+  const condition = hasExUk
+    ? `Buy it sealed new with a ${site.warranty.years}-year warranty, or Ex-UK (UK-used) from ${formatKes(exUkFrom)} to save — both with a Gadget Hub invoice`
+    : `Every unit is new and sealed, sold with a ${site.warranty.years}-year warranty and a Gadget Hub invoice`;
+  const intro = `${range} ${input.summary} ${condition}, from our shop at ${site.address}, Nairobi CBD.${aka}`;
 
   const faq: SeoFaqItem[] = [
     {
@@ -107,8 +119,18 @@ export function buildProductSeo(input: ProductSeoInput): ProductSeo {
     },
     {
       question: `Is the ${name} at Gadget Hub original?`,
-      answer: `Yes. We sell genuine, sealed Apple stock with a ${site.warranty.years}-year warranty. Keep your Gadget Hub invoice for warranty support.`,
+      answer: hasExUk
+        ? `Yes. Gadget Hub is an Apple Authorised Reseller. New units are sealed with a ${site.warranty.years}-year warranty; Ex-UK units are genuine UK-used Apple devices, with condition and warranty stated on your invoice.`
+        : `Yes. Gadget Hub is an Apple Authorised Reseller selling genuine, sealed Apple stock with a ${site.warranty.years}-year warranty. Keep your Gadget Hub invoice for warranty support.`,
     },
+    ...(hasExUk
+      ? [
+          {
+            question: `What is the Ex-UK ${name} price in Kenya?`,
+            answer: `Ex-UK (UK-used) ${name} units at Gadget Hub start from ${formatKes(exUkFrom)}. Switch the price toggle to Ex-UK on this page to see every option.`,
+          },
+        ]
+      : []),
     {
       question: `Can I buy the ${name} on Lipa Mdogo Mdogo?`,
       answer: `Yes. Lipa Mdogo Mdogo is run in-house by ${site.legalName}: pay a deposit, then clear the balance in monthly instalments. Start from the Lipa Mdogo Mdogo page or ask on WhatsApp ${site.phoneDisplay}.`,
@@ -126,16 +148,19 @@ export function buildProductSeo(input: ProductSeoInput): ProductSeo {
 
   const seller = { "@type": "Organization", name: site.legalName, url: site.url };
   const validUntil = priceValidUntil();
-  const offerFor = (priceKes: number, inStock: boolean) => ({
+  const offerFor = (priceKes: number, inStock: boolean, used = false) => ({
     "@type": "Offer",
     price: priceKes,
     priceCurrency: "KES",
     availability: inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-    itemCondition: "https://schema.org/NewCondition",
+    itemCondition: used ? "https://schema.org/UsedCondition" : "https://schema.org/NewCondition",
+    ...(used ? { description: "Ex-UK (UK-used)" } : {}),
     priceValidUntil: validUntil,
     url,
     seller,
   });
+  const offersFor = (r: { priceKes: number; exUkKes?: number; inStock: boolean }) =>
+    r.exUkKes ? [offerFor(r.priceKes, r.inStock), offerFor(r.exUkKes, r.inStock, true)] : offerFor(r.priceKes, r.inStock);
   const brand = { "@type": "Brand", name: "Apple" };
 
   const productNode =
@@ -157,7 +182,7 @@ export function buildProductSeo(input: ProductSeoInput): ProductSeo {
             sku: `${product.id}-${i + 1}`,
             image: images.slice(0, 1),
             brand,
-            offers: offerFor(r.priceKes, r.inStock),
+            offers: offersFor(r),
           })),
         }
       : {
@@ -169,7 +194,7 @@ export function buildProductSeo(input: ProductSeoInput): ProductSeo {
           sku: product.id,
           image: images,
           brand,
-          offers: offerFor(fromKes, rows[0]?.inStock ?? product.inStock),
+          offers: rows[0] ? offersFor(rows[0]) : offerFor(fromKes, product.inStock),
         };
 
   const jsonLd = {
@@ -201,6 +226,7 @@ export function buildProductSeo(input: ProductSeoInput): ProductSeo {
     heading: `${name} price in Kenya`,
     intro,
     rows,
+    hasExUk,
     fromKes,
     topKes,
     updatedLabel: date.label,

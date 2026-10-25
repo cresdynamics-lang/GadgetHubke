@@ -325,7 +325,7 @@ if (seo) {
           <span class="ipdp__pill ipdp__pill--muted">{model.year}</span>
         </div>
         <h1>{seo.h1}</h1>
-        {SHOW_EX_UK ? <StockChannelToggle /> : null}
+        <StockChannelToggle show={prices.some((p) => (p.exUkKes ?? 0) > 0)} />
         <p class="ipdp__tagline">
           Price in Kenya · From {formatKesSeo(seo.fromKes)}
           {model?.tagline ? ` · ${model.tagline}` : ""}
@@ -376,6 +376,7 @@ if (seo) {
                   data-storage={p.label}
                   data-kes={p.kes}
                   data-kes-new={p.kes}
+                  data-kes-exuk={p.exUkKes ?? ""}
                   data-sheet-id={p.sheetId ?? ""}
                 >
                   {p.label}
@@ -601,12 +602,17 @@ if (seo) {
     view: 1,
     storage: prices[0]?.label,
     kesNew: prices[0]?.kes,
+    kesExUk: prices[0]?.exUkKes,
+    channel: "new",
     tour: null,
   };
 
+  /** Price for the selected storage in the selected channel (New or Ex-UK). */
   function activeKes() {
+    if (state.channel === "ex-uk" && Number(state.kesExUk) > 0) return Number(state.kesExUk);
     return Number(state.kesNew) || 0;
   }
+  const channelLabel = () => (state.channel === "ex-uk" ? "Ex-UK" : "New");
 
   const img = document.querySelector("[data-gallery-img]");
   const webpSource = document.querySelector("[data-gallery-webp]");
@@ -704,12 +710,16 @@ if (seo) {
     const kes = activeKes();
     const deposit = Math.round((kes * depositPct) / 100);
     const monthly = Math.round((kes - deposit) / months);
-    if (priceEl) priceEl.textContent = `From KES ${kes.toLocaleString("en-KE")}`;
+    if (priceEl) priceEl.textContent = `${state.channel === "ex-uk" ? "Ex-UK · " : ""}From KES ${kes.toLocaleString("en-KE")}`;
     if (monthlyEl)
       monthlyEl.textContent = `or KES ${monthly.toLocaleString("en-KE")} a month for ${months} months after a KES ${deposit.toLocaleString("en-KE")} deposit`;
 
     document.querySelectorAll("[data-storage]").forEach((btn) => {
-      const shown = Number(btn.getAttribute("data-kes-new") || btn.getAttribute("data-kes") || 0);
+      const exUk = Number(btn.getAttribute("data-kes-exuk") || 0);
+      const shown =
+        state.channel === "ex-uk" && exUk > 0
+          ? exUk
+          : Number(btn.getAttribute("data-kes-new") || btn.getAttribute("data-kes") || 0);
       const span = btn.querySelector("[data-storage-price]");
       if (span) span.textContent = `KES ${shown.toLocaleString("en-KE")}`;
     });
@@ -719,7 +729,7 @@ if (seo) {
       const sheetId = document.querySelector("[data-storage].is-active")?.getAttribute("data-sheet-id");
       const itemBit = sheetId ? ` Item ${sheetId}.` : "";
       const msg = encodeURIComponent(
-        `Hi Gadget Hub, I'm interested in the ${modelName}, ${c}, ${state.storage}.${itemBit} Price: KES ${kes.toLocaleString("en-KE")}.`,
+        `Hi Gadget Hub, I'm interested in the ${modelName} (${channelLabel()}), ${c}, ${state.storage}.${itemBit} Price: KES ${kes.toLocaleString("en-KE")}.`,
       );
       wa.href = `${waBase}${msg}`;
     }
@@ -756,8 +766,14 @@ if (seo) {
       btn.classList.add("is-active");
       state.storage = btn.getAttribute("data-storage");
       state.kesNew = btn.getAttribute("data-kes-new") || btn.getAttribute("data-kes");
+      state.kesExUk = btn.getAttribute("data-kes-exuk");
       updatePrice();
     });
+  });
+
+  document.addEventListener("gh:channel", (e) => {
+    state.channel = e.detail === "ex-uk" ? "ex-uk" : "new";
+    updatePrice();
   });
 
   tourBtn?.addEventListener("click", () => {
@@ -878,9 +894,10 @@ if (seo) {
       document.querySelector("[data-storage].is-active")?.getAttribute("data-sheet-id") ||
       "";
     return {
-      id: `${galleryPayload.modelId}-${state.storage}`,
-      catalogId: sheetId || undefined,
-      sheetId: sheetId || undefined,
+      id: `${galleryPayload.modelId}-${state.storage}${state.channel === "ex-uk" ? "-exuk" : ""}`,
+      catalogId: sheetId ? (state.channel === "ex-uk" ? `${sheetId}-EXUK` : sheetId) : undefined,
+      sheetId: sheetId ? (state.channel === "ex-uk" ? `${sheetId}-EXUK` : sheetId) : undefined,
+      channel: channelLabel(),
       name: modelName,
       colour: c?.label || "Overview",
       storage: state.storage,

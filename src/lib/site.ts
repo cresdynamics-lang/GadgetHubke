@@ -3,7 +3,7 @@
 export const site = {
   name: "GadgetHub",
   legalName: "Gadget Hub Investments",
-  tagline: "New devices. Nairobi.",
+  tagline: "Apple devices. Nairobi.",
   url: "https://gadgethubke.com",
   domain: "gadgethubke.com",
   phoneDisplay: "0729 585 471",

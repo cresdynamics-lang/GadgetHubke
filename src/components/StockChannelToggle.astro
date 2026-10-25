@@ -1,20 +1,23 @@
 ---
 /**
- * New | Used (ex-UK) stock-channel toggle.
- * Renders nothing while SHOW_EX_UK is false.
+ * New | Ex-UK stock toggle. Pages listen for the `gh:channel` event
+ * (detail: "new" | "ex-uk") and switch every price they show.
+ * Renders nothing when Ex-UK is off site-wide or the product has no Ex-UK prices.
  */
 import { SHOW_EX_UK, EX_UK_CONDITION_LABEL } from "../lib/iphone/seo/flags";
 
 interface Props {
   /** Extra class on the root */
   class?: string;
+  /** Hide when this product has no Ex-UK prices. */
+  show?: boolean;
 }
 
-const { class: className } = Astro.props;
+const { class: className, show = true } = Astro.props;
 ---
 
 {
-  SHOW_EX_UK ? (
+  SHOW_EX_UK && show ? (
     <>
       <div
         class:list={["stock-channel", className]}
@@ -29,10 +32,27 @@ const { class: className } = Astro.props;
           {EX_UK_CONDITION_LABEL}
         </button>
       </div>
-      <p class="stock-channel__hint">New = sealed. {EX_UK_CONDITION_LABEL} = used import stock.</p>
+      <p class="stock-channel__hint">New = sealed, 1-year warranty. {EX_UK_CONDITION_LABEL} = UK-used stock.</p>
     </>
   ) : null
 }
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-stock-channel]").forEach((group) => {
+    group.addEventListener("click", (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>("[data-channel]");
+      if (!btn) return;
+      const channel = btn.dataset.channel === "ex-uk" ? "ex-uk" : "new";
+      document.querySelectorAll<HTMLElement>("[data-stock-channel] [data-channel]").forEach((b) => {
+        const on = b.dataset.channel === channel;
+        b.classList.toggle("is-active", on);
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+      document.documentElement.dataset.stockChannel = channel;
+      document.dispatchEvent(new CustomEvent("gh:channel", { detail: channel }));
+    });
+  });
+</script>
 
 <style>
   .stock-channel {
@@ -58,13 +78,13 @@ const { class: className } = Astro.props;
   }
 
   .stock-channel__btn.is-active {
-    background: #1d1d1f;
-    color: #f5f5f7;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
   }
 
   .stock-channel__hint {
-    margin: 0 0 0.75rem;
-    font-size: 0.7rem;
+    margin: 0 0 0.5rem;
+    font-size: 0.78rem;
     color: #6e6e73;
   }
 </style>

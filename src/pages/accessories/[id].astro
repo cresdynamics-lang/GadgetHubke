@@ -30,6 +30,7 @@ import {
   getCaseVariants,
   productGeoUs,
 } from "../../lib/accessories";
+import { storeAngleTabs } from "../../lib/store-angles";
 import { livePricedProduct } from "../../lib/pricing/live";
 import { buildProductSeo } from "../../lib/seo/product-seo";
 import ProductSeoBlock from "../../components/ProductSeoBlock.astro";
@@ -139,10 +140,22 @@ const activeVariant =
   caseVariants.find((v) => v.partNumber.toUpperCase() === (variantParam || "").toUpperCase()) ||
   caseVariants[0] ||
   null;
-const activeHero =
+const colourKey = (c: string) => c.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const activeColour = activeVariant?.colour ?? product.colours?.[0] ?? "";
+// Apple store photos of the selected colour (front + angles) lead the viewer, like iPhone pages.
+const colourAngles = activeColour
+  ? storeAngleTabs(product.id, colourKey(activeColour), product.name, activeColour)
+  : [];
+const variantFront = (part: string, colour: string) =>
+  storeAngleTabs(product.id, colourKey(colour), product.name, colour)[0]?.src ??
+  getAccessoryImage(product.id, `variant:${part}`).src;
+const activeHeroDefault =
   activeVariant != null
     ? getAccessoryImage(product.id, `variant:${activeVariant.partNumber}`)
     : hero;
+const activeHero = colourAngles[0]
+  ? { ...activeHeroDefault, src: colourAngles[0].src, srcWebp: colourAngles[0].src, alt: colourAngles[0].alt }
+  : activeHeroDefault;
 const showGeoCaption = Boolean(product.geoUs || productGeoUs(product.id) || activeHero.geoUs);
 const siblings = accessoriesByGroup(product.group).filter((a) => a.id !== product.id);
 const notes = accessoryBuyingNotes(product);
@@ -187,7 +200,6 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
           <div class="xpdp__variants" role="listbox" aria-label="Colours">
             {caseVariants.map((v) => {
               const sw = getAccessoryImage(product.id, `variant-swatch:${v.partNumber}`);
-              const main = getAccessoryImage(product.id, `variant:${v.partNumber}`);
               const on = activeVariant?.partNumber === v.partNumber;
               return (
                 <a
@@ -196,7 +208,7 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
                   role="option"
                   aria-selected={on ? "true" : "false"}
                   title={v.colour}
-                  data-variant-src={main.src}
+                  data-variant-src={variantFront(v.partNumber, v.colour)}
                   data-variant-part={v.partNumber}
                   data-variant-colour={v.colour}
                 >
@@ -208,9 +220,17 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
         ) : null
       }
       <div class="xpdp__thumbs" role="tablist" aria-label="Views">
-        <button type="button" class="is-active" data-view={activeHero.src} data-alt={activeHero.alt}>Product</button>
         {
-          angles.map((src, i) => (
+          colourAngles.length ? (
+            colourAngles.map((t, i) => (
+              <button type="button" class:list={{ "is-active": i === 0 }} data-view={t.src} data-alt={t.alt}>{t.label}</button>
+            ))
+          ) : (
+            <button type="button" class="is-active" data-view={activeHero.src} data-alt={activeHero.alt}>Product</button>
+          )
+        }
+        {
+          (colourAngles.length ? [] : angles).map((src, i) => (
             <button type="button" data-view={src} data-alt={`${product.name}, angle ${i + 1}`}>
               Angle {i + 1}
             </button>

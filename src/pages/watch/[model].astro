@@ -30,6 +30,8 @@ import {
   watchFaq,
 } from "../../lib/watch";
 import { storeAngleTabs } from "../../lib/store-angles";
+import { variantExUkMap } from "../../lib/pricing/live";
+import StockChannelToggle from "../../components/StockChannelToggle.astro";
 import { livePricedProduct, variantPriceMap } from "../../lib/pricing/live";
 import { buildProductSeo } from "../../lib/seo/product-seo";
 import ProductSeoBlock from "../../components/ProductSeoBlock.astro";
@@ -39,7 +41,9 @@ export const prerender = false;
 const watchDefault = getWatchModel(Astro.params.model!);
 if (!watchDefault) return Astro.redirect("/watch");
 // Live admin prices per material + connectivity ("aluminum-gps", "titanium-cell").
-const exact = variantPriceMap(await livePricedProduct(watchDefault.id));
+const liveWatch = await livePricedProduct(watchDefault.id);
+const exact = variantPriceMap(liveWatch);
+const exactExUk = variantExUkMap(liveWatch);
 const defaultMaterial = watchDefault.materials[0] || "aluminum";
 const liveBase = exact[`${defaultMaterial}-gps`] ?? exact[`${defaultMaterial}-cell`];
 const hasExact = Object.keys(exact).length > 0;
@@ -249,6 +253,7 @@ const scaleVbH = scaleMidY + Math.max(scaleWatchR, scaleCoinR) + 18;
         </fieldset>
 
         <div class="wpdp__price">
+          <StockChannelToggle show={Object.keys(exactExUk).length > 0} />
           <p><span data-price>{formatKes(price.kes)}</span></p>
           <p data-lipa>or {formatKes(lipa.monthlyKes)} / mo</p>
           <p class="wpdp__fine">{watchConfig.samplePriceDisclaimer}</p>
@@ -467,6 +472,7 @@ const scaleVbH = scaleMidY + Math.max(scaleWatchR, scaleCoinR) + 18;
   base: model.basePriceKes,
   cellStep: watchConfig.cellularStepKes,
   exact,
+  exactExUk,
   defaultMaterial,
   depositPct: watchConfig.lipa.depositDefaultPct,
   months: watchConfig.lipa.monthsDefault,
@@ -474,7 +480,7 @@ const scaleVbH = scaleMidY + Math.max(scaleWatchR, scaleCoinR) + 18;
   modelName: model.name,
 }}>
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const state = { materialStep: 0, cellular: 0, bandKes: 0, colour: "", size: "", material: "", band: "Band in the pack", connectivity: "GPS" };
+  const state = { materialStep: 0, cellular: 0, bandKes: 0, colour: "", size: "", material: "", band: "Band in the pack", connectivity: "GPS", channel: "new" };
   const priceEl = document.querySelector("[data-price]");
   const lipaEl = document.querySelector("[data-lipa]");
   const bag = document.querySelector("[data-watch-bag]");
@@ -482,18 +488,24 @@ const scaleVbH = scaleMidY + Math.max(scaleWatchR, scaleCoinR) + 18;
   const viewerImg = document.querySelector("[data-viewer-img]");
   const stage = document.querySelector("[data-stage]");
 
+  document.addEventListener("gh:channel", (e) => {
+    state.channel = e.detail === "ex-uk" ? "ex-uk" : "new";
+    refresh();
+  });
   function total() {
-    const hit = exact[`${state.material || defaultMaterial}-${state.cellular ? "cell" : "gps"}`];
+    const optionKey = `${state.material || defaultMaterial}-${state.cellular ? "cell" : "gps"}`;
+    const hit = (state.channel === "ex-uk" ? exactExUk[optionKey] : undefined) ?? exact[optionKey];
     if (hit != null) return hit + state.bandKes;
     return base + state.materialStep + (state.cellular ? cellStep : 0) + state.bandKes;
   }
   function refresh() {
     const kes = total();
     const monthly = Math.round((kes * (1 - depositPct / 100)) / months);
-    if (priceEl) priceEl.textContent = `KES ${kes.toLocaleString("en-KE")}`;
+    if (priceEl) priceEl.textContent = `${state.channel === "ex-uk" ? "Ex-UK · " : ""}KES ${kes.toLocaleString("en-KE")}`;
     if (lipaEl) lipaEl.textContent = `or KES ${monthly.toLocaleString("en-KE")} / mo`;
     if (bag instanceof HTMLElement) {
       bag.setAttribute("data-kes", String(kes));
+      bag.setAttribute("data-channel", state.channel === "ex-uk" ? "Ex-UK" : "New");
       bag.setAttribute("data-colour", state.colour || bag.getAttribute("data-colour") || "");
       bag.setAttribute("data-material", state.material || bag.getAttribute("data-material") || "");
       bag.setAttribute("data-size", state.size || bag.getAttribute("data-size") || "");
@@ -619,6 +631,7 @@ const scaleVbH = scaleMidY + Math.max(scaleWatchR, scaleCoinR) + 18;
       connectivity: bag.getAttribute("data-connectivity"),
       band: bag.getAttribute("data-band"),
       kes: Number(bag.getAttribute("data-kes") || 0),
+      channel: bag.getAttribute("data-channel") || "New",
       image: bag.getAttribute("data-image"),
       href: location.pathname,
       qty: 1,

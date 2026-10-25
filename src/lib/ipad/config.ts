@@ -40,7 +40,7 @@ export const ipadConfig = {
   },
 
   samplePriceDisclaimer:
-    "Sealed product, serial on the invoice. 1-year warranty. Set-up fees vary and are confirmed when you engage with us.",
+    "New: sealed, serial on the invoice, 1-year warranty. Ex-UK: condition and warranty stated on your invoice. Set-up fees vary and are confirmed when you engage with us.",
 
   announce:
     "Sealed iPads, serial number on your invoice. Lipa Mdogo Mdogo available.",

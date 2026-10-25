@@ -29,6 +29,8 @@ import {
   defaultAirpodsColour,
 } from "../../lib/airpods";
 import { storeAngleTabs } from "../../lib/store-angles";
+import { variantExUkMap } from "../../lib/pricing/live";
+import StockChannelToggle from "../../components/StockChannelToggle.astro";
 import { livePricedProduct, variantPriceMap } from "../../lib/pricing/live";
 import { buildProductSeo } from "../../lib/seo/product-seo";
 import ProductSeoBlock from "../../components/ProductSeoBlock.astro";
@@ -38,7 +40,9 @@ export const prerender = false;
 const airpodsDefault = getAirpodsModel(Astro.params.model!);
 if (!airpodsDefault) return Astro.redirect("/airpods");
 // Live admin price ("base").
-const liveBase = variantPriceMap(await livePricedProduct(airpodsDefault.id)).base;
+const liveAirpods = await livePricedProduct(airpodsDefault.id);
+const liveBase = variantPriceMap(liveAirpods).base;
+const exUkBase = variantExUkMap(liveAirpods).base ?? null;
 const model = liveBase != null ? { ...airpodsDefault, basePriceKes: liveBase } : airpodsDefault;
 
 const baseTabs = airpodsViewerTabs(model);
@@ -206,6 +210,7 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
         ) : null}
 
         <div class="apdp__price">
+          <StockChannelToggle show={exUkBase != null} />
           <p><span data-price>{formatKes(price.kes)}</span></p>
           <p data-lipa>or {formatKes(lipa.monthlyKes)} / mo</p>
           <p class="apdp__fine">{airpodsConfig.samplePriceDisclaimer}</p>
@@ -347,6 +352,7 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
 
 <script define:vars={{
   base: model.basePriceKes,
+  exUkBase,
   wirelessStep: airpodsConfig.wirelessCaseStepKes,
   depositPct: airpodsConfig.lipa.depositDefaultPct,
   months: airpodsConfig.lipa.monthsDefault,
@@ -354,23 +360,29 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
   modelName: model.name,
 }}>
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const state = { wireless: 0, addonsKes: 0, caseOption: "usb-c", colour: "", extras: "" };
+  const state = { wireless: 0, addonsKes: 0, caseOption: "usb-c", colour: "", extras: "", channel: "new" };
   const priceEl = document.querySelector("[data-price]");
   const lipaEl = document.querySelector("[data-lipa]");
   const bag = document.querySelector("[data-airpods-bag]");
   const wa = document.querySelector("[data-wa]");
   const viewerImg = document.querySelector("[data-viewer-img]");
 
+  document.addEventListener("gh:channel", (e) => {
+    state.channel = e.detail === "ex-uk" ? "ex-uk" : "new";
+    refresh();
+  });
   function total() {
-    return base + state.wireless + state.addonsKes;
+    const unit = state.channel === "ex-uk" && exUkBase ? exUkBase : base;
+    return unit + state.wireless + state.addonsKes;
   }
   function refresh() {
     const kes = total();
     const monthly = Math.round((kes * (1 - depositPct / 100)) / months);
-    if (priceEl) priceEl.textContent = `KES ${kes.toLocaleString("en-KE")}`;
+    if (priceEl) priceEl.textContent = `${state.channel === "ex-uk" ? "Ex-UK · " : ""}KES ${kes.toLocaleString("en-KE")}`;
     if (lipaEl) lipaEl.textContent = `or KES ${monthly.toLocaleString("en-KE")} / mo`;
     if (bag instanceof HTMLElement) {
       bag.setAttribute("data-kes", String(kes));
+      bag.setAttribute("data-channel", state.channel === "ex-uk" ? "Ex-UK" : "New");
       bag.setAttribute("data-colour", state.colour || bag.getAttribute("data-colour") || "");
       bag.setAttribute("data-case-option", state.caseOption);
       bag.setAttribute("data-extras", state.extras);
@@ -448,6 +460,7 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
       caseOption: bag.getAttribute("data-case-option"),
       extras: bag.getAttribute("data-extras") || "",
       kes: Number(bag.getAttribute("data-kes") || 0),
+      channel: bag.getAttribute("data-channel") || "New",
       image: bag.getAttribute("data-image"),
       href: location.pathname,
       qty: 1,

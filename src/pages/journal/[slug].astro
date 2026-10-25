@@ -10,6 +10,9 @@ import {
 } from "../../lib/journal";
 
 const { slug } = Astro.params;
+// Renamed posts keep their old links working.
+const movedSlugs: Record<string, string> = { "why-we-only-sell-new": "new-and-ex-uk-apple-devices" };
+if (slug && movedSlugs[slug]) return Astro.redirect(`/journal/${movedSlugs[slug]}`, 301);
 const post = slug ? await getPublishedJournalPost(slug) : undefined;
 if (!post) {
   return Astro.redirect("/journal");

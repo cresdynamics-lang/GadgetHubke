@@ -30,6 +30,8 @@ import {
   macBuyingNotes,
   macFaq,
 } from "../../lib/mac";
+import { variantExUkMap } from "../../lib/pricing/live";
+import StockChannelToggle from "../../components/StockChannelToggle.astro";
 import { livePricedProduct, variantPriceMap } from "../../lib/pricing/live";
 import { buildProductSeo } from "../../lib/seo/product-seo";
 import ProductSeoBlock from "../../components/ProductSeoBlock.astro";
@@ -40,7 +42,9 @@ export const prerender = false;
 const model = getMacModel(Astro.params.model!);
 if (!model) return Astro.redirect("/mac");
 // Live admin prices per memory + storage ("16gb-512gb").
-const exact = variantPriceMap(await livePricedProduct(model.id));
+const liveMac = await livePricedProduct(model.id);
+const exact = variantPriceMap(liveMac);
+const exactExUk = variantExUkMap(liveMac);
 const exactKey = (gb: number, storage: string) => `${gb}gb-${storage.replace(/\s+/g, "").toLowerCase()}`;
 const hasExact = Object.keys(exact).length > 0;
 
@@ -212,6 +216,7 @@ const wa = whatsappUrl(
             }
           </div>
 
+          <StockChannelToggle show={Object.keys(exactExUk).length > 0} />
           <p class="mpdp__price">
             <span data-mac-price>{formatKes(price.kes)}</span>
           </p>
@@ -424,6 +429,7 @@ const wa = whatsappUrl(
 <script define:vars={{
   base: firstExact ?? model.basePriceKes,
   exact,
+  exactExUk,
   memStep: macConfig.memoryStepKes,
   storStep: macConfig.storageStepKes,
   depositPct: macConfig.lipa.depositDefaultPct,
@@ -435,7 +441,7 @@ const wa = whatsappUrl(
   lid: lid ? { start: lid.start.src, end: lid.end.src } : null,
   initialColour: colour,
 }}>
-  const state = { memory: 0, storage: 0, colour: initialColour, view: "front", kes: base, tabIndex: 0 };
+  const state = { memory: 0, storage: 0, colour: initialColour, view: "front", kes: base, tabIndex: 0, channel: "new" };
   const priceEl = document.querySelector("[data-mac-price]");
   const lipaEl = document.querySelector("[data-mac-lipa]");
   const viewerImg = document.querySelector("[data-viewer-img]");
@@ -510,12 +516,18 @@ const wa = whatsappUrl(
   }
   wireTabs();
 
+  document.addEventListener("gh:channel", (e) => {
+    state.channel = e.detail === "ex-uk" ? "ex-uk" : "new";
+    refresh();
+  });
+
   function refresh() {
     const memGb = document.querySelector("[data-mac-memory] .is-active")?.getAttribute("data-gb") || "";
     const storLabel = document.querySelector("[data-mac-storage] .is-active")?.getAttribute("data-storage") || "";
-    const hit = exact[`${memGb}gb-${storLabel.replace(/\s+/g, "").toLowerCase()}`];
+    const optionKey = `${memGb}gb-${storLabel.replace(/\s+/g, "").toLowerCase()}`;
+    const hit = (state.channel === "ex-uk" ? exactExUk[optionKey] : undefined) ?? exact[optionKey];
     state.kes = hit ?? base + state.memory * memStep + state.storage * storStep;
-    if (priceEl) priceEl.textContent = `KES ${state.kes.toLocaleString("en-KE")}`;
+    if (priceEl) priceEl.textContent = `${state.channel === "ex-uk" ? "Ex-UK · " : ""}KES ${state.kes.toLocaleString("en-KE")}`;
     const deposit = Math.round((state.kes * depositPct) / 100);
     const monthly = Math.round((state.kes - deposit) / months);
     if (lipaEl) {
@@ -523,6 +535,7 @@ const wa = whatsappUrl(
     }
     if (bag instanceof HTMLElement) {
       bag.setAttribute("data-kes", String(state.kes));
+      bag.setAttribute("data-channel", state.channel === "ex-uk" ? "Ex-UK" : "New");
       const memBtn = document.querySelector("[data-mac-memory] .is-active");
       const storBtn = document.querySelector("[data-mac-storage] .is-active");
       if (memBtn) bag.setAttribute("data-memory", `${memBtn.getAttribute("data-gb")}GB`);
@@ -574,6 +587,7 @@ const wa = whatsappUrl(
       storage: bag.getAttribute("data-storage"),
       colour: bag.getAttribute("data-colour"),
       kes: Number(bag.getAttribute("data-kes") || 0),
+      channel: bag.getAttribute("data-channel") || "New",
       image: bag.getAttribute("data-image"),
       href: location.pathname,
       qty: 1,

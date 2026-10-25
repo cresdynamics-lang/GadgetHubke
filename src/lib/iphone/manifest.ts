@@ -17,10 +17,7 @@ export type ModelImageEntry = {
 export const OVERVIEW_ONLY_MODELS = ["iphone-duo"] as const;
 
 /** Colours listed for marketing but no image yet */
-export const TEXT_ONLY_COLOURS: Record<string, string[]> = {
-  "iphone-13-pro": ["sierra-blue"],
-  "iphone-13-pro-max": ["sierra-blue"],
-};
+export const TEXT_ONLY_COLOURS: Record<string, string[]> = {};
 
 export const imageManifest: Record<string, ModelImageEntry> = {
   "iphone-11": {
@@ -823,3 +820,13 @@ const appleStoreManifest: Record<string, ModelImageEntry> = {
   },
 };
 Object.assign(imageManifest, appleStoreManifest);
+
+// Sierra Blue and Alpine Green from Apple Newsroom (the store no longer hosts them).
+for (const id of ["iphone-13-pro", "iphone-13-pro-max"]) {
+  const entry = imageManifest[id];
+  if (!entry) continue;
+  for (const [key, file] of [["sierra-blue", "sierrablue"], ["alpine-green", "alpinegreen"]] as const) {
+    entry.colours[key] = [1];
+    entry.files[`${key}|1`] = `/Gadget_Hub_iPhone_Apple_Store_Images/${id}/${id}_${file}_view1.jpg`;
+  }
+}
