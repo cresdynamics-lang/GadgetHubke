@@ -52,6 +52,10 @@ const { class: className, show = true } = Astro.props;
       document.dispatchEvent(new CustomEvent("gh:channel", { detail: channel }));
     });
   });
+  // Feed links for used stock land with Ex-UK selected (?condition=ex-uk).
+  if (new URLSearchParams(location.search).get("condition") === "ex-uk") {
+    document.querySelector<HTMLButtonElement>('[data-stock-channel] [data-channel="ex-uk"]')?.click();
+  }
 </script>
 
 <style>

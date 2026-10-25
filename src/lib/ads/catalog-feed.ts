@@ -18,6 +18,7 @@ import { getTvHomeImage } from "../tv-home";
 import { accessories } from "../accessories/models";
 import { getAccessoryImage } from "../accessories";
 import { cardImageSrc } from "../card-images";
+import feedImageMap from "./feed-image-map.json";
 import { iphoneSheet, storageIdFromLabel } from "../pricing/iphone-sheet";
 import { getSeoModelByName } from "../iphone/seo";
 import { livePricedCatalog, iphoneLiveId } from "../pricing/live";
@@ -58,6 +59,12 @@ function imageLink(publicPath: string | undefined, fallbackId?: string): string 
   return undefined;
 }
 
+/** Square ≥500px copy for images Meta would reject as too small (scripts/build-feed-images.mjs). */
+function squareFeedImage(link: string): string {
+  const square = (feedImageMap as Record<string, string>)[decodeURI(new URL(link).pathname)];
+  return square ? absUrl(square) : link;
+}
+
 function pushRow(
   rows: CatalogRow[],
   row: Omit<CatalogRow, "brand" | "condition" | "availability"> & {
@@ -67,6 +74,7 @@ function pushRow(
   if (!row.image_link || !row.price || !row.link) return;
   rows.push({
     ...row,
+    image_link: squareFeedImage(row.image_link),
     brand: "Apple",
     // Ex-UK (UK-used) iPhone rows carry ids ending -EXUK.
     condition: /-EXUK$/i.test(row.id) ? "used" : "new",

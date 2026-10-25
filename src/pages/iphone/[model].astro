@@ -83,6 +83,8 @@ let hasLegacyGallery = false;
 let model: ReturnType<typeof getModel>;
 let prices: ReturnType<typeof storagePrices> = [];
 let firstPrice = { label: "", kes: 0 };
+let selectedIdx = 0;
+let priceLine = "";
 let lipa = { depositKes: 0, monthlyKes: 0, months: 6 };
 let tag: string | null = null;
 let notes: ReturnType<typeof buyingNotes> = [];
@@ -143,8 +145,16 @@ if (seo) {
     const l = liveByKey.get(storageIdFromLabel(p.label));
     return l ? { ...p, kes: l.priceKes, exUkKes: l.exUkKes ?? p.exUkKes } : p;
   });
-  firstPrice = prices[0] ?? { label: "", kes: seo.fromKes };
-  lipa = lipaMonthly(firstPrice.kes);
+  // Feed links (?storage=256GB&condition=ex-uk) open on that exact option so the
+  // landing price matches the Google / Meta feed price.
+  const wantStorage = (Astro.url.searchParams.get("storage") || "").toLowerCase();
+  selectedIdx = Math.max(0, prices.findIndex((p) => p.label.toLowerCase() === wantStorage));
+  const wantExUk = Astro.url.searchParams.get("condition") === "ex-uk" && (prices[selectedIdx]?.exUkKes ?? 0) > 0;
+  firstPrice = prices[selectedIdx] ?? { label: "", kes: seo.fromKes };
+  priceLine = wantExUk
+    ? `Ex-UK · From ${formatKes(prices[selectedIdx].exUkKes!)}`
+    : `From ${formatKes(firstPrice.kes)}`;
+  lipa = lipaMonthly(wantExUk ? prices[selectedIdx].exUkKes! : firstPrice.kes);
   tag = model ? (isLatestTag(model) ? "Latest" : isValueTag(model) ? "Value" : null) : null;
   notes = model ? buyingNotes(model) : [];
   fits = model ? accessoriesFor(model) : [];
@@ -247,7 +257,7 @@ if (seo) {
             <div class="ipdp__storage">
               {prices.map((p, i) => (
                 <a
-                  class:list={["ipdp__storage-btn", { "is-active": i === 0 }]}
+                  class:list={["ipdp__storage-btn", { "is-active": i === selectedIdx }]}
                   href={whatsappUrl(
                     `Hi Gadget Hub, I'd like to order the ${seo.name} ${p.label}${p.sheetId ? ` (Item ${p.sheetId})` : ""}.`,
                   )}
@@ -260,7 +270,7 @@ if (seo) {
               ))}
             </div>
           </div>
-          <p class="ipdp__price">From {formatKes(firstPrice.kes)}</p>
+          <p class="ipdp__price">{priceLine || `From ${formatKes(firstPrice.kes)}`}</p>
           <a
             class="ipdp__wa"
             href={whatsappUrl(`Hi Gadget Hub, I'm interested in the ${seo.name}.`)}
@@ -372,7 +382,7 @@ if (seo) {
               prices.map((p, i) => (
                 <button
                   type="button"
-                  class:list={["ipdp__storage-btn", { "is-active": i === 0 }]}
+                  class:list={["ipdp__storage-btn", { "is-active": i === selectedIdx }]}
                   data-storage={p.label}
                   data-kes={p.kes}
                   data-kes-new={p.kes}
@@ -388,7 +398,7 @@ if (seo) {
         </div>
 
         <div class="ipdp__price-block">
-          <p class="ipdp__price" data-price-display>From {formatKes(firstPrice.kes)}</p>
+          <p class="ipdp__price" data-price-display>{priceLine || `From ${formatKes(firstPrice.kes)}`}</p>
           <p class="ipdp__monthly" data-monthly-display>
             or {formatKes(lipa.monthlyKes)} a month for {lipa.months} months after a {formatKes(lipa.depositKes)} deposit
           </p>
@@ -593,6 +603,7 @@ if (seo) {
       ? { label: p.label, kes: p.kes, sheetId: p.sheetId, exUkKes: p.exUkKes }
       : { label: p.label, kes: p.kes, sheetId: p.sheetId },
   ),
+  selectedIdx,
   depositPct: iphoneConfig.lipa.depositDefaultPct,
   months: iphoneConfig.lipa.monthsDefault,
   waBase: `https://wa.me/${iphoneConfig.whatsapp}?text=`,
@@ -600,9 +611,9 @@ if (seo) {
   const state = {
     colour: galleryPayload.initialColour,
     view: 1,
-    storage: prices[0]?.label,
-    kesNew: prices[0]?.kes,
-    kesExUk: prices[0]?.exUkKes,
+    storage: prices[selectedIdx]?.label,
+    kesNew: prices[selectedIdx]?.kes,
+    kesExUk: prices[selectedIdx]?.exUkKes,
     channel: "new",
     tour: null,
   };

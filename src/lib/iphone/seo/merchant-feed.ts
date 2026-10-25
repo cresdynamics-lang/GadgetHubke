@@ -65,6 +65,14 @@ function resolveImage(modelId: string, name: string): string | undefined {
   return undefined;
 }
 
+/** Product page opened on this storage (and Ex-UK), so the page price matches the feed. */
+function variantLink(modelId: string, storage: string, exUk = false): string {
+  const url = new URL(`/iphone/${modelId}`, site.url);
+  url.searchParams.set("storage", storage);
+  if (exUk) url.searchParams.set("condition", "ex-uk");
+  return url.href;
+}
+
 export function buildIphoneMerchantFeed(): {
   rows: MerchantRow[];
   exclusions: MerchantExclusion[];
@@ -97,7 +105,7 @@ export function buildIphoneMerchantFeed(): {
         id: v.sheetId,
         title: `${model.name} ${v.storage}`,
         description: model.metaDescription,
-        link: new URL(`/iphone/${model.id}`, site.url).href,
+        link: variantLink(model.id, v.storage),
         image_link: image,
         price: `${v.newKes} KES`,
         availability:
@@ -115,7 +123,7 @@ export function buildIphoneMerchantFeed(): {
           id: `${v.sheetId}-EXUK`,
           title: `${model.name} ${v.storage} Used (ex-UK)`,
           description: model.metaDescription,
-          link: new URL(`/iphone/${model.id}`, site.url).href,
+          link: variantLink(model.id, v.storage, true),
           image_link: image,
           price: `${v.exUkKes} KES`,
           availability: "in_stock",
