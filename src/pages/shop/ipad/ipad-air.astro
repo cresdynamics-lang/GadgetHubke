@@ -1,8 +1,5 @@
 ---
-import StockInquiryPage from "../../../layouts/StockInquiryPage.astro";
+export const prerender = false;
+// Placeholder replaced by the full product page.
+return Astro.redirect("/ipad/ipad-air-11-m4", 301);
 ---
-<StockInquiryPage
-  title="iPad Air"
-  categoryLabel="iPad"
-  categoryHref="/shop/ipad"
-/>

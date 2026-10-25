@@ -4,6 +4,7 @@
  * New | EX-UK channel switches sample price (sealed vs ex-UK import).
  */
 import BaseLayout from "./BaseLayout.astro";
+import { shopCanonical } from "../lib/seo/shop-canonical";
 import ProductExperience from "../components/ProductExperience.astro";
 import ProductReviews from "../components/ProductReviews.astro";
 import StickyBuyBar from "../components/StickyBuyBar.astro";
@@ -71,7 +72,7 @@ const pageDescription = seo?.metaDescription ?? product.tagline;
   title={pageTitle}
   description={pageDescription}
   image={product.image.src}
-  canonicalPath={seo ? `/iphone/${seo.id}` : undefined}
+  canonicalPath={shopCanonical(product)}
 >
   {jsonLd ? <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} /> : null}
   <TrackProductView

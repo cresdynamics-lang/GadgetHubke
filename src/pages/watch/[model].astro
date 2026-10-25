@@ -10,6 +10,7 @@ import WatchFeel from "../../components/watch/WatchFeel.astro";
 import WatchLipaCalc from "../../components/watch/WatchLipaCalc.astro";
 import WatchTradeIn from "../../components/watch/WatchTradeIn.astro";
 import ProductReviews from "../../components/ProductReviews.astro";
+import { reviewSchema } from "../../lib/seo/offer-schema";
 import StickyBuyBar from "../../components/StickyBuyBar.astro";
 import {
   watchModels,
@@ -59,6 +60,7 @@ const img = tabs[0] || getWatchImage(model.id, "main", model.name);
 const liveProduct = await livePricedProduct(model.id);
 const pageSeo = liveProduct
   ? buildProductSeo({
+      reviews: await reviewSchema(model.id),
       product: liveProduct,
       categoryLabel: "Apple Watch",
       categoryHref: "/watch",

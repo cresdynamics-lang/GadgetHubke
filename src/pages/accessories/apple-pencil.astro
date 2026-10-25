@@ -1,9 +1,11 @@
 ---
+export const prerender = false;
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import AccessoryCard from "../../components/accessories/AccessoryCard.astro";
 import CompatibilityFinder from "../../components/accessories/CompatibilityFinder.astro";
 import PencilFeel from "../../components/accessories/PencilFeel.astro";
 import AccessoryLipaCalc from "../../components/accessories/AccessoryLipaCalc.astro";
+import AccessoryGroupSeo from "../../components/accessories/AccessoryGroupSeo.astro";
 import AccessoryTrademark from "../../components/accessories/AccessoryTrademark.astro";
 import {
   pencils,
@@ -24,7 +26,10 @@ const faq = accessoryFaq();
 const notes = accessoryBuyingNotes(list[0]);
 ---
 
-<BaseLayout title="Apple Pencil - GadgetHub" description="Which Apple Pencil fits your iPad. Sealed stock in Nairobi.">
+<BaseLayout
+  title="Apple Pencil Price in Kenya | Gadget Hub"
+  description="Apple Pencil Pro, USB-C, 2nd and 1st gen prices in Kenya. Genuine Apple, iPad fit checked at Gadget Hub, Nairobi CBD. M-Pesa or Lipa Mdogo Mdogo."
+>
   <section class="xpencil-hero">
     <div class="container">
       <h1>Apple Pencil</h1>
@@ -92,6 +97,8 @@ const notes = accessoryBuyingNotes(list[0]);
       ))
     }
   </section>
+
+  <AccessoryGroupSeo name="Apple Pencil" path="/accessories/apple-pencil" productIds={list.map((p) => p.id)} faq={faq} />
 
   <AccessoryLipaCalc productId="pencil-pro" />
   <AccessoryTrademark />

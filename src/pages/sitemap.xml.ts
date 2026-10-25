@@ -6,7 +6,10 @@ import { listPublishedJournalPosts } from "../lib/journal";
 import { products } from "../lib/products";
 import { tvHomeModels } from "../lib/tv-home";
 import { listSeoModels, listSeriesHubs, getSeoModelByName } from "../lib/iphone/seo";
-import { defaultPricedCatalog } from "../lib/pricing/live";
+import { defaultPricedCatalog, livePricedCatalog } from "../lib/pricing/live";
+
+/** When this build went live — the floor for product "last updated" dates. */
+const DEPLOYED = new Date().toISOString().slice(0, 10);
 
 const staticPaths = [
   "/",
@@ -81,9 +84,21 @@ export const GET: APIRoute = async () => {
   urls.add(abs("/iphone"));
 
 
-  // Shop iPhone pages canonicalise to /iphone/<model>; keep duplicates out of the sitemap.
-  for (const product of products) {
-    if (getSeoModelByName(product.name)) urls.delete(abs(product.overviewHref));
+  // Product pages: last admin price change, or this deploy if newer.
+  for (const p of await livePricedCatalog()) {
+    const loc = abs(p.href);
+    const changed = (p.updatedAt || "").slice(0, 10);
+    if (urls.has(loc)) lastmod.set(loc, changed > DEPLOYED ? changed : DEPLOYED);
+  }
+  for (const loc of urls) {
+    const path = new URL(loc).pathname;
+    if (/^\/(iphone|ipad|mac|watch|airpods|tv-home|accessories)(\/|$)/.test(path) && !lastmod.has(loc)) lastmod.set(loc, DEPLOYED);
+  }
+
+  // /shop/<category>/<item> pages (and their specs) point Google at the model
+  // pages, so only the model pages are listed. Shop category lists stay.
+  for (const loc of [...urls]) {
+    if (/^\/shop\/[^/]+\/.+/.test(new URL(loc).pathname) || loc.includes("?")) urls.delete(loc);
   }
 
   const body = `<?xml version="1.0" encoding="UTF-8"?>

@@ -1,9 +1,11 @@
 ---
+export const prerender = false;
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import AccessoryCard from "../../components/accessories/AccessoryCard.astro";
 import CompatibilityFinder from "../../components/accessories/CompatibilityFinder.astro";
 import PowerFeel from "../../components/accessories/PowerFeel.astro";
 import AccessoryLipaCalc from "../../components/accessories/AccessoryLipaCalc.astro";
+import AccessoryGroupSeo from "../../components/accessories/AccessoryGroupSeo.astro";
 import AccessoryTrademark from "../../components/accessories/AccessoryTrademark.astro";
 import {
   adapters,
@@ -31,8 +33,8 @@ const fromCables = Math.min(...cableList.map((a) => a.basePriceKes));
 ---
 
 <BaseLayout
-  title="Power - GadgetHub"
-  description="Apple USB-C adapters, MagSafe chargers and cables. Matched to your device in Nairobi."
+  title="Apple Charger Price in Kenya | 20W to 140W | Gadget Hub"
+  description="Genuine Apple USB-C chargers, MagSafe and cables in Kenya: 20W, 35W, 70W, 140W and more. Live prices at Gadget Hub, Nairobi CBD."
 >
   <section class="xpower-hero">
     <div class="container">
@@ -156,6 +158,8 @@ const fromCables = Math.min(...cableList.map((a) => a.basePriceKes));
       </details>
     ))}
   </section>
+
+  <AccessoryGroupSeo name="Apple Chargers & Cables" path="/accessories/power" productIds={all.map((p) => p.id)} faq={faq} />
 
   <AccessoryLipaCalc productId="power-adapter-20w" />
   <AccessoryTrademark />

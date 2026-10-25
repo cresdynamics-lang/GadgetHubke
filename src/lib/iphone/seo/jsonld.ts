@@ -7,6 +7,7 @@ import {
 } from "./flags";
 import { sharedProductFaq } from "./shared";
 import type { IphoneSeoModel } from "./types";
+import { offerExtras, type ReviewSchema } from "../../seo/offer-schema";
 
 function availability(status: IphoneSeoModel["variants"][0]["stockStatus"]): string | undefined {
   if (status === "in_stock") return "https://schema.org/InStock";
@@ -17,9 +18,10 @@ function availability(status: IphoneSeoModel["variants"][0]["stockStatus"]): str
 /** ProductGroup + Product variants + BreadcrumbList + FAQPage for a model page. */
 export function buildIphoneProductJsonLd(
   model: IphoneSeoModel,
-  opts: { pageUrl: string; imageUrl?: string; seriesUrl?: string },
+  opts: { pageUrl: string; imageUrl?: string; seriesUrl?: string; reviews?: ReviewSchema },
 ) {
   assertExUkWarrantyConfigured();
+  const extras = offerExtras();
 
   const newProducts = model.variants.map((v) => {
     const offer: Record<string, unknown> = {
@@ -27,7 +29,8 @@ export function buildIphoneProductJsonLd(
       price: v.newKes,
       priceCurrency: "KES",
       itemCondition: "https://schema.org/NewCondition",
-      url: opts.pageUrl,
+      url: `${opts.pageUrl}?storage=${encodeURIComponent(v.storage)}`,
+      ...extras,
     };
     const avail = availability(v.stockStatus);
     if (avail) offer.availability = avail;
@@ -51,8 +54,9 @@ export function buildIphoneProductJsonLd(
             price: v.exUkKes,
             priceCurrency: "KES",
             itemCondition: "https://schema.org/UsedCondition",
-            url: opts.pageUrl,
+            url: `${opts.pageUrl}?storage=${encodeURIComponent(v.storage)}&condition=ex-uk`,
             description: `${EX_UK_CONDITION_LABEL}. ${EX_UK_WARRANTY}`,
+            ...extras,
           };
           const avail = availability(v.stockStatus);
           if (avail) offer.availability = avail;
@@ -80,6 +84,7 @@ export function buildIphoneProductJsonLd(
     variesBy: ["https://schema.org/storageCapacity"],
     hasVariant: products,
     url: opts.pageUrl,
+    ...(opts.reviews ?? {}),
   };
 
   const crumbs = [

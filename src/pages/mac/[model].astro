@@ -10,6 +10,7 @@ import MacFeel from "../../components/mac/MacFeel.astro";
 import MacLipaCalc from "../../components/mac/MacLipaCalc.astro";
 import MacTradeIn from "../../components/mac/MacTradeIn.astro";
 import ProductReviews from "../../components/ProductReviews.astro";
+import { reviewSchema } from "../../lib/seo/offer-schema";
 import StickyBuyBar from "../../components/StickyBuyBar.astro";
 import {
   macModels,
@@ -55,6 +56,7 @@ const img = tabs[0] || getMacImage(model.id, colour, "product", model.name);
 const liveProduct = await livePricedProduct(model.id);
 const pageSeo = liveProduct
   ? buildProductSeo({
+      reviews: await reviewSchema(model.id),
       product: liveProduct,
       categoryLabel: "Mac",
       categoryHref: "/mac",

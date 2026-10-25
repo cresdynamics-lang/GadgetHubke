@@ -6,6 +6,7 @@ import AccessoryLipaCalc from "../../components/accessories/AccessoryLipaCalc.as
 import AccessoryTrademark from "../../components/accessories/AccessoryTrademark.astro";
 import AccessoryCard from "../../components/accessories/AccessoryCard.astro";
 import ProductReviews from "../../components/ProductReviews.astro";
+import { reviewSchema } from "../../lib/seo/offer-schema";
 import StickyBuyBar from "../../components/StickyBuyBar.astro";
 import BackButton from "../../components/BackButton.astro";
 import TrackProductView from "../../components/TrackProductView.astro";
@@ -76,6 +77,7 @@ const hero = getAccessoryImage(product.id, "hero");
 const liveProduct = await livePricedProduct(product.id);
 const pageSeo = liveProduct
   ? buildProductSeo({
+      reviews: await reviewSchema(product.id),
       product: liveProduct,
       categoryLabel: "Accessories",
       categoryHref: "/accessories",

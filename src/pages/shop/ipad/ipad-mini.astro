@@ -1,8 +1,5 @@
 ---
-import StockInquiryPage from "../../../layouts/StockInquiryPage.astro";
+export const prerender = false;
+// Placeholder replaced by the full product page.
+return Astro.redirect("/ipad/ipad-mini-a17-pro", 301);
 ---
-<StockInquiryPage
-  title="iPad mini"
-  categoryLabel="iPad"
-  categoryHref="/shop/ipad"
-/>

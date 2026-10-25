@@ -1,8 +1,5 @@
 ---
-import StockInquiryPage from "../../../layouts/StockInquiryPage.astro";
+export const prerender = false;
+// Placeholder replaced by the full product page.
+return Astro.redirect("/mac/macbook-air-13-m5", 301);
 ---
-<StockInquiryPage
-  title="MacBook Air"
-  categoryLabel="Mac"
-  categoryHref="/shop/mac"
-/>

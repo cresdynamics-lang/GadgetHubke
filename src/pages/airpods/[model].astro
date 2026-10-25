@@ -8,6 +8,7 @@ import AirPodsLipaCalc from "../../components/airpods/AirPodsLipaCalc.astro";
 import AirPodsTradeIn from "../../components/airpods/AirPodsTradeIn.astro";
 import AirpodsTrademark from "../../components/airpods/AirpodsTrademark.astro";
 import ProductReviews from "../../components/ProductReviews.astro";
+import { reviewSchema } from "../../lib/seo/offer-schema";
 import StickyBuyBar from "../../components/StickyBuyBar.astro";
 import {
   airpodsModels,
@@ -54,6 +55,7 @@ const img = tabs[0] || getAirpodsImage(model.id, "hero", model.name);
 const liveProduct = await livePricedProduct(model.id);
 const pageSeo = liveProduct
   ? buildProductSeo({
+      reviews: await reviewSchema(model.id),
       product: liveProduct,
       categoryLabel: "AirPods",
       categoryHref: "/airpods",

@@ -1,9 +1,11 @@
 ---
+export const prerender = false;
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import AccessoryCard from "../../components/accessories/AccessoryCard.astro";
 import CompatibilityFinder from "../../components/accessories/CompatibilityFinder.astro";
 import CasesFeel from "../../components/accessories/CasesFeel.astro";
 import AccessoryLipaCalc from "../../components/accessories/AccessoryLipaCalc.astro";
+import AccessoryGroupSeo from "../../components/accessories/AccessoryGroupSeo.astro";
 import AccessoryTrademark from "../../components/accessories/AccessoryTrademark.astro";
 import {
   caseProducts,
@@ -60,7 +62,10 @@ const fitMatrix = Object.fromEntries(
 );
 ---
 
-<BaseLayout title="Cases - GadgetHub" description="Apple iPhone cases and iPad Smart Folios. Exact model fit in Nairobi.">
+<BaseLayout
+  title="iPhone Case Price in Kenya | Apple Cases | Gadget Hub"
+  description="Genuine Apple iPhone Silicone, Clear and FineWoven cases and iPad Smart Folios in Kenya. Exact model fit, live prices, Gadget Hub Nairobi."
+>
   <section class="xcases-hero">
     <div class="container">
       <h1>Made to fit.</h1>
@@ -170,6 +175,8 @@ const fitMatrix = Object.fromEntries(
       </details>
     ))}
   </section>
+
+  <AccessoryGroupSeo name="iPhone Cases & iPad Folios" path="/accessories/cases" productIds={list.map((p) => p.id)} faq={faq} />
 
   <AccessoryLipaCalc productId="case-iphone-17-pro-silicone" />
   <AccessoryTrademark />

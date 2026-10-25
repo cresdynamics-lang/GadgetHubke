@@ -8,6 +8,7 @@ import TvHomeLipaCalc from "../../components/tv-home/TvHomeLipaCalc.astro";
 import TvHomeTradeIn from "../../components/tv-home/TvHomeTradeIn.astro";
 import TvHomeTrademark from "../../components/tv-home/TvHomeTrademark.astro";
 import ProductReviews from "../../components/ProductReviews.astro";
+import { reviewSchema } from "../../lib/seo/offer-schema";
 import StickyBuyBar from "../../components/StickyBuyBar.astro";
 import {
   tvHomeModels,
@@ -53,6 +54,7 @@ const tabs = colourViews[model.colours[0]] ?? baseTabs;
 const img = tabs[0] || getTvHomeImage(model.id, "hero", model.name);
 const pageSeo = live
   ? buildProductSeo({
+      reviews: await reviewSchema(model.id),
       product: live,
       categoryLabel: "TV & Home",
       categoryHref: "/tv-home",

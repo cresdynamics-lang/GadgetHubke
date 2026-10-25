@@ -1,4 +1,5 @@
 ---
+import { tidyTitle } from "../lib/seo/title";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import FloatingActions from "../components/FloatingActions.astro";
@@ -20,6 +21,8 @@ interface Props {
   image?: string;
   /** Site-relative canonical path when this page duplicates another. */
   canonicalPath?: string;
+  /** Keep this page out of Google (still crawlable for links). */
+  noindex?: boolean;
 }
 
 const {
@@ -28,6 +31,7 @@ const {
   hideFooter = false,
   image,
   canonicalPath,
+  noindex = false,
 } = Astro.props;
 const ogImage = new URL(image || "/images/logo.png", site.url).href;
 // Store details on every page so Google can tie products and articles to the Nairobi shop.
@@ -60,7 +64,9 @@ const storeJsonLd = {
   sameAs: [site.social.facebook, site.social.instagram, site.social.tiktok],
 };
 
-const canonical = new URL(canonicalPath || Astro.url.pathname, site.url).href;
+// One address per page: never a trailing slash (matches the sitemap), never a query string.
+const canonical = new URL((canonicalPath || Astro.url.pathname).replace(/(.)\/+$/, "$1"), site.url).href;
+const pageTitle = tidyTitle(title);
 const path = Astro.url.pathname.replace(/\/$/, "") || "/";
 const hideFloatWhatsApp = path === "/contact";
 ---
@@ -74,6 +80,7 @@ const hideFloatWhatsApp = path === "/contact";
     <meta name="color-scheme" content="light only" />
     <meta name="theme-color" content="#ffffff" />
     <link rel="canonical" href={canonical} />
+    {noindex ? <meta name="robots" content="noindex, follow" /> : null}
     <link
       rel="preload"
       href={interLatin}
@@ -83,7 +90,7 @@ const hideFloatWhatsApp = path === "/contact";
     />
     <link rel="icon" type="image/png" href="/images/logo.png" />
     <link rel="apple-touch-icon" href="/images/logo.png" />
-    <meta property="og:title" content={title} />
+    <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
@@ -91,14 +98,14 @@ const hideFloatWhatsApp = path === "/contact";
     <meta property="og:site_name" content="Gadget Hub Kenya" />
     <meta property="og:locale" content="en_KE" />
     <meta name="twitter:card" content={image ? "summary_large_image" : "summary"} />
-    <meta name="twitter:title" content={title} />
+    <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
     <meta name="geo.region" content="KE-110" />
     <meta name="geo.placename" content="Nairobi" />
     <script type="application/ld+json" set:html={JSON.stringify(storeJsonLd)} />
     <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
+    <title>{pageTitle}</title>
     <slot name="head" />
   </head>
   <body>

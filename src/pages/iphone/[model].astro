@@ -51,6 +51,7 @@ import { storageIdFromLabel } from "../../lib/pricing/iphone-sheet";
 import { site, whatsappUrl } from "../../lib/site";
 import StockChannelToggle from "../../components/StockChannelToggle.astro";
 import ProductReviews from "../../components/ProductReviews.astro";
+import { reviewSchema } from "../../lib/seo/offer-schema";
 import StickyBuyBar from "../../components/StickyBuyBar.astro";
 import BackButton from "../../components/BackButton.astro";
 import TrackProductView from "../../components/TrackProductView.astro";
@@ -163,6 +164,7 @@ if (seo) {
     pageUrl,
     imageUrl: new URL(initialImg.src, site.url).href,
     seriesUrl: new URL(`/iphone/${seriesHub.slug}`, site.url).href,
+    reviews: await reviewSchema(seo.id, seoIdToShopProductId[seo.id]),
   });
   colourData = hasLegacyGallery
     ? colours.map((key) => ({

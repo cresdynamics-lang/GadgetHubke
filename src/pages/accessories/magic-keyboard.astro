@@ -1,9 +1,11 @@
 ---
+export const prerender = false;
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import AccessoryCard from "../../components/accessories/AccessoryCard.astro";
 import CompatibilityFinder from "../../components/accessories/CompatibilityFinder.astro";
 import KeyboardFeel from "../../components/accessories/KeyboardFeel.astro";
 import AccessoryLipaCalc from "../../components/accessories/AccessoryLipaCalc.astro";
+import AccessoryGroupSeo from "../../components/accessories/AccessoryGroupSeo.astro";
 import AccessoryTrademark from "../../components/accessories/AccessoryTrademark.astro";
 import {
   keyboards,
@@ -26,7 +28,10 @@ const faq = accessoryFaq();
 const notes = accessoryBuyingNotes(ipadKbs[0]);
 ---
 
-<BaseLayout title="Magic Keyboard - GadgetHub" description="Magic Keyboard for iPad and Mac. Fit checked in Nairobi.">
+<BaseLayout
+  title="Magic Keyboard Price in Kenya | iPad & Mac | Gadget Hub"
+  description="Magic Keyboard for iPad Pro, iPad Air and Mac in Kenya. Genuine Apple, fit checked, live prices at Gadget Hub, Nairobi CBD."
+>
   <section class="xkb-hero">
     <div class="container">
       <h1>Magic Keyboard</h1>
@@ -94,6 +99,8 @@ const notes = accessoryBuyingNotes(ipadKbs[0]);
       ))
     }
   </section>
+
+  <AccessoryGroupSeo name="Magic Keyboard" path="/accessories/magic-keyboard" productIds={[...ipadKbs, ...macKbs].map((p) => p.id)} faq={faq} />
 
   <AccessoryLipaCalc productId="keyboard-ipad-pro-13" />
   <AccessoryTrademark />

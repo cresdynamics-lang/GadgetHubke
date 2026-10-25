@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
+import { shopCanonical } from "../lib/seo/shop-canonical";
 import StickyBuyBar from "../components/StickyBuyBar.astro";
 import type { Product } from "../lib/products";
 import { site } from "../lib/site";
@@ -14,6 +15,7 @@ const { product } = Astro.props;
 <BaseLayout
   title={`${product.name} Tech Specs - GadgetHub`}
   description={`Full specifications for ${product.name}. Warranty via ${site.legalName}.`}
+  canonicalPath={shopCanonical(product)}
 >
   <article class="specs container">
     <header class="specs__intro">

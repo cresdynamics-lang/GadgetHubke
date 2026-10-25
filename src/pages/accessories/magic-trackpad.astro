@@ -1,9 +1,11 @@
 ---
+export const prerender = false;
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import AccessoryCard from "../../components/accessories/AccessoryCard.astro";
 import CompatibilityFinder from "../../components/accessories/CompatibilityFinder.astro";
 import TrackpadFeel from "../../components/accessories/TrackpadFeel.astro";
 import AccessoryLipaCalc from "../../components/accessories/AccessoryLipaCalc.astro";
+import AccessoryGroupSeo from "../../components/accessories/AccessoryGroupSeo.astro";
 import AccessoryTrademark from "../../components/accessories/AccessoryTrademark.astro";
 import {
   trackpads,
@@ -20,7 +22,10 @@ const faq = accessoryFaq();
 const notes = accessoryBuyingNotes(list[0]);
 ---
 
-<BaseLayout title="Magic Trackpad - GadgetHub" description="Magic Trackpad with Force Touch. Fit checked in Nairobi.">
+<BaseLayout
+  title="Magic Trackpad Price in Kenya | Gadget Hub"
+  description="Apple Magic Trackpad (USB-C) price in Kenya, black or white. Genuine Apple at Gadget Hub, Nairobi CBD. Pay by M-Pesa."
+>
   <section class="xtpad-hero">
     <div class="container">
       <h1>A whole surface to command.</h1>
@@ -68,6 +73,8 @@ const notes = accessoryBuyingNotes(list[0]);
       ))
     }
   </section>
+
+  <AccessoryGroupSeo name="Magic Trackpad" path="/accessories/magic-trackpad" productIds={list.map((p) => p.id)} faq={faq} />
 
   <AccessoryLipaCalc productId="trackpad-usbc-white" />
   <AccessoryTrademark />

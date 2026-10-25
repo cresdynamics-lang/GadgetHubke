@@ -16,7 +16,7 @@ const {
   title,
   categoryLabel,
   categoryHref,
-  blurb = "New sealed stock. Message us for current configurations and pricing.",
+  blurb = "New and Ex-UK stock. Message us for current configurations and pricing.",
 } = Astro.props;
 
 const waHref = whatsappUrl(`Hi GadgetHub - interested in ${title}.`);
@@ -24,7 +24,8 @@ const waHref = whatsappUrl(`Hi GadgetHub - interested in ${title}.`);
 
 <BaseLayout
   title={`${title} - GadgetHub`}
-  description={`${title} at GadgetHub Kenya. New devices only. WhatsApp ${site.phoneDisplay}.`}
+  description={`${title} at GadgetHub Kenya. New and Ex-UK. WhatsApp ${site.phoneDisplay}.`}
+  noindex
 >
   <section class="stock container">
     <nav class="stock__crumb" aria-label="Breadcrumb">

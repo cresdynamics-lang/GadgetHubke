@@ -54,6 +54,11 @@ function preloadHero(html: string): string {
 }
 
 export const onRequest = defineMiddleware(async (context, next) => {
+  // One URL per page: /iphone/iphone-17/ → /iphone/iphone-17 (keeps the query).
+  const { pathname, search } = context.url;
+  if (!context.isPrerendered && pathname.length > 1 && pathname.endsWith("/") && !pathname.startsWith("/api/")) {
+    return context.redirect(pathname.replace(/\/+$/, "") + search, 301);
+  }
   const response = await next();
   const type = response.headers.get("content-type") || "";
   if (!type.includes("text/html") || context.url.pathname.startsWith("/management") || context.url.pathname.startsWith("/api/")) {

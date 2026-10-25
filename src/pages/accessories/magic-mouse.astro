@@ -1,9 +1,11 @@
 ---
+export const prerender = false;
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import AccessoryCard from "../../components/accessories/AccessoryCard.astro";
 import CompatibilityFinder from "../../components/accessories/CompatibilityFinder.astro";
 import MouseFeel from "../../components/accessories/MouseFeel.astro";
 import AccessoryLipaCalc from "../../components/accessories/AccessoryLipaCalc.astro";
+import AccessoryGroupSeo from "../../components/accessories/AccessoryGroupSeo.astro";
 import AccessoryTrademark from "../../components/accessories/AccessoryTrademark.astro";
 import {
   mice,
@@ -20,7 +22,10 @@ const faq = accessoryFaq();
 const notes = accessoryBuyingNotes(list[0]);
 ---
 
-<BaseLayout title="Magic Mouse - GadgetHub" description="Magic Mouse with Multi-Touch surface. Fit checked in Nairobi.">
+<BaseLayout
+  title="Magic Mouse Price in Kenya | Gadget Hub"
+  description="Apple Magic Mouse (USB-C) price in Kenya, black or white. Genuine Apple at Gadget Hub, Nairobi CBD. Pay by M-Pesa."
+>
   <section class="xmouse-hero">
     <div class="container">
       <h1>A mouse you can swipe.</h1>
@@ -68,6 +73,8 @@ const notes = accessoryBuyingNotes(list[0]);
       ))
     }
   </section>
+
+  <AccessoryGroupSeo name="Magic Mouse" path="/accessories/magic-mouse" productIds={list.map((p) => p.id)} faq={faq} />
 
   <AccessoryLipaCalc productId="mouse-usbc-white" />
   <AccessoryTrademark />

@@ -5,6 +5,8 @@
  */
 import { site, policy } from "../site";
 import type { PricedProduct } from "../pricing/live";
+import { offerExtras, type ReviewSchema } from "./offer-schema";
+import { tidyTitle } from "./title";
 
 export type SeoFaqItem = { question: string; answer: string };
 
@@ -24,6 +26,8 @@ export type ProductSeoInput = {
   alsoKnownAs?: string[];
   variesBy?: string[];
   extraFaq?: SeoFaqItem[];
+  /** Star rating from real customer reviews (reviewSchema()). */
+  reviews?: ReviewSchema;
 };
 
 export type ProductSeo = {
@@ -62,11 +66,6 @@ function nairobiDate(d = new Date()): { iso: string; label: string } {
 }
 
 /** Offers stay valid to the end of next month; prices are re-read on every request. */
-function priceValidUntil(d = new Date()): string {
-  const end = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 2, 0));
-  return end.toISOString().slice(0, 10);
-}
-
 export function buildProductSeo(input: ProductSeoInput): ProductSeo {
   const { product, categoryLabel, categoryHref, path } = input;
   const name = product.name;
@@ -90,7 +89,7 @@ export function buildProductSeo(input: ProductSeoInput): ProductSeo {
   const options = input.optionsSummary ? ` ${input.optionsSummary}.` : "";
 
   const longTitle = `${name} Price in Kenya | Gadget Hub Nairobi`;
-  const title = longTitle.length <= 60 ? longTitle : clip(`${name} Price in Kenya | Gadget Hub`, 65);
+  const title = tidyTitle(longTitle);
   const description = clip(
     `Buy the ${name} in Nairobi from ${formatKes(fromKes)}.${options} Genuine sealed Apple, ${site.warranty.years}-year warranty. Pay by M-Pesa or Lipa Mdogo Mdogo.`,
     158,
@@ -146,8 +145,7 @@ export function buildProductSeo(input: ProductSeoInput): ProductSeo {
     ...(input.extraFaq ?? []),
   ];
 
-  const seller = { "@type": "Organization", name: site.legalName, url: site.url };
-  const validUntil = priceValidUntil();
+  const extras = offerExtras();
   const offerFor = (priceKes: number, inStock: boolean, used = false) => ({
     "@type": "Offer",
     price: priceKes,
@@ -155,9 +153,8 @@ export function buildProductSeo(input: ProductSeoInput): ProductSeo {
     availability: inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
     itemCondition: used ? "https://schema.org/UsedCondition" : "https://schema.org/NewCondition",
     ...(used ? { description: "Ex-UK (UK-used)" } : {}),
-    priceValidUntil: validUntil,
     url,
-    seller,
+    ...extras,
   });
   const offersFor = (r: { priceKes: number; exUkKes?: number; inStock: boolean }) =>
     r.exUkKes ? [offerFor(r.priceKes, r.inStock), offerFor(r.exUkKes, r.inStock, true)] : offerFor(r.priceKes, r.inStock);
@@ -174,6 +171,7 @@ export function buildProductSeo(input: ProductSeoInput): ProductSeo {
           image: images,
           brand,
           productGroupID: product.id,
+          ...(input.reviews ?? {}),
           ...(input.variesBy?.length ? { variesBy: input.variesBy } : {}),
           hasVariant: rows.map((r, i) => ({
             "@type": "Product",
@@ -194,6 +192,7 @@ export function buildProductSeo(input: ProductSeoInput): ProductSeo {
           sku: product.id,
           image: images,
           brand,
+          ...(input.reviews ?? {}),
           offers: rows[0] ? offersFor(rows[0]) : offerFor(fromKes, product.inStock),
         };
 
