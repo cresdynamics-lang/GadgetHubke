@@ -44,8 +44,13 @@ rsync -az --checksum --delete --exclude '._*' --rsync-path="$RSYNC_PATH" dist/se
 echo "→ Uploading client files (old hashed assets kept for cached pages)"
 rsync -az --checksum --delete --filter='P _astro/**' --exclude '._*' --rsync-path="$RSYNC_PATH" dist/client/ "$HOST:$ROOT/dist/client/"
 
+echo "→ Uploading PM2 config and admin tool"
+rsync -az --rsync-path="$RSYNC_PATH" ecosystem.config.cjs "$HOST:$ROOT/ecosystem.config.cjs"
+ssh -o BatchMode=yes "$HOST" "sudo -n -u $RUN_AS mkdir -p $ROOT/scripts"
+rsync -az --rsync-path="$RSYNC_PATH" scripts/set-admin-password.mjs "$HOST:$ROOT/scripts/set-admin-password.mjs"
+
 echo "→ Restarting app"
-ssh -o BatchMode=yes "$HOST" "$PM2 restart gadgethub --update-env >/dev/null && for i in \$(seq 1 30); do curl -s -o /dev/null http://127.0.0.1:3030/ && exit 0; sleep 1; done; echo 'app did not come up' >&2; exit 1"
+ssh -o BatchMode=yes "$HOST" "cd $ROOT && $PM2 startOrReload ecosystem.config.cjs --update-env >/dev/null && for i in \$(seq 1 30); do curl -s -o /dev/null http://127.0.0.1:3030/ && exit 0; sleep 1; done; echo 'app did not come up' >&2; exit 1"
 
 echo "→ Smoke test"
 fail=0

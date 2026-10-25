@@ -2,7 +2,10 @@
 /**
  * iPad compare page - photos, grouped specs, differences toggle, honest summary.
  */
+export const prerender = false;
+
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { liveFromPrices } from "../../lib/pricing/live";
 import {
   ipadModels,
   ipadConfig,
@@ -29,14 +32,17 @@ if (models.length < 2) {
   ].filter(Boolean);
 }
 
+const fromPrice = await liveFromPrices();
 const cards = models.map((m) => {
+  const live = fromPrice(m.id);
   const c = defaultIpadColour(m);
   const img = getIpadImage(m.id, c, "product", m.name);
   return {
     id: m.id,
     name: m.name,
     href: `/ipad/${m.id}`,
-    priceLabel: formatKes(m.basePriceKes),
+    priceLabel: formatKes(live.newKes ?? m.basePriceKes),
+    exUkLabel: live.exUkKes ? formatKes(live.exUkKes) : "—",
     imageSrc: img.src,
     imageAlt: img.alt,
     chip: m.chip,
@@ -48,7 +54,7 @@ const cards = models.map((m) => {
     size: `${m.screenInches}″`,
     weight: `${m.weightG} g`,
     ai: m.appleIntelligence ? "Yes" : "No",
-    price: m.basePriceKes,
+    price: live.newKes ?? m.basePriceKes,
   };
 });
 
@@ -62,7 +68,8 @@ const rows = [
   { group: "Size and weight", label: "Size", values: cards.map((c) => c.size) },
   { group: "Size and weight", label: "Weight", values: cards.map((c) => c.weight) },
   { group: "Software", label: "Apple Intelligence", values: cards.map((c) => c.ai) },
-  { group: "Price", label: "From", values: cards.map((c) => c.priceLabel) },
+  { group: "Price", label: "From (New)", values: cards.map((c) => c.priceLabel) },
+  { group: "Price", label: "From (Ex-UK)", values: cards.map((c) => c.exUkLabel) },
 ];
 
 const chips = new Set(cards.map((c) => c.chip));

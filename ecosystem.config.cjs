@@ -57,6 +57,12 @@ module.exports = {
         MAIL_FROM: fileEnv.MAIL_FROM || "",
         MAIL_REPLY_TO: fileEnv.MAIL_REPLY_TO || "",
         GH_SIGNING_SECRET: fileEnv.GH_SIGNING_SECRET || "",
+        // Admin sign-in (set with scripts/set-admin-password.mjs; never committed)
+        ADMIN_EMAIL: fileEnv.ADMIN_EMAIL || "",
+        ADMIN_PASSWORD_HASH: fileEnv.ADMIN_PASSWORD_HASH || "",
+        ADMIN_SESSION_SECRET: fileEnv.ADMIN_SESSION_SECRET || "",
+        ADMIN_SECRET: fileEnv.ADMIN_SECRET || "",
+        MANAGEMENT_OTP_CODE: fileEnv.MANAGEMENT_OTP_CODE || "",
       },
     },
   ],

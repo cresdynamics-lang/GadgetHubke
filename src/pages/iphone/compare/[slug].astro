@@ -25,6 +25,10 @@ const left = withLiveSeoPrices(leftDefault, await livePricedProduct(iphoneLiveId
 const right = withLiveSeoPrices(rightDefault, await livePricedProduct(iphoneLiveId(rightDefault.id)));
 
 const title = `${left.name} vs ${right.name}: Price in Kenya & Specs | Gadget Hub`;
+const exUkFrom = (m: typeof left) => {
+  const ex = m.variants.map((v) => v.exUkKes).filter((n) => n > 0);
+  return ex.length ? Math.min(...ex) : 0;
+};
 const description = `Compare ${left.name} and ${right.name} prices and specs in Kenya. From ${formatKesSeo(left.fromKes)} vs ${formatKesSeo(right.fromKes)} at Gadget Hub, Norwich House.`;
 
 const labels = [...new Set([...left.specs.map((s) => s.label), ...right.specs.map((s) => s.label)])];
@@ -60,9 +64,14 @@ const which =
       </thead>
       <tbody>
         <tr>
-          <th scope="row">From price</th>
+          <th scope="row">From price (New)</th>
           <td>{formatKesSeo(left.fromKes)}</td>
           <td>{formatKesSeo(right.fromKes)}</td>
+        </tr>
+        <tr>
+          <th scope="row">From price (Ex-UK)</th>
+          <td>{exUkFrom(left) ? formatKesSeo(exUkFrom(left)) : "—"}</td>
+          <td>{exUkFrom(right) ? formatKesSeo(exUkFrom(right)) : "—"}</td>
         </tr>
         {
           labels.map((label) => (

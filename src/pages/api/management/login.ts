@@ -25,7 +25,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
 
   try {
-    await loginWithPassword(password);
+    await loginWithPassword(password, email);
   } catch (e) {
     return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Login failed." }), {
       status: 401,

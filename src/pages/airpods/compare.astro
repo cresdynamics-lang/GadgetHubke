@@ -1,5 +1,8 @@
 ---
+export const prerender = false;
+
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { liveFromPrices } from "../../lib/pricing/live";
 import AirPodsStage from "../../components/airpods/AirPodsStage.astro";
 import AirpodsTrademark from "../../components/airpods/AirpodsTrademark.astro";
 import {
@@ -14,7 +17,11 @@ import {
 const idsParam = Astro.url.searchParams.get("ids") || "";
 const ids = idsParam.split(",").map((s) => s.trim()).filter(Boolean).slice(0, 3);
 const models = ids.map((id) => getAirpodsModel(id)).filter(Boolean);
-const chosen = models.length ? models : airpodsModels.filter((m) => m.isNew).slice(0, 3);
+const fromPrice = await liveFromPrices();
+const chosen = (models.length ? models : airpodsModels.filter((m) => m.isNew).slice(0, 3)).map((m) => {
+  const live = fromPrice(m!.id);
+  return { ...m!, basePriceKes: live.newKes ?? m!.basePriceKes, exUkKes: live.exUkKes };
+});
 
 function honestDiff(list: typeof chosen): string {
   if (list.length < 2) return "Pick two or three models to see what actually changes.";
@@ -42,7 +49,8 @@ const rows: { label: string; values: (string | number | boolean | null)[] }[] = 
   { label: "Battery (single h)", values: chosen.map((m) => m!.batterySingleHours) },
   { label: "Battery + case (h)", values: chosen.map((m) => m!.batteryWithCaseHours) },
   { label: "Weight (g)", values: chosen.map((m) => m!.weightG) },
-  { label: "From (KES)", values: chosen.map((m) => m!.basePriceKes) },
+  { label: "From New (KES)", values: chosen.map((m) => m!.basePriceKes) },
+  { label: "From Ex-UK (KES)", values: chosen.map((m) => m!.exUkKes ?? "—") },
 ];
 
 function cell(v: string | number | boolean | null): string {

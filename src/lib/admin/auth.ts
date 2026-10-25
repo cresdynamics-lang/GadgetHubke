@@ -1,14 +1,23 @@
 /**
  * Cookie auth for /management and /api/management/* (legacy /api/admin/* still works).
- * Set ADMIN_SECRET in env (required in production).
+ * Production env (set with `node scripts/set-admin-password.mjs` on the server, never in git):
+ *   ADMIN_EMAIL           super-admin email
+ *   ADMIN_PASSWORD_HASH   scrypt$<salt hex>$<hash hex>
+ *   ADMIN_SESSION_SECRET  random key that signs session cookies
+ * Legacy: ADMIN_SECRET alone acts as both password and signing key.
  */
 import type { AstroCookies } from "astro";
+import { scryptSync, timingSafeEqual } from "node:crypto";
 
 const COOKIE = "gh_admin_session";
 const MAX_AGE_SEC = 60 * 60 * 12; // 12 hours
 
 function secret() {
-  return process.env.ADMIN_SECRET || (import.meta.env.DEV ? "gadgethub-dev-admin" : "");
+  return (
+    process.env.ADMIN_SESSION_SECRET ||
+    process.env.ADMIN_SECRET ||
+    (import.meta.env.DEV ? "gadgethub-dev-admin" : "")
+  );
 }
 
 function toHex(buf: ArrayBuffer) {
@@ -28,7 +37,7 @@ async function sign(payload: string) {
 }
 
 export function adminSecretConfigured() {
-  return Boolean(process.env.ADMIN_SECRET) || import.meta.env.DEV;
+  return Boolean(process.env.ADMIN_SESSION_SECRET || process.env.ADMIN_SECRET) || import.meta.env.DEV;
 }
 
 export async function createAdminSessionToken() {
@@ -82,8 +91,26 @@ export async function requireAdmin(cookies: AstroCookies) {
   return null;
 }
 
-export async function loginWithPassword(password: string) {
-  const expected = secret();
-  if (!expected) throw new Error("ADMIN_SECRET is not set on the server.");
+function passwordMatchesHash(password: string, stored: string): boolean {
+  const [scheme, saltHex, hashHex] = stored.split("$");
+  if (scheme !== "scrypt" || !saltHex || !hashHex) return false;
+  const expected = Buffer.from(hashHex, "hex");
+  const actual = scryptSync(password, Buffer.from(saltHex, "hex"), expected.length);
+  return actual.length === expected.length && timingSafeEqual(actual, expected);
+}
+
+export async function loginWithPassword(password: string, email?: string) {
+  const hash = process.env.ADMIN_PASSWORD_HASH;
+  if (hash) {
+    const adminEmail = (process.env.ADMIN_EMAIL || "").trim().toLowerCase();
+    const emailOk = !adminEmail || (email || "").trim().toLowerCase() === adminEmail;
+    // Check the password even when the email is wrong, so timing does not reveal which failed.
+    const passOk = Boolean(password) && passwordMatchesHash(password, hash);
+    if (!emailOk || !passOk) throw new Error("Wrong email or password.");
+    if (!secret()) throw new Error("ADMIN_SESSION_SECRET is not set on the server.");
+    return;
+  }
+  const expected = process.env.ADMIN_SECRET || (import.meta.env.DEV ? "gadgethub-dev-admin" : "");
+  if (!expected) throw new Error("Admin sign-in is not configured on the server.");
   if (!password || password !== expected) throw new Error("Wrong password.");
 }

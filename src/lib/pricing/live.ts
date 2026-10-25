@@ -249,6 +249,17 @@ export function hasExUk(p: PricedProduct | undefined): boolean {
   return Object.keys(variantExUkMap(p)).length > 0 || (typeof p?.exUkKes === "number" && p.exUkKes > 0);
 }
 
+/** Live "from" prices for comparisons: lowest New and lowest Ex-UK per product id. */
+export async function liveFromPrices(): Promise<(id: string) => { newKes?: number; exUkKes?: number }> {
+  const map = new Map((await livePricedCatalog()).map((p) => [p.id, p]));
+  return (id) => {
+    const p = map.get(id);
+    if (!p) return {};
+    const ex = Object.values(variantExUkMap(p));
+    return { newKes: p.priceKes, exUkKes: ex.length ? Math.min(...ex) : p.exUkKes };
+  };
+}
+
 /** The admin/live id an iPhone SEO page prices against. */
 export function iphoneLiveId(seoId: string): string {
   return seoIdToShopProductId[seoId] ?? seoId;

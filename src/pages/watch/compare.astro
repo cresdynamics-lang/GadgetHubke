@@ -2,7 +2,10 @@
 /**
  * Watch compare - side-by-side with show-only-differences.
  */
+export const prerender = false;
+
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { liveFromPrices } from "../../lib/pricing/live";
 import WatchStage from "../../components/watch/WatchStage.astro";
 import {
   watchModels,
@@ -14,7 +17,11 @@ import {
 const idsParam = Astro.url.searchParams.get("ids") || "";
 const ids = idsParam.split(",").map((s) => s.trim()).filter(Boolean).slice(0, 3);
 const models = ids.map((id) => getWatchModel(id)).filter(Boolean);
-const chosen = models.length ? models : watchModels.filter((m) => m.isNew).slice(0, 3);
+const fromPrice = await liveFromPrices();
+const chosen = (models.length ? models : watchModels.filter((m) => m.isNew).slice(0, 3)).map((m) => {
+  const live = fromPrice(m!.id);
+  return { ...m!, basePriceKes: live.newKes ?? m!.basePriceKes, exUkKes: live.exUkKes };
+});
 
 function honestDiff(list: typeof chosen): string {
   if (list.length < 2) return "Pick two or three watches to see what actually changes.";
@@ -46,7 +53,8 @@ const rows: { group: string; label: string; values: (string | number | boolean |
   { group: "Battery", label: "Low Power hours", values: chosen.map((m) => m!.lowPowerHours) },
   { group: "Case and weight", label: "Case (mm)", values: chosen.map((m) => m!.defaultCaseMm) },
   { group: "Case and weight", label: "Weight (g)", values: chosen.map((m) => m!.weightG) },
-  { group: "Price", label: "From (KES)", values: chosen.map((m) => m!.basePriceKes) },
+  { group: "Price", label: "From New (KES)", values: chosen.map((m) => m!.basePriceKes) },
+  { group: "Price", label: "From Ex-UK (KES)", values: chosen.map((m) => m!.exUkKes ?? "—") },
 ];
 
 function cell(v: string | number | boolean | null): string {

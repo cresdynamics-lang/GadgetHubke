@@ -2,7 +2,11 @@
 /**
  * MacBook compare page - photos, grouped specs, differences toggle, honest summary.
  */
+export const prerender = false;
+
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { liveFromPrices } from "../../lib/pricing/live";
+import { formatKes } from "../../lib/mac";
 import {
   macModels,
   macConfig,
@@ -31,7 +35,12 @@ if (models.length < 2) {
   ].filter(Boolean);
 }
 
-const cards = models.map(macCompareCard);
+const fromPrice = await liveFromPrices();
+const cards = models.map((m) => {
+  const live = fromPrice(m.id);
+  const price = live.newKes ?? m.basePriceKes;
+  return { ...macCompareCard(m), price, priceLabel: formatKes(price), exUkLabel: live.exUkKes ? formatKes(live.exUkKes) : "—" };
+});
 const rows = macCompareRows(cards);
 const honest = honestMacDifference(models);
 const pickList = macModels.filter((m) => m.year >= 2023 || m.isNew);
