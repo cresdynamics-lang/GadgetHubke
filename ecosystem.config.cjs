@@ -55,6 +55,7 @@ module.exports = {
         SMTP_USER: fileEnv.SMTP_USER || "",
         SMTP_PASS: fileEnv.SMTP_PASS || "",
         MAIL_FROM: fileEnv.MAIL_FROM || "",
+        RESEND_API_KEY: fileEnv.RESEND_API_KEY || "",
         MAIL_REPLY_TO: fileEnv.MAIL_REPLY_TO || "",
         GH_SIGNING_SECRET: fileEnv.GH_SIGNING_SECRET || "",
         // Admin sign-in (set with scripts/set-admin-password.mjs; never committed)

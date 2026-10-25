@@ -50,11 +50,16 @@ export type OrderStatus =
   | "failed"
   | "cancelled";
 
+/** Staff-side progress after payment (management Orders). */
+export type FulfillmentStatus = "confirmed" | "dispatched" | "delivered";
+
 export type CheckoutCustomer = {
   name: string;
   phone: string;
   email: string;
   fulfillment: Fulfillment;
+  /** Area / estate, building and landmark — required for delivery. */
+  deliveryAddress?: string;
   notes?: string;
   mpesaPhone?: string;
 };
@@ -81,6 +86,8 @@ export type CheckoutOrder = {
   error?: string;
   invoiceSentAt?: string;
   receiptSentAt?: string;
+  fulfillmentStatus?: FulfillmentStatus;
+  adminNotes?: string;
 };
 
 export const BAG_KEY = "gh-bag";

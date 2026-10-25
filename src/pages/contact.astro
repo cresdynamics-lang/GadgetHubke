@@ -392,6 +392,14 @@ const headlineWords = contactHero.headline.split(" ");
       message,
     ].join("\n");
 
+    // Save first (keepalive survives the tab switch) so staff see it even if WhatsApp isn't sent.
+    void fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ kind: "contact", name, phone, topic, message }),
+      keepalive: true,
+    }).catch(() => {});
+
     if (done instanceof HTMLElement) {
       done.hidden = false;
       done.classList.add("is-show");

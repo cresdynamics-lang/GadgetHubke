@@ -55,7 +55,7 @@ function firstName(order: CheckoutOrder) {
 
 function fulfillLine(order: CheckoutOrder) {
   return order.customer.fulfillment === "delivery"
-    ? "Delivery · Nairobi (fee confirmed after payment)"
+    ? `Delivery · ${order.customer.deliveryAddress || "Nairobi"} (fee confirmed after payment)`
     : `Pickup · ${site.address}`;
 }
 
@@ -191,10 +191,12 @@ export function orderNoticeToShop(order: CheckoutOrder, kind: "invoice" | "recei
   const html = wrap(
     title,
     `<p>${esc(order.customer.name)} · ${esc(order.customer.phone)} · ${esc(order.customer.email)}</p>
-    <p>${lipa ? `Lipa Mdogo Mdogo · deposit ${esc(due)} · remaining ${esc(formatKes(order.lipa?.remainingKes || 0))} over ${order.lipa?.months || 6} months` : `Purchase · ${esc(due)}`} · ${order.customer.fulfillment}</p>
+    <p>${lipa ? `Lipa Mdogo Mdogo · deposit ${esc(due)} · remaining ${esc(formatKes(order.lipa?.remainingKes || 0))} over ${order.lipa?.months || 6} months` : `Purchase · ${esc(due)}`} </p>
+    <p>${esc(fulfillLine(order))}</p>
+    ${order.customer.notes ? `<p style="color:#6e6e73;font-size:13px;">Note: ${esc(order.customer.notes)}</p>` : ""}
     <table width="100%">${itemRows(order)}</table>`,
   );
-  const text = `${title}\n${order.customer.name} ${order.customer.phone} ${order.customer.email}\n${lipa ? `Lipa deposit ${due}` : due}`;
+  const text = `${title}\n${order.customer.name} ${order.customer.phone} ${order.customer.email}\n${lipa ? `Lipa deposit ${due}` : due}\n${fulfillLine(order)}`;
   return { subject: `${title} · Gadget Hub`, html, text };
 }
 
@@ -315,5 +317,28 @@ export function cartFollowUpNoticeToShop(input: {
     `Total ${formatKes(input.totalKes)}`,
     ...input.items.map((i) => `• ${i.name} ×${i.qty}`),
   ].join("\n");
+  return { subject: `${title} · Gadget Hub`, html, text };
+}
+
+export function contactNoticeToShop(input: {
+  id: string;
+  kind: "contact" | "newsletter" | "track";
+  name: string;
+  phone: string;
+  topic?: string;
+  message?: string;
+  orderRef?: string;
+}) {
+  const what = input.kind === "newsletter" ? "Newsletter signup" : input.kind === "track" ? "Track-order request" : "Contact message";
+  const title = `${what} ${input.id}`;
+  const html = wrap(
+    title,
+    `<p>${esc(input.name)} · ${esc(input.phone)}</p>
+    ${input.topic ? `<p>Looking for: ${esc(input.topic)}</p>` : ""}
+    ${input.orderRef ? `<p>Order reference: ${esc(input.orderRef)}</p>` : ""}
+    ${input.message ? `<p style="white-space:pre-wrap;">${esc(input.message)}</p>` : ""}
+    <p style="font-size:13px;">The customer was sent to WhatsApp with these details. If no chat arrives, reply on WhatsApp or call.</p>`,
+  );
+  const text = [title, `${input.name} ${input.phone}`, input.topic, input.orderRef, input.message].filter(Boolean).join("\n");
   return { subject: `${title} · Gadget Hub`, html, text };
 }

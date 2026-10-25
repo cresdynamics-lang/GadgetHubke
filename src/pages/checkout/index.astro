@@ -115,6 +115,15 @@ const lipa = iphoneConfig.lipa;
             Delivery · Nairobi (fee confirmed after payment)
           </label>
         </fieldset>
+        <label class="checkout__field" data-delivery-field hidden>
+          <span>Delivery address</span>
+          <textarea
+            name="deliveryAddress"
+            rows="2"
+            maxlength="300"
+            placeholder="Area / estate, building or street, and a landmark — e.g. Kilimani, Argwings Kodhek Rd, Elgon Court B4, opposite Yaya Centre"
+          ></textarea>
+        </label>
         <label class="checkout__field">
           <span>Notes (optional)</span>
           <textarea name="notes" rows="2" placeholder="Landmark, preferred pickup time…"></textarea>
@@ -399,6 +408,17 @@ const lipa = iphoneConfig.lipa;
     });
   });
 
+  // Delivery address shows (and is required) only when Delivery is chosen.
+  const deliveryField = root.querySelector("[data-delivery-field]");
+  const syncDelivery = () => {
+    const on = root.querySelector('input[name="fulfillment"][value="delivery"]')?.checked;
+    if (deliveryField instanceof HTMLElement) deliveryField.hidden = !on;
+    const ta = deliveryField?.querySelector("textarea");
+    if (ta) ta.required = Boolean(on);
+  };
+  root.querySelectorAll('input[name="fulfillment"]').forEach((r) => r.addEventListener("change", syncDelivery));
+  syncDelivery();
+
   root.querySelector('[data-panel="details"]')?.addEventListener("submit", async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -410,6 +430,7 @@ const lipa = iphoneConfig.lipa;
       phone: String(fd.get("phone") || "").trim(),
       email: String(fd.get("email") || "").trim(),
       fulfillment: String(fd.get("fulfillment") || "pickup") === "delivery" ? "delivery" : "pickup",
+      deliveryAddress: String(fd.get("deliveryAddress") || "").trim(),
       notes: String(fd.get("notes") || "").trim(),
     };
     const intent = String(fd.get("intent") || "purchase") === "lipa" ? "lipa" : "purchase";

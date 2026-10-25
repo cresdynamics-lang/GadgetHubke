@@ -50,6 +50,8 @@ export const POST: APIRoute = async ({ request }) => {
     phone: String(customerRaw.phone || "").trim(),
     email: String(customerRaw.email || "").trim(),
     fulfillment,
+    deliveryAddress:
+      fulfillment === "delivery" ? String(customerRaw.deliveryAddress || "").trim().slice(0, 300) || undefined : undefined,
     notes: String(customerRaw.notes || "").trim() || undefined,
     mpesaPhone: String(customerRaw.mpesaPhone || "").trim() || undefined,
   };
@@ -62,6 +64,9 @@ export const POST: APIRoute = async ({ request }) => {
   }
   if (!customer.email.includes("@")) {
     return json({ error: "Enter a valid email." }, 400);
+  }
+  if (customer.fulfillment === "delivery" && (customer.deliveryAddress || "").length < 5) {
+    return json({ error: "Enter your delivery area, building and a landmark." }, 400);
   }
   if (!items.length) return json({ error: "Your cart is empty." }, 400);
 

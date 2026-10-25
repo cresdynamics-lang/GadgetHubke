@@ -3,7 +3,7 @@ import path from "node:path";
 import { site } from "../site";
 
 function hydrateFromDotEnv() {
-  if (process.env.SMTP_PASS) return;
+  if (process.env.SMTP_PASS || process.env.RESEND_API_KEY) return;
   const file = path.join(process.cwd(), ".env");
   if (!fs.existsSync(file)) return;
   for (const line of fs.readFileSync(file, "utf8").split(/\r?\n/)) {
@@ -24,6 +24,10 @@ function hydrateFromDotEnv() {
 }
 
 hydrateFromDotEnv();
+
+export function resendConfigured() {
+  return Boolean(process.env.RESEND_API_KEY);
+}
 
 export function smtpConfigured() {
   return Boolean(process.env.SMTP_USER && process.env.SMTP_PASS);

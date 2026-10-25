@@ -117,7 +117,9 @@ export async function buildOrderPdf(
     order.customer.name,
     order.customer.phone,
     order.customer.email,
-    order.customer.fulfillment === "delivery" ? "Delivery · Nairobi" : `Pickup · ${site.address}`,
+    order.customer.fulfillment === "delivery"
+      ? `Delivery · ${(order.customer.deliveryAddress || "Nairobi").slice(0, 70)}`
+      : `Pickup · ${site.address}`,
     order.customer.notes ? `Note: ${order.customer.notes}` : "",
   ].filter(Boolean);
 

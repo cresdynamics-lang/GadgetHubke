@@ -1,0 +1,89 @@
+---
+export const prerender = false;
+
+import ManagementLayout from "../../layouts/ManagementLayout.astro";
+import { isAdminAuthed } from "../../lib/admin";
+import { listContactMessages } from "../../lib/leads/messages";
+import { sampleStaff } from "../../lib/management/sample";
+
+const authed = await isAdminAuthed(Astro.cookies);
+if (!authed) return Astro.redirect("/management");
+
+const filter = Astro.url.searchParams.get("filter") || "all";
+const all = await listContactMessages();
+const rows = filter === "all" ? all : all.filter((m) => m.kind === filter);
+const label = { contact: "Contact", newsletter: "Newsletter", track: "Track order" } as const;
+
+function waHref(row: (typeof rows)[number]) {
+  const phone = row.phone.replace(/\D/g, "").replace(/^0/, "254");
+  return `https://wa.me/${phone}?text=${encodeURIComponent(`Hi ${row.name} — Gadget Hub here, following up on your message.`)}`;
+}
+
+function when(iso: string) {
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Africa/Nairobi",
+  }).format(new Date(iso));
+}
+---
+
+<ManagementLayout title="Messages - Management" authed active="messages" staffName={sampleStaff.name} staffRole={sampleStaff.role}>
+  <header style="margin-bottom:1rem;">
+    <h1 class="mgmt-page-title">Messages</h1>
+    <p class="mgmt-muted">
+      Contact, newsletter and track-order forms. Saved before the customer is sent to WhatsApp, so you can follow up even if no chat arrives.
+    </p>
+  </header>
+
+  <div class="mgmt-tabs">
+    <a class:list={["mgmt-tab", { "is-active": filter === "all" }]} href="/management/messages">All {all.length}</a>
+    <a class:list={["mgmt-tab", { "is-active": filter === "contact" }]} href="/management/messages?filter=contact">Contact</a>
+    <a class:list={["mgmt-tab", { "is-active": filter === "newsletter" }]} href="/management/messages?filter=newsletter">Newsletter</a>
+    <a class:list={["mgmt-tab", { "is-active": filter === "track" }]} href="/management/messages?filter=track">Track order</a>
+  </div>
+
+  <div class="mgmt-card">
+    <table class="mgmt-table">
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Type</th>
+          <th>Message</th>
+          <th>Received</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          rows.length ? (
+            rows.map((row) => (
+              <tr>
+                <td>
+                  {row.name}
+                  <div class="mgmt-muted">{row.phone}</div>
+                </td>
+                <td>{label[row.kind]}</td>
+                <td>
+                  {row.topic ? <strong>{row.topic}</strong> : null}
+                  {row.orderRef ? <div>Ref {row.orderRef}</div> : null}
+                  {row.message ? <div class="mgmt-muted">{row.message}</div> : null}
+                </td>
+                <td class="mgmt-muted">{when(row.createdAt)}</td>
+                <td>
+                  <a class="mgmt-link" href={waHref(row)} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colspan="5" class="mgmt-muted">No messages in this view yet.</td>
+            </tr>
+          )
+        }
+      </tbody>
+    </table>
+  </div>
+</ManagementLayout>

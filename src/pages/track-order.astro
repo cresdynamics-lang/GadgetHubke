@@ -62,6 +62,13 @@ const waBase = whatsappUrl();
     ]
       .filter(Boolean)
       .join("\n");
+    // Save first (keepalive survives the tab switch) so staff see it even if WhatsApp isn't sent.
+    void fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ kind: "track", name, phone, ref }),
+      keepalive: true,
+    }).catch(() => {});
     window.open(`${waBase}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
   });
 </script>

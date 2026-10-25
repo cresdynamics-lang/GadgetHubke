@@ -1,5 +1,9 @@
+/**
+ * Outgoing email. Resend (HTTPS API) when RESEND_API_KEY is set — the VPS host
+ * blocks SMTP ports — otherwise SMTP via nodemailer.
+ */
 import nodemailer from "nodemailer";
-import { mailFrom, mailReplyTo, smtpConfigured, smtpOptions } from "./config";
+import { mailFrom, mailReplyTo, resendConfigured, smtpConfigured, smtpOptions } from "./config";
 
 let transporter: nodemailer.Transporter | null = null;
 
@@ -19,6 +23,31 @@ export type MailAttachment = {
   contentType?: string;
 };
 
+async function sendViaResend(input: Parameters<typeof sendMail>[0]) {
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: mailFrom(),
+      reply_to: mailReplyTo(),
+      to: [input.to],
+      subject: input.subject,
+      text: input.text,
+      html: input.html,
+      attachments: input.attachments?.map((a) => ({
+        filename: a.filename,
+        content: a.content.toString("base64"),
+      })),
+    }),
+  });
+  const data = (await res.json().catch(() => ({}))) as { id?: string; message?: string };
+  if (!res.ok) throw new Error(`Resend ${res.status}: ${data.message || res.statusText}`);
+  return { messageId: data.id || "" };
+}
+
 export async function sendMail(input: {
   to: string;
   subject: string;
@@ -26,6 +55,7 @@ export async function sendMail(input: {
   html: string;
   attachments?: MailAttachment[];
 }) {
+  if (resendConfigured()) return sendViaResend(input);
   const info = await getTransport().sendMail({
     from: mailFrom(),
     replyTo: mailReplyTo(),
@@ -41,7 +71,7 @@ export async function sendMail(input: {
 export async function trySendMail(
   input: Parameters<typeof sendMail>[0],
 ): Promise<{ ok: true } | { ok: false; error: string }> {
-  if (!smtpConfigured()) return { ok: false, error: "SMTP is not configured." };
+  if (!resendConfigured() && !smtpConfigured()) return { ok: false, error: "Email is not configured." };
   try {
     await sendMail(input);
     return { ok: true };

@@ -3,17 +3,22 @@ export const prerender = false;
 
 import ManagementLayout from "../../../layouts/ManagementLayout.astro";
 import { isAdminAuthed } from "../../../lib/admin";
-import { sampleOrders, sampleStaff } from "../../../lib/management/sample";
+import { getOrder } from "../../../lib/checkout/orders";
+import { sampleStaff } from "../../../lib/management/sample";
+import { toMgmtRow } from "../../../lib/management/orders-view";
 
 const authed = await isAdminAuthed(Astro.cookies);
 if (!authed) return Astro.redirect("/management");
 
-const id = `#${Astro.params.id}`;
-const order = sampleOrders.find((o) => o.id === id) || sampleOrders[0];
+const found = await getOrder(decodeURIComponent(Astro.params.id || ""));
+if (!found) return Astro.redirect("/management/orders");
+const order = toMgmtRow(found);
+const c = found.customer;
+const waPhone = c.phone.replace(/\D/g, "").replace(/^0/, "254");
+const kes = (n: number) => `KES ${n.toLocaleString("en-KE")}`;
 ---
 
 <ManagementLayout title={`Order ${order.id} - Management`} authed active="orders" staffName={sampleStaff.name} staffRole={sampleStaff.role}>
-  <p class="mgmt-banner">Sample order detail - full actions in Phase E.</p>
   <p class="mgmt-muted" style="margin-bottom:0.5rem;">
     <a class="mgmt-link" href="/management/orders">‹ Back to Orders</a>
   </p>
@@ -22,32 +27,95 @@ const order = sampleOrders.find((o) => o.id === id) || sampleOrders[0];
       <h1 class="mgmt-page-title">Order {order.id}</h1>
       <p class="mgmt-muted">{order.customer} · {order.placed}</p>
     </div>
-    <span class:list={["mgmt-tag", { "mgmt-tag--new": order.status === "New" }]}>{order.status}</span>
+    <span class:list={["mgmt-tag", { "mgmt-tag--new": order.status === "New" || order.status === "Awaiting payment" }]}>{order.status}</span>
   </header>
 
   <div class="mgmt-grid mgmt-grid--2">
     <div class="mgmt-card">
       <h2 style="font-size:1.05rem;">Items</h2>
-      <p style="margin:0.75rem 0 0;"><strong>{order.item}</strong></p>
-      <p class="mgmt-muted">{order.total}</p>
+      {
+        found.items.map((i) => (
+          <p style="margin:0.6rem 0 0;">
+            <strong>{i.name}</strong> ×{i.qty}
+            <span class="mgmt-muted">
+              {" "}
+              {[i.storage, i.colour, i.channel === "ex-uk" ? "Ex-UK" : null].filter(Boolean).join(" · ")} — {kes(i.kes * i.qty)}
+            </span>
+          </p>
+        ))
+      }
+      <p style="margin:0.9rem 0 0;"><strong>{found.intent === "lipa" ? "Deposit due" : "Total"}: {order.total}</strong></p>
+      {found.lipa ? (
+        <p class="mgmt-muted">
+          Lipa Mdogo Mdogo · {found.lipa.depositPct}% deposit · {kes(found.lipa.remainingKes)} over {found.lipa.months} months
+        </p>
+      ) : null}
     </div>
     <div class="mgmt-card">
-      <h2 style="font-size:1.05rem;">Payment & source</h2>
-      <p style="margin:0.75rem 0 0;">{order.payment}</p>
-      <p class="mgmt-muted">Came from {order.from}</p>
+      <h2 style="font-size:1.05rem;">Payment</h2>
+      <p style="margin:0.75rem 0 0;">{order.payment} · {found.status.replace("_", " ")}</p>
+      {found.paymentRef ? <p class="mgmt-muted">Ref {found.paymentRef}</p> : null}
+      {found.paidAt ? <p class="mgmt-muted">Paid {new Date(found.paidAt).toLocaleString("en-GB", { timeZone: "Africa/Nairobi" })}</p> : null}
+      {found.error ? <p class="mgmt-muted">Last error: {found.error}</p> : null}
     </div>
     <div class="mgmt-card">
       <h2 style="font-size:1.05rem;">Customer</h2>
-      <p style="margin:0.75rem 0 0;">{order.customer}</p>
-      <p class="mgmt-muted">Phone shown only on open orders (sample hidden).</p>
+      <p style="margin:0.75rem 0 0;">{c.name}</p>
+      <p class="mgmt-muted">
+        <a class="mgmt-link" href={`tel:${c.phone}`}>{c.phone}</a> ·{" "}
+        <a class="mgmt-link" href={`mailto:${c.email}`}>{c.email}</a> ·{" "}
+        <a class="mgmt-link" href={`https://wa.me/${waPhone}`} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+      </p>
+      <p style="margin:0.75rem 0 0;"><strong>{c.fulfillment === "delivery" ? "Delivery" : "Pickup at the shop"}</strong></p>
+      {c.deliveryAddress ? <p class="mgmt-muted">{c.deliveryAddress}</p> : null}
+      {c.notes ? <p class="mgmt-muted">Customer note: {c.notes}</p> : null}
     </div>
-    <div class="mgmt-card">
+    <div class="mgmt-card" data-order-actions data-order-id={found.id}>
       <h2 style="font-size:1.05rem;">Actions</h2>
       <div class="mgmt-actions" style="margin-top:0.75rem;">
-        <button class="mgmt-btn" type="button" disabled>Confirm</button>
-        <button class="mgmt-btn mgmt-btn--ghost" type="button" disabled>Mark dispatched</button>
-        <button class="mgmt-btn mgmt-btn--ghost" type="button" disabled>Add note</button>
+        <button class="mgmt-btn" type="button" data-action="confirm" disabled={found.status !== "paid"}>Confirm</button>
+        <button class="mgmt-btn mgmt-btn--ghost" type="button" data-action="dispatch">Mark dispatched</button>
+        <button class="mgmt-btn mgmt-btn--ghost" type="button" data-action="deliver">Mark delivered</button>
+        <button class="mgmt-btn mgmt-btn--ghost" type="button" data-action="cancel">Cancel order</button>
       </div>
+      <label style="display:grid;gap:0.35rem;margin-top:0.9rem;">
+        <span class="mgmt-muted">Staff note</span>
+        <textarea rows="3" data-order-notes>{found.adminNotes || ""}</textarea>
+      </label>
+      <div class="mgmt-actions" style="margin-top:0.5rem;">
+        <button class="mgmt-btn mgmt-btn--ghost" type="button" data-save-notes>Save note</button>
+      </div>
+      <p class="mgmt-muted" data-order-msg></p>
     </div>
   </div>
 </ManagementLayout>
+
+<script>
+  const box = document.querySelector<HTMLElement>("[data-order-actions]");
+  const msg = box?.querySelector<HTMLElement>("[data-order-msg]");
+  async function patch(body: Record<string, string>) {
+    if (!box) return;
+    const res = await fetch(`/api/management/orders/${encodeURIComponent(box.dataset.orderId || "")}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      if (msg) msg.textContent = data.error || "Could not update the order.";
+      return;
+    }
+    location.reload();
+  }
+  box?.querySelectorAll<HTMLButtonElement>("[data-action]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const action = btn.dataset.action || "";
+      if (action === "cancel" && !confirm("Cancel this order?")) return;
+      void patch({ action });
+    });
+  });
+  box?.querySelector("[data-save-notes]")?.addEventListener("click", () => {
+    const notes = box.querySelector<HTMLTextAreaElement>("[data-order-notes]")?.value || "";
+    void patch({ notes });
+  });
+</script>
