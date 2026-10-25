@@ -219,19 +219,28 @@ const { productId, productName } = Astro.props;
         } else if (statusEl) {
           statusEl.textContent = "";
         }
-        for (const r of reviews) {
+        const card = (r, copy) => {
           const li = document.createElement("li");
           li.className = "reviews__item";
+          if (copy) li.setAttribute("aria-hidden", "true");
           li.innerHTML = `
             <div class="reviews__item-top">
               <strong>${escapeHtml(r.author)}</strong>
               <span class="reviews__item-stars" aria-label="${r.rating} out of 5">${stars(r.rating)}</span>
             </div>
-            <p class="reviews__item-title">${escapeHtml(r.title)}</p>
+            ${r.title ? `<p class="reviews__item-title">${escapeHtml(r.title)}</p>` : ""}
             <p class="reviews__item-body">${escapeHtml(r.body)}</p>
             <p class="reviews__item-meta">${escapeHtml([r.city, formatDate(r.createdAt)].filter(Boolean).join(" · "))}</p>
           `;
-          listEl.appendChild(li);
+          return li;
+        };
+        for (const r of reviews) listEl.appendChild(card(r, false));
+        // Single-row marquee: a second, hidden copy makes the loop seamless.
+        const marquee = reviews.length > 1;
+        listEl.classList.toggle("is-marquee", marquee);
+        if (marquee) {
+          for (const r of reviews) listEl.appendChild(card(r, true));
+          listEl.style.setProperty("--marquee-duration", `${Math.max(20, reviews.length * 7)}s`);
         }
       }
 
@@ -354,14 +363,46 @@ const { productId, productName } = Astro.props;
     color: #6e6e73;
     font-size: 0.9rem;
   }
+  .reviews__list-wrap {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+  }
   .reviews__list {
     list-style: none;
     margin: 0;
     padding: 0;
-    display: grid;
+    display: flex;
+    flex-wrap: nowrap;
     gap: 1rem;
+    width: max-content;
+  }
+  .reviews__list.is-marquee {
+    animation: reviews-marquee var(--marquee-duration, 30s) linear infinite;
+  }
+  .reviews__list.is-marquee:hover,
+  .reviews__list.is-marquee:active,
+  .reviews__list.is-marquee:focus-within {
+    animation-play-state: paused;
+  }
+  @keyframes reviews-marquee {
+    to {
+      transform: translateX(calc(-50% - 0.5rem));
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reviews__list-wrap {
+      overflow-x: auto;
+    }
+    .reviews__list.is-marquee {
+      animation: none;
+    }
+    .reviews__list.is-marquee [aria-hidden="true"] {
+      display: none;
+    }
   }
   .reviews__item {
+    flex: 0 0 min(20rem, 78vw);
     background: #f5f5f7;
     border-radius: 1rem;
     padding: 1rem 1.1rem;
