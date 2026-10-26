@@ -1,9 +1,7 @@
 ---
 /**
- * Live prices on storefront cards, plus the site-wide Ex-UK mode.
+ * Live prices on storefront cards.
  * Targets: [data-live-price="product-id"], [data-live-stock="product-id"].
- * When the shopper switches on "Ex-UK only" (menu toggle, saved as gh-channel),
- * cards show Ex-UK prices and products with no Ex-UK option are hidden.
  */
 ---
 
@@ -12,26 +10,16 @@
   let overlay: Record<string, Entry> = {};
 
   const formatKes = (n: number) => `KSh ${Math.round(n).toLocaleString("en-KE")}`;
-  const exUkMode = () => {
-    try {
-      return localStorage.getItem("gh-channel") === "ex-uk";
-    } catch {
-      return false;
-    }
-  };
-  const cardOf = (el: Element) => el.closest("li, article, [class*='card']") as HTMLElement | null;
+  // The short-lived "Ex-UK only" menu mode is gone; clear it for anyone who turned it on.
+  try {
+    localStorage.removeItem("gh-channel");
+  } catch {}
 
   function render() {
-    const exUk = exUkMode();
-    document.documentElement.classList.toggle("is-exuk-mode", exUk);
     for (const [id, entry] of Object.entries(overlay)) {
       document.querySelectorAll(`[data-live-price="${id}"]`).forEach((el) => {
         const prefix = el.getAttribute("data-live-prefix") || "";
-        const useExUk = exUk && typeof entry.exUkKes === "number";
-        const price = useExUk ? entry.exUkKes : entry.priceKes;
-        if (typeof price === "number") el.textContent = `${useExUk ? "Ex-UK " : ""}${prefix}${formatKes(price)}`;
-        const card = cardOf(el);
-        if (card) card.hidden = exUk && typeof entry.exUkKes !== "number";
+        if (typeof entry.priceKes === "number") el.textContent = `${prefix}${formatKes(entry.priceKes)}`;
       });
       if (typeof entry.inStock === "boolean") {
         document.querySelectorAll(`[data-live-stock="${id}"]`).forEach((el) => {
@@ -53,6 +41,5 @@
     }
   }
 
-  document.addEventListener("gh:channel", render);
   void load();
 </script>

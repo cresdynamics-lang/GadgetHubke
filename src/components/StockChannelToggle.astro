@@ -52,16 +52,8 @@ const { class: className, show = true } = Astro.props;
       document.dispatchEvent(new CustomEvent("gh:channel", { detail: channel }));
     });
   });
-  // Feed links for used stock land with Ex-UK selected (?condition=ex-uk); otherwise
-  // follow the shopper's "Ex-UK only" choice from the menu. Only the menu saves it.
-  const wanted = new URLSearchParams(location.search).get("condition") || (() => {
-    try {
-      return localStorage.getItem("gh-channel");
-    } catch {
-      return null;
-    }
-  })();
-  if (wanted === "ex-uk") {
+  // Feed links for used stock land with Ex-UK selected (?condition=ex-uk).
+  if (new URLSearchParams(location.search).get("condition") === "ex-uk") {
     document.querySelector<HTMLButtonElement>('[data-stock-channel] [data-channel="ex-uk"]')?.click();
   }
 </script>
