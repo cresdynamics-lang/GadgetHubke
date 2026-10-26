@@ -55,7 +55,8 @@ const tools = [
     {
       authed ? (
         <div class="mgmt-shell">
-          <aside class="mgmt-side">
+          <div class="mgmt-scrim" data-mgmt-scrim hidden></div>
+          <aside class="mgmt-side" id="mgmt-side" data-mgmt-side>
             <a class="mgmt-side__brand" href="/management">Gadget Hub</a>
             <nav class="mgmt-side__nav" aria-label="Management">
               {nav.map((item) => (
@@ -90,6 +91,10 @@ const tools = [
           </aside>
           <div class="mgmt-content">
             <header class="mgmt-top">
+              <button type="button" class="mgmt-top__menu" data-mgmt-menu aria-controls="mgmt-side" aria-expanded="false">
+                <span aria-hidden="true">☰</span> Menu
+              </button>
+              <a class="mgmt-top__brand" href="/management">Gadget Hub</a>
               <a class="mgmt-top__site" href="/" target="_blank" rel="noopener">View site</a>
             </header>
             <main class="mgmt-main">
@@ -106,6 +111,22 @@ const tools = [
     {
       authed ? (
         <script>
+          // Phone / small tablet: the side panel opens as a drawer from the Menu button.
+          const side = document.querySelector("[data-mgmt-side]");
+          const scrim = document.querySelector<HTMLElement>("[data-mgmt-scrim]");
+          const menuBtn = document.querySelector("[data-mgmt-menu]");
+          const setMenu = (open: boolean) => {
+            side?.classList.toggle("is-open", open);
+            if (scrim) scrim.hidden = !open;
+            menuBtn?.setAttribute("aria-expanded", String(open));
+            document.body.classList.toggle("mgmt-body--menu-open", open);
+          };
+          menuBtn?.addEventListener("click", () => setMenu(!side?.classList.contains("is-open")));
+          scrim?.addEventListener("click", () => setMenu(false));
+          side?.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => setMenu(false)));
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") setMenu(false);
+          });
           document.querySelector("[data-mgmt-logout]")?.addEventListener("click", async () => {
             await fetch("/api/management/logout", { method: "POST" });
             location.href = "/management";
@@ -141,6 +162,44 @@ const tools = [
     display: flex;
     flex-direction: column;
     gap: 0.35rem;
+    /* Phones / small tablets: off-canvas drawer, opened from the Menu button. */
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 60;
+    width: min(17rem, 82vw);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    transform: translateX(-100%);
+    transition: transform 0.22s ease;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.35);
+  }
+  .mgmt-side.is-open {
+    transform: none;
+  }
+  .mgmt-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    background: rgba(0, 0, 0, 0.45);
+  }
+  .mgmt-body--menu-open {
+    overflow: hidden;
+  }
+  /* Computers and landscape tablets: the panel stays put while the page scrolls. */
+  @media (min-width: 56rem) {
+    .mgmt-side {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      height: 100dvh;
+      width: auto;
+      transform: none;
+      transition: none;
+      box-shadow: none;
+    }
+    .mgmt-scrim {
+      display: none;
+    }
   }
   .mgmt-side__brand {
     color: inherit;
@@ -214,8 +273,57 @@ const tools = [
   }
   .mgmt-top {
     display: flex;
+    align-items: center;
     justify-content: flex-end;
+    gap: 0.75rem;
     padding: 0.75rem 1.25rem;
+  }
+  .mgmt-top__menu,
+  .mgmt-top__brand {
+    display: none;
+  }
+  @media (max-width: 55.99rem) {
+    .mgmt-top {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      justify-content: space-between;
+      padding: 0.6rem 0.9rem;
+      background: #111113;
+      color: #f5f5f7;
+    }
+    .mgmt-top__menu {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #fff;
+      background: #2c2c2e;
+      border: 0;
+      border-radius: 999px;
+      padding: 0.4rem 0.8rem;
+      cursor: pointer;
+    }
+    .mgmt-top__brand {
+      display: block;
+      color: #fff;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      text-decoration: none;
+    }
+    .mgmt-top__site {
+      color: #d2d2d7;
+    }
+    .mgmt-top__site:hover {
+      color: #fff;
+    }
+  }
+  /* Wide tables scroll inside their card instead of stretching the page. */
+  .mgmt-card {
+    min-width: 0;
+    overflow-x: auto;
   }
   .mgmt-top__site {
     font-size: 0.85rem;
@@ -484,5 +592,29 @@ const tools = [
     gap: 0.5rem;
     align-items: center;
     font-size: 0.9rem;
+  }
+  /* Phones and small tablets: tighter spacing and type (kept last so it wins). */
+  @media (max-width: 55.99rem) {
+    .mgmt-main {
+      padding: 0.9rem 0.85rem 2.5rem;
+    }
+    .mgmt-stat {
+      font-size: 1.35rem;
+    }
+    .mgmt-page-title {
+      font-size: 1.35rem;
+    }
+    .mgmt-card {
+      padding: 0.9rem;
+    }
+    .mgmt-tabs {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .mgmt-tab {
+      flex: 0 0 auto;
+    }
   }
 </style>

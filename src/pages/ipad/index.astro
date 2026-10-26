@@ -70,7 +70,11 @@ const choose = [
 
 const genChips = ["M5", "M4", "M3", "M2", "M1", "A-series"] as const;
 const wa = whatsappUrl("Hi Gadget Hub, I want to visit and try an iPad / Apple Pencil.");
-const hubProducts = (await livePricedCatalog()).filter((p) => ["iPad"].includes(p.group));
+const liveCatalog = await livePricedCatalog();
+const hubProducts = liveCatalog.filter((p) => ["iPad"].includes(p.group));
+const liveKes = (id: string) => liveCatalog.find((p) => p.id === id)?.priceKes ?? 0;
+// Accessory price from the live catalogue, matched by its page (/accessories/<id>).
+const accessoryKes = (href: string, fallback: number) => liveKes(href.split("/").filter(Boolean).pop() || "") || fallback;
 const hubSeo = buildCategorySeo({ label: "iPad", path: "/ipad", products: hubProducts });
 const hubFrom = formatKesSeoHub(hubSeo.fromKes);
 ---
@@ -176,21 +180,21 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
 
   <section class="container ipad-bundles">
     <h2>Pencil and keyboard bundles</h2>
-    <p>Compatible sets only - sample combined prices.</p>
+    <p>Compatible sets only — combined live prices.</p>
     <ul class="ipad-bundles__grid">
       {
         [
-          { id: "ipad-air-11-m2", pencil: 18000, kb: 35000, label: "Air 11″ M2 + Pencil Pro + Magic Keyboard" },
-          { id: "ipad-pro-11-m4", pencil: 18000, kb: 45000, label: "Pro 11″ M4 + Pencil Pro + Magic Keyboard" },
-          { id: "ipad-10", pencil: 11000, kb: 28000, label: "iPad 10th gen + Pencil (USB-C) + Folio" },
+          { id: "ipad-air-11-m4", pencil: "pencil-pro", kb: "keyboard-ipad-air-11", label: "Air 11″ M4 + Pencil Pro + Magic Keyboard" },
+          { id: "ipad-pro-11-m5", pencil: "pencil-pro", kb: "keyboard-ipad-pro-11", label: "Pro 11″ M5 + Pencil Pro + Magic Keyboard" },
+          { id: "ipad-a16", pencil: "pencil-usbc", kb: "keyboard-folio", label: "iPad (A16) + Pencil (USB-C) + Magic Keyboard Folio" },
         ].map((b) => {
           const m = ipadModels.find((x) => x.id === b.id)!;
-          const total = m.basePriceKes + b.pencil + b.kb;
+          const total = (liveKes(m.id) || m.basePriceKes) + liveKes(b.pencil) + liveKes(b.kb);
           const lipa = lipaMonthly(total);
           return (
             <li>
               <h3>{b.label}</h3>
-              <p>{formatKes(total)} sample · or {formatKes(lipa.monthlyKes)} / mo</p>
+              <p>{formatKes(total)} · or {formatKes(lipa.monthlyKes)} / mo</p>
               <button
                 type="button"
                 class="btn btn--primary btn--sm"
@@ -226,7 +230,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
           <li>
             <a href={a.href}>
               <strong>{a.name}</strong>
-              <span>{a.priceKes > 0 ? `${formatKes(a.priceKes)} sample` : "See category"}</span>
+              <span>{accessoryKes(a.href, a.priceKes) > 0 ? `From ${formatKes(accessoryKes(a.href, a.priceKes))}` : "See category"}</span>
             </a>
           </li>
         ))

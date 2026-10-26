@@ -80,6 +80,11 @@ const bundlePayload = tvHomeBundles.map((b) => ({
 const hubProducts = (await livePricedCatalog()).filter((p) => ["TV & Home"].includes(p.group));
 const hubSeo = buildCategorySeo({ label: "TV & Home", path: "/tv-home", products: hubProducts });
 const hubFrom = formatKesSeoHub(hubSeo.fromKes);
+// Live price for an accessory link (/accessories/<id>), falling back to the listed price.
+const __liveCat = await livePricedCatalog();
+const liveAccessoryKes = (href: string, fallback: number) =>
+  __liveCat.find((p) => p.id === (href || "").split("?")[0].split("/").filter(Boolean).pop())?.priceKes || fallback;
+
 ---
 
 <BaseLayout
@@ -184,7 +189,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
         <li>
           <a href={a.href}>
             <strong>{a.name}</strong>
-            <span>{a.priceKes > 0 ? `${formatKes(a.priceKes)} sample` : "Ask"}</span>
+            <span>{liveAccessoryKes(a.href, a.priceKes) > 0 ? `From ${formatKes(liveAccessoryKes(a.href, a.priceKes))}` : "Ask"}</span>
           </a>
         </li>
       ))}

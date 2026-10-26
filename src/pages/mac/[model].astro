@@ -1,4 +1,5 @@
 ---
+import { livePricedCatalog } from "../../lib/pricing/live";
 /**
  * MacBook PDP - sticky viewer + buy panel + feel sections + specs/FAQ.
  */
@@ -84,6 +85,11 @@ const colourViews = Object.fromEntries(
 const wa = whatsappUrl(
   `Hi Gadget Hub, I'm interested in the ${model.name}, ${model.chip}, ${model.memoryOptionsGb[0]} GB, ${model.storageOptions[0]}, ${colourLabel(colour)}.`,
 );
+// Live price for an accessory link (/accessories/<id>), falling back to the listed price.
+const __liveCat = await livePricedCatalog();
+const liveAccessoryKes = (href: string, fallback: number) =>
+  __liveCat.find((p) => p.id === (href || "").split("?")[0].split("/").filter(Boolean).pop())?.priceKes || fallback;
+
 ---
 
 <BaseLayout title={pageSeo?.title ?? `${model.name} - GadgetHub`} description={pageSeo?.description ?? model.tagline} image={pageSeo?.image}>
@@ -383,7 +389,7 @@ const wa = whatsappUrl(
               <li>
                 <h3>{a.name}</h3>
                 <p>{a.blurb}</p>
-                <p>{a.priceKes > 0 ? `${formatKes(a.priceKes)} sample` : "See category"}</p>
+                <p>{liveAccessoryKes(a.href, a.priceKes) > 0 ? `From ${formatKes(liveAccessoryKes(a.href, a.priceKes))}` : "See category"}</p>
                 <a href={a.href}>View</a>
               </li>
             ))}

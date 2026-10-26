@@ -1,0 +1,98 @@
+---
+/**
+ * Anonymous heartbeat for Management → Live visitors (every 20s while the tab is visible).
+ * One id per browser when analytics consent is given (shared by all tabs), otherwise
+ * one id per tab session. Sends only the page, device type, source and cart size.
+ */
+---
+
+<script>
+  const CONSENT_KEY = "gh-cookie-consent";
+  const store = (): Storage | null => {
+    try {
+      const consent = JSON.parse(localStorage.getItem(CONSENT_KEY) || "null");
+      return consent?.analytics ? localStorage : sessionStorage;
+    } catch {
+      return null;
+    }
+  };
+
+  function visitorId(): string {
+    const s = store();
+    let id = s?.getItem("gh-vid") || "";
+    if (!id) {
+      id = (crypto.randomUUID?.() || `${Date.now()}-${Math.random()}`).replace(/-/g, "");
+      try {
+        s?.setItem("gh-vid", id);
+      } catch {}
+    }
+    return id;
+  }
+
+  function device(): string {
+    const ua = navigator.userAgent;
+    if (/iPad|Tablet/i.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) return "Tablet";
+    if (/Mobi|Android|iPhone/i.test(ua)) return "Phone";
+    return "Computer";
+  }
+
+  // First referrer / utm_source of this browsing session.
+  function source(): { ref: string; utm: string } {
+    try {
+      const saved = sessionStorage.getItem("gh-src");
+      if (saved) return JSON.parse(saved);
+      const src = {
+        ref: document.referrer || "",
+        utm: new URLSearchParams(location.search).get("utm_source") || "",
+      };
+      sessionStorage.setItem("gh-src", JSON.stringify(src));
+      return src;
+    } catch {
+      return { ref: document.referrer || "", utm: "" };
+    }
+  }
+
+  function bagCount(): number {
+    try {
+      const bag = JSON.parse(localStorage.getItem("gh-bag") || "[]");
+      return Array.isArray(bag) ? bag.reduce((n: number, i: { qty?: number }) => n + (i.qty || 1), 0) : 0;
+    } catch {
+      return 0;
+    }
+  }
+
+  function send(event: string, label = "") {
+    const body = JSON.stringify({
+      vid: visitorId(),
+      path: location.pathname,
+      title: document.title,
+      device: device(),
+      bagCount: bagCount(),
+      event,
+      label,
+      ...source(),
+    });
+    if (event === "leave" && navigator.sendBeacon) {
+      navigator.sendBeacon("/api/presence", new Blob([body], { type: "application/json" }));
+      return;
+    }
+    fetch("/api/presence", { method: "POST", body, keepalive: true, headers: { "Content-Type": "application/json" } }).catch(() => {});
+  }
+
+  send("view");
+  setInterval(() => {
+    if (document.visibilityState === "visible") send("view");
+  }, 20_000);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") send("view");
+  });
+  window.addEventListener("pagehide", () => send("leave"));
+  window.addEventListener("gh:bag-add", (e) => {
+    const detail = (e as CustomEvent).detail || {};
+    send("cart_add", String(detail.name || detail.item?.name || ""));
+  });
+  document.addEventListener("click", (e) => {
+    const a = (e.target as HTMLElement | null)?.closest?.("a[href*='wa.me']");
+    if (a) send("whatsapp");
+  });
+</script>

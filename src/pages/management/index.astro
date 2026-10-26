@@ -3,10 +3,13 @@ export const prerender = false;
 
 import ManagementLayout from "../../layouts/ManagementLayout.astro";
 import { adminSecretConfigured, isAdminAuthed } from "../../lib/admin";
-import { sampleDashboard, sampleStaff } from "../../lib/management/sample";
+import { sampleStaff } from "../../lib/management/sample";
+import { buildDashboard } from "../../lib/management/dashboard";
+import { liveSnapshot } from "../../lib/analytics/presence";
 
 const authed = await isAdminAuthed(Astro.cookies);
-const d = sampleDashboard;
+const d = authed ? await buildDashboard() : null;
+const live = liveSnapshot();
 
 const now = new Date();
 const greetingHour = Number(
@@ -64,7 +67,6 @@ const dayLabel = new Intl.DateTimeFormat("en-GB", {
       </section>
     ) : (
       <section>
-        <p class="mgmt-banner">Sample data - live metrics wire up in later phases (see docs/MANAGEMENT_CRAFT_PLAN.md).</p>
         <header style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.75rem;align-items:end;margin-bottom:1.25rem;">
           <div>
             <h1 class="mgmt-page-title">
@@ -81,40 +83,43 @@ const dayLabel = new Intl.DateTimeFormat("en-GB", {
               <span class="mgmt-muted">Visitors on the website now</span>
               <span class="mgmt-tag mgmt-tag--live">live</span>
             </div>
-            <p class="mgmt-stat">{d.visitorsNow}</p>
+            <p class="mgmt-stat" data-live="now">{live.now}</p>
             <p class="mgmt-muted">
-              {d.visitorsLast5Min} active in the last 5 minutes
+              <span data-live="last5Min">{live.last5Min}</span> active in the last 5 minutes
               <br />
-              {d.phones} phones · {d.computers} computers · {d.tablets} tablet
+              <span data-live="phones">{live.devices.Phone}</span> phones · <span data-live="computers">{live.devices.Computer}</span> computers · <span data-live="tablets">{live.devices.Tablet}</span> tablets
+              <br />
+              <span data-live="todayVisitors">{live.today.visitors}</span> different visitors today
             </p>
           </a>
           <div class="mgmt-card">
             <p class="mgmt-muted">Orders today</p>
-            <p class="mgmt-stat">{d.ordersToday}</p>
-            <p class="mgmt-muted">▲ {d.ordersDelta} vs yesterday</p>
+            <p class="mgmt-stat">{d!.ordersToday}</p>
+            <p class="mgmt-muted">{d!.ordersDelta >= 0 ? "▲" : "▼"} {Math.abs(d!.ordersDelta)} vs yesterday</p>
           </div>
           <div class="mgmt-card">
             <p class="mgmt-muted">Sales today</p>
-            <p class="mgmt-stat">KES {d.salesTodayKes.toLocaleString("en-KE")}</p>
-            <p class="mgmt-muted">Sample figure</p>
+            <p class="mgmt-stat">KES {d!.salesTodayKes.toLocaleString("en-KE")}</p>
+            <p class="mgmt-muted">paid website orders today</p>
           </div>
           <div class="mgmt-card">
             <p class="mgmt-muted">WhatsApp clicks</p>
-            <p class="mgmt-stat">{d.whatsappClicks}</p>
-            <p class="mgmt-muted">from product pages</p>
+            <p class="mgmt-stat" data-live="whatsapp">{live.today.whatsapp}</p>
+            <p class="mgmt-muted">today, from any page</p>
           </div>
         </div>
 
         <div class="mgmt-grid mgmt-grid--2" style="margin-bottom:1rem;">
           <div class="mgmt-card">
             <p class="mgmt-muted">Trade-in requests</p>
-            <p class="mgmt-stat">{d.tradeInRequests}</p>
-            <p class="mgmt-muted">{d.tradeInsWaitingQuote} waiting for a quote</p>
+            <p class="mgmt-stat">{d!.tradeInRequests}</p>
+            <p class="mgmt-muted">{d!.tradeInsWaitingQuote} waiting for a quote</p>
           </div>
           <div class="mgmt-card">
             <h2 style="font-size:1.05rem;">Needs your attention</h2>
             <ul class="mgmt-attention">
-              {d.attention.map((item) => (
+              {!d!.attention.length ? <li class="mgmt-muted">Nothing waiting right now.</li> : null}
+              {d!.attention.map((item) => (
                 <li>
                   <span>
                     <span class="mgmt-attention__count">{item.count}</span> {item.label}
@@ -133,13 +138,13 @@ const dayLabel = new Intl.DateTimeFormat("en-GB", {
           <div class="mgmt-card">
             <h2 style="font-size:1.05rem;">Pages people are viewing now</h2>
             <table class="mgmt-table">
-              <tbody>
-                {d.pagesNow.map((p) => (
+              <tbody data-live="pages">
+                {live.pages.length ? live.pages.map((p) => (
                   <tr>
                     <td>{p.label}</td>
                     <td style="text-align:right;font-weight:600;">{p.count}</td>
                   </tr>
-                ))}
+                )) : <tr><td class="mgmt-muted">Nobody on the site right now.</td></tr>}
               </tbody>
             </table>
           </div>
@@ -161,14 +166,15 @@ const dayLabel = new Intl.DateTimeFormat("en-GB", {
                 </tr>
               </thead>
               <tbody>
-                {d.latestOrders.map((o) => (
+                {!d!.latestOrders.length ? <tr><td colspan="5" class="mgmt-muted">No website orders yet.</td></tr> : null}
+                {d!.latestOrders.map((o) => (
                   <tr>
-                    <td>{o.id}</td>
+                    <td><a class="mgmt-link" href={`/management/orders/${encodeURIComponent(o.id)}`}>{o.id}</a></td>
                     <td>{o.customer}</td>
                     <td>{o.item}</td>
                     <td>{o.total}</td>
                     <td>
-                      <span class:list={["mgmt-tag", { "mgmt-tag--new": o.status === "New" }]}>{o.status}</span>
+                      <span class:list={["mgmt-tag", { "mgmt-tag--new": o.status === "New" || o.status === "Awaiting payment" }]}>{o.status}</span>
                     </td>
                   </tr>
                 ))}
@@ -180,6 +186,39 @@ const dayLabel = new Intl.DateTimeFormat("en-GB", {
     )
   }
 </ManagementLayout>
+
+{
+  authed ? (
+    <script>
+      // Refresh the visitor figures every 10 seconds.
+      const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c] as string);
+      async function refreshLive() {
+        try {
+          const res = await fetch("/api/management/live", { cache: "no-store" });
+          if (!res.ok) return;
+          const s = await res.json();
+          const set = (k: string, v: number) => {
+            const el = document.querySelector(`[data-live="${k}"]`);
+            if (el) el.textContent = String(v);
+          };
+          set("now", s.now);
+          set("last5Min", s.last5Min);
+          set("phones", s.devices.Phone);
+          set("computers", s.devices.Computer);
+          set("tablets", s.devices.Tablet);
+          set("todayVisitors", s.today.visitors);
+          set("whatsapp", s.today.whatsapp);
+          const pages = document.querySelector('[data-live="pages"]');
+          if (pages)
+            pages.innerHTML = s.pages.length
+              ? s.pages.map((p: { label: string; count: number }) => `<tr><td>${esc(p.label)}</td><td style="text-align:right;font-weight:600;">${p.count}</td></tr>`).join("")
+              : `<tr><td class="mgmt-muted">Nobody on the site right now.</td></tr>`;
+        } catch {}
+      }
+      setInterval(refreshLive, 10_000);
+    </script>
+  ) : null
+}
 
 {
   !authed ? (

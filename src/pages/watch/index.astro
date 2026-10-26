@@ -62,6 +62,11 @@ const genChips = ["Series 12", "Series 11", "Series 10", "Series 9", "Series 8",
 const hubProducts = (await livePricedCatalog()).filter((p) => ["Watch"].includes(p.group));
 const hubSeo = buildCategorySeo({ label: "Apple Watch", path: "/watch", products: hubProducts });
 const hubFrom = formatKesSeoHub(hubSeo.fromKes);
+// Live price for an accessory link (/accessories/<id>), falling back to the listed price.
+const __liveCat = await livePricedCatalog();
+const liveAccessoryKes = (href: string, fallback: number) =>
+  __liveCat.find((p) => p.id === (href || "").split("?")[0].split("/").filter(Boolean).pop())?.priceKes || fallback;
+
 ---
 
 <BaseLayout
@@ -163,7 +168,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
         <li>
           <a href={a.href}>
             <strong>{a.name}</strong>
-            <span>{a.priceKes > 0 ? `${formatKes(a.priceKes)} sample` : "See category"}</span>
+            <span>{liveAccessoryKes(a.href, a.priceKes) > 0 ? `From ${formatKes(liveAccessoryKes(a.href, a.priceKes))}` : "See category"}</span>
           </a>
         </li>
       ))}

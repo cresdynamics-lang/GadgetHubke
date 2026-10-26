@@ -4,6 +4,7 @@ import Footer from "../components/Footer.astro";
 import FloatingActions from "../components/FloatingActions.astro";
 import CookieBanner from "../components/CookieBanner.astro";
 import Analytics from "../components/Analytics.astro";
+import PresenceBeacon from "../components/PresenceBeacon.astro";
 import SiteSearch from "../components/SiteSearch.astro";
 import BagDrawer from "../components/iphone/BagDrawer.astro";
 import CatalogOverlay from "../components/CatalogOverlay.astro";
@@ -137,6 +138,7 @@ const hideFloatWhatsApp = path === "/contact";
     <FloatingActions hideWhatsApp={hideFloatWhatsApp} />
     <CookieBanner />
     <Analytics />
+    <PresenceBeacon />
     <CatalogOverlay />
   </body>
 </html>

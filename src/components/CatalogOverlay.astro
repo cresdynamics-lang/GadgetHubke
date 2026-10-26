@@ -1,41 +1,58 @@
 ---
 /**
- * Applies admin price/stock overlays on the storefront.
- * Targets: [data-live-price="product-id"], [data-live-stock="product-id"]
+ * Live prices on storefront cards, plus the site-wide Ex-UK mode.
+ * Targets: [data-live-price="product-id"], [data-live-stock="product-id"].
+ * When the shopper switches on "Ex-UK only" (menu toggle, saved as gh-channel),
+ * cards show Ex-UK prices and products with no Ex-UK option are hidden.
  */
 ---
 
 <script>
-  function formatKes(n: number) {
-    return `KSh ${Math.round(n).toLocaleString("en-KE")}`;
+  type Entry = { priceKes?: number; exUkKes?: number; inStock?: boolean };
+  let overlay: Record<string, Entry> = {};
+
+  const formatKes = (n: number) => `KSh ${Math.round(n).toLocaleString("en-KE")}`;
+  const exUkMode = () => {
+    try {
+      return localStorage.getItem("gh-channel") === "ex-uk";
+    } catch {
+      return false;
+    }
+  };
+  const cardOf = (el: Element) => el.closest("li, article, [class*='card']") as HTMLElement | null;
+
+  function render() {
+    const exUk = exUkMode();
+    document.documentElement.classList.toggle("is-exuk-mode", exUk);
+    for (const [id, entry] of Object.entries(overlay)) {
+      document.querySelectorAll(`[data-live-price="${id}"]`).forEach((el) => {
+        const prefix = el.getAttribute("data-live-prefix") || "";
+        const useExUk = exUk && typeof entry.exUkKes === "number";
+        const price = useExUk ? entry.exUkKes : entry.priceKes;
+        if (typeof price === "number") el.textContent = `${useExUk ? "Ex-UK " : ""}${prefix}${formatKes(price)}`;
+        const card = cardOf(el);
+        if (card) card.hidden = exUk && typeof entry.exUkKes !== "number";
+      });
+      if (typeof entry.inStock === "boolean") {
+        document.querySelectorAll(`[data-live-stock="${id}"]`).forEach((el) => {
+          el.textContent = entry.inStock ? "In stock" : "Out of stock";
+          el.classList.toggle("is-oos", !entry.inStock);
+        });
+      }
+    }
   }
 
-  async function applyOverlay() {
+  async function load() {
     try {
       const res = await fetch("/api/catalog-overlay");
       if (!res.ok) return;
-      const data = (await res.json()) as {
-        overlay: Record<string, { priceKes?: number; inStock?: boolean }>;
-      };
-      const overlay = data.overlay || {};
-      for (const [id, entry] of Object.entries(overlay)) {
-        if (typeof entry.priceKes === "number") {
-          document.querySelectorAll(`[data-live-price="${id}"]`).forEach((el) => {
-            const prefix = el.getAttribute("data-live-prefix") || "";
-            el.textContent = `${prefix}${formatKes(entry.priceKes!)}`;
-          });
-        }
-        if (typeof entry.inStock === "boolean") {
-          document.querySelectorAll(`[data-live-stock="${id}"]`).forEach((el) => {
-            el.textContent = entry.inStock ? "In stock" : "Out of stock";
-            el.classList.toggle("is-oos", !entry.inStock);
-          });
-        }
-      }
+      overlay = ((await res.json()) as { overlay: Record<string, Entry> }).overlay || {};
+      render();
     } catch {
       /* ignore */
     }
   }
 
-  void applyOverlay();
+  document.addEventListener("gh:channel", render);
+  void load();
 </script>

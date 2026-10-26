@@ -3,25 +3,35 @@ export const prerender = false;
 
 import ManagementLayout from "../../layouts/ManagementLayout.astro";
 import { isAdminAuthed } from "../../lib/admin";
-import { sampleLive, sampleStaff } from "../../lib/management/sample";
+import { sampleStaff } from "../../lib/management/sample";
+import { liveSnapshot } from "../../lib/analytics/presence";
 
 const authed = await isAdminAuthed(Astro.cookies);
 if (!authed) return Astro.redirect("/management");
-const d = sampleLive;
+const d = liveSnapshot();
 ---
 
 <ManagementLayout title="Live visitors - Management" authed active="live" staffName={sampleStaff.name} staffRole={sampleStaff.role}>
-  <p class="mgmt-banner">Sample data - presence beacon ships in Phase C.</p>
   <header style="margin-bottom:1rem;">
     <h1 class="mgmt-page-title">Live visitors</h1>
-    <p class="mgmt-muted">Updates every few seconds · people active in the last 5 minutes</p>
+    <p class="mgmt-muted">
+      Real visitors, updating every 5 seconds · one person counts once, however many tabs they open · bots and staff are not counted ·
+      last update <span data-live="updated">{new Date(d.updatedAt).toLocaleTimeString("en-GB", { timeZone: "Africa/Nairobi" })}</span>
+    </p>
   </header>
 
   <div class="mgmt-grid mgmt-grid--4" style="margin-bottom:1rem;">
-    <div class="mgmt-card"><p class="mgmt-muted">On the site now</p><p class="mgmt-stat">{d.now}</p></div>
-    <div class="mgmt-card"><p class="mgmt-muted">Looking at a product</p><p class="mgmt-stat">{d.lookingAtProduct}</p></div>
-    <div class="mgmt-card"><p class="mgmt-muted">In a cart</p><p class="mgmt-stat">{d.inCart}</p></div>
-    <div class="mgmt-card"><p class="mgmt-muted">At checkout</p><p class="mgmt-stat">{d.atCheckout}</p></div>
+    <div class="mgmt-card"><p class="mgmt-muted">On the site now</p><p class="mgmt-stat" data-live="now">{d.now}</p><p class="mgmt-muted"><span data-live="last5Min">{d.last5Min}</span> in the last 5 minutes</p></div>
+    <div class="mgmt-card"><p class="mgmt-muted">Looking at a product</p><p class="mgmt-stat" data-live="lookingAtProduct">{d.lookingAtProduct}</p></div>
+    <div class="mgmt-card"><p class="mgmt-muted">With items in the cart</p><p class="mgmt-stat" data-live="inCart">{d.inCart}</p></div>
+    <div class="mgmt-card"><p class="mgmt-muted">At checkout</p><p class="mgmt-stat" data-live="atCheckout">{d.atCheckout}</p></div>
+  </div>
+
+  <div class="mgmt-grid mgmt-grid--4" style="margin-bottom:1rem;">
+    <div class="mgmt-card"><p class="mgmt-muted">Different visitors today</p><p class="mgmt-stat" data-live="todayVisitors">{d.today.visitors}</p></div>
+    <div class="mgmt-card"><p class="mgmt-muted">Pages opened today</p><p class="mgmt-stat" data-live="todayPageviews">{d.today.pageviews}</p></div>
+    <div class="mgmt-card"><p class="mgmt-muted">Added to cart today</p><p class="mgmt-stat" data-live="todayCart">{d.today.cartAdds}</p></div>
+    <div class="mgmt-card"><p class="mgmt-muted">WhatsApp taps today</p><p class="mgmt-stat" data-live="todayWhatsapp">{d.today.whatsapp}</p></div>
   </div>
 
   <div class="mgmt-card" style="margin-bottom:1rem;">
@@ -31,25 +41,27 @@ const d = sampleLive;
         <thead>
           <tr>
             <th>Visitor</th>
-            <th>Town</th>
             <th>Device</th>
             <th>Looking at</th>
             <th>Came from</th>
             <th>On site</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody data-live="visitors">
           {
-            d.visitors.map((v) => (
-              <tr>
-                <td>Visitor {v.id}</td>
-                <td>{v.town}</td>
-                <td>{v.device}</td>
-                <td>{v.page}</td>
-                <td>{v.from}</td>
-                <td>{v.onSite}</td>
-              </tr>
-            ))
+            d.visitors.length ? (
+              d.visitors.map((v) => (
+                <tr>
+                  <td>Visitor {v.id}</td>
+                  <td>{v.device}</td>
+                  <td>{v.page}</td>
+                  <td>{v.from}</td>
+                  <td>{v.onSite}</td>
+                </tr>
+              ))
+            ) : (
+              <tr><td colspan="5" class="mgmt-muted">Nobody on the site right now.</td></tr>
+            )
           }
         </tbody>
       </table>
@@ -60,43 +72,83 @@ const d = sampleLive;
     <div class="mgmt-card">
       <h2 style="font-size:1.05rem;">Where they came from</h2>
       <table class="mgmt-table">
-        <tbody>
-          {d.sources.map((s) => (
-            <tr>
-              <td>{s.label}</td>
-              <td style="text-align:right;font-weight:600;">{s.count}</td>
-            </tr>
-          ))}
+        <tbody data-live="sources">
+          {d.sources.length ? d.sources.map((s) => (
+            <tr><td>{s.label}</td><td style="text-align:right;font-weight:600;">{s.count}</td></tr>
+          )) : <tr><td class="mgmt-muted">No visitors right now.</td></tr>}
+        </tbody>
+      </table>
+      <h2 style="font-size:1.05rem;margin-top:1rem;">Pages open now</h2>
+      <table class="mgmt-table">
+        <tbody data-live="pages">
+          {d.pages.length ? d.pages.map((p) => (
+            <tr><td>{p.label}</td><td style="text-align:right;font-weight:600;">{p.count}</td></tr>
+          )) : <tr><td class="mgmt-muted">No visitors right now.</td></tr>}
         </tbody>
       </table>
     </div>
     <div class="mgmt-card">
-      <h2 style="font-size:1.05rem;">Live activity <span class="mgmt-tag mgmt-tag--live">streaming</span></h2>
-      <ul class="mgmt-attention">
-        {d.activity.map((a) => (
-          <li>
-            <span class="mgmt-muted" style="min-width:4.5rem;">{a.when}</span>
-            <span style="flex:1;">{a.text}</span>
-          </li>
-        ))}
+      <h2 style="font-size:1.05rem;">Live activity <span class="mgmt-tag mgmt-tag--live">live</span></h2>
+      <ul class="mgmt-attention" data-live="activity">
+        {d.activity.length ? d.activity.map((a) => (
+          <li><span class="mgmt-muted" style="min-width:4.5rem;">{a.when}</span><span style="flex:1;">{a.text}</span></li>
+        )) : <li class="mgmt-muted">No activity in the last 30 minutes.</li>}
       </ul>
     </div>
   </div>
-
-  <div class="mgmt-card" style="margin-top:1rem;">
-    <h2 style="font-size:1.05rem;">Pages right now</h2>
-    <table class="mgmt-table">
-      <tbody>
-        {d.pages.map((p) => (
-          <tr>
-            <td><code>{p.path}</code></td>
-            <td style="text-align:right;font-weight:600;">{p.count}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-    <p class="mgmt-muted" style="margin-top:0.75rem;">
-      Privacy: visitors are anonymous codes. No names, phone numbers or exact locations are shown.
-    </p>
-  </div>
 </ManagementLayout>
+
+<script>
+  type Snap = {
+    now: number; last5Min: number; lookingAtProduct: number; inCart: number; atCheckout: number;
+    visitors: { id: string; device: string; page: string; from: string; onSite: string }[];
+    sources: { label: string; count: number }[];
+    pages: { label: string; count: number }[];
+    activity: { when: string; text: string }[];
+    today: { visitors: number; pageviews: number; whatsapp: number; cartAdds: number };
+    updatedAt: string;
+  };
+  const esc = (s: string) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c] as string);
+  const el = (k: string) => document.querySelector(`[data-live="${k}"]`);
+  const set = (k: string, v: string | number) => {
+    const n = el(k);
+    if (n) n.textContent = String(v);
+  };
+  const rows = (items: { label: string; count: number }[], empty: string) =>
+    items.length
+      ? items.map((x) => `<tr><td>${esc(x.label)}</td><td style="text-align:right;font-weight:600;">${x.count}</td></tr>`).join("")
+      : `<tr><td class="mgmt-muted">${empty}</td></tr>`;
+
+  async function refresh() {
+    try {
+      const res = await fetch("/api/management/live", { cache: "no-store" });
+      if (!res.ok) return;
+      const s: Snap = await res.json();
+      set("now", s.now);
+      set("last5Min", s.last5Min);
+      set("lookingAtProduct", s.lookingAtProduct);
+      set("inCart", s.inCart);
+      set("atCheckout", s.atCheckout);
+      set("todayVisitors", s.today.visitors);
+      set("todayPageviews", s.today.pageviews);
+      set("todayCart", s.today.cartAdds);
+      set("todayWhatsapp", s.today.whatsapp);
+      set("updated", new Date(s.updatedAt).toLocaleTimeString("en-GB", { timeZone: "Africa/Nairobi" }));
+      const v = el("visitors");
+      if (v)
+        v.innerHTML = s.visitors.length
+          ? s.visitors.map((x) => `<tr><td>Visitor ${esc(x.id)}</td><td>${esc(x.device)}</td><td>${esc(x.page)}</td><td>${esc(x.from)}</td><td>${esc(x.onSite)}</td></tr>`).join("")
+          : `<tr><td colspan="5" class="mgmt-muted">Nobody on the site right now.</td></tr>`;
+      const so = el("sources");
+      if (so) so.innerHTML = rows(s.sources, "No visitors right now.");
+      const pg = el("pages");
+      if (pg) pg.innerHTML = rows(s.pages, "No visitors right now.");
+      const ac = el("activity");
+      if (ac)
+        ac.innerHTML = s.activity.length
+          ? s.activity.map((a) => `<li><span class="mgmt-muted" style="min-width:4.5rem;">${esc(a.when)}</span><span style="flex:1;">${esc(a.text)}</span></li>`).join("")
+          : `<li class="mgmt-muted">No activity in the last 30 minutes.</li>`;
+    } catch {}
+  }
+  setInterval(refresh, 5000);
+</script>

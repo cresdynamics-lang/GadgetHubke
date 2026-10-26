@@ -3,21 +3,26 @@ export const prerender = false;
 
 import ManagementLayout from "../../layouts/ManagementLayout.astro";
 import { isAdminAuthed } from "../../lib/admin";
-import { sampleSales, sampleStaff } from "../../lib/management/sample";
+import { sampleStaff } from "../../lib/management/sample";
+import { buildSales } from "../../lib/management/sales";
 
 const authed = await isAdminAuthed(Astro.cookies);
 if (!authed) return Astro.redirect("/management");
-const s = sampleSales;
+const days = Number(Astro.url.searchParams.get("days")) || 7;
+const s = await buildSales(days);
 ---
 
 <ManagementLayout title="Sales - Management" authed active="sales" staffName={sampleStaff.name} staffRole={sampleStaff.role}>
-  <p class="mgmt-banner">Sample data - owner/manager only (Phase G).</p>
   <header style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.75rem;margin-bottom:1rem;">
     <div>
       <h1 class="mgmt-page-title">Sales</h1>
-      <p class="mgmt-muted">Revenue by day, product, payment method and staff</p>
+      <p class="mgmt-muted">Paid website orders by product and payment method</p>
     </div>
-    <span class="mgmt-tag">{s.rangeLabel}</span>
+    <div class="mgmt-tabs">
+      {[7, 30, 90].map((n) => (
+        <a class:list={["mgmt-tab", { "is-active": days === n }]} href={`/management/sales?days=${n}`}>Last {n} days</a>
+      ))}
+    </div>
   </header>
 
   <div class="mgmt-grid mgmt-grid--3" style="margin-bottom:1rem;">
@@ -31,6 +36,7 @@ const s = sampleSales;
       <h2 style="font-size:1.05rem;">Payment mix</h2>
       <table class="mgmt-table">
         <tbody>
+          {!s.paymentMix.length ? <tr><td class="mgmt-muted">No paid orders in this period.</td></tr> : null}
           {s.paymentMix.map((p) => (
             <tr>
               <td>{p.label}</td>
@@ -44,6 +50,7 @@ const s = sampleSales;
       <h2 style="font-size:1.05rem;">Top products</h2>
       <table class="mgmt-table">
         <tbody>
+          {!s.topProducts.length ? <tr><td class="mgmt-muted">No paid orders in this period.</td></tr> : null}
           {s.topProducts.map((p) => (
             <tr>
               <td>

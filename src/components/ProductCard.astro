@@ -336,4 +336,23 @@ const hoverSrc =
       opacity: 0;
     }
   }
+
+  /* Price and Add to cart never touch: smaller type on narrow cards, and the
+     button drops under the price when the card is too narrow for both. */
+  .pcard__row--price {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    column-gap: 0.5rem;
+    row-gap: 0.4rem;
+  }
+  .pcard__row--price .pcard__price,
+  .pcard__row--price .pcard__price * {
+    font-size: clamp(0.74rem, 2.9vw, 0.85rem);
+  }
+  .pcard__row--price :global(.btn) {
+    flex: 0 0 auto;
+    font-size: clamp(0.66rem, 2.6vw, 0.75rem);
+    padding: 0.28rem 0.55rem;
+    min-height: 1.75rem;
+  }
 </style>

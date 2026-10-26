@@ -559,6 +559,16 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
             </li>
           ))
         }
+        <li class="mobile-nav__item mobile-nav__exuk">
+          <label class="mobile-nav__exuk-row">
+            <span>
+              <strong>Ex-UK only</strong>
+              <small>Show UK-used devices and their prices</small>
+            </span>
+            <input type="checkbox" role="switch" data-exuk-toggle aria-label="Show Ex-UK devices only" />
+            <span class="mobile-nav__exuk-switch" aria-hidden="true"></span>
+          </label>
+        </li>
         <li class="mobile-nav__item">
           <a class="mobile-nav__link mobile-nav__link--util" href="/account">Sign in</a>
         </li>
@@ -1217,7 +1227,87 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
       transition: none;
     }
   }
+
+  .mobile-nav__exuk {
+    border-top: 1px solid var(--color-border, rgba(0, 0, 0, 0.1));
+    margin-top: 0.4rem;
+    padding-top: 0.4rem;
+  }
+  .mobile-nav__exuk-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    cursor: pointer;
+  }
+  .mobile-nav__exuk-row strong {
+    display: block;
+    font-size: 0.95rem;
+  }
+  .mobile-nav__exuk-row small {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: 0.75rem;
+    color: var(--color-fg-muted, #6e6e73);
+  }
+  .mobile-nav__exuk-row input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .mobile-nav__exuk-switch {
+    flex: 0 0 auto;
+    width: 2.6rem;
+    height: 1.5rem;
+    border-radius: 999px;
+    background: #d2d2d7;
+    position: relative;
+    transition: background 0.2s;
+  }
+  .mobile-nav__exuk-switch::after {
+    content: "";
+    position: absolute;
+    top: 0.15rem;
+    left: 0.15rem;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s;
+  }
+  .mobile-nav__exuk-row input:checked + .mobile-nav__exuk-switch {
+    background: #30d158;
+  }
+  .mobile-nav__exuk-row input:checked + .mobile-nav__exuk-switch::after {
+    transform: translateX(1.1rem);
+  }
+  .mobile-nav__exuk-row input:focus-visible + .mobile-nav__exuk-switch {
+    outline: 2px solid #0071e3;
+    outline-offset: 2px;
+  }
 </style>
+
+<script>
+  // "Ex-UK only" switch in the mobile menu: saved for the whole site, applied at once.
+  const exukToggle = document.querySelector<HTMLInputElement>("[data-exuk-toggle]");
+  if (exukToggle) {
+    try {
+      exukToggle.checked = localStorage.getItem("gh-channel") === "ex-uk";
+    } catch {}
+    exukToggle.addEventListener("change", () => {
+      const channel = exukToggle.checked ? "ex-uk" : "new";
+      try {
+        localStorage.setItem("gh-channel", channel);
+      } catch {}
+      // Product pages: flip their New / Ex-UK switch; cards and calculators listen for gh:channel.
+      document.querySelector<HTMLButtonElement>(`[data-stock-channel] [data-channel="${channel}"]`)?.click();
+      document.dispatchEvent(new CustomEvent("gh:channel", { detail: channel }));
+    });
+  }
+</script>
 
 <script>
   function setupHeader() {
