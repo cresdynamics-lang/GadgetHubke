@@ -1095,7 +1095,7 @@ export const products: Product[] = [
     ],
     finishesLabel: "Available in 5 finishes",
     storages: [
-      { id: "256", label: "256GB", priceKes: 124000 },
+      { id: "256", label: "256GB", priceKes: 120000 },
       { id: "512", label: "512GB", priceKes: 145000 }
     ],
     colors: [

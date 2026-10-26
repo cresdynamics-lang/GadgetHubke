@@ -909,7 +909,7 @@ export const newerModels: IphoneModel[] = [
     displayInches: 6.9, resolution: "2868×1320", ppi: 460, refreshHz: 120, chip: "A19 Pro",
     rearCameras: ["48MP Fusion", "48MP Ultra Wide", "48MP Telephoto"], frontCamera: "18MP Center Stage",
     batteryVideoHours: 39, weightGrams: 233, storage: ["256GB", "512GB", "1TB", "2TB"],
-    basePriceKes: 170000, frame: "Aluminium unibody", glass: "Ceramic Shield 2", port: "USB-C (USB 3)",
+    basePriceKes: 167000, frame: "Aluminium unibody", glass: "Ceramic Shield 2", port: "USB-C (USB 3)",
     cutout: "Dynamic Island", tagline: "Pro cameras, the biggest battery.", defaultColour: "cosmicorange", wifi: "Wi-Fi 7",
   },
   {
@@ -936,7 +936,7 @@ export const newerModels: IphoneModel[] = [
     displayInches: 6.3, resolution: "2622×1206", ppi: 460, refreshHz: 120, chip: "A19",
     rearCameras: ["48MP Fusion", "48MP Ultra Wide"], frontCamera: "18MP Center Stage",
     batteryVideoHours: 30, weightGrams: 177, storage: ["256GB", "512GB"],
-    basePriceKes: 124000, frame: "Aluminium", glass: "Ceramic Shield 2", port: "USB-C",
+    basePriceKes: 120000, frame: "Aluminium", glass: "Ceramic Shield 2", port: "USB-C",
     cutout: "Dynamic Island", tagline: "ProMotion comes to the standard iPhone.", defaultColour: "lavender", wifi: "Wi-Fi 7",
   },
   {

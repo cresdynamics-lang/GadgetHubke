@@ -4,19 +4,19 @@
   "airpods-3": {
    "base": {
     "priceKes": 21000,
-    "source": "Victor"
+    "source": "Victor Gadgets Hub (Oct 26)"
    }
   },
   "airpods-4": {
    "base": {
     "priceKes": 22000,
-    "source": "Victor"
+    "source": "Victor Gadgets Hub (Oct 26)"
    }
   },
   "airpods-4-anc": {
    "base": {
-    "priceKes": 31000,
-    "source": "Victor"
+    "priceKes": 28000,
+    "source": "Victor Gadgets Hub (Oct 26)"
    }
   },
   "airpods-max-2": {
@@ -39,14 +39,14 @@
   },
   "airpods-pro-2": {
    "base": {
-    "priceKes": 30000,
-    "source": "Victor"
+    "priceKes": 28000,
+    "source": "Victor Gadgets Hub (Oct 26)"
    }
   },
   "airpods-pro-3": {
    "base": {
-    "priceKes": 35000,
-    "source": "Victor"
+    "priceKes": 33000,
+    "source": "Victor Gadgets Hub (Oct 26)"
    }
   },
   "apple-tv-4k-3-ethernet": {
@@ -502,8 +502,8 @@
   "iphone-17": {
    "256": {
     "exUkKes": 95000,
-    "priceKes": 124000,
-    "source": "TechSmart + Victor"
+    "priceKes": 120000,
+    "source": "Victor Gadgets Hub (Oct 26)"
    },
    "512": {
     "priceKes": 145000,
@@ -518,11 +518,11 @@
    "256": {
     "exUkKes": 130000,
     "priceKes": 158000,
-    "source": "TechSmart + Victor"
+    "source": "Victor Gadgets Hub (Oct 26)"
    },
    "512": {
     "priceKes": 185000,
-    "source": "Victor"
+    "source": "Victor Gadgets Hub (Oct 26)"
    }
   },
   "iphone-17-pro-max": {
@@ -532,8 +532,8 @@
    },
    "256": {
     "exUkKes": 139000,
-    "priceKes": 170000,
-    "source": "TechSmart + Victor"
+    "priceKes": 167000,
+    "source": "Victor Gadgets Hub (Oct 26)"
    },
    "2tb": {
     "priceKes": 305000,
@@ -542,7 +542,7 @@
    "512": {
     "exUkKes": 155000,
     "priceKes": 195000,
-    "source": "TechSmart + Victor"
+    "source": "Victor Gadgets Hub (Oct 26)"
    }
   },
   "iphone-17e": {
@@ -793,5 +793,5 @@
    }
   }
  },
- "updated": "2026-10-25"
+ "updated": "2026-10-26"
 }

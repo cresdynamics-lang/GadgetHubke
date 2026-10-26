@@ -850,8 +850,8 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     aliases: ["iphone 17", "iphone17", "17"],
     seoTitle: "iPhone 17 Price in Kenya | Gadget Hub",
     h1: "iPhone 17",
-    metaDescription: "Buy the iPhone 17 in Nairobi from KES 124,000. 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone 17 at Gadget Hub in Nairobi. From KES 124,000 sealed new, with storage options 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    metaDescription: "Buy the iPhone 17 in Nairobi from KES 120,000. 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
+    intro: "Shop the iPhone 17 at Gadget Hub in Nairobi. From KES 120,000 sealed new, with storage options 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "everyday users who want the latest standard iPhone.",
     specs: [
       { label: "Display", value: "6.3-inch Super Retina XDR OLED with ProMotion" },
@@ -867,7 +867,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     colours: ["Lavender", "Mist Blue", "Sage", "White", "Black"],
     faq: [
       { question: "Should I buy the iPhone 17 or wait for a Pro?", answer: "Ask us on WhatsApp for current stock and a quote on the iPhone 17." },
-      { question: "What is the iPhone 17 price in Kenya?", answer: "Sealed new iPhone 17 starts from KES 124,000 at Gadget Hub. Options: 256GB, 512GB." }
+      { question: "What is the iPhone 17 price in Kenya?", answer: "Sealed new iPhone 17 starts from KES 120,000 at Gadget Hub. Options: 256GB, 512GB." }
     ],
     compareWith: ["iphone-17-vs-iphone-17-pro"],
     related: ["iphone-17-pro", "iphone-17e", "iphone-air"],
@@ -946,8 +946,8 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     aliases: ["iphone 17 pro max", "iphone17promax", "17 pro max", "17promax"],
     seoTitle: "iPhone 17 Pro Max Price in Kenya | Gadget Hub",
     h1: "iPhone 17 Pro Max",
-    metaDescription: "Buy the iPhone 17 Pro Max in Nairobi from KES 170,000. 256GB, 512GB, 1TB, 2TB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone 17 Pro Max at Gadget Hub in Nairobi. From KES 170,000 sealed new, with storage options 256GB, 512GB, 1TB, 2TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    metaDescription: "Buy the iPhone 17 Pro Max in Nairobi from KES 167,000. 256GB, 512GB, 1TB, 2TB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
+    intro: "Shop the iPhone 17 Pro Max at Gadget Hub in Nairobi. From KES 167,000 sealed new, with storage options 256GB, 512GB, 1TB, 2TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "big-screen users who want the most battery and Pro cameras.",
     specs: [
       { label: "Display", value: "6.9-inch Super Retina XDR OLED with ProMotion" },
@@ -963,7 +963,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     colours: ["Cosmic Orange", "Deep Blue", "Silver"],
     faq: [
       { question: "iPhone 17 Pro or 17 Pro Max?", answer: "Ask us on WhatsApp for current stock and a quote on the iPhone 17 Pro Max." },
-      { question: "What is the iPhone 17 Pro Max price in Kenya?", answer: "Sealed new iPhone 17 Pro Max starts from KES 170,000 at Gadget Hub. Options: 256GB, 512GB, 1TB, 2TB." }
+      { question: "What is the iPhone 17 Pro Max price in Kenya?", answer: "Sealed new iPhone 17 Pro Max starts from KES 167,000 at Gadget Hub. Options: 256GB, 512GB, 1TB, 2TB." }
     ],
     compareWith: ["iphone-17-pro-vs-iphone-17-pro-max", "iphone-17-pro-max-vs-iphone-18-pro-max"],
     related: ["iphone-17-pro", "iphone-18-pro-max"],
