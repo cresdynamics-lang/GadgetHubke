@@ -27,7 +27,7 @@ export const journalSearchGuidePosts: JournalPost[] = [
     excerpt:
       "Where to buy a genuine iPhone in Nairobi without the risk: what a trustworthy iPhone shop looks like, live prices from {{exuk:iphone-11}}, warranty, M-Pesa checkout and Lipa Mdogo Mdogo.",
     seoDescription:
-      "Looking for the best iPhone shop in Nairobi? Gadget Hub is an Apple Authorised Reseller at Norwich House, Nairobi CBD. Original iPhones new or Ex-UK, 1-year warranty on new, M-Pesa and Lipa Mdogo Mdogo.",
+      "Looking for the best iPhone shop in Nairobi? Gadget Hub is an Apple Authorised Reseller at Norwich Union House, Nairobi CBD. Original iPhones new or Ex-UK, 1-year warranty on new, M-Pesa and Lipa Mdogo Mdogo.",
     tags: ["best place to buy iPhone in Nairobi", "iPhone shop Nairobi", "original iPhone Kenya", "Apple shop Nairobi CBD", "where to buy iPhone in Kenya"],
     coverAlt: "Gadget Hub iPhone shop, Nairobi CBD",
     paragraphs: [
@@ -35,7 +35,7 @@ export const journalSearchGuidePosts: JournalPost[] = [
       "## What makes a good iPhone shop in Nairobi",
       "A shop worth your money does five things. It has a physical address you can walk into. It tells you plainly whether a phone is sealed new or used. It gives you a proper invoice with the serial number on it. It lets you pay to a business, not a personal M-Pesa number. And it answers when something goes wrong after you have paid. If a seller fails any one of these, the low price is not a deal.",
       "## Why Nairobi buyers choose Gadget Hub",
-      "Gadget Hub is an Apple Authorised Reseller at Norwich House, Suite 15, 4th Floor, in Nairobi CBD (Mon–Sat 8am–8pm, Sun 10am–8pm). Every iPhone is genuine Apple stock, sold either sealed new with a 1-year warranty or Ex-UK (UK-used) with the condition stated on your invoice. You pay on [checkout](/checkout) by M-Pesa — the prompt comes from the business, so there is no screenshot of a till number and no “send to my line”. Collect in town or take Nairobi delivery.",
+      "Gadget Hub is an Apple Authorised Reseller at Norwich Union House, Suite 15, 4th Floor, in Nairobi CBD (Mon–Sat 8am–8pm, Sun 10am–8pm). Every iPhone is genuine Apple stock, sold either sealed new with a 1-year warranty or Ex-UK (UK-used) with the condition stated on your invoice. You pay on [checkout](/checkout) by M-Pesa — the prompt comes from the business, so there is no screenshot of a till number and no “send to my line”. Collect in town or take Nairobi delivery.",
       "## iPhone prices at Gadget Hub today",
       "Prices on this page are live from our shop. The newest phones: [iPhone 18 Pro Max](/iphone/iphone-18-pro-max) from {{price:iphone-18-pro-max}}, [iPhone 18 Pro](/iphone/iphone-18-pro) from {{price:iphone-18-pro}}, [iPhone 17 Pro Max](/iphone/iphone-17-pro-max) from {{price:iphone-17-pro-max}} and [iPhone 17](/iphone/iphone-17) from {{price:iphone-17}}. Value picks: [iPhone 16](/iphone/iphone-16) from {{price:iphone-16}}, [iPhone 16e](/iphone/iphone-16e) from {{price:iphone-16e}}. Budget Ex-UK: [iPhone 13](/iphone/iphone-13) from {{exuk:iphone-13}}, [iPhone 12](/iphone/iphone-12) from {{exuk:iphone-12}} and [iPhone 11](/iphone/iphone-11) from {{exuk:iphone-11}}. The full list is on the [iPhone price page](/iphone).",
       "## How to check any iPhone before you pay",
@@ -44,11 +44,11 @@ export const journalSearchGuidePosts: JournalPost[] = [
       "If paying in full is hard this month, [Lipa Mdogo Mdogo](/lipa-mdogo-mdogo) is run in-house: a deposit today and the balance monthly, with no third-party app. If you have an older iPhone or a Samsung, [trade it in](/trade-in) and pay only the difference. Not sure what fits your budget? Read [the best iPhone to buy in Kenya by budget](/journal/best-iphone-to-buy-in-kenya).",
     ],
     faq: [
-      { q: "Where is the best place to buy an original iPhone in Nairobi?", a: "Buy from a shop with a physical address, a proper invoice with the serial number, and business payment. Gadget Hub is an Apple Authorised Reseller at Norwich House, Suite 15, 4th Floor, Nairobi CBD." },
+      { q: "Where is the best place to buy an original iPhone in Nairobi?", a: "Buy from a shop with a physical address, a proper invoice with the serial number, and business payment. Gadget Hub is an Apple Authorised Reseller at Norwich Union House, Suite 15, 4th Floor, Nairobi CBD." },
       { q: "Does Gadget Hub sell original iPhones?", a: "Yes. Every iPhone is genuine Apple stock, sold sealed new with a 1-year warranty or Ex-UK (UK-used) with the condition stated on your invoice." },
       { q: "What is the cheapest iPhone at Gadget Hub?", a: "Ex-UK iPhone 11 from {{exuk:iphone-11}}. The cheapest sealed new current iPhone is the iPhone 16e from {{price:iphone-16e}}." },
       { q: "Can I pay for an iPhone with M-Pesa?", a: "Yes. Pay on the website checkout with an M-Pesa prompt to your phone, or pay in the shop." },
-      { q: "Do you deliver iPhones in Nairobi?", a: "Yes. Nairobi delivery is arranged after payment, or collect at Norwich House in the CBD." },
+      { q: "Do you deliver iPhones in Nairobi?", a: "Yes. Nairobi delivery is arranged after payment, or collect at Norwich Union House in the CBD." },
       { q: "Can I buy an iPhone in instalments in Nairobi?", a: "Yes, with [Lipa Mdogo Mdogo](/lipa-mdogo-mdogo): pay a deposit, then the balance monthly." },
     ],
   },
@@ -76,12 +76,12 @@ export const journalSearchGuidePosts: JournalPost[] = [
       "## iPhone SE in Kenya",
       "People searching “iPhone SE price in Kenya” usually want a small, cheap iPhone with a home button. The SE is no longer the cheapest way into a modern iPhone: the [iPhone 12 mini](/iphone/iphone-12-mini) Ex-UK from {{exuk:iphone-12-mini}} and [iPhone 13 mini](/iphone/iphone-13-mini) Ex-UK from {{exuk:iphone-13-mini}} are small, have Face ID and better cameras. If you want the newest budget iPhone instead, the [iPhone 16e](/iphone/iphone-16e) starts at {{price:iphone-16e}} sealed new.",
       "## What is my old iPhone worth?",
-      "If you already own an iPhone 7, 8, X, XR or XS, it still has trade-in value. Bring it to Norwich House or start online on [trade-in](/trade-in): we inspect the phone (screen, battery, Face ID or Touch ID, iCloud signed out) and give you a quote you can put straight toward a newer iPhone. No money changes hands until you agree. Before you come, back up your photos and sign out of iCloud.",
+      "If you already own an iPhone 7, 8, X, XR or XS, it still has trade-in value. Bring it to Norwich Union House or start online on [trade-in](/trade-in): we inspect the phone (screen, battery, Face ID or Touch ID, iCloud signed out) and give you a quote you can put straight toward a newer iPhone. No money changes hands until you agree. Before you come, back up your photos and sign out of iCloud.",
     ],
     faq: [
       { q: "What is the iPhone 7 price in Kenya in 2026?", a: "Gadget Hub does not sell the iPhone 7 because it no longer gets current iOS updates. The cheapest iPhone we sell is the iPhone 11 Ex-UK from {{exuk:iphone-11}}." },
       { q: "Is the iPhone XR still worth buying in Kenya?", a: "For most people, no. An Ex-UK iPhone 11 from {{exuk:iphone-11}} costs a little more, has a better camera and battery, and gets app support for longer." },
-      { q: "Can I trade in my iPhone 7 or iPhone 8?", a: "Yes. Start on the [trade-in page](/trade-in) or bring it to Norwich House. We inspect it and quote a value you can put toward a newer iPhone." },
+      { q: "Can I trade in my iPhone 7 or iPhone 8?", a: "Yes. Start on the [trade-in page](/trade-in) or bring it to Norwich Union House. We inspect it and quote a value you can put toward a newer iPhone." },
       { q: "What is the cheapest small iPhone in Kenya?", a: "The iPhone 12 mini Ex-UK from {{exuk:iphone-12-mini}} and iPhone 13 mini Ex-UK from {{exuk:iphone-13-mini}}." },
       { q: "Do you sell the iPhone SE?", a: "Not currently. For a small iPhone, see the 12 mini or 13 mini; for the newest budget iPhone, the iPhone 16e from {{price:iphone-16e}}." },
     ],
@@ -113,7 +113,7 @@ export const journalSearchGuidePosts: JournalPost[] = [
       "## Best iPhone for camera, battery and value",
       "Best camera: iPhone 18 Pro or Pro Max. Best battery: any Pro Max — the 18 Pro Max, 17 Pro Max or an Ex-UK 16 Pro Max from {{exuk:iphone-16-pro-max}}. Best value: iPhone 16e new, or iPhone 13 Ex-UK. Best for students: iPhone 16e or iPhone 13 Ex-UK, paired with [Lipa Mdogo Mdogo](/lipa-mdogo-mdogo) if needed.",
       "## Before you buy",
-      "Choose at least 128GB, and 256GB if you shoot a lot of video or keep WhatsApp media. Decide new or Ex-UK — our [new vs Ex-UK guide](/journal/new-and-ex-uk-apple-devices) explains the difference. Then buy on the product page with M-Pesa and collect at Norwich House, Nairobi CBD, or [trade in](/trade-in) your old phone to bring the price down.",
+      "Choose at least 128GB, and 256GB if you shoot a lot of video or keep WhatsApp media. Decide new or Ex-UK — our [new vs Ex-UK guide](/journal/new-and-ex-uk-apple-devices) explains the difference. Then buy on the product page with M-Pesa and collect at Norwich Union House, Nairobi CBD, or [trade in](/trade-in) your old phone to bring the price down.",
     ],
     faq: [
       { q: "What is the best iPhone to buy in Kenya in 2026?", a: "Overall, the iPhone 18 Pro Max from {{price:iphone-18-pro-max}}. For value, the iPhone 16e from {{price:iphone-16e}} new or the iPhone 13 Ex-UK from {{exuk:iphone-13}}." },
@@ -148,7 +148,7 @@ export const journalSearchGuidePosts: JournalPost[] = [
       "## iPhone 17, 17e or Air?",
       "Pick the 17 if you want the best balance of camera, battery and price. Pick the 17e if price matters most. Pick the Air if you want the thinnest phone and a large display. If you want Pro cameras, look at the [iPhone 17 Pro and Pro Max](/journal/iphone-17-pro-and-pro-max-price-in-kenya). Comparing with last year? Read [iPhone 17 vs iPhone 16 in Kenya](/journal/iphone-17-vs-iphone-16-kenya).",
       "## How to buy in Nairobi",
-      "Choose storage and colour on the product page and pay by M-Pesa at checkout. Collect at Norwich House, Suite 15, 4th Floor, Nairobi CBD, or take delivery. [Lipa Mdogo Mdogo](/lipa-mdogo-mdogo) spreads the cost, and [trade-in](/trade-in) takes your old phone off the price.",
+      "Choose storage and colour on the product page and pay by M-Pesa at checkout. Collect at Norwich Union House, Suite 15, 4th Floor, Nairobi CBD, or take delivery. [Lipa Mdogo Mdogo](/lipa-mdogo-mdogo) spreads the cost, and [trade-in](/trade-in) takes your old phone off the price.",
     ],
     faq: [
       { q: "What is the iPhone 17 price in Kenya?", a: "From {{price:iphone-17:256}} for 256GB and {{price:iphone-17:512}} for 512GB, sealed new. Ex-UK from {{exuk:iphone-17:256}}." },
@@ -220,14 +220,14 @@ export const journalSearchGuidePosts: JournalPost[] = [
       "## 5. Test Face ID, cameras and your own SIM",
       "Set up Face ID, take a photo with every camera, record a short video and play it back. Insert your own Safaricom or Airtel SIM and make a call and use mobile data. A network lock or a dead camera shows up here.",
       "## 6. Pay a business, get an invoice",
-      "Warning signs of a fake deal: a price far below every shop, pressure to pay a personal M-Pesa number, no physical address, and no invoice with the serial number. At Gadget Hub, an Apple Authorised Reseller at Norwich House in Nairobi CBD, you pay through the business checkout, get an invoice with the serial number, and can do every check above at the counter. See our [iPhone prices](/iphone) or read [where to buy an iPhone in Nairobi](/journal/best-place-to-buy-iphone-in-nairobi).",
+      "Warning signs of a fake deal: a price far below every shop, pressure to pay a personal M-Pesa number, no physical address, and no invoice with the serial number. At Gadget Hub, an Apple Authorised Reseller at Norwich Union House in Nairobi CBD, you pay through the business checkout, get an invoice with the serial number, and can do every check above at the counter. See our [iPhone prices](/iphone) or read [where to buy an iPhone in Nairobi](/journal/best-place-to-buy-iphone-in-nairobi).",
     ],
     faq: [
       { q: "How do I check if an iPhone is original in Kenya?", a: "Dial *#06# and match the IMEI to the box and invoice, check the serial number on Apple's Check Coverage site, and confirm iCloud is signed out." },
       { q: "How do I check an iPhone's IMEI?", a: "Dial *#06#, or open Settings › General › About. The number must match the box and your invoice." },
       { q: "What is the difference between Ex-UK and refurbished?", a: "Ex-UK phones are genuine iPhones first used in the UK. Refurbished can mean anything from Apple-certified to local repairs with non-Apple parts — check Parts and Service History in Settings." },
       { q: "Can a locked iCloud iPhone be unlocked?", a: "Only by the original owner signing out. Never buy an iPhone with someone else's Apple ID still signed in." },
-      { q: "Where can I buy a guaranteed original iPhone in Nairobi?", a: "From an Apple Authorised Reseller such as Gadget Hub at Norwich House, Nairobi CBD, with an invoice showing the serial number." },
+      { q: "Where can I buy a guaranteed original iPhone in Nairobi?", a: "From an Apple Authorised Reseller such as Gadget Hub at Norwich Union House, Nairobi CBD, with an invoice showing the serial number." },
     ],
   },
   {
@@ -325,7 +325,7 @@ export const journalSearchGuidePosts: JournalPost[] = [
       "## Bigger gifts: iPhone, Apple Watch Series and MacBook",
       "For graduations and big milestones: the [iPhone 17](/iphone/iphone-17) from {{price:iphone-17}}, the [Apple Watch Series 11](/watch/watch-s11-42) from {{price:watch-s11-42}}, or a [MacBook Air](/mac/macbook-air-13-m4) from {{price:macbook-air-13-m4}} to start a career. You can spread a big gift with [Lipa Mdogo Mdogo](/lipa-mdogo-mdogo).",
       "## Gift tips",
-      "Check the person uses an iPhone before buying an Apple Watch. Buy sealed new so they can set it up with their own Apple ID. Keep the invoice for warranty. Collect at Norwich House, Nairobi CBD, or have it delivered in Nairobi — order on the site and add the recipient's details in the delivery address.",
+      "Check the person uses an iPhone before buying an Apple Watch. Buy sealed new so they can set it up with their own Apple ID. Keep the invoice for warranty. Collect at Norwich Union House, Nairobi CBD, or have it delivered in Nairobi — order on the site and add the recipient's details in the delivery address.",
     ],
     faq: [
       { q: "What is the best Apple gift under 25,000 shillings?", a: "AirPods 4 at {{price:airpods-4}}, or a HomePod mini at {{price:homepod-mini}}." },

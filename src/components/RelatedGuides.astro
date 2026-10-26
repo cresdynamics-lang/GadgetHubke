@@ -1,0 +1,49 @@
+---
+/**
+ * "Buying guides" links from a product page to the journal posts about it.
+ * Internal links help Google find and rank the guides, and help buyers decide.
+ * Keywords go most specific first ("iPhone 16 Pro Max", then "iPhone").
+ */
+import { listPublishedJournalPosts } from "../lib/journal";
+
+interface Props {
+  keywords: string[];
+  limit?: number;
+}
+
+const { keywords, limit = 4 } = Astro.props;
+const kws = keywords.map((k) => k.toLowerCase()).filter(Boolean);
+const guides = (await listPublishedJournalPosts())
+  .map((p) => {
+    const hay = `${p.title} ${p.tags.join(" ")}`.toLowerCase();
+    const score = kws.reduce((s, k, i) => (hay.includes(k) ? s + (kws.length - i) * 10 : s), 0);
+    return { p, score };
+  })
+  .filter((x) => x.score > 0)
+  .sort((a, b) => b.score - a.score)
+  .slice(0, limit)
+  .map((x) => x.p);
+---
+
+{
+  guides.length ? (
+    <section class="rguides container" aria-labelledby="rguides-title">
+      <h2 id="rguides-title">Buying guides</h2>
+      <ul>
+        {guides.map((g) => (
+          <li>
+            <a href={`/journal/${g.slug}`}>{g.title}</a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ) : null
+}
+
+<style>
+  .rguides { margin: 2rem auto; max-width: 860px; }
+  .rguides h2 { font-size: 1.2rem; margin: 0 0 0.6rem; }
+  .rguides ul { margin: 0; padding-left: 1.1rem; line-height: 1.6; }
+  .rguides li { margin: 0.35rem 0; }
+  .rguides a { color: #0066cc; }
+</style>

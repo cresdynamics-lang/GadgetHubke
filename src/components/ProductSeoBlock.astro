@@ -5,6 +5,7 @@
  */
 import type { ProductSeo } from "../lib/seo/product-seo";
 import { formatKes } from "../lib/seo/product-seo";
+import RelatedGuides from "./RelatedGuides.astro";
 
 interface Props {
   seo: ProductSeo;
@@ -12,6 +13,10 @@ interface Props {
 }
 
 const { seo, links = [] } = Astro.props;
+// Product name, then its family ("MacBook Air", "iPad Pro", "Apple Watch"), then the category word.
+const productName = seo.heading.replace(/ price in Kenya$/i, "");
+const family = productName.split(/ (?=\d|M\d|\()/)[0];
+const category = /^(Apple Watch|Apple TV|Apple Pencil|Magic \w+)/.exec(productName)?.[0] ?? productName.split(" ")[0];
 ---
 
 <script type="application/ld+json" set:html={JSON.stringify(seo.jsonLd)} />
@@ -42,7 +47,7 @@ const { seo, links = [] } = Astro.props;
   <ul class="pseo__list">
     <li>Apple Authorised Reseller: genuine Apple stock with a Gadget Hub invoice{seo.hasExUk ? " — sealed new (1-year warranty) or Ex-UK" : ", sealed with a 1-year warranty"}.</li>
     <li>Pay by M-Pesa at checkout, or spread the cost with <a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo</a>.</li>
-    <li>Collect at Norwich House, Suite 15, 4th Floor, Nairobi CBD, or get <a href="/shipping-delivery">delivery</a>.</li>
+    <li>Collect at Norwich Union House, Suite 15, 4th Floor, Nairobi CBD, or get <a href="/shipping-delivery">delivery</a>.</li>
     <li>Have an old device? <a href="/trade-in">Trade it in</a> for credit toward this one.</li>
   </ul>
 
@@ -66,6 +71,7 @@ const { seo, links = [] } = Astro.props;
       ))}
     </p>
   ) : null}
+  <RelatedGuides keywords={[productName, family, category]} />
 </section>
 
 <style>

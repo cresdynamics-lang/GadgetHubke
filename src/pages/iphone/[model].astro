@@ -51,6 +51,7 @@ import { storageIdFromLabel } from "../../lib/pricing/iphone-sheet";
 import { site, whatsappUrl } from "../../lib/site";
 import StockChannelToggle from "../../components/StockChannelToggle.astro";
 import ProductReviews from "../../components/ProductReviews.astro";
+import RelatedGuides from "../../components/RelatedGuides.astro";
 import { reviewSchema } from "../../lib/seo/offer-schema";
 import StickyBuyBar from "../../components/StickyBuyBar.astro";
 import BackButton from "../../components/BackButton.astro";
@@ -571,6 +572,7 @@ if (seo) {
 
     <div class="container">
       <ProductReviews productId={seo.id} productName={seo.name} />
+      <RelatedGuides keywords={[seo.name, seo.name.replace(/ (Pro Max|Pro|Plus|mini)$/, ""), "iPhone"]} />
     </div>
 
     <SeoProductBlocks model={seo} />

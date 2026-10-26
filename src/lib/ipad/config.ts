@@ -8,7 +8,7 @@ export const ipadConfig = {
   whatsappDisplay: "0729 585 471",
 
   address: {
-    line: "Norwich House, Suite 15, 4th Floor",
+    line: "Norwich Union House, Suite 15, 4th Floor",
     city: "Nairobi, Kenya",
     hours: "Mon-Sat 8am-8pm · Sun 10am-8pm",
   },

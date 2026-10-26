@@ -15,12 +15,14 @@ export const site = {
   privacyEmail: "info@gadgethubke.com",
   location: "Nairobi, Kenya",
   /** Short line for footer / compact UI */
-  address: "Norwich House, Suite 15, 4th Floor",
+  address: "Norwich Union House, Suite 15, 4th Floor",
+  /** How customers find the building */
+  landmark: "opposite the Hilton Hotel, Nairobi CBD",
   /** Full store address for the locations page */
   addressLines: [
-    "Norwich House",
+    "Norwich Union House, opposite the Hilton Hotel",
     "Suite 15, 4th Floor",
-    "Nairobi, Kenya",
+    "Nairobi CBD, Kenya",
   ],
   hours: {
     weekday: "Monday - Saturday: 8:00 AM - 8:00 PM",

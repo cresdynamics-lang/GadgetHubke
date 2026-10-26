@@ -33,7 +33,7 @@ export const aboutStory = {
     SHOW_EX_UK
       ? "Gadget Hub Investments sells Apple products in Nairobi - New sealed units and EX-UK imports - with live prices shown up front."
       : "Gadget Hub Investments sells Apple products in Nairobi - New sealed units with live prices shown up front.",
-    "Pick a device on the site, message us on WhatsApp, then receive or collect at Norwich House, Suite 15, 4th Floor. Payment options include M-Pesa, card, and Lipa Mdogo Mdogo run in-house by Gadget Hub Investments.",
+    "Pick a device on the site, message us on WhatsApp, then receive or collect at Norwich Union House, Suite 15, 4th Floor. Payment options include M-Pesa, card, and Lipa Mdogo Mdogo run in-house by Gadget Hub Investments.",
   ],
 } as const;
 

@@ -2,7 +2,7 @@
 export const prerender = false;
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { site } from "../../lib/site";
+import { site, whatsappUrl } from "../../lib/site";
 import { livePricedCatalog } from "../../lib/pricing/live";
 import {
   getPublishedJournalPost,
@@ -46,6 +46,8 @@ const jsonLd = {
         logo: { "@type": "ImageObject", url: new URL("/images/logo.png", site.url).href },
       },
       mainEntityOfPage: canonical,
+      image: post.coverUrl ? new URL(post.coverUrl, site.url).href : new URL("/images/logo.png", site.url).href,
+      about: { "@id": `${site.url}/#store` },
       articleSection: post.category,
       keywords: post.tags.join(", "),
     },
@@ -125,6 +127,24 @@ const jsonLd = {
         </section>
       ) : null
     }
+
+    <section class="post__visit" aria-labelledby="post-visit-title">
+      <h2 id="post-visit-title">Get served at Gadget Hub, Norwich Union House</h2>
+      <p>
+        <strong>{site.legalName}</strong> — Apple Authorised Reseller<br />
+        {site.addressLines.join(", ")}
+      </p>
+      <p>{site.hours.weekday} · {site.hours.sunday}</p>
+      <p>
+        <a href={`tel:${site.phoneE164}`}>Call {site.phoneDisplay}</a>
+        ·
+        <a href={whatsappUrl(`Hi Gadget Hub, I read "${post.title.slice(0, 80)}" and I'd like to buy.`)} target="_blank" rel="noopener noreferrer">WhatsApp us</a>
+        ·
+        <a href="https://www.google.com/maps/search/?api=1&query=Norwich+Union+House+Nairobi" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
+        ·
+        <a href="/locations">Directions</a>
+      </p>
+    </section>
 
     <p class="post__shop">
       Ready to buy sealed in Nairobi?
@@ -236,6 +256,27 @@ const jsonLd = {
   }
 
   .post__faq a {
+    text-decoration: underline;
+  }
+
+  .post__visit {
+    margin-top: var(--space-8);
+    padding: var(--space-5);
+    border-radius: 0.75rem;
+    background: #f5f5f7;
+    line-height: var(--leading-normal);
+  }
+
+  .post__visit h2 {
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-lg);
+  }
+
+  .post__visit p {
+    margin: var(--space-2) 0 0;
+  }
+
+  .post__visit a {
     text-decoration: underline;
   }
 
