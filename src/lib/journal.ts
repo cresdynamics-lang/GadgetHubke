@@ -7,6 +7,7 @@ import { livePricedCatalog, iphoneLiveId, type PricedProduct } from "./pricing/l
 import { journalGuidePosts } from "./journal-guides";
 import { journalSearchGuidePosts } from "./journal-search-guides";
 import { journalStoreGuidePosts } from "./journal-store-guides";
+import { journalHowToGuidePosts } from "./journal-howto-guides";
 
 export type JournalStatus = "published" | "scheduled" | "review" | "draft";
 
@@ -366,7 +367,7 @@ async function loadOverrides(): Promise<JournalPost[]> {
 /** Merge seeds with persisted overrides (override wins by id). */
 export async function listJournalPosts(): Promise<JournalPost[]> {
   const overrides = await loadOverrides();
-  const map = byIdMap([...journalSeedPosts, ...journalGuidePosts, ...journalSearchGuidePosts, ...journalStoreGuidePosts]);
+  const map = byIdMap([...journalSeedPosts, ...journalGuidePosts, ...journalSearchGuidePosts, ...journalStoreGuidePosts, ...journalHowToGuidePosts]);
   for (const o of overrides) map.set(o.id, o);
   return [...map.values()].sort((a, b) => {
     const ad = a.date || "0000";

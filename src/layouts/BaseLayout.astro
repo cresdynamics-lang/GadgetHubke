@@ -33,13 +33,28 @@ const {
   noindex = false,
 } = Astro.props;
 const ogImage = new URL(image || "/images/logo.png", site.url).href;
+const BRAND_NAMES = ["Gadget Hub", "Gadget Hub Kenya", "GadgetHub", "GadgetHub Kenya", "GadgetHub KE", "Gadget Hub KE", "Gadgets Hub", "Gadgets Hub KE", "Gadgets Hub Kenya", "Gadget Hub Nairobi", "gadgethubke"];
+
+// Site name Google shows in results, with the brand spellings people search.
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${site.url}/#website`,
+  name: "Gadget Hub Kenya",
+  alternateName: BRAND_NAMES,
+  url: `${site.url}/`,
+  publisher: { "@id": `${site.url}/#store` },
+  inLanguage: "en-KE",
+};
+
 // Store details on every page so Google can tie products and articles to the Nairobi shop.
 const storeJsonLd = {
   "@context": "https://schema.org",
   "@type": "ElectronicsStore",
   "@id": `${site.url}/#store`,
   name: site.legalName,
-  alternateName: ["Gadget Hub", "GadgetHub Kenya", "Gadget Hub Nairobi"],
+  // Every way people type the brand ("gadget hub kenya", "gadgethub ke", "gadgets hub").
+  alternateName: BRAND_NAMES,
   url: site.url,
   logo: new URL("/images/logo.png", site.url).href,
   image: new URL("/images/logo.png", site.url).href,
@@ -104,6 +119,7 @@ const hideFloatWhatsApp = path === "/contact";
     <meta name="geo.region" content="KE-110" />
     <meta name="geo.placename" content="Nairobi" />
     <script type="application/ld+json" set:html={JSON.stringify(storeJsonLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(websiteJsonLd)} />
     <meta name="generator" content={Astro.generator} />
     <title>{pageTitle}</title>
     <slot name="head" />
