@@ -1,8 +1,5 @@
 import type { APIRoute } from "astro";
 import { addContactMessage } from "../../lib/leads/messages";
-import { trySendMail } from "../../lib/mail/smtp";
-import { contactNoticeToShop } from "../../lib/mail/templates";
-import { site } from "../../lib/site";
 
 export const prerender = false;
 
@@ -21,9 +18,8 @@ export const POST: APIRoute = async ({ request }) => {
     return json({ error: "Invalid JSON body." }, 400);
   }
   try {
+    // Saved for Management → Messages; no email to the shop inbox.
     const row = await addContactMessage(body);
-    const shop = contactNoticeToShop(row);
-    await trySendMail({ to: site.email, subject: shop.subject, html: shop.html, text: shop.text });
     return json({ ok: true, id: row.id }, 201);
   } catch (e) {
     return json({ error: e instanceof Error ? e.message : "Could not save message." }, 400);

@@ -1,8 +1,7 @@
 import type { APIRoute } from "astro";
 import { addTradeIn } from "../../lib/management/trade-ins";
 import { trySendMail } from "../../lib/mail/smtp";
-import { tradeInCustomerEmail, tradeInNoticeToShop } from "../../lib/mail/templates";
-import { site } from "../../lib/site";
+import { tradeInCustomerEmail } from "../../lib/mail/templates";
 
 export const prerender = false;
 
@@ -50,15 +49,7 @@ export const POST: APIRoute = async ({ request }) => {
       notes,
     });
 
-    const shop = tradeInNoticeToShop({
-      name,
-      phone,
-      email,
-      requestId: row.id,
-      device,
-      notes,
-    });
-    await trySendMail({ to: site.email, subject: shop.subject, html: shop.html, text: shop.text });
+    // Listed in Management → Trade-ins; only the customer gets an email.
 
     if (email.includes("@")) {
       const customer = tradeInCustomerEmail({ name, requestId: row.id, device });

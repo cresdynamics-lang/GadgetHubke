@@ -65,7 +65,6 @@ module.exports = {
         ADMIN_PASSWORD_HASH: fileEnv.ADMIN_PASSWORD_HASH || "",
         ADMIN_SESSION_SECRET: fileEnv.ADMIN_SESSION_SECRET || "",
         ADMIN_SECRET: fileEnv.ADMIN_SECRET || "",
-        MANAGEMENT_OTP_CODE: fileEnv.MANAGEMENT_OTP_CODE || "",
       },
     },
   ],

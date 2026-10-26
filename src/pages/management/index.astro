@@ -49,30 +49,8 @@ const dayLabel = new Intl.DateTimeFormat("en-GB", {
             </label>
           </div>
 
-          <div data-login-step="otp" hidden>
-            <p class="mgmt-muted" style="margin-bottom:0.65rem;">Step 2: enter the 6-digit code</p>
-            <label style="display:grid;gap:0.3rem;">
-              <span class="mgmt-muted">One-time code</span>
-              <input
-                class="mgmt-input"
-                type="text"
-                name="otp"
-                inputmode="numeric"
-                pattern="[0-9]{6}"
-                maxlength="6"
-                autocomplete="one-time-code"
-                placeholder="••••••"
-              />
-            </label>
-            {import.meta.env.DEV ? (
-              <p class="mgmt-muted" style="margin-top:0.5rem;">
-                Dev: any 6 digits work unless MANAGEMENT_OTP_CODE is set.
-              </p>
-            ) : null}
-          </div>
-
           <p class="mgmt-error" data-login-error hidden></p>
-          <button class="mgmt-btn" type="submit" data-login-submit>Continue</button>
+          <button class="mgmt-btn" type="submit" data-login-submit>Sign in</button>
           <p class="mgmt-muted" style="margin:0;font-size:0.82rem;">
             Forgot password · Locked after 5 wrong tries
           </p>
@@ -208,33 +186,21 @@ const dayLabel = new Intl.DateTimeFormat("en-GB", {
     <script>
       const form = document.querySelector("[data-mgmt-login]") as HTMLFormElement | null;
       const err = document.querySelector("[data-login-error]");
-      const stepPassword = document.querySelector('[data-login-step="password"]') as HTMLElement | null;
-      const stepOtp = document.querySelector('[data-login-step="otp"]') as HTMLElement | null;
       const submitBtn = document.querySelector("[data-login-submit]") as HTMLButtonElement | null;
-      let stage: "password" | "otp" = "password";
 
       form?.addEventListener("submit", async (e) => {
         e.preventDefault();
         err?.setAttribute("hidden", "");
+        if (submitBtn) submitBtn.disabled = true;
         const fd = new FormData(form);
-        const email = String(fd.get("email") || "");
-        const password = String(fd.get("password") || "");
-        const otp = String(fd.get("otp") || "");
         const res = await fetch("/api/management/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password, otp, step: stage }),
+          body: JSON.stringify({ email: String(fd.get("email") || ""), password: String(fd.get("password") || "") }),
         });
-        const data = await res.json();
-        if (data.needOtp && stage === "password" && res.ok) {
-          stage = "otp";
-          stepPassword?.setAttribute("hidden", "");
-          stepOtp?.removeAttribute("hidden");
-          if (submitBtn) submitBtn.textContent = "Sign in";
-          (form.querySelector('[name="otp"]') as HTMLInputElement | null)?.focus();
-          return;
-        }
+        const data = await res.json().catch(() => ({}));
         if (!res.ok || !data.ok) {
+          if (submitBtn) submitBtn.disabled = false;
           if (err) {
             err.textContent = data.error || "Login failed.";
             err.removeAttribute("hidden");

@@ -1,63 +1,38 @@
 import type { APIRoute } from "astro";
 import { loginWithPassword, setAdminSession } from "../../../lib/admin";
+import { clientKey, lockedMinutes, recordFailure, recordSuccess } from "../../../lib/admin/throttle";
 
 export const prerender = false;
 
-/** PDF sign-in: email + password, then OTP step (stub until owner chooses SMS/app). */
-export const POST: APIRoute = async ({ request, cookies }) => {
-  let body: { email?: string; password?: string; otp?: string; step?: string };
+function json(data: unknown, status = 200) {
+  return new Response(JSON.stringify(data), { status, headers: { "Content-Type": "application/json" } });
+}
+
+/** Staff sign-in: email + password, one step. Locked for 15 minutes after 5 wrong tries. */
+export const POST: APIRoute = async ({ request, cookies, clientAddress }) => {
+  let body: { email?: string; password?: string };
   try {
     body = (await request.json()) as typeof body;
   } catch {
-    return new Response(JSON.stringify({ error: "Invalid JSON." }), { status: 400 });
+    return json({ error: "Invalid JSON." }, 400);
   }
 
   const email = String(body.email || "").trim().toLowerCase();
   const password = String(body.password || "");
-  const otp = String(body.otp || "").replace(/\s/g, "");
-  const step = body.step || "password";
+  if (!email || !email.includes("@")) return json({ error: "Enter a valid staff email." }, 400);
 
-  if (!email || !email.includes("@")) {
-    return new Response(JSON.stringify({ error: "Enter a valid staff email." }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
+  const key = clientKey(request, clientAddress);
+  const wait = lockedMinutes(key);
+  if (wait) return json({ error: `Too many wrong tries. Try again in ${wait} minute${wait === 1 ? "" : "s"}.` }, 429);
 
   try {
     await loginWithPassword(password, email);
   } catch (e) {
-    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Login failed." }), {
-      status: 401,
-      headers: { "Content-Type": "application/json" },
-    });
+    recordFailure(key);
+    return json({ error: e instanceof Error ? e.message : "Login failed." }, 401);
   }
 
-  if (step !== "otp") {
-    return new Response(JSON.stringify({ ok: false, needOtp: true }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
-
-  if (!/^\d{6}$/.test(otp)) {
-    return new Response(JSON.stringify({ error: "Enter the 6-digit code.", needOtp: true }), {
-      status: 401,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
-
-  const expected = process.env.MANAGEMENT_OTP_CODE;
-  if (expected && otp !== expected) {
-    return new Response(JSON.stringify({ error: "Wrong code. Try again.", needOtp: true }), {
-      status: 401,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
-
+  recordSuccess(key);
   await setAdminSession(cookies);
-  return new Response(JSON.stringify({ ok: true, email }), {
-    status: 200,
-    headers: { "Content-Type": "application/json" },
-  });
+  return json({ ok: true, email });
 };

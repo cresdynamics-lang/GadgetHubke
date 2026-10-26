@@ -2,8 +2,7 @@ import type { APIRoute } from "astro";
 import { buildLipaTerms } from "../../../lib/checkout/intent";
 import { addLipaPlan } from "../../../lib/management/lipa";
 import { trySendMail } from "../../../lib/mail/smtp";
-import { lipaApplicationEmail, lipaNoticeToShop } from "../../../lib/mail/templates";
-import { site } from "../../../lib/site";
+import { lipaApplicationEmail } from "../../../lib/mail/templates";
 
 export const prerender = false;
 
@@ -54,18 +53,7 @@ export const POST: APIRoute = async ({ request }) => {
         : "Application · price to confirm",
     });
 
-    const shop = lipaNoticeToShop({
-      name,
-      phone,
-      email,
-      planId: plan.id,
-      device,
-      depositKes: terms.depositKes,
-      remainingKes: terms.remainingKes,
-      months: terms.months,
-      notes: plan.notes,
-    });
-    await trySendMail({ stream: "orders", to: site.email, subject: shop.subject, html: shop.html, text: shop.text });
+    // Listed in Management → Lipa; only the customer gets an email.
 
     if (email.includes("@")) {
       const customer = lipaApplicationEmail({
