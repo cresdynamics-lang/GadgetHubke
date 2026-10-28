@@ -2,7 +2,7 @@
 export const prerender = false;
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { livePricedCatalog } from "../../lib/pricing/live";
+import { filterVisibleById, livePricedCatalog, websiteVisibleIdSet } from "../../lib/pricing/live";
 import { buildCategorySeo, formatKes as formatKesSeoHub } from "../../lib/seo/product-seo";
 import AirPodsStage from "../../components/airpods/AirPodsStage.astro";
 import AirPodsCard from "../../components/airpods/AirPodsCard.astro";
@@ -12,21 +12,22 @@ import AirPodsTradeIn from "../../components/airpods/AirPodsTradeIn.astro";
 import AirpodsTrademark from "../../components/airpods/AirpodsTrademark.astro";
 import {
   airpodsModels,
-  airpodsModelsByFamily,
   getAirpodsImage,
   formatKes,
-  lowestAirpodsPrice,
   airpodsConfig,
   homeAirpodsAccessories,
 } from "../../lib/airpods";
 import { whatsappUrl } from "../../lib/site";
 import CategoryHero from "../../components/hero/CategoryHero.astro";
+import { listingRows } from "../../lib/listing-offers";
 
-const pro = airpodsModelsByFamily("Pro");
-const std = airpodsModelsByFamily("AirPods");
-const max = airpodsModelsByFamily("Max");
+const visibleIds = await websiteVisibleIdSet();
+const listedAirpods = filterVisibleById(airpodsModels, visibleIds);
+const pro = listedAirpods.filter((m) => m.family === "Pro");
+const std = listedAirpods.filter((m) => m.family === "AirPods");
+const max = listedAirpods.filter((m) => m.family === "Max");
 const accessories = homeAirpodsAccessories();
-const newest = [...airpodsModels].sort((a, b) => b.year - a.year || b.basePriceKes - a.basePriceKes);
+const newest = [...listedAirpods].sort((a, b) => b.year - a.year || b.basePriceKes - a.basePriceKes);
 const wa = whatsappUrl("Hi Gadget Hub, I want to visit and try AirPods.");
 const corp = whatsappUrl("Corporate AirPods order");
 
@@ -50,7 +51,7 @@ const choose = [
     title: "AirPods Pro",
     body: "In-ear seal, strongest noise control, hearing features where available.",
     href: "/airpods/shop?family=Pro",
-    price: lowestAirpodsPrice("Pro"),
+    price: pro.length ? Math.min(...pro.map((m) => m.basePriceKes)) : 0,
     model: pro.find((m) => m.id === "airpods-pro-3") || pro[0],
     considerKey: "landing/consider/card_noise_cancellation",
   },
@@ -58,15 +59,15 @@ const choose = [
     title: "AirPods",
     body: "Open-fit everyday listening and calls.",
     href: "/airpods/shop?family=AirPods",
-    price: lowestAirpodsPrice("AirPods"),
-    model: std.find((m) => m.id === "airpods-5") || std[0],
+    price: std.length ? Math.min(...std.map((m) => m.basePriceKes)) : 0,
+    model: std.find((m) => m.id === "airpods-4") || std[0],
     considerKey: "landing/consider/card_personalized_spatial_audio",
   },
   {
     title: "AirPods Max",
     body: "Over-ear comfort for long sessions and travel.",
     href: "/airpods/shop?family=Max",
-    price: lowestAirpodsPrice("Max"),
+    price: max.length ? Math.min(...max.map((m) => m.basePriceKes)) : 0,
     model: max.find((m) => m.id === "airpods-max-2") || max[0],
     considerKey: "landing/consider/card_live_translation",
   },
@@ -82,7 +83,12 @@ const caseGuide = airpodsModels
     types: m.caseTypes.join(", "),
     options: m.caseOptions.length ? m.caseOptions.join(", ") : "-",
   }));
-const hubProducts = (await livePricedCatalog()).filter((p) => ["AirPods"].includes(p.group));
+const liveCatalog = await livePricedCatalog();
+const airpodsCardRows = listingRows(newest.slice(0, 12), liveCatalog, {
+  href: (model) => `/airpods/${model.id}`,
+  fallbackPrice: (model) => model.basePriceKes,
+});
+const hubProducts = liveCatalog.filter((p) => p.group === "AirPods" && p.showOnWebsite !== false);
 const hubSeo = buildCategorySeo({ label: "AirPods", path: "/airpods", products: hubProducts });
 const hubFrom = formatKesSeoHub(hubSeo.fromKes);
 ---
@@ -101,7 +107,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
     <p>Pro, open-fit AirPods, or over-ear Max.</p>
     <ul class="airpods-choose__grid">
       {
-        choose.map((c) => {
+        choose.filter((c) => c.model).map((c) => {
           const considerImg = getAirpodsImage(c.model.id, c.considerKey, c.title);
           const img = !considerImg.fallback ? considerImg : getAirpodsImage(c.model.id, "hero", c.model.name);
           return (
@@ -158,7 +164,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
     </div>
     <ul class="airpods-grid">
       {
-        newest.slice(0, 12).map((m) => {
+        airpodsCardRows.map(({ item: m, offer }) => {
           let chip = "Earlier";
           if (m.generation.includes("Pro 3")) chip = "Pro 3";
           else if (m.generation === "5") chip = "5";
@@ -167,7 +173,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
           else if (m.generation.includes("Pro 2")) chip = "Pro 2";
           return (
             <li data-chip-gen={chip}>
-              <AirPodsCard model={m} />
+              <AirPodsCard model={m} channel={offer.channel} priceKes={offer.priceKes || m.basePriceKes} coloursInStock={offer.colours} href={offer.href} />
             </li>
           );
         })

@@ -11,10 +11,14 @@ import { listSeoModels } from "../../lib/iphone/seo";
 import IphoneCard from "../../components/iphone/IphoneCard.astro";
 import IphoneQuiz from "../../components/iphone/IphoneQuiz.astro";
 import ProductCard from "../../components/ProductCard.astro";
+import { filterColours, listingRows } from "../../lib/listing-offers";
 import {
   models,
   getImage,
   defaultColourForModel,
+  availableColours,
+  colourHex,
+  colourLabel,
   modelSubline,
   iphoneConfig,
 } from "../../lib/iphone";
@@ -67,7 +71,23 @@ const comparePayload = list.map((m) => {
   };
 });
 // One ItemList entry per iPhone model page, priced live, newest first.
-const liveById = new Map((await livePricedCatalog()).map((p) => [p.id, p]));
+const liveCatalog = await livePricedCatalog();
+const liveById = new Map(liveCatalog.map((p) => [p.id, p]));
+const latest18Rows = listingRows(latest18, liveById, {
+  href: (item) => item.href,
+  liveId: (item) => iphoneLiveId(item.id),
+  fallbackPrice: (item) => item.priceKes,
+});
+const latest17Rows = listingRows(latest17, liveById, {
+  href: (item) => item.href,
+  liveId: (item) => iphoneLiveId(item.id),
+  fallbackPrice: (item) => item.priceKes,
+});
+const legacyRows = listingRows(list, liveById, {
+  href: (model) => `/iphone/${model.id}`,
+  liveId: (model) => iphoneLiveId(model.id),
+  fallbackPrice: (model) => model.basePriceKes,
+});
 const iphoneHubProducts = listSeoModels()
   .map((m) => {
     const live = liveById.get(iphoneLiveId(m.id));
@@ -121,15 +141,20 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
         <h2 class="ishop__subhead">iPhone 18 lineup</h2>
         <ul class="ishop__latest-grid">
           {
-            latest18.map((item, i) => (
-              <li data-latest-card data-family="18">
+            latest18Rows.map(({ item, offer }, i) => (
+              <li data-latest-card data-family="18" data-channel={offer.channel}>
                 <ProductCard
                   id={item.id}
                   name={item.name}
-                  href={item.href}
-                  priceKes={item.priceKes}
+                  href={offer.href}
+                  priceKes={offer.priceKes || item.priceKes}
+                  channel={offer.channel}
                   badge={item.badge}
                   image={{ src: item.image.src, alt: item.image.alt }}
+                  colors={filterColours(availableColours(item.id), offer.colours).map((key) => {
+                    const photo = getImage(item.id, key, 1, item.name);
+                    return { id: key, label: colourLabel(key), hex: colourHex(key), imageSrc: cardImageSrc(item.id, photo.src) };
+                  })}
                   eager
                   priority={i < 2}
                 />
@@ -143,17 +168,22 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
         <h2 class="ishop__subhead">iPhone 17</h2>
         <ul class="ishop__latest-grid">
           {
-            latest17.map((item, i) => (
-              <li data-latest-card data-family="17">
+            latest17Rows.map(({ item, offer }, i) => (
+              <li data-latest-card data-family="17" data-channel={offer.channel}>
                 <ProductCard
                   id={item.id}
                   name={item.name}
-                  href={item.href}
-                  priceKes={item.priceKes}
+                  href={offer.href}
+                  priceKes={offer.priceKes || item.priceKes}
+                  channel={offer.channel}
                   badge={item.badge}
                   image={{ src: item.image.src, alt: item.image.alt }}
+                  colors={filterColours(availableColours(item.id), offer.colours).map((key) => {
+                    const photo = getImage(item.id, key, 1, item.name);
+                    return { id: key, label: colourLabel(key), hex: colourHex(key), imageSrc: cardImageSrc(item.id, photo.src) };
+                  })}
                   eager
-                  priority={i === 0 && latest18.length === 0}
+                  priority={i === 0 && latest18Rows.length === 0}
                 />
               </li>
             ))
@@ -186,16 +216,17 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
       <h2 class="ishop__subhead" data-legacy-head>iPhone 16 and earlier</h2>
       <ul class="ishop__grid" data-grid>
         {
-          list.map((model, i) => (
+          legacyRows.map(({ item: model, offer }, i) => (
             <li
               data-card
               data-family={model.family}
               data-tier={model.tier}
-              data-price={model.basePriceKes}
+              data-price={offer.priceKes || model.basePriceKes}
               data-battery={model.batteryVideoHours}
+              data-channel={offer.channel}
               style={`--i: ${Math.min(i, 11)}`}
             >
-              <IphoneCard model={model} eager={i < 12} />
+              <IphoneCard model={model} eager={i < 12} channel={offer.channel} priceKes={offer.priceKes || model.basePriceKes} coloursInStock={offer.colours} href={offer.href} />
             </li>
           ))
         }

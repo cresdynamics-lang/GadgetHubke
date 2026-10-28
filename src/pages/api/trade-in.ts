@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { addTradeIn } from "../../lib/management/trade-ins";
 import { trySendMail } from "../../lib/mail/smtp";
 import { tradeInCustomerEmail } from "../../lib/mail/templates";
+import { pushCustomerToOps } from "../../lib/ops/push-customer";
 
 export const prerender = false;
 
@@ -60,6 +61,8 @@ export const POST: APIRoute = async ({ request }) => {
         text: customer.text,
       });
     }
+
+    await pushCustomerToOps({ name, email, phone, source: "trade-in" });
 
     return json({ ok: true, id: row.id }, 201);
   } catch (e) {

@@ -7,6 +7,7 @@ import PencilFeel from "../../components/accessories/PencilFeel.astro";
 import AccessoryLipaCalc from "../../components/accessories/AccessoryLipaCalc.astro";
 import AccessoryGroupSeo from "../../components/accessories/AccessoryGroupSeo.astro";
 import AccessoryTrademark from "../../components/accessories/AccessoryTrademark.astro";
+import { filterVisibleById, websiteVisibleIdSet } from "../../lib/pricing/live";
 import {
   pencils,
   getAccessoriesPageImage,
@@ -21,7 +22,7 @@ const selectors = [
   ["pencil-2", "pencil/selector/apple_pencil_2nd_gen"],
   ["pencil-1", "pencil/selector/apple_pencil_1st_gen"],
 ] as const;
-const list = pencils();
+const list = filterVisibleById(pencils(), await websiteVisibleIdSet());
 const faq = accessoryFaq();
 const notes = accessoryBuyingNotes(list[0]);
 ---
@@ -44,7 +45,7 @@ const notes = accessoryBuyingNotes(list[0]);
     <h2>Choose a Pencil</h2>
     <div class="xpencil-select__grid">
       {
-        selectors.map(([id, key]) => {
+        selectors.filter(([id]) => list.some((item) => item.id === id)).map(([id, key]) => {
           const img = getAccessoriesPageImage(key, id);
           const p = list.find((x) => x.id === id)!;
           return (

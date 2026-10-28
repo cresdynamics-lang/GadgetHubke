@@ -2,8 +2,11 @@
 /**
  * iPad shop - Family / Size / Gen / Need + Pencil Pro & Apple Intelligence toggles.
  */
+export const prerender = false;
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import IpadCard from "../../components/ipad/IpadCard.astro";
+import { filterVisibleById, livePricedCatalog, websiteVisibleIdSet } from "../../lib/pricing/live";
+import { listingRows } from "../../lib/listing-offers";
 import {
   ipadModels,
   ipadConfig,
@@ -20,7 +23,7 @@ const pencilPro = params.get("pencil") === "pro" || params.get("pencilPro") === 
 const aiOnly = params.get("ai") === "1";
 const sort = params.get("sort") || "newest";
 
-let list = [...ipadModels];
+let list = filterVisibleById([...ipadModels], await websiteVisibleIdSet());
 if (family === "Pro" || family === "Air" || family === "mini" || family === "iPad") {
   list = list.filter((m) => m.family === family);
 }
@@ -56,6 +59,10 @@ const qs = (extra: Record<string, string | null>) => {
   return s ? `/ipad/shop?${s}` : "/ipad/shop";
 };
 
+const ipadShopRows = listingRows(list, await livePricedCatalog(), {
+  href: (model) => `/ipad/${model.id}`,
+  fallbackPrice: (model) => model.basePriceKes,
+});
 ---
 
 <BaseLayout title="Shop iPad - GadgetHub" description="Filter iPad Pro, Air, mini and iPad by size, chip and need.">
@@ -116,9 +123,9 @@ const qs = (extra: Record<string, string | null>) => {
 
     <p class="ipad-shop__count">{list.length} models</p>
     <ul class="ipad-shop__grid" data-ipad-shop-grid>
-      {list.map((m) => (
+      {ipadShopRows.map(({ item: m, offer }) => (
         <li>
-          <IpadCard model={m} compare={false} />
+          <IpadCard model={m} compare={false} channel={offer.channel} priceKes={offer.priceKes || m.basePriceKes} coloursInStock={offer.colours} href={offer.href} />
         </li>
       ))}
     </ul>

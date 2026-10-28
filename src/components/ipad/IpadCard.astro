@@ -14,20 +14,28 @@ import {
   ipadViewerTabs,
 } from "../../lib/ipad";
 import { whatsappUrl } from "../../lib/site";
+import ConditionBadge from "../ConditionBadge.astro";
+import { filterColours, type ListingChannel } from "../../lib/listing-offers";
 
 interface Props {
   model: IpadModel;
   compare?: boolean;
+  channel?: ListingChannel;
+  priceKes?: number;
+  coloursInStock?: string[];
+  href?: string;
 }
 
-const { model, compare = false } = Astro.props;
-const colour = defaultIpadColour(model);
+const { model, compare = false, channel = "new", priceKes, coloursInStock, href: hrefProp } = Astro.props;
+const colours = filterColours(model.colours, coloursInStock);
+const colour = colours.includes(defaultIpadColour(model)) ? defaultIpadColour(model) : colours[0] || defaultIpadColour(model);
 const img = getIpadImage(model.id, colour, "product", model.name);
-const href = `/ipad/${model.id}`;
-const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}.`);
+const href = hrefProp || `/ipad/${model.id}`;
+const displayKes = priceKes ?? model.basePriceKes;
+const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}${channel === "ex-uk" ? " (Ex-UK)" : ""}.`);
 const tabs = ipadViewerTabs(model, colour);
 
-const colourPayload = model.colours.map((key) => {
+const colourPayload = colours.map((key) => {
   const resolved = getIpadImage(model.id, key, "product", model.name);
   const t = ipadViewerTabs(model, key);
   const hover = t.length > 1 ? t[1] : null;
@@ -71,7 +79,7 @@ const hoverSrc =
       </label>
     ) : null
   }
-  {model.isNew ? <span class="icard__tag">New</span> : null}
+  <ConditionBadge channel={channel} />
   
 
   <a class:list={["icard__media", { "icard__media--swap": Boolean(hoverSrc) }]} href={href}>
@@ -106,7 +114,7 @@ const hoverSrc =
           {colourPayload.map((c, i) => (
             <button
               type="button"
-              class:list={["icard__dot", { "is-active": i === 0, "icard__dot--light": c.light }]}
+              class:list={["icard__dot", { "is-active": c.key === colour, "icard__dot--light": c.light }]}
               style={`--swatch: ${c.hex}`}
               aria-label={c.label}
               data-icard-swatch
@@ -122,7 +130,7 @@ const hoverSrc =
 
     <div class="icard__row icard__row--price">
       <p class="icard__price">
-        <span data-live-price={model.id} data-live-prefix="">{`KSh ${Math.round(model.basePriceKes).toLocaleString("en-KE")}`}</span>
+        <span data-live-price={model.id} data-live-field={channel === "ex-uk" ? "exUkKes" : "priceKes"} data-live-prefix="">{`KSh ${Math.round(displayKes).toLocaleString("en-KE")}`}</span>
       </p>
       <button
         type="button"
@@ -134,7 +142,7 @@ const hoverSrc =
         data-size={`${model.screenInches}″`}
         data-storage={model.storageOptions[0]}
         data-colour={colourLabel(colour)}
-        data-kes={model.basePriceKes}
+        data-kes={displayKes}
         data-image={img.src}
       >
         Add to Cart

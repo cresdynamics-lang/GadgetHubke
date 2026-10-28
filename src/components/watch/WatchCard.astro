@@ -12,23 +12,32 @@ import {
   watchSubline,
 } from "../../lib/watch";
 import { whatsappUrl } from "../../lib/site";
+import ConditionBadge from "../ConditionBadge.astro";
+import { filterColours, type ListingChannel } from "../../lib/listing-offers";
 
 interface Props {
   model: WatchModel;
   compare?: boolean;
+  channel?: ListingChannel;
+  priceKes?: number;
+  coloursInStock?: string[];
+  href?: string;
 }
 
-const { model, compare = true } = Astro.props;
-const colour = defaultWatchColour(model);
+const { model, compare = true, channel = "new", priceKes, coloursInStock, href: hrefProp } = Astro.props;
+const colours = filterColours(model.colours, coloursInStock);
+const colour = colours.includes(defaultWatchColour(model)) ? defaultWatchColour(model) : colours[0] || defaultWatchColour(model);
+const href = hrefProp || `/watch/${model.id}`;
+const displayKes = priceKes ?? model.basePriceKes;
 const img = getWatchImage(model.id, "main", model.name);
 const hoverCandidate = getWatchImage(model.id, "design", model.name);
 const hoverSrc =
   !hoverCandidate.fallback && hoverCandidate.src !== img.src ? hoverCandidate.src : "";
-const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}.`);
+const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}${channel === "ex-uk" ? " (Ex-UK)" : ""}.`);
 ---
 
-<article class="wcard" data-watch-card data-id={model.id}>
-  <a class:list={["wcard__media", { "wcard__media--swap": Boolean(hoverSrc) }]} href={`/watch/${model.id}`}>
+<article class="wcard" data-watch-card data-id={model.id} data-channel={channel}>
+  <a class:list={["wcard__media", { "wcard__media--swap": Boolean(hoverSrc) }]} href={href}>
     <WatchStage src={img.src} srcWebp={img.srcWebp} alt={img.alt} width={img.width} height={Math.round(img.width * 0.75)} />
     {
       hoverSrc ? (
@@ -44,15 +53,13 @@ const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}.`)
         />
       ) : null
     }
-    {
-      model.isNew ? <span class="wcard__tag">New</span> : null
-    }
+    <ConditionBadge channel={channel} />
     {
       model.specialBandIncluded ? <span class="wcard__tag wcard__tag--band">Special band included</span> : null
     }
   </a>
   <div class="wcard__body">
-    <h3><a href={`/watch/${model.id}`}>{model.name}</a></h3>
+    <h3><a href={href}>{model.name}</a></h3>
     <p class="wcard__sub">{watchSubline(model)}</p>
     {
       model.batteryHours != null ? (
@@ -63,7 +70,7 @@ const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}.`)
     }
     <div class="wcard__colours" role="list" aria-label="Colours">
       {
-        model.colours.slice(0, 8).map((c) => (
+        colours.slice(0, 8).map((c) => (
           <button
             type="button"
             role="listitem"
@@ -78,7 +85,7 @@ const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}.`)
     </div>
     <div class="wcard__row wcard__row--price">
       <p class="wcard__price">
-        <span data-live-price={model.id} data-live-prefix="">{`KSh ${Math.round(model.basePriceKes).toLocaleString("en-KE")}`}</span>
+        <span data-live-price={model.id} data-live-field={channel === "ex-uk" ? "exUkKes" : "priceKes"} data-live-prefix="">{`KSh ${Math.round(displayKes).toLocaleString("en-KE")}`}</span>
       </p>
       <button
         type="button"
@@ -89,14 +96,14 @@ const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}.`)
         data-size={`${model.defaultCaseMm}mm`}
         data-material={model.materials[0]}
         data-colour={colourLabel(colour)}
-        data-kes={model.basePriceKes}
+        data-kes={displayKes}
         data-image={img.src}
       >
         Add to Cart
       </button>
     </div>
     <div class="wcard__row wcard__row--links">
-      <a class="btn btn--primary btn--xs" href={`/watch/${model.id}`}>Details</a>
+      <a class="btn btn--primary btn--xs" href={href}>Details</a>
       <a class="btn btn--whatsapp btn--xs" href={wa} target="_blank" rel="noopener noreferrer">WhatsApp</a>
     </div>
     {

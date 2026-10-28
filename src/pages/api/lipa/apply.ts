@@ -3,6 +3,7 @@ import { buildLipaTerms } from "../../../lib/checkout/intent";
 import { addLipaPlan } from "../../../lib/management/lipa";
 import { trySendMail } from "../../../lib/mail/smtp";
 import { lipaApplicationEmail } from "../../../lib/mail/templates";
+import { pushCustomerToOps } from "../../../lib/ops/push-customer";
 
 export const prerender = false;
 
@@ -73,6 +74,8 @@ export const POST: APIRoute = async ({ request }) => {
         text: customer.text,
       });
     }
+
+    await pushCustomerToOps({ name, email, phone, source: "lipa" });
 
     return json({ ok: true, id: plan.id, lipa: terms }, 201);
   } catch (e) {

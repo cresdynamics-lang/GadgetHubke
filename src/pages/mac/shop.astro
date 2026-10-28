@@ -2,8 +2,11 @@
 /**
  * Mac shop - Family / Size / Gen / Need filters + 16GB toggle + compare tray.
  */
+export const prerender = false;
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import MacCard from "../../components/mac/MacCard.astro";
+import { filterVisibleById, livePricedCatalog, websiteVisibleIdSet } from "../../lib/pricing/live";
+import { listingRows } from "../../lib/listing-offers";
 import {
   macModels,
   macConfig,
@@ -21,7 +24,8 @@ const only16 = params.get("mem16") === "1";
 const hideOlder = params.get("hideOlder") === "1";
 const sort = params.get("sort") || "newest";
 
-let list = [...macModels];
+const visibleIds = await websiteVisibleIdSet();
+let list = filterVisibleById([...macModels], visibleIds);
 if (family === "Air" || family === "Pro") list = list.filter((m) => m.family === family);
 if (chip) list = list.filter((m) => m.chipGen === chip);
 if (size === "13" || size === "14" || size === "15" || size === "16") {
@@ -55,6 +59,10 @@ const qs = (extra: Record<string, string | null>) => {
 };
 
 const compareCards = Object.fromEntries(macModels.map((m) => [m.id, macCompareCard(m)]));
+const macShopRows = listingRows(list, await livePricedCatalog(), {
+  href: (model) => `/mac/${model.id}`,
+  fallbackPrice: (model) => model.basePriceKes,
+});
 ---
 
 <BaseLayout title="Shop MacBook - GadgetHub" description="Filter MacBook Air and Pro by family, chip, size, and need.">
@@ -109,9 +117,9 @@ const compareCards = Object.fromEntries(macModels.map((m) => [m.id, macCompareCa
     <p class="mac-shop__count">{list.length} models</p>
 
     <ul class="mac-shop__grid">
-      {list.map((m, i) => (
+      {macShopRows.map(({ item: m, offer }, i) => (
         <li>
-          <MacCard model={m} eager={i < 12} />
+          <MacCard model={m} eager={i < 12} channel={offer.channel} priceKes={offer.priceKes || m.basePriceKes} coloursInStock={offer.colours} href={offer.href} />
         </li>
       ))}
     </ul>

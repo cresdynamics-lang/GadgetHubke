@@ -7,6 +7,7 @@ import MouseFeel from "../../components/accessories/MouseFeel.astro";
 import AccessoryLipaCalc from "../../components/accessories/AccessoryLipaCalc.astro";
 import AccessoryGroupSeo from "../../components/accessories/AccessoryGroupSeo.astro";
 import AccessoryTrademark from "../../components/accessories/AccessoryTrademark.astro";
+import { filterVisibleById, websiteVisibleIdSet } from "../../lib/pricing/live";
 import {
   mice,
   getAccessoryImage,
@@ -15,7 +16,7 @@ import {
   accessoriesConfig,
 } from "../../lib/accessories";
 
-const list = mice();
+const list = filterVisibleById(mice(), await websiteVisibleIdSet());
 const heroWhite = getAccessoryImage("mouse-usbc-white", "hero");
 const heroBlack = getAccessoryImage("mouse-usbc-black", "hero");
 const faq = accessoryFaq();

@@ -6,7 +6,7 @@
 ---
 
 <script>
-  type Entry = { priceKes?: number; exUkKes?: number; inStock?: boolean };
+  type Entry = { priceKes?: number; exUkKes?: number; inStock?: boolean; showOnWebsite?: boolean; [key: string]: unknown };
   let overlay: Record<string, Entry> = {};
 
   const formatKes = (n: number) => `KSh ${Math.round(n).toLocaleString("en-KE")}`;
@@ -19,7 +19,9 @@
     for (const [id, entry] of Object.entries(overlay)) {
       document.querySelectorAll(`[data-live-price="${id}"]`).forEach((el) => {
         const prefix = el.getAttribute("data-live-prefix") || "";
-        if (typeof entry.priceKes === "number") el.textContent = `${prefix}${formatKes(entry.priceKes)}`;
+        const field = el.getAttribute("data-live-field") === "exUkKes" ? "exUkKes" : "priceKes";
+        const value = entry[field];
+        if (typeof value === "number") el.textContent = `${prefix}${formatKes(value)}`;
       });
       if (typeof entry.inStock === "boolean") {
         document.querySelectorAll(`[data-live-stock="${id}"]`).forEach((el) => {
@@ -27,6 +29,11 @@
           el.classList.toggle("is-oos", !entry.inStock);
         });
       }
+      document.querySelectorAll(`[data-id="${id}"], [data-model="${id}"]`).forEach((el) => {
+        const wrap = el.closest("li") || el;
+        if (!(wrap instanceof HTMLElement)) return;
+        wrap.hidden = entry.showOnWebsite === false;
+      });
     }
   }
 

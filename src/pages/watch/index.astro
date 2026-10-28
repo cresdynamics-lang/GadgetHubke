@@ -5,7 +5,7 @@
 export const prerender = false;
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { livePricedCatalog } from "../../lib/pricing/live";
+import { filterVisibleById, livePricedCatalog, websiteVisibleIdSet } from "../../lib/pricing/live";
 import { buildCategorySeo, formatKes as formatKesSeoHub } from "../../lib/seo/product-seo";
 import WatchStage from "../../components/watch/WatchStage.astro";
 import WatchCard from "../../components/watch/WatchCard.astro";
@@ -14,10 +14,8 @@ import WatchLipaCalc from "../../components/watch/WatchLipaCalc.astro";
 import WatchTradeIn from "../../components/watch/WatchTradeIn.astro";
 import {
   watchModels,
-  watchModelsByFamily,
   getWatchImage,
   formatKes,
-  lowestWatchPrice,
   watchConfig,
   watchBands,
   homeWatchAccessories,
@@ -25,12 +23,15 @@ import {
 } from "../../lib/watch";
 import { whatsappUrl } from "../../lib/site";
 import CategoryHero from "../../components/hero/CategoryHero.astro";
+import { listingRows } from "../../lib/listing-offers";
 
-const series = watchModelsByFamily("Series");
-const ultra = watchModelsByFamily("Ultra");
-const se = watchModelsByFamily("SE");
+const visibleIds = await websiteVisibleIdSet();
+const listedWatchModels = filterVisibleById(watchModels, visibleIds);
+const series = listedWatchModels.filter((m) => m.family === "Series");
+const ultra = listedWatchModels.filter((m) => m.family === "Ultra");
+const se = listedWatchModels.filter((m) => m.family === "SE");
 const accessories = homeWatchAccessories();
-const newest = [...watchModels].sort((a, b) => b.year - a.year || b.basePriceKes - a.basePriceKes);
+const newest = [...listedWatchModels].sort((a, b) => b.year - a.year || b.basePriceKes - a.basePriceKes);
 const wa = whatsappUrl("Hi Gadget Hub, I want to visit and try an Apple Watch.");
 const corp = whatsappUrl("Corporate Watch order");
 
@@ -39,33 +40,36 @@ const choose = [
     title: "Apple Watch Series",
     body: "Everyday health, Always-On display, bands for every look.",
     href: "/watch/shop?family=Series",
-    price: lowestWatchPrice("Series"),
+    price: series.length ? Math.min(...series.map((m) => m.basePriceKes)) : 0,
     model: series.find((m) => m.id === "watch-s12-46") || series[0],
   },
   {
     title: "Apple Watch Ultra",
     body: "Brightest, toughest, longest battery - for trail, sea and siren.",
     href: "/watch/shop?family=Ultra",
-    price: lowestWatchPrice("Ultra"),
+    price: ultra.length ? Math.min(...ultra.map((m) => m.basePriceKes)) : 0,
     model: ultra.find((m) => m.id === "watch-ultra-4") || ultra[0],
   },
   {
     title: "Apple Watch SE",
     body: "Essential features at the lowest current price.",
     href: "/watch/shop?family=SE",
-    price: lowestWatchPrice("SE"),
+    price: se.length ? Math.min(...se.map((m) => m.basePriceKes)) : 0,
     model: se.find((m) => m.id === "watch-se3-44") || se[0],
   },
 ];
 
 const genChips = ["Series 12", "Series 11", "Series 10", "Series 9", "Series 8", "Series 7", "Series 6", "SE", "Ultra"] as const;
-const hubProducts = (await livePricedCatalog()).filter((p) => ["Watch"].includes(p.group));
+const liveCatalog = await livePricedCatalog();
+const watchCardRows = listingRows(newest.slice(0, 12), liveCatalog, {
+  href: (model) => `/watch/${model.id}`,
+  fallbackPrice: (model) => model.basePriceKes,
+});
+const hubProducts = liveCatalog.filter((p) => p.group === "Watch" && p.showOnWebsite !== false);
 const hubSeo = buildCategorySeo({ label: "Apple Watch", path: "/watch", products: hubProducts });
 const hubFrom = formatKesSeoHub(hubSeo.fromKes);
-// Live price for an accessory link (/accessories/<id>), falling back to the listed price.
-const __liveCat = await livePricedCatalog();
 const liveAccessoryKes = (href: string, fallback: number) =>
-  __liveCat.find((p) => p.id === (href || "").split("?")[0].split("/").filter(Boolean).pop())?.priceKes || fallback;
+  liveCatalog.find((p) => p.id === (href || "").split("?")[0].split("/").filter(Boolean).pop())?.priceKes || fallback;
 
 ---
 
@@ -124,9 +128,9 @@ const liveAccessoryKes = (href: string, fallback: number) =>
     </div>
     <ul class="watch-grid">
       {
-        newest.slice(0, 12).map((m) => (
+        watchCardRows.map(({ item: m, offer }) => (
           <li data-chip-gen={m.family === "Ultra" ? "Ultra" : m.family === "SE" ? "SE" : m.generation}>
-            <WatchCard model={m} />
+            <WatchCard model={m} channel={offer.channel} priceKes={offer.priceKes || m.basePriceKes} coloursInStock={offer.colours} href={offer.href} />
           </li>
         ))
       }

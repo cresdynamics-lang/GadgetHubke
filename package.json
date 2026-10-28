@@ -25,7 +25,10 @@
     "accessories:manifest": "node scripts/build-accessories-manifest.mjs",
     "images:accessories-webp": "node scripts/process-accessories-webp.mjs",
     "images:cards": "npx tsx scripts/build-card-images.mjs",
-    "deploy": "bash scripts/deploy.sh"
+    "deploy": "bash scripts/deploy.sh",
+    "test:ops-overlay": "node --experimental-strip-types --test src/lib/pricing/ops-overlay.test.ts",
+    "test:listing-offers": "node --experimental-strip-types --test src/lib/listing-offers.test.ts",
+    "test:catalog-display": "node --experimental-strip-types --test src/lib/listing-offers.test.ts src/lib/pricing/ops-overlay.test.ts"
   },
   "dependencies": {
     "@astrojs/node": "^11.1.7",

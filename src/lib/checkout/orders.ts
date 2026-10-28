@@ -7,6 +7,7 @@ import path from "node:path";
 import { documentUrl, payUrl } from "../documents/pay-link";
 import { sendInvoiceForOrder, sendReceiptForOrder } from "../mail/orders";
 import type { BagItem, CheckoutCustomer, CheckoutOrder, LipaTerms, OrderIntent, OrderStatus, PaymentMethod } from "./types";
+import { pushOrderToOps } from "../ops/push-order";
 import { bagTotal } from "./bag";
 import { buildLipaTerms, nairobiDay, parseIntent } from "./intent";
 
@@ -74,6 +75,10 @@ function newId() {
   const stamp = Date.now().toString(36).toUpperCase();
   const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
   return `GH-${stamp}-${rand}`;
+}
+
+function pushOrderToOpsSafe(order: CheckoutOrder) {
+  void pushOrderToOps(order);
 }
 
 export async function createOrder(input: {
@@ -151,6 +156,7 @@ export async function createOrder(input: {
   } catch (e) {
     console.error("[invoice-mail]", e);
   }
+  void pushOrderToOpsSafe(order);
   return order;
 }
 
@@ -196,6 +202,7 @@ export async function updateOrder(
   };
   all[idx] = next;
   await writeAll(all);
+  void pushOrderToOpsSafe(next);
   return next;
 }
 

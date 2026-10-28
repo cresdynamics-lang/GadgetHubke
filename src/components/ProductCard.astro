@@ -1,12 +1,12 @@
 ---
 /**
  * Blueprint product card: stage image, price + cart row, Details + WhatsApp row.
+ * New and Ex-UK are separate cards with a top-left condition badge — no toggle.
  */
 import Price from "./Price.astro";
-import StockChannelToggle from "./StockChannelToggle.astro";
+import ConditionBadge from "./ConditionBadge.astro";
 import { whatsappUrl } from "../lib/site";
-import { SHOW_EX_UK } from "../lib/iphone/seo/flags";
-import { sheetRowsForProduct } from "../lib/pricing/iphone-sheet";
+import type { ListingChannel } from "../lib/listing-offers";
 
 interface Props {
   id?: string;
@@ -16,6 +16,7 @@ interface Props {
   image: { src: string; alt: string };
   blurb?: string;
   badge?: "New" | "Pre-order" | "Coming soon";
+  channel?: ListingChannel;
   colors?: { id: string; label: string; hex: string; imageSrc?: string }[];
   /** Load image immediately (above-the-fold / first-screen cards). */
   eager?: boolean;
@@ -31,30 +32,32 @@ const {
   image,
   blurb,
   badge,
-  colors = [],
+  channel = "new",
+  colors: allColors = [],
   eager = false,
   priority = false,
 } = Astro.props;
+const colors = allColors;
+const displayImage = colors[0]?.imageSrc ? { src: colors[0].imageSrc, alt: `${name} in ${colors[0].label}` } : image;
 const loadEager = eager || priority;
 const liveId = productId || href.split("/").filter(Boolean).pop() || "";
-const sheetEx = SHOW_EX_UK ? sheetRowsForProduct(name)[0]?.exUkKes : undefined;
 const waBase = whatsappUrl();
-const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${name}.`);
+const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${name}${channel === "ex-uk" ? " (Ex-UK)" : ""}.`);
 const hoverSrc =
-  colors.find((c) => c.imageSrc && c.imageSrc !== image.src)?.imageSrc || "";
+  colors.find((c) => c.imageSrc && c.imageSrc !== displayImage.src)?.imageSrc || "";
 ---
 
 <article
   class="pcard"
   data-pcard
-  data-channel="new"
+  data-channel={channel}
   data-price-new={priceKes}
-  {...(SHOW_EX_UK && sheetEx ? { "data-price-ex-uk": sheetEx } : {})}
   data-wa-base={waBase}
 >
+  <ConditionBadge channel={channel} class="pcard__badge" />
   {
-    badge ? (
-      <span class:list={["badge", "pcard__badge", { "pcard__badge--soft": badge !== "New" }]}>
+    badge && badge !== "New" ? (
+      <span class:list={["badge", "pcard__badge", "pcard__badge--extra", { "pcard__badge--soft": true }]}>
         {badge}
       </span>
     ) : null
@@ -62,8 +65,8 @@ const hoverSrc =
   <a class:list={["pcard__media", "product-stage", { "pcard__media--swap": Boolean(hoverSrc) }]} href={href}>
     <img
       data-pcard-img
-      src={image.src}
-      alt={image.alt}
+      src={displayImage.src}
+      alt={displayImage.alt}
       width="440"
       height="400"
       sizes="(max-width: 40rem) 46vw, 220px"
@@ -91,7 +94,6 @@ const hoverSrc =
     <h3 class="pcard__name">
       <a href={href}>{name}</a>
     </h3>
-    {SHOW_EX_UK ? <StockChannelToggle class="pcard__channel" /> : null}
     {blurb ? <p class="pcard__blurb">{blurb}</p> : null}
     {
       colors.length > 0 ? (
@@ -111,7 +113,7 @@ const hoverSrc =
       ) : null
     }
     <div class="pcard__row pcard__row--price">
-      <p class="pcard__price" data-pcard-price data-live-price={liveId} data-live-prefix="">
+      <p class="pcard__price" data-pcard-price data-live-price={liveId} data-live-field={channel === "ex-uk" ? "exUkKes" : "priceKes"} data-live-prefix="">
         <Price kes={priceKes} />
       </p>
       <a class="btn btn--secondary btn--xs" href={href}>Add to Cart</a>
@@ -125,49 +127,11 @@ const hoverSrc =
   </div>
 </article>
 
-<script define:vars={{ channelOn: SHOW_EX_UK, usedPriceAttr: SHOW_EX_UK ? "data-price-ex-uk" : "" }}>
+<script>
   document.querySelectorAll("[data-pcard]").forEach((card) => {
+    if (card.getAttribute("data-pcard-bound") === "1") return;
+    card.setAttribute("data-pcard-bound", "1");
     const img = card.querySelector("[data-pcard-img]");
-    const priceHost = card.querySelector("[data-pcard-price] .price__amount");
-    const wa = card.querySelector("[data-pcard-wa]");
-    const name = card.querySelector(".pcard__name a")?.textContent?.trim() || "this product";
-
-    function syncChannelPrice() {
-      const ch = card.getAttribute("data-channel") || "new";
-      const newKes = Number(card.getAttribute("data-price-new") || 0);
-      let kes = newKes;
-      if (channelOn && usedPriceAttr) {
-        const hasUsed = card.hasAttribute(usedPriceAttr);
-        const usedKes = Number(card.getAttribute(usedPriceAttr) || newKes);
-        kes = hasUsed && ch !== "new" ? usedKes : newKes;
-      }
-      if (priceHost) priceHost.textContent = `KSh ${Math.round(kes).toLocaleString("en-KE")}`;
-      if (channelOn) {
-        card.querySelectorAll("[data-stock-channel] [data-channel]").forEach((b) => {
-          const on = b.getAttribute("data-channel") === ch;
-          b.classList.toggle("is-active", on);
-          b.setAttribute("aria-pressed", on ? "true" : "false");
-        });
-      }
-      if (wa instanceof HTMLAnchorElement) {
-        const base = card.getAttribute("data-wa-base") || "https://wa.me/";
-        const msg = `Hello Gadget Hub, I'm interested in the ${name}. KSh ${Math.round(kes).toLocaleString("en-KE")}.`;
-        const sep = base.includes("?") ? "&" : "?";
-        wa.href = `${base}${sep}text=${encodeURIComponent(msg)}`;
-      }
-    }
-
-    if (channelOn) {
-      card.querySelectorAll("[data-stock-channel] [data-channel]").forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          card.setAttribute("data-channel", btn.getAttribute("data-channel") || "new");
-          syncChannelPrice();
-        });
-      });
-    }
-
     const altImg = card.querySelector("[data-pcard-alt]");
     const media = card.querySelector(".pcard__media");
 
@@ -215,6 +179,11 @@ const hoverSrc =
     background: var(--color-ink);
   }
 
+  .pcard__badge--extra {
+    left: auto;
+    right: var(--space-3);
+  }
+
   .pcard__media {
     position: relative;
     aspect-ratio: 1.1 / 1;
@@ -254,14 +223,6 @@ const hoverSrc =
 
   .pcard__name a {
     text-decoration: none;
-  }
-
-  .pcard__channel {
-    margin: 0.2rem 0 0.35rem;
-  }
-
-  .pcard__channel :global(.stock-channel__hint) {
-    display: none;
   }
 
   .pcard__blurb {

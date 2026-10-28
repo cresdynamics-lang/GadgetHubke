@@ -6,15 +6,23 @@ export type CatalogOverlayVariant = {
   priceKes?: number;
   exUkKes?: number;
   inStock?: boolean;
+  exUkInStock?: boolean;
+  showOnWebsite?: boolean;
+  exUkShowOnWebsite?: boolean;
 };
 
 export type CatalogOverlayEntry = {
   priceKes?: number;
   exUkKes?: number;
   inStock?: boolean;
+  exUkInStock?: boolean;
+  showOnWebsite?: boolean;
+  showNewOnWebsite?: boolean;
+  exUkShowOnWebsite?: boolean;
   /** Per storage / configuration prices, keyed like the price sheets (e.g. "256", "256gb-cell"). */
   storages?: Record<string, CatalogOverlayVariant>;
   coloursInStock?: string[];
+  exUkColoursInStock?: string[];
   confirmed?: boolean;
   confirmedAt?: string;
   updatedAt: string;
@@ -26,6 +34,7 @@ export type OverlayVariantPatch = {
   priceKes?: number | null;
   exUkKes?: number | null;
   inStock?: boolean | null;
+  showOnWebsite?: boolean | null;
 };
 
 export async function getOverlayMap(): Promise<CatalogOverlayMap> {
@@ -48,6 +57,8 @@ function applyVariantPatch<T extends CatalogOverlayVariant>(prev: T, patch: Over
   else if (money(patch.exUkKes) != null) next.exUkKes = money(patch.exUkKes);
   if (patch.inStock === null) delete next.inStock;
   else if (typeof patch.inStock === "boolean") next.inStock = patch.inStock;
+  if (patch.showOnWebsite === null) delete next.showOnWebsite;
+  else if (typeof patch.showOnWebsite === "boolean") next.showOnWebsite = patch.showOnWebsite;
   return next;
 }
 
@@ -57,6 +68,7 @@ export async function upsertOverlay(
     priceKes?: number | null;
     exUkKes?: number | null;
     inStock?: boolean | null;
+    showOnWebsite?: boolean | null;
     storages?: Record<string, OverlayVariantPatch>;
   },
 ) {
@@ -69,7 +81,7 @@ export async function upsertOverlay(
     const storages = { ...(next.storages || {}) };
     for (const [key, vp] of Object.entries(patch.storages)) {
       const v = applyVariantPatch(storages[key] || {}, vp || {});
-      if (v.priceKes == null && v.exUkKes == null && v.inStock == null) delete storages[key];
+      if (v.priceKes == null && v.exUkKes == null && v.inStock == null && v.showOnWebsite == null) delete storages[key];
       else storages[key] = v;
     }
     next.storages = storages;
@@ -84,6 +96,7 @@ export async function upsertOverlay(
     next.priceKes == null &&
     next.exUkKes == null &&
     next.inStock == null &&
+    next.showOnWebsite == null &&
     !Object.keys(next.storages || {}).length;
   if (empty) delete map[id];
   else map[id] = next;

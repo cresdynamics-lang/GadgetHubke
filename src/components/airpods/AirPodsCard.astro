@@ -8,14 +8,21 @@ import {
   colourLabel,
 } from "../../lib/airpods";
 import { whatsappUrl } from "../../lib/site";
+import ConditionBadge from "../ConditionBadge.astro";
+import { filterColours, type ListingChannel } from "../../lib/listing-offers";
 
 interface Props {
   model: AirpodsModel;
   compare?: boolean;
+  channel?: ListingChannel;
+  priceKes?: number;
+  coloursInStock?: string[];
+  href?: string;
 }
 
-const { model, compare = true } = Astro.props;
-const colour = defaultAirpodsColour(model);
+const { model, compare = true, channel = "new", priceKes, coloursInStock, href: hrefProp } = Astro.props;
+const colours = filterColours(model.colours, coloursInStock);
+const colour = colours.includes(defaultAirpodsColour(model)) ? defaultAirpodsColour(model) : colours[0] || defaultAirpodsColour(model);
 const img = getAirpodsImage(model.id, "earbuds", model.name);
 const hoverImg = getAirpodsImage(model.id, "case", model.name);
 const hoverSrc =
@@ -25,11 +32,13 @@ const hoverSrc =
         const hero = getAirpodsImage(model.id, "hero", model.name);
         return !hero.fallback && hero.src !== img.src ? hero.src : "";
       })();
-const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}.`);
+const href = hrefProp || `/airpods/${model.id}`;
+const displayKes = priceKes ?? model.basePriceKes;
+const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}${channel === "ex-uk" ? " (Ex-UK)" : ""}.`);
 ---
 
-<article class="acard" data-airpods-card data-id={model.id}>
-  <a class:list={["acard__media", { "acard__media--swap": Boolean(hoverSrc) }]} href={`/airpods/${model.id}`}>
+<article class="acard" data-airpods-card data-id={model.id} data-channel={channel}>
+  <a class:list={["acard__media", { "acard__media--swap": Boolean(hoverSrc) }]} href={href}>
     <AirPodsStage src={img.src} srcWebp={img.srcWebp} alt={img.alt} width={img.width} height={img.width} />
     {
       hoverSrc ? (
@@ -45,11 +54,11 @@ const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}.`)
         />
       ) : null
     }
-    {model.isNew ? <span class="acard__tag">New</span> : null}
+    <ConditionBadge channel={channel} />
     {model.standInImage ? <span class="acard__tag acard__tag--stand">Stand-in image</span> : null}
   </a>
   <div class="acard__body">
-    <h3><a href={`/airpods/${model.id}`}>{model.name}</a></h3>
+    <h3><a href={href}>{model.name}</a></h3>
     <p class="acard__sub">{model.tagline}</p>
     {
       model.batterySingleHours != null ? (
@@ -58,7 +67,7 @@ const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}.`)
     }
     <div class="acard__colours" role="list" aria-label="Colours">
       {
-        model.colours.slice(0, 8).map((c) => (
+        colours.slice(0, 8).map((c) => (
           <button
             type="button"
             role="listitem"
@@ -73,7 +82,7 @@ const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}.`)
     </div>
     <div class="acard__row acard__row--price">
       <p class="acard__price">
-        <span data-live-price={model.id} data-live-prefix="">{`KSh ${Math.round(model.basePriceKes).toLocaleString("en-KE")}`}</span>
+        <span data-live-price={model.id} data-live-field={channel === "ex-uk" ? "exUkKes" : "priceKes"} data-live-prefix="">{`KSh ${Math.round(displayKes).toLocaleString("en-KE")}`}</span>
       </p>
       <button
         type="button"
@@ -84,14 +93,14 @@ const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}.`)
         data-colour={colourLabel(colour)}
         data-case-option={model.caseOptions[0] || "usb-c"}
         data-extras=""
-        data-kes={model.basePriceKes}
+        data-kes={displayKes}
         data-image={img.src}
       >
         Add to Cart
       </button>
     </div>
     <div class="acard__row acard__row--links">
-      <a class="btn btn--primary btn--xs" href={`/airpods/${model.id}`}>Details</a>
+      <a class="btn btn--primary btn--xs" href={href}>Details</a>
       <a class="btn btn--whatsapp btn--xs" href={wa} target="_blank" rel="noopener noreferrer">WhatsApp</a>
     </div>
     {

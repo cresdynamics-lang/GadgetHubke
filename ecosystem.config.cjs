@@ -65,6 +65,8 @@ module.exports = {
         ADMIN_PASSWORD_HASH: fileEnv.ADMIN_PASSWORD_HASH || "",
         ADMIN_SESSION_SECRET: fileEnv.ADMIN_SESSION_SECRET || "",
         ADMIN_SECRET: fileEnv.ADMIN_SECRET || "",
+        OPS_CATALOG_URL: fileEnv.OPS_CATALOG_URL || "",
+        WEBSITE_SYNC_SECRET: fileEnv.WEBSITE_SYNC_SECRET || "",
       },
     },
   ],

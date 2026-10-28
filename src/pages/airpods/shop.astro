@@ -1,7 +1,10 @@
 ---
+export const prerender = false;
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import AirPodsCard from "../../components/airpods/AirPodsCard.astro";
 import AirpodsTrademark from "../../components/airpods/AirpodsTrademark.astro";
+import { filterVisibleById, livePricedCatalog, websiteVisibleIdSet } from "../../lib/pricing/live";
+import { listingRows } from "../../lib/listing-offers";
 import { airpodsModels, hasAnc, hasHearing } from "../../lib/airpods";
 
 const url = Astro.url;
@@ -10,7 +13,7 @@ const typeQ = url.searchParams.get("type") || "";
 const caseQ = url.searchParams.get("case") || "";
 const needQ = url.searchParams.get("need") || "";
 
-let filtered = [...airpodsModels];
+let filtered = filterVisibleById([...airpodsModels], await websiteVisibleIdSet());
 if (familyQ) filtered = filtered.filter((m) => m.family === familyQ);
 if (typeQ) filtered = filtered.filter((m) => m.type === typeQ);
 if (caseQ) filtered = filtered.filter((m) => m.caseTypes.includes(caseQ as any));
@@ -20,6 +23,10 @@ if (needQ === "budget") filtered = filtered.sort((a, b) => a.basePriceKes - b.ba
 if (needQ === "over-ear") filtered = filtered.filter((m) => m.type === "over-ear");
 if (needQ === "calls") filtered = filtered.filter((m) => m.type === "in-ear");
 if (needQ === "hearing") filtered = filtered.filter((m) => hasHearing(m));
+const airpodsShopRows = listingRows(filtered, await livePricedCatalog(), {
+  href: (model) => `/airpods/${model.id}`,
+  fallbackPrice: (model) => model.basePriceKes,
+});
 ---
 
 <BaseLayout title="Shop AirPods - GadgetHub" description="Filter AirPods by family, ANC, case and need. Live Nairobi prices.">
@@ -72,16 +79,17 @@ if (needQ === "hearing") filtered = filtered.filter((m) => hasHearing(m));
     </div>
 
     <ul class="ashop__grid" data-shop-grid>
-      {filtered.map((m) => (
+      {airpodsShopRows.map(({ item: m, offer }) => (
         <li
           data-shop-item
           data-id={m.id}
           data-anc={hasAnc(m) ? "1" : "0"}
           data-hearing={hasHearing(m) ? "1" : "0"}
           data-year={m.year}
-          data-price={m.basePriceKes}
+          data-price={offer.priceKes || m.basePriceKes}
+          data-channel={offer.channel}
         >
-          <AirPodsCard model={m} />
+          <AirPodsCard model={m} channel={offer.channel} priceKes={offer.priceKes || m.basePriceKes} coloursInStock={offer.colours} href={offer.href} />
         </li>
       ))}
     </ul>

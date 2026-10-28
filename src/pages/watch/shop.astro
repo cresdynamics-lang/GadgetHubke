@@ -2,8 +2,11 @@
 /**
  * Watch shop - filters, ECG/Cellular toggles, cards, compare tray.
  */
+export const prerender = false;
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import WatchCard from "../../components/watch/WatchCard.astro";
+import { filterVisibleById, livePricedCatalog, websiteVisibleIdSet } from "../../lib/pricing/live";
+import { listingRows } from "../../lib/listing-offers";
 import { watchModels, formatKes } from "../../lib/watch";
 
 const url = Astro.url;
@@ -13,7 +16,7 @@ const needQ = url.searchParams.get("need") || "";
 const sizeQ = url.searchParams.get("size") || "";
 const materialQ = url.searchParams.get("material") || "";
 
-let filtered = [...watchModels];
+let filtered = filterVisibleById([...watchModels], await websiteVisibleIdSet());
 if (familyQ) filtered = filtered.filter((m) => m.family === familyQ);
 if (genQ) filtered = filtered.filter((m) => m.generation === genQ || m.generation.includes(genQ.replace(/\+/g, " ")));
 if (sizeQ) filtered = filtered.filter((m) => m.caseSizesMm.includes(Number(sizeQ)));
@@ -25,6 +28,10 @@ if (needQ === "kids") filtered = filtered.filter((m) => m.family === "SE");
 if (needQ === "price") filtered = filtered.sort((a, b) => a.basePriceKes - b.basePriceKes);
 if (needQ === "bright") filtered = filtered.filter((m) => (m.brightnessNits || 0) >= 2000 || m.family === "Ultra");
 
+const watchShopRows = listingRows(filtered, await livePricedCatalog(), {
+  href: (model) => `/watch/${model.id}`,
+  fallbackPrice: (model) => model.basePriceKes,
+});
 const payload = filtered.map((m) => ({
   id: m.id,
   family: m.family,
@@ -78,17 +85,18 @@ const payload = filtered.map((m) => ({
     </div>
 
     <ul class="wshop__grid" data-shop-grid>
-      {filtered.map((m) => (
+      {watchShopRows.map(({ item: m, offer }) => (
         <li
           data-shop-item
           data-id={m.id}
           data-ecg={m.health.ecg === true ? "1" : "0"}
           data-cell={m.cellularAvailable ? "1" : "0"}
           data-year={m.year}
-          data-price={m.basePriceKes}
+          data-price={offer.priceKes || m.basePriceKes}
           data-weight={m.weightG || 999}
+          data-channel={offer.channel}
         >
-          <WatchCard model={m} />
+          <WatchCard model={m} channel={offer.channel} priceKes={offer.priceKes || m.basePriceKes} coloursInStock={offer.colours} href={offer.href} />
         </li>
       ))}
     </ul>

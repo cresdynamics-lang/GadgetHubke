@@ -24,10 +24,13 @@ export function mergeStoragesWithOverlay(
 export function mergeColorsWithOverlay(
   colors: ProductColor[],
   entry?: CatalogOverlayEntry | null,
+  channel: "new" | "ex-uk" = "new",
 ): ProductColor[] {
-  if (!entry?.coloursInStock?.length) return colors;
-  const allowed = new Set(entry.coloursInStock);
-  return colors.filter((c) => allowed.has(c.id));
+  const stock = channel === "ex-uk" ? entry?.exUkColoursInStock : entry?.coloursInStock;
+  if (!stock?.length) return colors;
+  const allowed = new Set(stock.map((value) => value.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")));
+  const hit = colors.filter((c) => allowed.has(c.id) || allowed.has(c.id.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-")));
+  return hit.length ? hit : colors;
 }
 
 export function applyOverlayToProduct(

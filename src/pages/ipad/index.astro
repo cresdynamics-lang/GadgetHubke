@@ -5,7 +5,7 @@
 export const prerender = false;
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { livePricedCatalog } from "../../lib/pricing/live";
+import { livePricedCatalog, websiteVisibleIdSet, filterVisibleById } from "../../lib/pricing/live";
 import { buildCategorySeo, formatKes as formatKesSeoHub } from "../../lib/seo/product-seo";
 import IpadStage from "../../components/ipad/IpadStage.astro";
 import IpadCard from "../../components/ipad/IpadCard.astro";
@@ -14,24 +14,35 @@ import IpadLipaCalc from "../../components/ipad/IpadLipaCalc.astro";
 import IpadTradeIn from "../../components/ipad/IpadTradeIn.astro";
 import {
   ipadModels,
-  ipadModelsByFamily,
   getIpadImage,
   defaultIpadColour,
   formatKes,
-  lowestIpadPrice,
   ipadConfig,
   homeIpadAccessories,
   lipaMonthly,
 } from "../../lib/ipad";
 import { whatsappUrl } from "../../lib/site";
 import CategoryHero from "../../components/hero/CategoryHero.astro";
+import { listingRows } from "../../lib/listing-offers";
 
-const pro = ipadModelsByFamily("Pro");
-const air = ipadModelsByFamily("Air");
-const mini = ipadModelsByFamily("mini");
-const std = ipadModelsByFamily("iPad");
+const visibleIds = await websiteVisibleIdSet();
+const listedIpadModels = filterVisibleById(ipadModels, visibleIds);
+const pro = listedIpadModels.filter((m) => m.family === "Pro");
+const air = listedIpadModels.filter((m) => m.family === "Air");
+const mini = listedIpadModels.filter((m) => m.family === "mini");
+const std = listedIpadModels.filter((m) => m.family === "iPad");
 const accessories = homeIpadAccessories();
-const newest = [...ipadModels].sort((a, b) => b.year - a.year || b.basePriceKes - a.basePriceKes);
+const newest = [...listedIpadModels].sort((a, b) => b.year - a.year || b.basePriceKes - a.basePriceKes);
+const liveCatalog = await livePricedCatalog();
+const ipadCardRows = listingRows(newest.slice(0, 12), liveCatalog, {
+  href: (model) => `/ipad/${model.id}`,
+  fallbackPrice: (model) => model.basePriceKes,
+});
+const liveKes = (id: string) => liveCatalog.find((p) => p.id === id)?.priceKes ?? 0;
+const familyFrom = (models: typeof listedIpadModels) => {
+  const prices = models.map((m) => liveKes(m.id) || m.basePriceKes).filter((n) => n > 0);
+  return prices.length ? Math.min(...prices) : 0;
+};
 
 const choose = [
   {
@@ -39,23 +50,23 @@ const choose = [
     title: "iPad Pro",
     body: "Tandem OLED, M-series power, Pencil Pro. For people who push the screen hard.",
     href: "/ipad/shop?family=Pro",
-    price: lowestIpadPrice("Pro"),
-    model: pro.find((m) => m.id === "ipad-pro-11-m4") || pro[0],
+    price: familyFrom(pro),
+    model: pro.find((m) => m.id === "ipad-pro-11-m5") || pro[0],
   },
   {
     family: "Air" as const,
     title: "iPad Air",
     body: "The sweet spot - light, colourful, Pencil Pro, enough for school and creative work.",
     href: "/ipad/shop?family=Air",
-    price: lowestIpadPrice("Air"),
-    model: air.find((m) => m.id === "ipad-air-11-m2") || air[0],
+    price: familyFrom(air),
+    model: air.find((m) => m.id === "ipad-air-11-m4") || air[0],
   },
   {
     family: "mini" as const,
     title: "iPad mini",
     body: "One-hand reading, notes and travel. A17 Pro brings Apple Intelligence.",
     href: "/ipad/shop?family=mini",
-    price: lowestIpadPrice("mini"),
+    price: familyFrom(mini),
     model: mini.find((m) => m.id === "ipad-mini-a17-pro") || mini[0],
   },
   {
@@ -63,16 +74,14 @@ const choose = [
     title: "iPad",
     body: "Colourful, approachable, family-ready. USB-C on 10th gen and A16.",
     href: "/ipad/shop?family=iPad",
-    price: lowestIpadPrice("iPad"),
-    model: std.find((m) => m.id === "ipad-10") || std[0],
+    price: familyFrom(std),
+    model: std.find((m) => m.id === "ipad-a16") || std[0],
   },
 ];
 
 const genChips = ["M5", "M4", "M3", "M2", "M1", "A-series"] as const;
 const wa = whatsappUrl("Hi Gadget Hub, I want to visit and try an iPad / Apple Pencil.");
-const liveCatalog = await livePricedCatalog();
-const hubProducts = liveCatalog.filter((p) => ["iPad"].includes(p.group));
-const liveKes = (id: string) => liveCatalog.find((p) => p.id === id)?.priceKes ?? 0;
+const hubProducts = liveCatalog.filter((p) => p.group === "iPad" && p.showOnWebsite !== false);
 // Accessory price from the live catalogue, matched by its page (/accessories/<id>).
 const accessoryKes = (href: string, fallback: number) => liveKes(href.split("/").filter(Boolean).pop() || "") || fallback;
 const hubSeo = buildCategorySeo({ label: "iPad", path: "/ipad", products: hubProducts });
@@ -93,7 +102,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
     <p>Four families. One honest fit for how you draw, study, travel or share with family.</p>
     <ul class="ipad-choose__grid">
       {
-        choose.map((c) => {
+        choose.filter((c) => c.model).map((c) => {
           const colour = defaultIpadColour(c.model);
           const img = getIpadImage(c.model.id, colour, "product", c.model.name);
           return (
@@ -169,9 +178,9 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
     </div>
     <ul class="ipad-grid">
       {
-        newest.slice(0, 12).map((m) => (
+        ipadCardRows.map(({ item: m, offer }) => (
           <li data-chip-gen={["M1", "M2", "M3", "M4", "M5"].includes(m.chipGen) ? m.chipGen : "A-series"}>
-            <IpadCard model={m} compare={false} />
+            <IpadCard model={m} compare={false} channel={offer.channel} priceKes={offer.priceKes || m.basePriceKes} coloursInStock={offer.colours} href={offer.href} />
           </li>
         ))
       }

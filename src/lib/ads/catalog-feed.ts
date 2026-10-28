@@ -344,7 +344,11 @@ export async function applyLivePrices<T extends { id: string; price: string; ava
 ): Promise<T[]> {
   const live = new Map((await livePricedCatalog()).map((p) => [p.id, p]));
   const bySheet = iphoneSheetLiveIndex();
-  return rows.map((r) => {
+  const visible = rows.filter((r) => {
+    const p = live.get(r.id);
+    return !p || p.showOnWebsite !== false;
+  });
+  return visible.map((r) => {
     const exUk = r.id.endsWith("-EXUK");
     const sheetHit = bySheet.get(exUk ? r.id.slice(0, -5) : r.id);
     if (sheetHit) {

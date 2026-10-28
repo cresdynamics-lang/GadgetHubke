@@ -7,6 +7,7 @@ import KeyboardFeel from "../../components/accessories/KeyboardFeel.astro";
 import AccessoryLipaCalc from "../../components/accessories/AccessoryLipaCalc.astro";
 import AccessoryGroupSeo from "../../components/accessories/AccessoryGroupSeo.astro";
 import AccessoryTrademark from "../../components/accessories/AccessoryTrademark.astro";
+import { filterVisibleById, websiteVisibleIdSet } from "../../lib/pricing/live";
 import {
   keyboards,
   getAccessoriesPageImage,
@@ -22,8 +23,10 @@ const families = [
   { label: "Folio", key: "keyboard/selector/selector_magic_keyboard_folio", href: "#for-ipad" },
   { label: "Mac", key: "keyboard/selector/selector_magic_keyboard", href: "#for-mac" },
 ];
-const ipadKbs = keyboards().filter((k) => k.platform === "ipad");
-const macKbs = keyboards().filter((k) => k.platform === "mac");
+const visibleIds = await websiteVisibleIdSet();
+const listedKeyboards = filterVisibleById(keyboards(), visibleIds);
+const ipadKbs = listedKeyboards.filter((k) => k.platform === "ipad");
+const macKbs = listedKeyboards.filter((k) => k.platform === "mac");
 const faq = accessoryFaq();
 const notes = accessoryBuyingNotes(ipadKbs[0]);
 ---

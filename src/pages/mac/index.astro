@@ -5,7 +5,7 @@
 export const prerender = false;
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { livePricedCatalog } from "../../lib/pricing/live";
+import { filterVisibleById, livePricedCatalog, websiteVisibleIdSet } from "../../lib/pricing/live";
 import { buildCategorySeo, formatKes as formatKesSeoHub } from "../../lib/seo/product-seo";
 import MacStage from "../../components/mac/MacStage.astro";
 import MacCard from "../../components/mac/MacCard.astro";
@@ -14,22 +14,23 @@ import MacLipaCalc from "../../components/mac/MacLipaCalc.astro";
 import MacTradeIn from "../../components/mac/MacTradeIn.astro";
 import {
   macModels,
-  macModelsByFamily,
   getMacImage,
   defaultMacColour,
   formatKes,
-  lowestMacPrice,
   macConfig,
   homeMacAccessories,
 } from "../../lib/mac";
 import { cardImageSrc } from "../../lib/card-images";
 import CategoryHero from "../../components/hero/CategoryHero.astro";
+import { listingRows } from "../../lib/listing-offers";
 
-const air = macModelsByFamily("Air");
-const pro = macModelsByFamily("Pro");
+const visibleIds = await websiteVisibleIdSet();
+const listedMacModels = filterVisibleById(macModels, visibleIds);
+const air = listedMacModels.filter((m) => m.family === "Air");
+const pro = listedMacModels.filter((m) => m.family === "Pro");
 const accessories = homeMacAccessories();
-const chooseAir = air.find((x) => x.id === "macbook-air-13-m4") || air[0];
-const choosePro = pro.find((x) => x.id === "macbook-pro-14-m4") || pro[0];
+const chooseAir = air.find((x) => x.id === "macbook-air-13-m5") || air.find((x) => x.id === "macbook-neo-13") || air[0];
+const choosePro = pro.find((x) => x.id === "macbook-pro-14-m5") || pro[0];
 const chooseAirImg = (() => {
   const img = getMacImage(chooseAir.id, defaultMacColour(chooseAir), "product", chooseAir.name);
   const src = cardImageSrc(chooseAir.id, img.src);
@@ -43,12 +44,17 @@ const chooseProImg = (() => {
 const preloadMacCards = [
   chooseAirImg.src,
   chooseProImg.src,
-  ...macModels.slice(0, 6).map((m) => {
+  ...listedMacModels.slice(0, 6).map((m) => {
     const img = getMacImage(m.id, defaultMacColour(m), "product", m.name);
     return cardImageSrc(m.id, img.src);
   }),
 ].filter((src, i, arr) => src && arr.indexOf(src) === i);
-const hubProducts = (await livePricedCatalog()).filter((p) => ["Mac"].includes(p.group));
+const liveCatalog = await livePricedCatalog();
+const macCardRows = listingRows(listedMacModels.slice(0, 8), liveCatalog, {
+  href: (model) => `/mac/${model.id}`,
+  fallbackPrice: (model) => model.basePriceKes,
+});
+const hubProducts = liveCatalog.filter((p) => p.group === "Mac" && p.showOnWebsite !== false);
 const hubSeo = buildCategorySeo({ label: "Mac", path: "/mac", products: hubProducts });
 const hubFrom = formatKesSeoHub(hubSeo.fromKes);
 ---
@@ -88,7 +94,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
         />
         <h3>MacBook Air</h3>
         <p>Thin, silent, all-day battery. From students to everyday work.</p>
-        <span class="mac-choose__price">From {formatKes(lowestMacPrice("Air"))}</span>
+        <span class="mac-choose__price">From {formatKes(air.length ? Math.min(...air.map((m) => m.basePriceKes)) : 0)}</span>
       </a>
       <a class="mac-choose__card" href="/mac/shop?family=Pro">
         <MacStage
@@ -102,7 +108,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
         />
         <h3>MacBook Pro</h3>
         <p>XDR screens, active cooling, ports for real work.</p>
-        <span class="mac-choose__price">From {formatKes(lowestMacPrice("Pro"))}</span>
+        <span class="mac-choose__price">From {formatKes(pro.length ? Math.min(...pro.map((m) => m.basePriceKes)) : 0)}</span>
       </a>
     </div>
   </section>
@@ -123,14 +129,14 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
       <a class="mac-chip mac-chip--all" href="/mac/shop">All</a>
     </div>
     <ul class="mac-grid">
-      {macModels.slice(0, 8).map((m, i) => (
+      {macCardRows.map(({ item: m, offer }, i) => (
         <li>
-          <MacCard model={m} eager={i < 8} />
+          <MacCard model={m} eager={i < 8} channel={offer.channel} priceKes={offer.priceKes || m.basePriceKes} coloursInStock={offer.colours} href={offer.href} />
         </li>
       ))}
     </ul>
     <p class="mac-grid-wrap__more">
-      <a href="/mac/shop">See all {macModels.length} MacBooks ›</a>
+      <a href="/mac/shop">See all {listedMacModels.length} MacBooks ›</a>
     </p>
   </section>
 

@@ -2,7 +2,7 @@
 export const prerender = false;
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { livePricedCatalog } from "../../lib/pricing/live";
+import { livePricedCatalog, websiteVisibleIdSet } from "../../lib/pricing/live";
 import { buildCategorySeo, formatKes as formatKesSeoHub } from "../../lib/seo/product-seo";
 import AccessoryCard from "../../components/accessories/AccessoryCard.astro";
 import CompatibilityFinder from "../../components/accessories/CompatibilityFinder.astro";
@@ -28,9 +28,11 @@ const groupKb = getAccessoriesPageImage("keyboard/selector/selector_hero", "Magi
 const groupMouse = getAccessoryImage("mouse-usbc-black", "hero");
 const groupPower = getAccessoryImage("power-adapter-70w", "hero");
 const groupCases = getAccessoryImage("case-iphone-17-pro-silicone", "hero");
-const featured = ["pencil-pro", "power-adapter-70w", "mouse-usbc-black", "case-iphone-17-pro-silicone"].map(
-  (id) => getAccessory(id)!,
-);
+const visibleIds = await websiteVisibleIdSet();
+const featured = ["pencil-pro", "power-adapter-70w", "mouse-usbc-white", "case-iphone-17-pro-silicone"]
+  .map((id) => getAccessory(id)!)
+  .filter(Boolean)
+  .filter((item) => !item.id.startsWith("pencil-") && !item.id.startsWith("keyboard-") && !item.id.startsWith("mouse-") ? true : visibleIds.has(item.id));
 
 const groups = [
   {
@@ -97,7 +99,7 @@ function bundleKes(ids: string[]) {
 
 const wa = whatsappUrl("Hi Gadget Hub, I want to visit and try accessories.");
 const corp = whatsappUrl("Corporate accessories order");
-const hubProducts = (await livePricedCatalog()).filter((p) => ["Accessories"].includes(p.group));
+const hubProducts = (await livePricedCatalog()).filter((p) => p.group === "Accessories" && p.showOnWebsite !== false);
 const hubSeo = buildCategorySeo({ label: "Accessories", path: "/accessories", products: hubProducts });
 const hubFrom = formatKesSeoHub(hubSeo.fromKes);
 ---

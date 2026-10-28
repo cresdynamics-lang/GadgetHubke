@@ -13,6 +13,8 @@ import { airpodsModels } from "../airpods";
 import { tvHomeModels } from "../tv-home";
 import { accessories } from "../accessories/models";
 import { getOverlayMap, type CatalogOverlayEntry, type CatalogOverlayMap } from "../admin/overlay";
+import { fetchOpsCatalog } from "./ops-catalog";
+import { mergeOpsCatalog } from "./ops-overlay";
 import priceBaseline from "./price-baseline.json";
 import { sheetRowsForProduct, storageIdFromLabel } from "./iphone-sheet";
 import { macSheetForModel, macConfigStorageId, macConfigStorageLabel } from "./mac-sheet";
@@ -26,6 +28,9 @@ export type PriceVariant = {
   priceKes: number;
   exUkKes?: number;
   inStock: boolean;
+  exUkInStock?: boolean;
+  showOnWebsite?: boolean;
+  exUkShowOnWebsite?: boolean;
 };
 
 export type PricedProduct = {
@@ -38,7 +43,13 @@ export type PricedProduct = {
   exUkKes?: number;
   basePriceKes: number;
   inStock: boolean;
+  exUkInStock?: boolean;
+  showOnWebsite: boolean;
+  showNewOnWebsite?: boolean;
+  exUkShowOnWebsite?: boolean;
   variants: PriceVariant[];
+  coloursInStock?: string[];
+  exUkColoursInStock?: string[];
   /** True when nothing has been saved in admin for this product. */
   sample: boolean;
   updatedAt?: string;
@@ -61,7 +72,7 @@ function product(
     });
   }
   const priceKes = variants.length ? Math.min(...variants.map((v) => v.priceKes)) : basePriceKes;
-  return { id, name, group, href, priceKes, basePriceKes: priceKes, inStock, variants, sample: true };
+  return { id, name, group, href, priceKes, basePriceKes: priceKes, inStock, showOnWebsite: true, variants, sample: true };
 }
 
 /** Last row wins when a sheet repeats a key (matches how admin overlays were seeded). */
@@ -187,27 +198,44 @@ export function applyOverlay(p: PricedProduct, entry?: CatalogOverlayEntry | nul
   if (!entry) return p;
   const variants = p.variants.map((v) => {
     const o = entry.storages?.[v.key];
-    if (!o) return v;
+    if (!o) {
+      return {
+        ...v,
+        showOnWebsite: typeof entry.showOnWebsite === "boolean" ? entry.showOnWebsite : v.showOnWebsite !== false,
+      };
+    }
     return {
       ...v,
       priceKes: typeof o.priceKes === "number" ? o.priceKes : v.priceKes,
       exUkKes: typeof o.exUkKes === "number" ? o.exUkKes : v.exUkKes,
       inStock: typeof o.inStock === "boolean" ? o.inStock : v.inStock,
+      exUkInStock: typeof o.exUkInStock === "boolean" ? o.exUkInStock : v.exUkInStock,
+      showOnWebsite: typeof o.showOnWebsite === "boolean" ? o.showOnWebsite : entry.showOnWebsite !== false,
+      exUkShowOnWebsite: typeof o.exUkShowOnWebsite === "boolean" ? o.exUkShowOnWebsite : entry.exUkShowOnWebsite,
     };
   });
-  const inStockVariants = variants.filter((v) => v.inStock);
-  const pool = inStockVariants.length ? inStockVariants : variants;
+  const shown = variants.filter((v) => v.showOnWebsite !== false);
+  const inStockVariants = shown.filter((v) => v.inStock);
+  const pool = inStockVariants.length ? inStockVariants : shown.length ? shown : variants;
   const priceKes = pool.length
     ? Math.min(...pool.map((v) => v.priceKes))
     : typeof entry.priceKes === "number"
       ? entry.priceKes
       : p.priceKes;
+  const showOnWebsite = typeof entry.showOnWebsite === "boolean" ? entry.showOnWebsite : shown.length > 0;
+  const exUkPrices = variants.map((v) => v.exUkKes).filter((n): n is number => typeof n === "number" && n > 0);
   return {
     ...p,
     variants,
     priceKes,
-    exUkKes: typeof entry.exUkKes === "number" ? entry.exUkKes : p.exUkKes,
+    exUkKes: typeof entry.exUkKes === "number" ? entry.exUkKes : exUkPrices.length ? Math.min(...exUkPrices) : p.exUkKes,
     inStock: typeof entry.inStock === "boolean" ? entry.inStock : p.inStock,
+    exUkInStock: typeof entry.exUkInStock === "boolean" ? entry.exUkInStock : p.exUkInStock,
+    showOnWebsite,
+    showNewOnWebsite: typeof entry.showNewOnWebsite === "boolean" ? entry.showNewOnWebsite : p.showNewOnWebsite,
+    exUkShowOnWebsite: typeof entry.exUkShowOnWebsite === "boolean" ? entry.exUkShowOnWebsite : p.exUkShowOnWebsite,
+    coloursInStock: entry.coloursInStock ?? p.coloursInStock,
+    exUkColoursInStock: entry.exUkColoursInStock ?? p.exUkColoursInStock,
     sample: false,
     updatedAt: entry.updatedAt,
   };
@@ -218,7 +246,9 @@ let cache: { at: number; overlay: CatalogOverlayMap } | null = null;
 /** Overlay map with a short in-process cache so page renders stay cheap. */
 export async function liveOverlay(maxAgeMs = 5000): Promise<CatalogOverlayMap> {
   if (cache && Date.now() - cache.at < maxAgeMs) return cache.overlay;
-  const overlay = await getOverlayMap();
+  const local = await getOverlayMap();
+  const ops = await fetchOpsCatalog();
+  const overlay = ops ? mergeOpsCatalog(local, ops, defaultPricedCatalog()) : local;
   cache = { at: Date.now(), overlay };
   return overlay;
 }
@@ -272,4 +302,17 @@ export async function liveFromPrices(): Promise<(id: string) => { newKes?: numbe
 /** The admin/live id an iPhone SEO page prices against. */
 export function iphoneLiveId(seoId: string): string {
   return seoIdToShopProductId[seoId] ?? seoId;
+}
+
+export function isShownOnWebsite(p: PricedProduct) {
+  return p.showOnWebsite !== false;
+}
+
+export async function websiteVisibleIdSet(): Promise<Set<string>> {
+  return new Set((await livePricedCatalog()).filter(isShownOnWebsite).map((p) => p.id));
+}
+
+export function filterVisibleById<T extends { id: string }>(items: T[], visible: Set<string>) {
+  if (!visible.size) return items;
+  return items.filter((item) => visible.has(item.id));
 }

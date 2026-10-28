@@ -15,15 +15,22 @@ import {
 } from "../../lib/mac";
 import { whatsappUrl } from "../../lib/site";
 import { cardImageSrc } from "../../lib/card-images";
+import ConditionBadge from "../ConditionBadge.astro";
+import { filterColours, type ListingChannel } from "../../lib/listing-offers";
 
 interface Props {
   model: MacModel;
   compare?: boolean;
   eager?: boolean;
+  channel?: ListingChannel;
+  priceKes?: number;
+  coloursInStock?: string[];
+  href?: string;
 }
 
-const { model, compare = true, eager = false } = Astro.props;
-const colour = defaultMacColour(model);
+const { model, compare = true, eager = false, channel = "new", priceKes, coloursInStock, href: hrefProp } = Astro.props;
+const colours = filterColours(model.colours, coloursInStock);
+const colour = colours.includes(defaultMacColour(model)) ? defaultMacColour(model) : colours[0] || defaultMacColour(model);
 const resolved = getMacImage(model.id, colour, "product", model.name);
 const cardSrc = cardImageSrc(model.id, resolved.src);
 const img = {
@@ -31,12 +38,13 @@ const img = {
   src: cardSrc,
   srcWebp: cardSrc.endsWith(".webp") ? cardSrc : resolved.srcWebp,
 };
-const href = `/mac/${model.id}`;
-const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}.`);
+const href = hrefProp || `/mac/${model.id}`;
+const displayKes = priceKes ?? model.basePriceKes;
+const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}${channel === "ex-uk" ? " (Ex-UK)" : ""}.`);
 const viewerTabs = macViewerTabs(model, colour);
 const hoverFromTabs = viewerTabs.length > 1 ? viewerTabs[1] : null;
 
-const colourPayload = model.colours.map((key) => {
+const colourPayload = colours.map((key) => {
   const resolved = getMacImage(model.id, key, "product", model.name);
   const tabs = macViewerTabs(model, key);
   const hover = tabs.length > 1 ? tabs[1] : null;
@@ -80,7 +88,7 @@ const hoverSrc =
       </label>
     ) : null
   }
-  {model.isNew ? <span class="mcard__tag">New</span> : null}
+  <ConditionBadge channel={channel} />
   
 
   <a class:list={["mcard__media", { "mcard__media--swap": Boolean(hoverSrc) }]} href={href}>
@@ -123,7 +131,7 @@ const hoverSrc =
           {colourPayload.map((c, i) => (
             <button
               type="button"
-              class:list={["mcard__dot", { "is-active": i === 0, "mcard__dot--light": c.light }]}
+              class:list={["mcard__dot", { "is-active": c.key === colour, "mcard__dot--light": c.light }]}
               style={`--swatch: ${c.hex}`}
               aria-label={c.label}
               data-mcard-swatch
@@ -139,7 +147,7 @@ const hoverSrc =
 
     <div class="mcard__row mcard__row--price">
       <p class="mcard__price">
-        <span data-live-price={model.id} data-live-prefix="">{`KSh ${Math.round(model.basePriceKes).toLocaleString("en-KE")}`}</span>
+        <span data-live-price={model.id} data-live-field={channel === "ex-uk" ? "exUkKes" : "priceKes"} data-live-prefix="">{`KSh ${Math.round(displayKes).toLocaleString("en-KE")}`}</span>
       </p>
       <button
         type="button"
@@ -151,7 +159,7 @@ const hoverSrc =
         data-memory={`${model.memoryOptionsGb[0]}GB`}
         data-storage={model.storageOptions[0]}
         data-colour={colourLabel(colour)}
-        data-kes={model.basePriceKes}
+        data-kes={displayKes}
         data-image={img.src}
       >
         Add to Cart
@@ -166,6 +174,8 @@ const hoverSrc =
 
 <script>
   document.querySelectorAll("[data-mcard]").forEach((card) => {
+    if (card.getAttribute("data-mcard-bound") === "1") return;
+    card.setAttribute("data-mcard-bound", "1");
     const img = card.querySelector(".mstage__img") as HTMLImageElement | null;
     const webpSource = card.querySelector(".mstage source") as HTMLSourceElement | null;
     const altImg = card.querySelector("[data-mcard-alt]") as HTMLImageElement | null;

@@ -2,12 +2,23 @@
 /**
  * iPhone category: Help me choose, filters, sort, compare (max 3).
  */
+export const prerender = false;
+
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import ProductCard from "../../../components/ProductCard.astro";
 import { listIphones } from "../../../lib/iphone-list";
+import { livePricedCatalog, iphoneLiveId } from "../../../lib/pricing/live";
+import { filterColours, listingRows } from "../../../lib/listing-offers";
+import { availableColours, colourHex, colourLabel, getImage } from "../../../lib/iphone";
+import { cardImageSrc } from "../../../lib/card-images";
 import { site } from "../../../lib/site";
 
 const items = listIphones();
+const itemRows = listingRows(items, await livePricedCatalog(), {
+  href: (item) => item.href,
+  liveId: (item) => iphoneLiveId(item.id),
+  fallbackPrice: (item) => item.priceKes,
+});
 const payload = items.map((item) => ({
   id: item.id,
   name: item.name,
@@ -106,18 +117,23 @@ const payload = items.map((item) => ({
     <div class="container">
       <ul class="iphone-cat__grid" data-iphone-grid>
         {
-          items.map((item) => (
-            <li data-iphone-card data-id={item.id}>
+          itemRows.map(({ item, offer }) => (
+            <li data-iphone-card data-id={item.id} data-channel={offer.channel}>
               <div class="iphone-cat__card">
                 <ProductCard
                   id={item.id}
                   name={item.name}
-                  href={item.href}
-                  priceKes={item.priceKes}
+                  href={offer.href}
+                  priceKes={offer.priceKes || item.priceKes}
+                  channel={offer.channel}
                   image={item.image}
                   blurb={item.blurb}
                   badge={item.badge}
-                  colors={item.colors}
+                  colors={filterColours(availableColours(item.id).length ? availableColours(item.id) : item.colors.map((c) => c.id), offer.colours).map((key) => {
+                    const existing = item.colors.find((c) => c.id === key);
+                    const photo = getImage(item.id, key, 1, item.name);
+                    return { id: key, label: existing?.label || colourLabel(key), hex: existing?.hex || colourHex(key), imageSrc: cardImageSrc(item.id, photo.src) };
+                  })}
                 />
                 <label class="iphone-cat__compare">
                   <input type="checkbox" data-compare={item.id} />
