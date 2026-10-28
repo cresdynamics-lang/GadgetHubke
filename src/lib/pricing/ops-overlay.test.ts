@@ -9,6 +9,22 @@ const catalog = [
   { id: "iphone-17", group: "Shop iPhone", variants: [{ key: "256" }] },
 ];
 
+test("empty ops catalog leaves local Mac and iPad overlays in place", () => {
+  const merged = mergeOpsCatalog(
+    { "macbook-air-13-m5": { showOnWebsite: true, priceKes: 155000 } },
+    {
+      source: "gadgetmgmt",
+      generatedAt: "2026-10-28T00:00:00.000Z",
+      managedGroups: ["iPad", "Mac", "AirPods", "Watch"],
+      items: [],
+    },
+    catalog,
+  );
+  assert.equal(merged["macbook-air-13-m5"]?.showOnWebsite, true);
+  assert.equal(merged["macbook-air-13-m5"]?.priceKes, 155000);
+  assert.equal(merged["ipad-pro-11-m4"], undefined);
+});
+
 test("ops catalog hides unlisted iPads and keeps iPhones untouched", () => {
   const merged = mergeOpsCatalog(
     {},

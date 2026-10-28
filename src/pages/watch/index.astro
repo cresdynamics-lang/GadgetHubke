@@ -87,7 +87,7 @@ const liveAccessoryKes = (href: string, fallback: number) =>
     <p>Three families. One honest fit for fitness, health or adventure.</p>
     <ul class="watch-choose__grid">
       {
-        choose.map((c, i) => {
+        choose.filter((c) => c.model).map((c, i) => {
           const img = getWatchImage(c.model.id, "main", c.model.name);
           return (
             <li>

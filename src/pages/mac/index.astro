@@ -29,8 +29,17 @@ const listedMacModels = filterVisibleById(macModels, visibleIds);
 const air = listedMacModels.filter((m) => m.family === "Air");
 const pro = listedMacModels.filter((m) => m.family === "Pro");
 const accessories = homeMacAccessories();
-const chooseAir = air.find((x) => x.id === "macbook-air-13-m5") || air.find((x) => x.id === "macbook-neo-13") || air[0];
-const choosePro = pro.find((x) => x.id === "macbook-pro-14-m5") || pro[0];
+const chooseAir =
+  air.find((x) => x.id === "macbook-air-13-m5") ||
+  air.find((x) => x.id === "macbook-neo-13") ||
+  air[0] ||
+  macModels.find((x) => x.family === "Air") ||
+  macModels[0];
+const choosePro =
+  pro.find((x) => x.id === "macbook-pro-14-m5") ||
+  pro[0] ||
+  macModels.find((x) => x.family === "Pro") ||
+  macModels[0];
 const chooseAirImg = (() => {
   const img = getMacImage(chooseAir.id, defaultMacColour(chooseAir), "product", chooseAir.name);
   const src = cardImageSrc(chooseAir.id, img.src);

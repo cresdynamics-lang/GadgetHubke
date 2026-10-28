@@ -19,6 +19,7 @@ export type OpsCatalogVariant = {
 
 export type OpsCatalogItem = {
   id: string;
+  group?: string;
   showOnWebsite: boolean;
   inStock: boolean;
   priceKes: number;
@@ -59,8 +60,13 @@ export function mergeOpsCatalog(local: CatalogOverlayMap, ops: OpsCatalog, catal
   const now = ops.generatedAt || new Date().toISOString();
   const next: CatalogOverlayMap = { ...local };
 
+  const listedItems = ops.items.filter((item) => item.showOnWebsite);
+  const listedGroups = new Set(listedItems.map((item) => item.group).filter((group): group is string => Boolean(group)));
+
   for (const product of catalog) {
     if (!isManaged(product, ops)) continue;
+    if (!listedItems.length) continue;
+    if (listedGroups.size && !listedGroups.has(product.group)) continue;
     const item = byId.get(product.id);
     const prev = next[product.id];
     const storages: Record<string, CatalogOverlayVariant> = { ...(prev?.storages || {}) };
