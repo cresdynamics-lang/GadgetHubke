@@ -141,13 +141,12 @@ const pageDescription = seo?.metaDescription ?? product.tagline;
         <h1>{seo?.h1 ?? product.name}</h1>
         {SHOW_EX_UK ? <StockChannelToggle /> : null}
         <p class="pdp__tagline">
-          {seo ? `Price in Kenya · From ${formatKesSeo(seo.fromKes)}. ` : ""}
+          {seo ? `Price in Kenya · ${formatKesSeo(seo.fromKes)}. ` : ""}
           {product.tagline}
         </p>
 
         <div class="pdp__pricing">
           <p class="pdp__price">
-            Buy from{" "}
             <span data-config-price class="price">
               <span class="price__amount">
                 {`KSh ${Math.round(basePrice).toLocaleString("en-KE")}`}

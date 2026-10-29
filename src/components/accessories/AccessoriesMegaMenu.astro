@@ -71,7 +71,7 @@ const groups = [
             <li>
               <a class="xmega__link" href={p.href} data-mega-preview={p.id}>
                 <span>{p.name}</span>
-                <em>from {p.priceLabel}</em>
+                <em>{p.priceLabel}</em>
               </a>
             </li>
           ))
@@ -93,7 +93,7 @@ const groups = [
       </div>
       <p data-mega-name class="xmega__pname">{defaultPreview.name}</p>
       <p data-mega-price class="xmega__pprice">
-        <strong>From {defaultPreview.priceLabel}</strong>
+        <strong>{defaultPreview.priceLabel}</strong>
       </p>
       <a class="btn btn--primary btn--sm" data-mega-view href={defaultPreview.href}>View</a>
     </div>
@@ -115,7 +115,7 @@ const groups = [
         img.alt = p.alt;
       }
       if (name) name.textContent = p.name;
-      if (price) price.innerHTML = `<strong>From ${p.priceLabel}</strong>`;
+      if (price) price.innerHTML = `<strong>${p.priceLabel}</strong>`;
       if (view instanceof HTMLAnchorElement) view.href = p.href;
     }
 

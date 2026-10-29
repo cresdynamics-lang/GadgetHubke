@@ -49,7 +49,7 @@ const previews = Object.fromEntries(picks.map((p) => [p.id, p]));
                   {m.name}
                   {m.isNew ? <span class="thmega__tag">New</span> : null}
                 </span>
-                <em>from {m.priceLabel}</em>
+                <em>{m.priceLabel}</em>
               </a>
             </li>
           ))
@@ -82,7 +82,7 @@ const previews = Object.fromEntries(picks.map((p) => [p.id, p]));
       </div>
       <p data-mega-name class="thmega__pname">{defaultPreview.name}</p>
       <p data-mega-price class="thmega__pprice">
-        <strong>From {defaultPreview.priceLabel}</strong>
+        <strong>{defaultPreview.priceLabel}</strong>
       </p>
       <a class="btn btn--primary btn--sm" data-mega-view href={defaultPreview.href}>View</a>
     </div>
@@ -104,7 +104,7 @@ const previews = Object.fromEntries(picks.map((p) => [p.id, p]));
         img.alt = p.alt;
       }
       if (name) name.textContent = p.name;
-      if (price) price.innerHTML = `<strong>From ${p.priceLabel}</strong>`;
+      if (price) price.innerHTML = `<strong>${p.priceLabel}</strong>`;
       if (view instanceof HTMLAnchorElement) view.href = p.href;
     }
 

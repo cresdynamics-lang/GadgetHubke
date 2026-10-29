@@ -370,7 +370,7 @@ const liveAccessoryKes = (href: string, fallback: number) =>
                 <a href={`/mac/compare?ids=${encodeURIComponent(`${model.id},${r.id}`)}`}>
                   <MacStage src={rimg.src} srcWebp={rimg.srcWebp} alt={rimg.alt} width={760} height={475} />
                   <span>{r.name}</span>
-                  <em>From {formatKes(r.basePriceKes)}</em>
+                  <em>{formatKes(r.basePriceKes)}</em>
                   <b>Compare with {r.name.replace("MacBook ", "")}</b>
                 </a>
               );
@@ -389,7 +389,7 @@ const liveAccessoryKes = (href: string, fallback: number) =>
               <li>
                 <h3>{a.name}</h3>
                 <p>{a.blurb}</p>
-                <p>{liveAccessoryKes(a.href, a.priceKes) > 0 ? `From ${formatKes(liveAccessoryKes(a.href, a.priceKes))}` : "See category"}</p>
+                <p>{liveAccessoryKes(a.href, a.priceKes) > 0 ? formatKes(liveAccessoryKes(a.href, a.priceKes)) : "See category"}</p>
                 <a href={a.href}>View</a>
               </li>
             ))}

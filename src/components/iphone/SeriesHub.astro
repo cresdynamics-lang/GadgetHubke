@@ -24,7 +24,7 @@ const liveFrom = Math.min(...liveModels.map((m) => m.fromKes));
 const hub = {
   ...hubDefault,
   models: liveModels,
-  metaDescription: `Compare every ${hubDefault.name} model at Gadget Hub Nairobi. From KES ${liveFrom.toLocaleString("en-KE")}. Pay in full or Lipa Mdogo Mdogo.`,
+  metaDescription: `Compare every ${hubDefault.name} model at Gadget Hub Nairobi. KES ${liveFrom.toLocaleString("en-KE")}. Pay in full or Lipa Mdogo Mdogo.`,
 };
 const pageUrl = new URL(`/iphone/${hub.slug}`, site.url).href;
 const jsonLd = buildSeriesHubJsonLd({
@@ -51,7 +51,7 @@ const jsonLd = buildSeriesHubJsonLd({
       <thead>
         <tr>
           <th scope="col">Model</th>
-          <th scope="col">From price</th>
+          <th scope="col">Price</th>
           <th scope="col">Storage options</th>
         </tr>
       </thead>

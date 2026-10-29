@@ -164,8 +164,8 @@ if (seo) {
     (prices[selectedIdx]?.exUkKes ?? 0) > 0;
   firstPrice = prices[selectedIdx] ?? { label: "", kes: seo.fromKes };
   priceLine = wantExUk
-    ? `Ex-UK · From ${formatKes(prices[selectedIdx].exUkKes!)}`
-    : `From ${formatKes(firstPrice.kes)}`;
+    ? `Ex-UK · ${formatKes(prices[selectedIdx].exUkKes!)}`
+    : formatKes(firstPrice.kes);
   lipa = lipaMonthly(wantExUk ? prices[selectedIdx].exUkKes! : firstPrice.kes);
   tag = model ? (isLatestTag(model) ? "Latest" : isValueTag(model) ? "Value" : null) : null;
   notes = model ? buyingNotes(model) : [];
@@ -263,7 +263,7 @@ if (seo) {
         <div class="ipdp__buy">
           <h1>{seo.h1}</h1>
           <p class="ipdp__tagline">
-            Price in Kenya · From {formatKesSeo(seo.fromKes)}
+            Price in Kenya · {formatKesSeo(seo.fromKes)}
           </p>
           <div class="ipdp__field">
             <p class="ipdp__label">Storage</p>
@@ -283,7 +283,7 @@ if (seo) {
               ))}
             </div>
           </div>
-          <p class="ipdp__price">{priceLine || `From ${formatKes(firstPrice.kes)}`}</p>
+          <p class="ipdp__price">{priceLine || formatKes(firstPrice.kes)}</p>
           <a
             class="ipdp__wa"
             href={whatsappUrl(`Hi Gadget Hub, I'm interested in the ${seo.name}.`)}
@@ -350,7 +350,7 @@ if (seo) {
         <h1>{seo.h1}</h1>
         <StockChannelToggle show={live?.showNewOnWebsite !== false && live?.exUkShowOnWebsite !== false && prices.some((p) => (p.exUkKes ?? 0) > 0)} />
         <p class="ipdp__tagline">
-          Price in Kenya · From {formatKesSeo(seo.fromKes)}
+          Price in Kenya · {formatKesSeo(seo.fromKes)}
           {model?.tagline ? ` · ${model.tagline}` : ""}
         </p>
 
@@ -411,7 +411,7 @@ if (seo) {
         </div>
 
         <div class="ipdp__price-block">
-          <p class="ipdp__price" data-price-display>{priceLine || `From ${formatKes(firstPrice.kes)}`}</p>
+          <p class="ipdp__price" data-price-display>{priceLine || formatKes(firstPrice.kes)}</p>
           <p class="ipdp__monthly" data-monthly-display>
             or {formatKes(lipa.monthlyKes)} a month for {lipa.months} months after a {formatKes(lipa.depositKes)} deposit
           </p>
@@ -501,7 +501,7 @@ if (seo) {
                 <a class="ipdp__related-card" href={`/iphone/${r.id}`}>
                   <ProductStage src={img.src} srcWebp={img.srcWebp} alt={img.alt} width={img.width} height={img.width} />
                   <span class="ipdp__related-name">{r.name}</span>
-                  <span class="ipdp__related-price">From {formatKes(r.basePriceKes)}</span>
+                  <span class="ipdp__related-price">{formatKes(r.basePriceKes)}</span>
                   <span class="ipdp__related-cta">Compare with {r.name.replace("iPhone ", "")}</span>
                 </a>
               );
@@ -735,7 +735,7 @@ if (seo) {
     const kes = activeKes();
     const deposit = Math.round((kes * depositPct) / 100);
     const monthly = Math.round((kes - deposit) / months);
-    if (priceEl) priceEl.textContent = `${state.channel === "ex-uk" ? "Ex-UK · " : ""}From KES ${kes.toLocaleString("en-KE")}`;
+    if (priceEl) priceEl.textContent = `${state.channel === "ex-uk" ? "Ex-UK · " : ""}KES ${kes.toLocaleString("en-KE")}`;
     if (monthlyEl)
       monthlyEl.textContent = `or KES ${monthly.toLocaleString("en-KE")} a month for ${months} months after a KES ${deposit.toLocaleString("en-KE")} deposit`;
 

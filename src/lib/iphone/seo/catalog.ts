@@ -275,7 +275,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     seoTitle: "iPhone 13 mini Price in Kenya | Gadget Hub",
     h1: "iPhone 13 mini",
     metaDescription: "Buy the iPhone 13 mini in Nairobi from KES 48,000. 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone 13 mini at Gadget Hub in Nairobi. From KES 48,000 sealed new, with storage options 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    intro: "Shop the iPhone 13 mini at Gadget Hub in Nairobi. KES 48,000 sealed new, with storage options 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "buyers comparing iPhone 13 mini prices in Kenya.",
     specs: [
       { label: "Display", value: "5.4-inch Super Retina XDR OLED" },
@@ -290,7 +290,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     ],
     colours: [],
     faq: [
-      { question: "What is the iPhone 13 mini price in Kenya?", answer: "At Gadget Hub, iPhone 13 mini starts from KES 48,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB." },
+      { question: "What is the iPhone 13 mini price in Kenya?", answer: "At Gadget Hub, iPhone 13 mini is KES 48,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
     compareWith: [],
@@ -307,7 +307,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     seoTitle: "iPhone 13 Price in Kenya | Gadget Hub",
     h1: "iPhone 13",
     metaDescription: "Buy the iPhone 13 in Nairobi from KES 62,000. 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone 13 at Gadget Hub in Nairobi. From KES 62,000 sealed new, with storage options 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    intro: "Shop the iPhone 13 at Gadget Hub in Nairobi. KES 62,000 sealed new, with storage options 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "buyers comparing iPhone 13 prices in Kenya.",
     specs: [
       { label: "Display", value: "6.1-inch Super Retina XDR OLED" },
@@ -322,7 +322,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     ],
     colours: [],
     faq: [
-      { question: "What is the iPhone 13 price in Kenya?", answer: "At Gadget Hub, iPhone 13 starts from KES 62,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB." },
+      { question: "What is the iPhone 13 price in Kenya?", answer: "At Gadget Hub, iPhone 13 is KES 62,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
     compareWith: ["iphone-13-vs-iphone-14", "iphone-13-vs-iphone-13-pro"],
@@ -339,7 +339,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     seoTitle: "iPhone 13 Pro Price in Kenya | Gadget Hub",
     h1: "iPhone 13 Pro",
     metaDescription: "Buy the iPhone 13 Pro in Nairobi from KES 65,000. 128GB, 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone 13 Pro at Gadget Hub in Nairobi. From KES 65,000 sealed new, with storage options 128GB, 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    intro: "Shop the iPhone 13 Pro at Gadget Hub in Nairobi. KES 65,000 sealed new, with storage options 128GB, 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "buyers comparing iPhone 13 Pro prices in Kenya.",
     specs: [
       { label: "Display", value: "6.1-inch Super Retina XDR OLED with ProMotion" },
@@ -354,7 +354,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     ],
     colours: [],
     faq: [
-      { question: "What is the iPhone 13 Pro price in Kenya?", answer: "At Gadget Hub, iPhone 13 Pro starts from KES 65,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB, 1TB." },
+      { question: "What is the iPhone 13 Pro price in Kenya?", answer: "At Gadget Hub, iPhone 13 Pro is KES 65,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB, 1TB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
     compareWith: ["iphone-13-pro-vs-iphone-13-pro-max", "iphone-13-pro-vs-iphone-14-pro"],
@@ -371,7 +371,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     seoTitle: "iPhone 13 Pro Max Price in Kenya | Gadget Hub",
     h1: "iPhone 13 Pro Max",
     metaDescription: "Buy the iPhone 13 Pro Max in Nairobi from KES 78,000. 128GB, 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone 13 Pro Max at Gadget Hub in Nairobi. From KES 78,000 sealed new, with storage options 128GB, 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    intro: "Shop the iPhone 13 Pro Max at Gadget Hub in Nairobi. KES 78,000 sealed new, with storage options 128GB, 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "buyers comparing iPhone 13 Pro Max prices in Kenya.",
     specs: [
       { label: "Display", value: "6.7-inch Super Retina XDR OLED with ProMotion" },
@@ -386,7 +386,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     ],
     colours: [],
     faq: [
-      { question: "What is the iPhone 13 Pro Max price in Kenya?", answer: "At Gadget Hub, iPhone 13 Pro Max starts from KES 78,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB, 1TB." },
+      { question: "What is the iPhone 13 Pro Max price in Kenya?", answer: "At Gadget Hub, iPhone 13 Pro Max is KES 78,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB, 1TB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
     compareWith: [],
@@ -403,7 +403,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     seoTitle: "iPhone 14 Price in Kenya | Gadget Hub",
     h1: "iPhone 14",
     metaDescription: "Buy the iPhone 14 in Nairobi from KES 85,000. 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone 14 at Gadget Hub in Nairobi. From KES 85,000 sealed new, with storage options 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    intro: "Shop the iPhone 14 at Gadget Hub in Nairobi. KES 85,000 sealed new, with storage options 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "buyers comparing iPhone 14 prices in Kenya.",
     specs: [
       { label: "Display", value: "6.1-inch Super Retina XDR OLED" },
@@ -418,7 +418,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     ],
     colours: [],
     faq: [
-      { question: "What is the iPhone 14 price in Kenya?", answer: "At Gadget Hub, iPhone 14 starts from KES 85,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB." },
+      { question: "What is the iPhone 14 price in Kenya?", answer: "At Gadget Hub, iPhone 14 is KES 85,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
     compareWith: ["iphone-14-vs-iphone-15", "iphone-14-vs-iphone-14-plus"],
@@ -435,7 +435,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     seoTitle: "iPhone 14 Plus Price in Kenya | Gadget Hub",
     h1: "iPhone 14 Plus",
     metaDescription: "Buy the iPhone 14 Plus in Nairobi from KES 92,000. 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone 14 Plus at Gadget Hub in Nairobi. From KES 92,000 sealed new, with storage options 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    intro: "Shop the iPhone 14 Plus at Gadget Hub in Nairobi. KES 92,000 sealed new, with storage options 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "buyers comparing iPhone 14 Plus prices in Kenya.",
     specs: [
       { label: "Display", value: "6.7-inch Super Retina XDR OLED" },
@@ -450,7 +450,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     ],
     colours: [],
     faq: [
-      { question: "What is the iPhone 14 Plus price in Kenya?", answer: "At Gadget Hub, iPhone 14 Plus starts from KES 92,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB." },
+      { question: "What is the iPhone 14 Plus price in Kenya?", answer: "At Gadget Hub, iPhone 14 Plus is KES 92,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
     compareWith: [],
@@ -467,7 +467,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     seoTitle: "iPhone 14 Pro Price in Kenya | Gadget Hub",
     h1: "iPhone 14 Pro",
     metaDescription: "Buy the iPhone 14 Pro in Nairobi from KES 110,000. 128GB, 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone 14 Pro at Gadget Hub in Nairobi. From KES 110,000 sealed new, with storage options 128GB, 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    intro: "Shop the iPhone 14 Pro at Gadget Hub in Nairobi. KES 110,000 sealed new, with storage options 128GB, 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "buyers comparing iPhone 14 Pro prices in Kenya.",
     specs: [
       { label: "Display", value: "6.1-inch Super Retina XDR OLED with ProMotion" },
@@ -482,7 +482,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     ],
     colours: [],
     faq: [
-      { question: "What is the iPhone 14 Pro price in Kenya?", answer: "At Gadget Hub, iPhone 14 Pro starts from KES 110,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB, 1TB." },
+      { question: "What is the iPhone 14 Pro price in Kenya?", answer: "At Gadget Hub, iPhone 14 Pro is KES 110,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB, 1TB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
     compareWith: [],
@@ -499,7 +499,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     seoTitle: "iPhone 14 Pro Max Price in Kenya | Gadget Hub",
     h1: "iPhone 14 Pro Max",
     metaDescription: "Buy the iPhone 14 Pro Max in Nairobi from KES 120,000. 128GB, 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone 14 Pro Max at Gadget Hub in Nairobi. From KES 120,000 sealed new, with storage options 128GB, 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    intro: "Shop the iPhone 14 Pro Max at Gadget Hub in Nairobi. KES 120,000 sealed new, with storage options 128GB, 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "buyers comparing iPhone 14 Pro Max prices in Kenya.",
     specs: [
       { label: "Display", value: "6.7-inch Super Retina XDR OLED with ProMotion" },
@@ -514,7 +514,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     ],
     colours: [],
     faq: [
-      { question: "What is the iPhone 14 Pro Max price in Kenya?", answer: "At Gadget Hub, iPhone 14 Pro Max starts from KES 120,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB, 1TB." },
+      { question: "What is the iPhone 14 Pro Max price in Kenya?", answer: "At Gadget Hub, iPhone 14 Pro Max is KES 120,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB, 1TB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
     compareWith: ["iphone-14-pro-max-vs-iphone-15-pro-max"],
@@ -531,7 +531,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     seoTitle: "iPhone 15 Price in Kenya | Gadget Hub",
     h1: "iPhone 15",
     metaDescription: "Buy the iPhone 15 in Nairobi from KES 90,000. 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone 15 at Gadget Hub in Nairobi. From KES 90,000 sealed new, with storage options 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    intro: "Shop the iPhone 15 at Gadget Hub in Nairobi. KES 90,000 sealed new, with storage options 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "buyers comparing iPhone 15 prices in Kenya.",
     specs: [
       { label: "Display", value: "6.1-inch Super Retina XDR OLED" },
@@ -546,7 +546,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     ],
     colours: [],
     faq: [
-      { question: "What is the iPhone 15 price in Kenya?", answer: "At Gadget Hub, iPhone 15 starts from KES 90,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB." },
+      { question: "What is the iPhone 15 price in Kenya?", answer: "At Gadget Hub, iPhone 15 is KES 90,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
     compareWith: ["iphone-15-vs-iphone-16"],
@@ -563,7 +563,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     seoTitle: "iPhone 15 Plus Price in Kenya | Gadget Hub",
     h1: "iPhone 15 Plus",
     metaDescription: "Buy the iPhone 15 Plus in Nairobi from KES 88,000. 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone 15 Plus at Gadget Hub in Nairobi. From KES 88,000 sealed new, with storage options 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    intro: "Shop the iPhone 15 Plus at Gadget Hub in Nairobi. KES 88,000 sealed new, with storage options 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "buyers comparing iPhone 15 Plus prices in Kenya.",
     specs: [
       { label: "Display", value: "6.7-inch Super Retina XDR OLED" },
@@ -578,7 +578,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     ],
     colours: [],
     faq: [
-      { question: "What is the iPhone 15 Plus price in Kenya?", answer: "At Gadget Hub, iPhone 15 Plus starts from KES 88,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB." },
+      { question: "What is the iPhone 15 Plus price in Kenya?", answer: "At Gadget Hub, iPhone 15 Plus is KES 88,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
     compareWith: [],
@@ -595,7 +595,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     seoTitle: "iPhone 15 Pro Price in Kenya | Gadget Hub",
     h1: "iPhone 15 Pro",
     metaDescription: "Buy the iPhone 15 Pro in Nairobi from KES 128,000. 128GB, 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone 15 Pro at Gadget Hub in Nairobi. From KES 128,000 sealed new, with storage options 128GB, 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    intro: "Shop the iPhone 15 Pro at Gadget Hub in Nairobi. KES 128,000 sealed new, with storage options 128GB, 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "buyers comparing iPhone 15 Pro prices in Kenya.",
     specs: [
       { label: "Display", value: "6.1-inch Super Retina XDR OLED with ProMotion" },
@@ -610,7 +610,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     ],
     colours: [],
     faq: [
-      { question: "What is the iPhone 15 Pro price in Kenya?", answer: "At Gadget Hub, iPhone 15 Pro starts from KES 128,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB, 1TB." },
+      { question: "What is the iPhone 15 Pro price in Kenya?", answer: "At Gadget Hub, iPhone 15 Pro is KES 128,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB, 1TB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
     compareWith: [],
@@ -627,7 +627,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     seoTitle: "iPhone 15 Pro Max Price in Kenya | Gadget Hub",
     h1: "iPhone 15 Pro Max",
     metaDescription: "Buy the iPhone 15 Pro Max in Nairobi from KES 150,000. 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone 15 Pro Max at Gadget Hub in Nairobi. From KES 150,000 sealed new, with storage options 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    intro: "Shop the iPhone 15 Pro Max at Gadget Hub in Nairobi. KES 150,000 sealed new, with storage options 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "buyers comparing iPhone 15 Pro Max prices in Kenya.",
     specs: [
       { label: "Display", value: "6.7-inch Super Retina XDR OLED with ProMotion" },
@@ -642,7 +642,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     ],
     colours: [],
     faq: [
-      { question: "What is the iPhone 15 Pro Max price in Kenya?", answer: "At Gadget Hub, iPhone 15 Pro Max starts from KES 150,000 for sealed new stock. Storage options: 256GB, 512GB, 1TB." },
+      { question: "What is the iPhone 15 Pro Max price in Kenya?", answer: "At Gadget Hub, iPhone 15 Pro Max is KES 150,000 for sealed new stock. Storage options: 256GB, 512GB, 1TB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
     compareWith: ["iphone-15-pro-max-vs-iphone-16-pro-max"],
@@ -659,7 +659,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     seoTitle: "iPhone 16e Price in Kenya | Gadget Hub",
     h1: "iPhone 16e",
     metaDescription: "Buy the iPhone 16e in Nairobi from KES 79,000. 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone 16e at Gadget Hub in Nairobi. From KES 79,000 sealed new, with storage options 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    intro: "Shop the iPhone 16e at Gadget Hub in Nairobi. KES 79,000 sealed new, with storage options 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "buyers comparing iPhone 16e prices in Kenya.",
     specs: [
       { label: "Display", value: "6.1-inch Super Retina XDR OLED" },
@@ -674,7 +674,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     ],
     colours: [],
     faq: [
-      { question: "What is the iPhone 16e price in Kenya?", answer: "At Gadget Hub, iPhone 16e starts from KES 79,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB." },
+      { question: "What is the iPhone 16e price in Kenya?", answer: "At Gadget Hub, iPhone 16e is KES 79,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
     compareWith: [],
@@ -691,7 +691,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     seoTitle: "iPhone 16 Price in Kenya | Gadget Hub",
     h1: "iPhone 16",
     metaDescription: "Buy the iPhone 16 in Nairobi from KES 93,000. 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone 16 at Gadget Hub in Nairobi. From KES 93,000 sealed new, with storage options 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    intro: "Shop the iPhone 16 at Gadget Hub in Nairobi. KES 93,000 sealed new, with storage options 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "buyers comparing iPhone 16 prices in Kenya.",
     specs: [
       { label: "Display", value: "6.1-inch Super Retina XDR OLED" },
@@ -706,7 +706,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     ],
     colours: [],
     faq: [
-      { question: "What is the iPhone 16 price in Kenya?", answer: "At Gadget Hub, iPhone 16 starts from KES 93,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB." },
+      { question: "What is the iPhone 16 price in Kenya?", answer: "At Gadget Hub, iPhone 16 is KES 93,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
     compareWith: ["iphone-16-vs-iphone-17", "iphone-16-vs-iphone-16-pro", "iphone-16e-vs-iphone-16"],
@@ -723,7 +723,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     seoTitle: "iPhone 16 Plus Price in Kenya | Gadget Hub",
     h1: "iPhone 16 Plus",
     metaDescription: "Buy the iPhone 16 Plus in Nairobi from KES 105,000. 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone 16 Plus at Gadget Hub in Nairobi. From KES 105,000 sealed new, with storage options 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    intro: "Shop the iPhone 16 Plus at Gadget Hub in Nairobi. KES 105,000 sealed new, with storage options 128GB, 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "buyers comparing iPhone 16 Plus prices in Kenya.",
     specs: [
       { label: "Display", value: "6.7-inch Super Retina XDR OLED" },
@@ -738,7 +738,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     ],
     colours: [],
     faq: [
-      { question: "What is the iPhone 16 Plus price in Kenya?", answer: "At Gadget Hub, iPhone 16 Plus starts from KES 105,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB." },
+      { question: "What is the iPhone 16 Plus price in Kenya?", answer: "At Gadget Hub, iPhone 16 Plus is KES 105,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
     compareWith: [],
@@ -755,7 +755,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     seoTitle: "iPhone 16 Pro Price in Kenya | Gadget Hub",
     h1: "iPhone 16 Pro",
     metaDescription: "Buy the iPhone 16 Pro in Nairobi from KES 111,000. 128GB, 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone 16 Pro at Gadget Hub in Nairobi. From KES 111,000 sealed new, with storage options 128GB, 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    intro: "Shop the iPhone 16 Pro at Gadget Hub in Nairobi. KES 111,000 sealed new, with storage options 128GB, 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "buyers comparing iPhone 16 Pro prices in Kenya.",
     specs: [
       { label: "Display", value: "6.3-inch Super Retina XDR OLED with ProMotion" },
@@ -770,7 +770,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     ],
     colours: [],
     faq: [
-      { question: "What is the iPhone 16 Pro price in Kenya?", answer: "At Gadget Hub, iPhone 16 Pro starts from KES 111,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB, 1TB." },
+      { question: "What is the iPhone 16 Pro price in Kenya?", answer: "At Gadget Hub, iPhone 16 Pro is KES 111,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB, 1TB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
     compareWith: ["iphone-16-pro-vs-iphone-17-pro", "iphone-16-pro-vs-iphone-16-pro-max"],
@@ -787,7 +787,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     seoTitle: "iPhone 16 Pro Max Price in Kenya | Gadget Hub",
     h1: "iPhone 16 Pro Max",
     metaDescription: "Buy the iPhone 16 Pro Max in Nairobi from KES 155,000. 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone 16 Pro Max at Gadget Hub in Nairobi. From KES 155,000 sealed new, with storage options 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    intro: "Shop the iPhone 16 Pro Max at Gadget Hub in Nairobi. KES 155,000 sealed new, with storage options 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "buyers comparing iPhone 16 Pro Max prices in Kenya.",
     specs: [
       { label: "Display", value: "6.9-inch Super Retina XDR OLED with ProMotion" },
@@ -802,7 +802,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     ],
     colours: [],
     faq: [
-      { question: "What is the iPhone 16 Pro Max price in Kenya?", answer: "At Gadget Hub, iPhone 16 Pro Max starts from KES 155,000 for sealed new stock. Storage options: 256GB, 512GB, 1TB." },
+      { question: "What is the iPhone 16 Pro Max price in Kenya?", answer: "At Gadget Hub, iPhone 16 Pro Max is KES 155,000 for sealed new stock. Storage options: 256GB, 512GB, 1TB." },
       { question: "Can I pay with Lipa Mdogo Mdogo?", answer: "Yes. Lipa Mdogo Mdogo is run in-house by Gadget Hub Investments. Ask on WhatsApp for a plan on this model." }
     ],
     compareWith: ["iphone-16-pro-max-vs-iphone-17-pro-max"],
@@ -819,7 +819,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     seoTitle: "iPhone 17e Price in Kenya | Gadget Hub",
     h1: "iPhone 17e",
     metaDescription: "Buy the iPhone 17e in Nairobi from KES 115,000. 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone 17e at Gadget Hub in Nairobi. From KES 115,000 sealed new, with storage options 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    intro: "Shop the iPhone 17e at Gadget Hub in Nairobi. KES 115,000 sealed new, with storage options 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "value buyers who want a current-generation iPhone.",
     specs: [
       { label: "Display", value: "6.1-inch Super Retina XDR OLED" },
@@ -835,7 +835,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     colours: ["Black", "White", "Soft Pink"],
     faq: [
       { question: "Is the iPhone 17e a good starter phone?", answer: "Ask us on WhatsApp for current stock and a quote on the iPhone 17e." },
-      { question: "What is the iPhone 17e price in Kenya?", answer: "Sealed new iPhone 17e starts from KES 115,000 at Gadget Hub. Options: 256GB, 512GB." }
+      { question: "What is the iPhone 17e price in Kenya?", answer: "Sealed new iPhone 17e is KES 115,000 at Gadget Hub. Options: 256GB, 512GB." }
     ],
     compareWith: ["iphone-17e-vs-iphone-17"],
     related: ["iphone-17", "iphone-16e"],
@@ -851,7 +851,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     seoTitle: "iPhone 17 Price in Kenya | Gadget Hub",
     h1: "iPhone 17",
     metaDescription: "Buy the iPhone 17 in Nairobi from KES 120,000. 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone 17 at Gadget Hub in Nairobi. From KES 120,000 sealed new, with storage options 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    intro: "Shop the iPhone 17 at Gadget Hub in Nairobi. KES 120,000 sealed new, with storage options 256GB, 512GB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "everyday users who want the latest standard iPhone.",
     specs: [
       { label: "Display", value: "6.3-inch Super Retina XDR OLED with ProMotion" },
@@ -867,7 +867,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     colours: ["Lavender", "Mist Blue", "Sage", "White", "Black"],
     faq: [
       { question: "Should I buy the iPhone 17 or wait for a Pro?", answer: "Ask us on WhatsApp for current stock and a quote on the iPhone 17." },
-      { question: "What is the iPhone 17 price in Kenya?", answer: "Sealed new iPhone 17 starts from KES 120,000 at Gadget Hub. Options: 256GB, 512GB." }
+      { question: "What is the iPhone 17 price in Kenya?", answer: "Sealed new iPhone 17 is KES 120,000 at Gadget Hub. Options: 256GB, 512GB." }
     ],
     compareWith: ["iphone-17-vs-iphone-17-pro"],
     related: ["iphone-17-pro", "iphone-17e", "iphone-air"],
@@ -883,7 +883,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     seoTitle: "iPhone Air Price in Kenya | Gadget Hub",
     h1: "iPhone Air",
     metaDescription: "Buy the iPhone Air in Nairobi from KES 125,000. 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone Air at Gadget Hub in Nairobi. From KES 125,000 sealed new, with storage options 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    intro: "Shop the iPhone Air at Gadget Hub in Nairobi. KES 125,000 sealed new, with storage options 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "buyers who want the thinnest, lightest current iPhone.",
     specs: [
       { label: "Display", value: "6.5-inch Super Retina XDR OLED with ProMotion" },
@@ -899,7 +899,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     colours: ["Sky", "Light Gold", "Cloud White", "Space Black"],
     faq: [
       { question: "How thin is the iPhone Air?", answer: "Ask us on WhatsApp for current stock and a quote on the iPhone Air." },
-      { question: "What is the iPhone Air price in Kenya?", answer: "Sealed new iPhone Air starts from KES 125,000 at Gadget Hub. Options: 256GB, 512GB, 1TB." }
+      { question: "What is the iPhone Air price in Kenya?", answer: "Sealed new iPhone Air is KES 125,000 at Gadget Hub. Options: 256GB, 512GB, 1TB." }
     ],
     compareWith: ["iphone-air-vs-iphone-17", "iphone-air-vs-iphone-17-pro"],
     related: ["iphone-17", "iphone-17-pro"],
@@ -915,7 +915,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     seoTitle: "iPhone 17 Pro Price in Kenya | Gadget Hub",
     h1: "iPhone 17 Pro",
     metaDescription: "Buy the iPhone 17 Pro in Nairobi from KES 158,000. 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone 17 Pro at Gadget Hub in Nairobi. From KES 158,000 sealed new, with storage options 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    intro: "Shop the iPhone 17 Pro at Gadget Hub in Nairobi. KES 158,000 sealed new, with storage options 256GB, 512GB, 1TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "photo and video users who want Pro cameras without the largest size.",
     specs: [
       { label: "Display", value: "6.3-inch Super Retina XDR OLED with ProMotion" },
@@ -931,7 +931,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     colours: ["Cosmic Orange", "Deep Blue", "Silver"],
     faq: [
       { question: "What makes the iPhone 17 Pro different from the iPhone 17?", answer: "Ask us on WhatsApp for current stock and a quote on the iPhone 17 Pro." },
-      { question: "What is the iPhone 17 Pro price in Kenya?", answer: "Sealed new iPhone 17 Pro starts from KES 158,000 at Gadget Hub. Options: 256GB, 512GB, 1TB." }
+      { question: "What is the iPhone 17 Pro price in Kenya?", answer: "Sealed new iPhone 17 Pro is KES 158,000 at Gadget Hub. Options: 256GB, 512GB, 1TB." }
     ],
     compareWith: ["iphone-17-vs-iphone-17-pro", "iphone-17-pro-vs-iphone-17-pro-max"],
     related: ["iphone-17-pro-max", "iphone-17", "iphone-18-pro"],
@@ -947,7 +947,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     seoTitle: "iPhone 17 Pro Max Price in Kenya | Gadget Hub",
     h1: "iPhone 17 Pro Max",
     metaDescription: "Buy the iPhone 17 Pro Max in Nairobi from KES 167,000. 256GB, 512GB, 1TB, 2TB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone 17 Pro Max at Gadget Hub in Nairobi. From KES 167,000 sealed new, with storage options 256GB, 512GB, 1TB, 2TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    intro: "Shop the iPhone 17 Pro Max at Gadget Hub in Nairobi. KES 167,000 sealed new, with storage options 256GB, 512GB, 1TB, 2TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "big-screen users who want the most battery and Pro cameras.",
     specs: [
       { label: "Display", value: "6.9-inch Super Retina XDR OLED with ProMotion" },
@@ -963,7 +963,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     colours: ["Cosmic Orange", "Deep Blue", "Silver"],
     faq: [
       { question: "iPhone 17 Pro or 17 Pro Max?", answer: "Ask us on WhatsApp for current stock and a quote on the iPhone 17 Pro Max." },
-      { question: "What is the iPhone 17 Pro Max price in Kenya?", answer: "Sealed new iPhone 17 Pro Max starts from KES 167,000 at Gadget Hub. Options: 256GB, 512GB, 1TB, 2TB." }
+      { question: "What is the iPhone 17 Pro Max price in Kenya?", answer: "Sealed new iPhone 17 Pro Max is KES 167,000 at Gadget Hub. Options: 256GB, 512GB, 1TB, 2TB." }
     ],
     compareWith: ["iphone-17-pro-vs-iphone-17-pro-max", "iphone-17-pro-max-vs-iphone-18-pro-max"],
     related: ["iphone-17-pro", "iphone-18-pro-max"],
@@ -979,7 +979,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     seoTitle: "iPhone 18 Pro Price in Kenya | Gadget Hub",
     h1: "iPhone 18 Pro",
     metaDescription: "Buy the iPhone 18 Pro in Nairobi from KES 185,000. 128GB, 256GB, 512GB, 1TB, 2TB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone 18 Pro at Gadget Hub in Nairobi. From KES 185,000 sealed new, with storage options 128GB, 256GB, 512GB, 1TB, 2TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    intro: "Shop the iPhone 18 Pro at Gadget Hub in Nairobi. KES 185,000 sealed new, with storage options 128GB, 256GB, 512GB, 1TB, 2TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "buyers who want the newest Pro iPhone in a compact size.",
     specs: [
       { label: "Display", value: "6.3-inch Super Retina XDR OLED with ProMotion" },
@@ -995,7 +995,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     colours: ["Burgundy", "Glacier", "Silver", "Black"],
     faq: [
       { question: "Is the iPhone 18 Pro available in Nairobi?", answer: "Ask us on WhatsApp for current stock and a quote on the iPhone 18 Pro." },
-      { question: "What is the iPhone 18 Pro price in Kenya?", answer: "Sealed new iPhone 18 Pro starts from KES 185,000 (128GB) at Gadget Hub. Options: 128GB, 256GB, 512GB, 1TB, 2TB." }
+      { question: "What is the iPhone 18 Pro price in Kenya?", answer: "Sealed new iPhone 18 Pro is KES 185,000 (128GB) at Gadget Hub. Options: 128GB, 256GB, 512GB, 1TB, 2TB." }
     ],
     compareWith: ["iphone-18-pro-vs-iphone-18-pro-max", "iphone-17-pro-vs-iphone-18-pro"],
     related: ["iphone-18-pro-max", "iphone-17-pro"],
@@ -1011,7 +1011,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     seoTitle: "iPhone 18 Pro Max Price in Kenya | Gadget Hub",
     h1: "iPhone 18 Pro Max",
     metaDescription: "Buy the iPhone 18 Pro Max in Nairobi from KES 218,000. 256GB, 512GB, 1TB, 2TB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "Shop the iPhone 18 Pro Max at Gadget Hub in Nairobi. From KES 218,000 sealed new, with storage options 256GB, 512GB, 1TB, 2TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
+    intro: "Shop the iPhone 18 Pro Max at Gadget Hub in Nairobi. KES 218,000 sealed new, with storage options 256GB, 512GB, 1TB, 2TB. Pay in full or with Lipa Mdogo Mdogo, and trade in your old phone toward this model. Covered by the manufacturer's standard warranty.",
     bestFor: "power users who want the largest newest Pro iPhone.",
     specs: [
       { label: "Display", value: "6.9-inch Super Retina XDR OLED with ProMotion" },
@@ -1027,7 +1027,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     colours: ["Burgundy", "Glacier", "Silver", "Black"],
     faq: [
       { question: "iPhone 18 Pro or 18 Pro Max?", answer: "Ask us on WhatsApp for current stock and a quote on the iPhone 18 Pro Max." },
-      { question: "What is the iPhone 18 Pro Max price in Kenya?", answer: "Sealed new iPhone 18 Pro Max starts from KES 218,000 at Gadget Hub. Options: 256GB, 512GB, 1TB, 2TB." }
+      { question: "What is the iPhone 18 Pro Max price in Kenya?", answer: "Sealed new iPhone 18 Pro Max is KES 218,000 at Gadget Hub. Options: 256GB, 512GB, 1TB, 2TB." }
     ],
     compareWith: ["iphone-18-pro-vs-iphone-18-pro-max"],
     related: ["iphone-18-pro", "iphone-duo"],
@@ -1050,7 +1050,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     ],
     colours: [],
     faq: [
-      { question: "What is the iPhone Duo price in Kenya?", answer: "Sealed new iPhone Duo starts from KES 350,000 at Gadget Hub. Options: 256GB, 512GB, 1TB, 2TB." },
+      { question: "What is the iPhone Duo price in Kenya?", answer: "Sealed new iPhone Duo is KES 350,000 at Gadget Hub. Options: 256GB, 512GB, 1TB, 2TB." },
       { question: "Do you have full tech specs for the iPhone Duo?", answer: "Apple has not published a dedicated tech-spec page we can cite yet. Ask us on WhatsApp for what we can confirm from the unit and the sheet." }
     ],
     compareWith: [],

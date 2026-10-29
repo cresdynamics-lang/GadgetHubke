@@ -91,7 +91,7 @@ export function buildProductSeo(input: ProductSeoInput): ProductSeo {
   // Full title, never shortened: long titles carry more of what Kenyans search.
   const title = longTitle;
   const description = clip(
-    `Buy the ${name} in Nairobi from ${formatKes(fromKes)}.${options} Genuine sealed Apple, ${site.warranty.years}-year warranty. Pay by M-Pesa or Lipa Mdogo Mdogo.`,
+    `Buy the ${name} in Nairobi. ${formatKes(fromKes)}.${options} Genuine sealed Apple, ${site.warranty.years}-year warranty. Pay by M-Pesa or Lipa Mdogo Mdogo.`,
     158,
   );
 
@@ -104,7 +104,7 @@ export function buildProductSeo(input: ProductSeoInput): ProductSeo {
   const hasExUk = exUkRows.length > 0;
   const exUkFrom = hasExUk ? Math.min(...exUkRows.map((r) => r.exUkKes!)) : 0;
   const condition = hasExUk
-    ? `Buy it sealed new with a ${site.warranty.years}-year warranty, or Ex-UK (UK-used) from ${formatKes(exUkFrom)} to save — both with a Gadget Hub invoice`
+    ? `Buy it sealed new with a ${site.warranty.years}-year warranty, or Ex-UK (UK-used) ${formatKes(exUkFrom)} to save — both with a Gadget Hub invoice`
     : `Every unit is new and sealed, sold with a ${site.warranty.years}-year warranty and a Gadget Hub invoice`;
   const intro = `${range} ${input.summary} ${condition}, from our shop at ${site.address}, Nairobi CBD.${aka}`;
 
@@ -113,7 +113,7 @@ export function buildProductSeo(input: ProductSeoInput): ProductSeo {
       question: `What is the ${name} price in Kenya?`,
       answer:
         rows.length > 1
-          ? `At Gadget Hub the ${name} costs from ${formatKes(fromKes)} (${rows[0].label}) to ${formatKes(topKes)} (${rows[rows.length - 1].label}). Prices on this page are live and include VAT where it applies.`
+          ? `At Gadget Hub the ${name} is ${formatKes(fromKes)} (${rows[0].label}) to ${formatKes(topKes)} (${rows[rows.length - 1].label}). Prices on this page are live and include VAT where it applies.`
           : `At Gadget Hub the ${name} costs ${formatKes(fromKes)}. The price on this page is live and includes VAT where it applies.`,
     },
     {
@@ -126,7 +126,7 @@ export function buildProductSeo(input: ProductSeoInput): ProductSeo {
       ? [
           {
             question: `What is the Ex-UK ${name} price in Kenya?`,
-            answer: `Ex-UK (UK-used) ${name} units at Gadget Hub start from ${formatKes(exUkFrom)}. Switch the price toggle to Ex-UK on this page to see every option.`,
+            answer: `Ex-UK (UK-used) ${name} units at Gadget Hub are ${formatKes(exUkFrom)}. Switch the price toggle to Ex-UK on this page to see every option.`,
           },
         ]
       : []),
@@ -262,7 +262,7 @@ export function buildCategorySeo(input: {
               "@type": "ListItem",
               position: i + 1,
               url: new URL(input.hrefFor ? input.hrefFor(p) : p.href, site.url).href,
-              name: `${p.name} - from ${formatKes(p.priceKes)}`,
+              name: `${p.name} — ${formatKes(p.priceKes)}`,
             })),
           },
         },

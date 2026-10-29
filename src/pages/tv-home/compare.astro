@@ -47,8 +47,8 @@ const rows: { label: string; values: (string | number | boolean | null)[] }[] = 
   { label: "Intercom", values: chosen.map((m) => m!.intercom) },
   { label: "Storage / SKU", values: chosen.map((m) => m!.storageOptions.join(", ") || "-") },
   { label: "Speaker", values: chosen.map((m) => isSpeaker(m!)) },
-  { label: "From New (KES)", values: chosen.map((m) => m!.basePriceKes) },
-  { label: "From Ex-UK (KES)", values: chosen.map((m) => m!.exUkKes ?? "—") },
+  { label: "New (KES)", values: chosen.map((m) => m!.basePriceKes) },
+  { label: "Ex-UK (KES)", values: chosen.map((m) => m!.exUkKes ?? "—") },
 ];
 
 function cell(v: string | number | boolean | null): string {
@@ -88,7 +88,7 @@ function cell(v: string | number | boolean | null): string {
                       )
                     }
                     <a href={`/tv-home/${m!.id}`}>{m!.name}</a>
-                    <em>From {formatKes(m!.basePriceKes)}</em>
+                    <em>{formatKes(m!.basePriceKes)}</em>
                   </th>
                 );
               })

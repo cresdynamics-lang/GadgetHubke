@@ -59,17 +59,17 @@ const fromCables = Math.min(...cableList.map((a) => a.basePriceKes));
     <a class="xpower-tile" href="#adapters">
       <img src={getAccessoryImage("power-adapter-70w", "hero").src} alt="Power adapters" width="400" height="300" loading="lazy" />
       <h2>Power adapters</h2>
-      <p>From {formatKes(fromAdapters)}</p>
+      <p>{formatKes(fromAdapters)}</p>
     </a>
     <a class="xpower-tile" href="#magsafe">
       <img src={getAccessoryImage("magsafe-charger-1m", "hero").src} alt="MagSafe" width="400" height="300" loading="lazy" />
       <h2>MagSafe and wireless</h2>
-      <p>From {formatKes(fromMagsafe)}</p>
+      <p>{formatKes(fromMagsafe)}</p>
     </a>
     <a class="xpower-tile" href="#cables">
       <img src={getAccessoryImage("cable-usbc-60w-1m", "hero").src} alt="Cables" width="400" height="300" loading="lazy" />
       <h2>Cables</h2>
-      <p>From {formatKes(fromCables)}</p>
+      <p>{formatKes(fromCables)}</p>
     </a>
   </section>
 

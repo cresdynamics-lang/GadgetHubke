@@ -417,7 +417,7 @@ const scaleVbH = scaleMidY + Math.max(scaleWatchR, scaleCoinR) + 18;
               <a href={`/watch/compare?ids=${encodeURIComponent(`${model.id},${r.id}`)}`}>
                 <WatchStage src={rimg.src} srcWebp={rimg.srcWebp} alt={rimg.alt} width={280} height={210} />
                 <span>{r.name}</span>
-                <em>From {formatKes(r.basePriceKes)}</em>
+                <em>{formatKes(r.basePriceKes)}</em>
               </a>
             );
           })}

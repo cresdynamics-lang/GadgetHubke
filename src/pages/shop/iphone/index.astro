@@ -295,7 +295,7 @@ const payload = items.map((item) => ({
           <table>
             <thead><tr><th></th>${cols.map((c) => `<th>${c.name}</th>`).join("")}</tr></thead>
             <tbody>
-              <tr><th>From</th>${cols.map((c) => `<td>KSh ${c.priceKes.toLocaleString("en-KE")}</td>`).join("")}</tr>
+              <tr><th>Price</th>${cols.map((c) => `<td>KSh ${c.priceKes.toLocaleString("en-KE")}</td>`).join("")}</tr>
               <tr><th>Storage</th>${cols.map((c) => `<td>${c.storages.join(", ")}</td>`).join("")}</tr>
               <tr><th>Stock</th>${cols.map((c) => `<td>${c.stock === "preorder" ? "Pre-order" : "In stock"}</td>`).join("")}</tr>
               <tr><th></th>${cols.map((c) => `<td><a href="${c.href}">View</a></td>`).join("")}</tr>

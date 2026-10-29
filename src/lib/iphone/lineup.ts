@@ -117,7 +117,7 @@ export function iphoneGenStripCards(): GenStripCard[] {
 }
 
 export function formatFromKes(kes: number): string {
-  return `from ${formatKes(kes)}`;
+  return formatKes(kes);
 }
 
 export type MegaNewLink = {

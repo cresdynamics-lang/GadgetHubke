@@ -113,7 +113,7 @@ const fitMatrix = Object.fromEntries(
                   <a href={`/accessories/${p.id}`}>
                     <img src={lead.src} alt={lead.alt} width="400" height="300" loading="lazy" />
                     <h3>{p.name}</h3>
-                    <p>From {formatKes(p.basePriceKes)}</p>
+                    <p>{formatKes(p.basePriceKes)}</p>
                   </a>
                   <div class="xcases-card__swatches" aria-label={`${p.name} colours`}>
                     {variants.slice(0, 8).map((v) => {

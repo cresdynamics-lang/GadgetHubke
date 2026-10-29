@@ -29,7 +29,7 @@ const exUkFrom = (m: typeof left) => {
   const ex = m.variants.map((v) => v.exUkKes).filter((n) => n > 0);
   return ex.length ? Math.min(...ex) : 0;
 };
-const description = `Compare ${left.name} and ${right.name} prices and specs in Kenya. From ${formatKesSeo(left.fromKes)} vs ${formatKesSeo(right.fromKes)} at Gadget Hub, Norwich Union House.`;
+const description = `Compare ${left.name} and ${right.name} prices and specs in Kenya. ${formatKesSeo(left.fromKes)} vs ${formatKesSeo(right.fromKes)} at Gadget Hub, Norwich Union House.`;
 
 const labels = [...new Set([...left.specs.map((s) => s.label), ...right.specs.map((s) => s.label)])];
 function specVal(model: typeof left, label: string) {
@@ -64,12 +64,12 @@ const which =
       </thead>
       <tbody>
         <tr>
-          <th scope="row">From price (New)</th>
+          <th scope="row">New</th>
           <td>{formatKesSeo(left.fromKes)}</td>
           <td>{formatKesSeo(right.fromKes)}</td>
         </tr>
         <tr>
-          <th scope="row">From price (Ex-UK)</th>
+          <th scope="row">Ex-UK</th>
           <td>{exUkFrom(left) ? formatKesSeo(exUkFrom(left)) : "—"}</td>
           <td>{exUkFrom(right) ? formatKesSeo(exUkFrom(right)) : "—"}</td>
         </tr>

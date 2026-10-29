@@ -111,7 +111,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
                 <IpadStage src={img.src} srcWebp={img.srcWebp} alt={img.alt} width={760} height={760} />
                 <h3>{c.title}</h3>
                 <p>{c.body}</p>
-                <em>From {formatKes(c.price)}</em>
+                <em>{formatKes(c.price)}</em>
               </a>
             </li>
           );
@@ -239,7 +239,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
           <li>
             <a href={a.href}>
               <strong>{a.name}</strong>
-              <span>{accessoryKes(a.href, a.priceKes) > 0 ? `From ${formatKes(accessoryKes(a.href, a.priceKes))}` : "See category"}</span>
+              <span>{accessoryKes(a.href, a.priceKes) > 0 ? formatKes(accessoryKes(a.href, a.priceKes)) : "See category"}</span>
             </a>
           </li>
         ))

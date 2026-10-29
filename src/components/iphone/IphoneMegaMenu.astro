@@ -3,7 +3,7 @@
  * Compact iPhone nav flyout - iPhone 18 lineup + shop all.
  */
 import { formatKes } from "../../lib/iphone";
-import { latestByFamily, formatFromKes } from "../../lib/iphone/lineup";
+import { latestByFamily } from "../../lib/iphone/lineup";
 import { homeOpt } from "../../lib/home-images";
 import { livePricedCatalog } from "../../lib/pricing/live";
 import { liveMerchItems } from "../../lib/home-live";
@@ -53,7 +53,7 @@ const defaultPreview =
                   {m.name}
                   <span class="imega__tag">{m.badge}</span>
                 </span>
-                <span class="imega__from" data-live-price={m.id} data-live-prefix="from ">{formatFromKes(m.priceKes)}</span>
+                <span class="imega__from" data-live-price={m.id}>{formatKes(m.priceKes)}</span>
               </a>
             </li>
           ))
@@ -87,7 +87,7 @@ const defaultPreview =
       </div>
       <p class="imega__pname" data-mega-name>{defaultPreview.name}</p>
       <p class="imega__pprice" data-mega-price>
-        {defaultPreview.priceLabel ? `From ${defaultPreview.priceLabel}` : ""}
+        {defaultPreview.priceLabel || ""}
       </p>
       <a class="btn btn--primary btn--sm" data-mega-cta href={defaultPreview.href}>
         View
@@ -111,7 +111,7 @@ const defaultPreview =
         img.alt = p.alt;
       }
       if (name) name.textContent = p.name;
-      if (price) price.textContent = p.priceLabel ? `From ${p.priceLabel}` : "";
+      if (price) price.textContent = p.priceLabel || "";
       if (cta instanceof HTMLAnchorElement) cta.href = p.href;
     }
 

@@ -103,7 +103,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
         />
         <h3>MacBook Air</h3>
         <p>Thin, silent, all-day battery. From students to everyday work.</p>
-        <span class="mac-choose__price">From {formatKes(air.length ? Math.min(...air.map((m) => m.basePriceKes)) : 0)}</span>
+        <span class="mac-choose__price">{formatKes(air.length ? Math.min(...air.map((m) => m.basePriceKes)) : 0)}</span>
       </a>
       <a class="mac-choose__card" href="/mac/shop?family=Pro">
         <MacStage
@@ -117,7 +117,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
         />
         <h3>MacBook Pro</h3>
         <p>XDR screens, active cooling, ports for real work.</p>
-        <span class="mac-choose__price">From {formatKes(pro.length ? Math.min(...pro.map((m) => m.basePriceKes)) : 0)}</span>
+        <span class="mac-choose__price">{formatKes(pro.length ? Math.min(...pro.map((m) => m.basePriceKes)) : 0)}</span>
       </a>
     </div>
   </section>

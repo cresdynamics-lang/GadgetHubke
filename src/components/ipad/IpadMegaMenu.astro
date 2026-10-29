@@ -65,7 +65,7 @@ const previews = Object.fromEntries(picks.map((p) => [p.id, p]));
                   {m.name}
                   {m.isNew ? <span class="imega__tag">New</span> : null}
                 </span>
-                <span class="imega__from" data-live-price={m.id} data-live-prefix="from ">from {formatKes(m.priceKes)}</span>
+                <span class="imega__from" data-live-price={m.id}>{formatKes(m.priceKes)}</span>
               </a>
             </li>
           ))
@@ -98,7 +98,7 @@ const previews = Object.fromEntries(picks.map((p) => [p.id, p]));
         />
       </div>
       <p class="imega__pname" data-mega-name>{defaultPreview.name}</p>
-      <p class="imega__pprice" data-mega-price>From {formatKes(defaultPreview.priceKes)}</p>
+      <p class="imega__pprice" data-mega-price>{formatKes(defaultPreview.priceKes)}</p>
       <a class="btn btn--primary btn--sm" data-mega-view href={defaultPreview.href}>View</a>
     </div>
   </div>
@@ -119,7 +119,7 @@ const previews = Object.fromEntries(picks.map((p) => [p.id, p]));
         img.alt = p.alt;
       }
       if (name) name.textContent = p.name;
-      if (price) price.textContent = `From ${p.priceLabel}`;
+      if (price) price.textContent = p.priceLabel;
       if (view instanceof HTMLAnchorElement) view.href = p.href;
     }
 

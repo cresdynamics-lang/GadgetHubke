@@ -68,8 +68,8 @@ const rows = [
   { group: "Size and weight", label: "Size", values: cards.map((c) => c.size) },
   { group: "Size and weight", label: "Weight", values: cards.map((c) => c.weight) },
   { group: "Software", label: "Apple Intelligence", values: cards.map((c) => c.ai) },
-  { group: "Price", label: "From (New)", values: cards.map((c) => c.priceLabel) },
-  { group: "Price", label: "From (Ex-UK)", values: cards.map((c) => c.exUkLabel) },
+  { group: "Price", label: "New", values: cards.map((c) => c.priceLabel) },
+  { group: "Price", label: "Ex-UK", values: cards.map((c) => c.exUkLabel) },
 ];
 
 const chips = new Set(cards.map((c) => c.chip));
@@ -133,7 +133,7 @@ const pickList = ipadModels.filter((m) => m.year >= 2022 || m.isNew);
                     <img src={c.imageSrc} alt={c.imageAlt} width="160" height="160" loading="lazy" />
                     <span>{c.name}</span>
                   </a>
-                  <small>From {c.priceLabel}</small>
+                  <small>{c.priceLabel}</small>
                 </th>
               ))
             }

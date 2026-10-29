@@ -61,7 +61,7 @@ const previews = Object.fromEntries(picks.map((p) => [p.id, p]));
                   {m.name.replace("Apple Watch ", "")}
                   {m.isNew ? <span class="wmega__tag">New</span> : null}
                 </span>
-                <em data-live-price={m.id} data-live-prefix="from ">from {formatKes(m.priceKes)}</em>
+                <em data-live-price={m.id}>{formatKes(m.priceKes)}</em>
               </a>
             </li>
           ))
@@ -95,7 +95,7 @@ const previews = Object.fromEntries(picks.map((p) => [p.id, p]));
       </div>
       <p data-mega-name class="wmega__pname">{defaultPreview.name}</p>
       <p data-mega-price class="wmega__pprice">
-        <strong>From {formatKes(defaultPreview.priceKes)}</strong>
+        <strong>{formatKes(defaultPreview.priceKes)}</strong>
       </p>
       <a class="btn btn--primary btn--sm" data-mega-view href={defaultPreview.href}>View</a>
     </div>
@@ -117,7 +117,7 @@ const previews = Object.fromEntries(picks.map((p) => [p.id, p]));
         img.alt = p.alt;
       }
       if (name) name.textContent = p.name;
-      if (price) price.innerHTML = `<strong>From ${p.priceLabel}</strong>`;
+      if (price) price.innerHTML = `<strong>${p.priceLabel}</strong>`;
       if (view instanceof HTMLAnchorElement) view.href = p.href;
     }
 

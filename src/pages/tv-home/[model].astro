@@ -313,7 +313,7 @@ const showPair = model.stereoPairCapable;
         <h2>Related</h2>
         <ul class="thpdp__related">
           {related.map((m) => (
-            <li><a href={`/tv-home/${m.id}`}>{m.name} · from {formatKes(m.basePriceKes)}</a></li>
+            <li><a href={`/tv-home/${m.id}`}>{m.name} · {formatKes(m.basePriceKes)}</a></li>
           ))}
         </ul>
       </section>

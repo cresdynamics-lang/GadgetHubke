@@ -103,8 +103,8 @@ export function macCompareRows(cards: MacCompareCard[]): MacCompareRow[] {
     { group: "Size and weight", label: "Size", values: col("screen") },
     { group: "Size and weight", label: "Weight", values: col("weight") },
     { group: "Size and weight", label: "Thickness", values: col("thickness") },
-    { group: "Price", label: "From (New)", values: col("priceLabel") },
-    { group: "Price", label: "From (Ex-UK)", values: cards.map((c) => c.exUkLabel ?? "—") },
+    { group: "Price", label: "New", values: col("priceLabel") },
+    { group: "Price", label: "Ex-UK", values: cards.map((c) => c.exUkLabel ?? "—") },
   ];
 }
 

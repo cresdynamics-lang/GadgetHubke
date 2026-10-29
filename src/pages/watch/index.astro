@@ -102,7 +102,7 @@ const liveAccessoryKes = (href: string, fallback: number) =>
                 />
                 <h3>{c.title}</h3>
                 <p>{c.body}</p>
-                <em>From {formatKes(c.price)}</em>
+                <em>{formatKes(c.price)}</em>
               </a>
             </li>
           );
@@ -172,7 +172,7 @@ const liveAccessoryKes = (href: string, fallback: number) =>
         <li>
           <a href={a.href}>
             <strong>{a.name}</strong>
-            <span>{liveAccessoryKes(a.href, a.priceKes) > 0 ? `From ${formatKes(liveAccessoryKes(a.href, a.priceKes))}` : "See category"}</span>
+            <span>{liveAccessoryKes(a.href, a.priceKes) > 0 ? formatKes(liveAccessoryKes(a.href, a.priceKes)) : "See category"}</span>
           </a>
         </li>
       ))}

@@ -452,7 +452,7 @@ const wa = whatsappUrl(
                 <a href={`/ipad/compare?ids=${encodeURIComponent(`${model.id},${r.id}`)}`}>
                   <IpadStage src={rimg.src} srcWebp={rimg.srcWebp} alt={rimg.alt} width={560} height={560} />
                   <span>{r.name}</span>
-                  <em>From {formatKes(r.basePriceKes)}</em>
+                  <em>{formatKes(r.basePriceKes)}</em>
                   <b>Compare with {r.name.replace("iPad ", "")}</b>
                 </a>
               );

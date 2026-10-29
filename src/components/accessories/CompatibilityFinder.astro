@@ -247,7 +247,7 @@ const fitPayload = {
               <p class="xfinder__status"><span class="xfinder__badge">${roleLabel}</span></p>
               <h3><a href="${href}">${name}</a></h3>
               <p class="xfinder__reason">${row.reason}</p>
-              ${price != null ? `<p class="xfinder__price">From KES ${Number(price).toLocaleString("en-KE")}</p>` : ""}
+              ${price != null ? `<p class="xfinder__price">KES ${Number(price).toLocaleString("en-KE")}</p>` : ""}
               <div class="xfinder__actions">
                 <a class="btn btn--secondary btn--xs" href="${href}">View</a>
               </div>
@@ -289,7 +289,7 @@ const fitPayload = {
               <h3><a href="${item.href}">${item.name}</a></h3>
               ${conn ? `<p class="xfinder__conn">${conn}</p>` : ""}
               <p class="xfinder__reason">${fit.reason}</p>
-              <p class="xfinder__price">From KES ${item.price.toLocaleString("en-KE")}</p>
+              <p class="xfinder__price">KES ${item.price.toLocaleString("en-KE")}</p>
               <div class="xfinder__actions">
                 <a class="btn btn--secondary btn--xs" href="${item.href}">View</a>
                 ${
