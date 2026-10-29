@@ -21,6 +21,8 @@ import { watchModelsByFamily, formatKes as formatWatchKes } from "../lib/watch";
 import { airpodsModelsByFamily, formatKes as formatAirpodsKes } from "../lib/airpods";
 import { tvHomeModelsByFamily, formatKes as formatTvHomeKes } from "../lib/tv-home";
 import { site, whatsappUrl } from "../lib/site";
+import { livePricedCatalog } from "../lib/pricing/live";
+import { isListed, liveMerchItems } from "../lib/home-live";
 
 const pathname = Astro.url.pathname;
 
@@ -29,23 +31,32 @@ function isActive(href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+const catalog = await livePricedCatalog();
+const listed = new Set(catalog.filter(isListed).map((p) => p.id));
+const priceById = new Map(catalog.map((p) => [p.id, p.priceKes]));
+const onlyListed = <T extends { id: string }>(items: T[]) => items.filter((item) => listed.has(item.id));
+const liveKes = (id: string, fallback: number) => priceById.get(id) ?? fallback;
+
 const iphoneGens = [16, 15, 14, 13, 12, 11] as const;
-const iphoneNewest = megaNewIphones();
-const macAir = macModelsByFamily("Air");
-const macPro = macModelsByFamily("Pro");
-const ipadPro = ipadModelsByFamily("Pro");
-const ipadAir = ipadModelsByFamily("Air");
-const ipadMini = ipadModelsByFamily("mini");
-const ipadStd = ipadModelsByFamily("iPad");
-const watchSeries = watchModelsByFamily("Series").filter((m) => m.isNew || m.year >= 2025).slice(0, 4);
-const watchUltra = watchModelsByFamily("Ultra").slice(0, 4);
-const watchSe = watchModelsByFamily("SE").slice(0, 4);
-const airpodsPro = airpodsModelsByFamily("Pro").slice(0, 4);
-const airpodsStd = airpodsModelsByFamily("AirPods").slice(0, 4);
-const airpodsMax = airpodsModelsByFamily("Max").slice(0, 4);
-const tvAtv = tvHomeModelsByFamily("Apple TV").slice(0, 4);
-const tvHp = tvHomeModelsByFamily("HomePod").slice(0, 3);
-const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
+const iphoneNewest = liveMerchItems(
+  megaNewIphones().map((m) => ({ ...m, priceKes: m.preview.priceKes })),
+  catalog,
+).map((m) => ({ ...m, price: formatKes(m.priceKes) }));
+const macAir = onlyListed(macModelsByFamily("Air"));
+const macPro = onlyListed(macModelsByFamily("Pro"));
+const ipadPro = onlyListed(ipadModelsByFamily("Pro"));
+const ipadAir = onlyListed(ipadModelsByFamily("Air"));
+const ipadMini = onlyListed(ipadModelsByFamily("mini"));
+const ipadStd = onlyListed(ipadModelsByFamily("iPad"));
+const watchSeries = onlyListed(watchModelsByFamily("Series").filter((m) => m.isNew || m.year >= 2025)).slice(0, 4);
+const watchUltra = onlyListed(watchModelsByFamily("Ultra")).slice(0, 4);
+const watchSe = onlyListed(watchModelsByFamily("SE")).slice(0, 4);
+const airpodsPro = onlyListed(airpodsModelsByFamily("Pro")).slice(0, 4);
+const airpodsStd = onlyListed(airpodsModelsByFamily("AirPods")).slice(0, 4);
+const airpodsMax = onlyListed(airpodsModelsByFamily("Max")).slice(0, 4);
+const tvAtv = onlyListed(tvHomeModelsByFamily("Apple TV")).slice(0, 4);
+const tvHp = onlyListed(tvHomeModelsByFamily("HomePod")).slice(0, 3);
+const tvMini = onlyListed(tvHomeModelsByFamily("HomePod mini")).slice(0, 2);
 ---
 
 <header class="site-header" data-site-header>
@@ -236,10 +247,10 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
                   <summary class="mobile-nav__summary mobile-nav__summary--nested">New</summary>
                   <ul>
                     {iphoneNewest.map((m) => (
-                      <li>
+                      <li data-id={m.id}>
                         <a href={m.href}>
                           {m.name}
-                          <span>from {m.price}</span>
+                          <span data-live-price={m.id} data-live-prefix="from ">from {m.price}</span>
                         </a>
                       </li>
                     ))}
@@ -252,11 +263,11 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
                     <details class="mobile-nav__details mobile-nav__details--nested">
                       <summary class="mobile-nav__summary mobile-nav__summary--nested">iPhone {g}</summary>
                       <ul>
-                        {modelsByFamily(g).map((m) => (
-                          <li>
+                        {onlyListed(modelsByFamily(g)).map((m) => (
+                          <li data-id={m.id}>
                             <a href={`/iphone/${m.id}`}>
                               {m.name}
-                              <span>from {formatKes(m.basePriceKes)}</span>
+                              <span data-live-price={m.id} data-live-prefix="from ">from {formatKes(liveKes(m.id, m.basePriceKes))}</span>
                             </a>
                           </li>
                         ))}
@@ -278,10 +289,10 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
                 <p>MacBook Air</p>
                 <ul>
                   {macAir.map((m) => (
-                    <li>
+                    <li data-id={m.id}>
                       <a href={`/mac/${m.id}`}>
                         {m.name}
-                        <span>from {formatMacKes(m.basePriceKes)}</span>
+                        <span data-live-price={m.id} data-live-prefix="from ">from {formatMacKes(liveKes(m.id, m.basePriceKes))}</span>
                       </a>
                     </li>
                   ))}
@@ -291,10 +302,10 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
                 <p>MacBook Pro</p>
                 <ul>
                   {macPro.map((m) => (
-                    <li>
+                    <li data-id={m.id}>
                       <a href={`/mac/${m.id}`}>
                         {m.name}
-                        <span>from {formatMacKes(m.basePriceKes)}</span>
+                        <span data-live-price={m.id} data-live-prefix="from ">from {formatMacKes(liveKes(m.id, m.basePriceKes))}</span>
                       </a>
                     </li>
                   ))}
@@ -317,10 +328,10 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
                 <p>iPad Pro</p>
                 <ul>
                   {ipadPro.slice(0, 6).map((m) => (
-                    <li>
+                    <li data-id={m.id}>
                       <a href={`/ipad/${m.id}`}>
                         {m.name}
-                        <span>from {formatIpadKes(m.basePriceKes)}</span>
+                        <span data-live-price={m.id} data-live-prefix="from ">from {formatIpadKes(liveKes(m.id, m.basePriceKes))}</span>
                       </a>
                     </li>
                   ))}
@@ -330,10 +341,10 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
                 <p>iPad Air</p>
                 <ul>
                   {ipadAir.slice(0, 6).map((m) => (
-                    <li>
+                    <li data-id={m.id}>
                       <a href={`/ipad/${m.id}`}>
                         {m.name}
-                        <span>from {formatIpadKes(m.basePriceKes)}</span>
+                        <span data-live-price={m.id} data-live-prefix="from ">from {formatIpadKes(liveKes(m.id, m.basePriceKes))}</span>
                       </a>
                     </li>
                   ))}
@@ -343,10 +354,10 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
                 <p>iPad mini</p>
                 <ul>
                   {ipadMini.map((m) => (
-                    <li>
+                    <li data-id={m.id}>
                       <a href={`/ipad/${m.id}`}>
                         {m.name}
-                        <span>from {formatIpadKes(m.basePriceKes)}</span>
+                        <span data-live-price={m.id} data-live-prefix="from ">from {formatIpadKes(liveKes(m.id, m.basePriceKes))}</span>
                       </a>
                     </li>
                   ))}
@@ -356,10 +367,10 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
                 <p>iPad</p>
                 <ul>
                   {ipadStd.map((m) => (
-                    <li>
+                    <li data-id={m.id}>
                       <a href={`/ipad/${m.id}`}>
                         {m.name}
-                        <span>from {formatIpadKes(m.basePriceKes)}</span>
+                        <span data-live-price={m.id} data-live-prefix="from ">from {formatIpadKes(liveKes(m.id, m.basePriceKes))}</span>
                       </a>
                     </li>
                   ))}
@@ -382,10 +393,10 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
                 <p>Series</p>
                 <ul>
                   {watchSeries.map((m) => (
-                    <li>
+                    <li data-id={m.id}>
                       <a href={`/watch/${m.id}`}>
                         {m.name}
-                        <span>from {formatWatchKes(m.basePriceKes)}</span>
+                        <span data-live-price={m.id} data-live-prefix="from ">from {formatWatchKes(liveKes(m.id, m.basePriceKes))}</span>
                       </a>
                     </li>
                   ))}
@@ -395,10 +406,10 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
                 <p>Ultra</p>
                 <ul>
                   {watchUltra.map((m) => (
-                    <li>
+                    <li data-id={m.id}>
                       <a href={`/watch/${m.id}`}>
                         {m.name}
-                        <span>from {formatWatchKes(m.basePriceKes)}</span>
+                        <span data-live-price={m.id} data-live-prefix="from ">from {formatWatchKes(liveKes(m.id, m.basePriceKes))}</span>
                       </a>
                     </li>
                   ))}
@@ -408,10 +419,10 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
                 <p>SE</p>
                 <ul>
                   {watchSe.map((m) => (
-                    <li>
+                    <li data-id={m.id}>
                       <a href={`/watch/${m.id}`}>
                         {m.name}
-                        <span>from {formatWatchKes(m.basePriceKes)}</span>
+                        <span data-live-price={m.id} data-live-prefix="from ">from {formatWatchKes(liveKes(m.id, m.basePriceKes))}</span>
                       </a>
                     </li>
                   ))}
@@ -434,10 +445,10 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
                 <p>Pro</p>
                 <ul>
                   {airpodsPro.map((m) => (
-                    <li>
+                    <li data-id={m.id}>
                       <a href={`/airpods/${m.id}`}>
                         {m.name}
-                        <span>from {formatAirpodsKes(m.basePriceKes)}</span>
+                        <span data-live-price={m.id} data-live-prefix="from ">from {formatAirpodsKes(liveKes(m.id, m.basePriceKes))}</span>
                       </a>
                     </li>
                   ))}
@@ -447,10 +458,10 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
                 <p>AirPods</p>
                 <ul>
                   {airpodsStd.map((m) => (
-                    <li>
+                    <li data-id={m.id}>
                       <a href={`/airpods/${m.id}`}>
                         {m.name}
-                        <span>from {formatAirpodsKes(m.basePriceKes)}</span>
+                        <span data-live-price={m.id} data-live-prefix="from ">from {formatAirpodsKes(liveKes(m.id, m.basePriceKes))}</span>
                       </a>
                     </li>
                   ))}
@@ -460,10 +471,10 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
                 <p>Max</p>
                 <ul>
                   {airpodsMax.map((m) => (
-                    <li>
+                    <li data-id={m.id}>
                       <a href={`/airpods/${m.id}`}>
                         {m.name}
-                        <span>from {formatAirpodsKes(m.basePriceKes)}</span>
+                        <span data-live-price={m.id} data-live-prefix="from ">from {formatAirpodsKes(liveKes(m.id, m.basePriceKes))}</span>
                       </a>
                     </li>
                   ))}
@@ -488,7 +499,7 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
                     <li>
                       <a href={`/tv-home/${m.id}`}>
                         {m.name}
-                        <span>from {formatTvHomeKes(m.basePriceKes)}</span>
+                        <span data-live-price={m.id} data-live-prefix="from ">from {formatTvHomeKes(liveKes(m.id, m.basePriceKes))}</span>
                       </a>
                     </li>
                   ))}
@@ -501,7 +512,7 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
                     <li>
                       <a href={`/tv-home/${m.id}`}>
                         {m.name}
-                        <span>from {formatTvHomeKes(m.basePriceKes)}</span>
+                        <span data-live-price={m.id} data-live-prefix="from ">from {formatTvHomeKes(liveKes(m.id, m.basePriceKes))}</span>
                       </a>
                     </li>
                   ))}
@@ -514,7 +525,7 @@ const tvMini = tvHomeModelsByFamily("HomePod mini").slice(0, 2);
                     <li>
                       <a href={`/tv-home/${m.id}`}>
                         {m.name}
-                        <span>from {formatTvHomeKes(m.basePriceKes)}</span>
+                        <span data-live-price={m.id} data-live-prefix="from ">from {formatTvHomeKes(liveKes(m.id, m.basePriceKes))}</span>
                       </a>
                     </li>
                   ))}

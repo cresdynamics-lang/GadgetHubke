@@ -5,19 +5,25 @@
 import { formatKes } from "../../lib/iphone";
 import { latestByFamily, formatFromKes } from "../../lib/iphone/lineup";
 import { homeOpt } from "../../lib/home-images";
+import { livePricedCatalog } from "../../lib/pricing/live";
+import { liveMerchItems } from "../../lib/home-live";
 
 const eighteen = latestByFamily(18);
+const catalog = await livePricedCatalog();
 
-const picks = eighteen.map((i) => ({
-  id: i.id,
-  name: i.name,
-  href: i.href,
-  priceLabel: formatKes(i.priceKes),
-  badge: i.badge || "New",
-  src: homeOpt(i.image.src),
-  alt: i.image.alt,
-  priceKes: i.priceKes,
-}));
+const picks = liveMerchItems(
+  eighteen.map((i) => ({
+    id: i.id,
+    name: i.name,
+    href: i.href,
+    priceLabel: formatKes(i.priceKes),
+    badge: i.badge || "New",
+    src: homeOpt(i.image.src),
+    alt: i.image.alt,
+    priceKes: i.priceKes,
+  })),
+  catalog,
+).map((item) => ({ ...item, priceLabel: formatKes(item.priceKes) }));
 
 const previews = Object.fromEntries(picks.map((p) => [p.id, p]));
 const defaultPreview =
@@ -41,13 +47,13 @@ const defaultPreview =
       <ul>
         {
           picks.map((m) => (
-            <li>
+            <li data-id={m.id}>
               <a class="imega__link" href={m.href} data-mega-preview={m.id}>
                 <span>
                   {m.name}
                   <span class="imega__tag">{m.badge}</span>
                 </span>
-                <span class="imega__from">{formatFromKes(m.priceKes)}</span>
+                <span class="imega__from" data-live-price={m.id} data-live-prefix="from ">{formatFromKes(m.priceKes)}</span>
               </a>
             </li>
           ))

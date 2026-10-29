@@ -10,6 +10,8 @@ import {
   type MacModel,
 } from "../../lib/mac";
 import { homeOpt } from "../../lib/home-images";
+import { livePricedCatalog } from "../../lib/pricing/live";
+import { liveMerchItems } from "../../lib/home-live";
 
 function previewFor(m: MacModel) {
   const colour = defaultMacColour(m);
@@ -27,20 +29,24 @@ function previewFor(m: MacModel) {
 }
 
 const featuredIds = [
-  "macbook-air-13-m4",
-  "macbook-air-15-m4",
-  "macbook-pro-14-m4",
-  "macbook-pro-16-m4-pro",
+  "macbook-air-13-m5",
+  "macbook-air-15-m5",
+  "macbook-pro-14-m5",
+  "macbook-pro-16-m5-pro",
 ] as const;
 
-const picks = featuredIds
-  .map((id) => macModels.find((m) => m.id === id))
-  .filter(Boolean)
-  .map((m) => previewFor(m as MacModel));
+const catalog = await livePricedCatalog();
+const picks = liveMerchItems(
+  featuredIds
+    .map((id) => macModels.find((m) => m.id === id))
+    .filter(Boolean)
+    .map((m) => previewFor(m as MacModel)),
+  catalog,
+);
 
 const defaultPreview =
   picks[0] ||
-  previewFor(macModels.find((m) => m.id === "macbook-air-13-m4") || macModels[0]);
+  previewFor(macModels.find((m) => m.id === "macbook-air-13-m5") || macModels[0]);
 const previews = Object.fromEntries(picks.map((p) => [p.id, p]));
 ---
 
@@ -51,13 +57,13 @@ const previews = Object.fromEntries(picks.map((p) => [p.id, p]));
       <ul>
         {
           picks.map((m) => (
-            <li>
+            <li data-id={m.id}>
               <a class="mmega__link" href={m.href} data-mega-preview={m.id}>
                 <span>
                   {m.name}
                   {m.isNew ? <span class="mmega__tag">New</span> : null}
                 </span>
-                <span class="mmega__from">from {formatKes(m.priceKes)}</span>
+                <span class="mmega__from" data-live-price={m.id} data-live-prefix="from ">from {formatKes(m.priceKes)}</span>
               </a>
             </li>
           ))

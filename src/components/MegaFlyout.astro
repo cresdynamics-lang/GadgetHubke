@@ -45,7 +45,7 @@ const {
       {
         items.map((item) => (
           <li>
-            <a class="mega__item" href={item.href}>
+            <a class="mega__item" href={item.href} data-id={item.id}>
               <span class="mega__media product-stage">
                 {item.image ? (
                   <img
@@ -69,7 +69,7 @@ const {
                 </span>
                 {item.fromPriceKes != null ? (
                   <span class="mega__price">
-                    <Price kes={item.fromPriceKes} prefix="From" />
+                    <Price kes={item.fromPriceKes} prefix="From" liveId={item.id} />
                   </span>
                 ) : item.blurb ? (
                   <span class="mega__blurb">{item.blurb}</span>

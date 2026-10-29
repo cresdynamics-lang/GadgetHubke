@@ -10,6 +10,8 @@ import {
   type IpadModel,
 } from "../../lib/ipad";
 import { homeOpt } from "../../lib/home-images";
+import { livePricedCatalog } from "../../lib/pricing/live";
+import { liveMerchItems } from "../../lib/home-live";
 
 function previewFor(m: IpadModel) {
   const colour = defaultIpadColour(m);
@@ -27,19 +29,23 @@ function previewFor(m: IpadModel) {
 }
 
 const featuredIds = [
-  "ipad-pro-11-m4",
-  "ipad-air-11-m2",
+  "ipad-pro-11-m5",
+  "ipad-air-11-m4",
   "ipad-mini-a17-pro",
   "ipad-a16",
 ] as const;
 
-const featured = featuredIds
-  .map((id) => ipadModels.find((m) => m.id === id))
-  .filter(Boolean)
-  .map((m) => previewFor(m as IpadModel));
+const catalog = await livePricedCatalog();
+const featured = liveMerchItems(
+  featuredIds
+    .map((id) => ipadModels.find((m) => m.id === id))
+    .filter(Boolean)
+    .map((m) => previewFor(m as IpadModel)),
+  catalog,
+);
 
 const fallback = previewFor(
-  ipadModels.find((m) => m.id === "ipad-air-11-m2") || ipadModels[0],
+  ipadModels.find((m) => m.id === "ipad-pro-11-m5") || ipadModels[0],
 );
 const picks = featured.length ? featured : [fallback];
 const defaultPreview = picks[0];
@@ -53,13 +59,13 @@ const previews = Object.fromEntries(picks.map((p) => [p.id, p]));
       <ul>
         {
           picks.map((m) => (
-            <li>
+            <li data-id={m.id}>
               <a class="imega__link" href={m.href} data-mega-preview={m.id}>
                 <span>
                   {m.name}
                   {m.isNew ? <span class="imega__tag">New</span> : null}
                 </span>
-                <span class="imega__from">from {formatKes(m.priceKes)}</span>
+                <span class="imega__from" data-live-price={m.id} data-live-prefix="from ">from {formatKes(m.priceKes)}</span>
               </a>
             </li>
           ))

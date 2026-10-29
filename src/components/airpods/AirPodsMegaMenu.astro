@@ -10,6 +10,8 @@ import {
   type AirpodsModel,
 } from "../../lib/airpods";
 import { homeOpt } from "../../lib/home-images";
+import { livePricedCatalog } from "../../lib/pricing/live";
+import { liveMerchItems } from "../../lib/home-live";
 
 function previewFor(m: AirpodsModel) {
   const img = getAirpodsImage(m.id, "hero", m.name);
@@ -25,11 +27,15 @@ function previewFor(m: AirpodsModel) {
   };
 }
 
-const featuredIds = ["airpods-pro-3", "airpods-5", "airpods-max-2", "airpods-4"] as const;
-const picks = featuredIds
-  .map((id) => getAirpodsModel(id))
-  .filter(Boolean)
-  .map((m) => previewFor(m as AirpodsModel));
+const featuredIds = ["airpods-pro-3", "airpods-4-anc", "airpods-4", "airpods-pro-2"] as const;
+const catalog = await livePricedCatalog();
+const picks = liveMerchItems(
+  featuredIds
+    .map((id) => getAirpodsModel(id))
+    .filter(Boolean)
+    .map((m) => previewFor(m as AirpodsModel)),
+  catalog,
+).map((item) => ({ ...item, priceLabel: formatKes(item.priceKes) }));
 
 const defaultPreview =
   picks[0] || previewFor(getAirpodsModel("airpods-pro-3") || airpodsModels[0]);
@@ -43,13 +49,13 @@ const previews = Object.fromEntries(picks.map((p) => [p.id, p]));
       <ul>
         {
           picks.map((m) => (
-            <li>
+            <li data-id={m.id}>
               <a class="amega__link" href={m.href} data-mega-preview={m.id}>
                 <span>
                   {m.name}
                   {m.isNew ? <span class="amega__tag">New</span> : null}
                 </span>
-                <em>from {m.priceLabel}</em>
+                <em data-live-price={m.id} data-live-prefix="from ">from {m.priceLabel}</em>
               </a>
             </li>
           ))

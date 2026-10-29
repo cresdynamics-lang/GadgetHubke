@@ -8,15 +8,23 @@ interface Props {
   class?: string;
   /** Optional prefix, e.g. "From" */
   prefix?: string;
+  /** Overlay product id — CatalogOverlay updates the amount in place. */
+  liveId?: string;
+  liveField?: "priceKes" | "exUkKes";
 }
 
-const { kes, class: className = "", prefix } = Astro.props;
+const { kes, class: className = "", prefix, liveId, liveField } = Astro.props;
 const display = `KSh ${Math.round(kes).toLocaleString("en-KE")}`;
 ---
 
 <span class:list={["price", className]}>
   {prefix ? <span class="price__prefix">{prefix}</span> : null}
-  <span class="price__amount">{display}</span>
+  <span
+    class="price__amount"
+    data-live-price={liveId}
+    data-live-field={liveId ? liveField : undefined}
+    data-live-prefix={liveId ? "" : undefined}>{display}</span
+  >
 </span>
 
 <style>

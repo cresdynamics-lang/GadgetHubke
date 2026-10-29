@@ -40,7 +40,7 @@ const {
     <ul class="home-row__track">
       {
         items.map((item) => (
-          <li>
+          <li data-id={item.id}>
             <a class="home-row__card" href={item.href}>
               <span class="home-row__media product-stage">
                 {item.badge ? <span class="badge home-row__badge">{item.badge}</span> : null}
@@ -59,7 +59,7 @@ const {
                 )}
               </span>
               <span class="home-row__name">{item.name}</span>
-              <Price kes={item.priceKes} prefix="From" />
+              <Price kes={item.priceKes} prefix="From" liveId={item.id} />
             </a>
           </li>
         ))
