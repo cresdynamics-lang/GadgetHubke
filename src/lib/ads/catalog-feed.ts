@@ -22,6 +22,7 @@ import feedImageMap from "./feed-image-map.json";
 import { iphoneSheet, storageIdFromLabel } from "../pricing/iphone-sheet";
 import { getSeoModelByName } from "../iphone/seo";
 import { livePricedCatalog, iphoneLiveId } from "../pricing/live";
+import { applyLivePricesToRows } from "./feed-live";
 
 export type CatalogRow = {
   id: string;
@@ -335,32 +336,13 @@ function iphoneSheetLiveIndex(): Map<string, { id: string; key: string }> {
   return out;
 }
 
-/**
- * Feed rows with live admin prices, so ad prices always match the product pages.
- * Works for both the full catalog and the iPhone-only feed (ids ending -EXUK use Ex-UK prices).
- */
+export { applyLivePricesToRows } from "./feed-live";
+
 export async function applyLivePrices<T extends { id: string; price: string; availability: string }>(
   rows: T[],
 ): Promise<T[]> {
   const live = new Map((await livePricedCatalog()).map((p) => [p.id, p]));
-  const bySheet = iphoneSheetLiveIndex();
-  const visible = rows.filter((r) => {
-    const p = live.get(r.id);
-    return !p || p.showOnWebsite !== false;
-  });
-  return visible.map((r) => {
-    const exUk = r.id.endsWith("-EXUK");
-    const sheetHit = bySheet.get(exUk ? r.id.slice(0, -5) : r.id);
-    if (sheetHit) {
-      const v = live.get(sheetHit.id)?.variants.find((x) => x.key === sheetHit.key);
-      const kes = v ? (exUk ? v.exUkKes : v.priceKes) : undefined;
-      if (!v || kes == null) return r;
-      return { ...r, price: priceKes(kes), availability: v.inStock ? r.availability : "out_of_stock" };
-    }
-    const p = live.get(r.id);
-    if (!p) return r;
-    return { ...r, price: priceKes(p.priceKes), availability: p.inStock ? r.availability : "out_of_stock" };
-  });
+  return applyLivePricesToRows(rows, live, iphoneSheetLiveIndex());
 }
 
 export async function buildAdsCatalogLive(): Promise<CatalogRow[]> {
