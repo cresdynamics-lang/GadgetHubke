@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { addContactMessage } from "../../lib/leads/messages";
+import { pushMessageToOps } from "../../lib/ops/push-message";
 
 export const prerender = false;
 
@@ -20,6 +21,7 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     // Saved for Management → Messages; no email to the shop inbox.
     const row = await addContactMessage(body);
+    void pushMessageToOps(row);
     return json({ ok: true, id: row.id }, 201);
   } catch (e) {
     return json({ error: e instanceof Error ? e.message : "Could not save message." }, 400);
