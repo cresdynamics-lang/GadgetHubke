@@ -94,6 +94,7 @@ const hoverSrc =
     <h3 class="pcard__name">
       <a href={href}>{name}</a>
     </h3>
+    <p class="pcard__channel">{channel === "ex-uk" ? "Ex-UK" : "New"}</p>
     {blurb ? <p class="pcard__blurb">{blurb}</p> : null}
     {
       colors.length > 0 ? (
@@ -223,6 +224,15 @@ const hoverSrc =
 
   .pcard__name a {
     text-decoration: none;
+  }
+
+  .pcard__channel {
+    margin: 0 0 var(--space-1);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-fg-muted);
   }
 
   .pcard__blurb {

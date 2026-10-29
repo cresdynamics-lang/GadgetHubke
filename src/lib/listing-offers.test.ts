@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { channelHref, colourKey, filterColours, listingOffers, listingRows, type ListingOffer } from "./listing-offers.ts";
+import { channelHref, colourKey, filterColours, listedVariantPrices, listingOffers, listingRows, type ListingOffer } from "./listing-offers.ts";
 import type { PricedProduct } from "./pricing/live.ts";
 
 function product(partial: Partial<PricedProduct> & Pick<PricedProduct, "id">): PricedProduct {
@@ -80,6 +80,42 @@ test("unrecognized SKU with no priced row still shows a New fallback card", () =
   assert.equal(rows.length, 1);
   assert.equal(rows[0]?.offer.channel, "new");
   assert.equal(rows[0]?.offer.priceKes, 1000);
+});
+
+test("same phone listed as new and ex-uk becomes two rows with different prices", () => {
+  const rows = listingRows([{ id: "iphone-16" }], [product({ id: "iphone-16", name: "iPhone 16" })], {
+    href: (item) => `/iphone/${item.id}`,
+    fallbackPrice: () => 0,
+  });
+  assert.deepEqual(
+    rows.map((row) => [row.item.id, row.offer.channel, row.offer.priceKes]),
+    [
+      ["iphone-16", "new", 189000],
+      ["iphone-16", "ex-uk", 149000],
+    ],
+  );
+});
+
+test("ex-uk-only leftover new sheet price is not a listed new figure", () => {
+  const live = product({
+    id: "iphone-16",
+    name: "iPhone 16",
+    showNewOnWebsite: false,
+    exUkShowOnWebsite: true,
+    priceKes: 93000,
+    exUkKes: 80000,
+    variants: [{ key: "128", label: "128GB", priceKes: 93000, exUkKes: 80000, inStock: true, showOnWebsite: true, exUkShowOnWebsite: true }],
+  });
+  const listed = listedVariantPrices(live, live.variants[0]);
+  assert.equal(listed.showNew, false);
+  assert.equal(listed.showEx, true);
+  assert.equal(listed.newKes, 0);
+  assert.equal(listed.exUkKes, 80000);
+  assert.equal(listed.displayKes, 80000);
+  const offers = listingOffers(live, "/iphone/iphone-16");
+  assert.equal(offers.length, 1);
+  assert.equal(offers[0]?.channel, "ex-uk");
+  assert.equal(offers[0]?.priceKes, 80000);
 });
 
 test("channel href does not duplicate condition", () => {

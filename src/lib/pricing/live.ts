@@ -12,7 +12,8 @@ import { watchModels } from "../watch";
 import { airpodsModels } from "../airpods";
 import { tvHomeModels } from "../tv-home";
 import { accessories } from "../accessories/models";
-import { getOverlayMap, type CatalogOverlayEntry, type CatalogOverlayMap } from "../admin/overlay";
+import { getOverlayMap, type CatalogOverlayMap } from "../admin/overlay";
+import { applyOverlay } from "./overlay-apply";
 import { fetchOpsCatalog } from "./ops-catalog";
 import { mergeOpsCatalog } from "./ops-overlay";
 import priceBaseline from "./price-baseline.json";
@@ -21,6 +22,8 @@ import { macSheetForModel, macConfigStorageId, macConfigStorageLabel } from "./m
 import { ipadSheetForModel, ipadConfigStorageId, ipadConfigStorageLabel } from "./ipad-sheet";
 import { watchSheetForModel, watchConfigStorageId, watchConfigStorageLabel } from "./watch-sheet";
 import { tvHomeSheetForModel, tvHomeConfigStorageId, tvHomeConfigStorageLabel } from "./tv-home-sheet";
+
+export { applyOverlay };
 
 export type PriceVariant = {
   key: string;
@@ -192,57 +195,6 @@ export function defaultPricedCatalog(): PricedProduct[] {
   }
 
   return rows;
-}
-
-export function applyOverlay(p: PricedProduct, entry?: CatalogOverlayEntry | null): PricedProduct {
-  if (!entry) return p;
-  const managedStorages = Boolean(entry.storages && Object.keys(entry.storages).length);
-  const variants = p.variants.map((v) => {
-    const o = entry.storages?.[v.key];
-    if (!o) {
-      if (managedStorages) {
-        return { ...v, showOnWebsite: false, exUkShowOnWebsite: false, inStock: false, exUkInStock: false };
-      }
-      return {
-        ...v,
-        showOnWebsite: typeof entry.showOnWebsite === "boolean" ? entry.showOnWebsite : v.showOnWebsite !== false,
-      };
-    }
-    return {
-      ...v,
-      priceKes: typeof o.priceKes === "number" ? o.priceKes : v.priceKes,
-      exUkKes: typeof o.exUkKes === "number" ? o.exUkKes : v.exUkKes,
-      inStock: typeof o.inStock === "boolean" ? o.inStock : v.inStock,
-      exUkInStock: typeof o.exUkInStock === "boolean" ? o.exUkInStock : v.exUkInStock,
-      showOnWebsite: typeof o.showOnWebsite === "boolean" ? o.showOnWebsite : entry.showOnWebsite !== false,
-      exUkShowOnWebsite: typeof o.exUkShowOnWebsite === "boolean" ? o.exUkShowOnWebsite : entry.exUkShowOnWebsite,
-    };
-  });
-  const shown = variants.filter((v) => v.showOnWebsite !== false);
-  const inStockVariants = shown.filter((v) => v.inStock);
-  const pool = inStockVariants.length ? inStockVariants : shown.length ? shown : variants;
-  const priceKes = pool.length
-    ? Math.min(...pool.map((v) => v.priceKes))
-    : typeof entry.priceKes === "number"
-      ? entry.priceKes
-      : p.priceKes;
-  const showOnWebsite = typeof entry.showOnWebsite === "boolean" ? entry.showOnWebsite : shown.length > 0;
-  const exUkPrices = variants.map((v) => v.exUkKes).filter((n): n is number => typeof n === "number" && n > 0);
-  return {
-    ...p,
-    variants,
-    priceKes,
-    exUkKes: typeof entry.exUkKes === "number" ? entry.exUkKes : exUkPrices.length ? Math.min(...exUkPrices) : p.exUkKes,
-    inStock: typeof entry.inStock === "boolean" ? entry.inStock : p.inStock,
-    exUkInStock: typeof entry.exUkInStock === "boolean" ? entry.exUkInStock : p.exUkInStock,
-    showOnWebsite,
-    showNewOnWebsite: typeof entry.showNewOnWebsite === "boolean" ? entry.showNewOnWebsite : p.showNewOnWebsite,
-    exUkShowOnWebsite: typeof entry.exUkShowOnWebsite === "boolean" ? entry.exUkShowOnWebsite : p.exUkShowOnWebsite,
-    coloursInStock: entry.coloursInStock ?? p.coloursInStock,
-    exUkColoursInStock: entry.exUkColoursInStock ?? p.exUkColoursInStock,
-    sample: false,
-    updatedAt: entry.updatedAt,
-  };
 }
 
 let cache: { at: number; overlay: CatalogOverlayMap } | null = null;

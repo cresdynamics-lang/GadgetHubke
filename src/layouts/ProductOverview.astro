@@ -17,6 +17,7 @@ import { site, whatsappUrl } from "../lib/site";
 import { withLiveSeoPrices } from "../lib/iphone/seo/live";
 import { livePricedProduct } from "../lib/pricing/live";
 import { storageIdFromLabel } from "../lib/pricing/iphone-sheet";
+import { listedVariantPrices } from "../lib/listing-offers";
 import {
   getSeoModelByName,
   buildIphoneProductJsonLd,
@@ -38,14 +39,20 @@ const storages = seo
   ? seo.variants.map((v) => ({
       id: v.storage.toLowerCase().replace(/\s+/g, ""),
       label: v.storage,
-      priceKes: v.newKes,
+      priceKes: v.newKes > 0 ? v.newKes : v.exUkKes,
+      newKes: v.newKes,
       sheetId: v.sheetId,
-      exUkKes: v.exUkKes,
+      exUkKes: v.exUkKes > 0 ? v.exUkKes : undefined,
     }))
   : product.storages.map((st) => {
       const l = liveByKey.get(st.id);
-      return l ? { ...st, priceKes: l.priceKes, exUkKes: l.exUkKes ?? st.exUkKes } : st;
+      if (!l) return st;
+      const listed = listedVariantPrices(live, l);
+      return { ...st, priceKes: listed.displayKes, newKes: listed.newKes, exUkKes: listed.exUkKes || undefined };
     });
+const showNewChannel = live?.showNewOnWebsite !== false;
+const showExChannel = SHOW_EX_UK && live?.exUkShowOnWebsite !== false && storages.some((s) => (s.exUkKes ?? 0) > 0);
+const initialChannel = !showNewChannel && showExChannel ? "ex-uk" : "new";
 const basePrice = seo?.fromKes ?? storages[0]?.priceKes ?? 0;
 const defaultStorage = storages[0];
 const defaultColor = product.colors[0];
@@ -132,14 +139,14 @@ const pageDescription = seo?.metaDescription ?? product.tagline;
         }
       </div>
 
-      <div class="pdp__buy" id="buy" data-configurator data-lipa-months={lipaMonths || ""} data-channel="new">
+      <div class="pdp__buy" id="buy" data-configurator data-lipa-months={lipaMonths || ""} data-channel={initialChannel}>
         <nav class="pdp__crumb" aria-label="Breadcrumb">
           <a href="/shop">Shop</a>
           <span aria-hidden="true">/</span>
           <a href={product.categoryHref}>{product.categoryLabel}</a>
         </nav>
         <h1>{seo?.h1 ?? product.name}</h1>
-        {SHOW_EX_UK ? <StockChannelToggle /> : null}
+        <StockChannelToggle show={showNewChannel && showExChannel} />
         <p class="pdp__tagline">
           {seo ? `Price in Kenya · ${formatKesSeo(seo.fromKes)}. ` : ""}
           {product.tagline}
@@ -178,12 +185,9 @@ const pageDescription = seo?.metaDescription ?? product.tagline;
                     name="storage"
                     value={s.id}
                     data-price-kes={s.priceKes}
-                    data-price-new={s.priceKes}
-                    {...(SHOW_EX_UK
-                      ? {
-                          "data-price-ex-uk":
-                            ("exUkKes" in s && s.exUkKes) || s.priceKes,
-                        }
+                    data-price-new={"newKes" in s && typeof s.newKes === "number" ? s.newKes : s.priceKes}
+                    {...(SHOW_EX_UK && "exUkKes" in s && s.exUkKes
+                      ? { "data-price-ex-uk": s.exUkKes }
                       : {})}
                     data-label={s.label}
                     data-sheet-id={"sheetId" in s && s.sheetId ? s.sheetId : ""}
@@ -378,7 +382,6 @@ const pageDescription = seo?.metaDescription ?? product.tagline;
     waBase,
     productName: product.name,
     productId: product.id,
-    channelOn: SHOW_EX_UK,
     usedPriceAttr: SHOW_EX_UK ? "data-price-ex-uk" : "",
     usedChannel: SHOW_EX_UK ? "ex-uk" : "",
     usedLabel: SHOW_EX_UK ? "EX-UK" : "New",
@@ -393,11 +396,11 @@ const pageDescription = seo?.metaDescription ?? product.tagline;
   function selected() {
     const storage = root.querySelector('input[name="storage"]:checked');
     const color = root.querySelector('input[name="color"]:checked');
-    const newKes = Number(storage?.getAttribute("data-price-new") || storage?.getAttribute("data-price-kes") || 0);
-    let priceKes = newKes;
-    if (channelOn && usedPriceAttr && usedChannel && channel === usedChannel) {
-      priceKes = Number(storage?.getAttribute(usedPriceAttr) || newKes);
-    }
+    const newKes = Number(storage?.getAttribute("data-price-new") || 0);
+    const exKes = Number((usedPriceAttr && storage?.getAttribute(usedPriceAttr)) || 0);
+    const displayKes = Number(storage?.getAttribute("data-price-kes") || 0);
+    const usingEx = channel === usedChannel ? exKes > 0 || (newKes === 0 && displayKes > 0) : newKes === 0 && exKes > 0;
+    const priceKes = usingEx ? exKes || displayKes : newKes || displayKes || exKes;
     return {
       storageId: storage?.value || "",
       storageLabel: storage?.getAttribute("data-label") || "",
@@ -405,8 +408,8 @@ const pageDescription = seo?.metaDescription ?? product.tagline;
       colorId: color?.value || "",
       colorLabel: color?.getAttribute("data-label") || "",
       priceKes,
-      channel,
-      channelLabel: channelOn && usedChannel && channel === usedChannel ? usedLabel : "New",
+      channel: usingEx ? usedChannel || "ex-uk" : "new",
+      channelLabel: usingEx ? usedLabel : "New",
     };
   }
 

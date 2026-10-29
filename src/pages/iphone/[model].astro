@@ -48,6 +48,7 @@ import { getProduct } from "../../lib/products";
 import { withLiveSeoPrices } from "../../lib/iphone/seo/live";
 import { livePricedProduct, iphoneLiveId } from "../../lib/pricing/live";
 import { storageIdFromLabel } from "../../lib/pricing/iphone-sheet";
+import { listedVariantPrices } from "../../lib/listing-offers";
 import { site, whatsappUrl } from "../../lib/site";
 import StockChannelToggle from "../../components/StockChannelToggle.astro";
 import ProductReviews from "../../components/ProductReviews.astro";
@@ -86,6 +87,7 @@ let model: ReturnType<typeof getModel>;
 let prices: ReturnType<typeof storagePrices> = [];
 let firstPrice = { label: "", kes: 0 };
 let selectedIdx = 0;
+let wantExUk = false;
 let priceLine = "";
 let lipa = { depositKes: 0, monthlyKes: 0, months: 6 };
 let tag: string | null = null;
@@ -146,20 +148,21 @@ if (seo) {
   prices = prices
     .map((p) => {
       const l = liveByKey.get(storageIdFromLabel(p.label));
-      return l ? { ...p, kes: l.priceKes, exUkKes: l.exUkKes ?? p.exUkKes } : p;
+      if (!l) return p;
+      const listed = listedVariantPrices(live, l);
+      return { ...p, kes: listed.displayKes, newKes: listed.newKes, exUkKes: listed.exUkKes || undefined };
     })
     .filter((p) => {
       const l = liveByKey.get(storageIdFromLabel(p.label));
       if (!l) return live?.showOnWebsite !== false && live?.showNewOnWebsite !== false;
-      const showNew = live?.showNewOnWebsite !== false && l.showOnWebsite !== false;
-      const showEx = live?.exUkShowOnWebsite !== false && l.exUkShowOnWebsite !== false && (p.exUkKes ?? 0) > 0;
-      return showNew || showEx;
+      const listed = listedVariantPrices(live, l);
+      return listed.showNew || listed.showEx;
     });
   // Feed links (?storage=256GB&condition=ex-uk) open on that exact option so the
   // landing price matches the Google / Meta feed price.
   const wantStorage = (Astro.url.searchParams.get("storage") || "").toLowerCase();
   selectedIdx = Math.max(0, prices.findIndex((p) => p.label.toLowerCase() === wantStorage));
-  const wantExUk =
+  wantExUk =
     (Astro.url.searchParams.get("condition") === "ex-uk" || live?.showNewOnWebsite === false) &&
     (prices[selectedIdx]?.exUkKes ?? 0) > 0;
   firstPrice = prices[selectedIdx] ?? { label: "", kes: seo.fromKes };
@@ -398,7 +401,7 @@ if (seo) {
                   class:list={["ipdp__storage-btn", { "is-active": i === selectedIdx }]}
                   data-storage={p.label}
                   data-kes={p.kes}
-                  data-kes-new={p.kes}
+                  data-kes-new={"newKes" in p && p.newKes ? p.newKes : live?.showNewOnWebsite === false ? "" : p.kes}
                   data-kes-exuk={p.exUkKes ?? ""}
                   data-sheet-id={p.sheetId ?? ""}
                 >
@@ -614,10 +617,11 @@ if (seo) {
   modelName: seo.name,
   prices: prices.map((p) =>
     SHOW_EX_UK
-      ? { label: p.label, kes: p.kes, sheetId: p.sheetId, exUkKes: p.exUkKes }
+      ? { label: p.label, kes: p.kes, sheetId: p.sheetId, newKes: "newKes" in p ? p.newKes : p.kes, exUkKes: p.exUkKes }
       : { label: p.label, kes: p.kes, sheetId: p.sheetId },
   ),
   selectedIdx,
+  initialChannel: wantExUk ? "ex-uk" : "new",
   depositPct: iphoneConfig.lipa.depositDefaultPct,
   months: iphoneConfig.lipa.monthsDefault,
   waBase: `https://wa.me/${iphoneConfig.whatsapp}?text=`,
@@ -626,16 +630,16 @@ if (seo) {
     colour: galleryPayload.initialColour,
     view: 1,
     storage: prices[selectedIdx]?.label,
-    kesNew: prices[selectedIdx]?.kes,
+    kesNew: prices[selectedIdx]?.newKes ?? (initialChannel === "new" ? prices[selectedIdx]?.kes : 0),
     kesExUk: prices[selectedIdx]?.exUkKes,
-    channel: "new",
+    channel: initialChannel,
     tour: null,
   };
 
   /** Price for the selected storage in the selected channel (New or Ex-UK). */
   function activeKes() {
     if (state.channel === "ex-uk" && Number(state.kesExUk) > 0) return Number(state.kesExUk);
-    return Number(state.kesNew) || 0;
+    return Number(state.kesNew) || Number(state.kesExUk) || 0;
   }
   const channelLabel = () => (state.channel === "ex-uk" ? "Ex-UK" : "New");
 
@@ -741,10 +745,9 @@ if (seo) {
 
     document.querySelectorAll("[data-storage]").forEach((btn) => {
       const exUk = Number(btn.getAttribute("data-kes-exuk") || 0);
-      const shown =
-        state.channel === "ex-uk" && exUk > 0
-          ? exUk
-          : Number(btn.getAttribute("data-kes-new") || btn.getAttribute("data-kes") || 0);
+      const newKes = Number(btn.getAttribute("data-kes-new") || 0);
+      const display = Number(btn.getAttribute("data-kes") || 0);
+      const shown = state.channel === "ex-uk" ? exUk || display : newKes || display;
       const span = btn.querySelector("[data-storage-price]");
       if (span) span.textContent = `KES ${shown.toLocaleString("en-KE")}`;
     });

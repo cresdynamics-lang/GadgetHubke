@@ -5,6 +5,8 @@ export type StoragePrice = {
   label: string;
   kes: number;
   sheetId?: string;
+  /** Listed New figure; 0 when this storage is Ex-UK-only. */
+  newKes?: number;
   exUkKes?: number;
 };
 

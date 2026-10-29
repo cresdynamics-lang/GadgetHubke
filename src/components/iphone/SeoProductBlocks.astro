@@ -58,15 +58,16 @@ const waDefault = whatsappUrl(
       <tbody>
         {
           model.variants.flatMap((v) => {
-            const rows = [
-              {
+            const rows = [];
+            if (v.newKes > 0) {
+              rows.push({
                 storage: v.storage,
                 condition: "New",
                 price: v.newKes,
                 sheetId: v.sheetId,
-              },
-            ];
-            if (SHOW_EX_UK) {
+              });
+            }
+            if (SHOW_EX_UK && v.exUkKes > 0) {
               rows.push({
                 storage: v.storage,
                 condition: EX_UK_CONDITION_LABEL,
@@ -97,7 +98,7 @@ const waDefault = whatsappUrl(
     </table>
     </div>
     {
-      SHOW_EX_UK ? (
+      SHOW_EX_UK && model.variants.some((v) => v.exUkKes > 0) ? (
         <p class="seo-blocks__used-note">
           {EX_UK_CONDITION_LABEL}: {EX_UK_WARRANTY}
         </p>

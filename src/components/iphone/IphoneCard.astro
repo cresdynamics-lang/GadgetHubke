@@ -128,6 +128,7 @@ const hoverSrc =
   </a>
   <div class="icard__body">
     <h3 class="icard__name"><a href={href}>{model.name}</a></h3>
+    <p class="icard__channel">{channel === "ex-uk" ? "Ex-UK" : "New"}</p>
     <p class="icard__sub">{modelSubline(model)}</p>
     {
       overviewOnly ? (
@@ -339,6 +340,15 @@ const hoverSrc =
   .icard__name a {
     color: inherit;
     text-decoration: none;
+  }
+
+  .icard__channel {
+    margin: 0;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-fg-muted);
   }
 
   .icard__sub {

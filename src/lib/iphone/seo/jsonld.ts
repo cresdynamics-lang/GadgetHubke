@@ -23,7 +23,7 @@ export function buildIphoneProductJsonLd(
   assertExUkWarrantyConfigured();
   const extras = offerExtras();
 
-  const newProducts = model.variants.map((v) => {
+  const newProducts = model.variants.filter((v) => v.newKes > 0).map((v) => {
     const offer: Record<string, unknown> = {
       "@type": "Offer",
       price: v.newKes,
@@ -48,7 +48,7 @@ export function buildIphoneProductJsonLd(
 
   const usedProducts =
     SHOW_EX_UK
-      ? model.variants.map((v) => {
+      ? model.variants.filter((v) => v.exUkKes > 0).map((v) => {
           const offer: Record<string, unknown> = {
             "@type": "Offer",
             price: v.exUkKes,

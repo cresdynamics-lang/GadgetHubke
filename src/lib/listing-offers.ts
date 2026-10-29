@@ -38,21 +38,37 @@ function positive(n: number | undefined) {
   return typeof n === "number" && Number.isFinite(n) && n > 0;
 }
 
+/** New and Ex-UK prices for one storage — leftover sheet figures on an unlisted channel stay at 0. */
+export function listedVariantPrices(
+  product: PricedProduct | undefined,
+  variant?: PricedProduct["variants"][number],
+) {
+  const productNew = product?.showOnWebsite !== false && product?.showNewOnWebsite !== false;
+  const productEx = SHOW_EX_UK && product?.showOnWebsite !== false && product?.exUkShowOnWebsite !== false;
+  if (!variant) {
+    return { showNew: Boolean(productNew), showEx: Boolean(productEx), newKes: 0, exUkKes: 0, displayKes: 0 };
+  }
+  const showNew = Boolean(productNew) && variant.showOnWebsite !== false && positive(variant.priceKes);
+  const showEx = Boolean(productEx) && variant.exUkShowOnWebsite !== false && positive(variant.exUkKes);
+  const newKes = showNew ? variant.priceKes : 0;
+  const exUkKes = showEx ? variant.exUkKes! : 0;
+  return { showNew, showEx, newKes, exUkKes, displayKes: newKes || exUkKes };
+}
+
 function newPrice(p: PricedProduct) {
-  const shown = p.variants.filter((variant) => variant.showOnWebsite !== false);
-  const pool = shown.length ? shown : p.variants;
+  const shown = p.variants.filter((variant) => listedVariantPrices(p, variant).showNew);
+  const pool = shown.length ? shown : [];
   const inStock = pool.filter((variant) => variant.inStock);
   const prices = (inStock.length ? inStock : pool).map((variant) => variant.priceKes).filter(positive);
   if (prices.length) return Math.min(...prices);
+  if (p.showNewOnWebsite === false) return 0;
   return positive(p.priceKes) ? p.priceKes : 0;
 }
 
 function exUkPrice(p: PricedProduct) {
-  const shown = p.variants.filter((variant) => variant.showOnWebsite !== false && variant.exUkShowOnWebsite !== false);
-  const pool = shown.length ? shown : p.variants;
-  const withEx = pool.filter((variant) => positive(variant.exUkKes));
-  const inStock = withEx.filter((variant) => variant.exUkInStock !== false && variant.inStock);
-  const prices = (inStock.length ? inStock : withEx).map((variant) => variant.exUkKes!).filter(positive);
+  const shown = p.variants.filter((variant) => listedVariantPrices(p, variant).showEx);
+  const inStock = shown.filter((variant) => variant.exUkInStock !== false);
+  const prices = (inStock.length ? inStock : shown).map((variant) => variant.exUkKes!).filter(positive);
   if (prices.length) return Math.min(...prices);
   return positive(p.exUkKes) ? p.exUkKes! : 0;
 }
@@ -90,7 +106,7 @@ export function listingOffers(product: PricedProduct | undefined, href: string, 
     }
   }
 
-  if (!offers.length && product?.showOnWebsite !== false) {
+  if (!offers.length && product?.showOnWebsite !== false && showNew) {
     offers.push({
       channel: "new",
       priceKes: fallbackPrice || product?.priceKes || 0,
