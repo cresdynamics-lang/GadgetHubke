@@ -89,21 +89,6 @@ const square = isSpeaker(model);
       <p class="thcard__price">
         <span data-live-price={model.id} data-live-prefix="">{`KSh ${Math.round(model.basePriceKes).toLocaleString("en-KE")}`}</span>
       </p>
-      <button
-        type="button"
-        class="btn btn--secondary btn--xs"
-        data-tvhome-bag
-        data-id={model.id}
-        data-name={model.name}
-        data-colour={colourLabel(colour)}
-        data-storage=""
-        data-pair=""
-        data-extras=""
-        data-kes={model.basePriceKes}
-        data-image={model.noImage ? "" : img.src}
-      >
-        Add to Cart
-      </button>
     </div>
     <div class="thcard__row thcard__row--links">
       <a class="btn btn--primary btn--xs" href={`/tv-home/${model.id}`}>Details</a>

@@ -58,19 +58,6 @@ const isPencil = product.group === "pencil";
       <p class="xcard__price">
         <span data-live-price={product.id} data-live-prefix="">{`KSh ${Math.round(product.basePriceKes).toLocaleString("en-KE")}`}</span>
       </p>
-      <button
-        type="button"
-        class="btn btn--secondary btn--xs"
-        data-accessory-bag
-        data-id={product.id}
-        data-name={product.name}
-        data-colour={product.defaultColour}
-        data-kes={product.basePriceKes}
-        data-image={img.src}
-        data-group={product.group}
-      >
-        Add to Cart
-      </button>
     </div>
     <div class="xcard__row xcard__row--links">
       <a class="btn btn--primary btn--xs" href={`/accessories/${product.id}`}>Details</a>

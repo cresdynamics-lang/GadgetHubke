@@ -279,7 +279,6 @@ const fitPayload = {
         const fit = map[`${device}::${item.id}`] || { status: "no", reason: "No rule." };
         const cls =
           fit.status === "fits" ? "is-fits" : fit.status === "note" ? "is-note" : "is-no";
-        const canBag = fit.status === "fits" || fit.status === "note";
         const conn = connectorLine(item.connector);
         return `
           <article class="xfinder__card ${cls}" data-product="${item.id}">
@@ -292,39 +291,12 @@ const fitPayload = {
               <p class="xfinder__price">KES ${item.price.toLocaleString("en-KE")}</p>
               <div class="xfinder__actions">
                 <a class="btn btn--secondary btn--xs" href="${item.href}">View</a>
-                ${
-                  canBag
-                    ? `<button type="button" class="btn btn--primary btn--xs" data-finder-bag
-                        data-id="${item.id}" data-name="${item.name}" data-kes="${item.price}"
-                        data-image="${item.img}" data-device="${device}" data-connector="${conn}">Add to Cart</button>`
-                    : ""
-                }
               </div>
             </div>
           </article>`;
       })
       .join("");
     results.innerHTML = cards || `<p class="xfinder__empty">No matches.</p>`;
-
-    results.querySelectorAll("[data-finder-bag]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const el = btn;
-        window.dispatchEvent(
-          new CustomEvent("gh:bag-add", {
-            detail: {
-              id: el.getAttribute("data-id"),
-              name: el.getAttribute("data-name"),
-              kes: Number(el.getAttribute("data-kes")),
-              image: el.getAttribute("data-image"),
-              kind: "accessory",
-              deviceFor: el.getAttribute("data-device"),
-              connector: el.getAttribute("data-connector") || null,
-              colour: "default",
-            },
-          }),
-        );
-      });
-    });
 
     if (preselectProduct) {
       const focus = results.querySelector(`[data-product="${preselectProduct}"]`);

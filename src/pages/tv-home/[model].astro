@@ -210,22 +210,6 @@ const showPair = model.stereoPairCapable;
         <p class="thpdp__stock"><span class="thpdp__dot" /> In stock · Collect today in Nairobi</p>
 
         <div class="thpdp__cta" data-pdp-cta>
-          <button
-            type="button"
-            class="btn btn--primary btn--xs"
-            data-tvhome-bag
-            data-pdp-cart
-            data-id={model.id}
-            data-name={model.name}
-            data-colour={colourLabel(defaultColour)}
-            data-storage={model.defaultStorage}
-            data-pair=""
-            data-extras=""
-            data-kes={price.kes}
-            data-image={model.noImage ? "" : img.src}
-          >
-            Add to Cart
-          </button>
           <button type="button" class="btn btn--primary btn--xs" data-buy-now-checkout data-pdp-buy>Buy now</button>
           <a class="btn btn--secondary btn--xs" href="/trade-in">Trade In</a>
           <a class="btn btn--whatsapp btn--xs" data-wa data-wa-link href={`https://wa.me/${tvHomeConfig.whatsapp}`} target="_blank" rel="noopener noreferrer">

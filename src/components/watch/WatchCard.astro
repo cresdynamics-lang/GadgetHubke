@@ -87,20 +87,6 @@ const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}${c
       <p class="wcard__price">
         <span data-live-price={model.id} data-live-field={channel === "ex-uk" ? "exUkKes" : "priceKes"} data-live-prefix="">{`KSh ${Math.round(displayKes).toLocaleString("en-KE")}`}</span>
       </p>
-      <button
-        type="button"
-        class="btn btn--secondary btn--xs"
-        data-watch-bag
-        data-id={model.id}
-        data-name={model.name}
-        data-size={`${model.defaultCaseMm}mm`}
-        data-material={model.materials[0]}
-        data-colour={colourLabel(colour)}
-        data-kes={displayKes}
-        data-image={img.src}
-      >
-        Add to Cart
-      </button>
     </div>
     <div class="wcard__row wcard__row--links">
       <a class="btn btn--primary btn--xs" href={href}>Details</a>

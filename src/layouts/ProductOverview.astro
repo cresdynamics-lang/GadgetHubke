@@ -228,17 +228,6 @@ const pageDescription = seo?.metaDescription ?? product.tagline;
         </fieldset>
 
         <div class="pdp__actions" data-pdp-cta>
-          <button
-            type="button"
-            class="btn btn--primary btn--xs"
-            data-add-cart
-            data-pdp-cart
-            data-storage={defaultStorage?.id}
-            data-color={defaultColor?.id}
-            data-price={basePrice}
-          >
-            Add to Cart
-          </button>
           <button type="button" class="btn btn--primary btn--xs" data-buy-now data-pdp-buy data-buy-now-checkout>
             Buy now
           </button>
@@ -342,11 +331,10 @@ const pageDescription = seo?.metaDescription ?? product.tagline;
     <section class="container pdp__section pdp__close">
       <h2>Ready to buy?</h2>
       <p>
-        Configure storage and finish above. Add to Cart, Buy now, Order on WhatsApp{" "}
+        Configure storage and finish above. Buy now, Order on WhatsApp{" "}
         {site.phoneDisplay}, or Trade In toward {product.name}.
       </p>
       <div class="pdp__actions" data-pdp-cta>
-        <button type="button" class="btn btn--primary btn--xs" data-add-cart data-pdp-cart>Add to Cart</button>
         <button type="button" class="btn btn--primary btn--xs" data-buy-now data-pdp-buy data-buy-now-checkout>Buy now</button>
         <a class="btn btn--secondary btn--xs" href="/trade-in">Trade In</a>
         <a

@@ -266,23 +266,6 @@ const wa = whatsappUrl(
           <p class="ipdp__stock"><span class="ipdp__pulse" /> In stock · Collect today in Nairobi</p>
 
           <div class="ipdp__actions" data-pdp-cta>
-            <button
-              type="button"
-              class="btn btn--primary btn--xs"
-              data-add-bag
-              data-pdp-cart
-              data-id={model.id}
-              data-name={model.name}
-              data-chip={model.chip}
-              data-size={`${model.screenInches}″`}
-              data-storage={model.storageOptions[0]}
-              data-colour={colourLabel(colour)}
-              data-connectivity="Wi-Fi"
-              data-kes={price.kes}
-              data-image={img.src}
-            >
-              Add to Cart
-            </button>
             <button type="button" class="btn btn--primary btn--xs" data-buy-now-checkout data-pdp-buy>Buy now</button>
             <a class="btn btn--secondary btn--xs" href="/trade-in">Trade In</a>
             <a class="btn btn--whatsapp btn--xs" href={wa} target="_blank" rel="noopener noreferrer" data-wa-link>

@@ -221,21 +221,6 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
         <p class="apdp__stock"><span class="apdp__dot" /> In stock · Collect today in Nairobi</p>
 
         <div class="apdp__cta" data-pdp-cta>
-          <button
-            type="button"
-            class="btn btn--primary btn--xs"
-            data-airpods-bag
-            data-pdp-cart
-            data-id={model.id}
-            data-name={model.name}
-            data-colour={colourLabel(defaultColour)}
-            data-case-option={model.caseOptions[0] || "usb-c"}
-            data-extras=""
-            data-kes={price.kes}
-            data-image={img.src}
-          >
-            Add to Cart
-          </button>
           <button type="button" class="btn btn--primary btn--xs" data-buy-now-checkout data-pdp-buy>Buy now</button>
           <a class="btn btn--secondary btn--xs" href="/trade-in">Trade In</a>
           <a class="btn btn--whatsapp btn--xs" data-wa data-wa-link href={`https://wa.me/${airpodsConfig.whatsapp}`} target="_blank" rel="noopener noreferrer">

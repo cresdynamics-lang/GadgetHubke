@@ -1,7 +1,8 @@
 import type { CheckoutOrder } from "../checkout/types";
+import { opsLinked } from "./link";
 
 function configured() {
-  return Boolean(process.env.OPS_CATALOG_URL?.trim() && process.env.WEBSITE_SYNC_SECRET?.trim());
+  return opsLinked() && Boolean(process.env.OPS_CATALOG_URL?.trim() && process.env.WEBSITE_SYNC_SECRET?.trim());
 }
 
 export async function pushOrderToOps(order: CheckoutOrder) {

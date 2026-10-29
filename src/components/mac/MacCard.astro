@@ -149,21 +149,6 @@ const hoverSrc =
       <p class="mcard__price">
         <span data-live-price={model.id} data-live-field={channel === "ex-uk" ? "exUkKes" : "priceKes"} data-live-prefix="">{`KSh ${Math.round(displayKes).toLocaleString("en-KE")}`}</span>
       </p>
-      <button
-        type="button"
-        class="btn btn--secondary btn--xs"
-        data-add-bag
-        data-id={model.id}
-        data-name={model.name}
-        data-chip={model.chip}
-        data-memory={`${model.memoryOptionsGb[0]}GB`}
-        data-storage={model.storageOptions[0]}
-        data-colour={colourLabel(colour)}
-        data-kes={displayKes}
-        data-image={img.src}
-      >
-        Add to Cart
-      </button>
     </div>
     <div class="mcard__row mcard__row--links">
       <a class="btn btn--primary btn--xs" href={href}>Details</a>

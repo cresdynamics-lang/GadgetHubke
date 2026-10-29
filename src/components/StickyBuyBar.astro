@@ -27,7 +27,6 @@ const {
     <p class="float-buy__desc" data-float-desc>{description}</p>
   </div>
   <div class="float-buy__actions">
-    <button type="button" class="btn btn--secondary btn--xs" data-sticky-cart>Add to Cart</button>
     <button type="button" class="btn btn--primary btn--xs" data-sticky-buy-now>Buy now</button>
     <a class="btn btn--secondary btn--xs" href="/trade-in">Trade In</a>
     <a class="btn btn--whatsapp btn--xs" data-sticky-wa href="#">Order on WhatsApp</a>
@@ -47,13 +46,6 @@ const {
 
     window.addEventListener("scroll", sync, { passive: true });
     sync();
-
-    bar.querySelector("[data-sticky-cart]")?.addEventListener("click", () => {
-      const source = document.querySelector(
-        "[data-pdp-cart], [data-add-bag], [data-watch-bag], [data-airpods-bag], [data-tvhome-bag], [data-accessory-bag], [data-add-cart]",
-      );
-      if (source instanceof HTMLElement) source.click();
-    });
 
     bar.querySelector("[data-sticky-buy-now]")?.addEventListener("click", () => {
       const checkoutBtn = document.querySelector("[data-buy-now-checkout]");
@@ -148,7 +140,7 @@ const {
 
   .float-buy__actions {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.25rem;
     width: 100%;
     flex: 1 1 100%;

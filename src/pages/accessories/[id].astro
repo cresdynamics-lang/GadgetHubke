@@ -290,22 +290,6 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
       <p class="xpdp__fine">{accessoriesConfig.samplePriceDisclaimer}</p>
       <p class="xpdp__stock"><span class="dot" aria-hidden="true" /> In stock · Collect today in Nairobi</p>
       <div class="xpdp__actions" data-pdp-cta>
-        <button
-          type="button"
-          class="btn btn--primary btn--xs"
-          data-accessory-bag
-          data-pdp-cart
-          data-id={product.id}
-          data-name={product.name}
-          data-colour={activeVariant?.colour || product.defaultColour}
-          data-kes={product.basePriceKes}
-          data-image={activeHero.src}
-          data-group={product.group}
-          data-connector={connector || ""}
-          data-part={activeVariant?.partNumber || product.partNumber || ""}
-        >
-          Add to Cart
-        </button>
         <button type="button" class="btn btn--primary btn--xs" data-buy-now-checkout data-pdp-buy>Buy now</button>
         <a class="btn btn--secondary btn--xs" href="/trade-in">Trade In</a>
         <a class="btn btn--whatsapp btn--xs" href={wa} rel="noopener" data-wa-link target="_blank">Order on WhatsApp</a>

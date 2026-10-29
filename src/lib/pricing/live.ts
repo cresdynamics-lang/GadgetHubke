@@ -14,8 +14,6 @@ import { tvHomeModels } from "../tv-home";
 import { accessories } from "../accessories/models";
 import { getOverlayMap, type CatalogOverlayMap } from "../admin/overlay";
 import { applyOverlay } from "./overlay-apply";
-import { fetchOpsCatalog } from "./ops-catalog";
-import { mergeOpsCatalog } from "./ops-overlay";
 import priceBaseline from "./price-baseline.json";
 import { sheetRowsForProduct, storageIdFromLabel } from "./iphone-sheet";
 import { macSheetForModel, macConfigStorageId, macConfigStorageLabel } from "./mac-sheet";
@@ -202,9 +200,7 @@ let cache: { at: number; overlay: CatalogOverlayMap } | null = null;
 /** Overlay map with a short in-process cache so page renders stay cheap. */
 export async function liveOverlay(maxAgeMs = 5000): Promise<CatalogOverlayMap> {
   if (cache && Date.now() - cache.at < maxAgeMs) return cache.overlay;
-  const local = await getOverlayMap();
-  const ops = await fetchOpsCatalog();
-  const overlay = ops ? mergeOpsCatalog(local, ops, defaultPricedCatalog()) : local;
+  const overlay = await getOverlayMap();
   cache = { at: Date.now(), overlay };
   return overlay;
 }

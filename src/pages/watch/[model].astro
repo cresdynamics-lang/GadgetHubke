@@ -264,23 +264,6 @@ const scaleVbH = scaleMidY + Math.max(scaleWatchR, scaleCoinR) + 18;
         <p class="wpdp__stock"><span class="wpdp__dot" /> In stock · Collect today in Nairobi</p>
 
         <div class="wpdp__cta" data-pdp-cta>
-          <button
-            type="button"
-            class="btn btn--primary btn--xs"
-            data-watch-bag
-            data-pdp-cart
-            data-id={model.id}
-            data-name={model.name}
-            data-size={`${model.defaultCaseMm}mm`}
-            data-material={materials[0]}
-            data-colour={colourLabel(model.defaultColour)}
-            data-connectivity="GPS"
-            data-band="Band in the pack"
-            data-kes={price.kes}
-            data-image={img.src}
-          >
-            Add to Cart
-          </button>
           <button type="button" class="btn btn--primary btn--xs" data-buy-now-checkout data-pdp-buy>Buy now</button>
           <a class="btn btn--secondary btn--xs" href="/trade-in">Trade In</a>
           <a class="btn btn--whatsapp btn--xs" data-wa data-wa-link href={`https://wa.me/${watchConfig.whatsapp}`} target="_blank" rel="noopener noreferrer">

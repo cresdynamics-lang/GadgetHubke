@@ -1,9 +1,10 @@
+import { opsLinked } from "../ops/link";
 import type { OpsCatalog } from "./ops-overlay";
 
 const TIMEOUT_MS = 2500;
 
 function configured() {
-  return Boolean(process.env.OPS_CATALOG_URL?.trim() && process.env.WEBSITE_SYNC_SECRET?.trim());
+  return opsLinked() && Boolean(process.env.OPS_CATALOG_URL?.trim() && process.env.WEBSITE_SYNC_SECRET?.trim());
 }
 
 export function opsCatalogConfigured() {

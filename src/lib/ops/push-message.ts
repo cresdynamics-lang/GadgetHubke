@@ -1,8 +1,9 @@
 import type { ContactMessage } from "../leads/messages";
+import { opsLinked } from "./link";
 import { pushCustomerToOps } from "./push-customer";
 
 function configured() {
-  return Boolean(process.env.OPS_CATALOG_URL?.trim() && process.env.WEBSITE_SYNC_SECRET?.trim());
+  return opsLinked() && Boolean(process.env.OPS_CATALOG_URL?.trim() && process.env.WEBSITE_SYNC_SECRET?.trim());
 }
 
 export async function pushMessageToOps(row: ContactMessage) {

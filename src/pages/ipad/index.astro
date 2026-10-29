@@ -204,17 +204,6 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
             <li>
               <h3>{b.label}</h3>
               <p>{formatKes(total)} · or {formatKes(lipa.monthlyKes)} / mo</p>
-              <button
-                type="button"
-                class="btn btn--primary btn--sm"
-                data-bundle
-                data-id={m.id}
-                data-name={m.name}
-                data-kes={total}
-                data-extras={`${b.label}`}
-              >
-                Add to Cart
-              </button>
             </li>
           );
         })
