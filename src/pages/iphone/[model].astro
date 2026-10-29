@@ -143,15 +143,25 @@ if (seo) {
     model?.storage ?? seo.variants.map((v) => v.storage),
     seo.name,
   );
-  prices = prices.map((p) => {
-    const l = liveByKey.get(storageIdFromLabel(p.label));
-    return l ? { ...p, kes: l.priceKes, exUkKes: l.exUkKes ?? p.exUkKes } : p;
-  });
+  prices = prices
+    .map((p) => {
+      const l = liveByKey.get(storageIdFromLabel(p.label));
+      return l ? { ...p, kes: l.priceKes, exUkKes: l.exUkKes ?? p.exUkKes } : p;
+    })
+    .filter((p) => {
+      const l = liveByKey.get(storageIdFromLabel(p.label));
+      if (!l) return live?.showOnWebsite !== false && live?.showNewOnWebsite !== false;
+      const showNew = live?.showNewOnWebsite !== false && l.showOnWebsite !== false;
+      const showEx = live?.exUkShowOnWebsite !== false && l.exUkShowOnWebsite !== false && (p.exUkKes ?? 0) > 0;
+      return showNew || showEx;
+    });
   // Feed links (?storage=256GB&condition=ex-uk) open on that exact option so the
   // landing price matches the Google / Meta feed price.
   const wantStorage = (Astro.url.searchParams.get("storage") || "").toLowerCase();
   selectedIdx = Math.max(0, prices.findIndex((p) => p.label.toLowerCase() === wantStorage));
-  const wantExUk = Astro.url.searchParams.get("condition") === "ex-uk" && (prices[selectedIdx]?.exUkKes ?? 0) > 0;
+  const wantExUk =
+    (Astro.url.searchParams.get("condition") === "ex-uk" || live?.showNewOnWebsite === false) &&
+    (prices[selectedIdx]?.exUkKes ?? 0) > 0;
   firstPrice = prices[selectedIdx] ?? { label: "", kes: seo.fromKes };
   priceLine = wantExUk
     ? `Ex-UK · From ${formatKes(prices[selectedIdx].exUkKes!)}`
@@ -338,7 +348,7 @@ if (seo) {
           <span class="ipdp__pill ipdp__pill--muted">{model.year}</span>
         </div>
         <h1>{seo.h1}</h1>
-        <StockChannelToggle show={prices.some((p) => (p.exUkKes ?? 0) > 0)} />
+        <StockChannelToggle show={live?.showNewOnWebsite !== false && live?.exUkShowOnWebsite !== false && prices.some((p) => (p.exUkKes ?? 0) > 0)} />
         <p class="ipdp__tagline">
           Price in Kenya · From {formatKesSeo(seo.fromKes)}
           {model?.tagline ? ` · ${model.tagline}` : ""}

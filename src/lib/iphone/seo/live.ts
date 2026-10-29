@@ -11,17 +11,24 @@ const kes = (n: number) => `KES ${Math.round(n).toLocaleString("en-KE")}`;
 export function withLiveSeoPrices(model: IphoneSeoModel, live: PricedProduct | undefined): IphoneSeoModel {
   if (!live) return model;
   const byKey = new Map(live.variants.map((v) => [v.key, v]));
-  const variants = model.variants.map((v) => {
+  const showNew = live.showNewOnWebsite !== false && live.showOnWebsite !== false;
+  const showEx = live.exUkShowOnWebsite !== false && live.showOnWebsite !== false;
+  const variants = model.variants.flatMap((v) => {
     const l = byKey.get(storageIdFromLabel(v.storage));
-    return l
-      ? {
-          ...v,
-          newKes: l.priceKes,
-          exUkKes: l.exUkKes ?? v.exUkKes,
-          stockStatus: l.inStock ? ("in_stock" as const) : ("out_of_stock" as const),
-        }
-      : v;
+    if (!l) return showNew ? [v] : [];
+    const newOk = showNew && l.showOnWebsite !== false;
+    const exOk = showEx && l.exUkShowOnWebsite !== false && typeof l.exUkKes === "number" && l.exUkKes > 0;
+    if (!newOk && !exOk) return [];
+    return [
+      {
+        ...v,
+        newKes: newOk ? l.priceKes : l.exUkKes ?? v.newKes,
+        exUkKes: exOk ? (l.exUkKes ?? v.exUkKes) : 0,
+        stockStatus: (newOk ? l.inStock : l.exUkInStock !== false) ? ("in_stock" as const) : ("out_of_stock" as const),
+      },
+    ];
   });
+  if (!variants.length) return { ...model, variants: [], fromKes: 0 };
   const fromKes = Math.min(...variants.map((v) => v.newKes));
   const oldFrom = kes(model.fromKes);
   const newFrom = kes(fromKes);

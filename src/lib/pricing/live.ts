@@ -196,9 +196,13 @@ export function defaultPricedCatalog(): PricedProduct[] {
 
 export function applyOverlay(p: PricedProduct, entry?: CatalogOverlayEntry | null): PricedProduct {
   if (!entry) return p;
+  const managedStorages = Boolean(entry.storages && Object.keys(entry.storages).length);
   const variants = p.variants.map((v) => {
     const o = entry.storages?.[v.key];
     if (!o) {
+      if (managedStorages) {
+        return { ...v, showOnWebsite: false, exUkShowOnWebsite: false, inStock: false, exUkInStock: false };
+      }
       return {
         ...v,
         showOnWebsite: typeof entry.showOnWebsite === "boolean" ? entry.showOnWebsite : v.showOnWebsite !== false,
@@ -269,17 +273,23 @@ export async function livePricedProduct(id: string): Promise<PricedProduct | und
   return applyOverlay(base, overlay[id]);
 }
 
-/** key → variant, for product page scripts. */
+/** key → variant, for product page scripts. Hidden options are omitted. */
 export function variantPriceMap(p: PricedProduct | undefined): Record<string, number> {
   const out: Record<string, number> = {};
-  for (const v of p?.variants ?? []) out[v.key] = v.priceKes;
+  for (const v of p?.variants ?? []) {
+    if (v.showOnWebsite === false) continue;
+    out[v.key] = v.priceKes;
+  }
   return out;
 }
 
 /** key → Ex-UK price (only options that have one). */
 export function variantExUkMap(p: PricedProduct | undefined): Record<string, number> {
   const out: Record<string, number> = {};
-  for (const v of p?.variants ?? []) if (typeof v.exUkKes === "number" && v.exUkKes > 0) out[v.key] = v.exUkKes;
+  for (const v of p?.variants ?? []) {
+    if (v.showOnWebsite === false || v.exUkShowOnWebsite === false) continue;
+    if (typeof v.exUkKes === "number" && v.exUkKes > 0) out[v.key] = v.exUkKes;
+  }
   return out;
 }
 
