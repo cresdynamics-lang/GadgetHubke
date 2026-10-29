@@ -63,20 +63,20 @@
   },
   "ipad-a16": {
    "128gb": {
-    "priceKes": 63000,
-    "source": "TechSmart"
+    "priceKes": 64000,
+    "source": "Shop list"
    },
    "128gb-cell": {
-    "priceKes": 81000,
-    "source": "TechSmart"
+    "priceKes": 80000,
+    "source": "Shop list"
    },
    "256gb": {
-    "priceKes": 77000,
-    "source": "TechSmart"
+    "priceKes": 83000,
+    "source": "Shop list"
    },
    "256gb-cell": {
-    "priceKes": 105000,
-    "source": "TechSmart"
+    "priceKes": 130000,
+    "source": "Shop list"
    }
   },
   "ipad-air-11-m3": {
@@ -99,20 +99,20 @@
   },
   "ipad-air-11-m4": {
    "128gb": {
-    "priceKes": 100000,
-    "source": "TechSmart"
+    "priceKes": 105000,
+    "source": "Shop list"
    },
    "128gb-cell": {
-    "priceKes": 125000,
-    "source": "PrimeTech"
+    "priceKes": 121000,
+    "source": "Shop list"
    },
    "256gb": {
-    "priceKes": 120000,
-    "source": "TechSmart"
+    "priceKes": 128000,
+    "source": "Shop list"
    },
    "256gb-cell": {
-    "priceKes": 148000,
-    "source": "PrimeTech"
+    "priceKes": 152000,
+    "source": "Shop list"
    }
   },
   "ipad-air-13-m3": {
@@ -146,9 +146,21 @@
    }
   },
   "ipad-air-13-m4": {
+   "128gb": {
+    "priceKes": 130000,
+    "source": "Shop list"
+   },
+   "128gb-cell": {
+    "priceKes": 138000,
+    "source": "Shop list"
+   },
    "256gb": {
-    "priceKes": 143000,
-    "source": "TechSmart"
+    "priceKes": 145000,
+    "source": "Shop list"
+   },
+   "256gb-cell": {
+    "priceKes": 165000,
+    "source": "Shop list"
    }
   },
   "ipad-pro-11-m4": {
@@ -167,16 +179,16 @@
   },
   "ipad-pro-11-m5": {
    "256gb": {
-    "priceKes": 157000,
-    "source": "Victor"
+    "priceKes": 165000,
+    "source": "Shop list"
    },
    "256gb-cell": {
-    "priceKes": 165000,
-    "source": "Victor"
+    "priceKes": 188000,
+    "source": "Shop list"
    },
    "512gb-cell": {
-    "priceKes": 215000,
-    "source": "Victor"
+    "priceKes": 218000,
+    "source": "Shop list"
    }
   },
   "ipad-pro-13-m4": {
@@ -206,29 +218,21 @@
    }
   },
   "ipad-pro-13-m5": {
-   "1tb": {
-    "priceKes": 260000,
-    "source": "TechSmart"
-   },
    "1tb-cell": {
     "priceKes": 258000,
-    "source": "Victor"
+    "source": "Shop list"
    },
    "256gb": {
-    "priceKes": 177000,
-    "source": "TechSmart"
+    "priceKes": 185000,
+    "source": "Shop list"
    },
    "256gb-cell": {
-    "priceKes": 180000,
-    "source": "Victor"
-   },
-   "512gb": {
-    "priceKes": 225000,
-    "source": "TechSmart"
+    "priceKes": 195000,
+    "source": "Shop list"
    },
    "512gb-cell": {
-    "priceKes": 215000,
-    "source": "Victor"
+    "priceKes": 223000,
+    "source": "Shop list"
    }
   },
   "iphone-11": {

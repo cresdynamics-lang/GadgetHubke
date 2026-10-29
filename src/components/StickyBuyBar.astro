@@ -27,7 +27,6 @@ const {
     <p class="float-buy__desc" data-float-desc>{description}</p>
   </div>
   <div class="float-buy__actions">
-    <button type="button" class="btn btn--primary btn--xs" data-sticky-buy-now>Buy now</button>
     <a class="btn btn--secondary btn--xs" href="/trade-in">Trade In</a>
     <a class="btn btn--whatsapp btn--xs" data-sticky-wa href="#">Order on WhatsApp</a>
   </div>
@@ -46,16 +45,6 @@ const {
 
     window.addEventListener("scroll", sync, { passive: true });
     sync();
-
-    bar.querySelector("[data-sticky-buy-now]")?.addEventListener("click", () => {
-      const checkoutBtn = document.querySelector("[data-buy-now-checkout]");
-      if (checkoutBtn instanceof HTMLElement) {
-        checkoutBtn.click();
-        return;
-      }
-      const source = document.querySelector("[data-pdp-buy], [data-buy-now]");
-      if (source instanceof HTMLElement) source.click();
-    });
 
     const stickyWa = bar.querySelector("[data-sticky-wa]");
     if (stickyWa instanceof HTMLAnchorElement) {
@@ -140,7 +129,7 @@ const {
 
   .float-buy__actions {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.25rem;
     width: 100%;
     flex: 1 1 100%;

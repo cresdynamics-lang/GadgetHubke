@@ -12,6 +12,7 @@ import RecentlyViewed from "../components/RecentlyViewed.astro";
 import interLatin from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
 import "../styles/global.css";
 import { site } from "../lib/site";
+import { STOREFRONT_PAYMENTS } from "../lib/commerce";
 
 interface Props {
   title?: string;
@@ -64,7 +65,7 @@ const storeJsonLd = {
   email: site.email,
   priceRange: "KES 3,000 - KES 600,000",
   currenciesAccepted: "KES",
-  paymentAccepted: "M-Pesa, Lipa Mdogo Mdogo",
+  paymentAccepted: STOREFRONT_PAYMENTS ? "M-Pesa, Lipa Mdogo Mdogo" : "WhatsApp order, M-Pesa in store",
   address: {
     "@type": "PostalAddress",
     streetAddress: `${site.address}, ${site.landmark}`,
@@ -88,7 +89,7 @@ const hideFloatWhatsApp = path === "/contact";
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class:list={{ "storefront-wa-only": !STOREFRONT_PAYMENTS }}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />

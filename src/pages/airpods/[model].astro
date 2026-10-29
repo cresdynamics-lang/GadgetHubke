@@ -221,7 +221,6 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
         <p class="apdp__stock"><span class="apdp__dot" /> In stock · Collect today in Nairobi</p>
 
         <div class="apdp__cta" data-pdp-cta>
-          <button type="button" class="btn btn--primary btn--xs" data-buy-now-checkout data-pdp-buy>Buy now</button>
           <a class="btn btn--secondary btn--xs" href="/trade-in">Trade In</a>
           <a class="btn btn--whatsapp btn--xs" data-wa data-wa-link href={`https://wa.me/${airpodsConfig.whatsapp}`} target="_blank" rel="noopener noreferrer">
             Order on WhatsApp
@@ -605,7 +604,7 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
   .apdp__dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: #34c759; }
   .apdp__cta {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.35rem;
     width: 100%;
     margin: 1rem 0;

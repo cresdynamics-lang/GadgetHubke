@@ -9,6 +9,7 @@ import { sendInvoiceForOrder, sendReceiptForOrder } from "../mail/orders";
 import type { BagItem, CheckoutCustomer, CheckoutOrder, LipaTerms, OrderIntent, OrderStatus, PaymentMethod } from "./types";
 import { pushOrderToOps } from "../ops/push-order";
 import { bagTotal } from "./bag";
+import { STOREFRONT_PAYMENTS } from "../commerce";
 import { buildLipaTerms, nairobiDay, parseIntent } from "./intent";
 
 const REDIS_KEY = "gh:checkout-orders:v1";
@@ -107,7 +108,7 @@ export async function createOrder(input: {
     intent,
     lipa,
     currency: "KES",
-    paymentProvider: "stanbic",
+    paymentProvider: STOREFRONT_PAYMENTS ? "stanbic" : "whatsapp",
   };
   const all = await readAll();
   all.unshift(order);
@@ -144,17 +145,19 @@ export async function createOrder(input: {
       console.error("[lipa-plan]", e);
     }
   }
-  try {
-    const result = await sendInvoiceForOrder(order);
-    if (result.ok) {
-      const sentAt = new Date().toISOString();
-      order.invoiceSentAt = sentAt;
-      await updateOrder(order.id, { invoiceSentAt: sentAt });
-    } else {
-      console.error("[invoice-mail]", result.error);
+  if (STOREFRONT_PAYMENTS) {
+    try {
+      const result = await sendInvoiceForOrder(order);
+      if (result.ok) {
+        const sentAt = new Date().toISOString();
+        order.invoiceSentAt = sentAt;
+        await updateOrder(order.id, { invoiceSentAt: sentAt });
+      } else {
+        console.error("[invoice-mail]", result.error);
+      }
+    } catch (e) {
+      console.error("[invoice-mail]", e);
     }
-  } catch (e) {
-    console.error("[invoice-mail]", e);
   }
   void pushOrderToOpsSafe(order);
   return order;

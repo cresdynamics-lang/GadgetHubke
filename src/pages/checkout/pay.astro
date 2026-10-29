@@ -7,9 +7,10 @@ export const prerender = false;
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getOrder, publicOrder } from "../../lib/checkout/orders";
-import { formatKes } from "../../lib/checkout/bag";
+import { formatKes, whatsappOrderMessage } from "../../lib/checkout/bag";
+import { STOREFRONT_PAYMENTS } from "../../lib/commerce";
 import { verifyPayToken } from "../../lib/documents/pay-link";
-import { site } from "../../lib/site";
+import { site, whatsappUrl } from "../../lib/site";
 
 const orderId = Astro.url.searchParams.get("order")?.trim() || "";
 const token = Astro.url.searchParams.get("t")?.trim() || "";
@@ -19,11 +20,16 @@ const order = valid && found ? publicOrder(found) : null;
 const paid = order?.status === "paid";
 const lipa = order?.intent === "lipa";
 const dueLabel = lipa ? "Lipa Mdogo Mdogo deposit" : "Invoice";
+const waHref = order
+  ? whatsappUrl(
+      whatsappOrderMessage(order.items, order.subtotalKes, order.customer, order.id),
+    )
+  : whatsappUrl("Hi Gadget Hub — I have a question about my order.");
 ---
 
 <BaseLayout
   title={order ? `Pay ${formatKes(order.subtotalKes)} - GadgetHub` : "Pay invoice - GadgetHub"}
-  description={`Pay your Gadget Hub invoice with M-Pesa. ${site.address}.`}
+  description={STOREFRONT_PAYMENTS ? `Pay your Gadget Hub invoice with M-Pesa. ${site.address}.` : `Finish this order on WhatsApp. ${site.address}.`}
 >
   <section class="pay container" data-pay-page data-order-id={order?.id || ""}>
     {
@@ -57,8 +63,10 @@ const dueLabel = lipa ? "Lipa Mdogo Mdogo deposit" : "Invoice";
           <p class="pay__lede">
             {order.customer.name} · {order.customer.email}. Pickup at {site.address} unless you chose delivery.
             {lipa
-              ? `This is the Lipa Mdogo Mdogo deposit (${order.lipa?.depositPct || 40}%), not the full device price. Remaining ${formatKes(order.lipa?.remainingKes || 0)} over ${order.lipa?.months || 6} months after we confirm the plan.`
-              : "We emailed this purchase invoice; download the PDF, then pay with M-Pesa."}
+              ? `This is the Lipa Mdogo Mdogo deposit (${order.lipa?.depositPct || 40}%), not the full device price. Remaining ${formatKes(order.lipa?.remainingKes || 0)} over ${order.lipa?.months || 6} months.`
+              : STOREFRONT_PAYMENTS
+                ? "We emailed this purchase invoice; download the PDF, then pay with M-Pesa."
+                : "Finish this order on WhatsApp. We already have your details for follow-up."}
           </p>
           <ul class="pay__lines">
             {order.items.map((item) => (
@@ -77,18 +85,29 @@ const dueLabel = lipa ? "Lipa Mdogo Mdogo deposit" : "Invoice";
               <a class="btn btn--secondary" href={order.invoiceUrl}>Download invoice PDF</a>
             ) : null}
           </div>
-          <label class="pay__field">
-            <span>M-Pesa number</span>
-            <input type="tel" data-mpesa-phone value={order.customer.phone} placeholder="07XX XXX XXX" />
-          </label>
-          <button type="button" class="btn btn--primary pay__btn" data-pay-mpesa-btn>
-            Pay {formatKes(order.subtotalKes)} with M-Pesa
-          </button>
-          <p class="pay__wait" data-mpesa-wait hidden>Check your phone for the M-Pesa prompt…</p>
-          <p class="pay__error" data-pay-error hidden></p>
-          <p class="pay__hint">
-            Funds settle to Gadget Hub’s Stanbic account. Card is not available. WhatsApp {site.phoneDisplay} if the prompt does not arrive.
-          </p>
+          {STOREFRONT_PAYMENTS ? (
+            <>
+              <label class="pay__field">
+                <span>M-Pesa number</span>
+                <input type="tel" data-mpesa-phone value={order.customer.phone} placeholder="07XX XXX XXX" />
+              </label>
+              <button type="button" class="btn btn--primary pay__btn" data-pay-mpesa-btn>
+                Pay {formatKes(order.subtotalKes)} with M-Pesa
+              </button>
+              <p class="pay__wait" data-mpesa-wait hidden>Check your phone for the M-Pesa prompt…</p>
+              <p class="pay__error" data-pay-error hidden></p>
+              <p class="pay__hint">
+                Funds settle to Gadget Hub’s Stanbic account. Card is not available. WhatsApp {site.phoneDisplay} if the prompt does not arrive.
+              </p>
+            </>
+          ) : (
+            <>
+              <a class="btn btn--whatsapp pay__btn" href={waHref} target="_blank" rel="noopener noreferrer">
+                Continue on WhatsApp
+              </a>
+              <p class="pay__hint">Online card and M-Pesa checkout are off. We confirm payment on WhatsApp or in the shop.</p>
+            </>
+          )}
         </div>
       )
     }
@@ -96,7 +115,7 @@ const dueLabel = lipa ? "Lipa Mdogo Mdogo deposit" : "Invoice";
 </BaseLayout>
 
 {
-  order && !paid ? (
+  STOREFRONT_PAYMENTS && order && !paid ? (
     <script>
       const root = document.querySelector("[data-pay-page]");
       const orderId = root?.getAttribute("data-order-id") || "";

@@ -75,7 +75,7 @@ export const policy = {
   faultyReturnShipping: "GadgetHub" as const,
   /** Card rail - processor name TBD; do not invent a provider */
   cardPaymentsLabel: "card payments via our payment provider",
-  paymentMethods: ["M-Pesa", "card", "Lipa Mdogo Mdogo"] as const,
+  paymentMethods: ["WhatsApp order", "M-Pesa in store", "Lipa Mdogo Mdogo"] as const,
 } as const;
 
 export function whatsappUrl(message?: string): string {

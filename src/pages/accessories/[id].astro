@@ -290,7 +290,6 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
       <p class="xpdp__fine">{accessoriesConfig.samplePriceDisclaimer}</p>
       <p class="xpdp__stock"><span class="dot" aria-hidden="true" /> In stock · Collect today in Nairobi</p>
       <div class="xpdp__actions" data-pdp-cta>
-        <button type="button" class="btn btn--primary btn--xs" data-buy-now-checkout data-pdp-buy>Buy now</button>
         <a class="btn btn--secondary btn--xs" href="/trade-in">Trade In</a>
         <a class="btn btn--whatsapp btn--xs" href={wa} rel="noopener" data-wa-link target="_blank">Order on WhatsApp</a>
       </div>
@@ -698,7 +697,7 @@ const designOnly = Boolean(product.overviewOnly || product.noStorePhoto || hero.
   }
   .xpdp__actions {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.35rem;
     width: 100%;
     margin: 1rem 0;

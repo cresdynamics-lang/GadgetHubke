@@ -270,6 +270,21 @@ button {
   transform: none;
 }
 
+html.storefront-wa-only [data-buy-now],
+html.storefront-wa-only [data-buy-now-checkout],
+html.storefront-wa-only [data-pdp-buy],
+html.storefront-wa-only [data-add-bag],
+html.storefront-wa-only [data-sticky-buy-now],
+html.storefront-wa-only [data-bag-checkout],
+html.storefront-wa-only [data-pay-mpesa],
+html.storefront-wa-only .checkout__methods {
+  display: none !important;
+}
+
+html.storefront-wa-only .float-buy__actions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

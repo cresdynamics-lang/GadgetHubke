@@ -233,8 +233,8 @@ const liveAccessoryKes = (href: string, fallback: number) =>
           </p>
           <p class="mpdp__stock"><span class="mpdp__pulse" /> In stock · Collect today in Nairobi</p>
 
+          <div hidden data-add-bag data-id={model.id} data-name={model.name} data-chip={model.chip} data-size={`${model.display.diagonal}″`} data-colour={colourLabel(colour)} data-image={img.src}></div>
           <div class="mpdp__actions" data-pdp-cta>
-            <button type="button" class="btn btn--primary btn--xs" data-buy-now-checkout data-pdp-buy>Buy now</button>
             <a class="btn btn--secondary btn--xs" href="/trade-in">Trade In</a>
             <a class="btn btn--whatsapp btn--xs" href={wa} target="_blank" rel="noopener noreferrer" data-wa-link>
               Order on WhatsApp
@@ -796,7 +796,7 @@ const liveAccessoryKes = (href: string, fallback: number) =>
   }
   .mpdp__actions {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.35rem;
     width: 100%;
     margin: 1rem 0;

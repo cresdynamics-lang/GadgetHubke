@@ -70,6 +70,7 @@ export async function upsertOverlay(
     inStock?: boolean | null;
     showOnWebsite?: boolean | null;
     storages?: Record<string, OverlayVariantPatch>;
+    coloursInStock?: string[] | null;
   },
 ) {
   const map = await getOverlayMap();
@@ -92,12 +93,18 @@ export async function upsertOverlay(
     if (from.length) next.priceKes = Math.min(...from);
   }
 
+  if (patch.coloursInStock === null) delete next.coloursInStock;
+  else if (Array.isArray(patch.coloursInStock)) {
+    next.coloursInStock = patch.coloursInStock.map((c) => String(c).trim()).filter(Boolean);
+  }
+
   const empty =
     next.priceKes == null &&
     next.exUkKes == null &&
     next.inStock == null &&
     next.showOnWebsite == null &&
-    !Object.keys(next.storages || {}).length;
+    !Object.keys(next.storages || {}).length &&
+    !(next.coloursInStock && next.coloursInStock.length);
   if (empty) delete map[id];
   else map[id] = next;
   await saveOverlayMap(map);

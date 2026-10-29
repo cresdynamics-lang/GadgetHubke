@@ -37,6 +37,7 @@ import { whatsappUrl } from "../../lib/site";
 import { variantExUkMap } from "../../lib/pricing/live";
 import StockChannelToggle from "../../components/StockChannelToggle.astro";
 import { livePricedProduct, variantPriceMap } from "../../lib/pricing/live";
+import { isListedIpadModel, listedIpadKeys, listedIpadPrice } from "../../lib/pricing/ipad-listed";
 import { buildProductSeo } from "../../lib/seo/product-seo";
 import ProductSeoBlock from "../../components/ProductSeoBlock.astro";
 
@@ -44,6 +45,7 @@ export const prerender = false;
 
 const model = getIpadModel(Astro.params.model!);
 if (!model) return Astro.redirect("/ipad");
+if (!isListedIpadModel(model.id)) return Astro.redirect("/ipad");
 
 const colour = defaultIpadColour(model);
 const tabs = ipadViewerTabs(model, colour);
@@ -74,22 +76,30 @@ const exactExUk = variantExUkMap(liveIpad);
 const hasExact = Object.keys(exactPrices).length > 0;
 const exactKey = (storage: string, cellular: boolean) =>
   `${storage.replace(/\s+/g, "").toLowerCase()}${cellular ? "-cell" : ""}`;
-const firstExact = exactPrices[exactKey(model.storageOptions[0], false)];
+const listedKeys = listedIpadKeys(model.id);
+const storageOptions = model.storageOptions.filter(
+  (s) => listedKeys.includes(exactKey(s, false)) || listedKeys.includes(exactKey(s, true)),
+);
+const showWifi = listedKeys.some((key) => !key.endsWith("-cell"));
+const showCell = listedKeys.some((key) => key.endsWith("-cell"));
+const defaultStorage = storageOptions[0] || model.storageOptions[0];
+const defaultCellular = listedIpadPrice(model.id, exactKey(defaultStorage, false)) == null && listedIpadPrice(model.id, exactKey(defaultStorage, true)) != null;
+const firstExact = exactPrices[exactKey(defaultStorage, defaultCellular)] ?? exactPrices[exactKey(defaultStorage, false)];
 if (firstExact != null) price.kes = firstExact;
 const lipa = lipaMonthly(price.kes);
 const notes = ipadBuyingNotes(model);
 const faq = ipadFaq();
 const fitsList = accessoriesForIpad(model).filter((a) => a.category !== "cross");
-const related = relatedIpadModels(model, ipadModels);
+const related = relatedIpadModels(model, ipadModels).filter((m) => isListedIpadModel(m.id));
 const thickness = ipadConfig.thicknessMm[model.thicknessKey];
 const pencils = pencilCatalog().filter((a) => fits(model, a));
 const keyboards = keyboardCatalog().filter((a) => fits(model, a));
 const siblings = ipadModels.filter(
-  (m) => m.family === model.family && m.chipGen === model.chipGen && m.id !== model.id,
+  (m) => m.family === model.family && m.chipGen === model.chipGen && m.id !== model.id && isListedIpadModel(m.id),
 );
 const colourViews = Object.fromEntries(model.colours.map((c) => [c, ipadViewerTabs(model, c)]));
 const wa = whatsappUrl(
-  `Hi Gadget Hub, I'm interested in the ${model.name}, ${model.storageOptions[0]}, Wi-Fi, ${colourLabel(colour)}.`,
+  `Hi Gadget Hub, I'm interested in the ${model.name}, ${defaultStorage}, ${defaultCellular ? "Wi-Fi + Cellular" : "Wi-Fi"}, ${colourLabel(colour)}.`,
 );
 ---
 
@@ -209,14 +219,14 @@ const wa = whatsappUrl(
 
           <p class="ipdp__cfg-label">Connectivity</p>
           <div class="ipdp__opts" data-ipad-conn>
-            <button type="button" class="is-active" data-cellular="0">Wi-Fi</button>
-            {model.cellular ? <button type="button" data-cellular="1">Wi-Fi + Cellular{hasExact ? "" : ` · +${formatKes(ipadConfig.cellularStepKes)}`}</button> : null}
+            {showWifi ? <button type="button" class:list={{ "is-active": !defaultCellular }} data-cellular="0">Wi-Fi</button> : null}
+            {model.cellular && showCell ? <button type="button" class:list={{ "is-active": defaultCellular }} data-cellular="1">Wi-Fi + Cellular{hasExact ? "" : ` · +${formatKes(ipadConfig.cellularStepKes)}`}</button> : null}
           </div>
 
           <p class="ipdp__cfg-label">Storage</p>
           <div class="ipdp__opts" data-ipad-storage>
             {
-              model.storageOptions.map((s, i) => (
+              storageOptions.map((s, i) => (
                 <button type="button" class:list={{ "is-active": i === 0 }} data-storage={s} data-step={i}>
                   {s}{i > 0 && !hasExact ? ` · +${formatKes(i * ipadConfig.storageStepKes)}` : ""}
                 </button>
@@ -265,8 +275,8 @@ const wa = whatsappUrl(
           </p>
           <p class="ipdp__stock"><span class="ipdp__pulse" /> In stock · Collect today in Nairobi</p>
 
+          <div hidden data-add-bag data-id={model.id} data-name={model.name} data-chip={model.chip} data-size={`${model.screenInches}″`} data-storage={defaultStorage} data-colour={colourLabel(colour)} data-connectivity={defaultCellular ? "Wi-Fi + Cellular" : "Wi-Fi"} data-image={img.src}></div>
           <div class="ipdp__actions" data-pdp-cta>
-            <button type="button" class="btn btn--primary btn--xs" data-buy-now-checkout data-pdp-buy>Buy now</button>
             <a class="btn btn--secondary btn--xs" href="/trade-in">Trade In</a>
             <a class="btn btn--whatsapp btn--xs" href={wa} target="_blank" rel="noopener noreferrer" data-wa-link>
               Order on WhatsApp
@@ -508,9 +518,10 @@ const wa = whatsappUrl(
   colourViews,
   initialColour: colour,
   nanoAllowed: Boolean(model.display.nanoTextureOptional),
+  initialCellular: defaultCellular ? 1 : 0,
 }}>
   const viewKey = `gh-pdp-ipad:${modelName}`;
-  const state = { storage: 0, cellular: 0, nano: false, colour: initialColour, kes: base, tabIndex: 0, addons: 0, channel: "new" };
+  const state = { storage: 0, cellular: initialCellular, nano: false, colour: initialColour, kes: base, tabIndex: 0, addons: 0, channel: "new" };
   const priceEl = document.querySelector("[data-ipad-price]");
   const lipaEl = document.querySelector("[data-ipad-lipa]");
   const viewerImg = document.querySelector("[data-viewer-img]");
@@ -619,6 +630,13 @@ const wa = whatsappUrl(
   function refresh() {
     const storBtn = document.querySelector("[data-ipad-storage] .is-active");
     const storLabel = storBtn?.getAttribute("data-storage") || "";
+    const wifiKey = `${storLabel.replace(/\s+/g, "").toLowerCase()}`;
+    const cellKey = `${wifiKey}-cell`;
+    if (state.cellular && exactPrices[cellKey] == null && exactPrices[wifiKey] != null) state.cellular = 0;
+    if (!state.cellular && exactPrices[wifiKey] == null && exactPrices[cellKey] != null) state.cellular = 1;
+    document.querySelectorAll("[data-ipad-conn] button").forEach((b) => {
+      b.classList.toggle("is-active", Number(b.getAttribute("data-cellular") || 0) === state.cellular);
+    });
     const optionKey = `${storLabel.replace(/\s+/g, "").toLowerCase()}${state.cellular ? "-cell" : ""}`;
     const exactKes = (state.channel === "ex-uk" ? exactExUk[optionKey] : undefined) ?? exactPrices[optionKey];
     let kes = (exactKes ?? base + state.storage * storStep + state.cellular * cellStep) + state.addons;
@@ -952,7 +970,7 @@ const wa = whatsappUrl(
   }
   .ipdp__actions {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.35rem;
     width: 100%;
     margin: 1rem 0;

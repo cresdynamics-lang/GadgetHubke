@@ -18,6 +18,8 @@ import priceBaseline from "./price-baseline.json";
 import { sheetRowsForProduct, storageIdFromLabel } from "./iphone-sheet";
 import { macSheetForModel, macConfigStorageId, macConfigStorageLabel } from "./mac-sheet";
 import { ipadSheetForModel, ipadConfigStorageId, ipadConfigStorageLabel } from "./ipad-sheet";
+import { listedIpadPrice, isListedIpadModel, enforceListedIpad } from "./ipad-listed";
+import { availableColours, textOnlyColours } from "../iphone/images";
 import { watchSheetForModel, watchConfigStorageId, watchConfigStorageLabel } from "./watch-sheet";
 import { tvHomeSheetForModel, tvHomeConfigStorageId, tvHomeConfigStorageLabel } from "./tv-home-sheet";
 
@@ -49,6 +51,8 @@ export type PricedProduct = {
   showNewOnWebsite?: boolean;
   exUkShowOnWebsite?: boolean;
   variants: PriceVariant[];
+  /** Catalogue finishes for admin stock ticks. Empty means “all colours”. */
+  colours?: string[];
   coloursInStock?: string[];
   exUkColoursInStock?: string[];
   /** True when nothing has been saved in admin for this product. */
@@ -64,6 +68,7 @@ function product(
   basePriceKes: number,
   variants: PriceVariant[] = [],
   inStock = true,
+  colours: string[] = [],
 ): PricedProduct {
   const base = (priceBaseline.products as Record<string, Record<string, { priceKes?: number; exUkKes?: number }>>)[id];
   if (base) {
@@ -72,8 +77,25 @@ function product(
       return b ? { ...v, priceKes: b.priceKes ?? v.priceKes, exUkKes: b.exUkKes ?? v.exUkKes } : v;
     });
   }
-  const priceKes = variants.length ? Math.min(...variants.map((v) => v.priceKes)) : basePriceKes;
-  return { id, name, group, href, priceKes, basePriceKes: priceKes, inStock, showOnWebsite: true, variants, sample: true };
+  const shown = variants.filter((v) => v.showOnWebsite !== false);
+  const priceKes = shown.length
+    ? Math.min(...shown.map((v) => v.priceKes))
+    : variants.length
+      ? Math.min(...variants.map((v) => v.priceKes))
+      : basePriceKes;
+  return {
+    id,
+    name,
+    group,
+    href,
+    priceKes,
+    basePriceKes: priceKes,
+    inStock,
+    showOnWebsite: true,
+    variants,
+    colours: colours.length ? [...new Set(colours)] : undefined,
+    sample: true,
+  };
 }
 
 /** Last row wins when a sheet repeats a key (matches how admin overlays were seeded). */
@@ -111,14 +133,14 @@ export function defaultPricedCatalog(): PricedProduct[] {
       exUkKes: s.exUkKes,
       inStock: true,
     }));
-    push(product(p.id, p.name, "Shop iPhone", p.overviewHref, p.storages[0]?.priceKes ?? 0, variants));
+    push(product(p.id, p.name, "Shop iPhone", p.overviewHref, p.storages[0]?.priceKes ?? 0, variants, true, [...availableColours(p.id), ...textOnlyColours(p.id)]));
   }
 
   // iPhone models without a shop entry (11–17 Pro Max) — keyed by SEO page id.
   for (const m of listSeoModels()) {
     if (seoIdToShopProductId[m.id]) continue;
     const variants = iphoneVariants(m.name);
-    push(product(m.id, m.name, "iPhone catalog", `/iphone/${m.id}`, m.fromKes, variants));
+    push(product(m.id, m.name, "iPhone catalog", `/iphone/${m.id}`, m.fromKes, variants, true, [...availableColours(m.id), ...textOnlyColours(m.id)]));
   }
 
   for (const m of macModels) {
@@ -131,20 +153,32 @@ export function defaultPricedCatalog(): PricedProduct[] {
         inStock: true,
       })),
     );
-    push(product(m.id, m.name, "Mac", `/mac/${m.id}`, m.basePriceKes, variants));
+    push(product(m.id, m.name, "Mac", `/mac/${m.id}`, m.basePriceKes, variants, true, m.colours));
   }
 
   for (const m of ipadModels) {
+    const listed = isListedIpadModel(m.id);
     const variants = dedupe(
-      ipadSheetForModel(m.id).map((r) => ({
-        key: ipadConfigStorageId(r.storage, r.cellular),
-        label: ipadConfigStorageLabel(r.storage, r.cellular),
-        priceKes: r.newKes,
-        exUkKes: r.exUkKes,
-        inStock: true,
-      })),
+      ipadSheetForModel(m.id).map((r) => {
+        const key = ipadConfigStorageId(r.storage, r.cellular);
+        const listedKes = listedIpadPrice(m.id, key);
+        const on = listedKes != null;
+        return {
+          key,
+          label: ipadConfigStorageLabel(r.storage, r.cellular),
+          priceKes: listedKes ?? r.newKes,
+          exUkKes: r.exUkKes,
+          inStock: on,
+          showOnWebsite: on,
+        };
+      }),
     );
-    push(product(m.id, m.name, "iPad", `/ipad/${m.id}`, m.basePriceKes, variants));
+    const row = product(m.id, m.name, "iPad", `/ipad/${m.id}`, m.basePriceKes, variants, listed, m.colours);
+    if (!listed) {
+      row.showOnWebsite = false;
+      row.inStock = false;
+    }
+    push(row);
   }
 
   for (const m of watchModels) {
@@ -157,14 +191,14 @@ export function defaultPricedCatalog(): PricedProduct[] {
         inStock: true,
       })),
     );
-    push(product(m.id, m.name, "Watch", `/watch/${m.id}`, m.basePriceKes, variants));
+    push(product(m.id, m.name, "Watch", `/watch/${m.id}`, m.basePriceKes, variants, true, m.colours));
   }
 
   for (const m of airpodsModels) {
     push(
       product(m.id, m.name, "AirPods", `/airpods/${m.id}`, m.basePriceKes, [
         { key: "base", label: "Standard", priceKes: m.basePriceKes, inStock: true },
-      ]),
+      ], true, m.colours),
     );
   }
 
@@ -181,7 +215,7 @@ export function defaultPricedCatalog(): PricedProduct[] {
           })),
         )
       : [];
-    push(product(m.id, m.name, "TV & Home", `/tv-home/${m.id}`, m.basePriceKes, variants, !m.noImage));
+    push(product(m.id, m.name, "TV & Home", `/tv-home/${m.id}`, m.basePriceKes, variants, !m.noImage, m.colours));
   }
 
   for (const a of accessories) {
@@ -211,14 +245,14 @@ export function clearLiveCache() {
 
 export async function livePricedCatalog(): Promise<PricedProduct[]> {
   const overlay = await liveOverlay();
-  return defaultPricedCatalog().map((p) => applyOverlay(p, overlay[p.id]));
+  return defaultPricedCatalog().map((p) => enforceListedIpad(applyOverlay(p, overlay[p.id])));
 }
 
 export async function livePricedProduct(id: string): Promise<PricedProduct | undefined> {
   const base = defaultPricedCatalog().find((p) => p.id === id);
   if (!base) return undefined;
   const overlay = await liveOverlay();
-  return applyOverlay(base, overlay[id]);
+  return enforceListedIpad(applyOverlay(base, overlay[id]));
 }
 
 /** key → variant, for product page scripts. Hidden options are omitted. */

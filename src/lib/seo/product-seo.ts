@@ -91,7 +91,7 @@ export function buildProductSeo(input: ProductSeoInput): ProductSeo {
   // Full title, never shortened: long titles carry more of what Kenyans search.
   const title = longTitle;
   const description = clip(
-    `Buy the ${name} in Nairobi. ${formatKes(fromKes)}.${options} Genuine sealed Apple, ${site.warranty.years}-year warranty. Pay by M-Pesa or Lipa Mdogo Mdogo.`,
+    `Buy the ${name} in Nairobi. ${formatKes(fromKes)}.${options} Genuine sealed Apple, ${site.warranty.years}-year warranty. Order on WhatsApp or Lipa Mdogo Mdogo.`,
     158,
   );
 

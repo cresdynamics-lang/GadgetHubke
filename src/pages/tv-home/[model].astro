@@ -210,7 +210,6 @@ const showPair = model.stereoPairCapable;
         <p class="thpdp__stock"><span class="thpdp__dot" /> In stock · Collect today in Nairobi</p>
 
         <div class="thpdp__cta" data-pdp-cta>
-          <button type="button" class="btn btn--primary btn--xs" data-buy-now-checkout data-pdp-buy>Buy now</button>
           <a class="btn btn--secondary btn--xs" href="/trade-in">Trade In</a>
           <a class="btn btn--whatsapp btn--xs" data-wa data-wa-link href={`https://wa.me/${tvHomeConfig.whatsapp}`} target="_blank" rel="noopener noreferrer">
             Order on WhatsApp
@@ -509,7 +508,7 @@ const showPair = model.stereoPairCapable;
   .thpdp__dot { display: inline-block; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: #34c759; margin-right: 0.35rem; }
   .thpdp__cta {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.35rem;
     width: 100%;
     margin: 1rem 0;

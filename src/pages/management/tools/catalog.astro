@@ -17,8 +17,8 @@ const kes = (n?: number) => (typeof n === "number" ? n : "");
   <section class="mgmt-card">
     <h1 class="mgmt-page-title">Prices & stock</h1>
     <p class="mgmt-muted">
-      Every price on the site comes from here: product pages, cards, cart, checkout and the Google / Meta feeds.
-      Edit a product's options and press Save; the shop updates within a few seconds.
+      Every price on the site comes from here: product pages, cards, cart and WhatsApp orders.
+      Tick every colour that is in stock (all are available until you untick). Press Save; the shop updates within a few seconds.
     </p>
     <div class="mgmt-filter">
       <input class="mgmt-input" type="search" placeholder="Filter by name or id" data-filter-q style="max-width:16rem;" />
@@ -47,6 +47,8 @@ const kes = (n?: number) => (typeof n === "number" ? n : "");
             const options = item.variants.length
               ? item.variants
               : [{ key: "", label: "Single price", priceKes: item.priceKes, exUkKes: item.exUkKes, inStock: item.inStock }];
+            const colourKeys = item.colours || [];
+            const stockColours = item.coloursInStock?.length ? item.coloursInStock : colourKeys;
             return (
               <tbody
                 data-row
@@ -64,6 +66,18 @@ const kes = (n?: number) => (typeof n === "number" ? n : "");
                           <strong>{item.name}</strong>
                           <div class="mgmt-muted">{item.id}</div>
                           {item.sample ? <div class="mgmt-muted">Repo default</div> : <div class="mgmt-muted">Saved in admin</div>}
+                          {
+                            colourKeys.length ? (
+                              <div class="cat-colours" data-colours>
+                                {colourKeys.map((c) => (
+                                  <label>
+                                    <input type="checkbox" value={c} data-colour checked={stockColours.includes(c)} />
+                                    {c.replace(/-/g, " ")}
+                                  </label>
+                                ))}
+                              </div>
+                            ) : null
+                          }
                         </td>
                         <td rowspan={options.length}>{item.group}</td>
                       </>
@@ -91,6 +105,20 @@ const kes = (n?: number) => (typeof n === "number" ? n : "");
 
 <style>
   .cat-product + .cat-product tr:first-child td { border-top: 2px solid rgba(0, 0, 0, 0.12); }
+  .cat-colours {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.7rem;
+    margin-top: 0.55rem;
+    font-size: 0.78rem;
+    font-weight: 500;
+    text-transform: capitalize;
+  }
+  .cat-colours label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
 </style>
 
 <script>
@@ -142,6 +170,10 @@ const kes = (n?: number) => (typeof n === "number" ? n : "");
         body.priceKes = num(tr.querySelector("[data-price]"));
         body.exUkKes = num(tr.querySelector("[data-exuk]"));
         body.inStock = Boolean(tr.querySelector<HTMLInputElement>("[data-stock]")?.checked);
+      }
+      const colourBoxes = [...row.querySelectorAll<HTMLInputElement>("[data-colour]")];
+      if (colourBoxes.length) {
+        body.coloursInStock = colourBoxes.filter((el) => el.checked).map((el) => el.value);
       }
       (btn as HTMLButtonElement).disabled = true;
       try {

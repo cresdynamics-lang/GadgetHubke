@@ -20,9 +20,8 @@ const waPhone = iphoneConfig.whatsapp;
     <ul class="bag__list" data-bag-list hidden></ul>
     <footer class="bag__foot" data-bag-foot hidden>
       <p class="bag__total">Total <strong data-bag-total></strong></p>
-      <a class="btn btn--primary" data-bag-checkout href="/checkout">Checkout</a>
-      <a class="btn btn--whatsapp btn--sm" data-bag-wa href="#" target="_blank" rel="noopener noreferrer">
-        Need help on WhatsApp
+      <a class="btn btn--whatsapp" data-bag-wa href="#" target="_blank" rel="noopener noreferrer">
+        Order on WhatsApp
       </a>
     </footer>
   </div>
@@ -328,9 +327,6 @@ const waPhone = iphoneConfig.whatsapp;
   });
 
   document.querySelector("[data-bag-close]")?.addEventListener("click", closeBag);
-  document.querySelector("[data-bag-checkout]")?.addEventListener("click", () => {
-    closeBag();
-  });
   drawer?.addEventListener("click", (e) => {
     if (e.target === drawer) closeBag();
   });
@@ -346,8 +342,8 @@ const waPhone = iphoneConfig.whatsapp;
     else items.push(incoming);
     write(items);
     trackMetaAddToCart(incoming);
-    showToast("Added — opening checkout");
-    location.href = "/checkout";
+    showToast("Added — order on WhatsApp");
+    openBag();
   });
 
   window.addEventListener("gh:cart", () => {

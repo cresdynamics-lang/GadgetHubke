@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { iphoneConfig } from "../../lib/iphone/config";
+import { STOREFRONT_PAYMENTS } from "../../lib/commerce";
 import { site } from "../../lib/site";
 
 const waNumber = site.whatsapp;
@@ -9,7 +10,7 @@ const lipa = iphoneConfig.lipa;
 
 <BaseLayout
   title="Checkout - GadgetHub"
-  description={`Complete your order with M-Pesa. ${site.address}.`}
+  description={STOREFRONT_PAYMENTS ? `Complete your order with M-Pesa. ${site.address}.` : `Leave your details, then finish the order on WhatsApp. ${site.address}.`}
   hideFooter
 >
   <section
@@ -18,20 +19,21 @@ const lipa = iphoneConfig.lipa;
     data-wa={waNumber}
     data-lipa-pct={lipa.depositDefaultPct}
     data-lipa-months={lipa.monthsDefault}
+    data-payments={STOREFRONT_PAYMENTS ? "1" : "0"}
   >
     <header class="checkout__intro">
       <button type="button" class="checkout__back" data-checkout-back>← Back</button>
       <p class="checkout__eyebrow">Checkout</p>
       <h1 data-checkout-title>Review cart</h1>
       <p class="checkout__lede" data-checkout-lede>
-        Confirm your items, then pay with M-Pesa.
+        {STOREFRONT_PAYMENTS ? "Confirm your items, then pay with M-Pesa." : "Confirm your items, leave your contact details, then finish on WhatsApp."}
       </p>
     </header>
 
     <ol class="checkout__steps" aria-label="Checkout steps">
       <li data-step-dot="review" class="is-active">1. Review</li>
       <li data-step-dot="details">2. Details</li>
-      <li data-step-dot="pay">3. Pay</li>
+      {STOREFRONT_PAYMENTS ? <li data-step-dot="pay">3. Pay</li> : <li data-step-dot="pay">3. WhatsApp</li>}
     </ol>
 
     <div class="checkout__empty" data-checkout-empty hidden>
@@ -63,6 +65,7 @@ const lipa = iphoneConfig.lipa;
           <span>Email</span>
           <input type="email" name="email" required autocomplete="email" placeholder="you@email.com" />
         </label>
+        {STOREFRONT_PAYMENTS ? (
         <fieldset class="checkout__fulfill">
           <legend>How you’ll pay</legend>
           <label>
@@ -74,6 +77,8 @@ const lipa = iphoneConfig.lipa;
             Lipa Mdogo Mdogo — {lipa.depositDefaultPct}% deposit today, rest over {lipa.monthsDefault} months
           </label>
         </fieldset>
+        ) : <input type="hidden" name="intent" value="purchase" />}
+        {STOREFRONT_PAYMENTS ? (
         <div class="checkout__lipa" data-lipa-fields hidden>
           <label class="checkout__field">
             <span>Deposit</span>
@@ -103,6 +108,7 @@ const lipa = iphoneConfig.lipa;
             </select>
           </label>
         </div>
+        ) : null}
         <p class="checkout__hint" data-intent-hint></p>
         <fieldset class="checkout__fulfill">
           <legend>Fulfillment</legend>
@@ -112,7 +118,7 @@ const lipa = iphoneConfig.lipa;
           </label>
           <label>
             <input type="radio" name="fulfillment" value="delivery" />
-            Delivery · Nairobi (fee confirmed after payment)
+            Delivery · Nairobi (fee confirmed on WhatsApp)
           </label>
         </fieldset>
         <label class="checkout__field" data-delivery-field hidden>
@@ -130,11 +136,12 @@ const lipa = iphoneConfig.lipa;
         </label>
         <p class="checkout__error" data-details-error hidden></p>
         <div class="checkout__actions">
-          <button type="submit" class="btn btn--primary">Continue to invoice</button>
+          <button type="submit" class="btn btn--primary">{STOREFRONT_PAYMENTS ? "Continue to invoice" : "Continue on WhatsApp"}</button>
         </div>
       </form>
 
-      <!-- Pay -->
+      <!-- Pay (hidden while storefront is WhatsApp-only) -->
+      {STOREFRONT_PAYMENTS ? (
       <div class="checkout__panel" data-panel="pay" hidden>
         <p class="checkout__pay-total"><span data-pay-kind>Pay</span> <strong data-pay-total></strong></p>
         <p class="checkout__hint">Order <span data-order-id></span> · <span data-pay-mail-kind>invoice</span> emailed to <span data-order-email></span></p>
@@ -168,6 +175,7 @@ const lipa = iphoneConfig.lipa;
         <p class="checkout__error" data-pay-error hidden></p>
         <p class="checkout__hint">Need help? <button type="button" class="checkout__text-btn" data-order-wa>WhatsApp this order</button></p>
       </div>
+      ) : null}
     </div>
   </section>
 </BaseLayout>
@@ -198,7 +206,8 @@ const lipa = iphoneConfig.lipa;
   const params = new URLSearchParams(location.search);
   const resumeOrder = params.get("order") || "";
   const resumeToken = params.get("t") || params.get("pay") || "";
-  if (resumeOrder && resumeToken) {
+  const paymentsOn = root.getAttribute("data-payments") !== "0";
+  if (paymentsOn && resumeOrder && resumeToken) {
     location.replace(`/checkout/pay?order=${encodeURIComponent(resumeOrder)}&t=${encodeURIComponent(resumeToken)}`);
   }
   const expressMode = params.get("mode") === "buy-now";
@@ -239,11 +248,17 @@ const lipa = iphoneConfig.lipa;
     details: "Your details",
     pay: "Pay securely",
   };
-  const ledes = {
-    review: "Confirm your items, then pay with M-Pesa.",
-    details: "We'll use these for pickup, delivery updates, and your receipt. Choose pay-in-full or Lipa Mdogo Mdogo.",
-    pay: "Download the invoice, then pay with M-Pesa STK Push. Funds settle to Gadget Hub’s Stanbic account.",
-  };
+  const ledes = paymentsOn
+    ? {
+        review: "Confirm your items, then pay with M-Pesa.",
+        details: "We'll use these for pickup, delivery updates, and your receipt. Choose pay-in-full or Lipa Mdogo Mdogo.",
+        pay: "Download the invoice, then pay with M-Pesa STK Push. Funds settle to Gadget Hub’s Stanbic account.",
+      }
+    : {
+        review: "Confirm your items, leave your contact details, then finish on WhatsApp.",
+        details: "We’ll save these for follow-up, then open WhatsApp with your order.",
+        pay: "Finish this order on WhatsApp.",
+      };
 
   function visitorId() {
     try {
@@ -487,6 +502,10 @@ const lipa = iphoneConfig.lipa;
           : ledes.pay;
       }
       localStorage.setItem(RECENT_ORDER_KEY, orderId);
+      if (!paymentsOn) {
+        openOrderWhatsApp();
+        return;
+      }
       showPanel("pay");
       if (typeof window.fbq === "function") {
         const contentIds = items
@@ -738,6 +757,10 @@ const lipa = iphoneConfig.lipa;
     gap: 0.65rem;
   }
 
+  .checkout [hidden] {
+    display: none !important;
+  }
+
   .checkout__field {
     display: grid;
     gap: 0.35rem;
@@ -778,6 +801,9 @@ const lipa = iphoneConfig.lipa;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.75rem;
+  }
+  .checkout__lipa[hidden] {
+    display: none;
   }
 
   .checkout__field select {

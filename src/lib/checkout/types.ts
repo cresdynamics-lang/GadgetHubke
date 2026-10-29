@@ -80,7 +80,7 @@ export type CheckoutOrder = {
   currency: "KES";
   paymentMethod?: PaymentMethod;
   paymentRef?: string;
-  paymentProvider: "stanbic";
+  paymentProvider: "stanbic" | "whatsapp";
   mock?: boolean;
   paidAt?: string;
   error?: string;

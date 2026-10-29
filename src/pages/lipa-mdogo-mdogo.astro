@@ -91,7 +91,7 @@ const lipa = iphoneConfig.lipa;
   </section>
 </BaseLayout>
 
-<script>
+<script define:vars={{ waBase: whatsappUrl() }}>
   const form = document.querySelector("[data-lipa-form]");
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -99,35 +99,61 @@ const lipa = iphoneConfig.lipa;
     const status = document.querySelector("[data-lipa-status]");
     const btn = form.querySelector('button[type="submit"]');
     const data = new FormData(form);
+    const payload = {
+      name: String(data.get("name") || "").trim(),
+      phone: String(data.get("phone") || "").trim(),
+      email: String(data.get("email") || "").trim(),
+      device: String(data.get("device") || "").trim(),
+      catalogKes: String(data.get("catalogKes") || "").trim(),
+      depositPct: String(data.get("depositPct") || "40"),
+      months: String(data.get("months") || "6"),
+    };
     if (btn instanceof HTMLButtonElement) btn.disabled = true;
     if (status instanceof HTMLElement) {
       status.hidden = false;
       status.textContent = "Saving your Lipa application…";
     }
+    let savedId = "";
     try {
       const res = await fetch("/api/lipa/apply", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: String(data.get("name") || "").trim(),
-          phone: String(data.get("phone") || "").trim(),
-          email: String(data.get("email") || "").trim(),
-          device: String(data.get("device") || "").trim(),
-          catalogKes: Number(data.get("catalogKes") || 0),
-          depositPct: Number(data.get("depositPct") || 40),
-          months: Number(data.get("months") || 6),
+          ...payload,
+          catalogKes: Number(payload.catalogKes || 0),
+          depositPct: Number(payload.depositPct || 40),
+          months: Number(payload.months || 6),
         }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Could not save.");
-      if (status instanceof HTMLElement) {
-        status.textContent = `Saved ${json.id}. We emailed a Lipa Mdogo Mdogo confirmation — pay the deposit when the invoice arrives, not the full device price.`;
-      }
-      form.reset();
+      savedId = json.id || "";
     } catch (err) {
       if (status instanceof HTMLElement) {
-        status.textContent = err instanceof Error ? err.message : "Could not save. Try WhatsApp.";
+        status.textContent = err instanceof Error ? err.message : "Could not save. Continuing on WhatsApp.";
       }
+    }
+    const message = [
+      "Hi GadgetHub - Lipa Mdogo Mdogo enquiry",
+      savedId ? `Reference: ${savedId}` : "",
+      "",
+      `Name: ${payload.name}`,
+      `Phone: ${payload.phone}`,
+      `Email: ${payload.email}`,
+      `Device: ${payload.device}`,
+      payload.catalogKes ? `Price: KES ${payload.catalogKes}` : "",
+      `Deposit: ${payload.depositPct}%`,
+      `Months: ${payload.months}`,
+      "",
+      "I'd like to apply for a Lipa Mdogo Mdogo plan.",
+    ]
+      .filter((line) => line !== "")
+      .join("\n");
+    window.open(`${waBase}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
+    if (status instanceof HTMLElement) {
+      status.textContent = savedId
+        ? `Saved ${savedId}. Opened WhatsApp so we can confirm the plan — this is not a payment.`
+        : "Opened WhatsApp. We’ll follow up from there.";
     }
     if (btn instanceof HTMLButtonElement) btn.disabled = false;
   });
