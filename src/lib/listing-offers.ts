@@ -151,6 +151,26 @@ export function listingOffers(product: PricedProduct | undefined, href: string, 
   return offers;
 }
 
+/**
+ * Choices for a Lipa calculator: only what is on the live list, at listed prices that are in stock.
+ * `base` is the New price and stays 0 for a model sold only as Ex-UK.
+ */
+export function lipaCalcOptions<T extends { id: string; name: string }>(
+  items: readonly T[],
+  catalog: PricedProduct[],
+  liveId: (id: string) => string = (id) => id,
+) {
+  const byId = new Map(catalog.map((row) => [row.id, row]));
+  return items.flatMap((item) => {
+    const live = byId.get(liveId(item.id));
+    if (!live || !isListedForSale(live)) return [];
+    const offers = listingOffers(live, "").filter((offer) => offer.inStock && offer.priceKes > 0);
+    const base = offers.find((offer) => offer.channel === "new")?.priceKes ?? 0;
+    const exUk = offers.find((offer) => offer.channel === "ex-uk")?.priceKes ?? 0;
+    return base || exUk ? [{ id: item.id, name: item.name, base, exUk }] : [];
+  });
+}
+
 export function listingRows<T extends { id: string }>(
   items: T[],
   catalog: PricedProduct[] | Map<string, PricedProduct>,

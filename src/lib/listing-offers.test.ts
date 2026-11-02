@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { isListedForSale, listedFromKes, channelHref, colourKey, filterColours, listedVariantPrices, listingOffers, listingRows, type ListingOffer } from "./listing-offers.ts";
+import { isListedForSale, lipaCalcOptions, listedFromKes, channelHref, colourKey, filterColours, listedVariantPrices, listingOffers, listingRows, type ListingOffer } from "./listing-offers.ts";
 import type { PricedProduct } from "./pricing/live.ts";
 
 function product(partial: Partial<PricedProduct> & Pick<PricedProduct, "id">): PricedProduct {
@@ -161,4 +161,31 @@ test("isListedForSale keeps only products with a priced, in-stock listed option"
   const exUk = { ...base, showNewOnWebsite: false, variants: [{ ...variant, exUkKes: 80 }] };
   assert.equal(isListedForSale(exUk), true);
   assert.equal(listedFromKes(exUk), 80);
+});
+
+test("Lipa calculator offers only listed models, at their listed prices", () => {
+  const items = [
+    { id: "both", name: "Both" },
+    { id: "ex-only", name: "Ex-UK only" },
+    { id: "hidden", name: "Hidden" },
+    { id: "sold-out", name: "Sold out" },
+    { id: "not-in-catalog", name: "Not in catalog" },
+  ];
+  const exOnlyVariant = { key: "128", label: "128GB", priceKes: 0, exUkKes: 80000, inStock: false };
+  const options = lipaCalcOptions(items, [
+    product({ id: "both" }),
+    product({ id: "ex-only", priceKes: 0, variants: [exOnlyVariant] }),
+    product({ id: "hidden", showOnWebsite: false }),
+    product({ id: "sold-out", inStock: false, exUkShowOnWebsite: false }),
+  ]);
+  assert.deepEqual(options, [
+    { id: "both", name: "Both", base: 189000, exUk: 149000 },
+    { id: "ex-only", name: "Ex-UK only", base: 0, exUk: 80000 },
+  ]);
+});
+
+test("Lipa calculator finds a model under its live id", () => {
+  const options = lipaCalcOptions([{ id: "seo-id", name: "Phone" }], [product({ id: "shop-id" })], () => "shop-id");
+  assert.equal(options[0]?.id, "seo-id");
+  assert.equal(options[0]?.base, 189000);
 });

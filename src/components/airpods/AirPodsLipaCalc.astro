@@ -1,23 +1,20 @@
 ---
 import { airpodsModels, formatKes, lipaMonthly, airpodsConfig } from "../../lib/airpods";
+import { lipaCalcOptions } from "../../lib/listing-offers";
 import { livePricedCatalog } from "../../lib/pricing/live";
 
 interface Props { modelId?: string; }
 const { modelId } = Astro.props;
-// Live admin prices: New and the lowest Ex-UK option for each model.
-const liveById = new Map((await livePricedCatalog()).map((p) => [p.id, p]));
-const exUkFor = (id: string) => {
-  const live = liveById.get(id);
-  const ex = (live?.variants ?? []).map((v) => v.exUkKes).filter((n): n is number => typeof n === "number" && n > 0);
-  return ex.length ? Math.min(...ex) : live?.exUkKes;
-};
-const options = airpodsModels.map((m) => ({ id: m.id, name: m.name, base: liveById.get(m.id)?.priceKes ?? m.basePriceKes, exUk: exUkFor(m.id) }));
+// Only models on the live list, at their listed New and Ex-UK prices.
+const options = lipaCalcOptions(airpodsModels, await livePricedCatalog());
 const hasExUkOption = options.some((o) => (o.exUk ?? 0) > 0);
 const initial = options.find((o) => o.id === modelId) || options[0];
 const cfg = airpodsConfig.lipa;
-const start = lipaMonthly(initial.base, cfg.depositDefaultPct, cfg.monthsDefault);
+const startKes = initial ? initial.base || initial.exUk : 0;
+const start = lipaMonthly(startKes, cfg.depositDefaultPct, cfg.monthsDefault);
 ---
 
+{initial ? (
 <section class="airpods-lipa" data-airpods-lipa>
   <header>
     <h3>Lipa Mdogo Mdogo</h3>
@@ -49,9 +46,10 @@ const start = lipaMonthly(initial.base, cfg.depositDefaultPct, cfg.monthsDefault
   </div>
   <div class="airpods-lipa__result">
     <p><span data-airpods-lipa-monthly>{formatKes(start.monthlyKes)}</span> <small>/ month</small></p>
-    <p data-airpods-lipa-line>{formatKes(start.depositKes)} deposit · {start.months} payments · total {formatKes(initial.base)}</p>
+    <p data-airpods-lipa-line>{formatKes(start.depositKes)} deposit · {start.months} payments · total {formatKes(startKes)}</p>
   </div>
 </section>
+) : null}
 
 <script>
   document.querySelectorAll("[data-airpods-lipa]").forEach((root) => {
@@ -65,8 +63,15 @@ const start = lipaMonthly(initial.base, cfg.depositDefaultPct, cfg.monthsDefault
       if (!(model instanceof HTMLSelectElement) || !(deposit instanceof HTMLInputElement)) return;
       const opt = model.selectedOptions[0];
       const exUk = Number(opt?.getAttribute("data-exuk") || 0);
-      const useExUk = root.getAttribute("data-channel") === "ex-uk" && exUk > 0;
-      const base = useExUk ? exUk : Number(opt?.getAttribute("data-base") || 0);
+      const newKes = Number(opt?.getAttribute("data-base") || 0);
+      // A model sold only as Ex-UK has no New price, so it always uses Ex-UK.
+      const useExUk = exUk > 0 && (root.getAttribute("data-channel") === "ex-uk" || !newKes);
+      const base = useExUk ? exUk : newKes;
+      root.querySelectorAll("[data-lipa-channel]").forEach((b) => {
+        const isExUk = b.getAttribute("data-lipa-channel") === "ex-uk";
+        b.classList.toggle("is-active", isExUk === useExUk);
+        b.toggleAttribute("disabled", !(isExUk ? exUk : newKes));
+      });
       const depPct = Number(deposit.value);
       const dep = Math.round((base * depPct) / 100);
       const mo = Math.round((base - dep) / months);
@@ -76,7 +81,6 @@ const start = lipaMonthly(initial.base, cfg.depositDefaultPct, cfg.monthsDefault
     }
     const setChannel = (ch) => {
       root.setAttribute("data-channel", ch);
-      root.querySelectorAll("[data-lipa-channel]").forEach((b) => b.classList.toggle("is-active", b.getAttribute("data-lipa-channel") === ch));
       run();
     };
     root.querySelectorAll("[data-lipa-channel]").forEach((b) =>
@@ -123,4 +127,5 @@ const start = lipaMonthly(initial.base, cfg.depositDefaultPct, cfg.monthsDefault
   .lipa-channel { display: inline-flex; gap: 0.25rem; margin-top: 0.75rem; padding: 0.2rem; border-radius: 999px; background: #e8e8ed; }
   .lipa-channel button { border: 0; background: transparent; font: inherit; font-size: 0.8rem; font-weight: 600; padding: 0.35rem 0.8rem; border-radius: 999px; cursor: pointer; color: #1d1d1f; }
   .lipa-channel button.is-active { background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
+  .lipa-channel button:disabled { opacity: 0.4; cursor: default; }
 </style>

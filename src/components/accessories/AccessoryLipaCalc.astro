@@ -1,16 +1,21 @@
 ---
 import { accessoriesConfig, formatKes, lipaBreakdown, accessories } from "../../lib/accessories";
+import { lipaCalcOptions } from "../../lib/listing-offers";
+import { livePricedCatalog } from "../../lib/pricing/live";
 
 interface Props {
   productId?: string;
 }
 
 const { productId } = Astro.props;
-const products = accessories.filter((a) => a.stocked !== false);
+// Only products on the live list, at their listed prices.
+const products = lipaCalcOptions(accessories.filter((a) => a.stocked !== false), await livePricedCatalog())
+  .map((o) => ({ id: o.id, name: o.name, kes: o.base || o.exUk }));
 const initial = products.find((p) => p.id === productId) || products[0];
 const lipa = accessoriesConfig.lipa;
 ---
 
+{initial ? (
 <section class="xlipa" id="lipa" data-xlipa>
   <div class="container">
     <h2>Lipa Mdogo Mdogo</h2>
@@ -20,8 +25,8 @@ const lipa = accessoriesConfig.lipa;
       <select data-lipa-product>
         {
           products.map((p) => (
-            <option value={p.id} data-kes={p.basePriceKes} selected={p.id === initial.id}>
-              {p.name} - {formatKes(p.basePriceKes)}
+            <option value={p.id} data-kes={p.kes} selected={p.id === initial.id}>
+              {p.name} - {formatKes(p.kes)}
             </option>
           ))
         }
@@ -50,8 +55,9 @@ const lipa = accessoriesConfig.lipa;
     <div class="xlipa__out" data-lipa-out aria-live="polite"></div>
   </div>
 </section>
+) : null}
 
-<script define:vars={{ defaultKes: initial.basePriceKes }}>
+<script define:vars={{ defaultKes: initial?.kes ?? 0 }}>
   const root = document.querySelector("[data-xlipa]");
   if (!root) throw new Error("lipa");
   const product = root.querySelector("[data-lipa-product]");
