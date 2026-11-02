@@ -66,7 +66,7 @@ export const journalStoreGuidePosts: JournalPost[] = [
     seoTitle:
       "iPhone 16 Pro Max Price in Kenya 2026 | New & Ex-UK iPhone 16 Pro Max 256GB, 512GB, 1TB in Nairobi | Gadget Hub, Norwich Union House",
     excerpt:
-      "iPhone 16 Pro Max from {{price:iphone-16-pro-max}} new and {{exuk:iphone-16-pro-max}} Ex-UK in Nairobi — every storage size, how it compares with 17 Pro Max, and where to buy.",
+      "iPhone 16 Pro Max from {{exuk:iphone-16-pro-max}} Ex-UK and {{price:iphone-16-pro-max}} new in Nairobi — every storage size, how it compares with 17 Pro Max, and where to buy.",
     seoDescription:
       "iPhone 16 Pro Max price in Kenya: new from {{price:iphone-16-pro-max}}, Ex-UK from {{exuk:iphone-16-pro-max}}. 256GB, 512GB, 1TB at Gadget Hub, Norwich Union House opposite Hilton, 4th Floor, Nairobi CBD.",
     tags: ["iPhone 16 Pro Max price in Kenya", "Ex-UK iPhone 16 Pro Max", "iPhone 16 Pro Max Nairobi", "16 Pro Max 256GB price"],
@@ -311,7 +311,7 @@ export const journalStoreGuidePosts: JournalPost[] = [
       "## MacBook Air 15-inch price in Kenya",
       "[MacBook Air 15-inch M4](/mac/macbook-air-15-m4) from {{price:macbook-air-15-m4}}; [MacBook Air 15-inch M5](/mac/macbook-air-15-m5) from {{price:macbook-air-15-m5}}. The 15-inch suits spreadsheets, design and anyone who wants a bigger screen.",
       "## M4 or M5?",
-      "Both are fast, silent and last a full day. The M4 is the better value; the M5 is newer and starts with 512GB storage. For heavy video editing, look at the [MacBook Pro](/journal/best-macbook-to-buy-in-kenya) instead. Cheaper options: Ex-UK [MacBook Air M1](/mac/macbook-air-13-m1) from {{exuk:macbook-air-13-m1}}.",
+      "Both are fast, silent and last a full day. The MacBook Air M4 is the better value. The M5 is newer and starts with 512GB storage. For heavy video editing, look at the [MacBook Pro](/journal/best-macbook-to-buy-in-kenya) instead. Cheaper options: Ex-UK [MacBook Air M1](/mac/macbook-air-13-m1) from {{exuk:macbook-air-13-m1}}.",
       ...visit("the MacBook Air in every colour and both sizes"),
     ],
     faq: [

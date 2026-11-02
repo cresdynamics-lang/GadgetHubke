@@ -3,9 +3,10 @@ export const prerender = false;
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { site, whatsappUrl } from "../../lib/site";
-import { livePricedCatalog } from "../../lib/pricing/live";
+import { journalShopPrice } from "../../lib/journal-prices";
 import {
   getPublishedJournalPost,
+  journalCatalog,
   listPublishedJournalPosts,
   parseJournalParagraph,
 } from "../../lib/journal";
@@ -25,8 +26,11 @@ const related = [
   ...all.filter((p) => p.slug !== post.slug && p.category !== post.category),
 ].slice(0, 3);
 const description = post.seoDescription || post.excerpt;
-const liveById = new Map((await livePricedCatalog()).map((p) => [p.id, p]));
-const fromKes = (id: string) => `KES ${(liveById.get(id)?.priceKes ?? 0).toLocaleString("en-KE")}`;
+const catalog = await journalCatalog();
+const shopLinks = ["iphone-16", "iphone-17"].flatMap((id) => {
+  const price = journalShopPrice(id, catalog);
+  return price ? [{ id, label: `iPhone ${id.replace("iphone-", "")} ${price}` }] : [];
+});
 const pageTitle = post.seoTitle || `${post.title} - GadgetHub Journal`;
 const canonical = new URL(`/journal/${post.slug}`, site.url).href;
 const jsonLd = {
@@ -147,13 +151,15 @@ const jsonLd = {
     </section>
 
     <p class="post__shop">
-      Ready to buy sealed in Nairobi?
+      Ready to buy in Nairobi?
       <a href="/iphone">Shop iPhones</a>
       ·
-      <a href="/iphone/iphone-16">iPhone 16 {fromKes("iphone-16")}</a>
-      ·
-      <a href="/iphone/iphone-17">iPhone 17 {fromKes("iphone-17")}</a>
-      ·
+      {shopLinks.map((link) => (
+        <>
+          <a href={`/iphone/${link.id}`}>{link.label}</a>
+          ·{" "}
+        </>
+      ))}
       <a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo</a>
     </p>
 
