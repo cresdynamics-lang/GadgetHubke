@@ -23,6 +23,8 @@ import { tvHomeModelsByFamily, formatKes as formatTvHomeKes } from "../lib/tv-ho
 import { site, whatsappUrl } from "../lib/site";
 import { livePricedCatalog } from "../lib/pricing/live";
 import { isListed, liveMerchItems } from "../lib/home-live";
+import { listedFromKes } from "../lib/listing-offers";
+import { caseProducts, keyboards, mice, pencils, powerProducts, trackpads } from "../lib/accessories";
 
 const pathname = Astro.url.pathname;
 
@@ -33,7 +35,7 @@ function isActive(href: string): boolean {
 
 const catalog = await livePricedCatalog();
 const listed = new Set(catalog.filter(isListed).map((p) => p.id));
-const priceById = new Map(catalog.map((p) => [p.id, p.priceKes]));
+const priceById = new Map(catalog.map((p) => [p.id, listedFromKes(p)]));
 const onlyListed = <T extends { id: string }>(items: T[]) => items.filter((item) => listed.has(item.id));
 const liveKes = (id: string, fallback: number) => priceById.get(id) ?? fallback;
 
@@ -57,6 +59,21 @@ const airpodsMax = onlyListed(airpodsModelsByFamily("Max")).slice(0, 4);
 const tvAtv = onlyListed(tvHomeModelsByFamily("Apple TV")).slice(0, 4);
 const tvHp = onlyListed(tvHomeModelsByFamily("HomePod")).slice(0, 3);
 const tvMini = onlyListed(tvHomeModelsByFamily("HomePod mini")).slice(0, 2);
+const tvListed = tvAtv.length + tvHp.length + tvMini.length > 0;
+const anyListed = (items: { id: string }[]) => items.some((item) => listed.has(item.id));
+const accessoryLinks = [
+  { show: anyListed(pencils()), label: "Apple Pencil", href: "/accessories/apple-pencil" },
+  { show: anyListed(keyboards()), label: "Magic Keyboard", href: "/accessories/magic-keyboard" },
+  { show: anyListed(mice()), label: "Magic Mouse", href: "/accessories/magic-mouse" },
+  { show: anyListed(trackpads()), label: "Magic Trackpad", href: "/accessories/magic-trackpad" },
+  { show: anyListed(powerProducts()), label: "Power", href: "/accessories/power" },
+  { show: anyListed(caseProducts()), label: "Cases", href: "/accessories/cases" },
+  { show: anyListed(pencils()), label: "Which Pencil fits my iPad?", href: "/accessories/apple-pencil#finder" },
+  { show: anyListed(keyboards()), label: "Which keyboard fits?", href: "/accessories/magic-keyboard#finder" },
+  { show: anyListed(powerProducts()), label: "What charger do I need?", href: "/accessories/power#finder" },
+  { show: anyListed(caseProducts()), label: "Which case fits?", href: "/accessories/cases#finder" },
+  { show: true, label: "Compare", href: "/accessories/compare" },
+].filter((link) => link.show);
 ---
 
 <header class="site-header" data-site-header>
@@ -66,7 +83,7 @@ const tvMini = onlyListed(tvHomeModelsByFamily("HomePod mini")).slice(0, 2);
     <nav class="site-header__nav" aria-label="Primary">
       <ul class="site-header__list">
         {
-          productNav.map((cat) =>
+          productNav.filter((cat) => cat.id !== "tv-home" || tvListed).map((cat) =>
             cat.children ? (
               <li class="site-header__item site-header__item--flyout">
                 <a
@@ -485,6 +502,7 @@ const tvMini = onlyListed(tvHomeModelsByFamily("HomePod mini")).slice(0, 2);
               <li><a href="/trade-in">Trade-In</a></li>
           </ul>
         </li>
+        {tvListed ? (
         <li class="mobile-nav__item" data-mobile-cat>
           <div class="mobile-nav__cat">
             <a class="mobile-nav__cat-link" href="/tv-home">TV &amp; Home</a>
@@ -535,23 +553,14 @@ const tvMini = onlyListed(tvHomeModelsByFamily("HomePod mini")).slice(0, 2);
               <li><a href="/tv-home/compare">Compare</a></li>
           </ul>
         </li>
+        ) : null}
         <li class="mobile-nav__item" data-mobile-cat>
           <div class="mobile-nav__cat">
             <a class="mobile-nav__cat-link" href="/accessories">Accessories</a>
             <button type="button" class="mobile-nav__cat-toggle" data-mobile-cat-toggle aria-expanded="false" aria-label="Show Accessories menu"></button>
           </div>
           <ul class="mobile-nav__sub" data-mobile-cat-panel hidden>
-              <li><a href="/accessories/apple-pencil">Apple Pencil</a></li>
-              <li><a href="/accessories/magic-keyboard">Magic Keyboard</a></li>
-              <li><a href="/accessories/magic-mouse">Magic Mouse</a></li>
-              <li><a href="/accessories/magic-trackpad">Magic Trackpad</a></li>
-              <li><a href="/accessories/power">Power</a></li>
-              <li><a href="/accessories/cases">Cases</a></li>
-              <li><a href="/accessories/apple-pencil#finder">Which Pencil fits my iPad?</a></li>
-              <li><a href="/accessories/magic-keyboard#finder">Which keyboard fits?</a></li>
-              <li><a href="/accessories/power#finder">What charger do I need?</a></li>
-              <li><a href="/accessories/cases#finder">Which case fits?</a></li>
-              <li><a href="/accessories/compare">Compare</a></li>
+              {accessoryLinks.map((link) => <li><a href={link.href}>{link.label}</a></li>)}
           </ul>
         </li>
         {

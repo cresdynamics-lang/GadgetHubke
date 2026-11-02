@@ -20,6 +20,7 @@ import { macSheetForModel, macConfigStorageId, macConfigStorageLabel } from "./m
 import { ipadSheetForModel, ipadConfigStorageId, ipadConfigStorageLabel } from "./ipad-sheet";
 import { listedIpadPrice, isListedIpadModel, enforceListedIpad } from "./ipad-listed";
 import { availableColours, textOnlyColours } from "../iphone/images";
+import { isListedForSale } from "../listing-offers.ts";
 import { watchSheetForModel, watchConfigStorageId, watchConfigStorageLabel } from "./watch-sheet";
 import { tvHomeSheetForModel, tvHomeConfigStorageId, tvHomeConfigStorageLabel } from "./tv-home-sheet";
 
@@ -297,7 +298,7 @@ export function iphoneLiveId(seoId: string): string {
 }
 
 export function isShownOnWebsite(p: PricedProduct) {
-  return p.showOnWebsite !== false;
+  return isListedForSale(p);
 }
 
 export async function websiteVisibleIdSet(): Promise<Set<string>> {

@@ -5,6 +5,7 @@
  */
 import { site, policy } from "../site";
 import type { PricedProduct } from "../pricing/live";
+import { isListedForSale, listedFromKes, listedVariantPrices } from "../listing-offers.ts";
 import { offerExtras, type ReviewSchema } from "./offer-schema";
 
 export type SeoFaqItem = { question: string; answer: string };
@@ -72,18 +73,23 @@ export function buildProductSeo(input: ProductSeoInput): ProductSeo {
   const images = input.images.map((src) => new URL(src, site.url).href);
   const rows = (product.variants.length
     ? product.variants
-    : [{ key: "base", label: "Standard", priceKes: product.priceKes, inStock: product.inStock }]
+    : [{ key: "base", label: "Standard", priceKes: product.priceKes, exUkKes: product.exUkKes, inStock: product.inStock }]
   )
-    .filter((v) => v.priceKes > 0)
-    .map((v) => ({
-      label: v.label,
-      priceKes: v.priceKes,
-      exUkKes: typeof v.exUkKes === "number" && v.exUkKes > 0 ? v.exUkKes : undefined,
-      inStock: v.inStock && product.inStock,
-    }))
-    .sort((a, b) => a.priceKes - b.priceKes);
-  const fromKes = rows.length ? rows[0].priceKes : product.priceKes;
-  const topKes = rows.length ? rows[rows.length - 1].priceKes : product.priceKes;
+    // Only options on the live list: nothing hidden or unpriced reaches the table or schema.
+    .flatMap((v) => {
+      const listed = listedVariantPrices(product, v);
+      if (!listed.newKes && !listed.exUkKes) return [];
+      return [{
+        label: v.label,
+        priceKes: listed.newKes,
+        exUkKes: listed.exUkKes || undefined,
+        inStock: v.inStock && product.inStock,
+      }];
+    })
+    .sort((a, b) => (a.priceKes || a.exUkKes!) - (b.priceKes || b.exUkKes!));
+  const prices = rows.map((r) => r.priceKes || r.exUkKes!);
+  const fromKes = prices.length ? Math.min(...prices) : product.priceKes;
+  const topKes = prices.length ? Math.max(...prices) : product.priceKes;
   const date = nairobiDate();
   const options = input.optionsSummary ? ` ${input.optionsSummary}.` : "";
 
@@ -157,7 +163,11 @@ export function buildProductSeo(input: ProductSeoInput): ProductSeo {
     ...extras,
   });
   const offersFor = (r: { priceKes: number; exUkKes?: number; inStock: boolean }) =>
-    r.exUkKes ? [offerFor(r.priceKes, r.inStock), offerFor(r.exUkKes, r.inStock, true)] : offerFor(r.priceKes, r.inStock);
+    !r.priceKes
+      ? offerFor(r.exUkKes!, r.inStock, true)
+      : r.exUkKes
+        ? [offerFor(r.priceKes, r.inStock), offerFor(r.exUkKes, r.inStock, true)]
+        : offerFor(r.priceKes, r.inStock);
   const brand = { "@type": "Brand", name: "Apple" };
 
   const productNode =
@@ -177,6 +187,7 @@ export function buildProductSeo(input: ProductSeoInput): ProductSeo {
             "@type": "Product",
             "@id": `${url}#v${i + 1}`,
             name: `${name} ${r.label}`,
+            description: `${name} ${r.label}. ${input.summary}`,
             sku: `${product.id}-${i + 1}`,
             image: images.slice(0, 1),
             brand,
@@ -242,8 +253,8 @@ export function buildCategorySeo(input: {
   products: PricedProduct[];
   hrefFor?: (p: PricedProduct) => string;
 }) {
-  const priced = input.products.filter((p) => p.priceKes > 0);
-  const fromKes = priced.length ? Math.min(...priced.map((p) => p.priceKes)) : 0;
+  const priced = input.products.filter(isListedForSale);
+  const fromKes = priced.length ? Math.min(...priced.map(listedFromKes)) : 0;
   const url = new URL(input.path, site.url).href;
   return {
     fromKes,
@@ -262,7 +273,7 @@ export function buildCategorySeo(input: {
               "@type": "ListItem",
               position: i + 1,
               url: new URL(input.hrefFor ? input.hrefFor(p) : p.href, site.url).href,
-              name: `${p.name} — ${formatKes(p.priceKes)}`,
+              name: `${p.name} — ${formatKes(listedFromKes(p))}`,
             })),
           },
         },

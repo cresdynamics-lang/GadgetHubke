@@ -14,8 +14,10 @@ import {
   accessoryBuyingNotes,
   accessoriesConfig,
 } from "../../lib/accessories";
+import { filterVisibleById, websiteVisibleIdSet } from "../../lib/pricing/live";
 
-const list = trackpads();
+const list = filterVisibleById(trackpads(), await websiteVisibleIdSet());
+if (!list.length) return Astro.redirect("/accessories");
 const heroWhite = getAccessoryImage("trackpad-usbc-white", "hero");
 const heroBlack = getAccessoryImage("trackpad-usbc-black", "hero");
 const faq = accessoryFaq();

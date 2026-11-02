@@ -1,4 +1,5 @@
 ---
+import { isListedForSale } from "../../lib/listing-offers";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import AccessoryStage from "../../components/accessories/AccessoryStage.astro";
 import CompatibilityFinder from "../../components/accessories/CompatibilityFinder.astro";
@@ -69,6 +70,8 @@ const accessoryDefault = getAccessory(id!);
 if (!accessoryDefault) {
   return Astro.redirect("/accessories");
 }
+const listing = await livePricedProduct(accessoryDefault.id);
+if (listing && !isListedForSale(listing)) return Astro.redirect("/accessories");
 // Live admin price.
 const livePrice = (await livePricedProduct(accessoryDefault.id))?.priceKes;
 const product = livePrice != null ? { ...accessoryDefault, basePriceKes: livePrice } : accessoryDefault;

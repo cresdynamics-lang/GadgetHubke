@@ -4,9 +4,10 @@
  */
 import type { DealItem, HomeCategoryRow } from "./home";
 import type { PricedProduct } from "./pricing/live";
+import { isListedForSale, listedFromKes } from "./listing-offers.ts";
 
 export function isListed(product: PricedProduct | undefined): product is PricedProduct {
-  return Boolean(product && product.showOnWebsite !== false);
+  return Boolean(product && isListedForSale(product));
 }
 
 const DEAL_ALIASES: Record<string, string> = {
@@ -134,7 +135,7 @@ export function liveMerchItems<T extends { id: string; name: string; href: strin
       ...item,
       id: live.id,
       href: live.href || item.href,
-      priceKes: live.priceKes,
+      priceKes: listedFromKes(live) || live.priceKes,
       name: displayName(item, live),
     });
   }

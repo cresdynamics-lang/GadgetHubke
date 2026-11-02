@@ -6,6 +6,7 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
 import { getSeoModel, formatKesSeo } from "../../../lib/iphone/seo";
 import { withLiveSeoPrices } from "../../../lib/iphone/seo/live";
 import { livePricedProduct, iphoneLiveId } from "../../../lib/pricing/live";
+import { isListedForSale } from "../../../lib/listing-offers";
 
 export const prerender = false;
 
@@ -21,8 +22,12 @@ if (!leftDefault || !rightDefault) {
   return Astro.redirect("/iphone");
 }
 // Live admin prices, so comparisons never quote stale numbers.
-const left = withLiveSeoPrices(leftDefault, await livePricedProduct(iphoneLiveId(leftDefault.id)));
-const right = withLiveSeoPrices(rightDefault, await livePricedProduct(iphoneLiveId(rightDefault.id)));
+const leftLive = await livePricedProduct(iphoneLiveId(leftDefault.id));
+const rightLive = await livePricedProduct(iphoneLiveId(rightDefault.id));
+// Stay out of search when either phone is off the live list.
+const offList = [leftLive, rightLive].some((p) => p && !isListedForSale(p));
+const left = withLiveSeoPrices(leftDefault, leftLive);
+const right = withLiveSeoPrices(rightDefault, rightLive);
 
 const title = `${left.name} vs ${right.name}: Price in Kenya & Specs | Gadget Hub`;
 const exUkFrom = (m: typeof left) => {
@@ -44,7 +49,7 @@ const which =
       : `Choose the ${right.name} if you want the lower starting price (${formatKesSeo(right.fromKes)}). Choose the ${left.name} if you want what it adds for ${formatKesSeo(left.fromKes)}.`;
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} noindex={offList}>
   <article class="compare container">
     <nav aria-label="Breadcrumb" class="compare__crumbs">
       <a href="/">Home</a> / <a href="/iphone">iPhone</a> / <span>{left.name} vs {right.name}</span>

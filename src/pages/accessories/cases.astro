@@ -17,8 +17,11 @@ import {
   formatKes,
   caseFits,
 } from "../../lib/accessories";
+import { filterVisibleById, websiteVisibleIdSet } from "../../lib/pricing/live";
 
-const list = caseProducts().filter((c) => c.subgroup !== "strap" || true);
+const list = filterVisibleById(caseProducts(), await websiteVisibleIdSet());
+if (!list.length) return Astro.redirect("/accessories");
+const wallCase = list.find((c) => c.material === "Silicone")?.id;
 const silicone = list.filter((c) => c.material === "Silicone");
 const heroIds = silicone.slice(0, 5).map((c) => c.id);
 const heroImgs = heroIds.map((id) => getAccessoryImage(id, "hero"));
@@ -135,15 +138,16 @@ const fitMatrix = Object.fromEntries(
     )
   }
 
+  {wallCase ? (
   <section class="container xcases-wall" data-colour-wall>
     <h2>Colour wall</h2>
     <p>Every colour of the selected material - hover for the name.</p>
     <div class="xcases-wall__grid" data-wall-grid>
       {
-        getCaseVariants("case-iphone-17-pro-silicone").map((v) => {
-          const sw = getAccessoryImage("case-iphone-17-pro-silicone", `variant-swatch:${v.partNumber}`);
+        getCaseVariants(wallCase).map((v) => {
+          const sw = getAccessoryImage(wallCase, `variant-swatch:${v.partNumber}`);
           return (
-            <a class="xcases-wall__swatch" href={`/accessories/case-iphone-17-pro-silicone?v=${v.partNumber}`} title={v.colour} data-colour-name={v.colour}>
+            <a class="xcases-wall__swatch" href={`/accessories/${wallCase}?v=${v.partNumber}`} title={v.colour} data-colour-name={v.colour}>
               <img src={sw.src} alt={v.colour} width="72" height="72" loading="lazy" />
               <span>{v.colour}</span>
             </a>
@@ -152,6 +156,7 @@ const fitMatrix = Object.fromEntries(
       }
     </div>
   </section>
+  ) : null}
 
   <CasesFeel />
 

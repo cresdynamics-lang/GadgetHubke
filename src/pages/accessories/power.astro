@@ -18,15 +18,19 @@ import {
   accessoriesConfig,
   formatKes,
 } from "../../lib/accessories";
+import { filterVisibleById, websiteVisibleIdSet } from "../../lib/pricing/live";
 
-const adaptersList = adapters().sort((a, b) => (a.wattage || 0) - (b.wattage || 0));
-const magsafeList = magsafeChargers();
-const cableList = cables();
-const all = powerProducts();
+const visibleIds = await websiteVisibleIdSet();
+const all = filterVisibleById(powerProducts(), visibleIds);
+if (!all.length) return Astro.redirect("/accessories");
+const adaptersList = filterVisibleById(adapters(), visibleIds).sort((a, b) => (a.wattage || 0) - (b.wattage || 0));
+const magsafeList = filterVisibleById(magsafeChargers(), visibleIds);
+const cableList = filterVisibleById(cables(), visibleIds);
+const leadAdapter = adaptersList[0];
 const heroAdapter = getAccessoryImage("power-adapter-140w", "hero");
 const heroCable = getAccessoryImage("cable-magsafe3-2m", "hero");
 const faq = accessoryFaq();
-const notes = accessoryBuyingNotes(adaptersList[0]);
+const notes = accessoryBuyingNotes(leadAdapter || all[0]);
 const fromAdapters = Math.min(...adaptersList.map((a) => a.basePriceKes));
 const fromMagsafe = Math.min(...magsafeList.map((a) => a.basePriceKes));
 const fromCables = Math.min(...cableList.map((a) => a.basePriceKes));
@@ -56,23 +60,24 @@ const fromCables = Math.min(...cableList.map((a) => a.basePriceKes));
   </section>
 
   <section class="container xpower-tiles">
-    <a class="xpower-tile" href="#adapters">
+    <a class="xpower-tile" href="#adapters" style={adaptersList.length ? undefined : "display:none"}>
       <img src={getAccessoryImage("power-adapter-70w", "hero").src} alt="Power adapters" width="400" height="300" loading="lazy" />
       <h2>Power adapters</h2>
       <p>{formatKes(fromAdapters)}</p>
     </a>
-    <a class="xpower-tile" href="#magsafe">
+    <a class="xpower-tile" href="#magsafe" style={magsafeList.length ? undefined : "display:none"}>
       <img src={getAccessoryImage("magsafe-charger-1m", "hero").src} alt="MagSafe" width="400" height="300" loading="lazy" />
       <h2>MagSafe and wireless</h2>
       <p>{formatKes(fromMagsafe)}</p>
     </a>
-    <a class="xpower-tile" href="#cables">
+    <a class="xpower-tile" href="#cables" style={cableList.length ? undefined : "display:none"}>
       <img src={getAccessoryImage("cable-usbc-60w-1m", "hero").src} alt="Cables" width="400" height="300" loading="lazy" />
       <h2>Cables</h2>
       <p>{formatKes(fromCables)}</p>
     </a>
   </section>
 
+  {leadAdapter ? (
   <section class="container xpower-ladder" id="adapters" data-watt-ladder>
     <h2>Wattage ladder</h2>
     <p>Pick a wattage that matches your device.</p>
@@ -101,29 +106,30 @@ const fromCables = Math.min(...cableList.map((a) => a.basePriceKes));
       }
     </div>
     <div class="xpower-ladder__detail" aria-live="polite">
-      <img data-watt-img src={getAccessoryImage(adaptersList[0].id, "hero").src} alt={adaptersList[0].name} width="640" height="480" />
+      <img data-watt-img src={getAccessoryImage(leadAdapter.id, "hero").src} alt={leadAdapter.name} width="640" height="480" />
       <div>
-        <h3 data-watt-name>{adaptersList[0].name}</h3>
-        <p data-watt-designed>{adaptersList[0].designedFor}</p>
-        <p data-watt-price>{formatKes(adaptersList[0].basePriceKes)}</p>
-        <p class="xpower-plug" data-watt-plug hidden={!getAccessoryImage(adaptersList[0].id, "hero").geoUs}>
+        <h3 data-watt-name>{leadAdapter.name}</h3>
+        <p data-watt-designed>{leadAdapter.designedFor}</p>
+        <p data-watt-price>{formatKes(leadAdapter.basePriceKes)}</p>
+        <p class="xpower-plug" data-watt-plug hidden={!getAccessoryImage(leadAdapter.id, "hero").geoUs}>
           {accessoriesConfig.plugCaption}
         </p>
-        <a class="btn btn--primary" data-watt-link href={`/accessories/${adaptersList[0].id}`}>View</a>
+        <a class="btn btn--primary" data-watt-link href={`/accessories/${leadAdapter.id}`}>View</a>
       </div>
     </div>
   </section>
+  ) : null}
 
   <CompatibilityFinder preselectLooking="charger" />
 
-  <section class="container xpower-cards" id="magsafe">
+  <section class="container xpower-cards" id="magsafe" style={magsafeList.length ? undefined : "display:none"}>
     <h2>MagSafe and Watch</h2>
     <div class="xpower-cards__grid">
       {magsafeList.map((p) => <AccessoryCard product={p} />)}
     </div>
   </section>
 
-  <section class="container xpower-cards" id="cables">
+  <section class="container xpower-cards" id="cables" style={cableList.length ? undefined : "display:none"}>
     <h2>Cables</h2>
     <div class="xpower-cards__grid">
       {cableList.map((p) => <AccessoryCard product={p} />)}

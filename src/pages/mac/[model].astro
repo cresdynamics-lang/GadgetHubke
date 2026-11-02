@@ -1,4 +1,5 @@
 ---
+import { isListedForSale } from "../../lib/listing-offers";
 import { livePricedCatalog } from "../../lib/pricing/live";
 /**
  * MacBook PDP - sticky viewer + buy panel + feel sections + specs/FAQ.
@@ -45,6 +46,7 @@ const model = getMacModel(Astro.params.model!);
 if (!model) return Astro.redirect("/mac");
 // Live admin prices per memory + storage ("16gb-512gb").
 const liveMac = await livePricedProduct(model.id);
+if (liveMac && !isListedForSale(liveMac)) return Astro.redirect("/mac");
 const exact = variantPriceMap(liveMac);
 const exactExUk = variantExUkMap(liveMac);
 const exactKey = (gb: number, storage: string) => `${gb}gb-${storage.replace(/\s+/g, "").toLowerCase()}`;

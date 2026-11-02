@@ -1,7 +1,7 @@
 /**
  * Shared structured-data pieces for product pages:
- *  - offerExtras(): seller, price-valid-until, return policy and delivery methods
- *    for every Offer (facts from site.ts policy — no invented shipping fee).
+ *  - offerExtras(): seller, price dates, return policy and delivery methods
+ *    for every Offer (facts from site.ts policy).
  *  - reviewSchema(): star rating + reviews from real customer reviews only.
  *    Sample reviews (ids starting "seed-") are never sent to Google.
  */
@@ -19,15 +19,26 @@ const returnPolicy = {
   returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
   merchantReturnDays: policy.returnWindowDays,
   returnMethod: "https://schema.org/ReturnInStore",
+  // Only faulty, damaged or not-as-described items can come back, and we cover those.
+  returnFees: "https://schema.org/FreeReturn",
   itemDefectReturnFees: "https://schema.org/FreeReturn",
   merchantReturnLink: `${site.url}/returns`,
+};
+
+const shippingDetails = {
+  "@type": "OfferShippingDetails",
+  shippingDestination: { "@type": "DefinedRegion", addressCountry: "KE" },
+  // Lowest delivery fee; the final figure depends on location.
+  shippingRate: { "@type": "MonetaryAmount", value: policy.deliveryFromKes, currency: "KES" },
 };
 
 export function offerExtras() {
   return {
     seller: { "@type": "Organization", name: site.legalName, url: site.url },
+    validFrom: new Date().toISOString().slice(0, 10),
     priceValidUntil: priceValidUntil(),
     hasMerchantReturnPolicy: returnPolicy,
+    shippingDetails,
     availableDeliveryMethod: [
       "http://purl.org/goodrelations/v1#DeliveryModePickUp",
       "http://purl.org/goodrelations/v1#DeliveryModeOwnFleet",

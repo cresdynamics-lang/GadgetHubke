@@ -1,4 +1,5 @@
 ---
+import { isListedForSale } from "../../lib/listing-offers";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import BackButton from "../../components/BackButton.astro";
 import TrackProductView from "../../components/TrackProductView.astro";
@@ -41,6 +42,7 @@ const tvDefault = getTvHomeModel(Astro.params.model!);
 if (!tvDefault) return Astro.redirect("/tv-home");
 // Live admin prices ("64gb-wifi", "128gb-ethernet", "32gb", or a single price).
 const live = await livePricedProduct(tvDefault.id);
+if (live && !isListedForSale(live)) return Astro.redirect("/tv-home");
 const exact = variantPriceMap(live);
 const exactExUk = variantExUkMap(live);
 const liveBase = exact["64gb-wifi"] ?? live?.priceKes;

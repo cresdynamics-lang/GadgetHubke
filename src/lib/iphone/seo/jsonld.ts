@@ -9,10 +9,8 @@ import { sharedProductFaq } from "./shared";
 import type { IphoneSeoModel } from "./types";
 import { offerExtras, type ReviewSchema } from "../../seo/offer-schema";
 
-function availability(status: IphoneSeoModel["variants"][0]["stockStatus"]): string | undefined {
-  if (status === "in_stock") return "https://schema.org/InStock";
-  if (status === "out_of_stock") return "https://schema.org/OutOfStock";
-  return undefined;
+function availability(status: IphoneSeoModel["variants"][0]["stockStatus"]): string {
+  return status === "out_of_stock" ? "https://schema.org/OutOfStock" : "https://schema.org/InStock";
 }
 
 /** ProductGroup + Product variants + BreadcrumbList + FAQPage for a model page. */
@@ -30,16 +28,16 @@ export function buildIphoneProductJsonLd(
       priceCurrency: "KES",
       itemCondition: "https://schema.org/NewCondition",
       url: `${opts.pageUrl}?storage=${encodeURIComponent(v.storage)}`,
+      availability: availability(v.stockStatus),
       ...extras,
     };
-    const avail = availability(v.stockStatus);
-    if (avail) offer.availability = avail;
 
     return {
       "@type": "Product",
       "@id": `${opts.pageUrl}#${v.sheetId}`,
       sku: v.sheetId,
       name: `${model.name} ${v.storage}`,
+      description: `${model.name} ${v.storage}, new and sealed. ${model.metaDescription}`,
       image: opts.imageUrl ? [opts.imageUrl] : undefined,
       brand: { "@type": "Brand", name: "Apple" },
       offers: offer,
@@ -56,15 +54,15 @@ export function buildIphoneProductJsonLd(
             itemCondition: "https://schema.org/UsedCondition",
             url: `${opts.pageUrl}?storage=${encodeURIComponent(v.storage)}&condition=ex-uk`,
             description: `${EX_UK_CONDITION_LABEL}. ${EX_UK_WARRANTY}`,
+            availability: availability(v.stockStatus),
             ...extras,
           };
-          const avail = availability(v.stockStatus);
-          if (avail) offer.availability = avail;
           return {
             "@type": "Product",
             "@id": `${opts.pageUrl}#${v.sheetId}-exuk`,
             sku: `${v.sheetId}-EXUK`,
             name: `${model.name} ${v.storage} (${EX_UK_CONDITION_LABEL})`,
+            description: `${model.name} ${v.storage}, ${EX_UK_CONDITION_LABEL}. ${EX_UK_WARRANTY}`,
             image: opts.imageUrl ? [opts.imageUrl] : undefined,
             brand: { "@type": "Brand", name: "Apple" },
             offers: offer,
@@ -79,6 +77,7 @@ export function buildIphoneProductJsonLd(
     "@id": `${opts.pageUrl}#productgroup`,
     name: model.name,
     description: model.metaDescription,
+    image: opts.imageUrl ? [opts.imageUrl] : undefined,
     brand: { "@type": "Brand", name: "Apple" },
     productGroupID: model.id,
     variesBy: ["https://schema.org/storageCapacity"],

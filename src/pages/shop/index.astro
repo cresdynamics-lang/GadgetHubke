@@ -1,7 +1,21 @@
 ---
+export const prerender = false;
+
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { homeCategories } from "../../lib/home";
 import { productNav } from "../../lib/catalog";
+import { websiteVisibleIdSet } from "../../lib/pricing/live";
+import { tvHomeModels } from "../../lib/tv-home";
+import { caseProducts, powerProducts, trackpads } from "../../lib/accessories";
+
+const visibleIds = await websiteVisibleIdSet();
+const tvListed = tvHomeModels.some((m) => visibleIds.has(m.id));
+const categories = homeCategories.filter((cat) => cat.href !== "/tv-home" || tvListed);
+const hubHasListed: Record<string, boolean> = {
+  "/accessories/power": powerProducts().some((p) => visibleIds.has(p.id)),
+  "/accessories/cases": caseProducts().some((p) => visibleIds.has(p.id)),
+  "/accessories/magic-trackpad": trackpads().some((p) => visibleIds.has(p.id)),
+};
 ---
 
 <BaseLayout
@@ -19,7 +33,7 @@ import { productNav } from "../../lib/catalog";
 
     <ul class="shop__grid">
       {
-        homeCategories.map((cat) => (
+        categories.map((cat) => (
           <li>
             <a class="shop__card" href={cat.href}>
               <h2>{cat.label}</h2>
@@ -33,7 +47,7 @@ import { productNav } from "../../lib/catalog";
     <div class="shop__lineups">
       {
         productNav
-          .filter((c) => c.children?.length)
+          .filter((c) => c.children?.length && (c.id !== "tv-home" || tvListed))
           .map((cat) => (
             <section class="shop__lineup">
               <header class="shop__lineup-head">
@@ -43,7 +57,7 @@ import { productNav } from "../../lib/catalog";
                 <a href={cat.href}>See all</a>
               </header>
               <ul>
-                {cat.children!.map((child) => (
+                {cat.children!.filter((child) => hubHasListed[child.href] !== false).map((child) => (
                   <li>
                     <a href={child.href}>{child.label}</a>
                   </li>

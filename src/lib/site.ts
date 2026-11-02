@@ -71,6 +71,8 @@ export const policy = {
    * Returns are for faulty, damaged-on-arrival, or materially not-as-described items only.
    */
   changeOfMindReturns: false,
+  /** Delivery is priced by location; this is the lowest fee. */
+  deliveryFromKes: 1500,
   /** Who pays return shipping when the item is faulty / not as described */
   faultyReturnShipping: "GadgetHub" as const,
   /** Card rail - processor name TBD; do not invent a provider */

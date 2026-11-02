@@ -34,7 +34,7 @@ const category = /^(Apple Watch|Apple TV|Apple Pencil|Magic \w+)/.exec(productNa
         {seo.rows.map((r) => (
           <tr>
             <th scope="row">{r.label}</th>
-            <td>{formatKes(r.priceKes)}</td>
+            <td>{r.priceKes ? formatKes(r.priceKes) : "—"}</td>
             {seo.hasExUk ? <td>{r.exUkKes ? formatKes(r.exUkKes) : "—"}</td> : null}
             <td>{r.inStock ? "In stock" : "Ask on WhatsApp"}</td>
           </tr>

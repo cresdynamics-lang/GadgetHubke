@@ -5,7 +5,7 @@
  * The FAQ schema mirrors the FAQ already shown on the page, as Google requires.
  */
 import { livePricedCatalog } from "../../lib/pricing/live";
-import { offerExtras } from "../../lib/seo/offer-schema";
+import { isListedForSale, listedFromKes } from "../../lib/listing-offers";
 import { formatKes } from "../../lib/seo/product-seo";
 import { site } from "../../lib/site";
 
@@ -20,9 +20,8 @@ interface Props {
 
 const { name, path, productIds, faq } = Astro.props;
 const byId = new Map((await livePricedCatalog()).map((p) => [p.id, p]));
-const rows = productIds.map((id) => byId.get(id)).filter((p): p is NonNullable<typeof p> => Boolean(p));
+const rows = productIds.map((id) => byId.get(id)).filter((p): p is NonNullable<typeof p> => Boolean(p && isListedForSale(p)));
 const url = new URL(path, site.url).href;
-const extras = offerExtras();
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -35,21 +34,9 @@ const jsonLd = {
       itemListElement: rows.map((p, i) => ({
         "@type": "ListItem",
         position: i + 1,
-        item: {
-          "@type": "Product",
-          name: p.name,
-          url: new URL(p.href, site.url).href,
-          brand: { "@type": "Brand", name: "Apple" },
-          offers: {
-            "@type": "Offer",
-            price: p.priceKes,
-            priceCurrency: "KES",
-            itemCondition: "https://schema.org/NewCondition",
-            availability: p.inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-            url: new URL(p.href, site.url).href,
-            ...extras,
-          },
-        },
+        // A list of links: each product's full schema lives on its own page.
+        name: p.name,
+        url: new URL(p.href, site.url).href,
       })),
     },
     {
@@ -88,7 +75,7 @@ const jsonLd = {
           rows.map((p) => (
             <tr>
               <th scope="row"><a href={p.href}>{p.name}</a></th>
-              <td>{formatKes(p.priceKes)}</td>
+              <td>{formatKes(listedFromKes(p))}</td>
               <td>{p.inStock ? "In stock" : "Ask on WhatsApp"}</td>
             </tr>
           ))

@@ -3,6 +3,7 @@
  * iPhone SEO product page (11–18). Gallery + buying panel for catalog models;
  * SEO-only layout for sheet models without a legacy gallery entry.
  */
+import { isListedForSale } from "../../lib/listing-offers";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ProductStage from "../../components/iphone/ProductStage.astro";
 import LipaCalc from "../../components/iphone/LipaCalc.astro";
@@ -79,6 +80,11 @@ const seriesPage = kind === "series" ? getSeriesHub(modelId!) : undefined;
 const seoDefault = kind === "model" ? getSeoModel(modelId!) : undefined;
 // Live admin prices override the repo sheet for every storage option.
 const live = seoDefault ? await livePricedProduct(iphoneLiveId(seoDefault.id)) : undefined;
+if (live && !isListedForSale(live)) return Astro.redirect("/iphone");
+if (seriesPage) {
+  const listed = await Promise.all(seriesPage.models.map((m) => livePricedProduct(iphoneLiveId(m.id))));
+  if (!listed.some((p) => !p || isListedForSale(p))) return Astro.redirect("/iphone");
+}
 const liveByKey = new Map((live?.variants ?? []).map((v) => [v.key, v]));
 const seo = seoDefault ? withLiveSeoPrices(seoDefault, live) : undefined;
 

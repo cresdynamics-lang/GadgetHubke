@@ -5,11 +5,9 @@ import { productNav } from "../lib/catalog";
 import { listPublishedJournalPosts } from "../lib/journal";
 import { products } from "../lib/products";
 import { tvHomeModels } from "../lib/tv-home";
-import { listSeoModels, listSeriesHubs, getSeoModelByName } from "../lib/iphone/seo";
-import { defaultPricedCatalog, livePricedCatalog } from "../lib/pricing/live";
-
-/** When this build went live — the floor for product "last updated" dates. */
-const DEPLOYED = new Date().toISOString().slice(0, 10);
+import { listSeoModels, listSeriesHubs, getSeoModel, getSeoModelByName } from "../lib/iphone/seo";
+import { defaultPricedCatalog, iphoneLiveId, isShownOnWebsite, livePricedCatalog } from "../lib/pricing/live";
+import { caseProducts, keyboards, mice, pencils, powerProducts, trackpads } from "../lib/accessories";
 
 const staticPaths = [
   "/",
@@ -52,6 +50,12 @@ export const prerender = false;
 export const GET: APIRoute = async () => {
   const urls = new Set<string>();
   const lastmod = new Map<string, string>();
+  const live = await livePricedCatalog();
+  const onList = new Set(live.filter(isShownOnWebsite).map((p) => p.id));
+  const known = new Set(live.map((p) => p.id));
+  const listed = (id: string) => !known.has(id) || onList.has(id);
+  const anyListed = (items: { id: string }[]) => items.some((item) => listed(item.id));
+  const iphoneListed = (id: string) => listed(iphoneLiveId(id));
 
   for (const p of staticPaths) urls.add(abs(p));
   for (const c of homeCategories) urls.add(abs(c.href));
@@ -77,22 +81,42 @@ export const GET: APIRoute = async () => {
   }
   for (const m of tvHomeModels) urls.add(abs(`/tv-home/${m.id}`));
   for (const m of listSeoModels()) {
+    if (!iphoneListed(m.id)) continue;
     urls.add(abs(`/iphone/${m.id}`));
-    for (const c of m.compareWith) urls.add(abs(`/iphone/compare/${c}`));
+    for (const c of m.compareWith) {
+      if (c.split("-vs-").every((id) => getSeoModel(id) && iphoneListed(id))) urls.add(abs(`/iphone/compare/${c}`));
+    }
   }
-  for (const s of listSeriesHubs()) urls.add(abs(`/iphone/${s.slug}`));
+  for (const s of listSeriesHubs()) {
+    if (s.models.some((m) => iphoneListed(m.id))) urls.add(abs(`/iphone/${s.slug}`));
+  }
   urls.add(abs("/iphone"));
 
 
-  // Product pages: last admin price change, or this deploy if newer.
-  for (const p of await livePricedCatalog()) {
+  // Only the live list goes to Google: off-list product pages redirect to their section.
+  for (const p of live) {
+    if (!onList.has(p.id)) urls.delete(abs(p.href));
+  }
+  const emptyHubs: [string, { id: string }[]][] = [
+    ["/accessories/apple-pencil", pencils()],
+    ["/accessories/magic-keyboard", keyboards()],
+    ["/accessories/magic-mouse", mice()],
+    ["/accessories/magic-trackpad", trackpads()],
+    ["/accessories/power", powerProducts()],
+    ["/accessories/cases", caseProducts()],
+    ["/tv-home", tvHomeModels],
+    ["/tv-home/shop", tvHomeModels],
+    ["/tv-home/compare", tvHomeModels],
+  ];
+  for (const [path, items] of emptyHubs) {
+    if (!anyListed(items)) urls.delete(abs(path));
+  }
+
+  // Product pages: the date the listing last really changed.
+  for (const p of live) {
     const loc = abs(p.href);
     const changed = (p.updatedAt || "").slice(0, 10);
-    if (urls.has(loc)) lastmod.set(loc, changed > DEPLOYED ? changed : DEPLOYED);
-  }
-  for (const loc of urls) {
-    const path = new URL(loc).pathname;
-    if (/^\/(iphone|ipad|mac|watch|airpods|tv-home|accessories)(\/|$)/.test(path) && !lastmod.has(loc)) lastmod.set(loc, DEPLOYED);
+    if (urls.has(loc) && changed) lastmod.set(loc, changed);
   }
 
   // /shop/<category>/<item> pages (and their specs) point Google at the model

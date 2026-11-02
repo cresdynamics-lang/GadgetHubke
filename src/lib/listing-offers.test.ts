@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { channelHref, colourKey, filterColours, listedVariantPrices, listingOffers, listingRows, type ListingOffer } from "./listing-offers.ts";
+import { isListedForSale, listedFromKes, channelHref, colourKey, filterColours, listedVariantPrices, listingOffers, listingRows, type ListingOffer } from "./listing-offers.ts";
 import type { PricedProduct } from "./pricing/live.ts";
 
 function product(partial: Partial<PricedProduct> & Pick<PricedProduct, "id">): PricedProduct {
@@ -134,4 +134,31 @@ test("ex-uk offer prefers ex-uk colour list", () => {
   const byChannel = Object.fromEntries(offers.map((offer: ListingOffer) => [offer.channel, offer.colours]));
   assert.deepEqual(byChannel.new, ["black-titanium"]);
   assert.deepEqual(byChannel["ex-uk"], ["desert-titanium"]);
+});
+
+test("isListedForSale keeps only products with a priced, in-stock listed option", () => {
+  const base = {
+    id: "x",
+    name: "X",
+    group: "Mac",
+    href: "/mac/x",
+    priceKes: 100,
+    basePriceKes: 100,
+    inStock: true,
+    showOnWebsite: true,
+    sample: false,
+    variants: [],
+  };
+  const variant = { key: "a", label: "A", priceKes: 100, inStock: true };
+  assert.equal(isListedForSale(base), true);
+  assert.equal(isListedForSale({ ...base, priceKes: 0 }), false);
+  assert.equal(isListedForSale({ ...base, inStock: false }), false);
+  assert.equal(isListedForSale({ ...base, showOnWebsite: false }), false);
+  assert.equal(isListedForSale({ ...base, variants: [variant] }), true);
+  assert.equal(isListedForSale({ ...base, variants: [{ ...variant, showOnWebsite: false }] }), false);
+  assert.equal(isListedForSale({ ...base, variants: [{ ...variant, inStock: false }] }), false);
+  // Ex-UK only: no New stock, but a listed Ex-UK price keeps it on the list.
+  const exUk = { ...base, showNewOnWebsite: false, variants: [{ ...variant, exUkKes: 80 }] };
+  assert.equal(isListedForSale(exUk), true);
+  assert.equal(listedFromKes(exUk), 80);
 });

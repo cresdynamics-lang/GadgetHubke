@@ -9,6 +9,7 @@ import {
 import { site } from "../../lib/site";
 import { livePricedCatalog, iphoneLiveId } from "../../lib/pricing/live";
 import { withLiveSeoPrices } from "../../lib/iphone/seo/live";
+import { isListedForSale } from "../../lib/listing-offers";
 
 interface Props {
   hub: IphoneSeriesHub;
@@ -18,6 +19,10 @@ const { hub: hubDefault } = Astro.props;
 // Live admin prices for every model in the series.
 const liveById = new Map((await livePricedCatalog()).map((p) => [p.id, p]));
 const liveModels = hubDefault.models
+  .filter((m) => {
+    const live = liveById.get(iphoneLiveId(m.id));
+    return !live || isListedForSale(live);
+  })
   .map((m) => withLiveSeoPrices(m, liveById.get(iphoneLiveId(m.id))))
   .sort((a, b) => a.fromKes - b.fromKes || a.name.localeCompare(b.name));
 const liveFrom = Math.min(...liveModels.map((m) => m.fromKes));

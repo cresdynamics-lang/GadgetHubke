@@ -2,6 +2,7 @@
 /**
  * Watch PDP - sticky 4:3 viewer + buy panel + feel + specs/FAQ.
  */
+import { isListedForSale } from "../../lib/listing-offers";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import BackButton from "../../components/BackButton.astro";
 import TrackProductView from "../../components/TrackProductView.astro";
@@ -43,6 +44,7 @@ const watchDefault = getWatchModel(Astro.params.model!);
 if (!watchDefault) return Astro.redirect("/watch");
 // Live admin prices per material + connectivity ("aluminum-gps", "titanium-cell").
 const liveWatch = await livePricedProduct(watchDefault.id);
+if (liveWatch && !isListedForSale(liveWatch)) return Astro.redirect("/watch");
 const exact = variantPriceMap(liveWatch);
 const exactExUk = variantExUkMap(liveWatch);
 const defaultMaterial = watchDefault.materials[0] || "aluminum";

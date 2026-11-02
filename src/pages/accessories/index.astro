@@ -18,6 +18,11 @@ import {
   getAccessoriesPageImage,
   accessoriesConfig,
   lowestAccessoryPrice,
+  caseProducts,
+  keyboards,
+  mice,
+  pencils,
+  powerProducts,
 } from "../../lib/accessories";
 import { whatsappUrl } from "../../lib/site";
 import CategoryHero from "../../components/hero/CategoryHero.astro";
@@ -32,7 +37,16 @@ const visibleIds = await websiteVisibleIdSet();
 const featured = ["pencil-pro", "power-adapter-70w", "mouse-usbc-white", "case-iphone-17-pro-silicone"]
   .map((id) => getAccessory(id)!)
   .filter(Boolean)
-  .filter((item) => !item.id.startsWith("pencil-") && !item.id.startsWith("keyboard-") && !item.id.startsWith("mouse-") ? true : visibleIds.has(item.id));
+  .filter((item) => visibleIds.has(item.id));
+const hasListed = (items: { id: string }[]) => items.some((item) => visibleIds.has(item.id));
+
+const listedGroups: Record<string, boolean> = {
+  "/accessories/apple-pencil": hasListed(pencils()),
+  "/accessories/magic-keyboard": hasListed(keyboards()),
+  "/accessories/magic-mouse": hasListed(mice()),
+  "/accessories/power": hasListed(powerProducts()),
+  "/accessories/cases": hasListed(caseProducts()),
+};
 
 const groups = [
   {
@@ -70,7 +84,7 @@ const groups = [
     fromKes: lowestAccessoryPrice("cases"),
     img: groupCases,
   },
-];
+].filter((group) => listedGroups[group.href]);
 
 const bundlePro = {
   name: "iPad Pro + Pencil Pro + Magic Keyboard",
@@ -144,7 +158,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
     <h2>Bundles</h2>
     <p>Only compatible combinations. Add all parts to the bag.</p>
     {
-      [bundleAir, bundlePro, bundleMacAirMouse, bundleImacDesk].map((b) => {
+      [bundleAir, bundlePro, bundleMacAirMouse, bundleImacDesk].filter((b) => b.parts.every((id) => visibleIds.has(id))).map((b) => {
         const kes = bundleKes(b.parts);
         const monthly = lipaMonthly(kes).monthlyKes;
         return (

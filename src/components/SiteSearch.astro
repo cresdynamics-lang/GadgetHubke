@@ -2,6 +2,7 @@
 /**
  * Full-screen search (/ or header). iPhone + MacBook + iPad model-aware ranking.
  */
+import { iphoneLiveId, isShownOnWebsite, livePricedCatalog } from "../lib/pricing/live";
 import {
   buildIphoneSearchIndex,
   iphonePopularSearches,
@@ -142,6 +143,12 @@ const tvHomeAcc = Object.fromEntries(
       })),
   ]),
 );
+
+// Search offers only what is on the live list.
+const offList = new Set((await livePricedCatalog()).filter((p) => !isShownOnWebsite(p)).map((p) => p.id));
+const onLiveList = (item: { id: string }) => !offList.has(iphoneLiveId(item.id));
+const tvListed = tvHomeModels.some((m) => !offList.has(m.id));
+
 ---
 
 <dialog class="site-search" data-site-search aria-label="Search products">
@@ -219,7 +226,7 @@ const tvHomeAcc = Object.fromEntries(
           <li><a href="/airpods/compare">Compare AirPods</a></li>
           <li><a href="/accessories/compare">Compare accessories</a></li>
           <li><a href="/accessories/apple-pencil#finder">Which Pencil fits?</a></li>
-          <li><a href="/tv-home/compare">Compare TV &amp; Home</a></li>
+          {tvListed ? <li><a href="/tv-home/compare">Compare TV &amp; Home</a></li> : null}
           <li><a href="/ipad/compare">Compare iPads</a></li>
           <li><a href="/mac/compare">Compare Macs</a></li>
           <li><a href="/support">Support</a></li>
@@ -256,7 +263,7 @@ const tvHomeAcc = Object.fromEntries(
   </div>
 </dialog>
 
-<script define:vars={{ phoneIndex, macIndex, ipadIndex, watchIndex, airpodsIndex, tvHomeIndex, accessoriesIndex, waPhone, phoneAcc, macAcc, ipadAcc, watchAcc, airpodsAcc, tvHomeAcc }}>
+<script define:vars={{ phoneIndex: phoneIndex.filter(onLiveList), macIndex: macIndex.filter(onLiveList), ipadIndex: ipadIndex.filter(onLiveList), watchIndex: watchIndex.filter(onLiveList), airpodsIndex: airpodsIndex.filter(onLiveList), tvHomeIndex: tvHomeIndex.filter(onLiveList), accessoriesIndex: accessoriesIndex.filter(onLiveList), waPhone, phoneAcc, macAcc, ipadAcc, watchAcc, airpodsAcc, tvHomeAcc }}>
   const PHONE_VOCAB = [
     "pro", "max", "plus", "mini", "titanium", "black", "white", "blue", "pink", "teal",
     "case", "charger", "cable", "magsafe", "screen", "protector", "ultramarine", "desert", "natural",

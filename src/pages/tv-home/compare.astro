@@ -2,7 +2,7 @@
 export const prerender = false;
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { liveFromPrices } from "../../lib/pricing/live";
+import { liveFromPrices, websiteVisibleIdSet } from "../../lib/pricing/live";
 import TvHomeStage from "../../components/tv-home/TvHomeStage.astro";
 import TvHomeTrademark from "../../components/tv-home/TvHomeTrademark.astro";
 import {
@@ -57,6 +57,9 @@ function cell(v: string | number | boolean | null): string {
   if (typeof v === "number") return v.toLocaleString("en-KE");
   return v;
 }
+
+const listedIds = await websiteVisibleIdSet();
+if (!tvHomeModels.some((m) => listedIds.has(m.id))) return Astro.redirect("/shop");
 ---
 
 <BaseLayout title="Compare TV & Home - GadgetHub" description="Compare Apple TV and HomePod side by side.">

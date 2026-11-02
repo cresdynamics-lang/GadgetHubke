@@ -1,4 +1,5 @@
 ---
+import { isListedForSale } from "../../lib/listing-offers";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import BackButton from "../../components/BackButton.astro";
 import TrackProductView from "../../components/TrackProductView.astro";
@@ -42,6 +43,7 @@ const airpodsDefault = getAirpodsModel(Astro.params.model!);
 if (!airpodsDefault) return Astro.redirect("/airpods");
 // Live admin price ("base").
 const liveAirpods = await livePricedProduct(airpodsDefault.id);
+if (liveAirpods && !isListedForSale(liveAirpods)) return Astro.redirect("/airpods");
 const liveBase = variantPriceMap(liveAirpods).base;
 const exUkBase = variantExUkMap(liveAirpods).base ?? null;
 const model = liveBase != null ? { ...airpodsDefault, basePriceKes: liveBase } : airpodsDefault;

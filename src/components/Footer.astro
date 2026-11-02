@@ -3,9 +3,15 @@
  * Site footer - five columns + bottom utility bar.
  * Inverse (black) surface; links match main nav + care/legal trust paths.
  */
+import { websiteVisibleIdSet } from "../lib/pricing/live";
+import { tvHomeModels } from "../lib/tv-home";
+import { caseProducts, powerProducts } from "../lib/accessories";
 import { site, whatsappUrl, telUrl } from "../lib/site";
 import SocialIcon from "./SocialIcon.astro";
 
+const visibleIds = await websiteVisibleIdSet();
+const anyListed = (items: { id: string }[]) => items.some((item) => visibleIds.has(item.id));
+const tvListed = anyListed(tvHomeModels);
 const year = new Date().getFullYear();
 const waHref = whatsappUrl("Hi GadgetHub - I'd like to get in touch.");
 
@@ -15,7 +21,7 @@ const shop = [
   { label: "iPad", href: "/ipad" },
   { label: "Watch", href: "/watch" },
   { label: "AirPods", href: "/airpods/shop" },
-  { label: "TV & Home", href: "/tv-home" },
+  ...(tvListed ? [{ label: "TV & Home", href: "/tv-home" }] : []),
   { label: "Accessories", href: "/accessories" },
   { label: "Deals", href: "/deals" },
   { label: "Compare Devices", href: "/compare" },
@@ -72,16 +78,20 @@ const accessoriesCol = [
   { label: "What charger?", href: "/accessories/power#finder" },
   { label: "Which case?", href: "/accessories/cases#finder" },
   { label: "Find what fits", href: "/accessories#finder" },
-] as const;
+].filter((link) => {
+  if (link.href.includes("/power")) return anyListed(powerProducts());
+  if (link.href.includes("/cases")) return anyListed(caseProducts());
+  return true;
+});
 
 const columns = [
   { title: "Shop", links: shop },
   { title: "Accessories", links: accessoriesCol },
-  { title: "TV & Home", links: tvHome },
+  ...(tvListed ? [{ title: "TV & Home", links: tvHome }] : []),
   { title: "Customer Care", links: care },
   { title: "Company", links: company },
   { title: "Legal", links: legal },
-] as const;
+];
 ---
 
 <footer class="site-footer">

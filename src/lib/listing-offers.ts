@@ -73,6 +73,38 @@ function exUkPrice(p: PricedProduct) {
   return positive(p.exUkKes) ? p.exUkKes! : 0;
 }
 
+/**
+ * On the live list: shown, and at least one New or Ex-UK option is priced and in stock.
+ * Search pages, menus, feeds and the sitemap all follow this.
+ */
+export function isListedForSale(p: PricedProduct): boolean {
+  if (p.showOnWebsite === false) return false;
+  const rows = p.variants.map((variant) => ({ variant, listed: listedVariantPrices(p, variant) }));
+  if (rows.length) {
+    return rows.some(
+      ({ variant, listed }) =>
+        (listed.showNew && variant.inStock && p.inStock !== false) ||
+        (listed.showEx && variant.exUkInStock !== false && p.exUkInStock !== false),
+    );
+  }
+  const flags = listedVariantPrices(p);
+  return (
+    (flags.showNew && positive(p.priceKes) && p.inStock !== false) ||
+    (flags.showEx && positive(p.exUkKes) && p.exUkInStock !== false)
+  );
+}
+
+/** Lowest listed price, New or Ex-UK. */
+export function listedFromKes(p: PricedProduct): number {
+  const prices = p.variants.flatMap((variant) => {
+    const listed = listedVariantPrices(p, variant);
+    return [listed.newKes, listed.exUkKes];
+  });
+  if (!p.variants.length) prices.push(p.priceKes, p.exUkKes ?? 0);
+  const shown = prices.filter(positive);
+  return shown.length ? Math.min(...shown) : 0;
+}
+
 export function listingOffers(product: PricedProduct | undefined, href: string, fallbackPrice = 0): ListingOffer[] {
   if (product?.showOnWebsite === false) return [];
 

@@ -6,9 +6,20 @@ import {
   getAccessory,
   getAccessoryImage,
   formatKes,
+  caseProducts,
+  keyboards,
+  mice,
+  pencils,
+  powerProducts,
   type Accessory,
 } from "../../lib/accessories";
+import { livePricedCatalog, isShownOnWebsite } from "../../lib/pricing/live";
+import { listedFromKes } from "../../lib/listing-offers";
 import { homeOpt } from "../../lib/home-images";
+
+const catalog = await livePricedCatalog();
+const live = new Map(catalog.filter(isShownOnWebsite).map((p) => [p.id, p]));
+const anyListed = (items: { id: string }[]) => items.some((item) => live.has(item.id));
 
 function previewFor(a: Accessory) {
   const img = getAccessoryImage(a.id, "hero");
@@ -16,7 +27,7 @@ function previewFor(a: Accessory) {
     id: a.id,
     name: a.name,
     href: `/accessories/${a.id}`,
-    priceLabel: formatKes(a.basePriceKes),
+    priceLabel: formatKes(live.has(a.id) ? listedFromKes(live.get(a.id)!) : a.basePriceKes),
     src: homeOpt(img.src),
     alt: img.alt,
   };
@@ -26,25 +37,26 @@ const featuredIds = [
   "pencil-pro",
   "keyboard-ipad-pro-13",
   "mouse-usbc-black",
+  "mouse-usbc-white",
   "power-adapter-70w",
   "case-iphone-17-pro-silicone",
 ] as const;
 
 const picks = featuredIds
   .map((id) => getAccessory(id))
-  .filter(Boolean)
+  .filter((a) => a && live.has(a.id))
   .map((a) => previewFor(a as Accessory));
 
 const defaultPreview = picks[0] || previewFor(getAccessory("pencil-pro")!);
 const previews = Object.fromEntries(picks.map((p) => [p.id, p]));
 
 const groups = [
-  { label: "Apple Pencil", href: "/accessories/apple-pencil" },
-  { label: "Magic Keyboard", href: "/accessories/magic-keyboard" },
-  { label: "Magic Mouse", href: "/accessories/magic-mouse" },
-  { label: "Power", href: "/accessories/power" },
-  { label: "Cases", href: "/accessories/cases" },
-];
+  { show: anyListed(pencils()), label: "Apple Pencil", href: "/accessories/apple-pencil" },
+  { show: anyListed(keyboards()), label: "Magic Keyboard", href: "/accessories/magic-keyboard" },
+  { show: anyListed(mice()), label: "Magic Mouse", href: "/accessories/magic-mouse" },
+  { show: anyListed(powerProducts()), label: "Power", href: "/accessories/power" },
+  { show: anyListed(caseProducts()), label: "Cases", href: "/accessories/cases" },
+].filter((group) => group.show);
 ---
 
 <div class="xmega" data-xmega>

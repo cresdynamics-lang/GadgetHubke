@@ -1,4 +1,6 @@
 ---
+export const prerender = false;
+
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import TvHomeCard from "../../components/tv-home/TvHomeCard.astro";
 import TvHomeTrademark from "../../components/tv-home/TvHomeTrademark.astro";
@@ -8,13 +10,17 @@ import {
   isHomeHub,
   isSpeaker,
 } from "../../lib/tv-home";
+import { filterVisibleById, websiteVisibleIdSet } from "../../lib/pricing/live";
+
+const listedModels = filterVisibleById(tvHomeModels, await websiteVisibleIdSet());
+if (!listedModels.length) return Astro.redirect("/shop");
 
 const url = Astro.url;
 const familyQ = url.searchParams.get("family") || "";
 const colourQ = url.searchParams.get("colour") || "";
 const needQ = url.searchParams.get("need") || "";
 
-let filtered = [...tvHomeModels];
+let filtered = [...listedModels];
 if (familyQ) filtered = filtered.filter((m) => m.family === familyQ);
 if (colourQ) filtered = filtered.filter((m) => m.colours.includes(colourQ));
 if (needQ === "movies") filtered = filtered.filter((m) => m.family === "Apple TV");

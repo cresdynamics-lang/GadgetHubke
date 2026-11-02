@@ -2,7 +2,7 @@
 export const prerender = false;
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { livePricedCatalog } from "../../lib/pricing/live";
+import { livePricedCatalog, websiteVisibleIdSet } from "../../lib/pricing/live";
 import { buildCategorySeo, formatKes as formatKesSeoHub } from "../../lib/seo/product-seo";
 import TvHomeStage from "../../components/tv-home/TvHomeStage.astro";
 import TvHomeCard from "../../components/tv-home/TvHomeCard.astro";
@@ -24,6 +24,8 @@ import {
 import { whatsappUrl } from "../../lib/site";
 import CategoryHero from "../../components/hero/CategoryHero.astro";
 
+const visibleIds = await websiteVisibleIdSet();
+if (!tvHomeModels.some((m) => visibleIds.has(m.id))) return Astro.redirect("/shop");
 const atv = tvHomeModelsByFamily("Apple TV");
 const hp = tvHomeModelsByFamily("HomePod");
 const mini = tvHomeModelsByFamily("HomePod mini");
