@@ -1,3 +1,4 @@
+import { LIPA_MONTH_OPTIONS, LIPA_NOTE } from "../pricing/lipa";
 /**
  * Accessories CONFIG - Pencil, Keyboard, Mouse, Trackpad, Power, Cases.
  * re-verify every price, spec and compatibility rule on apple.com before launch.
@@ -18,9 +19,9 @@ export const accessoriesConfig = {
     depositMaxPct: 60,
     depositStepPct: 5,
     depositDefaultPct: 40,
-    monthOptions: [3, 6, 9, 12] as const,
+    monthOptions: LIPA_MONTH_OPTIONS,
     monthsDefault: 6,
-    note: "Illustration at 0% extra; the real terms are set by Gadget Hub.",
+    note: LIPA_NOTE,
   },
 
   tradeIn: {

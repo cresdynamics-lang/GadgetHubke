@@ -1,3 +1,4 @@
+import { lipaPlan } from "../pricing/lipa";
 import { iphoneConfig } from "./config";
 import { sheetRowsForProduct } from "../pricing/iphone-sheet";
 
@@ -47,11 +48,8 @@ export function lipaMonthly(
   priceKes: number,
   depositPct = iphoneConfig.lipa.depositDefaultPct,
   months = iphoneConfig.lipa.monthsDefault,
-): { depositKes: number; monthlyKes: number; months: number } {
-  const depositKes = Math.round((priceKes * depositPct) / 100);
-  const remainder = priceKes - depositKes;
-  const monthlyKes = Math.round(remainder / months);
-  return { depositKes, monthlyKes, months };
+) {
+  return lipaPlan(priceKes, depositPct, months);
 }
 
 export function tradeInEstimate(

@@ -1,4 +1,5 @@
 ---
+import { lipaRate } from "../../lib/pricing/lipa";
 import { isListedForSale } from "../../lib/listing-offers";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import BackButton from "../../components/BackButton.astro";
@@ -344,6 +345,7 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
   wirelessStep: airpodsConfig.wirelessCaseStepKes,
   depositPct: airpodsConfig.lipa.depositDefaultPct,
   months: airpodsConfig.lipa.monthsDefault,
+  lipaRatePct: Math.round(lipaRate(airpodsConfig.lipa.monthsDefault) * 100),
   waBase: `https://wa.me/${airpodsConfig.whatsapp}?text=`,
   modelName: model.name,
 }}>
@@ -365,7 +367,9 @@ const showPageHero = Boolean(heroStartSrc && heroEndSrc);
   }
   function refresh() {
     const kes = total();
-    const monthly = Math.round((kes * (1 - depositPct / 100)) / months);
+    const deposit = Math.round((kes * depositPct) / 100);
+    const repay = Math.round(((kes - deposit) * lipaRatePct) / 10000) * 100; // same sum as lib/pricing/lipa.ts
+    const monthly = Math.round(repay / months);
     if (priceEl) priceEl.textContent = `${state.channel === "ex-uk" ? "Ex-UK · " : ""}KES ${kes.toLocaleString("en-KE")}`;
     if (lipaEl) lipaEl.textContent = `or KES ${monthly.toLocaleString("en-KE")} / mo`;
     if (bag instanceof HTMLElement) {

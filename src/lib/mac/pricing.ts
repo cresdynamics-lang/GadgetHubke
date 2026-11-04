@@ -1,3 +1,4 @@
+import { lipaPlan } from "../pricing/lipa";
 import { macConfig } from "./config";
 import type { MacModel } from "./models";
 
@@ -23,11 +24,8 @@ export function lipaMonthly(
   priceKes: number,
   depositPct = macConfig.lipa.depositDefaultPct,
   months = macConfig.lipa.monthsDefault,
-): { monthlyKes: number; depositKes: number; months: number } {
-  const depositKes = Math.round((priceKes * depositPct) / 100);
-  const financed = priceKes - depositKes;
-  const monthlyKes = Math.round(financed / months);
-  return { monthlyKes, depositKes, months };
+) {
+  return lipaPlan(priceKes, depositPct, months);
 }
 
 export function tradeInEstimate(baseKes: number, condition: keyof typeof macConfig.tradeIn.conditionPct): number {

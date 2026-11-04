@@ -74,7 +74,7 @@ const lipa = iphoneConfig.lipa;
           </label>
           <label>
             <input type="radio" name="intent" value="lipa" />
-            Lipa Mdogo Mdogo — {lipa.depositDefaultPct}% deposit today, rest over {lipa.monthsDefault} months
+            Lipa Mdogo Mdogo — {lipa.depositDefaultPct}% deposit today, the balance over 1 to 6 months
           </label>
         </fieldset>
         ) : <input type="hidden" name="intent" value="purchase" />}
@@ -101,7 +101,7 @@ const lipa = iphoneConfig.lipa;
               {
                 lipa.monthOptions.map((m) => (
                   <option value={m} selected={m === lipa.monthsDefault}>
-                    {m} months
+                    {m} {m === 1 ? "month" : "months"}
                   </option>
                 ))
               }
@@ -181,6 +181,7 @@ const lipa = iphoneConfig.lipa;
 </BaseLayout>
 
 <script>
+  import { lipaPlan } from "../../lib/pricing/lipa";
   import {
     bagMetaLine,
     bagTotal,
@@ -341,8 +342,10 @@ const lipa = iphoneConfig.lipa;
     const hint = root.querySelector("[data-intent-hint]");
     const total = bagTotal(items);
     if (hint) {
+      const { pct, months } = lipaInputs();
+      const plan = lipaPlan(total, pct, months);
       hint.textContent = lipa
-        ? `Deposit due today ${formatKes(dueKes())}. Remaining ${formatKes(total - dueKes())} after we confirm your plan.`
+        ? `Deposit due today ${formatKes(plan.depositKes)}. Then ${formatKes(plan.monthlyKes)} a month for ${plan.months} ${plan.months === 1 ? "month" : "months"} after we confirm your plan. Total ${formatKes(plan.totalKes)}.`
         : `Full amount due today ${formatKes(total)}.`;
     }
   }

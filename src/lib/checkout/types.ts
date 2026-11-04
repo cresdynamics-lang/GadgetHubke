@@ -40,7 +40,10 @@ export type LipaTerms = {
   months: number;
   catalogKes: number;
   depositKes: number;
+  /** Still to pay after the deposit, with the plan rate added. */
   remainingKes: number;
+  monthlyKes?: number;
+  totalKes?: number;
 };
 
 export type OrderStatus =

@@ -1,3 +1,4 @@
+import { lipaPlan } from "../pricing/lipa";
 import { watchConfig } from "./config";
 import type { WatchModel } from "./models";
 
@@ -24,11 +25,8 @@ export function lipaMonthly(
   priceKes: number,
   depositPct = watchConfig.lipa.depositDefaultPct,
   months = watchConfig.lipa.monthsDefault,
-): { monthlyKes: number; depositKes: number; months: number } {
-  const depositKes = Math.round((priceKes * depositPct) / 100);
-  const financed = priceKes - depositKes;
-  const monthlyKes = Math.round(financed / months);
-  return { monthlyKes, depositKes, months };
+) {
+  return lipaPlan(priceKes, depositPct, months);
 }
 
 export function tradeInEstimate(

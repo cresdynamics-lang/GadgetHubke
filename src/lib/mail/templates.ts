@@ -62,7 +62,7 @@ function fulfillLine(order: CheckoutOrder) {
 function lipaSummary(order: CheckoutOrder) {
   const lipa = order.lipa;
   if (!lipa) return "";
-  return `Device total ${formatKes(lipa.catalogKes)}. Deposit ${lipa.depositPct}% due today. Remaining ${formatKes(lipa.remainingKes)} over ${lipa.months} months after we confirm your plan.`;
+  return `Device price ${formatKes(lipa.catalogKes)}. Deposit ${lipa.depositPct}% due today. Remaining ${formatKes(lipa.remainingKes)} over ${lipa.months} ${lipa.months === 1 ? "month" : "months"}, plan rate included, after we confirm your plan.`;
 }
 
 export function invoiceEmail(order: CheckoutOrder) {
@@ -254,13 +254,13 @@ export function lipaApplicationEmail(input: {
   const html = wrap(
     title,
     `<p style="margin:0 0 16px;line-height:1.5;">Hi ${esc(input.name.split(" ")[0] || "there")}, we have your Lipa Mdogo Mdogo application for <strong>${esc(input.device)}</strong>.</p>
-    <p style="margin:0 0 16px;line-height:1.5;">Deposit ${esc(formatKes(input.depositKes))} (${input.depositPct}%) to start. Remaining ${esc(formatKes(input.remainingKes))} over ${input.months} months after we confirm terms. This email is not a receipt — pay the deposit when we send the invoice or on WhatsApp.</p>
+    <p style="margin:0 0 16px;line-height:1.5;">Deposit ${esc(formatKes(input.depositKes))} (${input.depositPct}%) to start. Remaining ${esc(formatKes(input.remainingKes))} over ${input.months} ${input.months === 1 ? "month" : "months"}, plan rate included, after we confirm terms. This email is not a receipt — pay the deposit when we send the invoice or on WhatsApp.</p>
     <p style="margin:0;font-size:13px;">Reference ${esc(input.planId)} · ${esc(site.phoneDisplay)} · ${esc(site.address)}</p>`,
   );
   const text = [
     title,
     `Hi ${input.name}, Lipa Mdogo Mdogo for ${input.device}.`,
-    `Deposit ${formatKes(input.depositKes)} (${input.depositPct}%). Remaining ${formatKes(input.remainingKes)} over ${input.months} months.`,
+    `Deposit ${formatKes(input.depositKes)} (${input.depositPct}%). Remaining ${formatKes(input.remainingKes)} over ${input.months} ${input.months === 1 ? "month" : "months"}, plan rate included.`,
     `Reference ${input.planId}`,
   ].join("\n");
   return { subject: `${title} · Gadget Hub`, html, text };

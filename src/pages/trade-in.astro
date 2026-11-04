@@ -1,43 +1,54 @@
 ---
+export const prerender = false;
 import BaseLayout from "../layouts/BaseLayout.astro";
+import DevicePicker from "../components/DevicePicker.astro";
+import { liveDeviceOptions } from "../lib/device-options-live";
 import { site, whatsappUrl } from "../lib/site";
+import { tradeInQuestions } from "../lib/trade-in-questions";
 
 const brands = ["iPhone", "Samsung"] as const;
-const storages = ["64GB", "128GB", "256GB", "512GB", "1TB", "2TB"] as const;
-const conditions = [
-  { value: "excellent", label: "Excellent - minimal wear" },
-  { value: "good", label: "Good - light marks" },
-  { value: "fair", label: "Fair - visible wear, works fully" },
-  { value: "poor", label: "Poor - heavy wear or issues" },
-] as const;
-
-const waBase = whatsappUrl();
+const storages = ["32GB", "64GB", "128GB", "256GB", "512GB", "1TB", "2TB"] as const;
+const iphoneNames = [
+  "iPhone 7", "iPhone 7 Plus", "iPhone 8", "iPhone 8 Plus", "iPhone X", "iPhone XR", "iPhone XS", "iPhone XS Max",
+  "iPhone SE (2nd generation)", "iPhone SE (3rd generation)", "iPhone 11", "iPhone 11 Pro", "iPhone 11 Pro Max",
+  "iPhone 12 mini", "iPhone 12", "iPhone 12 Pro", "iPhone 12 Pro Max", "iPhone 13 mini", "iPhone 13", "iPhone 13 Pro",
+  "iPhone 13 Pro Max", "iPhone 14", "iPhone 14 Plus", "iPhone 14 Pro", "iPhone 14 Pro Max", "iPhone 15", "iPhone 15 Plus",
+  "iPhone 15 Pro", "iPhone 15 Pro Max", "iPhone 16e", "iPhone 16", "iPhone 16 Plus", "iPhone 16 Pro", "iPhone 16 Pro Max",
+  "iPhone 17e", "iPhone 17", "iPhone Air", "iPhone 17 Pro", "iPhone 17 Pro Max", "iPhone 18 Pro", "iPhone 18 Pro Max",
+];
+const options = await liveDeviceOptions(["Accessories"]);
+const payload = JSON.stringify(tradeInQuestions.map((q) => ({ id: q.id, label: q.label }))).replace(/</g, "\\u003c");
 ---
 
 <BaseLayout
   title="Trade-In - GadgetHub"
-  description="Trade in an iPhone or Samsung toward any new device at GadgetHub. Estimates online; final value after inspection."
+  description="Trade in your iPhone or Samsung for the device you want at Gadget Hub Nairobi. Tell us both phones, answer a few questions and get your quote on WhatsApp."
 >
   <section class="tradein container">
     <header class="tradein__intro">
       <p class="tradein__eyebrow">Trade-In</p>
-      <h1>Turn your phone into credit</h1>
+      <h1>Trade your phone for the one you want</h1>
       <p class="tradein__lede">
-        We accept <strong>iPhone</strong> and <strong>Samsung</strong> only. Credit
-        applies toward <strong>any new device</strong> in our catalog. Online values
-        are estimates - final offer after in-person inspection at{" "}
-        {site.address}.
+        Tell us the device you want and the phone you are trading in, answer a few
+        questions, and send it to us on WhatsApp. We reply with your quote. We accept
+        <strong>iPhone</strong> and <strong>Samsung</strong> only, and the final offer is
+        confirmed after we inspect the phone at {site.address}.
       </p>
     </header>
 
     <div class="tradein__grid">
-      <form class="tradein__form" data-tradein-form>
+      <form class="tradein__form" data-tradein-form data-wa={whatsappUrl()}>
         <fieldset class="tradein__fieldset">
-          <legend>Your trade-in device</legend>
+          <legend>1. The device you want</legend>
+          <DevicePicker options={options} name="want" />
+        </fieldset>
+
+        <fieldset class="tradein__fieldset">
+          <legend>2. The phone you are trading in</legend>
 
           <label class="tradein__field">
             <span>Brand</span>
-            <select name="brand" required>
+            <select name="brand" required data-tradein-brand>
               <option value="" disabled selected>Select brand</option>
               {brands.map((b) => <option value={b}>{b}</option>)}
             </select>
@@ -51,7 +62,11 @@ const waBase = whatsappUrl();
               required
               placeholder="e.g. iPhone 13 Pro, Galaxy S23"
               autocomplete="off"
+              data-tradein-model
             />
+            <datalist id="tradein-iphones">
+              {iphoneNames.map((n) => <option value={n} />)}
+            </datalist>
           </label>
 
           <label class="tradein__field">
@@ -63,20 +78,32 @@ const waBase = whatsappUrl();
           </label>
 
           <label class="tradein__field">
-            <span>Condition</span>
-            <select name="condition" required>
-              <option value="" disabled selected>Select condition</option>
-              {
-                conditions.map((c) => (
-                  <option value={c.label}>{c.label}</option>
-                ))
-              }
-            </select>
+            <span>Colour</span>
+            <input type="text" name="colour" required placeholder="e.g. Graphite, Midnight" autocomplete="off" />
           </label>
         </fieldset>
 
         <fieldset class="tradein__fieldset">
-          <legend>Contact</legend>
+          <legend>3. About your phone</legend>
+          {
+            tradeInQuestions.map((q) => (
+              <label class="tradein__field">
+                <span>{q.label}</span>
+                <select name={`q_${q.id}`} required>
+                  <option value="" disabled selected>Select an answer</option>
+                  {q.options.map((o) => <option value={o}>{o}</option>)}
+                </select>
+              </label>
+            ))
+          }
+          <label class="tradein__field">
+            <span>Anything else we should know? (optional)</span>
+            <textarea name="notes" rows="3" maxlength="500"></textarea>
+          </label>
+        </fieldset>
+
+        <fieldset class="tradein__fieldset">
+          <legend>4. Your details</legend>
           <label class="tradein__field">
             <span>Your name</span>
             <input type="text" name="name" required autocomplete="name" />
@@ -105,18 +132,20 @@ const waBase = whatsappUrl();
 
         <p class="tradein__note">
           We’ll email a trade-in confirmation (not a payment invoice) and open WhatsApp
-          to {site.phoneDisplay}. No commitment until we inspect the device.
+          to {site.phoneDisplay} with everything filled in. Press send there and we reply
+          with your quote. No commitment until we inspect the phone.
         </p>
         <p class="tradein__note" data-tradein-status hidden></p>
 
-        <button class="btn btn--primary" type="submit">Send trade-in request</button>
+        <button class="btn btn--primary" type="submit">Send to WhatsApp for a quote</button>
       </form>
 
       <aside class="tradein__aside">
         <h2>Good to know</h2>
         <ul>
           <li>iPhone and Samsung only - other brands are not accepted</li>
-          <li>Credit toward any new sealed device we sell</li>
+          <li>Credit goes toward the device you choose, New or Ex-UK</li>
+          <li>Pay any balance by M-Pesa, cash or Lipa Mdogo Mdogo</li>
           <li>Devices with iCloud/Google lock or unclear ownership may be declined</li>
           <li>Visit us: {site.hours.short}</li>
         </ul>
@@ -124,27 +153,53 @@ const waBase = whatsappUrl();
       </aside>
     </div>
   </section>
+  <script type="application/json" data-tradein-questions set:html={payload} />
 </BaseLayout>
 
-<script define:vars={{ waBase }}>
-  const form = document.querySelector("[data-tradein-form]");
+<script>
+  import { holdWhatsAppTab, initDevicePickers, readPicker } from "../scripts/devicePicker";
+
+  initDevicePickers();
+  const form = document.querySelector<HTMLFormElement>("[data-tradein-form]");
+  const picker = form?.querySelector("[data-device-picker]");
+  const brandEl = form?.querySelector<HTMLSelectElement>("[data-tradein-brand]");
+  const modelEl = form?.querySelector<HTMLInputElement>("[data-tradein-model]");
+  const questions: { id: string; label: string }[] = JSON.parse(
+    document.querySelector("[data-tradein-questions]")?.textContent || "[]",
+  );
+
+  // Suggest iPhone names only while the brand is iPhone.
+  brandEl?.addEventListener("change", () => {
+    if (brandEl.value === "iPhone") modelEl?.setAttribute("list", "tradein-iphones");
+    else modelEl?.removeAttribute("list");
+  });
+
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();
-    if (!(form instanceof HTMLFormElement)) return;
-    const status = document.querySelector("[data-tradein-status]");
-    const btn = form.querySelector('button[type="submit"]');
+    const status = form.querySelector<HTMLElement>("[data-tradein-status]");
+    const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const want = picker ? readPicker(picker) : null;
+    if (!want) {
+      if (status) {
+        status.hidden = false;
+        status.textContent = "Choose the device you want, with its storage and colour.";
+      }
+      return;
+    }
+    const sendToWhatsApp = holdWhatsAppTab();
     const data = new FormData(form);
-    const payload = {
-      brand: String(data.get("brand") || "").trim(),
-      model: String(data.get("model") || "").trim(),
-      storage: String(data.get("storage") || "").trim(),
-      condition: String(data.get("condition") || "").trim(),
-      name: String(data.get("name") || "").trim(),
-      phone: String(data.get("phone") || "").trim(),
-      email: String(data.get("email") || "").trim(),
-    };
-    if (btn instanceof HTMLButtonElement) btn.disabled = true;
-    if (status instanceof HTMLElement) {
+    const text = (key: string) => String(data.get(key) || "").trim();
+    const answers = Object.fromEntries(questions.map((q) => [q.id, text(`q_${q.id}`)]));
+    const brand = text("brand");
+    const model = text("model");
+    const current = [
+      model.toLowerCase().startsWith(brand.toLowerCase()) ? model : `${brand} ${model}`,
+      text("storage"),
+      text("colour"),
+    ].join(" · ");
+
+    if (btn) btn.disabled = true;
+    if (status) {
       status.hidden = false;
       status.textContent = "Saving your request…";
     }
@@ -153,42 +208,56 @@ const waBase = whatsappUrl();
       const res = await fetch("/api/trade-in", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          brand,
+          model,
+          storage: text("storage"),
+          colour: text("colour"),
+          answers,
+          notes: text("notes"),
+          name: text("name"),
+          phone: text("phone"),
+          email: text("email"),
+          want: { productId: want.productId, variantKey: want.variantKey, channel: want.channel, colour: want.colour },
+        }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Could not save.");
       savedId = json.id || "";
     } catch (err) {
-      if (status instanceof HTMLElement) {
-        status.textContent = err instanceof Error ? err.message : "Could not save. Continuing on WhatsApp.";
-      }
+      if (status) status.textContent = err instanceof Error ? err.message : "Could not save. Continuing on WhatsApp.";
     }
 
     const message = [
-      "Hi GadgetHub - Trade-In enquiry",
+      "Hi Gadget Hub, please send me a trade-in quote.",
       savedId ? `Reference: ${savedId}` : "",
       "",
-      `Name: ${payload.name}`,
-      `Phone: ${payload.phone}`,
-      `Email: ${payload.email}`,
-      `Brand: ${payload.brand}`,
-      `Model: ${payload.model}`,
-      `Storage: ${payload.storage}`,
-      `Condition: ${payload.condition}`,
+      "*Device I want*",
+      want.summary,
+      `Listed price: KES ${want.priceKes.toLocaleString("en-KE")}`,
       "",
-      "I'd like an estimate / to bring it in for inspection.",
+      "*Phone I'm trading in*",
+      current,
+      "",
+      "*About my phone*",
+      ...questions.map((q) => `${q.label}: ${answers[q.id]}`),
+      text("notes") ? `Other: ${text("notes")}` : "",
+      "",
+      "*My details*",
+      `Name: ${text("name")}`,
+      `Phone: ${text("phone")}`,
+      `Email: ${text("email")}`,
     ]
-      .filter((line) => line !== "")
+      .filter((line, i, all) => line !== "" || all[i - 1] !== "")
       .join("\n");
 
-    const url = `${waBase}?text=${encodeURIComponent(message)}`;
-    window.open(url, "_blank", "noopener,noreferrer");
-    if (status instanceof HTMLElement) {
+    sendToWhatsApp(`${form.dataset.wa}?text=${encodeURIComponent(message)}`);
+    if (status) {
       status.textContent = savedId
-        ? `Saved ${savedId}. We emailed a trade-in confirmation — this is not a payment.`
-        : "Opened WhatsApp. We’ll follow up from there.";
+        ? `Saved ${savedId}. Press send in WhatsApp and we'll reply with your quote — this is not a payment.`
+        : "Opened WhatsApp. Press send and we'll reply with your quote.";
     }
-    if (btn instanceof HTMLButtonElement) btn.disabled = false;
+    if (btn) btn.disabled = false;
   });
 </script>
 
@@ -268,7 +337,8 @@ const waBase = whatsappUrl();
   }
 
   .tradein__field input,
-  .tradein__field select {
+  .tradein__field select,
+  .tradein__field textarea {
     min-height: 2.75rem;
     padding: 0.65rem 0.85rem;
     border: 1px solid var(--color-border-strong);
@@ -278,7 +348,8 @@ const waBase = whatsappUrl();
   }
 
   .tradein__field input:focus-visible,
-  .tradein__field select:focus-visible {
+  .tradein__field select:focus-visible,
+  .tradein__field textarea:focus-visible {
     outline: 2px solid var(--color-black);
     outline-offset: 2px;
   }

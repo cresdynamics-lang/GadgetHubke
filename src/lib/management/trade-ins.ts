@@ -7,7 +7,12 @@ export type TradeInRequest = {
   customer: string;
   phone?: string;
   email?: string;
+  /** The phone being traded in. */
   device: string;
+  /** The device the customer wants in exchange. */
+  wantDevice?: string;
+  wantKes?: number;
+  answers?: { question: string; answer: string }[];
   status: TradeInStatus;
   quoteKes?: number;
   submittedAt: string;
@@ -36,6 +41,9 @@ export async function addTradeIn(
     phone: input.phone,
     email: input.email,
     device: input.device,
+    wantDevice: input.wantDevice,
+    wantKes: input.wantKes,
+    answers: input.answers,
     status: input.status || "Waiting for quote",
     quoteKes: input.quoteKes,
     submittedAt: new Date().toISOString(),

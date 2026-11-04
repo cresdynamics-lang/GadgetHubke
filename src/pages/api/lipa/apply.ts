@@ -1,5 +1,7 @@
 import type { APIRoute } from "astro";
 import { buildLipaTerms } from "../../../lib/checkout/intent";
+import { resolveDevice } from "../../../lib/device-options";
+import { liveDeviceOptions } from "../../../lib/device-options-live";
 import { addLipaPlan } from "../../../lib/management/lipa";
 import { trySendMail } from "../../../lib/mail/smtp";
 import { lipaApplicationEmail } from "../../../lib/mail/templates";
@@ -28,14 +30,16 @@ export const POST: APIRoute = async ({ request }) => {
   const name = String(body.name || "").trim();
   const phone = String(body.phone || "").trim();
   const email = String(body.email || "").trim();
-  const device = String(body.device || "").trim();
-  const catalogKes = Math.max(0, Math.round(Number(body.catalogKes) || 0));
 
   if (name.length < 2) return json({ error: "Enter your name." }, 400);
   if (phone.replace(/\D/g, "").length < 9) return json({ error: "Enter a valid phone number." }, 400);
-  if (!device) return json({ error: "Tell us which device you want." }, 400);
 
-  const terms = buildLipaTerms(catalogKes || 0, Number(body.depositPct), Number(body.months));
+  const chosen = resolveDevice(await liveDeviceOptions(), body);
+  if (!chosen) return json({ error: "That device is not available. Please choose another." }, 400);
+  const device = chosen.summary;
+  const catalogKes = chosen.priceKes;
+
+  const terms = buildLipaTerms(catalogKes, Number(body.depositPct), Number(body.months));
 
   try {
     const plan = await addLipaPlan({
@@ -49,9 +53,7 @@ export const POST: APIRoute = async ({ request }) => {
       depositKes: terms.depositKes,
       months: terms.months,
       catalogKes: terms.catalogKes || undefined,
-      notes: catalogKes
-        ? `Application · ${terms.depositPct}% of ${catalogKes}`
-        : "Application · price to confirm",
+      notes: `Application · ${terms.depositPct}% of ${catalogKes} · ${terms.monthlyKes} a month for ${terms.months} · total ${terms.totalKes}`,
     });
 
     // Listed in Management → Lipa; only the customer gets an email.

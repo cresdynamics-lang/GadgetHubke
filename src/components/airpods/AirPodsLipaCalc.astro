@@ -46,12 +46,13 @@ const start = lipaMonthly(startKes, cfg.depositDefaultPct, cfg.monthsDefault);
   </div>
   <div class="airpods-lipa__result">
     <p><span data-airpods-lipa-monthly>{formatKes(start.monthlyKes)}</span> <small>/ month</small></p>
-    <p data-airpods-lipa-line>{formatKes(start.depositKes)} deposit · {start.months} payments · total {formatKes(startKes)}</p>
+    <p data-airpods-lipa-line>{formatKes(start.depositKes)} deposit · {start.months} payments · total {formatKes(start.totalKes)}</p>
   </div>
 </section>
 ) : null}
 
 <script>
+  import { lipaPlan } from "../../lib/pricing/lipa";
   document.querySelectorAll("[data-airpods-lipa]").forEach((root) => {
     const model = root.querySelector("[data-airpods-lipa-model]");
     const deposit = root.querySelector("[data-airpods-lipa-deposit]");
@@ -73,11 +74,10 @@ const start = lipaMonthly(startKes, cfg.depositDefaultPct, cfg.monthsDefault);
         b.toggleAttribute("disabled", !(isExUk ? exUk : newKes));
       });
       const depPct = Number(deposit.value);
-      const dep = Math.round((base * depPct) / 100);
-      const mo = Math.round((base - dep) / months);
+      const { depositKes: dep, monthlyKes: mo, totalKes } = lipaPlan(base, depPct, months);
       if (depLabel) depLabel.textContent = `${depPct}%`;
       if (monthly) monthly.textContent = `KES ${mo.toLocaleString("en-KE")}`;
-      if (line) line.textContent = `KES ${dep.toLocaleString("en-KE")} deposit · ${months} payments · ${useExUk ? "Ex-UK " : ""}total KES ${base.toLocaleString("en-KE")}`;
+      if (line) line.textContent = `KES ${dep.toLocaleString("en-KE")} deposit · ${months} ${months === 1 ? "payment" : "payments"} · ${useExUk ? "Ex-UK " : ""}total KES ${totalKes.toLocaleString("en-KE")}`;
     }
     const setChannel = (ch) => {
       root.setAttribute("data-channel", ch);

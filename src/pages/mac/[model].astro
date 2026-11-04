@@ -1,4 +1,5 @@
 ---
+import { lipaRate } from "../../lib/pricing/lipa";
 import { isListedForSale } from "../../lib/listing-offers";
 import { livePricedCatalog } from "../../lib/pricing/live";
 /**
@@ -428,6 +429,7 @@ const liveAccessoryKes = (href: string, fallback: number) =>
   storStep: macConfig.storageStepKes,
   depositPct: macConfig.lipa.depositDefaultPct,
   months: macConfig.lipa.monthsDefault,
+  lipaRatePct: Math.round(lipaRate(macConfig.lipa.monthsDefault) * 100),
   waBase: `https://wa.me/${macConfig.whatsapp}?text=`,
   modelName: model.name,
   chip: model.chip,
@@ -523,7 +525,8 @@ const liveAccessoryKes = (href: string, fallback: number) =>
     state.kes = hit ?? base + state.memory * memStep + state.storage * storStep;
     if (priceEl) priceEl.textContent = `${state.channel === "ex-uk" ? "Ex-UK · " : ""}KES ${state.kes.toLocaleString("en-KE")}`;
     const deposit = Math.round((state.kes * depositPct) / 100);
-    const monthly = Math.round((state.kes - deposit) / months);
+    const repay = Math.round(((state.kes - deposit) * lipaRatePct) / 10000) * 100; // same sum as lib/pricing/lipa.ts
+    const monthly = Math.round(repay / months);
     if (lipaEl) {
       lipaEl.textContent = `or KES ${monthly.toLocaleString("en-KE")} a month for ${months} months after a ${depositPct}% deposit`;
     }

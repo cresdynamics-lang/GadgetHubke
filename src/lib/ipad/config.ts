@@ -1,3 +1,4 @@
+import { LIPA_MONTH_OPTIONS, LIPA_NOTE } from "../pricing/lipa";
 /**
  * Owner-editable CONFIG for the iPad section (Pro / Air / mini / standard, 2020 - 2026).
  * All KES prices are samples. Re-verify specs on apple.com before launch.
@@ -25,9 +26,9 @@ export const ipadConfig = {
     depositMaxPct: 60,
     depositStepPct: 5,
     depositDefaultPct: 40,
-    monthOptions: [3, 6, 9, 12] as const,
+    monthOptions: LIPA_MONTH_OPTIONS,
     monthsDefault: 6,
-    note: "Illustration at 0% extra; the real terms are set by Gadget Hub.",
+    note: LIPA_NOTE,
   },
 
   tradeIn: {

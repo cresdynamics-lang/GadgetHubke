@@ -71,13 +71,14 @@ const start = lipaMonthly(startKes, cfg.depositDefaultPct, cfg.monthsDefault);
       <small>/ month</small>
     </p>
     <p data-mac-lipa-line>
-      {formatKes(start.depositKes)} deposit · {start.months} payments · total {formatKes(startKes)}
+      {formatKes(start.depositKes)} deposit · {start.months} payments · total {formatKes(start.totalKes)}
     </p>
   </div>
 </section>
 ) : null}
 
 <script>
+  import { lipaPlan } from "../../lib/pricing/lipa";
   document.querySelectorAll("[data-mac-lipa]").forEach((root) => {
     const model = root.querySelector("[data-mac-lipa-model]");
     const deposit = root.querySelector("[data-mac-lipa-deposit]");
@@ -101,11 +102,10 @@ const start = lipaMonthly(startKes, cfg.depositDefaultPct, cfg.monthsDefault);
       });
       const depPct = Number(deposit.value);
       if (depLabel) depLabel.textContent = `${depPct}%`;
-      const depositKes = Math.round((base * depPct) / 100);
-      const monthlyKes = Math.round((base - depositKes) / months);
+      const { depositKes, monthlyKes, totalKes } = lipaPlan(base, depPct, months);
       if (monthly) monthly.textContent = `KES ${monthlyKes.toLocaleString("en-KE")}`;
       if (line) {
-        line.textContent = `KES ${depositKes.toLocaleString("en-KE")} deposit · ${months} payments · ${useExUk ? "Ex-UK " : ""}total KES ${base.toLocaleString("en-KE")}`;
+        line.textContent = `KES ${depositKes.toLocaleString("en-KE")} deposit · ${months} ${months === 1 ? "payment" : "payments"} · ${useExUk ? "Ex-UK " : ""}total KES ${totalKes.toLocaleString("en-KE")}`;
       }
     }
 

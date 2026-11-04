@@ -1,60 +1,78 @@
 ---
+export const prerender = false;
 import BaseLayout from "../layouts/BaseLayout.astro";
+import DevicePicker from "../components/DevicePicker.astro";
+import { liveDeviceOptions } from "../lib/device-options-live";
 import { iphoneConfig } from "../lib/iphone/config";
+import { LIPA_MONTH_OPTIONS, lipaPlan } from "../lib/pricing/lipa";
+import { formatKes } from "../lib/iphone/pricing";
 import { site, whatsappUrl } from "../lib/site";
 
 const waHref = whatsappUrl(
   "Hi GadgetHub - I'd like to ask about Lipa Mdogo Mdogo.",
 );
 const lipa = iphoneConfig.lipa;
+const options = await liveDeviceOptions();
+const examplePrice = 158000;
+const exampleDeposit = lipaPlan(examplePrice, lipa.depositDefaultPct).depositKes;
+const example = [...LIPA_MONTH_OPTIONS].reverse().map((m) => lipaPlan(examplePrice, lipa.depositDefaultPct, m));
+const monthWord = (m: number) => (m === 1 ? "month" : "months");
 ---
 
 <BaseLayout
   title="Lipa Mdogo Mdogo - GadgetHub"
-  description={`${site.lipa.label} installment plans from ${site.legalName}. Pay a deposit, then the rest in smaller amounts - no external finance partner.`}
+  description={`${site.lipa.label} from ${site.legalName}: pay a 40% deposit on a New or Ex-UK device, then the balance over 1 to 6 months. See the monthly amount before you apply.`}
 >
   <section class="page container">
     <p class="page__eyebrow">Pay your way</p>
     <h1>{site.lipa.label}</h1>
     <p class="page__lede">
-      Spread the cost of a new device with installment plans offered directly by{" "}
+      Spread the cost of a New or Ex-UK device with installment plans offered directly by{" "}
       {site.legalName}. There is no third-party financing partner - you deal with us.
     </p>
     <ul class="page__points">
       <li>Minimum deposit is {lipa.depositMinPct}% of the device price</li>
-      <li>Available on qualifying new devices, subject to approval</li>
+      <li>Pay the balance over 1 to 6 months. The shorter the plan, the less you pay</li>
+      <li>Works the same for New and Ex-UK, subject to approval</li>
       <li>Terms and schedule are confirmed with you before you commit</li>
       <li>Corporate and bulk purchases can be settled by separate agreement</li>
     </ul>
     <p class="page__note">{site.lipa.note}</p>
 
-    <form class="page__form" data-lipa-form>
-      <h2>Apply for a plan</h2>
-      <p class="page__note">We’ll email a Lipa confirmation (not a full-purchase invoice) and keep your details for follow-up.</p>
-      <label class="page__field">
-        <span>Your name</span>
-        <input type="text" name="name" required autocomplete="name" />
-      </label>
-      <label class="page__field">
-        <span>Phone / WhatsApp</span>
-        <input type="tel" name="phone" required autocomplete="tel" placeholder="07…" />
-      </label>
-      <label class="page__field">
-        <span>Email</span>
-        <input type="email" name="email" required autocomplete="email" />
-      </label>
-      <label class="page__field">
-        <span>Device you want</span>
-        <input type="text" name="device" required placeholder="e.g. iPhone 16 128GB" />
-      </label>
-      <label class="page__field">
-        <span>Indicative price (KES, optional)</span>
-        <input type="number" name="catalogKes" min="0" step="1000" placeholder="e.g. 120000" />
-      </label>
+    <h2>How the monthly amount is worked out</h2>
+    <p class="page__note">
+      Take off the deposit, multiply the balance by the rate for your plan, round to the nearest KES 100, then
+      divide by the months. Here it is on a {formatKes(examplePrice)} device with a {formatKes(exampleDeposit)}
+      ({lipa.depositDefaultPct}%) deposit.
+    </p>
+    <div class="page__table-wrap">
+      <table class="page__table">
+        <thead>
+          <tr><th scope="col">Plan</th><th scope="col">Rate</th><th scope="col">After deposit</th><th scope="col">Per month</th><th scope="col">Total</th></tr>
+        </thead>
+        <tbody>
+          {
+            example.map((row) => (
+              <tr>
+                <th scope="row">{row.months} {monthWord(row.months)}</th>
+                <td>× {row.rate}</td>
+                <td>{formatKes(row.repayKes)}</td>
+                <td>{formatKes(row.monthlyKes)}</td>
+                <td>{formatKes(row.totalKes)}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <form class="page__form" data-lipa-form data-wa={whatsappUrl()}>
+      <h2>Work out your plan and apply</h2>
+      <DevicePicker options={options} name="device" label="Device you want" />
       <div class="page__row">
         <label class="page__field">
           <span>Deposit</span>
-          <select name="depositPct">
+          <select name="depositPct" data-lipa-deposit>
             {
               Array.from(
                 { length: Math.floor((lipa.depositMaxPct - lipa.depositMinPct) / lipa.depositStepPct) + 1 },
@@ -68,18 +86,37 @@ const lipa = iphoneConfig.lipa;
           </select>
         </label>
         <label class="page__field">
-          <span>Months</span>
-          <select name="months">
+          <span>Pay over</span>
+          <select name="months" data-lipa-months>
             {
               lipa.monthOptions.map((m) => (
                 <option value={m} selected={m === lipa.monthsDefault}>
-                  {m} months
+                  {m} {monthWord(m)}
                 </option>
               ))
             }
           </select>
         </label>
       </div>
+      <dl class="page__plan" data-lipa-plan hidden aria-live="polite">
+        <div><dt>Deposit today</dt><dd data-plan-deposit></dd></div>
+        <div><dt data-plan-sum-label>Balance</dt><dd data-plan-sum></dd></div>
+        <div><dt data-plan-monthly-label>Per month</dt><dd data-plan-monthly></dd></div>
+        <div><dt>Total you pay</dt><dd data-plan-total></dd></div>
+      </dl>
+      <label class="page__field">
+        <span>Your name</span>
+        <input type="text" name="name" required autocomplete="name" />
+      </label>
+      <label class="page__field">
+        <span>Phone / WhatsApp</span>
+        <input type="tel" name="phone" required autocomplete="tel" placeholder="07…" />
+      </label>
+      <label class="page__field">
+        <span>Email</span>
+        <input type="email" name="email" required autocomplete="email" />
+      </label>
+      <p class="page__note">We’ll email a Lipa confirmation (not a full-purchase invoice), keep your details for follow-up and open WhatsApp so we can confirm the plan.</p>
       <p class="page__note" data-lipa-status hidden></p>
       <div class="page__actions">
         <button class="btn btn--primary" type="submit">Send Lipa application</button>
@@ -91,25 +128,68 @@ const lipa = iphoneConfig.lipa;
   </section>
 </BaseLayout>
 
-<script define:vars={{ waBase: whatsappUrl() }}>
-  const form = document.querySelector("[data-lipa-form]");
+<script>
+  import { holdWhatsAppTab, initDevicePickers, readPicker } from "../scripts/devicePicker";
+  import { lipaPlan } from "../lib/pricing/lipa";
+
+  initDevicePickers();
+  const form = document.querySelector<HTMLFormElement>("[data-lipa-form]");
+  const picker = form?.querySelector("[data-device-picker]");
+  const planEl = form?.querySelector<HTMLElement>("[data-lipa-plan]");
+  const kes = (n: number) => `KES ${n.toLocaleString("en-KE")}`;
+  const set = (selector: string, text: string) => {
+    const el = form?.querySelector(selector);
+    if (el) el.textContent = text;
+  };
+
+  function currentPlan() {
+    const device = picker ? readPicker(picker) : null;
+    if (!device || !form) return null;
+    const data = new FormData(form);
+    const depositPct = Number(data.get("depositPct") || 40);
+    return { device, depositPct, plan: lipaPlan(device.priceKes, depositPct, Number(data.get("months") || 6)) };
+  }
+
+  function showPlan() {
+    const now = currentPlan();
+    if (planEl) planEl.hidden = !now;
+    if (!now) return;
+    const { plan } = now;
+    const months = `${plan.months} ${plan.months === 1 ? "month" : "months"}`;
+    set("[data-plan-deposit]", kes(plan.depositKes));
+    set("[data-plan-sum-label]", `Balance ${kes(plan.balanceKes)} × ${plan.rate}`);
+    set("[data-plan-sum]", kes(plan.repayKes));
+    set("[data-plan-monthly-label]", `Per month for ${months}`);
+    set("[data-plan-monthly]", kes(plan.monthlyKes));
+    set("[data-plan-total]", kes(plan.totalKes));
+  }
+
+  form?.addEventListener("gh:device", showPlan);
+  form?.querySelector("[data-lipa-deposit]")?.addEventListener("change", showPlan);
+  form?.querySelector("[data-lipa-months]")?.addEventListener("change", showPlan);
+
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();
-    if (!(form instanceof HTMLFormElement)) return;
-    const status = document.querySelector("[data-lipa-status]");
-    const btn = form.querySelector('button[type="submit"]');
+    const now = currentPlan();
+    const status = form.querySelector<HTMLElement>("[data-lipa-status]");
+    const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    if (!now) {
+      if (status) {
+        status.hidden = false;
+        status.textContent = "Choose a device, storage and colour first.";
+      }
+      return;
+    }
+    const sendToWhatsApp = holdWhatsAppTab();
+    const { device, depositPct, plan } = now;
     const data = new FormData(form);
-    const payload = {
+    const contact = {
       name: String(data.get("name") || "").trim(),
       phone: String(data.get("phone") || "").trim(),
       email: String(data.get("email") || "").trim(),
-      device: String(data.get("device") || "").trim(),
-      catalogKes: String(data.get("catalogKes") || "").trim(),
-      depositPct: String(data.get("depositPct") || "40"),
-      months: String(data.get("months") || "6"),
     };
-    if (btn instanceof HTMLButtonElement) btn.disabled = true;
-    if (status instanceof HTMLElement) {
+    if (btn) btn.disabled = true;
+    if (status) {
       status.hidden = false;
       status.textContent = "Saving your Lipa application…";
     }
@@ -119,43 +199,44 @@ const lipa = iphoneConfig.lipa;
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...payload,
-          catalogKes: Number(payload.catalogKes || 0),
-          depositPct: Number(payload.depositPct || 40),
-          months: Number(payload.months || 6),
+          ...contact,
+          productId: device.productId,
+          variantKey: device.variantKey,
+          channel: device.channel,
+          colour: device.colour,
+          depositPct,
+          months: plan.months,
         }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Could not save.");
       savedId = json.id || "";
     } catch (err) {
-      if (status instanceof HTMLElement) {
-        status.textContent = err instanceof Error ? err.message : "Could not save. Continuing on WhatsApp.";
-      }
+      if (status) status.textContent = err instanceof Error ? err.message : "Could not save. Continuing on WhatsApp.";
     }
     const message = [
-      "Hi GadgetHub - Lipa Mdogo Mdogo enquiry",
+      "Hi GadgetHub - Lipa Mdogo Mdogo application",
       savedId ? `Reference: ${savedId}` : "",
       "",
-      `Name: ${payload.name}`,
-      `Phone: ${payload.phone}`,
-      `Email: ${payload.email}`,
-      `Device: ${payload.device}`,
-      payload.catalogKes ? `Price: KES ${payload.catalogKes}` : "",
-      `Deposit: ${payload.depositPct}%`,
-      `Months: ${payload.months}`,
+      `Device: ${device.summary}`,
+      `Price: ${kes(device.priceKes)}`,
+      `Deposit: ${kes(plan.depositKes)} (${depositPct}%)`,
+      `Plan: ${kes(plan.monthlyKes)} a month for ${plan.months} ${plan.months === 1 ? "month" : "months"}`,
+      `Total: ${kes(plan.totalKes)}`,
       "",
-      "I'd like to apply for a Lipa Mdogo Mdogo plan.",
+      `Name: ${contact.name}`,
+      `Phone: ${contact.phone}`,
+      `Email: ${contact.email}`,
     ]
-      .filter((line) => line !== "")
+      .filter((line, i, all) => line !== "" || (all[i - 1] !== "" && i > 0))
       .join("\n");
-    window.open(`${waBase}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
-    if (status instanceof HTMLElement) {
+    sendToWhatsApp(`${form.dataset.wa}?text=${encodeURIComponent(message)}`);
+    if (status) {
       status.textContent = savedId
         ? `Saved ${savedId}. Opened WhatsApp so we can confirm the plan — this is not a payment.`
         : "Opened WhatsApp. We’ll follow up from there.";
     }
-    if (btn instanceof HTMLButtonElement) btn.disabled = false;
+    if (btn) btn.disabled = false;
   });
 </script>
 
@@ -234,6 +315,61 @@ const lipa = iphoneConfig.lipa;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--space-4);
+  }
+
+  .page__table-wrap {
+    overflow-x: auto;
+    margin-bottom: var(--space-6);
+  }
+
+  .page__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+  }
+
+  .page__table th,
+  .page__table td {
+    padding: 0.55rem 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .page__table thead th {
+    font-size: var(--text-xs);
+    color: var(--color-fg-subtle);
+  }
+
+  .page__plan {
+    display: grid;
+    gap: 0.45rem;
+    margin: 0;
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+  }
+
+  .page__plan[hidden] {
+    display: none;
+  }
+
+  .page__plan div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: var(--text-sm);
+  }
+
+  .page__plan dt {
+    color: var(--color-fg-muted);
+  }
+
+  .page__plan dd {
+    margin: 0;
+    font-weight: var(--font-weight-semibold);
+    white-space: nowrap;
   }
 
   .page__actions {

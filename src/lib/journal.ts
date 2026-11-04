@@ -267,7 +267,7 @@ export const journalSeedPosts: JournalPost[] = [
     needsReview: true,
     paragraphs: [
       "Lipa Mdogo Mdogo is offered directly by Gadget Hub Investments - there is no third-party bank in the middle for these plans.",
-      "You agree a deposit and schedule for a new sealed device, then pay over time with reminders from the shop.",
+      "You pay a deposit of at least 40% on a New or Ex-UK device, then the balance over 1 to 6 months, with reminders from the shop. How the plan is priced: after a 40% deposit, the balance is multiplied by 1.3 for 1 month, 1.4 for 2, 1.5 for 3, 1.6 for 4, 1.7 for 5 or 1.8 for 6, then split into equal monthly payments. On a KES 100,000 device that is KES 40,000 today, then KES 18,000 a month for 6 months, or KES 30,000 a month for 3 months.",
       "Eligibility depends on the device and a conversation with staff. Start on the Lipa page or WhatsApp.",
     ],
   },
@@ -326,7 +326,7 @@ export const journalSeedPosts: JournalPost[] = [
     views: 410,
     paragraphs: [
       "Lipa Mdogo Mdogo is our in-house installment plan. Gadget Hub Investments offers it directly - there is no external bank or financer in the middle for these plans.",
-      "You choose a new device, we agree a deposit and schedule that fits, and you pay over time. Corporate and bulk orders can be settled by a separate agreement.",
+      "You choose a New or Ex-UK device, pay a deposit of at least 40%, and pay the balance over 1 to 6 months. How the plan is priced: after a 40% deposit, the balance is multiplied by 1.3 for 1 month, 1.4 for 2, 1.5 for 3, 1.6 for 4, 1.7 for 5 or 1.8 for 6, then split into equal monthly payments. On a KES 100,000 device that is KES 40,000 today, then KES 18,000 a month for 6 months, or KES 30,000 a month for 3 months. Corporate and bulk orders can be settled by a separate agreement.",
       "Stock and eligibility depend on the device and your conversation with the shop. The best next step is WhatsApp or a visit so we can walk through options for the model you want.",
       "Read more on the Lipa Mdogo Mdogo page, then message us to apply.",
     ],

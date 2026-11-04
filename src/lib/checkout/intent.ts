@@ -1,4 +1,5 @@
 import { iphoneConfig } from "../iphone/config";
+import { lipaPlan } from "../pricing/lipa";
 import type { CheckoutOrder, LipaTerms, OrderIntent } from "./types";
 
 export function parseIntent(raw: unknown): OrderIntent {
@@ -34,12 +35,15 @@ export function buildLipaTerms(
     ? monthsRaw
     : cfg.monthsDefault;
   const depositKes = Math.min(catalog, Math.max(catalog > 0 ? 1 : 0, Math.round(catalog * (pct / 100))));
+  const plan = lipaPlan(catalog, pct, planMonths);
   return {
     depositPct: pct,
     months: planMonths,
     catalogKes: catalog,
     depositKes,
-    remainingKes: Math.max(0, catalog - depositKes),
+    remainingKes: plan.repayKes,
+    monthlyKes: plan.monthlyKes,
+    totalKes: plan.totalKes,
   };
 }
 

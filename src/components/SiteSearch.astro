@@ -866,7 +866,8 @@ const tvListed = tvHomeModels.some((m) => !offList.has(m.id));
       }
 
       if (services && top) {
-        const monthly = Math.round((top.priceKes * 0.6) / 6);
+        const deposit = Math.round(top.priceKes * 0.4); // 40% deposit, 6 months: same sum as lib/pricing/lipa.ts
+        const monthly = Math.round((Math.round(((top.priceKes - deposit) * 180) / 10000) * 100) / 6);
         if (mode === "mac") {
           services.innerHTML = `
             <li><a href="/trade-in">Trade in your Mac</a></li>

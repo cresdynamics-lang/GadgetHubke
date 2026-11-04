@@ -26,7 +26,7 @@ function when(iso: string) {
 function waHref(row: (typeof rows)[number]) {
   const phone = (row.phone || "").replace(/\D/g, "");
   const to = phone.length >= 9 ? phone.replace(/^0/, "254") : site.whatsapp;
-  const text = `Hi ${row.customer} — following up on trade-in ${row.id} (${row.device}).`;
+  const text = `Hi ${row.customer} — following up on trade-in ${row.id} (${row.device}${row.wantDevice ? `, toward ${row.wantDevice}` : ""}).`;
   return `https://wa.me/${to}?text=${encodeURIComponent(text)}`;
 }
 ---
@@ -59,7 +59,17 @@ function waHref(row: (typeof rows)[number]) {
                   {t.customer}
                   <div class="mgmt-muted">{t.phone || "—"}{t.email ? ` · ${t.email}` : ""}</div>
                 </td>
-                <td>{t.device}</td>
+                <td>
+                  {t.device}
+                  {t.wantDevice ? <div class="mgmt-muted">Wants: {t.wantDevice}{t.wantKes ? ` (${formatKes(t.wantKes)})` : ""}</div> : null}
+                  {t.answers?.length ? (
+                    <details class="mgmt-muted">
+                      <summary>Condition answers</summary>
+                      {t.answers.map((a) => <div>{a.question}: {a.answer}</div>)}
+                    </details>
+                  ) : null}
+                  {t.notes ? <div class="mgmt-muted">{t.notes}</div> : null}
+                </td>
                 <td>
                   <span class:list={["mgmt-tag", { "mgmt-tag--new": t.status.includes("Waiting") }]}>{t.status}</span>
                 </td>

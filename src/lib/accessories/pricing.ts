@@ -1,3 +1,4 @@
+import { lipaPlan } from "../pricing/lipa";
 import { accessoriesConfig } from "./config";
 import type { Accessory } from "./models";
 
@@ -18,11 +19,8 @@ export function lipaMonthly(
   priceKes: number,
   depositPct = accessoriesConfig.lipa.depositDefaultPct,
   months = accessoriesConfig.lipa.monthsDefault,
-): { monthlyKes: number; depositKes: number; months: number } {
-  const depositKes = Math.round((priceKes * depositPct) / 100);
-  const financed = priceKes - depositKes;
-  const monthlyKes = Math.round(financed / months);
-  return { monthlyKes, depositKes, months };
+) {
+  return lipaPlan(priceKes, depositPct, months);
 }
 
 export function monthlyFromPrice(priceKes: number, depositPct?: number, months?: number): number {
@@ -34,14 +32,14 @@ export function lipaBreakdown(
   depositPct = accessoriesConfig.lipa.depositDefaultPct,
   months = accessoriesConfig.lipa.monthsDefault,
 ) {
-  const { monthlyKes, depositKes } = lipaMonthly(priceKes, depositPct, months);
+  const { monthlyKes, depositKes, totalKes } = lipaMonthly(priceKes, depositPct, months);
   return {
     priceKes,
     depositPct,
     depositKes,
     months,
     monthlyKes,
-    totalKes: depositKes + monthlyKes * months,
+    totalKes,
     note: accessoriesConfig.lipa.note,
   };
 }

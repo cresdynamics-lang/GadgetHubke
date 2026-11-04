@@ -211,7 +211,7 @@ export async function buildOrderPdf(
     });
     y -= 14;
     const remain = formatKes(order.lipa.remainingKes);
-    page.drawText(`Remaining over ${order.lipa.months} months`, {
+    page.drawText(`Remaining over ${order.lipa.months} ${order.lipa.months === 1 ? "month" : "months"}`, {
       x: margin + 8,
       y,
       size: 9,
