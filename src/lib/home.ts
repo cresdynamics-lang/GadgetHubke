@@ -37,25 +37,25 @@ export const homeCinemaShots = [
   },
 ] as const;
 
-/** Signature hero - four equal cinematic rectangles (fill screen, then split) */
+/** Signature hero - four equal rectangles (fill screen, then split). Built by scripts/fetch-hero-images.mjs */
 export const heroPhones: [HeroPhone, HeroPhone, HeroPhone, HeroPhone] = [
   {
-    src: "/Hero/Gadget_Hub_Hero_Video_iPhone_part1of2/01_Cinematic_black_background_JPG/C01_iPhone_18_Pro_camera_hero.w1280.webp",
+    src: "/images/home/hero/iphone-18-pro-1600.webp",
     alt: "iPhone 18 Pro",
     href: "/shop/iphone/iphone-pro",
   },
   {
-    src: "/Hero/Gadget_Hub_Hero_Video_MacBook/01_Cinematic_black_background_JPG/C01_MacBook_Pro_open_hero.w1280.webp",
+    src: "/images/home/hero/macbook-pro-1600.webp",
     alt: "MacBook Pro",
     href: "/shop/mac/macbook-pro",
   },
   {
-    src: "/Hero/Gadget_Hub_Hero_Video_Watch/01_Cinematic_black_background_JPG/C01_Series_12_full_watch.w1280.webp",
+    src: "/images/home/hero/watch-series-12-1600.webp",
     alt: "Apple Watch Series 12",
     href: "/watch",
   },
   {
-    src: "/Hero/Gadget_Hub_Hero_Video_AirPods/02_Transparent_PNG_cutouts/P06_AirPods_Pro_3_with_case.w800.webp",
+    src: "/images/home/hero/airpods-pro-3-1600.webp",
     alt: "AirPods Pro",
     href: "/airpods",
   },

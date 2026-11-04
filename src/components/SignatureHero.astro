@@ -6,7 +6,6 @@
  */
 import { whatsappUrl } from "../lib/site";
 import type { HeroPhone } from "../lib/home";
-import { homeOpt } from "../lib/home-images";
 
 interface Props {
   eyebrow?: string;
@@ -56,14 +55,15 @@ const useTertiary = Boolean(tertiaryHref && tertiaryLabel);
           data-sig-phone
         >
           <img
-            src={homeOpt(phone.src)}
+            src={phone.src}
+            srcset={`${phone.src.replace("-1600.", "-800.")} 800w, ${phone.src} 1600w`}
+            sizes="50vw"
             alt=""
-            width="960"
-            height="720"
-            loading={i === 0 ? "eager" : "lazy"}
-            decoding="async"
+            width="1600"
+            height="1152"
+            loading="eager"
+            decoding="sync"
             fetchpriority={i === 0 ? "high" : "auto"}
-            sizes="(min-width: 64rem) 25vw, 50vw"
           />
         </a>
       ))
@@ -147,8 +147,9 @@ const useTertiary = Boolean(tertiaryHref && tertiaryLabel);
     --sig-settle-h: calc(var(--sig-settle-w) * 0.72);
     position: relative;
     isolation: isolate;
-    min-height: 100dvh;
-    min-height: 100svh;
+    /* The hero starts under the header, so a full screen would push the lower tiles past the fold */
+    min-height: calc(100dvh - var(--header-height));
+    min-height: calc(100svh - var(--header-height));
     display: grid;
     place-items: center;
     padding-block: var(--space-12);
@@ -168,7 +169,7 @@ const useTertiary = Boolean(tertiaryHref && tertiaryLabel);
     position: absolute;
     display: block;
     overflow: hidden;
-    background: #e8e8ed;
+    background: #f6f5f8;
     pointer-events: auto;
     transition:
       left var(--sig-disperse) var(--ease-out),
@@ -187,7 +188,8 @@ const useTertiary = Boolean(tertiaryHref && tertiaryLabel);
   .sig-hero__tile img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    /* Whole product, centred, at every tile shape (the images share this background) */
+    object-fit: contain;
     object-position: center;
     display: block;
   }
