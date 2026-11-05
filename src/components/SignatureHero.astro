@@ -2,10 +2,11 @@
 /**
  * Signature home hero - four equal rectangular tiles fill the viewport
  * as one solid rectangle, hold ~2s, then split to the corners while
- * centred copy opens. Respects prefers-reduced-motion.
+ * centred copy opens. 30s after the page has loaded, a silent product reel takes over
+ * the hero, then it returns to the copy. Respects prefers-reduced-motion.
  */
 import { whatsappUrl } from "../lib/site";
-import type { HeroPhone } from "../lib/home";
+import type { HeroPhone, HeroReelGroup } from "../lib/home";
 
 interface Props {
   eyebrow?: string;
@@ -20,6 +21,7 @@ interface Props {
   tertiaryHref?: string;
   tertiaryLabel?: string;
   phones: [HeroPhone, HeroPhone, HeroPhone, HeroPhone];
+  reel?: HeroReelGroup[];
 }
 
 const {
@@ -34,6 +36,7 @@ const {
   tertiaryHref = "/lipa-mdogo-mdogo",
   tertiaryLabel = "Lipa Mdogo Mdogo",
   phones,
+  reel = [],
 } = Astro.props;
 
 const wa = whatsappUrl("Hello Gadget Hub, I'd like to shop Apple products.");
@@ -95,6 +98,25 @@ const useTertiary = Boolean(tertiaryHref && tertiaryLabel);
       }
     </div>
   </div>
+
+  {
+    reel.length > 0 && (
+      <div class="sig-hero__reel" data-sig-reel data-reel={JSON.stringify(reel)} hidden>
+        <div class="sig-hero__reel-stage" data-sig-reel-stage />
+        <div class="sig-hero__reel-sting" data-sig-reel-sting aria-hidden="true">
+          <img src="/images/logo-mark.png" alt="" width="512" height="512" loading="lazy" />
+          <span>Gadget Hub</span>
+        </div>
+        <img class="sig-hero__reel-mark" src="/images/logo-mark.png" alt="Gadget Hub" width="512" height="512" loading="lazy" />
+        <a class="sig-hero__reel-btn sig-hero__reel-btn--shop" data-sig-reel-shop href={reel[0].href}>
+          {reel[0].label} ›
+        </a>
+        <button class="sig-hero__reel-btn sig-hero__reel-btn--close" type="button" data-sig-reel-close>
+          Close
+        </button>
+      </div>
+    )
+  }
 </section>
 
 <script>
@@ -137,6 +159,191 @@ const useTertiary = Boolean(tertiaryHref && tertiaryLabel);
         { passive: true },
       );
     }
+
+    if (!reduce) setupReel(root);
+  }
+
+  type ReelScene =
+    | { kind: "video"; large: string; small: string; ms: number }
+    | { kind: "image"; src: string; ms: number };
+  type ReelGroup = { label: string; href: string; scenes: ReelScene[] };
+
+  /** Rest on the copy this long, counted from the page having fully loaded. */
+  const REEL_DELAY_MS = 30_000;
+  /** Stay on the copy if the first scene has not loaded by then. */
+  const REEL_START_LIMIT_MS = 8_000;
+  const REEL_STING_MS = 1_800;
+  const REEL_FADE_MS = 500;
+
+  function setupReel(hero: Element) {
+    const box = hero.querySelector<HTMLElement>("[data-sig-reel]");
+    const stage = box?.querySelector<HTMLElement>("[data-sig-reel-stage]");
+    const shop = box?.querySelector<HTMLAnchorElement>("[data-sig-reel-shop]");
+    const close = box?.querySelector<HTMLButtonElement>("[data-sig-reel-close]");
+    if (!box || !stage || !shop || !close) return;
+
+    // Leave data savers and 2G visitors on the copy.
+    const connection = (navigator as any).connection;
+    if (connection?.saveData || /2g$/.test(connection?.effectiveType ?? "")) return;
+
+    const groups: ReelGroup[] = JSON.parse(box.dataset.reel ?? "[]");
+    const phone = window.matchMedia("(max-width: 47.99rem)").matches;
+    let state: "resting" | "due" | "running" | "done" = "resting";
+    let heroInView = true;
+    let groupIndex = 0;
+    let sceneIndex = 0;
+    let timer = 0;
+
+    const onScreen = () => heroInView && document.visibilityState === "visible";
+
+    const finish = () => {
+      if (state === "done") return;
+      state = "done";
+      window.clearTimeout(timer);
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", sync);
+      box.classList.remove("is-playing");
+      window.setTimeout(() => {
+        stage.replaceChildren();
+        box.hidden = true;
+      }, 800);
+    };
+
+    const buildScene = (scene: ReelScene): HTMLVideoElement | HTMLImageElement => {
+      if (scene.kind === "image") {
+        const img = new Image();
+        img.alt = "";
+        img.decoding = "async";
+        img.src = scene.src;
+        img.style.setProperty("--scene-ms", `${scene.ms + REEL_FADE_MS}ms`);
+        return img;
+      }
+      const video = document.createElement("video");
+      // No audio is ever played; muted and playsInline are what let it autoplay on phones.
+      video.muted = true;
+      video.defaultMuted = true;
+      video.playsInline = true;
+      video.preload = "auto";
+      video.disablePictureInPicture = true;
+      video.src = phone ? scene.small : scene.large;
+      return video;
+    };
+
+    const whenReady = (el: HTMLVideoElement | HTMLImageElement, ready: () => void) => {
+      let called = false;
+      const once = () => {
+        if (called) return;
+        called = true;
+        ready();
+      };
+      if (el instanceof HTMLVideoElement) el.addEventListener("canplay", once, { once: true });
+      else if (el.complete && el.naturalWidth) once();
+      else el.addEventListener("load", once, { once: true });
+      // A scene that will not load is passed over rather than holding the reel.
+      el.addEventListener("error", once, { once: true });
+      return once;
+    };
+
+    const show = (el: HTMLVideoElement | HTMLImageElement) => {
+      const previous = [...stage.children];
+      stage.append(el);
+      requestAnimationFrame(() => el.classList.add("is-on"));
+      window.setTimeout(() => previous.forEach((node) => node.remove()), REEL_FADE_MS + 100);
+    };
+
+    const playScene = () => {
+      if (state === "done") return;
+      const group = groups[groupIndex];
+      const scene = group.scenes[sceneIndex];
+      shop.href = group.href;
+      shop.textContent = `${group.label} ›`;
+      const el = buildScene(scene);
+      whenReady(el, () => {
+        if (state === "done") return;
+        if (state === "due") {
+          state = "running";
+          box.classList.add("is-playing");
+        }
+        show(el);
+        let advanced = false;
+        const advance = () => {
+          if (advanced) return;
+          advanced = true;
+          window.clearTimeout(timer);
+          next();
+        };
+        if (el instanceof HTMLVideoElement) {
+          el.addEventListener("ended", advance, { once: true });
+          void el.play().catch(advance);
+          // A stalled network must not freeze the reel.
+          timer = window.setTimeout(advance, scene.ms + 3000);
+        } else {
+          timer = window.setTimeout(advance, scene.ms);
+        }
+      });
+      const upcoming = nextScene();
+      if (upcoming) preload(upcoming);
+    };
+
+    const nextScene = (): ReelScene | null => {
+      const group = groups[groupIndex];
+      return group.scenes[sceneIndex + 1] ?? groups[groupIndex + 1]?.scenes[0] ?? null;
+    };
+
+    const preload = (scene: ReelScene) => {
+      if (scene.kind === "image") new Image().src = scene.src;
+    };
+
+    const next = () => {
+      sceneIndex += 1;
+      if (sceneIndex < groups[groupIndex].scenes.length) return playScene();
+      sceneIndex = 0;
+      groupIndex += 1;
+      // The logo closes every group, so the reel also ends on it.
+      box.classList.add("is-sting");
+      timer = window.setTimeout(() => {
+        box.classList.remove("is-sting");
+        if (groupIndex >= groups.length) finish();
+        else playScene();
+      }, REEL_STING_MS);
+    };
+
+    const start = () => {
+      state = "due";
+      box.hidden = false;
+      timer = window.setTimeout(() => {
+        if (state === "due") finish();
+      }, REEL_START_LIMIT_MS);
+      playScene();
+    };
+
+    // The reel only plays while it can be seen, so nobody pays for video they cannot see.
+    const sync = () => {
+      if (state === "due" && !box.hidden) return;
+      if (state === "due" && onScreen()) start();
+      if (state === "running" && !onScreen()) finish();
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        heroInView = entry.isIntersecting;
+        sync();
+      },
+      { threshold: 0.5 },
+    );
+    observer.observe(hero);
+    document.addEventListener("visibilitychange", sync);
+    close.addEventListener("click", finish);
+
+    const rest = () => {
+      window.setTimeout(() => {
+        if (state !== "resting") return;
+        state = "due";
+        sync();
+      }, REEL_DELAY_MS);
+    };
+    if (document.readyState === "complete") rest();
+    else window.addEventListener("load", rest, { once: true });
   }
 </script>
 
@@ -368,6 +575,167 @@ const useTertiary = Boolean(tertiaryHref && tertiaryLabel);
     padding: 0.4rem 0.7rem;
     min-height: 2rem;
     line-height: 1.2;
+  }
+
+  /* Silent reel: fills the hero at every screen shape, so there are never bars */
+  .sig-hero__reel {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    overflow: hidden;
+    background: #000;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.8s var(--ease-out),
+      visibility 0s linear 0.8s;
+  }
+
+  .sig-hero__reel[hidden] {
+    display: none;
+  }
+
+  .sig-hero__reel.is-playing {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.8s var(--ease-out);
+  }
+
+  .sig-hero__reel-stage {
+    position: absolute;
+    inset: 0;
+  }
+
+  .sig-hero__reel-stage :global(video),
+  .sig-hero__reel-stage :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .sig-hero__reel-stage :global(.is-on) {
+    opacity: 1;
+  }
+
+  .sig-hero__reel-stage :global(img) {
+    animation: sig-reel-drift var(--scene-ms, 4s) linear both;
+    will-change: transform;
+  }
+
+  @keyframes sig-reel-drift {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.08);
+    }
+  }
+
+  @keyframes sig-reel-pan {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Wide images on a tall screen: pan across the whole product instead of cropping it */
+  @media (max-aspect-ratio: 1 / 1) {
+    .sig-hero__reel .sig-hero__reel-stage :global(img) {
+      right: auto;
+      width: 200%;
+      max-width: none;
+      animation-name: sig-reel-pan;
+    }
+  }
+
+  .sig-hero__reel-sting {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 0.75rem;
+    background: #000;
+    color: #fff;
+    font-family: var(--font-hero);
+    font-size: clamp(1.25rem, 3vw, 2rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+
+  .sig-hero__reel-sting img {
+    width: clamp(4.5rem, 10vw, 7rem);
+    height: auto;
+    transform: scale(0.82);
+    transition: transform 1.6s var(--ease-out);
+  }
+
+  .sig-hero__reel.is-sting .sig-hero__reel-sting {
+    opacity: 1;
+  }
+
+  .sig-hero__reel.is-sting .sig-hero__reel-sting img {
+    transform: scale(1);
+  }
+
+  /* The logo stays on the reel. Controls sit at the top, clear of the floating buttons */
+  .sig-hero__reel-mark {
+    position: absolute;
+    bottom: 0.85rem;
+    left: 50%;
+    z-index: 2;
+    width: 2.25rem;
+    height: 2.25rem;
+    transform: translateX(-50%);
+    border-radius: 0.5rem;
+  }
+
+  .sig-hero__reel-btn {
+    position: absolute;
+    top: 0.85rem;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.25rem;
+    padding: 0.4rem 0.85rem;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    font: inherit;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .sig-hero__reel-btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+  }
+
+  .sig-hero__reel-btn--shop {
+    left: 0.85rem;
+    background: #fff;
+    color: #000;
+  }
+
+  .sig-hero__reel-btn--shop:hover {
+    background: #e8e8ed;
+  }
+
+  .sig-hero__reel-btn--close {
+    right: 2.5rem;
   }
 
   @media (max-width: 47.99rem) {

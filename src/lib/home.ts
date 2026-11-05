@@ -21,7 +21,7 @@ export type DealItem = {
 export const homeCinemaShots = [
   {
     href: "/shop/iphone/iphone-pro",
-    src: "/images/home/hero-iphone-18-pro.jpg",
+    src: "/images/home/cinema-iphone-18-pro-1600.webp",
     alt: "iPhone 18 Pro - Pro camera system",
     eyebrow: "iPhone 18 Pro",
     title: "Pro. Beyond.",
@@ -29,13 +29,67 @@ export const homeCinemaShots = [
   },
   {
     href: "/watch",
-    src: "/images/home/hero-watch-series-12.jpg",
+    src: "/images/home/cinema-watch-series-12-1600.webp",
     alt: "Apple Watch Series 12 heart rate sensing",
     eyebrow: "Apple Watch Series 12",
     title: "Know your heart.",
     cta: "Shop Watch ›",
   },
 ] as const;
+
+/** Silent reel that takes over the home hero, using media already in public/. */
+export type HeroReelScene =
+  | { kind: "video"; large: string; small: string; ms: number }
+  | { kind: "image"; src: string; ms: number };
+
+export type HeroReelGroup = {
+  label: string;
+  href: string;
+  scenes: HeroReelScene[];
+};
+
+const reelPhone = (key: string, ms: number): HeroReelScene => ({
+  kind: "video",
+  large: `/Gadget_Hub_iPhone_Scroll_Scenes/iphone-18-pro/${key}-large.mp4`,
+  small: `/Gadget_Hub_iPhone_Scroll_Scenes/iphone-18-pro/${key}-small.mp4`,
+  ms,
+});
+const REEL_MAC = "/Gadget_Hub_MacBook_3_Pro_page_animation_images/03_Animation_and_page_images_apple.com/MacBook_Pro_page/overview";
+const REEL_IPAD = "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview";
+
+/** Phones first and longest, then Mac, then iPad. The logo plays between groups. */
+export const heroReel: HeroReelGroup[] = [
+  {
+    label: "Shop iPhone 18 Pro",
+    href: "/shop/iphone/iphone-pro",
+    scenes: [
+      reelPhone("colours", 2000),
+      reelPhone("hero", 5000),
+      reelPhone("camera", 2467),
+      reelPhone("chip", 5000),
+      reelPhone("battery", 5000),
+    ],
+  },
+  {
+    label: "Shop MacBook Pro",
+    href: "/shop/mac/macbook-pro",
+    scenes: [
+      { kind: "image", src: `${REEL_MAC}/product-viewer/pv_hero_endframe__gc89p7dw1syi_large_2x.webp`, ms: 3750 },
+      { kind: "image", src: `${REEL_MAC}/product-viewer/pv_display__fv0jzlzaak2u_large_2x.webp`, ms: 3750 },
+      { kind: "image", src: `${REEL_MAC}/apps/apps_design__dsxdvaoxgtme_large_2x.webp`, ms: 3750 },
+      { kind: "image", src: `${REEL_MAC}/security/security_hero__f5ly2jycveq2_large_2x.webp`, ms: 3750 },
+    ],
+  },
+  {
+    label: "Shop iPad Pro",
+    href: "/shop/ipad/ipad-pro",
+    scenes: [
+      { kind: "image", src: `${REEL_IPAD}/chip/chip_hero_endframe__becrgbad20j6_large_2x.webp`, ms: 5000 },
+      { kind: "image", src: `${REEL_IPAD}/apple-pencil-pro/pencil_hero__lg9qkg94jnm2_large_2x.webp`, ms: 5000 },
+      { kind: "image", src: `${REEL_IPAD}/connectivity/cellular_hero__ea2fpz3yplme_large_2x.webp`, ms: 5000 },
+    ],
+  },
+];
 
 /** Signature hero - four equal rectangles (fill screen, then split). Built by scripts/fetch-hero-images.mjs */
 export const heroPhones: [HeroPhone, HeroPhone, HeroPhone, HeroPhone] = [
