@@ -23,6 +23,8 @@ import { iphoneSheet, storageIdFromLabel } from "../pricing/iphone-sheet";
 import { getSeoModelByName } from "../iphone/seo";
 import { livePricedCatalog, iphoneLiveId } from "../pricing/live";
 import { applyLivePricesToRows } from "./feed-live";
+import { iphoneSeoCatalog } from "../iphone/seo/catalog";
+import { withLiveSeoPrices } from "../iphone/seo/live";
 
 export type CatalogRow = {
   id: string;
@@ -345,6 +347,25 @@ export async function applyLivePrices<T extends { id: string; price: string; ava
   return applyLivePricesToRows(rows, live, iphoneSheetLiveIndex());
 }
 
+/** iPhone rows share their model's description: give each the live "from" price and listed storage sizes. */
+async function liveIphoneDescriptions(): Promise<Map<string, string>> {
+  const live = new Map((await livePricedCatalog()).map((p) => [p.id, p]));
+  const bySheet = new Map<string, string>();
+  for (const model of iphoneSeoCatalog) {
+    const { metaDescription } = withLiveSeoPrices(model, live.get(iphoneLiveId(model.id)));
+    for (const v of model.variants) bySheet.set(v.sheetId, metaDescription);
+  }
+  return bySheet;
+}
+
+export async function applyLiveIphoneDescriptions<T extends { id: string; description: string }>(rows: T[]): Promise<T[]> {
+  const descriptions = await liveIphoneDescriptions();
+  return rows.map((row) => {
+    const description = descriptions.get(row.id.replace(/-EXUK$/, ""));
+    return description ? { ...row, description } : row;
+  });
+}
+
 export async function buildAdsCatalogLive(): Promise<CatalogRow[]> {
-  return applyLivePrices(buildAdsCatalog());
+  return applyLiveIphoneDescriptions(await applyLivePrices(buildAdsCatalog()));
 }

@@ -80,3 +80,12 @@ test("new and ex-uk listed keep different prices on the same phone", () => {
   );
   assert.equal(priced.fromKes, 80000);
 });
+
+test("the description takes the listed price and storage sizes", () => {
+  const model = { ...seo(), metaDescription: "Buy the iPhone 16 in Nairobi from KES 93,000. 128GB, 256GB or 2TB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House." };
+  const priced = withLiveSeoPrices(model, live({ showNewOnWebsite: true, exUkShowOnWebsite: false }));
+  assert.match(priced.metaDescription, /^Buy the iPhone 16 in Nairobi from KES [\d,]+\. 128GB or 256GB\. Pay in full/);
+  assert.equal(priced.metaDescription.includes("2TB"), false);
+  assert.equal(priced.metaDescription.includes(`from KES ${priced.fromKes.toLocaleString("en-KE")}.`), true);
+});
+
