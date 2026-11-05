@@ -175,7 +175,9 @@ const useTertiary = Boolean(tertiaryHref && tertiaryLabel);
   const REEL_STING_MS = 1_800;
   const REEL_FADE_MS = 500;
   /** How long the Shop button shows each category. */
-  const REEL_SHOP_LINK_MS = 2_500;
+  const REEL_SHOP_LINK_MS = 6_000;
+  /** Matches the fade on .sig-hero__reel-btn--shop. */
+  const REEL_SHOP_FADE_MS = 700;
 
   function setupReel(hero: Element) {
     const box = hero.querySelector<HTMLElement>("[data-sig-reel]");
@@ -315,8 +317,12 @@ const useTertiary = Boolean(tertiaryHref && tertiaryLabel);
       if (!shopLinks.length) return;
       shopIndex = (shopIndex + 1) % shopLinks.length;
       const link = shopLinks[shopIndex];
-      shop.href = link.href;
-      shop.textContent = `Shop ${link.label} ›`;
+      shop.classList.add("is-changing");
+      window.setTimeout(() => {
+        shop.href = link.href;
+        shop.textContent = `Shop ${link.label} ›`;
+        shop.classList.remove("is-changing");
+      }, REEL_SHOP_FADE_MS);
     };
 
     const start = () => {
@@ -739,6 +745,11 @@ const useTertiary = Boolean(tertiaryHref && tertiaryLabel);
     left: 0.85rem;
     background: #fff;
     color: #000;
+    transition: opacity 0.7s ease;
+  }
+
+  .sig-hero__reel-btn--shop.is-changing {
+    opacity: 0;
   }
 
   .sig-hero__reel-btn--shop:hover {
