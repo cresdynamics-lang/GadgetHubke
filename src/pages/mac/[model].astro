@@ -238,7 +238,8 @@ const liveAccessoryKes = (href: string, fallback: number) =>
 
           <div hidden data-add-bag data-id={model.id} data-name={model.name} data-chip={model.chip} data-size={`${model.display.diagonal}″`} data-colour={colourLabel(colour)} data-image={img.src}></div>
           <div class="mpdp__actions" data-pdp-cta>
-            <a class="btn btn--secondary btn--xs" href="/trade-in">Trade In</a>
+            <a class="btn btn--secondary btn--xs" href="#lipa-on-product">Lipa Mdogo Mdogo</a>
+            <a class="btn btn--secondary btn--xs" href="#trade-on-product">Trade In</a>
             <a class="btn btn--whatsapp btn--xs" href={wa} target="_blank" rel="noopener noreferrer" data-wa-link>
               Order on WhatsApp
             </a>
@@ -408,6 +409,7 @@ const liveAccessoryKes = (href: string, fallback: number) =>
     imageSrc={img.src}
     imageAlt={img.alt}
     description={model.tagline}
+    onPageOffers
   />
     </div>
   </article>
@@ -805,6 +807,15 @@ const liveAccessoryKes = (href: string, fallback: number) =>
     gap: 0.35rem;
     width: 100%;
     margin: 1rem 0;
+  }
+
+  .mpdp__actions .btn--whatsapp {
+    grid-column: 1 / -1;
+  }
+
+  :global(#lipa-on-product),
+  :global(#trade-on-product) {
+    scroll-margin-top: 5.5rem;
   }
   .mpdp__actions .btn {
     width: 100%;

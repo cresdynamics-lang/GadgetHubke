@@ -227,6 +227,8 @@ export function tradeInNoticeToShop(input: {
   email?: string;
   requestId: string;
   device: string;
+  wantDevice?: string;
+  wantKes?: number;
   notes?: string;
 }) {
   const title = `New trade-in ${input.requestId}`;
@@ -234,10 +236,35 @@ export function tradeInNoticeToShop(input: {
     title,
     `<p>${esc(input.name)} · ${esc(input.phone)}${input.email ? ` · ${esc(input.email)}` : ""}</p>
     <p>Device: ${esc(input.device)}</p>
+    ${input.wantDevice ? `<p>They want: ${esc(input.wantDevice)}${input.wantKes ? ` (KES ${esc(input.wantKes.toLocaleString("en-KE"))} listed)` : ""}</p>` : ""}
     ${input.notes ? `<p style="color:#6e6e73;font-size:13px;">${esc(input.notes)}</p>` : ""}
     <p style="font-size:13px;">Follow up on WhatsApp. Quote after inspection — no money has been taken.</p>`,
   );
-  const text = `${title}\n${input.name} ${input.phone} ${input.email || ""}\n${input.device}\n${input.notes || ""}`;
+  const text = `${title}\n${input.name} ${input.phone} ${input.email || ""}\nTrading in: ${input.device}\nWants: ${input.wantDevice || ""}\n${input.notes || ""}`;
+  return { subject: `${title} · Gadget Hub`, html, text };
+}
+
+export function tradeInQuoteEmail(input: {
+  name: string;
+  requestId: string;
+  device: string;
+  wantDevice?: string;
+  quoteKes: number;
+}) {
+  const quote = `KES ${input.quoteKes.toLocaleString("en-KE")}`;
+  const title = `Trade-in quote ${input.requestId}`;
+  const html = wrap(
+    title,
+    `<p style="margin:0 0 16px;line-height:1.5;">Hi ${esc(input.name.split(" ")[0] || "there")}, our quote for your <strong>${esc(input.device)}</strong>${input.wantDevice ? `, toward <strong>${esc(input.wantDevice)}</strong>` : ""} is <strong>${esc(quote)}</strong>.</p>
+    <p style="margin:0 0 12px;font-size:13px;color:#6e6e73;">This is a quote, not a payment. The final figure is confirmed when we inspect the phone at ${esc(site.address)} (${esc(site.hours.short)}). Reference ${esc(input.requestId)}.</p>
+    <p style="margin:0;font-size:13px;">Reply to this email or WhatsApp ${esc(site.phoneDisplay)} if you want to go ahead.</p>`,
+  );
+  const text = [
+    title,
+    `Hi ${input.name}, our quote for ${input.device}${input.wantDevice ? `, toward ${input.wantDevice}` : ""} is ${quote}.`,
+    `Reference ${input.requestId}. This is a quote, not a payment. We confirm it when we inspect the phone.`,
+    `${site.address} · ${site.phoneDisplay}`,
+  ].join("\n");
   return { subject: `${title} · Gadget Hub`, html, text };
 }
 

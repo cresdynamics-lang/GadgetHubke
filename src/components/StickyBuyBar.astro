@@ -8,6 +8,8 @@ interface Props {
   imageSrc: string;
   imageAlt?: string;
   description?: string;
+  /** iPhone and Mac product pages: open Lipa and Trade-in on this page. */
+  onPageOffers?: boolean;
 }
 
 const {
@@ -15,6 +17,7 @@ const {
   imageSrc,
   imageAlt = productName,
   description = "Sealed stock · ready in Nairobi",
+  onPageOffers = false,
 } = Astro.props;
 ---
 
@@ -26,8 +29,9 @@ const {
     <p class="float-buy__name">{productName}</p>
     <p class="float-buy__desc" data-float-desc>{description}</p>
   </div>
-  <div class="float-buy__actions">
-    <a class="btn btn--secondary btn--xs" href="/trade-in">Trade In</a>
+  <div class:list={["float-buy__actions", { "float-buy__actions--offers": onPageOffers }]}>
+    {onPageOffers ? <a class="btn btn--secondary btn--xs" href="#lipa-on-product">Lipa Mdogo Mdogo</a> : null}
+    <a class="btn btn--secondary btn--xs" href={onPageOffers ? "#trade-on-product" : "/trade-in"}>Trade In</a>
     <a class="btn btn--whatsapp btn--xs" data-sticky-wa href="#">Order on WhatsApp</a>
   </div>
 </div>
@@ -133,6 +137,10 @@ const {
     gap: 0.25rem;
     width: 100%;
     flex: 1 1 100%;
+  }
+
+  .float-buy__actions--offers :global(.btn--whatsapp) {
+    grid-column: 1 / -1;
   }
 
   .float-buy__actions :global(.btn) {

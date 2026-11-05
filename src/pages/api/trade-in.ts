@@ -4,7 +4,8 @@ import { liveDeviceOptions } from "../../lib/device-options-live";
 import { addTradeIn } from "../../lib/management/trade-ins";
 import { cleanAnswers } from "../../lib/trade-in-questions";
 import { trySendMail } from "../../lib/mail/smtp";
-import { tradeInCustomerEmail } from "../../lib/mail/templates";
+import { tradeInCustomerEmail, tradeInNoticeToShop } from "../../lib/mail/templates";
+import { site } from "../../lib/site";
 import { pushCustomerToOps } from "../../lib/ops/push-customer";
 
 export const prerender = false;
@@ -71,6 +72,23 @@ export const POST: APIRoute = async ({ request }) => {
         text: customer.text,
       });
     }
+
+    const shop = tradeInNoticeToShop({
+      name,
+      phone,
+      email: email || undefined,
+      requestId: row.id,
+      device,
+      wantDevice: want.summary,
+      wantKes: want.priceKes,
+      notes,
+    });
+    await trySendMail({
+      to: site.email,
+      subject: shop.subject,
+      html: shop.html,
+      text: shop.text,
+    });
 
     await pushCustomerToOps({ name, email, phone, source: "trade-in" });
 

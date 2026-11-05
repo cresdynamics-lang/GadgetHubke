@@ -34,7 +34,7 @@ function waHref(row: (typeof rows)[number]) {
 <ManagementLayout title="Trade-ins - Management" authed active="trade-ins" staffName={sampleStaff.name} staffRole={sampleStaff.role}>
   <header style="margin-bottom:1rem;">
     <h1 class="mgmt-page-title">Trade-ins</h1>
-    <p class="mgmt-muted">Live requests from /trade-in. These are quotes, not payments — follow up after inspection.</p>
+    <p class="mgmt-muted">Each request names the phone they are trading in and the device they want. Enter a quote to email it back. Nothing is charged until the phone is inspected.</p>
   </header>
   <div class="mgmt-card">
     <table class="mgmt-table">
@@ -73,7 +73,15 @@ function waHref(row: (typeof rows)[number]) {
                 <td>
                   <span class:list={["mgmt-tag", { "mgmt-tag--new": t.status.includes("Waiting") }]}>{t.status}</span>
                 </td>
-                <td>{t.quoteKes ? formatKes(t.quoteKes) : "-"}</td>
+                <td>
+                  {t.quoteKes ? formatKes(t.quoteKes) : "-"}
+                  <form class="mgmt-quote" data-quote-form style="margin-top:0.4rem;display:flex;gap:0.35rem;align-items:center;">
+                    <input type="hidden" name="id" value={t.id} />
+                    <input name="quoteKes" type="number" min="1" step="1" required placeholder="KES" aria-label={`Quote for ${t.id}`} style="width:7rem;padding:0.3rem 0.4rem;" />
+                    <button type="submit" class="mgmt-link" style="background:none;border:0;padding:0;cursor:pointer;">Email quote</button>
+                  </form>
+                  <p class="mgmt-muted" data-quote-status hidden></p>
+                </td>
                 <td class="mgmt-muted">{when(t.submittedAt)}</td>
                 <td>
                   <a class="mgmt-link" href={waHref(t)} target="_blank" rel="noopener noreferrer">WhatsApp</a>
@@ -90,3 +98,37 @@ function waHref(row: (typeof rows)[number]) {
     </table>
   </div>
 </ManagementLayout>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>("[data-quote-form]").forEach((form) => {
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const status = form.parentElement?.querySelector<HTMLElement>("[data-quote-status]");
+      const button = form.querySelector<HTMLButtonElement>("button");
+      const data = new FormData(form);
+      if (button) button.disabled = true;
+      if (status) {
+        status.hidden = false;
+        status.textContent = "Sending…";
+      }
+      try {
+        const response = await fetch("/api/management/trade-in-quote", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: data.get("id"), quoteKes: Number(data.get("quoteKes")) }),
+        });
+        const body = await response.json();
+        if (!response.ok) throw new Error(body.error || "Could not send the quote.");
+        if (status) {
+          status.textContent = body.emailed
+            ? `Quote emailed to ${body.email}.`
+            : "Quote saved. This request has no email, so reply on WhatsApp.";
+        }
+      } catch (error) {
+        if (status) status.textContent = error instanceof Error ? error.message : "Could not send the quote.";
+      } finally {
+        if (button) button.disabled = false;
+      }
+    });
+  });
+</script>

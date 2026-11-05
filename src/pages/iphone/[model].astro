@@ -433,7 +433,8 @@ if (seo) {
         </p>
 
         <div class="ipdp__cta" data-pdp-cta>
-          <a class="btn btn--secondary btn--xs" href="/trade-in">Trade In</a>
+          <a class="btn btn--secondary btn--xs" href="#lipa-on-product">Lipa Mdogo Mdogo</a>
+          <a class="btn btn--secondary btn--xs" href="#trade-on-product">Trade In</a>
           <a
             class="btn btn--whatsapp btn--xs"
             data-wa-link
@@ -611,6 +612,7 @@ if (seo) {
     imageSrc={initialImg.src}
     imageAlt={initialImg.alt}
     description={seo.metaDescription}
+    onPageOffers
   />
   )}
 </BaseLayout>
@@ -1264,6 +1266,15 @@ if (seo) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.35rem;
     width: 100%;
+  }
+
+  .ipdp__cta .btn--whatsapp {
+    grid-column: 1 / -1;
+  }
+
+  :global(#lipa-on-product),
+  :global(#trade-on-product) {
+    scroll-margin-top: 5.5rem;
   }
 
   .ipdp__cta .btn {
