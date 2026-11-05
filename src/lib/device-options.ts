@@ -15,6 +15,8 @@ export type DeviceOption = {
   group: string;
   colours: string[];
   variants: DeviceVariantOption[];
+  /** Set by lipaDeviceOptions: the colours in stock per condition, out of everything in `colours`. */
+  colourStock?: { new: string[]; exUk: string[] };
 };
 
 export type ChosenDevice = {
@@ -30,6 +32,12 @@ export type ChosenDevice = {
 
 function colourName(value: string) {
   return value.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+/** Shop products share one catalogue group, so the MacBook among them needs its own. */
+function pickerGroup(p: PricedProduct) {
+  if (!p.group.includes("iPhone")) return p.group;
+  return /macbook/i.test(p.name) ? "Mac" : "iPhone";
 }
 
 function variantOptions(p: PricedProduct): DeviceVariantOption[] {
@@ -63,12 +71,47 @@ export function deviceOptions(
   nameColour: (key: string) => string = colourName,
 ): DeviceOption[] {
   return catalog.flatMap((p) => {
-    const group = p.group.includes("iPhone") ? "iPhone" : p.group;
+    const group = pickerGroup(p);
     if (skipGroups.includes(group) || !isListedForSale(p)) return [];
     const variants = variantOptions(p).filter((v) => v.newKes > 0 || v.exUkKes > 0);
     if (!variants.length) return [];
     const colours = filterColours(p.colours ?? [], p.coloursInStock).map(nameColour);
     return [{ id: p.id, name: p.name, group, colours, variants }];
+  });
+}
+
+/**
+ * The Lipa form lists sold-out options too, so a customer can be told and still ask.
+ * Prices stay 0 for anything out of stock, so resolveDevice keeps refusing them.
+ */
+export function lipaDeviceOptions(
+  catalog: PricedProduct[],
+  nameColour: (key: string) => string = colourName,
+): DeviceOption[] {
+  return catalog.flatMap((p) => {
+    if (p.showOnWebsite === false) return [];
+    const flags = listedVariantPrices(p);
+    const variants = variantOptions(p).filter((_, i) => {
+      if (!p.variants.length) return (flags.showNew && p.priceKes > 0) || (flags.showEx && (p.exUkKes ?? 0) > 0);
+      const listed = listedVariantPrices(p, p.variants[i]);
+      return listed.newKes > 0 || listed.exUkKes > 0;
+    });
+    if (!variants.length) return [];
+    const all = p.colours ?? [];
+    const exUkTicks = p.exUkColoursInStock?.length ? p.exUkColoursInStock : p.coloursInStock;
+    return [
+      {
+        id: p.id,
+        name: p.name,
+        group: pickerGroup(p),
+        colours: all.map(nameColour),
+        variants,
+        colourStock: {
+          new: filterColours(all, p.coloursInStock).map(nameColour),
+          exUk: filterColours(all, exUkTicks).map(nameColour),
+        },
+      },
+    ];
   });
 }
 

@@ -10,14 +10,17 @@ interface Props {
   /** Field name prefix, so a form can hold more than one picker. */
   name: string;
   label?: string;
+  /** Let sold-out options be chosen and tell the customer, instead of blocking them. */
+  notifyUnavailable?: boolean;
 }
 
-const { options, name, label = "Model" } = Astro.props;
+const { options, name, label = "Model", notifyUnavailable = false } = Astro.props;
+const soldOut = (o: DeviceOption) => notifyUnavailable && o.variants.every((v) => !v.newKes && !v.exUkKes);
 const groups = [...new Set(options.map((o) => o.group))];
 const json = JSON.stringify(options).replace(/</g, "\\u003c");
 ---
 
-<div class="picker" data-device-picker>
+<div class="picker" data-device-picker data-picker-notify={notifyUnavailable ? "1" : undefined}>
   <script type="application/json" data-device-options set:html={json} />
   <label class="picker__field">
     <span>{label}</span>
@@ -26,7 +29,7 @@ const json = JSON.stringify(options).replace(/</g, "\\u003c");
       {
         groups.map((group) => (
           <optgroup label={group}>
-            {options.filter((o) => o.group === group).map((o) => <option value={o.id}>{o.name}</option>)}
+            {options.filter((o) => o.group === group).map((o) => <option value={o.id}>{o.name}{soldOut(o) ? " (not available)" : ""}</option>)}
           </optgroup>
         ))
       }
@@ -49,6 +52,7 @@ const json = JSON.stringify(options).replace(/</g, "\\u003c");
     <label><input type="radio" name={`${name}Channel`} value="ex-uk" data-picker-channel /> <span data-picker-channel-label>Ex-UK</span></label>
   </div>
   <p class="picker__price" data-picker-price hidden></p>
+  {notifyUnavailable && <p class="picker__notice" data-picker-notice role="status" hidden></p>}
 </div>
 
 <style>
@@ -115,7 +119,18 @@ const json = JSON.stringify(options).replace(/</g, "\\u003c");
     font-weight: var(--font-weight-semibold);
   }
 
-  .picker__price[hidden] {
+  .picker__price[hidden],
+  .picker__notice[hidden] {
     display: none;
+  }
+
+  .picker__notice {
+    margin: 0;
+    padding: 0.75rem 0.85rem;
+    border: 1px solid #e0a100;
+    border-radius: var(--radius-md);
+    background: #fff8e1;
+    color: #5c4300;
+    font-size: var(--text-sm);
   }
 </style>

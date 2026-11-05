@@ -58,6 +58,7 @@ function waHref(row: (typeof rows)[number]) {
                 <td>
                   {t.customer}
                   <div class="mgmt-muted">{t.phone || "—"}{t.email ? ` · ${t.email}` : ""}</div>
+                  {t.idNumber ? <div class="mgmt-muted">ID: {t.idNumber}</div> : null}
                 </td>
                 <td>
                   {t.device}

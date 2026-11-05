@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { deviceOptions, resolveDevice } from "./device-options.ts";
+import { deviceOptions, lipaDeviceOptions, resolveDevice } from "./device-options.ts";
 import type { PricedProduct } from "./pricing/live.ts";
 
 const phone = {
@@ -47,4 +47,21 @@ test("an option that is not on sale is refused", () => {
   const options = deviceOptions([phone]);
   assert.equal(resolveDevice(options, { productId: "iphone-17-pro", variantKey: "512", channel: "new" }), null);
   assert.equal(resolveDevice(options, { productId: "nope", variantKey: "256" }), null);
+});
+
+test("the Lipa list keeps sold-out options, but they still cannot be applied for", () => {
+  const soldOut = { ...phone, inStock: false, exUkInStock: false } as PricedProduct;
+  assert.deepEqual(deviceOptions([soldOut]), []);
+  const options = lipaDeviceOptions([soldOut]);
+  assert.deepEqual(options[0].variants.map((v) => v.key), ["256", "512"]);
+  assert.deepEqual(options[0].colours, ["Cosmic Orange", "Silver"]);
+  assert.deepEqual(options[0].colourStock?.new, ["Silver"]);
+  assert.equal(resolveDevice(options, { productId: phone.id, variantKey: "256", channel: "new" }), null);
+  assert.equal(resolveDevice(options, { productId: phone.id, variantKey: "256", channel: "ex-uk" }), null);
+});
+
+test("the Lipa list leaves out what the site hides or has no price for", () => {
+  assert.deepEqual(lipaDeviceOptions([{ ...phone, showOnWebsite: false } as PricedProduct]), []);
+  const [option] = lipaDeviceOptions([phone]);
+  assert.equal(option.variants.some((v) => v.key === "1tb"), false);
 });

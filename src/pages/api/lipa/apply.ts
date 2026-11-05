@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import { buildLipaTerms } from "../../../lib/checkout/intent";
 import { resolveDevice } from "../../../lib/device-options";
-import { liveDeviceOptions } from "../../../lib/device-options-live";
+import { liveLipaDeviceOptions } from "../../../lib/device-options-live";
 import { addLipaPlan } from "../../../lib/management/lipa";
 import { trySendMail } from "../../../lib/mail/smtp";
 import { lipaApplicationEmail } from "../../../lib/mail/templates";
@@ -34,7 +34,7 @@ export const POST: APIRoute = async ({ request }) => {
   if (name.length < 2) return json({ error: "Enter your name." }, 400);
   if (phone.replace(/\D/g, "").length < 9) return json({ error: "Enter a valid phone number." }, 400);
 
-  const chosen = resolveDevice(await liveDeviceOptions(), body);
+  const chosen = resolveDevice(await liveLipaDeviceOptions(), body);
   if (!chosen) return json({ error: "That device is not available. Please choose another." }, 400);
   const device = chosen.summary;
   const catalogKes = chosen.priceKes;

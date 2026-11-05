@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { resolveDevice } from "../../lib/device-options";
 import { liveDeviceOptions } from "../../lib/device-options-live";
 import { addTradeIn } from "../../lib/management/trade-ins";
-import { cleanAnswers } from "../../lib/trade-in-questions";
+import { cleanAnswers, cleanIdNumber, TRADE_IN_SKIP_GROUPS, TRADE_IN_TYPES } from "../../lib/trade-in-questions";
 import { trySendMail } from "../../lib/mail/smtp";
 import { tradeInCustomerEmail, tradeInNoticeToShop } from "../../lib/mail/templates";
 import { site } from "../../lib/site";
@@ -33,32 +33,33 @@ export const POST: APIRoute = async ({ request }) => {
   const email = String(body.email || "").trim();
   const brand = String(body.brand || "").trim();
   const model = String(body.model || "").trim();
-  const storage = String(body.storage || "").trim();
-  const colour = String(body.colour || "").trim();
-  const extra = String(body.notes || "").trim().slice(0, 500);
+  const idNumber = cleanIdNumber(body.idNumber);
 
   if (name.length < 2) return json({ error: "Enter your name." }, 400);
   if (phone.replace(/\D/g, "").length < 9) return json({ error: "Enter a valid phone number." }, 400);
-  if (!brand || !model) return json({ error: "Enter the brand and model of the phone you are trading in." }, 400);
+  if (!idNumber) return json({ error: "Enter a valid ID or passport number." }, 400);
+  if (!(TRADE_IN_TYPES as readonly string[]).includes(brand) || !model) {
+    return json({ error: "Choose the type and model of the device you are trading in." }, 400);
+  }
 
-  const want = resolveDevice(await liveDeviceOptions(), (body.want ?? {}) as Record<string, unknown>);
+  const want = resolveDevice(await liveDeviceOptions(TRADE_IN_SKIP_GROUPS), (body.want ?? {}) as Record<string, unknown>);
   if (!want) return json({ error: "Choose the device you want. That option is not available." }, 400);
 
   const modelName = model.toLowerCase().startsWith(brand.toLowerCase()) ? model : `${brand} ${model}`;
-  const device = [modelName, storage, colour].filter(Boolean).join(" · ");
+  const device = modelName;
   const answers = cleanAnswers(body.answers);
-  const notes = [extra, email ? `Email: ${email}` : ""].filter(Boolean).join(" · ");
+  const condition = answers.map((a) => `${a.question} ${a.answer}`).join(" · ");
 
   try {
     const row = await addTradeIn({
       customer: name,
       phone,
       email: email || undefined,
+      idNumber,
       device,
       wantDevice: want.summary,
       wantKes: want.priceKes,
       answers,
-      notes,
     });
 
     // Listed in Management → Trade-ins; only the customer gets an email.
@@ -81,7 +82,7 @@ export const POST: APIRoute = async ({ request }) => {
       device,
       wantDevice: want.summary,
       wantKes: want.priceKes,
-      notes,
+      notes: condition,
     });
     await trySendMail({
       to: site.email,

@@ -4,10 +4,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import DevicePicker from "../components/DevicePicker.astro";
 import { liveDeviceOptions } from "../lib/device-options-live";
 import { site, whatsappUrl } from "../lib/site";
-import { tradeInQuestions } from "../lib/trade-in-questions";
+import { BATTERY_LABEL, TRADE_IN_SKIP_GROUPS, TRADE_IN_TYPES, tradeInQuestions } from "../lib/trade-in-questions";
 
-const brands = ["iPhone", "Samsung"] as const;
-const storages = ["32GB", "64GB", "128GB", "256GB", "512GB", "1TB", "2TB"] as const;
 const iphoneNames = [
   "iPhone 7", "iPhone 7 Plus", "iPhone 8", "iPhone 8 Plus", "iPhone X", "iPhone XR", "iPhone XS", "iPhone XS Max",
   "iPhone SE (2nd generation)", "iPhone SE (3rd generation)", "iPhone 11", "iPhone 11 Pro", "iPhone 11 Pro Max",
@@ -16,23 +14,24 @@ const iphoneNames = [
   "iPhone 15 Pro", "iPhone 15 Pro Max", "iPhone 16e", "iPhone 16", "iPhone 16 Plus", "iPhone 16 Pro", "iPhone 16 Pro Max",
   "iPhone 17e", "iPhone 17", "iPhone Air", "iPhone 17 Pro", "iPhone 17 Pro Max", "iPhone 18 Pro", "iPhone 18 Pro Max",
 ];
-const options = await liveDeviceOptions(["Accessories"]);
+const options = await liveDeviceOptions(TRADE_IN_SKIP_GROUPS);
+const [screenQuestion, extrasQuestion] = tradeInQuestions;
 const payload = JSON.stringify(tradeInQuestions.map((q) => ({ id: q.id, label: q.label }))).replace(/</g, "\\u003c");
 ---
 
 <BaseLayout
   title="Trade-In - GadgetHub"
-  description="Trade in your iPhone or Samsung for the device you want at Gadget Hub Nairobi. Tell us both phones, answer a few questions and get your quote on WhatsApp."
+  description="Trade in your iPhone, Samsung, iPad or Mac for the device you want at Gadget Hub Nairobi. Tell us both devices and get your quote on WhatsApp."
 >
   <section class="tradein container">
     <header class="tradein__intro">
       <p class="tradein__eyebrow">Trade-In</p>
-      <h1>Trade your phone for the one you want</h1>
+      <h1>Trade your device for the one you want</h1>
       <p class="tradein__lede">
-        Tell us the device you want and the phone you are trading in, answer a few
-        questions, and send it to us on WhatsApp. We reply with your quote. We accept
-        <strong>iPhone</strong> and <strong>Samsung</strong> only, and the final offer is
-        confirmed after we inspect the phone at {site.address}.
+        Tell us the device you want and the device you have, then send it to us on
+        WhatsApp. We reply with your quote. We accept <strong>iPhone</strong>,
+        <strong>Samsung</strong>, <strong>iPad</strong> and <strong>Mac</strong>, and the final
+        offer is confirmed after we inspect it at {site.address}.
       </p>
     </header>
 
@@ -44,13 +43,13 @@ const payload = JSON.stringify(tradeInQuestions.map((q) => ({ id: q.id, label: q
         </fieldset>
 
         <fieldset class="tradein__fieldset">
-          <legend>2. The phone you are trading in</legend>
+          <legend>2. The device you have</legend>
 
           <label class="tradein__field">
-            <span>Brand</span>
+            <span>Type of device</span>
             <select name="brand" required data-tradein-brand>
-              <option value="" disabled selected>Select brand</option>
-              {brands.map((b) => <option value={b}>{b}</option>)}
+              <option value="" disabled selected>Select type</option>
+              {TRADE_IN_TYPES.map((b) => <option value={b}>{b}</option>)}
             </select>
           </label>
 
@@ -60,7 +59,8 @@ const payload = JSON.stringify(tradeInQuestions.map((q) => ({ id: q.id, label: q
               type="text"
               name="model"
               required
-              placeholder="e.g. iPhone 13 Pro, Galaxy S23"
+              maxlength="80"
+              placeholder="e.g. iPhone 13 Pro 256GB"
               autocomplete="off"
               data-tradein-model
             />
@@ -68,37 +68,28 @@ const payload = JSON.stringify(tradeInQuestions.map((q) => ({ id: q.id, label: q
               {iphoneNames.map((n) => <option value={n} />)}
             </datalist>
           </label>
-
-          <label class="tradein__field">
-            <span>Storage</span>
-            <select name="storage" required>
-              <option value="" disabled selected>Select storage</option>
-              {storages.map((s) => <option value={s}>{s}</option>)}
-            </select>
-          </label>
-
-          <label class="tradein__field">
-            <span>Colour</span>
-            <input type="text" name="colour" required placeholder="e.g. Graphite, Midnight" autocomplete="off" />
-          </label>
         </fieldset>
 
         <fieldset class="tradein__fieldset">
-          <legend>3. About your phone</legend>
-          {
-            tradeInQuestions.map((q) => (
-              <label class="tradein__field">
-                <span>{q.label}</span>
-                <select name={`q_${q.id}`} required>
-                  <option value="" disabled selected>Select an answer</option>
-                  {q.options.map((o) => <option value={o}>{o}</option>)}
-                </select>
-              </label>
-            ))
-          }
+          <legend>3. Its condition</legend>
           <label class="tradein__field">
-            <span>Anything else we should know? (optional)</span>
-            <textarea name="notes" rows="3" maxlength="500"></textarea>
+            <span>{screenQuestion.label}</span>
+            <select name={`q_${screenQuestion.id}`} required>
+              <option value="" disabled selected>Select an answer</option>
+              {screenQuestion.options.map((o) => <option value={o}>{o}</option>)}
+            </select>
+          </label>
+          <label class="tradein__field">
+            <span>{BATTERY_LABEL} (%)</span>
+            <input type="number" name="battery" min="1" max="100" step="1" inputmode="numeric" placeholder="e.g. 87" />
+            <small class="tradein__hint">Find it in Settings › Battery. Leave empty if your device does not show it.</small>
+          </label>
+          <label class="tradein__field">
+            <span>{extrasQuestion.label}</span>
+            <select name={`q_${extrasQuestion.id}`} required>
+              <option value="" disabled selected>Select an answer</option>
+              {extrasQuestion.options.map((o) => <option value={o}>{o}</option>)}
+            </select>
           </label>
         </fieldset>
 
@@ -109,14 +100,17 @@ const payload = JSON.stringify(tradeInQuestions.map((q) => ({ id: q.id, label: q
             <input type="text" name="name" required autocomplete="name" />
           </label>
           <label class="tradein__field">
-            <span>Phone / WhatsApp</span>
+            <span>ID or passport number</span>
             <input
-              type="tel"
-              name="phone"
+              type="text"
+              name="idNumber"
               required
-              autocomplete="tel"
-              placeholder="07…"
+              maxlength="20"
+              pattern="[A-Za-z0-9 ]{6,20}"
+              title="Letters and numbers only"
+              autocomplete="off"
             />
+            <small class="tradein__hint">We only use this to verify the device is yours.</small>
           </label>
           <label class="tradein__field">
             <span>Email</span>
@@ -128,12 +122,22 @@ const payload = JSON.stringify(tradeInQuestions.map((q) => ({ id: q.id, label: q
               placeholder="you@email.com"
             />
           </label>
+          <label class="tradein__field">
+            <span>Phone number</span>
+            <input
+              type="tel"
+              name="phone"
+              required
+              autocomplete="tel"
+              placeholder="07…"
+            />
+          </label>
         </fieldset>
 
         <p class="tradein__note">
           We’ll email a trade-in confirmation (not a payment invoice) and open WhatsApp
           to {site.phoneDisplay} with everything filled in. Press send there and we reply
-          with your quote. No commitment until we inspect the phone.
+          with your quote. No commitment until we inspect the device.
         </p>
         <p class="tradein__note" data-tradein-status hidden></p>
 
@@ -143,7 +147,7 @@ const payload = JSON.stringify(tradeInQuestions.map((q) => ({ id: q.id, label: q
       <aside class="tradein__aside">
         <h2>Good to know</h2>
         <ul>
-          <li>iPhone and Samsung only - other brands are not accepted</li>
+          <li>iPhone, Samsung, iPad and Mac only - other brands are not accepted</li>
           <li>Credit goes toward the device you choose, New or Ex-UK</li>
           <li>Pay any balance by M-Pesa, cash or Lipa Mdogo Mdogo</li>
           <li>Devices with iCloud/Google lock or unclear ownership may be declined</li>
@@ -168,10 +172,18 @@ const payload = JSON.stringify(tradeInQuestions.map((q) => ({ id: q.id, label: q
     document.querySelector("[data-tradein-questions]")?.textContent || "[]",
   );
 
-  // Suggest iPhone names only while the brand is iPhone.
+  const modelExamples: Record<string, string> = {
+    iPhone: "e.g. iPhone 13 Pro 256GB",
+    Samsung: "e.g. Galaxy S23 256GB",
+    iPad: "e.g. iPad Air 11-inch M2 128GB",
+    Mac: "e.g. MacBook Air M2 256GB",
+  };
+
+  // Suggest iPhone names only for an iPhone, and show an example that fits the type.
   brandEl?.addEventListener("change", () => {
     if (brandEl.value === "iPhone") modelEl?.setAttribute("list", "tradein-iphones");
     else modelEl?.removeAttribute("list");
+    if (modelEl) modelEl.placeholder = modelExamples[brandEl.value] ?? modelEl.placeholder;
   });
 
   form?.addEventListener("submit", async (event) => {
@@ -189,14 +201,11 @@ const payload = JSON.stringify(tradeInQuestions.map((q) => ({ id: q.id, label: q
     const sendToWhatsApp = holdWhatsAppTab();
     const data = new FormData(form);
     const text = (key: string) => String(data.get(key) || "").trim();
-    const answers = Object.fromEntries(questions.map((q) => [q.id, text(`q_${q.id}`)]));
+    const answers: Record<string, string> = Object.fromEntries(questions.map((q) => [q.id, text(`q_${q.id}`)]));
+    answers.battery = text("battery");
     const brand = text("brand");
     const model = text("model");
-    const current = [
-      model.toLowerCase().startsWith(brand.toLowerCase()) ? model : `${brand} ${model}`,
-      text("storage"),
-      text("colour"),
-    ].join(" · ");
+    const current = model.toLowerCase().startsWith(brand.toLowerCase()) ? model : `${brand} ${model}`;
 
     if (btn) btn.disabled = true;
     if (status) {
@@ -211,11 +220,9 @@ const payload = JSON.stringify(tradeInQuestions.map((q) => ({ id: q.id, label: q
         body: JSON.stringify({
           brand,
           model,
-          storage: text("storage"),
-          colour: text("colour"),
           answers,
-          notes: text("notes"),
           name: text("name"),
+          idNumber: text("idNumber"),
           phone: text("phone"),
           email: text("email"),
           want: { productId: want.productId, variantKey: want.variantKey, channel: want.channel, colour: want.colour },
@@ -236,17 +243,18 @@ const payload = JSON.stringify(tradeInQuestions.map((q) => ({ id: q.id, label: q
       want.summary,
       `Listed price: KES ${want.priceKes.toLocaleString("en-KE")}`,
       "",
-      "*Phone I'm trading in*",
-      current,
-      "",
-      "*About my phone*",
-      ...questions.map((q) => `${q.label}: ${answers[q.id]}`),
-      text("notes") ? `Other: ${text("notes")}` : "",
+      "*Device I have*",
+      `Type: ${brand}`,
+      `Model: ${current}`,
+      `${questions[0].label} ${answers[questions[0].id]}`,
+      `Battery health: ${answers.battery ? `${answers.battery}%` : "Not given"}`,
+      `${questions[1].label} ${answers[questions[1].id]}`,
       "",
       "*My details*",
       `Name: ${text("name")}`,
-      `Phone: ${text("phone")}`,
+      `ID or passport: ${text("idNumber")}`,
       `Email: ${text("email")}`,
+      `Phone: ${text("phone")}`,
     ]
       .filter((line, i, all) => line !== "" || all[i - 1] !== "")
       .join("\n");
@@ -352,6 +360,12 @@ const payload = JSON.stringify(tradeInQuestions.map((q) => ({ id: q.id, label: q
   .tradein__field textarea:focus-visible {
     outline: 2px solid var(--color-black);
     outline-offset: 2px;
+  }
+
+  .tradein__hint {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-regular);
+    color: var(--color-fg-muted);
   }
 
   .tradein__note {

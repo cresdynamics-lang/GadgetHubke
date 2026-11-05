@@ -7,6 +7,8 @@ export type TradeInRequest = {
   customer: string;
   phone?: string;
   email?: string;
+  /** National ID or passport, to verify ownership. Staff only: never put it in emails. */
+  idNumber?: string;
   /** The phone being traded in. */
   device: string;
   /** The device the customer wants in exchange. */
@@ -40,6 +42,7 @@ export async function addTradeIn(
     customer: input.customer,
     phone: input.phone,
     email: input.email,
+    idNumber: input.idNumber,
     device: input.device,
     wantDevice: input.wantDevice,
     wantKes: input.wantKes,

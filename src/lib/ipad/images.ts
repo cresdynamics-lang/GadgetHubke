@@ -198,8 +198,21 @@ export function ipadViewerTabs(model: IpadModel, colourKey: string) {
     tabs.push({ id: "colours", label: "Colours", src: colours.src, alt: colours.alt });
   }
 
-  const sizes = getIpadImage(model.id, colourKey, "size", model.name);
-  if (!sizes.fallback) tabs.push({ id: "sizes", label: "Sizes", src: sizes.src, alt: sizes.alt });
+  if (model.id === "ipad-a16") {
+    // Its only "size" photo fans out all four colours, so show the chosen finish instead.
+    const cellular = productSrc(model.id, colourKey, "product")?.replace("-wifi-select", "-cell-select");
+    if (cellular && publicFileExists(cellular)) {
+      tabs.push({
+        id: "cellular",
+        label: "Wi-Fi + Cellular",
+        src: cellular,
+        alt: `${model.name} in ${colourLabel(colourKey)}, Wi-Fi + Cellular`,
+      });
+    }
+  } else {
+    const sizes = getIpadImage(model.id, colourKey, "size", model.name);
+    if (!sizes.fallback) tabs.push({ id: "sizes", label: "Sizes", src: sizes.src, alt: sizes.alt });
+  }
 
   const pencil = getIpadImage(model.id, colourKey, "pencil", model.name);
   if (!pencil.fallback) tabs.push({ id: "pencil", label: "With Pencil", src: pencil.src, alt: pencil.alt });

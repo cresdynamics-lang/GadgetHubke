@@ -6,7 +6,7 @@ import { watchColourMeta } from "./watch/colours";
 import { airpodsColourMeta } from "./airpods/colours";
 import { tvHomeColourMeta } from "./tv-home/colours";
 import { livePricedCatalog } from "./pricing/live";
-import { deviceOptions } from "./device-options";
+import { deviceOptions, lipaDeviceOptions } from "./device-options";
 import { filterColours } from "./listing-offers";
 import { products } from "./products";
 
@@ -33,4 +33,20 @@ export async function liveDeviceOptions(skipGroups: readonly string[] = []) {
   return deviceOptions(catalog, skipGroups, colourName).map((o) =>
     o.colours.length ? o : { ...o, colours: finishes(o.id) },
   );
+}
+
+/** Every option on the site, sold out or not, for the Lipa form. */
+export async function liveLipaDeviceOptions() {
+  const catalog = await livePricedCatalog();
+  return lipaDeviceOptions(catalog, colourName).map((o) => {
+    if (o.colours.length) return o;
+    const row = catalog.find((p) => p.id === o.id);
+    const labels = products.find((p) => p.id === o.id)?.colors.map((c) => c.label) ?? [];
+    const exUkTicks = row?.exUkColoursInStock?.length ? row.exUkColoursInStock : row?.coloursInStock;
+    return {
+      ...o,
+      colours: labels,
+      colourStock: { new: filterColours(labels, row?.coloursInStock), exUk: filterColours(labels, exUkTicks) },
+    };
+  });
 }

@@ -2,17 +2,14 @@
 export const prerender = false;
 import BaseLayout from "../layouts/BaseLayout.astro";
 import DevicePicker from "../components/DevicePicker.astro";
-import { liveDeviceOptions } from "../lib/device-options-live";
+import { liveLipaDeviceOptions } from "../lib/device-options-live";
 import { iphoneConfig } from "../lib/iphone/config";
 import { LIPA_MONTH_OPTIONS, lipaPlan } from "../lib/pricing/lipa";
 import { formatKes } from "../lib/iphone/pricing";
 import { site, whatsappUrl } from "../lib/site";
 
-const waHref = whatsappUrl(
-  "Hi GadgetHub - I'd like to ask about Lipa Mdogo Mdogo.",
-);
 const lipa = iphoneConfig.lipa;
-const options = await liveDeviceOptions();
+const options = await liveLipaDeviceOptions();
 const examplePrice = 158000;
 const exampleDeposit = lipaPlan(examplePrice, lipa.depositDefaultPct).depositKes;
 const example = [...LIPA_MONTH_OPTIONS].reverse().map((m) => lipaPlan(examplePrice, lipa.depositDefaultPct, m));
@@ -48,7 +45,7 @@ const monthWord = (m: number) => (m === 1 ? "month" : "months");
     <div class="page__table-wrap">
       <table class="page__table">
         <thead>
-          <tr><th scope="col">Plan</th><th scope="col">Rate</th><th scope="col">After deposit</th><th scope="col">Per month</th><th scope="col">Total</th></tr>
+          <tr><th scope="col">Plan</th><th scope="col">Rate</th><th scope="col">Per month</th></tr>
         </thead>
         <tbody>
           {
@@ -56,9 +53,7 @@ const monthWord = (m: number) => (m === 1 ? "month" : "months");
               <tr>
                 <th scope="row">{row.months} {monthWord(row.months)}</th>
                 <td>× {row.rate}</td>
-                <td>{formatKes(row.repayKes)}</td>
                 <td>{formatKes(row.monthlyKes)}</td>
-                <td>{formatKes(row.totalKes)}</td>
               </tr>
             ))
           }
@@ -68,7 +63,7 @@ const monthWord = (m: number) => (m === 1 ? "month" : "months");
 
     <form class="page__form" data-lipa-form data-wa={whatsappUrl()}>
       <h2>Work out your plan and apply</h2>
-      <DevicePicker options={options} name="device" label="Device you want" />
+      <DevicePicker options={options} name="device" label="Device you want" notifyUnavailable />
       <div class="page__row">
         <label class="page__field">
           <span>Deposit</span>
@@ -116,13 +111,10 @@ const monthWord = (m: number) => (m === 1 ? "month" : "months");
         <span>Email</span>
         <input type="email" name="email" required autocomplete="email" />
       </label>
-      <p class="page__note">We’ll email a Lipa confirmation (not a full-purchase invoice), keep your details for follow-up and open WhatsApp so we can confirm the plan.</p>
+      <p class="page__note" data-lipa-email-note>We’ll email a Lipa confirmation (not a full-purchase invoice), keep your details for follow-up and open WhatsApp so we can confirm the plan.</p>
       <p class="page__note" data-lipa-status hidden></p>
       <div class="page__actions">
-        <button class="btn btn--primary" type="submit">Send Lipa application</button>
-        <a class="btn btn--secondary" href={waHref} target="_blank" rel="noopener noreferrer">
-          Ask on WhatsApp
-        </a>
+        <button class="btn btn--primary" type="submit">Proceed on WhatsApp</button>
       </div>
     </form>
   </section>
@@ -152,8 +144,11 @@ const monthWord = (m: number) => (m === 1 ? "month" : "months");
 
   function showPlan() {
     const now = currentPlan();
-    if (planEl) planEl.hidden = !now;
-    if (!now) return;
+    const canBuy = Boolean(now?.device.available);
+    if (planEl) planEl.hidden = !canBuy;
+    const emailNote = form?.querySelector<HTMLElement>("[data-lipa-email-note]");
+    if (emailNote) emailNote.hidden = Boolean(now) && !canBuy;
+    if (!now || !canBuy) return;
     const { plan } = now;
     const months = `${plan.months} ${plan.months === 1 ? "month" : "months"}`;
     set("[data-plan-deposit]", kes(plan.depositKes));
@@ -191,10 +186,11 @@ const monthWord = (m: number) => (m === 1 ? "month" : "months");
     if (btn) btn.disabled = true;
     if (status) {
       status.hidden = false;
-      status.textContent = "Saving your Lipa application…";
+      status.textContent = "Opening WhatsApp…";
     }
     let savedId = "";
-    try {
+    // Only a device we can sell becomes an application; anything else is a question on WhatsApp.
+    if (device.available) try {
       const res = await fetch("/api/lipa/apply", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -214,15 +210,26 @@ const monthWord = (m: number) => (m === 1 ? "month" : "months");
     } catch (err) {
       if (status) status.textContent = err instanceof Error ? err.message : "Could not save. Continuing on WhatsApp.";
     }
+    const monthsText = `${plan.months} ${plan.months === 1 ? "month" : "months"}`;
     const message = [
       "Hi GadgetHub - Lipa Mdogo Mdogo application",
       savedId ? `Reference: ${savedId}` : "",
       "",
-      `Device: ${device.summary}`,
-      `Price: ${kes(device.priceKes)}`,
-      `Deposit: ${kes(plan.depositKes)} (${depositPct}%)`,
-      `Plan: ${kes(plan.monthlyKes)} a month for ${plan.months} ${plan.months === 1 ? "month" : "months"}`,
-      `Total: ${kes(plan.totalKes)}`,
+      `Device: ${device.name}`,
+      device.size ? `Storage: ${device.size}` : "",
+      device.colour ? `Colour: ${device.colour}` : "",
+      `Condition: ${device.channel === "ex-uk" ? "Ex-UK" : "New"}`,
+      ...(device.available
+        ? [
+            `Price: ${kes(device.priceKes)}`,
+            `Deposit: ${kes(plan.depositKes)} (${depositPct}%)`,
+            `Plan: ${kes(plan.monthlyKes)} a month for ${monthsText}`,
+            `Total: ${kes(plan.totalKes)}`,
+          ]
+        : [
+            "Availability: shown as not available on the website. Please advise.",
+            `Preferred plan: ${depositPct}% deposit, over ${monthsText}`,
+          ]),
       "",
       `Name: ${contact.name}`,
       `Phone: ${contact.phone}`,
@@ -233,7 +240,7 @@ const monthWord = (m: number) => (m === 1 ? "month" : "months");
     sendToWhatsApp(`${form.dataset.wa}?text=${encodeURIComponent(message)}`);
     if (status) {
       status.textContent = savedId
-        ? `Saved ${savedId}. Opened WhatsApp so we can confirm the plan — this is not a payment.`
+        ? `Reference ${savedId}. Opened WhatsApp so we can confirm the plan — this is not a payment.`
         : "Opened WhatsApp. We’ll follow up from there.";
     }
     if (btn) btn.disabled = false;
