@@ -43,9 +43,12 @@ export type HeroReelScene =
   | { kind: "image"; src: string; ms: number };
 
 export type HeroReelGroup = {
+  scenes: HeroReelScene[];
+};
+
+export type HeroShopLink = {
   label: string;
   href: string;
-  scenes: HeroReelScene[];
 };
 
 const reelPhone = (key: string, ms: number): HeroReelScene => ({
@@ -57,11 +60,20 @@ const reelPhone = (key: string, ms: number): HeroReelScene => ({
 const REEL_MAC = "/Gadget_Hub_MacBook_3_Pro_page_animation_images/03_Animation_and_page_images_apple.com/MacBook_Pro_page/overview";
 const REEL_IPAD = "/Gadget_Hub_iPad_3_Pro_page_images_part1/03_Animation_and_page_images_apple.com/iPad_Pro_page/overview";
 
+/** The reel's Shop button rotates through these. */
+export const heroShopLinks: HeroShopLink[] = [
+  { label: "iPhone", href: "/iphone" },
+  { label: "Mac", href: "/mac" },
+  { label: "iPad", href: "/ipad" },
+  { label: "Watch", href: "/watch" },
+  { label: "AirPods", href: "/airpods" },
+  { label: "TV & Home", href: "/tv-home" },
+  { label: "Accessories", href: "/accessories" },
+];
+
 /** Phones first and longest, then Mac, then iPad. The logo plays between groups. */
 export const heroReel: HeroReelGroup[] = [
   {
-    label: "Shop iPhone 18 Pro",
-    href: "/shop/iphone/iphone-pro",
     scenes: [
       reelPhone("colours", 2000),
       reelPhone("hero", 5000),
@@ -71,8 +83,6 @@ export const heroReel: HeroReelGroup[] = [
     ],
   },
   {
-    label: "Shop MacBook Pro",
-    href: "/shop/mac/macbook-pro",
     scenes: [
       { kind: "image", src: `${REEL_MAC}/product-viewer/pv_hero_endframe__gc89p7dw1syi_large_2x.webp`, ms: 3750 },
       { kind: "image", src: `${REEL_MAC}/product-viewer/pv_display__fv0jzlzaak2u_large_2x.webp`, ms: 3750 },
@@ -81,8 +91,6 @@ export const heroReel: HeroReelGroup[] = [
     ],
   },
   {
-    label: "Shop iPad Pro",
-    href: "/shop/ipad/ipad-pro",
     scenes: [
       { kind: "image", src: `${REEL_IPAD}/chip/chip_hero_endframe__becrgbad20j6_large_2x.webp`, ms: 5000 },
       { kind: "image", src: `${REEL_IPAD}/apple-pencil-pro/pencil_hero__lg9qkg94jnm2_large_2x.webp`, ms: 5000 },

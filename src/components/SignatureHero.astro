@@ -6,7 +6,7 @@
  * the hero, then it returns to the copy. Respects prefers-reduced-motion.
  */
 import { whatsappUrl } from "../lib/site";
-import type { HeroPhone, HeroReelGroup } from "../lib/home";
+import type { HeroPhone, HeroReelGroup, HeroShopLink } from "../lib/home";
 
 interface Props {
   eyebrow?: string;
@@ -22,6 +22,7 @@ interface Props {
   tertiaryLabel?: string;
   phones: [HeroPhone, HeroPhone, HeroPhone, HeroPhone];
   reel?: HeroReelGroup[];
+  shopLinks?: HeroShopLink[];
 }
 
 const {
@@ -37,6 +38,7 @@ const {
   tertiaryLabel = "Lipa Mdogo Mdogo",
   phones,
   reel = [],
+  shopLinks = [],
 } = Astro.props;
 
 const wa = whatsappUrl("Hello Gadget Hub, I'd like to shop Apple products.");
@@ -101,19 +103,16 @@ const useTertiary = Boolean(tertiaryHref && tertiaryLabel);
 
   {
     reel.length > 0 && (
-      <div class="sig-hero__reel" data-sig-reel data-reel={JSON.stringify(reel)} hidden>
+      <div class="sig-hero__reel" data-sig-reel data-reel={JSON.stringify(reel)} data-shop-links={JSON.stringify(shopLinks)} hidden>
         <div class="sig-hero__reel-stage" data-sig-reel-stage />
         <div class="sig-hero__reel-sting" data-sig-reel-sting aria-hidden="true">
           <img src="/images/logo-mark.png" alt="" width="512" height="512" loading="lazy" />
           <span>Gadget Hub</span>
         </div>
         <img class="sig-hero__reel-mark" src="/images/logo-mark.png" alt="Gadget Hub" width="512" height="512" loading="lazy" />
-        <a class="sig-hero__reel-btn sig-hero__reel-btn--shop" data-sig-reel-shop href={reel[0].href}>
-          {reel[0].label} ›
+        <a class="sig-hero__reel-btn sig-hero__reel-btn--shop" data-sig-reel-shop href={shopLinks[0]?.href}>
+          Shop {shopLinks[0]?.label} ›
         </a>
-        <button class="sig-hero__reel-btn sig-hero__reel-btn--close" type="button" data-sig-reel-close>
-          Close
-        </button>
       </div>
     )
   }
@@ -166,7 +165,8 @@ const useTertiary = Boolean(tertiaryHref && tertiaryLabel);
   type ReelScene =
     | { kind: "video"; large: string; small: string; ms: number }
     | { kind: "image"; src: string; ms: number };
-  type ReelGroup = { label: string; href: string; scenes: ReelScene[] };
+  type ReelGroup = { scenes: ReelScene[] };
+  type ShopLink = { label: string; href: string };
 
   /** Rest on the copy this long, counted from the page having fully loaded. */
   const REEL_DELAY_MS = 30_000;
@@ -174,19 +174,23 @@ const useTertiary = Boolean(tertiaryHref && tertiaryLabel);
   const REEL_START_LIMIT_MS = 8_000;
   const REEL_STING_MS = 1_800;
   const REEL_FADE_MS = 500;
+  /** How long the Shop button shows each category. */
+  const REEL_SHOP_LINK_MS = 2_500;
 
   function setupReel(hero: Element) {
     const box = hero.querySelector<HTMLElement>("[data-sig-reel]");
     const stage = box?.querySelector<HTMLElement>("[data-sig-reel-stage]");
     const shop = box?.querySelector<HTMLAnchorElement>("[data-sig-reel-shop]");
-    const close = box?.querySelector<HTMLButtonElement>("[data-sig-reel-close]");
-    if (!box || !stage || !shop || !close) return;
+    if (!box || !stage || !shop) return;
 
     // Leave data savers and 2G visitors on the copy.
     const connection = (navigator as any).connection;
     if (connection?.saveData || /2g$/.test(connection?.effectiveType ?? "")) return;
 
     const groups: ReelGroup[] = JSON.parse(box.dataset.reel ?? "[]");
+    const shopLinks: ShopLink[] = JSON.parse(box.dataset.shopLinks ?? "[]");
+    let shopIndex = 0;
+    let shopTimer = 0;
     const phone = window.matchMedia("(max-width: 47.99rem)").matches;
     let state: "resting" | "due" | "running" | "done" = "resting";
     let heroInView = true;
@@ -200,6 +204,7 @@ const useTertiary = Boolean(tertiaryHref && tertiaryLabel);
       if (state === "done") return;
       state = "done";
       window.clearTimeout(timer);
+      window.clearInterval(shopTimer);
       observer.disconnect();
       document.removeEventListener("visibilitychange", sync);
       box.classList.remove("is-playing");
@@ -255,8 +260,6 @@ const useTertiary = Boolean(tertiaryHref && tertiaryLabel);
       if (state === "done") return;
       const group = groups[groupIndex];
       const scene = group.scenes[sceneIndex];
-      shop.href = group.href;
-      shop.textContent = `${group.label} ›`;
       const el = buildScene(scene);
       whenReady(el, () => {
         if (state === "done") return;
@@ -308,9 +311,18 @@ const useTertiary = Boolean(tertiaryHref && tertiaryLabel);
       }, REEL_STING_MS);
     };
 
+    const nextShopLink = () => {
+      if (!shopLinks.length) return;
+      shopIndex = (shopIndex + 1) % shopLinks.length;
+      const link = shopLinks[shopIndex];
+      shop.href = link.href;
+      shop.textContent = `Shop ${link.label} ›`;
+    };
+
     const start = () => {
       state = "due";
       box.hidden = false;
+      shopTimer = window.setInterval(nextShopLink, REEL_SHOP_LINK_MS);
       timer = window.setTimeout(() => {
         if (state === "due") finish();
       }, REEL_START_LIMIT_MS);
@@ -333,7 +345,6 @@ const useTertiary = Boolean(tertiaryHref && tertiaryLabel);
     );
     observer.observe(hero);
     document.addEventListener("visibilitychange", sync);
-    close.addEventListener("click", finish);
 
     const rest = () => {
       window.setTimeout(() => {
@@ -732,10 +743,6 @@ const useTertiary = Boolean(tertiaryHref && tertiaryLabel);
 
   .sig-hero__reel-btn--shop:hover {
     background: #e8e8ed;
-  }
-
-  .sig-hero__reel-btn--close {
-    right: 2.5rem;
   }
 
   @media (max-width: 47.99rem) {
