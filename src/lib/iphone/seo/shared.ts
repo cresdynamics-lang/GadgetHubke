@@ -22,7 +22,7 @@ export const sharedProductFaq = [
   {
     question: "Can I trade in my old phone?",
     answer:
-      "Bring an iPhone or Samsung and get credit toward this phone. We quote on WhatsApp and confirm after inspecting your device.",
+      "Bring an iPhone, Samsung, iPad or Mac and get credit toward this phone. We quote on WhatsApp and confirm after inspecting your device.",
     href: "/trade-in",
   },
   {
@@ -41,5 +41,5 @@ export const buyingBlock = {
   warranty: "Covered by the manufacturer's standard warranty.",
   hours: site.hours.short,
   tradeIn:
-    "Bring an iPhone or Samsung and get credit toward this phone. Our team quotes you on WhatsApp and confirms the value after inspecting your device.",
+    "Bring an iPhone, Samsung, iPad or Mac and get credit toward this phone. Our team quotes you on WhatsApp and confirms the value after inspecting your device.",
 } as const;

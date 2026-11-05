@@ -184,7 +184,7 @@ export const contactFaq = [
   },
   {
     q: "Can I trade in my old phone?",
-    a: "Yes - we accept iPhone and Samsung trade-ins as credit toward a new purchase. Start on the Trade-in page or WhatsApp us.",
+    a: "Yes - we accept iPhone, Samsung, iPad and Mac trade-ins as credit toward a new purchase. Start on the Trade-in page or WhatsApp us.",
   },
   {
     q: "Where are you based?",

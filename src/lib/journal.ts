@@ -228,7 +228,7 @@ export const journalSeedPosts: JournalPost[] = [
     views: 541,
     paragraphs: [
       "Before you visit, back up photos and WhatsApp, then remove your Google account and any screen lock you can.",
-      "We accept iPhone and Samsung for trade-in credit toward a new sealed device - not for resale on this site.",
+      "We accept iPhone, Samsung, iPad and Mac for trade-in credit toward a new sealed device - not for resale on this site.",
       "Start the Trade-In form online, then finish the estimate on WhatsApp.",
     ],
   },
@@ -296,7 +296,7 @@ export const journalSeedPosts: JournalPost[] = [
     slug: "how-trade-in-works",
     title: "How iPhone Trade-In Works in Nairobi: Swap Your Old iPhone or Samsung for a New iPhone at Gadget Hub",
     seoTitle: "iPhone Trade-In Nairobi | Swap Your Old iPhone or Samsung for a New iPhone 17 or 18 in Kenya | How It Works | Gadget Hub",
-    excerpt: "Bring your iPhone or Samsung, get credit toward any new device in stock.",
+    excerpt: "Bring your iPhone, Samsung, iPad or Mac, get credit toward any new device in stock.",
     category: "Trade-ins",
     tags: ["Trade-In", "Guide"],
     author: "GadgetHub",
@@ -305,8 +305,8 @@ export const journalSeedPosts: JournalPost[] = [
     dateLabel: "20 Sep 2026",
     views: 320,
     paragraphs: [
-      "At GadgetHub, trade-in is a way to put value from your current phone toward a new, sealed device - not a way we sell used stock. We accept iPhone and Samsung only.",
-      "Start on the Trade-In page: tell us the brand, model, storage, and condition. You’ll continue on WhatsApp so we can give an estimate. Final credit is set after we inspect the device in person at Norwich Union House, Suite 15.",
+      "At GadgetHub, trade-in is a way to put value from your current device toward a new, sealed one - not a way we sell used stock. We accept iPhone, Samsung, iPad and Mac only.",
+      "Start on the Trade-In page: tell us the device you want, the type and model you have, and its condition. You’ll continue on WhatsApp so we can give an estimate. Final credit is set after we inspect the device in person at Norwich Union House, Suite 15.",
       "Credit applies toward any new product in our catalog - phones, Macs, iPads, and more. Devices with account locks or unclear ownership may be declined.",
       "Ready when you are: open Trade-In, or WhatsApp 0729 585 471 with photos and details.",
     ],

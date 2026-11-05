@@ -37,7 +37,7 @@ export const iphoneSeoCatalog: IphoneSeoModel[] = [
     seoTitle: "iPhone 11 Price in Kenya | 64GB, 128GB, 256GB | Gadget Hub",
     h1: "iPhone 11",
     metaDescription: "Buy the iPhone 11 in Nairobi from KES 36,000. 64GB, 128GB or 256GB. Pay in full or with Lipa Mdogo Mdogo. Gadget Hub, Norwich Union House.",
-    intro: "The iPhone 11 is the easiest way into a modern iPhone. It has a 6.1-inch Liquid Retina display, the A13 Bionic chip and two 12MP rear cameras, wide and ultra wide. The battery lasts up to 17 hours of video playback, and it is rated IP68, to 2 metres for up to 30 minutes. It does not support 5G. Choose 64GB, 128GB or 256GB, pay in full or with Lipa Mdogo Mdogo, and trade in your old iPhone or Samsung toward it.",
+    intro: "The iPhone 11 is the easiest way into a modern iPhone. It has a 6.1-inch Liquid Retina display, the A13 Bionic chip and two 12MP rear cameras, wide and ultra wide. The battery lasts up to 17 hours of video playback, and it is rated IP68, to 2 metres for up to 30 minutes. It does not support 5G. Choose 64GB, 128GB or 256GB, pay in full or with Lipa Mdogo Mdogo, and trade in your old iPhone, Samsung, iPad or Mac toward it.",
     bestFor: "a first iPhone, a family phone or a dependable backup.",
     specs: [
       { label: "Display", value: "6.1-inch Liquid Retina HD LCD, 1792 x 828" },
