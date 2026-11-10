@@ -75,8 +75,18 @@ function fillTokens(text: string, catalog: JournalCatalog) {
   return { filled, exUkInPlaceOfNew };
 }
 
+/** One pattern per catalogue: it is the same for every paragraph and answer rendered from it. */
+const offListCache = new WeakMap<JournalCatalog, RegExp | null>();
+
 /** How article text names products that are off the list, e.g. "iPhone 16e", "16e", "MacBook Air 13-inch M4". */
-function offListNames(catalog: JournalCatalog) {
+function offListNames(catalog: JournalCatalog): RegExp | null {
+  if (offListCache.has(catalog)) return offListCache.get(catalog)!;
+  const pattern = buildOffListNames(catalog);
+  offListCache.set(catalog, pattern);
+  return pattern;
+}
+
+function buildOffListNames(catalog: JournalCatalog): RegExp | null {
   const products = [...catalog.byId.values()];
   const spellings = (name: string) => {
     const inches = name.replace(/″/g, "-inch");

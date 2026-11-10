@@ -85,9 +85,15 @@ export const GET: APIRoute = async () => {
     if (!iphoneListed(m.id)) continue;
     urls.add(abs(`/iphone/${m.id}`));
     // Each listed storage option is its own page (iPhone 18 Pro Max 256GB, 512GB, ...).
-    const priced = withLiveSeoPrices(m, live.find((p) => p.id === iphoneLiveId(m.id)));
+    const liveModel = live.find((p) => p.id === iphoneLiveId(m.id));
+    const priced = withLiveSeoPrices(m, liveModel);
+    const changed = (liveModel?.updatedAt || "").slice(0, 10);
     for (const v of priced.variants) {
-      if (v.newKes > 0 || v.exUkKes > 0) urls.add(abs(storagePath(m.id, v.storage)));
+      if (!(v.newKes > 0 || v.exUkKes > 0)) continue;
+      const loc = abs(storagePath(m.id, v.storage));
+      urls.add(loc);
+      // A storage page changes when its model's prices or stock change in admin.
+      if (changed) lastmod.set(loc, changed);
     }
     for (const c of m.compareWith) {
       if (c.split("-vs-").every((id) => getSeoModel(id) && iphoneListed(id))) urls.add(abs(`/iphone/compare/${c}`));

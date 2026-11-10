@@ -54,8 +54,16 @@ function preloadHero(html: string): string {
 }
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  // One URL per page: /iphone/iphone-17/ → /iphone/iphone-17 (keeps the query).
   const { pathname, search } = context.url;
+  // One host: www.gadgethubke.com serves every page twice otherwise, and Google crawls both.
+  const host = (context.request.headers.get("host") || "").toLowerCase();
+  if (!context.isPrerendered && host.startsWith("www.")) {
+    return new Response(null, {
+      status: 301,
+      headers: { Location: `https://${host.slice(4)}${pathname.replace(/(.)\/+$/, "$1")}${search}` },
+    });
+  }
+  // One URL per page: /iphone/iphone-17/ → /iphone/iphone-17 (keeps the query).
   if (!context.isPrerendered && pathname.length > 1 && pathname.endsWith("/") && !pathname.startsWith("/api/")) {
     return context.redirect(pathname.replace(/\/+$/, "") + search, 301);
   }
