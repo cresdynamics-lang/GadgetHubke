@@ -12,4 +12,32 @@ Disallow: /cart
 Disallow: /checkout
 Disallow: /account
 
+# Search engines and AI assistants are welcome to read product pages, prices and guides,
+# so they can recommend Gadget Hub. A plain-text summary with live prices: /llms.txt
+# (A named group replaces the * group for that crawler, so the private paths are repeated.)
+User-agent: Googlebot
+User-agent: Google-Extended
+User-agent: Bingbot
+User-agent: Applebot
+User-agent: Applebot-Extended
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: GPTBot
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: ClaudeBot
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: DuckAssistBot
+User-agent: meta-externalagent
+Allow: /
+Allow: /llms.txt
+Disallow: /management
+Disallow: /api/management
+Disallow: /api/admin
+Disallow: /api/
+Disallow: /cart
+Disallow: /checkout
+Disallow: /account
+
 Sitemap: https://gadgethubke.com/sitemap.xml

@@ -7,6 +7,7 @@ import { site, policy } from "../site";
 import type { PricedProduct } from "../pricing/live";
 import { isListedForSale, listedFromKes, listedVariantPrices } from "../listing-offers.ts";
 import { offerExtras, type ReviewSchema } from "./offer-schema";
+import { optionId, optionStories, type OptionStory } from "./option-stories.ts";
 
 export type SeoFaqItem = { question: string; answer: string };
 
@@ -24,7 +25,6 @@ export type ProductSeoInput = {
   optionsSummary?: string;
   /** Other names Kenyans type for this product ("iPad Pro M5 11 inch"). */
   alsoKnownAs?: string[];
-  variesBy?: string[];
   extraFaq?: SeoFaqItem[];
   /** Star rating from real customer reviews (reviewSchema()). */
   reviews?: ReviewSchema;
@@ -41,6 +41,8 @@ export type ProductSeo = {
   topKes: number;
   updatedLabel: string;
   faq: SeoFaqItem[];
+  /** One short story per configuration: price, Ex-UK saving, step up and Lipa plan. */
+  options: OptionStory[];
   jsonLd: Record<string, unknown>;
   image?: string;
 };
@@ -148,6 +150,13 @@ export function buildProductSeo(input: ProductSeoInput): ProductSeo {
       question: "What if the device is faulty?",
       answer: `Report a fault within ${policy.returnWindowDays} days of delivery for a return under our returns policy; after that the ${site.warranty.years}-year warranty applies.`,
     },
+    // One price question per configuration (up to 6): "How much is the MacBook Air 13 M5 16GB / 512GB in Kenya?"
+    ...rows.slice(0, rows.length > 1 ? 6 : 0).map((r) => ({
+      question: `How much is the ${name} ${r.label} in Kenya?`,
+      answer: r.priceKes
+        ? `${formatKes(r.priceKes)} sealed new at Gadget Hub${r.exUkKes ? `, or ${formatKes(r.exUkKes)} Ex-UK` : ""}.`
+        : `${formatKes(r.exUkKes!)} Ex-UK at Gadget Hub.`,
+    })),
     ...(input.extraFaq ?? []),
   ];
 
@@ -182,15 +191,18 @@ export function buildProductSeo(input: ProductSeoInput): ProductSeo {
           brand,
           productGroupID: product.id,
           ...(input.reviews ?? {}),
-          ...(input.variesBy?.length ? { variesBy: input.variesBy } : {}),
+          // Google reads size and color as variant properties; the configuration is the size.
+          variesBy: ["https://schema.org/size"],
           hasVariant: rows.map((r, i) => ({
             "@type": "Product",
-            "@id": `${url}#v${i + 1}`,
+            "@id": `${url}#${optionId(r.label)}`,
             name: `${name} ${r.label}`,
             description: `${name} ${r.label}. ${input.summary}`,
-            sku: `${product.id}-${i + 1}`,
+            sku: `${product.id}-${optionId(r.label)}`,
             image: images.slice(0, 1),
             brand,
+            size: r.label,
+            additionalProperty: [{ "@type": "PropertyValue", name: "Configuration", value: r.label }],
             offers: offersFor(r),
           })),
         }
@@ -241,6 +253,7 @@ export function buildProductSeo(input: ProductSeoInput): ProductSeo {
     topKes,
     updatedLabel: date.label,
     faq,
+    options: optionStories(name, rows),
     jsonLd,
     image: input.images[0],
   };

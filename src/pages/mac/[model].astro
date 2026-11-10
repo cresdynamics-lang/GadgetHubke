@@ -70,7 +70,6 @@ const pageSeo = liveProduct
       optionsSummary: `${model.chip}, ${model.memoryOptionsGb.join("/")}GB memory, ${model.storageOptions.join(" to ")
         .replace(/ to .* to /, " to ")} storage`,
       alsoKnownAs: [model.name.replace("″", " inch"), `${model.chip} MacBook`],
-      variesBy: ["https://schema.org/storageCapacity"],
     })
   : undefined;
 const price = macConfigurePrice(model, model.memoryOptionsGb[0], model.storageOptions[0]);

@@ -63,7 +63,6 @@ const pageSeo = liveProduct
       summary: [model.tagline, model.whoItSuits].filter(Boolean).join(" "),
       optionsSummary: `${model.storageOptions.join(", ")}${model.cellular ? ", Wi-Fi or Wi-Fi + Cellular (5G)" : ", Wi-Fi"}`,
       alsoKnownAs: [model.name.replace("″", " inch"), `${model.name.replace("″", "")} price Nairobi`],
-      variesBy: ["https://schema.org/storageCapacity"],
       extraFaq: model.cellular
         ? [{ question: `Should I get the Wi-Fi or Cellular ${model.name}?`, answer: "Wi-Fi is enough if you use it at home, the office or on a hotspot. The Cellular (5G) model takes a Safaricom or Airtel SIM or eSIM so it stays online anywhere, and it costs more." }]
         : [],

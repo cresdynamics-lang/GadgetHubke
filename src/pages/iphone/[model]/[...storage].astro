@@ -1,15 +1,16 @@
 ---
-import { lipaRate } from "../../lib/pricing/lipa";
+import { lipaRate } from "../../../lib/pricing/lipa";
 /**
  * iPhone SEO product page (11–18). Gallery + buying panel for catalog models;
  * SEO-only layout for sheet models without a legacy gallery entry.
  */
-import { isListedForSale } from "../../lib/listing-offers";
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import ProductStage from "../../components/iphone/ProductStage.astro";
-import LipaCalc from "../../components/iphone/LipaCalc.astro";
-import TradeInCalc from "../../components/iphone/TradeInCalc.astro";
-import SeoProductBlocks from "../../components/iphone/SeoProductBlocks.astro";
+import { isListedForSale } from "../../../lib/listing-offers";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import ProductStage from "../../../components/iphone/ProductStage.astro";
+import LipaCalc from "../../../components/iphone/LipaCalc.astro";
+import TradeInCalc from "../../../components/iphone/TradeInCalc.astro";
+import SeoProductBlocks from "../../../components/iphone/SeoProductBlocks.astro";
+import StorageVariantGuide from "../../../components/iphone/StorageVariantGuide.astro";
 import {
   models,
   getModel,
@@ -32,11 +33,21 @@ import {
   accessoriesFor,
   relatedModels,
   type IphoneView,
-} from "../../lib/iphone";
+} from "../../../lib/iphone";
 import {
   listSeoModels,
   getSeoModel,
-  buildIphoneProductJsonLd,
+  buildIphoneVariantJsonLd,
+  storageCopy,
+  storageGb,
+  storagePath,
+  storageSlug,
+  sharedProductFaq,
+  EX_UK_CONDITION_LABEL,
+  EX_UK_WARRANTY,
+  type StorageOption,
+  type ColourOption,
+  type StorageCopy,
   SHOW_EX_UK,
   formatKesSeo,
   listSeriesHubs,
@@ -45,29 +56,31 @@ import {
   assertExUkWarrantyConfigured,
   seoIdToShopProductId,
   seoModelGallery,
-} from "../../lib/iphone/seo";
-import { getProduct } from "../../lib/products";
-import { withLiveSeoPrices } from "../../lib/iphone/seo/live";
-import { livePricedProduct, iphoneLiveId } from "../../lib/pricing/live";
-import { storageIdFromLabel } from "../../lib/pricing/iphone-sheet";
-import { listedVariantPrices } from "../../lib/listing-offers";
-import { site, whatsappUrl } from "../../lib/site";
-import StockChannelToggle from "../../components/StockChannelToggle.astro";
-import ProductReviews from "../../components/ProductReviews.astro";
-import RelatedGuides from "../../components/RelatedGuides.astro";
-import { reviewSchema } from "../../lib/seo/offer-schema";
-import StickyBuyBar from "../../components/StickyBuyBar.astro";
-import BackButton from "../../components/BackButton.astro";
-import TrackProductView from "../../components/TrackProductView.astro";
-import SeriesHub from "../../components/iphone/SeriesHub.astro";
-import IphoneScrollStory from "../../components/iphone/IphoneScrollStory.astro";
-import { scrollScenesFor } from "../../lib/iphone/scroll-scenes";
+} from "../../../lib/iphone/seo";
+import { getProduct } from "../../../lib/products";
+import { withLiveSeoPrices } from "../../../lib/iphone/seo/live";
+import { livePricedProduct, iphoneLiveId } from "../../../lib/pricing/live";
+import { storageIdFromLabel } from "../../../lib/pricing/iphone-sheet";
+import { listedVariantPrices } from "../../../lib/listing-offers";
+import { policy, site, whatsappUrl } from "../../../lib/site";
+import StockChannelToggle from "../../../components/StockChannelToggle.astro";
+import ProductReviews from "../../../components/ProductReviews.astro";
+import RelatedGuides from "../../../components/RelatedGuides.astro";
+import { reviewSchema } from "../../../lib/seo/offer-schema";
+import StickyBuyBar from "../../../components/StickyBuyBar.astro";
+import BackButton from "../../../components/BackButton.astro";
+import TrackProductView from "../../../components/TrackProductView.astro";
+import SeriesHub from "../../../components/iphone/SeriesHub.astro";
+import IphoneScrollStory from "../../../components/iphone/IphoneScrollStory.astro";
+import { scrollScenesFor } from "../../../lib/iphone/scroll-scenes";
 
 assertExUkWarrantyConfigured();
 
 export const prerender = false;
 
-const { model: modelId } = Astro.params;
+const { model: modelId, storage: storageParam } = Astro.params;
+// /iphone/<series-hub>/<anything> is not a page.
+if (storageParam && !getSeoModel(modelId!)) return Astro.redirect(`/iphone/${modelId}`, 301);
 const kind: "model" | "series" | undefined = getSeoModel(modelId!)
   ? "model"
   : getSeriesHub(modelId!)
@@ -101,7 +114,11 @@ let tag: string | null = null;
 let notes: ReturnType<typeof buyingNotes> = [];
 let fits: ReturnType<typeof accessoriesFor> = [];
 let related: ReturnType<typeof relatedModels> = [];
-let jsonLd: ReturnType<typeof buildIphoneProductJsonLd> | null = null;
+let jsonLd: Record<string, unknown> | null = null;
+let storageOptions: StorageOption[] = [];
+let colourOptions: (ColourOption & { image?: string })[] = [];
+let currentStorage: StorageOption | undefined;
+let copy: StorageCopy | undefined;
 let galleryPayload: Record<string, unknown> = {};
 let initialImg = {
   src: "/images/logo.png",
@@ -132,8 +149,11 @@ if (seo) {
   overviewOnly = model ? isOverviewOnly(model.id) : true;
   colours = model ? availableColours(model.id) : [];
   textColours = model ? textOnlyColours(model.id) : [];
+  const askedColour = (Astro.url.searchParams.get("colour") || "").toLowerCase();
   initialColour = model
-    ? defaultColourForModel(model.id, model.defaultColour ?? undefined)
+    ? colours.includes(askedColour)
+      ? askedColour
+      : defaultColourForModel(model.id, model.defaultColour ?? undefined)
     : null;
   initialImg = model
     ? getImage(model.id, initialColour, overviewOnly ? "overview" : 1, model.name)
@@ -165,9 +185,36 @@ if (seo) {
       const listed = listedVariantPrices(live, l);
       return listed.showNew || listed.showEx;
     });
-  // Feed links (?storage=256GB&condition=ex-uk) open on that exact option so the
-  // landing price matches the Google / Meta feed price.
-  const wantStorage = (Astro.url.searchParams.get("storage") || "").toLowerCase();
+  // Every listed storage option has its own page: /iphone/<model>/<storage>.
+  storageOptions = seo.variants
+    .filter((v) => v.newKes > 0 || v.exUkKes > 0)
+    .map((v) => ({
+      storage: v.storage,
+      slug: storageSlug(v.storage),
+      sheetId: v.sheetId,
+      newKes: v.newKes,
+      exUkKes: v.exUkKes,
+      inStock: v.stockStatus !== "out_of_stock",
+    }))
+    .sort((a, b) => storageGb(a.storage) - storageGb(b.storage));
+  const keepQuery = (drop: string[]) => {
+    const q = new URLSearchParams(Astro.url.search);
+    for (const k of drop) q.delete(k);
+    const out = q.toString();
+    return out ? `?${out}` : "";
+  };
+  if (storageParam) {
+    currentStorage = storageOptions.find((o) => o.slug === storageParam.toLowerCase());
+    // Unknown or unlisted size, or extra path segments: send people to the model page.
+    if (!currentStorage) return Astro.redirect(`/iphone/${seo.id}`, 301);
+    if (storageParam !== currentStorage.slug) return Astro.redirect(storagePath(seo.id, currentStorage.storage) + keepQuery([]), 301);
+  } else {
+    // Old feed and shared links (?storage=256GB) move to the storage page, keeping colour and condition.
+    const legacy = (Astro.url.searchParams.get("storage") || "").toLowerCase().replace(/\s+/g, "");
+    const target = legacy ? storageOptions.find((o) => o.slug === legacy) : undefined;
+    if (target) return Astro.redirect(storagePath(seo.id, target.storage) + keepQuery(["storage"]), 301);
+  }
+  const wantStorage = (currentStorage?.storage ?? "").toLowerCase();
   selectedIdx = Math.max(0, prices.findIndex((p) => p.label.toLowerCase() === wantStorage));
   wantExUk =
     (Astro.url.searchParams.get("condition") === "ex-uk" || live?.showNewOnWebsite === false) &&
@@ -181,11 +228,48 @@ if (seo) {
   notes = model ? buyingNotes(model) : [];
   fits = model ? accessoriesFor(model) : [];
   related = model ? relatedModels(model, models) : [];
-  jsonLd = buildIphoneProductJsonLd(seo, {
-    pageUrl,
-    imageUrl: new URL(initialImg.src, site.url).href,
+  // Colours: the photographed finishes plus any listed without photos yet.
+  const squash = (v: string) => v.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const stockList = (live?.coloursInStock ?? []).map(squash);
+  colourOptions = [...colours, ...textColours].map((key) => ({
+    key,
+    label: colourLabel(key),
+    hex: colourHex(key),
+    inStock: stockList.length ? stockList.includes(squash(key)) || stockList.includes(squash(colourLabel(key))) : null,
+    image: model && colours.includes(key) ? getImage(model.id, key, 1, model.name).src : undefined,
+  }));
+  if (currentStorage) {
+    copy = storageCopy({
+      modelName: seo.name,
+      modelId: seo.id,
+      option: currentStorage,
+      options: storageOptions,
+      colours: colourOptions,
+      specs: seo.specs,
+      exUkLabel: EX_UK_CONDITION_LABEL,
+      exUkWarranty: EX_UK_WARRANTY,
+      store: {
+        line: `${site.address}, ${site.landmark}`,
+        phone: site.phoneDisplay,
+        hours: site.hours.short,
+        warrantyYears: site.warranty.years,
+        returnDays: policy.returnWindowDays,
+        deliveryFromKes: policy.deliveryFromKes,
+        checkedOn: new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "Africa/Nairobi" }).format(new Date()),
+      },
+    });
+  }
+  const absImage = (src: string) => new URL(src, site.url).href;
+  jsonLd = buildIphoneVariantJsonLd(seo, {
+    modelUrl: pageUrl,
+    pageUrl: currentStorage ? new URL(storagePath(seo.id, currentStorage.storage), site.url).href : undefined,
+    pageName: copy?.h1,
+    storages: currentStorage ? [currentStorage] : storageOptions,
+    colours: colourOptions,
+    imageFor: (key) => absImage(key && model && colours.includes(key) ? getImage(model.id, key, 1, model.name).src : initialImg.src),
     seriesUrl: new URL(`/iphone/${seriesHub.slug}`, site.url).href,
-    reviews: await reviewSchema(seo.id, seoIdToShopProductId[seo.id]),
+    faq: copy ? copy.faq : [...seo.faq, ...sharedProductFaq],
+    reviews: currentStorage ? undefined : await reviewSchema(seo.id, seoIdToShopProductId[seo.id]),
   });
   colourData = hasLegacyGallery
     ? colours.map((key) => ({
@@ -224,7 +308,7 @@ if (seo) {
 
 {seriesPage ? <SeriesHub hub={seriesPage} /> : null}
 {seo && jsonLd ? (
-<BaseLayout title={seo.seoTitle} description={seo.metaDescription} image={initialImg.src}>
+<BaseLayout title={copy?.title ?? seo.seoTitle} description={copy?.metaDescription ?? seo.metaDescription} image={initialImg.src}>
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <TrackProductView
     id={seo.id}
@@ -271,7 +355,7 @@ if (seo) {
           ) : null}
         </div>
         <div class="ipdp__buy">
-          <h1>{seo.h1}</h1>
+          <h1>{copy?.h1 ?? seo.h1}</h1>
           <p class="ipdp__tagline">
             Price in Kenya · {formatKesSeo(seo.fromKes)}
           </p>
@@ -304,6 +388,15 @@ if (seo) {
           </a>
         </div>
       </div>
+      <StorageVariantGuide
+        modelId={seo.id}
+        modelName={seo.name}
+        options={storageOptions}
+        colours={colourOptions}
+        current={currentStorage}
+        copy={copy}
+        exUkLabel={EX_UK_CONDITION_LABEL}
+      />
       <SeoProductBlocks model={seo} />
     </article>
   ) : (
@@ -357,7 +450,7 @@ if (seo) {
           {tag ? <span class="ipdp__pill">{tag}</span> : null}
           <span class="ipdp__pill ipdp__pill--muted">{model.year}</span>
         </div>
-        <h1>{seo.h1}</h1>
+        <h1>{copy?.h1 ?? seo.h1}</h1>
         <StockChannelToggle show={live?.showNewOnWebsite !== false && live?.exUkShowOnWebsite !== false && prices.some((p) => (p.exUkKes ?? 0) > 0)} />
         <p class="ipdp__tagline">
           Price in Kenya · {formatKesSeo(seo.fromKes)}
@@ -381,10 +474,10 @@ if (seo) {
                   <button
                     type="button"
                     role="option"
-                    class:list={["ipdp__swatch", { "is-active": i === 0, "ipdp__swatch--light": c.light }]}
+                    class:list={["ipdp__swatch", { "is-active": c.key === initialColour, "ipdp__swatch--light": c.light }]}
                     style={`--swatch: ${c.hex}`}
                     aria-label={c.label}
-                    aria-selected={i === 0 ? "true" : "false"}
+                    aria-selected={c.key === initialColour ? "true" : "false"}
                     data-colour={c.key}
                   />
                 ))}
@@ -594,6 +687,15 @@ if (seo) {
       <RelatedGuides keywords={[seo.name, seo.name.replace(/ (Pro Max|Pro|Plus|mini)$/, ""), "iPhone"]} />
     </div>
 
+    <StorageVariantGuide
+      modelId={seo.id}
+      modelName={seo.name}
+      options={storageOptions}
+      colours={colourOptions}
+      current={currentStorage}
+      copy={copy}
+      exUkLabel={EX_UK_CONDITION_LABEL}
+    />
     <SeoProductBlocks model={seo} />
   </article>
 
@@ -633,6 +735,7 @@ if (seo) {
   months: iphoneConfig.lipa.monthsDefault,
   lipaRatePct: Math.round(lipaRate(iphoneConfig.lipa.monthsDefault) * 100),
   waBase: `https://wa.me/${iphoneConfig.whatsapp}?text=`,
+  storagePagePrefix: currentStorage ? `/iphone/${seo.id}/` : "",
 }}>
   const state = {
     colour: galleryPayload.initialColour,
@@ -799,6 +902,16 @@ if (seo) {
 
   document.querySelectorAll("[data-storage]").forEach((btn) => {
     btn.addEventListener("click", () => {
+      // On a storage page, another size is another page with its own price, colours and questions.
+      const slug = (btn.getAttribute("data-storage") || "").toLowerCase().replace(/\s+/g, "");
+      if (storagePagePrefix && !btn.classList.contains("is-active")) {
+        const q = new URLSearchParams();
+        if (state.colour) q.set("colour", state.colour);
+        if (state.channel === "ex-uk") q.set("condition", "ex-uk");
+        const query = q.toString();
+        location.assign(storagePagePrefix + slug + (query ? `?${query}` : ""));
+        return;
+      }
       document.querySelectorAll("[data-storage]").forEach((b) => b.classList.remove("is-active"));
       btn.classList.add("is-active");
       state.storage = btn.getAttribute("data-storage");

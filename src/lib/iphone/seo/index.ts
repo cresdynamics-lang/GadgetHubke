@@ -3,7 +3,8 @@ import type { IphoneSeoModel } from "./types";
 
 export type { IphoneSeoModel, SeoVariant, SeoFaq, SeoSpec } from "./types";
 export { sharedProductFaq, buyingBlock } from "./shared";
-export { buildIphoneProductJsonLd, buildSeriesHubJsonLd } from "./jsonld";
+export { buildIphoneProductJsonLd, buildIphoneVariantJsonLd, buildSeriesHubJsonLd } from "./jsonld";
+export { storageCopy, storageSlug, storageGb, storagePath, toneName, type StorageOption, type ColourOption, type StorageCopy } from "./variant-pages";
 export { variantsFromSheet } from "./prices";
 export { iphoneSeoCatalog } from "./catalog";
 export { seoModelGallery, type SeoGalleryImage } from "./gallery";

@@ -43,6 +43,18 @@ const category = /^(Apple Watch|Apple TV|Apple Pencil|Magic \w+)/.exec(productNa
     </table>
   </div>
 
+  {seo.options.length ? (
+    <>
+      <h3>Every {productName} configuration</h3>
+      {seo.options.map((o) => (
+        <div class="pseo__option" id={o.id}>
+          <h4>{o.title}</h4>
+          {o.paragraphs.map((p) => <p>{p}</p>)}
+        </div>
+      ))}
+    </>
+  ) : null}
+
   <h3>Buying in Nairobi</h3>
   <ul class="pseo__list">
     <li>Apple Authorised Reseller: genuine Apple stock with a Gadget Hub invoice{seo.hasExUk ? " — sealed new (1-year warranty) or Ex-UK" : ", sealed with a 1-year warranty"}.</li>
@@ -78,6 +90,8 @@ const category = /^(Apple Watch|Apple TV|Apple Pencil|Magic \w+)/.exec(productNa
   .pseo { margin: 3rem auto; max-width: 860px; }
   .pseo h2 { font-size: clamp(1.4rem, 3vw, 1.9rem); letter-spacing: -0.02em; margin: 0 0 0.75rem; }
   .pseo h3 { font-size: 1.1rem; margin: 1.75rem 0 0.5rem; }
+  .pseo h4 { font-size: 1rem; margin: 1.1rem 0 0.3rem; }
+  .pseo__option p { margin: 0 0 0.4rem; line-height: 1.6; }
   .pseo__intro { color: #3a3a3c; line-height: 1.6; }
   .pseo__table-wrap { overflow-x: auto; margin-top: 1rem; }
   .pseo__table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }

@@ -1,0 +1,226 @@
+---
+/**
+ * Storage options as their own pages. On a model page: links to every storage page.
+ * On a storage page: the full story for that phone, its colours, the other sizes and
+ * its questions. Server-rendered so Google reads it without JavaScript.
+ */
+import { formatKesSeo, storagePath, type ColourOption, type StorageCopy, type StorageOption } from "../../lib/iphone/seo";
+import { lipaPlan } from "../../lib/pricing/lipa";
+import { whatsappUrl } from "../../lib/site";
+
+interface Props {
+  modelId: string;
+  modelName: string;
+  options: StorageOption[];
+  colours: (ColourOption & { image?: string })[];
+  /** Set on a storage page. */
+  current?: StorageOption;
+  copy?: StorageCopy;
+  exUkLabel: string;
+}
+
+const { modelId, modelName, options, colours, current, copy, exUkLabel } = Astro.props;
+const priceOf = (o: StorageOption) => o.newKes || o.exUkKes;
+const colourNames = colours.map((c) => c.label).join(", ");
+const wa = current
+  ? whatsappUrl(`Hi Gadget Hub, I'd like the ${modelName} ${current.storage}. Which colours do you have today?`)
+  : "";
+---
+
+<section class="svg-guide" aria-labelledby="svg-guide-title" id="storage-options">
+  {
+    current && copy ? (
+      <>
+        <h2 id="svg-guide-title">{copy.h1}: everything you need to know</h2>
+        <dl class="svg-guide__glance" aria-label={`${copy.h1} at a glance`}>
+          {copy.glance.map((g) => (
+            <div>
+              <dt>{g.label}</dt>
+              <dd>{g.value}</dd>
+            </div>
+          ))}
+        </dl>
+        {copy.sections.map((s) => (
+          <div class="svg-guide__block" id={`variant-${s.id}`}>
+            <h3>{s.heading}</h3>
+            {s.paragraphs.map((p) => <p>{p}</p>)}
+            {s.id === "colours" ? (
+              <ul class="svg-guide__colours">
+                {colours.map((c, i) => (
+                  <li>
+                    <a href={`${storagePath(modelId, current.storage)}?colour=${c.key}`}>
+                      {c.image ? (
+                        <img src={c.image} alt={`${modelName} ${current.storage} in ${c.label}`} width="96" height="96" loading="lazy" decoding="async" />
+                      ) : (
+                        <span class="svg-guide__dot" style={`--dot: ${c.hex}`} aria-hidden="true" />
+                      )}
+                      <span>{s.list?.[i] ?? c.label}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : s.list ? (
+              <ul class="svg-guide__list">
+                {s.list.map((item) => <li>{item}</li>)}
+              </ul>
+            ) : null}
+          </div>
+        ))}
+        <p class="svg-guide__cta">
+          <a class="btn btn--whatsapp" href={wa} target="_blank" rel="noopener noreferrer">Ask about the {copy.h1} on WhatsApp</a>
+        </p>
+      </>
+    ) : (
+      <h2 id="svg-guide-title">Choose your exact {modelName}</h2>
+    )
+  }
+
+  <div class="svg-guide__block">
+    <h3>{current ? `All ${modelName} storage options` : `Each ${modelName} storage size has its own page`}</h3>
+    {!current ? (
+      <p>
+        The {modelName} comes in {options.map((o) => o.storage).join(", ")}{colourNames ? `, in ${colourNames}` : ""}. Open a size for its price,
+        colours, Lipa Mdogo Mdogo plan and the questions people ask about it.
+      </p>
+    ) : null}
+    <ul class="svg-guide__options">
+      {options.map((o) => {
+        const plan = lipaPlan(priceOf(o), 40, 6);
+        const here = current?.slug === o.slug;
+        return (
+          <li class:list={{ "is-current": here }}>
+            <a href={storagePath(modelId, o.storage)} aria-current={here ? "page" : undefined}>
+              <strong>{modelName} {o.storage}</strong>
+              <span>{o.newKes ? `${formatKesSeo(o.newKes)} new` : ""}{o.newKes && o.exUkKes ? " · " : ""}{o.exUkKes ? `${formatKesSeo(o.exUkKes)} ${exUkLabel}` : ""}</span>
+              <span class="svg-guide__muted">or {formatKesSeo(plan.monthlyKes)} a month after a {formatKesSeo(plan.depositKes)} deposit{o.inStock ? "" : " · out of stock"}</span>
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+
+  {
+    current && copy ? (
+      <div class="svg-guide__block">
+        <h3>{copy.h1} questions</h3>
+        <dl class="svg-guide__faq">
+          {copy.faq.map((f) => (
+            <>
+              <dt>{f.question}</dt>
+              <dd>{f.answer}</dd>
+            </>
+          ))}
+        </dl>
+        <p><a href={`/iphone/${modelId}`}>See the full {modelName} page</a></p>
+      </div>
+    ) : null
+  }
+</section>
+
+<style>
+  .svg-guide {
+    max-width: 52rem;
+    margin: var(--space-10, 2.5rem) auto;
+    padding-inline: var(--space-4, 1rem);
+  }
+  .svg-guide h2 {
+    font-size: clamp(1.3rem, 3vw, 1.75rem);
+    margin-bottom: var(--space-4, 1rem);
+  }
+  .svg-guide h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+  .svg-guide__block {
+    margin-bottom: var(--space-8, 2rem);
+  }
+  .svg-guide__block p {
+    line-height: 1.6;
+    margin-bottom: 0.6rem;
+    color: var(--color-fg);
+  }
+  .svg-guide__list {
+    padding-left: 1.1rem;
+    line-height: 1.6;
+  }
+  .svg-guide__colours,
+  .svg-guide__options {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .svg-guide__colours {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  }
+  .svg-guide__colours a,
+  .svg-guide__options a {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.7rem 0.85rem;
+    border: 1px solid var(--color-border, #d2d2d7);
+    border-radius: 0.75rem;
+    color: inherit;
+    text-decoration: none;
+  }
+  .svg-guide__colours img {
+    width: 3.5rem;
+    height: 3.5rem;
+    object-fit: contain;
+    flex: none;
+  }
+  .svg-guide__dot {
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    background: var(--dot);
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    flex: none;
+  }
+  .svg-guide__options {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  }
+  .svg-guide__options a {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+  }
+  .svg-guide__options .is-current a {
+    border-color: var(--color-fg);
+    border-width: 2px;
+  }
+  .svg-guide__muted {
+    font-size: 0.85rem;
+    color: var(--color-fg-muted);
+  }
+  .svg-guide__glance {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
+    gap: 0.5rem 1rem;
+    margin: 0 0 var(--space-8, 2rem);
+    padding: 1rem;
+    border-radius: 0.75rem;
+    background: var(--color-bg-subtle, #f5f5f7);
+  }
+  .svg-guide__glance dt {
+    font-size: 0.78rem;
+    color: var(--color-fg-muted);
+  }
+  .svg-guide__glance dd {
+    margin: 0.1rem 0 0;
+    font-weight: 600;
+  }
+  .svg-guide__faq dt {
+    font-weight: 600;
+    margin-top: 0.8rem;
+  }
+  .svg-guide__faq dd {
+    margin: 0.25rem 0 0;
+    line-height: 1.6;
+  }
+  .svg-guide__cta {
+    margin-top: var(--space-4, 1rem);
+  }
+</style>

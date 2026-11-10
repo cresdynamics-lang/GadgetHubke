@@ -5,7 +5,8 @@ import { productNav } from "../lib/catalog";
 import { listPublishedJournalPosts } from "../lib/journal";
 import { products } from "../lib/products";
 import { tvHomeModels } from "../lib/tv-home";
-import { listSeoModels, listSeriesHubs, getSeoModel, getSeoModelByName } from "../lib/iphone/seo";
+import { listSeoModels, listSeriesHubs, getSeoModel, getSeoModelByName, storagePath } from "../lib/iphone/seo";
+import { withLiveSeoPrices } from "../lib/iphone/seo/live";
 import { defaultPricedCatalog, iphoneLiveId, isShownOnWebsite, livePricedCatalog } from "../lib/pricing/live";
 import { caseProducts, keyboards, mice, pencils, powerProducts, trackpads } from "../lib/accessories";
 
@@ -83,6 +84,11 @@ export const GET: APIRoute = async () => {
   for (const m of listSeoModels()) {
     if (!iphoneListed(m.id)) continue;
     urls.add(abs(`/iphone/${m.id}`));
+    // Each listed storage option is its own page (iPhone 18 Pro Max 256GB, 512GB, ...).
+    const priced = withLiveSeoPrices(m, live.find((p) => p.id === iphoneLiveId(m.id)));
+    for (const v of priced.variants) {
+      if (v.newKes > 0 || v.exUkKes > 0) urls.add(abs(storagePath(m.id, v.storage)));
+    }
     for (const c of m.compareWith) {
       if (c.split("-vs-").every((id) => getSeoModel(id) && iphoneListed(id))) urls.add(abs(`/iphone/compare/${c}`));
     }

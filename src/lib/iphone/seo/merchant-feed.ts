@@ -2,6 +2,7 @@
  * Google Merchant Center feed rows from the same SEO + sheet data as the pages.
  * EX-UK variants are excluded while SHOW_EX_UK is false.
  */
+import { storagePath } from "./variant-pages";
 import { seoModelGallery } from "./gallery";
 import { publicFileExists } from "../../public-file";
 import { site } from "../../site";
@@ -65,10 +66,9 @@ function resolveImage(modelId: string, name: string): string | undefined {
   return undefined;
 }
 
-/** Product page opened on this storage (and Ex-UK), so the page price matches the feed. */
+/** The storage option's own page (and Ex-UK), so the page price matches the feed with no redirect. */
 function variantLink(modelId: string, storage: string, exUk = false): string {
-  const url = new URL(`/iphone/${modelId}`, site.url);
-  url.searchParams.set("storage", storage);
+  const url = new URL(storagePath(modelId, storage), site.url);
   if (exUk) url.searchParams.set("condition", "ex-uk");
   return url.href;
 }
