@@ -1,0 +1,267 @@
+---
+/**
+ * Full-screen Black November deal for iPhone 17 Pro.
+ * Pops after 5s on first landing per session; dismiss with X.
+ */
+const videoSrc = "/promos/iphone-17-pro-black-november.mp4";
+const posterSrc = "/promos/iphone-17-pro-black-november-poster.jpg";
+const href = "/iphone/iphone-17-pro";
+const priceLabel = "From KSh 158,000";
+---
+
+<dialog class="bn-deal" data-bn-deal aria-label="Black November deal — iPhone 17 Pro">
+  <button type="button" class="bn-deal__close" data-bn-close aria-label="Close deal">
+    <span aria-hidden="true">×</span>
+  </button>
+
+  <div class="bn-deal__stage">
+    <video
+      class="bn-deal__video"
+      data-bn-video
+      src={videoSrc}
+      poster={posterSrc}
+      muted
+      playsinline
+      loop
+      preload="none"
+      aria-hidden="true"
+    ></video>
+    <img class="bn-deal__poster" src={posterSrc} alt="" width="1080" height="1080" decoding="async" />
+  </div>
+
+  <div class="bn-deal__copy">
+    <p class="bn-deal__eyebrow">Black November at Gadget Hub</p>
+    <h2 class="bn-deal__title">iPhone 17 Pro</h2>
+    <p class="bn-deal__sub">Cosmic Orange · A19 Pro · three 48MP cameras</p>
+    <p class="bn-deal__price">{priceLabel}</p>
+    <a class="bn-deal__cta" href={href} data-bn-cta>View deal</a>
+  </div>
+</dialog>
+
+<script>
+  const KEY = "gh-bn-17pro-2025";
+  const DELAY_MS = 5000;
+  const path = window.location.pathname || "";
+  const skip =
+    path.startsWith("/admin") ||
+    path.startsWith("/management") ||
+    path.startsWith("/checkout");
+
+  const dialog = document.querySelector("[data-bn-deal]");
+  if (!(dialog instanceof HTMLDialogElement) || skip) {
+    dialog?.remove();
+  } else if (typeof sessionStorage !== "undefined" && sessionStorage.getItem(KEY) === "1") {
+    dialog.remove();
+  } else {
+    const video = dialog.querySelector("[data-bn-video]");
+    const closeBtn = dialog.querySelector("[data-bn-close]");
+    const cta = dialog.querySelector("[data-bn-cta]");
+    let opened = false;
+
+    function markSeen() {
+      try {
+        sessionStorage.setItem(KEY, "1");
+      } catch {
+        /* private mode */
+      }
+    }
+
+    function closeDeal() {
+      if (video instanceof HTMLVideoElement) {
+        video.pause();
+      }
+      dialog.close();
+      markSeen();
+    }
+
+    function openDeal() {
+      if (opened) return;
+      opened = true;
+      dialog.showModal();
+      document.documentElement.classList.add("bn-deal-open");
+      if (video instanceof HTMLVideoElement) {
+        const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (!reduce) {
+          video.play().catch(() => {
+            /* autoplay blocked — poster stays */
+          });
+        }
+      }
+    }
+
+    dialog.addEventListener("close", () => {
+      document.documentElement.classList.remove("bn-deal-open");
+      markSeen();
+    });
+
+    closeBtn?.addEventListener("click", closeDeal);
+    cta?.addEventListener("click", () => markSeen());
+    dialog.addEventListener("click", (e) => {
+      if (e.target === dialog) closeDeal();
+    });
+    dialog.addEventListener("cancel", (e) => {
+      e.preventDefault();
+      closeDeal();
+    });
+
+    window.setTimeout(openDeal, DELAY_MS);
+  }
+</script>
+
+<style>
+  .bn-deal {
+    border: none;
+    padding: 0;
+    margin: 0;
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    background: #0a0a0a;
+    color: #f5f5f7;
+    overflow: hidden;
+  }
+
+  .bn-deal::backdrop {
+    background: rgba(0, 0, 0, 0.92);
+  }
+
+  .bn-deal[open] {
+    display: grid;
+    grid-template-rows: 1fr auto;
+  }
+
+  .bn-deal__close {
+    position: absolute;
+    top: max(0.65rem, env(safe-area-inset-top));
+    right: max(0.65rem, env(safe-area-inset-right));
+    z-index: 3;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: none;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+    font-size: 1.65rem;
+    line-height: 1;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    backdrop-filter: blur(8px);
+  }
+
+  .bn-deal__close:hover {
+    background: rgba(255, 255, 255, 0.28);
+  }
+
+  .bn-deal__stage {
+    position: relative;
+    min-height: 0;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 40%, #2a1a12 0%, #0a0a0a 70%);
+  }
+
+  .bn-deal__video,
+  .bn-deal__poster {
+    grid-area: 1 / 1;
+    width: min(92vw, 34rem);
+    height: auto;
+    max-height: min(58dvh, 34rem);
+    object-fit: contain;
+  }
+
+  .bn-deal__poster {
+    z-index: 0;
+  }
+
+  .bn-deal__video {
+    z-index: 1;
+    background: transparent;
+  }
+
+  .bn-deal__video:not([src]),
+  .bn-deal__video[data-failed] {
+    opacity: 0;
+  }
+
+  .bn-deal__copy {
+    position: relative;
+    z-index: 2;
+    padding: 1.1rem 1.25rem calc(1.35rem + env(safe-area-inset-bottom));
+    text-align: center;
+    background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.88) 28%, #000);
+  }
+
+  .bn-deal__eyebrow {
+    margin: 0 0 0.35rem;
+    font-size: 0.72rem;
+    font-weight: 650;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #f5a623;
+  }
+
+  .bn-deal__title {
+    margin: 0;
+    font-size: clamp(1.55rem, 5.5vw, 2.35rem);
+    letter-spacing: -0.03em;
+    font-weight: 700;
+  }
+
+  .bn-deal__sub {
+    margin: 0.35rem 0 0;
+    font-size: clamp(0.78rem, 2.6vw, 0.95rem);
+    color: rgba(245, 245, 247, 0.72);
+  }
+
+  .bn-deal__price {
+    margin: 0.55rem 0 0.9rem;
+    font-size: clamp(1rem, 3.2vw, 1.2rem);
+    font-weight: 650;
+  }
+
+  .bn-deal__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    padding: 0.7rem 1.4rem;
+    border-radius: 999px;
+    background: #f5a623;
+    color: #111;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
+  }
+
+  .bn-deal__cta:hover {
+    filter: brightness(1.06);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bn-deal__video {
+      display: none;
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .bn-deal[open] {
+      grid-template-columns: 1.15fr 0.85fr;
+      grid-template-rows: 1fr;
+    }
+
+    .bn-deal__copy {
+      display: grid;
+      align-content: center;
+      text-align: left;
+      padding: 2.5rem 2.75rem;
+      background: #000;
+    }
+
+    .bn-deal__cta {
+      justify-self: start;
+    }
+  }
+</style>
