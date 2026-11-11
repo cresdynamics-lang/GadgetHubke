@@ -139,6 +139,21 @@
   --watch-radius: 1.5rem;
 }
 
+/* Phone-first: slightly tighter type so shop cards and copy do not crowd. */
+@media (max-width: 39.99rem) {
+  :root {
+    --text-xs: 0.68rem;
+    --text-sm: 0.78rem;
+    --text-base: 0.92rem;
+    --text-lg: 1.02rem;
+    --text-xl: 1.12rem;
+    --text-2xl: 1.3rem;
+    --text-3xl: 1.55rem;
+    --text-4xl: 1.85rem;
+    --gutter: 0.9rem;
+  }
+}
+
 @media (min-width: 40rem) {
   :root {
     --fab-clearance: 4.5rem;

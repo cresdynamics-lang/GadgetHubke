@@ -29,9 +29,13 @@ export function bindLandingViewState(opts: {
       const active = (b.getAttribute("data-gen") || "") === gen;
       b.classList.toggle("is-active", active);
     });
+    const channel = document.documentElement.getAttribute("data-listing-channel") || "all";
     grid.querySelectorAll(itemSelector).forEach((li) => {
       if (!(li instanceof HTMLElement)) return;
-      li.hidden = gen !== "all" && li.getAttribute("data-chip-gen") !== gen;
+      const genOk = gen === "all" || li.getAttribute("data-chip-gen") === gen;
+      const ch = li.getAttribute("data-channel") || "new";
+      const channelOk = channel === "all" || ch === channel;
+      li.hidden = !(genOk && channelOk);
     });
   }
 
@@ -65,6 +69,11 @@ export function bindLandingViewState(opts: {
     }
   }
 
+  function currentGen() {
+    const active = document.querySelector(`${genButtonSelector}.is-active`);
+    return active?.getAttribute("data-gen") || "all";
+  }
+
   if (withGenFilter) {
     document.querySelectorAll(genButtonSelector).forEach((btn) => {
       if (!(btn instanceof HTMLElement) || btn.dataset.landingBound === "1") return;
@@ -79,6 +88,7 @@ export function bindLandingViewState(opts: {
         applyGen(gen);
       });
     });
+    document.addEventListener("gh:listing-channel", () => applyGen(currentGen()));
   }
 
   grid.addEventListener("click", (e) => {

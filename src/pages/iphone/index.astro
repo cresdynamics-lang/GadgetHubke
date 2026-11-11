@@ -10,6 +10,7 @@ import { buildCategorySeo, formatKes as formatKesSeoHub } from "../../lib/seo/pr
 import { listSeoModels } from "../../lib/iphone/seo";
 import IphoneCard from "../../components/iphone/IphoneCard.astro";
 import IphoneQuiz from "../../components/iphone/IphoneQuiz.astro";
+import CategoryFilters from "../../components/CategoryFilters.astro";
 import ProductCard from "../../components/ProductCard.astro";
 import { filterColours, listingRows } from "../../lib/listing-offers";
 import {
@@ -201,6 +202,9 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
       </div>
 
       <div class="ishop__toolbar">
+        <CategoryFilters>
+          <IphoneQuiz />
+        </CategoryFilters>
         <label class="ishop__sort">
           <span>Sort</span>
           <select data-sort>
@@ -233,8 +237,6 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
       </ul>
       <p class="ishop__none" data-none hidden>No models match those filters.</p>
       <p class="ishop__disclaimer">{iphoneConfig.samplePriceDisclaimer}</p>
-
-      <IphoneQuiz />
     </div>
   </section>
 
@@ -266,6 +268,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
   const sortSel = document.querySelector("[data-sort]");
   let family = "all";
   let size = "all";
+  let channel = document.documentElement.getAttribute("data-listing-channel") || "all";
 
   function sizeMatch(tier, sizeKey) {
     if (sizeKey === "all") return true;
@@ -277,13 +280,20 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
     return true;
   }
 
+  function channelMatch(el) {
+    if (channel === "all") return true;
+    return (el.getAttribute("data-channel") || "new") === channel;
+  }
+
   function refresh() {
+    channel = document.documentElement.getAttribute("data-listing-channel") || "all";
     const sort = sortSel?.value || "newest";
     const visible = cards.filter((li) => {
       const f = li.getAttribute("data-family");
       const tier = li.getAttribute("data-tier");
       if (family !== "all" && f !== family) return false;
       if (!sizeMatch(tier, size)) return false;
+      if (!channelMatch(li)) return false;
       return true;
     });
 
@@ -315,9 +325,18 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
     document.querySelectorAll("[data-latest-block]").forEach((block) => {
       if (!(block instanceof HTMLElement)) return;
       const g = block.getAttribute("data-family-group");
-      const show = family === "all" || family === g;
+      const genShow = family === "all" || family === g;
+      const cardsInBlock = [...block.querySelectorAll("[data-latest-card]")];
+      cardsInBlock.forEach((card) => {
+        if (!(card instanceof HTMLElement)) return;
+        card.hidden = !channelMatch(card);
+      });
+      const channelShow = cardsInBlock.some((c) => c instanceof HTMLElement && !c.hidden);
+      const show = genShow && (channel === "all" || channelShow);
+      if (!genShow) block.setAttribute("data-gen-hidden", "1");
+      else block.removeAttribute("data-gen-hidden");
       block.hidden = !show;
-      if (show) latestVisible += block.querySelectorAll("[data-latest-card]").length;
+      if (show) latestVisible += cardsInBlock.filter((c) => c instanceof HTMLElement && !c.hidden).length;
     });
     const legacyHead = document.querySelector("[data-legacy-head]");
     if (legacyHead instanceof HTMLElement) {
@@ -355,6 +374,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
   });
 
   sortSel?.addEventListener("change", refresh);
+  document.addEventListener("gh:listing-channel", () => refresh());
 
   // Compare
   const selected = [];

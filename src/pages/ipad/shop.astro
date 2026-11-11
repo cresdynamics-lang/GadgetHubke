@@ -5,6 +5,8 @@
 export const prerender = false;
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import IpadCard from "../../components/ipad/IpadCard.astro";
+import IpadQuiz from "../../components/ipad/IpadQuiz.astro";
+import CategoryFilters from "../../components/CategoryFilters.astro";
 import { filterVisibleById, livePricedCatalog, websiteVisibleIdSet } from "../../lib/pricing/live";
 import { listingRows } from "../../lib/listing-offers";
 import {
@@ -72,6 +74,11 @@ const ipadShopRows = listingRows(list, await livePricedCatalog(), {
     </nav>
     <h1>Shop iPad</h1>
     <p class="ipad-shop__intro">{ipadConfig.samplePriceDisclaimer}</p>
+    <div class="ipad-shop__guide">
+      <CategoryFilters>
+        <IpadQuiz />
+      </CategoryFilters>
+    </div>
 
     <div class="ipad-shop__filters" role="group" aria-label="Family">
       <a class:list={["ipad-chip", { "is-active": !family }]} href={qs({ family: null })}>All</a>
@@ -124,7 +131,7 @@ const ipadShopRows = listingRows(list, await livePricedCatalog(), {
     <p class="ipad-shop__count">{list.length} models</p>
     <ul class="ipad-shop__grid" data-ipad-shop-grid>
       {ipadShopRows.map(({ item: m, offer }) => (
-        <li>
+        <li data-channel={offer.channel}>
           <IpadCard model={m} compare={false} channel={offer.channel} priceKes={offer.priceKes || m.basePriceKes} coloursInStock={offer.colours} href={offer.href} />
         </li>
       ))}
@@ -162,6 +169,9 @@ const ipadShopRows = listingRows(list, await livePricedCatalog(), {
   .ipad-shop__intro {
     color: var(--color-fg-muted);
     max-width: 40rem;
+  }
+  .ipad-shop__guide {
+    margin: 0.75rem 0 1rem;
   }
   .ipad-shop__filters,
   .ipad-shop__toggles {

@@ -3,6 +3,7 @@
  * Paths come from generated-manifest.json (run: npm run ipad:manifest).
  */
 
+import { hasStoreAngles } from "../store-angles";
 import generated from "./generated-manifest.json";
 import type { IpadModel } from "./models";
 
@@ -145,6 +146,8 @@ export function pageAssetAliases(family: IpadModel["family"], kinds: string[]): 
 }
 
 export function missingStoreShot(model: IpadModel): boolean {
+  // Per-colour store angles count as real product shots for cards and PDPs.
+  if (hasStoreAngles(model.id)) return false;
   return Boolean(model.overviewOnly) || !PRODUCT_FOLDER[model.id];
 }
 

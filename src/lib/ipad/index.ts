@@ -24,6 +24,8 @@ export {
 export {
   getIpadImage,
   defaultIpadColour,
+  ipadCardPrimarySrc,
+  ipadCardHoverSrc,
   ipadViewerTabs,
   ipadLidFrames,
   relatedIpadModels,

@@ -3,6 +3,8 @@
  * Paths come from generated-manifest.json (run: npm run mac:manifest).
  */
 
+import { publicFileExists } from "../public-file";
+import { hasStoreAngles } from "../store-angles";
 import generated from "./generated-manifest.json";
 import type { MacModel } from "./models";
 
@@ -20,14 +22,14 @@ const g = generated as GenManifest;
 
 const PRODUCT_FOLDER: Record<string, string | null> = {
   "macbook-air-13-m1": "MacBook_Air/Air_2018-2020_chassis_(M1_2020_same_design)",
-  "macbook-air-13-m2": null, // overview only
+  "macbook-air-13-m2": "MacBook_Air/Air_13in_M3_2024", // same chassis family; store angles preferred
   "macbook-air-15-m2": "MacBook_Air/Air_15in_M2_2023",
   "macbook-air-13-m3": "MacBook_Air/Air_13in_M3_2024",
-  "macbook-air-15-m3": null,
+  "macbook-air-15-m3": "MacBook_Air/Air_15in_M2_2023", // same 15″ Air design
   "macbook-air-13-m4": "MacBook_Air/Air_13in_M4_2025",
   "macbook-air-15-m4": "MacBook_Air/Air_15in_M4_2025",
-  "macbook-air-13-m5": null,
-  "macbook-air-15-m5": null,
+  "macbook-air-13-m5": "MacBook_Air/Air_13in_M4_2025", // same chassis as M4; store angles preferred
+  "macbook-air-15-m5": "MacBook_Air/Air_15in_M4_2025",
   "macbook-pro-13-m1": "MacBook_Pro/Pro_13in_M1_2020",
   "macbook-pro-13-m2": "MacBook_Pro/Pro_13in_M2_2022",
   "macbook-pro-14-m1-pro": "MacBook_Pro/Pro_14in_16in_M1_Pro_Max_2021",
@@ -40,9 +42,9 @@ const PRODUCT_FOLDER: Record<string, string | null> = {
   "macbook-pro-14-m4": "MacBook_Pro/Pro_14in_16in_M4_family_2024",
   "macbook-pro-14-m4-pro": "MacBook_Pro/Pro_14in_16in_M4_family_2024",
   "macbook-pro-16-m4-pro": "MacBook_Pro/Pro_14in_16in_M4_family_2024",
-  "macbook-pro-14-m5": null,
-  "macbook-pro-14-m5-pro": null,
-  "macbook-pro-16-m5-pro": null,
+  "macbook-pro-14-m5": "MacBook_Pro/Pro_14in_16in_M4_family_2024", // same chassis as M4; store angles preferred
+  "macbook-pro-14-m5-pro": "MacBook_Pro/Pro_14in_16in_M4_family_2024",
+  "macbook-pro-16-m5-pro": "MacBook_Pro/Pro_14in_16in_M4_family_2024",
 };
 
 const OVERVIEW_KEY: Record<string, string> = {
@@ -72,21 +74,36 @@ const OVERVIEW_KEY: Record<string, string> = {
   "macbook-pro-16-m5-pro": "macbook-pro-16in-m5-pro-m5-max",
 };
 
-/** For 14/16 shared folders, filter product filenames by mbp14 / mbp16. */
+/** Rewrite shared-folder select shots to the matching 14″ / 16″ file when present. */
+function sizeMatchedProductPath(modelId: string, src: string): string | null {
+  const want14 = modelId.includes("-14-");
+  const want16 = modelId.includes("-16-");
+  if (want14 && /mbp16/i.test(src)) {
+    const alt = src.replace(/mbp16/gi, "mbp14");
+    return publicFileExists(alt) ? alt : null;
+  }
+  if (want16 && /mbp14/i.test(src)) {
+    const alt = src.replace(/mbp14/gi, "mbp16");
+    return publicFileExists(alt) ? alt : null;
+  }
+  if (want14 && /mbp14/i.test(src)) return src;
+  if (want16 && /mbp16/i.test(src)) return src;
+  if (!want14 && !want16) return src;
+  // Size-tagged folder entry that already matches, or untagged Air-style selects.
+  if (!/mbp1[46]/i.test(src)) return src;
+  return publicFileExists(src) ? src : null;
+}
+
+/** For 14/16 shared folders, prefer the select shot for this screen size. */
 function productColourMap(modelId: string): Record<string, string> {
   const folder = PRODUCT_FOLDER[modelId];
   if (!folder) return {};
   const raw = g.productsByFolder[folder] || {};
   const out: Record<string, string> = {};
-  const want14 = modelId.includes("-14-");
-  const want16 = modelId.includes("-16-");
   for (const [colour, src] of Object.entries(raw)) {
     if (colour === "_misc" || Array.isArray(src)) continue;
-    const path = String(src);
-    if (want14 && !/mbp14/i.test(path) && /mbp16/i.test(path)) continue;
-    if (want16 && !/mbp16/i.test(path) && /mbp14/i.test(path)) continue;
-    // M3 base uses space-gray/silver; Pro uses space-black/silver - keep all available
-    out[colour] = path;
+    const matched = sizeMatchedProductPath(modelId, String(src));
+    if (matched) out[colour] = matched;
   }
   return out;
 }
@@ -142,6 +159,8 @@ export function proPageKeys(): string[] {
 }
 
 export function missingStoreShot(model: MacModel): boolean {
+  // Per-colour store angles count as real product shots for cards and choose tiles.
+  if (hasStoreAngles(model.id)) return false;
   return Boolean(model.overviewOnly) || !PRODUCT_FOLDER[model.id];
 }
 

@@ -112,7 +112,6 @@ export const ipadModels: IpadModel[] = [
       "Apple Pencil (2nd gen) support.",
     ],
     basePriceKes: P["ipad-pro-11-2020"],
-    overviewOnly: true,
     notes: "Check battery health and condition on older stock.",
   },
   {
@@ -160,7 +159,6 @@ export const ipadModels: IpadModel[] = [
       "Magic Keyboard ready.",
     ],
     basePriceKes: P["ipad-pro-12-9-2020"],
-    overviewOnly: true,
   },
   {
     id: "ipad-pro-11-m1",
@@ -207,7 +205,6 @@ export const ipadModels: IpadModel[] = [
       "Apple Intelligence supported.",
     ],
     basePriceKes: P["ipad-pro-11-m1"],
-    overviewOnly: true,
   },
   {
     id: "ipad-pro-12-9-m1",
@@ -255,7 +252,6 @@ export const ipadModels: IpadModel[] = [
       "Apple Intelligence supported.",
     ],
     basePriceKes: P["ipad-pro-12-9-m1"],
-    overviewOnly: true,
   },
   {
     id: "ipad-pro-11-m2",
@@ -302,7 +298,6 @@ export const ipadModels: IpadModel[] = [
       "Same compact Pro design.",
     ],
     basePriceKes: P["ipad-pro-11-m2"],
-    overviewOnly: true,
   },
   {
     id: "ipad-pro-12-9-m2",
@@ -350,7 +345,6 @@ export const ipadModels: IpadModel[] = [
       "Apple Intelligence supported.",
     ],
     basePriceKes: P["ipad-pro-12-9-m2"],
-    overviewOnly: true,
   },
   {
     id: "ipad-pro-11-m4",
@@ -592,7 +586,6 @@ export const ipadModels: IpadModel[] = [
       "Apple Pencil (2nd gen).",
     ],
     basePriceKes: P["ipad-air-4"],
-    overviewOnly: true,
   },
   {
     id: "ipad-air-5",
@@ -638,7 +631,6 @@ export const ipadModels: IpadModel[] = [
       "Five colours.",
     ],
     basePriceKes: P["ipad-air-5"],
-    overviewOnly: true,
   },
   {
     id: "ipad-air-11-m2",
@@ -954,7 +946,6 @@ export const ipadModels: IpadModel[] = [
       "Apple Pencil (2nd gen).",
     ],
     basePriceKes: P["ipad-mini-6"],
-    overviewOnly: true,
   },
   {
     id: "ipad-mini-a17-pro",
@@ -1037,7 +1028,7 @@ export const ipadModels: IpadModel[] = [
     weightG: 490,
     thicknessKey: "ipad",
     colours: ["space-gray", "silver", "gold"],
-    defaultColour: "space-gray",
+    defaultColour: "silver",
     appleIntelligence: false,
     tagline: "Home-button classic.",
     whoItSuits: "Kids and first tablets on a tight budget - check condition.",
@@ -1047,7 +1038,6 @@ export const ipadModels: IpadModel[] = [
       "Lowest price in the range.",
     ],
     basePriceKes: P["ipad-8"],
-    overviewOnly: true,
   },
   {
     id: "ipad-9",
@@ -1083,7 +1073,7 @@ export const ipadModels: IpadModel[] = [
     weightG: 487,
     thicknessKey: "ipad",
     colours: ["space-gray", "silver"],
-    defaultColour: "space-gray",
+    defaultColour: "silver",
     appleIntelligence: false,
     tagline: "Center Stage on the classic iPad.",
     whoItSuits: "Video calls and school on a budget.",
@@ -1093,7 +1083,6 @@ export const ipadModels: IpadModel[] = [
       "Still Lightning - plan adapters.",
     ],
     basePriceKes: P["ipad-9"],
-    overviewOnly: true,
   },
   {
     id: "ipad-10",

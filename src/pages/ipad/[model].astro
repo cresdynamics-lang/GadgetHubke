@@ -1062,12 +1062,26 @@ const wa = whatsappUrl(
   }
   .ipdp__fits li {
     border: 1px solid var(--color-border); border-radius: 0.75rem;
-    padding: 0.55rem 0.65rem; min-width: 0;
-    display: flex; flex-direction: column; gap: 0.15rem;
+    padding: 0.45rem 0.55rem; min-width: 0;
+    display: flex; flex-direction: column; gap: 0.12rem;
   }
-  .ipdp__fits h3 { margin: 0; font-size: 0.82rem; letter-spacing: -0.01em; line-height: 1.25; }
-  .ipdp__fits p { margin: 0; font-size: 0.72rem; color: var(--color-fg-muted); line-height: 1.3; }
-  .ipdp__fits a { font-size: 0.72rem; font-weight: 600; margin-top: 0.15rem; }
+  .ipdp__fits h3 {
+    margin: 0;
+    font-size: clamp(0.68rem, 2.4vw, 0.85rem);
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+  }
+  .ipdp__fits p {
+    margin: 0;
+    font-size: clamp(0.58rem, 2vw, 0.72rem);
+    color: var(--color-fg-muted);
+    line-height: 1.3;
+  }
+  .ipdp__fits a {
+    font-size: clamp(0.58rem, 2vw, 0.72rem);
+    font-weight: 600;
+    margin-top: 0.1rem;
+  }
   .ipdp__tools { display: grid; gap: 0.75rem; padding-block: var(--ipad-section-gap); }
   @media (min-width: 40rem) { .ipdp__tools { grid-template-columns: 1fr 1fr; } }
   .ipdp__tool {

@@ -5,13 +5,13 @@
 import IpadStage from "./IpadStage.astro";
 import {
   type IpadModel,
-  getIpadImage,
   defaultIpadColour,
   ipadSubline,
   colourHex,
   colourLabel,
   isLightColour,
-  ipadViewerTabs,
+  ipadCardPrimarySrc,
+  ipadCardHoverSrc,
 } from "../../lib/ipad";
 import { whatsappUrl } from "../../lib/site";
 import ConditionBadge from "../ConditionBadge.astro";
@@ -29,16 +29,13 @@ interface Props {
 const { model, compare = false, channel = "new", priceKes, coloursInStock, href: hrefProp } = Astro.props;
 const colours = filterColours(model.colours, coloursInStock);
 const colour = colours.includes(defaultIpadColour(model)) ? defaultIpadColour(model) : colours[0] || defaultIpadColour(model);
-const img = getIpadImage(model.id, colour, "product", model.name);
+const img = ipadCardPrimarySrc(model, colour);
 const href = hrefProp || `/ipad/${model.id}`;
 const displayKes = priceKes ?? model.basePriceKes;
 const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}${channel === "ex-uk" ? " (Ex-UK)" : ""}.`);
-const tabs = ipadViewerTabs(model, colour);
-
 const colourPayload = colours.map((key) => {
-  const resolved = getIpadImage(model.id, key, "product", model.name);
-  const t = ipadViewerTabs(model, key);
-  const hover = t.length > 1 ? t[1] : null;
+  const resolved = ipadCardPrimarySrc(model, key);
+  const hoverSrcForColour = ipadCardHoverSrc(model, key, resolved.src, colours);
   return {
     key,
     hex: colourHex(key),
@@ -47,16 +44,11 @@ const colourPayload = colours.map((key) => {
     srcWebp: resolved.srcWebp ?? "",
     alt: resolved.alt,
     light: isLightColour(key),
-    hoverSrc: hover && hover.src !== resolved.src ? hover.src : "",
+    hoverSrc: hoverSrcForColour,
   };
 });
 
-const hoverSrc =
-  tabs.length > 1 && tabs[1].src !== img.src
-    ? tabs[1].src
-    : colourPayload[1] && colourPayload[1].src !== img.src
-      ? colourPayload[1].src
-      : "";
+const hoverSrc = ipadCardHoverSrc(model, colour, img.src, colours) || colourPayload[0]?.hoverSrc || "";
 ---
 
 <article
@@ -66,11 +58,12 @@ const hoverSrc =
   data-family={model.family}
   data-chip={model.chipGen}
   data-size={model.screenInches}
-  data-price={model.basePriceKes}
+  data-price={displayKes}
   data-weight={model.weightG}
   data-year={model.year}
   data-pencil-pro={model.pencils.includes("pro") ? "1" : "0"}
   data-ai={model.appleIntelligence ? "1" : "0"}
+  data-channel={channel}
 >
   {
     compare ? (
@@ -275,11 +268,11 @@ const hoverSrc =
     opacity: 1;
   }
   .icard__body {
-    padding: 1rem 1.1rem 1.15rem;
+    padding: 0.7rem 0.8rem 0.85rem;
   }
   .icard__name {
     margin: 0;
-    font-size: 1.05rem;
+    font-size: 0.92rem;
     letter-spacing: -0.02em;
   }
   .icard__name a {
@@ -290,9 +283,30 @@ const hoverSrc =
   .icard__meta,
   .icard__note,
   .icard__fine {
-    margin: 0.25rem 0 0;
-    font-size: var(--text-sm);
+    margin: 0.2rem 0 0;
+    font-size: 0.72rem;
+    line-height: 1.35;
     color: var(--color-fg-muted);
+  }
+  @media (min-width: 40rem) {
+    .icard__body {
+      padding: 1rem 1.1rem 1.15rem;
+    }
+    .icard__name {
+      font-size: 1.05rem;
+    }
+    .icard__sub,
+    .icard__meta,
+    .icard__note,
+    .icard__fine {
+      margin: 0.25rem 0 0;
+      font-size: var(--text-sm);
+    }
+  }
+  @media (hover: none) {
+    .icard__media--swap .icard__img-alt {
+      display: none;
+    }
   }
   .icard__swatches {
     display: flex;

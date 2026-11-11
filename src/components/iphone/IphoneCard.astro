@@ -20,6 +20,7 @@ import {
   colourLabel,
 } from "../../lib/iphone";
 import { cardImageSrc } from "../../lib/card-images";
+import { isSleekCardHover } from "../../lib/card-hover";
 import { filterColours, type ListingChannel } from "../../lib/listing-offers";
 import { whatsappUrl } from "../../lib/site";
 
@@ -51,30 +52,32 @@ const tag = isLatestTag(model) ? "Latest" : isValueTag(model) ? "Value" : null;
 
 const colourPayload = colours.map((key) => {
   const resolved = getImage(model.id, key, 1, model.name);
+  const primary = cardImageSrc(model.id, resolved.src);
   const views = availableViews(model.id, key);
-  const altView = views.includes(2)
-    ? getImage(model.id, key, 2, model.name)
-    : null;
-  const hover =
-    altView && !altView.fallback && altView.src !== resolved.src
-      ? altView
-      : null;
+  // Prefer view 2 (camera / back close-up). Skip open-screen marketing frames.
+  const altView = views.includes(2) ? getImage(model.id, key, 2, model.name) : null;
+  const hoverSrcRaw =
+    altView && !altView.fallback && isSleekCardHover(altView.src, primary)
+      ? altView.src
+      : "";
+  const hoverWebpRaw =
+    hoverSrcRaw && altView?.srcWebp && isSleekCardHover(altView.srcWebp, primary)
+      ? altView.srcWebp
+      : "";
   return {
     key,
     hex: colourHex(key),
     label: colourLabel(key),
-    src: resolved.src,
-    srcWebp: resolved.srcWebp ?? "",
+    src: primary,
+    srcWebp: primary.endsWith(".webp") ? primary : resolved.srcWebp ?? "",
     alt: resolved.alt,
     light: isLightColour(key),
-    hoverSrc: hover?.src ?? "",
-    hoverWebp: hover?.srcWebp ?? "",
+    hoverSrc: hoverSrcRaw,
+    hoverWebp: hoverWebpRaw,
   };
 });
 
-const hoverSrc =
-  colourPayload[0]?.hoverSrc ||
-  (colourPayload[1] && colourPayload[1].src !== img.src ? colourPayload[1].src : "");
+const hoverSrc = colourPayload[0]?.hoverSrc || "";
 ---
 
 <article
@@ -314,15 +317,31 @@ const hoverSrc =
   .icard__body {
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
-    padding: 1rem 1.1rem 1.15rem;
+    gap: 0.22rem;
+    padding: 0.7rem 0.8rem 0.85rem;
     flex: 1;
   }
 
   .icard__name {
     margin: 0;
-    font-size: 1.05rem;
+    font-size: 0.92rem;
     letter-spacing: -0.02em;
+  }
+
+  @media (min-width: 40rem) {
+    .icard__body {
+      gap: 0.35rem;
+      padding: 1rem 1.1rem 1.15rem;
+    }
+    .icard__name {
+      font-size: 1.05rem;
+    }
+  }
+
+  @media (hover: none) {
+    .icard__media--swap .icard__img-alt {
+      display: none;
+    }
   }
 
   .icard__name a {
@@ -341,14 +360,25 @@ const hoverSrc =
 
   .icard__sub {
     margin: 0;
-    font-size: var(--text-sm);
+    font-size: 0.72rem;
+    line-height: 1.35;
     color: var(--color-fg-muted);
   }
 
   .icard__note {
-    margin: 0.25rem 0 0;
-    font-size: 0.75rem;
+    margin: 0.2rem 0 0;
+    font-size: 0.68rem;
     color: var(--color-fg-muted);
+  }
+
+  @media (min-width: 40rem) {
+    .icard__sub {
+      font-size: var(--text-sm);
+    }
+    .icard__note {
+      margin: 0.25rem 0 0;
+      font-size: 0.75rem;
+    }
   }
 
   .icard__swatches {
@@ -400,7 +430,7 @@ const hoverSrc =
   .icard__from {
     font-weight: var(--font-weight-display);
     letter-spacing: -0.02em;
-    font-size: 0.85rem;
+    font-size: clamp(0.68rem, 2.8vw, 0.85rem);
     white-space: nowrap;
   }
 

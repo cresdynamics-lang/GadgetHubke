@@ -3195,81 +3195,49 @@
   "blue": [
    {
     "label": "Front",
-    "source": "ipad-finish-select-202503-blue",
     "src": "/Gadget_Hub_Store_Angles/ipad-a16/blue-1.webp",
     "srcWebp": "/Gadget_Hub_Store_Angles/ipad-a16/blue-1.webp"
    },
    {
     "label": "Back",
-    "source": "ipad-finish-select-202503-blue_AV1",
     "src": "/Gadget_Hub_Store_Angles/ipad-a16/blue-2.webp",
     "srcWebp": "/Gadget_Hub_Store_Angles/ipad-a16/blue-2.webp"
-   },
-   {
-    "label": "Side",
-    "source": "ipad-finish-select-202503-blue_AV2",
-    "src": "/Gadget_Hub_Store_Angles/ipad-a16/blue-3.webp",
-    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-a16/blue-3.webp"
    }
   ],
   "pink": [
    {
     "label": "Front",
-    "source": "ipad-finish-select-202503-pink",
     "src": "/Gadget_Hub_Store_Angles/ipad-a16/pink-1.webp",
     "srcWebp": "/Gadget_Hub_Store_Angles/ipad-a16/pink-1.webp"
    },
    {
     "label": "Back",
-    "source": "ipad-finish-select-202503-pink_AV1",
     "src": "/Gadget_Hub_Store_Angles/ipad-a16/pink-2.webp",
     "srcWebp": "/Gadget_Hub_Store_Angles/ipad-a16/pink-2.webp"
-   },
-   {
-    "label": "Side",
-    "source": "ipad-finish-select-202503-pink_AV2",
-    "src": "/Gadget_Hub_Store_Angles/ipad-a16/pink-3.webp",
-    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-a16/pink-3.webp"
    }
   ],
   "silver": [
    {
     "label": "Front",
-    "source": "ipad-finish-select-202503-silver",
     "src": "/Gadget_Hub_Store_Angles/ipad-a16/silver-1.webp",
     "srcWebp": "/Gadget_Hub_Store_Angles/ipad-a16/silver-1.webp"
    },
    {
     "label": "Back",
-    "source": "ipad-finish-select-202503-silver_AV1",
     "src": "/Gadget_Hub_Store_Angles/ipad-a16/silver-2.webp",
     "srcWebp": "/Gadget_Hub_Store_Angles/ipad-a16/silver-2.webp"
-   },
-   {
-    "label": "Side",
-    "source": "ipad-finish-select-202503-silver_AV2",
-    "src": "/Gadget_Hub_Store_Angles/ipad-a16/silver-3.webp",
-    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-a16/silver-3.webp"
    }
   ],
   "yellow": [
    {
     "label": "Front",
-    "source": "ipad-finish-select-202503-yellow",
     "src": "/Gadget_Hub_Store_Angles/ipad-a16/yellow-1.webp",
     "srcWebp": "/Gadget_Hub_Store_Angles/ipad-a16/yellow-1.webp"
    },
    {
     "label": "Back",
-    "source": "ipad-finish-select-202503-yellow_AV1",
     "src": "/Gadget_Hub_Store_Angles/ipad-a16/yellow-2.webp",
     "srcWebp": "/Gadget_Hub_Store_Angles/ipad-a16/yellow-2.webp"
-   },
-   {
-    "label": "Side",
-    "source": "ipad-finish-select-202503-yellow_AV2",
-    "src": "/Gadget_Hub_Store_Angles/ipad-a16/yellow-3.webp",
-    "srcWebp": "/Gadget_Hub_Store_Angles/ipad-a16/yellow-3.webp"
    }
   ]
  },

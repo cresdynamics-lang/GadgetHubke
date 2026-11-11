@@ -22,6 +22,8 @@ export {
 export {
   getMacImage,
   defaultMacColour,
+  macCardPrimarySrc,
+  macCardHoverSrc,
   macViewerTabs,
   macLidFrames,
   relatedMacModels,

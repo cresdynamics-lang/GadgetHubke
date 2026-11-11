@@ -5,6 +5,8 @@
 export const prerender = false;
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import MacCard from "../../components/mac/MacCard.astro";
+import MacQuiz from "../../components/mac/MacQuiz.astro";
+import CategoryFilters from "../../components/CategoryFilters.astro";
 import { filterVisibleById, livePricedCatalog, websiteVisibleIdSet } from "../../lib/pricing/live";
 import { listingRows } from "../../lib/listing-offers";
 import {
@@ -72,6 +74,11 @@ const macShopRows = listingRows(list, await livePricedCatalog(), {
     </nav>
     <h1>Shop MacBook</h1>
     <p class="mac-shop__intro">{macConfig.samplePriceDisclaimer}</p>
+    <div class="mac-shop__guide">
+      <CategoryFilters>
+        <MacQuiz />
+      </CategoryFilters>
+    </div>
 
     <div class="mac-shop__filters" role="group" aria-label="Family">
       <a class:list={["mac-chip", { "is-active": !family }]} href={qs({ family: null })}>All</a>
@@ -118,7 +125,7 @@ const macShopRows = listingRows(list, await livePricedCatalog(), {
 
     <ul class="mac-shop__grid">
       {macShopRows.map(({ item: m, offer }, i) => (
-        <li>
+        <li data-channel={offer.channel}>
           <MacCard model={m} eager={i < 12} channel={offer.channel} priceKes={offer.priceKes || m.basePriceKes} coloursInStock={offer.colours} href={offer.href} />
         </li>
       ))}
@@ -317,6 +324,9 @@ const macShopRows = listingRows(list, await livePricedCatalog(), {
   .mac-shop__intro {
     color: var(--color-fg-muted);
     max-width: 40rem;
+  }
+  .mac-shop__guide {
+    margin: 0.75rem 0 1rem;
   }
   .mac-shop__filters,
   .mac-shop__toggles {

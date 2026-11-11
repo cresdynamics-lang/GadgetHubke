@@ -5,16 +5,15 @@
 import MacStage from "./MacStage.astro";
 import {
   type MacModel,
-  getMacImage,
   defaultMacColour,
   macSubline,
   colourHex,
   colourLabel,
   isLightColour,
-  macViewerTabs,
+  macCardPrimarySrc,
+  macCardHoverSrc,
 } from "../../lib/mac";
 import { whatsappUrl } from "../../lib/site";
-import { cardImageSrc } from "../../lib/card-images";
 import ConditionBadge from "../ConditionBadge.astro";
 import { filterColours, type ListingChannel } from "../../lib/listing-offers";
 
@@ -31,23 +30,13 @@ interface Props {
 const { model, compare = true, eager = false, channel = "new", priceKes, coloursInStock, href: hrefProp } = Astro.props;
 const colours = filterColours(model.colours, coloursInStock);
 const colour = colours.includes(defaultMacColour(model)) ? defaultMacColour(model) : colours[0] || defaultMacColour(model);
-const resolved = getMacImage(model.id, colour, "product", model.name);
-const cardSrc = cardImageSrc(model.id, resolved.src);
-const img = {
-  ...resolved,
-  src: cardSrc,
-  srcWebp: cardSrc.endsWith(".webp") ? cardSrc : resolved.srcWebp,
-};
+const img = macCardPrimarySrc(model, colour);
 const href = hrefProp || `/mac/${model.id}`;
 const displayKes = priceKes ?? model.basePriceKes;
 const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}${channel === "ex-uk" ? " (Ex-UK)" : ""}.`);
-const viewerTabs = macViewerTabs(model, colour);
-const hoverFromTabs = viewerTabs.length > 1 ? viewerTabs[1] : null;
-
 const colourPayload = colours.map((key) => {
-  const resolved = getMacImage(model.id, key, "product", model.name);
-  const tabs = macViewerTabs(model, key);
-  const hover = tabs.length > 1 ? tabs[1] : null;
+  const resolved = macCardPrimarySrc(model, key);
+  const hoverSrcForColour = macCardHoverSrc(model, key, resolved.src, colours);
   return {
     key,
     hex: colourHex(key),
@@ -56,16 +45,11 @@ const colourPayload = colours.map((key) => {
     srcWebp: resolved.srcWebp ?? "",
     alt: resolved.alt,
     light: isLightColour(key),
-    hoverSrc: hover && hover.src !== resolved.src ? hover.src : "",
+    hoverSrc: hoverSrcForColour,
   };
 });
 
-const hoverSrc =
-  hoverFromTabs && hoverFromTabs.src !== img.src
-    ? hoverFromTabs.src
-    : colourPayload[1] && colourPayload[1].src !== img.src
-      ? colourPayload[1].src
-      : "";
+const hoverSrc = macCardHoverSrc(model, colour, img.src, colours) || colourPayload[0]?.hoverSrc || "";
 ---
 
 <article
@@ -75,11 +59,12 @@ const hoverSrc =
   data-family={model.family}
   data-chip={model.chipGen}
   data-size={model.screenInches}
-  data-price={model.basePriceKes}
+  data-price={displayKes}
   data-battery={model.batteryVideoHours}
   data-weight={model.weightKg}
   data-year={model.year}
   data-mem={model.memoryOptionsGb[0]}
+  data-channel={channel}
 >
   {
     compare ? (
@@ -303,13 +288,13 @@ const hoverSrc =
   .mcard__body {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
-    padding: 0.85rem 1rem 1rem;
+    gap: 0.2rem;
+    padding: 0.7rem 0.8rem 0.85rem;
     flex: 1;
   }
   .mcard__name {
     margin: 0;
-    font-size: 1.05rem;
+    font-size: 0.92rem;
     letter-spacing: -0.02em;
   }
   .mcard__name a {
@@ -321,8 +306,32 @@ const hoverSrc =
   .mcard__note,
   .mcard__lipa {
     margin: 0;
-    font-size: 0.8rem;
+    font-size: 0.72rem;
+    line-height: 1.35;
     color: var(--color-fg-muted);
+  }
+
+  @media (min-width: 40rem) {
+    .mcard__body {
+      gap: 0.25rem;
+      padding: 0.85rem 1rem 1rem;
+    }
+    .mcard__name {
+      font-size: 1.05rem;
+    }
+    .mcard__sub,
+    .mcard__meta,
+    .mcard__note,
+    .mcard__lipa {
+      font-size: 0.8rem;
+    }
+  }
+
+  /* Phones never get hover — keep the open-screen primary readable. */
+  @media (hover: none) {
+    .mcard__media--swap .mcard__img-alt {
+      display: none;
+    }
   }
   .mcard__swatches {
     display: flex;
@@ -331,13 +340,19 @@ const hoverSrc =
     margin: 0.35rem 0;
   }
   .mcard__dot {
-    width: 1.15rem;
-    height: 1.15rem;
+    width: 1rem;
+    height: 1rem;
     border-radius: 50%;
     border: none;
     background: var(--swatch);
     cursor: pointer;
     box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.15);
+  }
+  @media (min-width: 40rem) {
+    .mcard__dot {
+      width: 1.15rem;
+      height: 1.15rem;
+    }
   }
   .mcard__dot.is-active {
     outline: 2px solid var(--color-fg);
@@ -391,12 +406,12 @@ const hoverSrc =
   }
   .mcard__row--price .mcard__price,
   .mcard__row--price .mcard__price * {
-    font-size: clamp(0.74rem, 2.9vw, 0.85rem);
+    font-size: clamp(0.68rem, 2.8vw, 0.85rem);
   }
   .mcard__row--price :global(.btn) {
     flex: 0 0 auto;
-    font-size: clamp(0.66rem, 2.6vw, 0.75rem);
-    padding: 0.28rem 0.55rem;
-    min-height: 1.75rem;
+    font-size: clamp(0.6rem, 2.5vw, 0.75rem);
+    padding: 0.26rem 0.5rem;
+    min-height: 1.65rem;
   }
 </style>

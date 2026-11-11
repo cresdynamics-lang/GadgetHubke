@@ -1,0 +1,225 @@
+---
+/**
+ * Filters control: opens a sheet with New / Ex-UK + the category quiz (slot).
+ * Cards with [data-channel] are shown/hidden by the condition buttons.
+ */
+import { SHOW_EX_UK } from "../lib/iphone/seo/flags";
+
+interface Props {
+  label?: string;
+}
+
+const { label = "Filters" } = Astro.props;
+---
+
+<div class="cfilters" data-cfilters>
+  <button type="button" class="cfilters__open" data-cfilters-open>
+    {label}
+  </button>
+
+  <dialog class="cfilters__dialog" data-cfilters-dialog aria-label={label}>
+    <div class="cfilters__sheet">
+      <header class="cfilters__head">
+        <h2>{label}</h2>
+        <button type="button" class="cfilters__close" data-cfilters-close aria-label="Close filters">
+          Close
+        </button>
+      </header>
+
+      <fieldset class="cfilters__condition" data-cfilters-condition>
+        <legend>Condition</legend>
+        <div class="cfilters__opts" role="group" aria-label="Condition">
+          <button type="button" class="is-active" data-channel-filter="all">All</button>
+          <button type="button" data-channel-filter="new">New</button>
+          {
+            SHOW_EX_UK ? (
+              <button type="button" data-channel-filter="ex-uk">Ex-UK</button>
+            ) : null
+          }
+        </div>
+      </fieldset>
+
+      <div class="cfilters__quiz">
+        <slot />
+      </div>
+    </div>
+  </dialog>
+</div>
+
+<script>
+  const roots = document.querySelectorAll("[data-cfilters]");
+  roots.forEach((root) => {
+    if (!(root instanceof HTMLElement)) return;
+    if (root.dataset.bound === "1") return;
+    root.dataset.bound = "1";
+
+    const dialog = root.querySelector("[data-cfilters-dialog]");
+    const openBtn = root.querySelector("[data-cfilters-open]");
+    const closeBtn = root.querySelector("[data-cfilters-close]");
+    if (!(dialog instanceof HTMLDialogElement)) return;
+
+    openBtn?.addEventListener("click", () => dialog.showModal());
+    closeBtn?.addEventListener("click", () => dialog.close());
+    dialog.addEventListener("click", (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+
+    let channel = "all";
+
+    function applyChannel() {
+      document.documentElement.setAttribute("data-listing-channel", channel);
+      document.querySelectorAll("[data-channel]").forEach((el) => {
+        if (!(el instanceof HTMLElement)) return;
+        const ch = el.getAttribute("data-channel") || "new";
+        const match = channel === "all" || ch === channel;
+        el.hidden = !match;
+        // Also hide empty latest blocks when every child card is hidden.
+      });
+      document.querySelectorAll("[data-latest-block]").forEach((block) => {
+        if (!(block instanceof HTMLElement)) return;
+        const cards = [...block.querySelectorAll("[data-channel]")];
+        if (!cards.length) return;
+        const any = cards.some((c) => c instanceof HTMLElement && !c.hidden);
+        // Don't unhide a block the gen filter already hid.
+        if (block.hasAttribute("data-gen-hidden")) return;
+        block.hidden = !any;
+      });
+      document.dispatchEvent(
+        new CustomEvent("gh:listing-channel", { detail: channel }),
+      );
+    }
+
+    root.querySelectorAll("[data-channel-filter]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        root.querySelectorAll("[data-channel-filter]").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        channel = btn.getAttribute("data-channel-filter") || "all";
+        applyChannel();
+      });
+    });
+
+    applyChannel();
+  });
+</script>
+
+<style>
+  .cfilters {
+    display: inline-flex;
+    align-items: center;
+  }
+  .cfilters__open {
+    border: 1px solid var(--color-border, #d2d2d7);
+    background: var(--color-bg, #fff);
+    color: inherit;
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .cfilters__open:hover {
+    border-color: var(--color-fg, #1d1d1f);
+  }
+  .cfilters__dialog {
+    border: none;
+    padding: 0;
+    margin: auto 0 0;
+    width: min(100vw, 28rem);
+    max-width: 100%;
+    max-height: min(92vh, 44rem);
+    border-radius: 1.1rem 1.1rem 0 0;
+    background: var(--color-bg, #fff);
+    color: inherit;
+    box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.18);
+  }
+  .cfilters__dialog::backdrop {
+    background: rgba(0, 0, 0, 0.42);
+  }
+  @media (min-width: 40rem) {
+    .cfilters__dialog {
+      margin: auto;
+      border-radius: 1.15rem;
+      width: min(92vw, 26rem);
+    }
+  }
+  .cfilters__sheet {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding: 0.9rem 1rem 1.25rem;
+    overflow: auto;
+    max-height: inherit;
+  }
+  .cfilters__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    position: sticky;
+    top: 0;
+    background: var(--color-bg, #fff);
+    padding-bottom: 0.35rem;
+    z-index: 1;
+  }
+  .cfilters__head h2 {
+    margin: 0;
+    font-size: 1.05rem;
+    letter-spacing: -0.02em;
+  }
+  .cfilters__close {
+    border: 1px solid var(--color-border, #d2d2d7);
+    background: transparent;
+    border-radius: 999px;
+    padding: 0.28rem 0.7rem;
+    font: inherit;
+    font-size: 0.75rem;
+    cursor: pointer;
+  }
+  .cfilters__condition {
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+  .cfilters__condition legend {
+    padding: 0;
+    margin: 0 0 0.4rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--color-fg-muted, #6e6e73);
+  }
+  .cfilters__opts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+  .cfilters__opts button {
+    border: 1px solid var(--color-border, #d2d2d7);
+    background: #fff;
+    border-radius: 999px;
+    padding: 0.32rem 0.7rem;
+    font: inherit;
+    font-size: 0.72rem;
+    cursor: pointer;
+  }
+  .cfilters__opts button.is-active {
+    background: #000;
+    border-color: #000;
+    color: #fff;
+  }
+  .cfilters__quiz :global(.iquiz),
+  .cfilters__quiz :global(.mquiz) {
+    margin: 0;
+    padding: 0.85rem 0.75rem;
+    border-radius: 0.9rem;
+  }
+  .cfilters__quiz :global(.iquiz header h2),
+  .cfilters__quiz :global(.mquiz header h2) {
+    font-size: clamp(0.9rem, 3.2vw, 1.1rem);
+  }
+  .cfilters__quiz :global(.iquiz header p),
+  .cfilters__quiz :global(.mquiz header p) {
+    font-size: clamp(0.62rem, 2.2vw, 0.78rem);
+  }
+</style>

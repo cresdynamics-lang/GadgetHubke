@@ -3,12 +3,12 @@
  * Product select shots under Gadget_Hub_iPad_1_…/01_Product_photos prefer .jpg.
  */
 
+import { firstSleekHover } from "../card-hover";
 import { publicFileExists } from "../public-file";
 import { colourLabel } from "./colours";
 import { storeAngleTabs } from "../store-angles";
 import {
   gallerySrcs,
-  missingStoreShot,
   overviewSrc,
   pageAsset,
   pageAssetAliases,
@@ -40,6 +40,13 @@ function widthForKind(kind: string): number {
   return 1400;
 }
 
+/** Multi-device / colour-fan / kit shots — bad as the main shop-card image. */
+function isMultiDeviceIpadSrc(src: string): boolean {
+  return /colour[_-]?overview|Colour_overviews|finish-|witb-|unselect-gallery|compare|[-_/]colors\b|[-_/]colours\b/i.test(
+    src,
+  );
+}
+
 /**
  * kind: product | back | box | overview | swatch | size | pencil | keyboard | named page asset
  */
@@ -69,21 +76,27 @@ export function getIpadImage(
   }
 
   if (kind === "product" || kind === "front") {
-    if (model && missingStoreShot(model)) {
-      const ov = overviewSrc(modelId);
-      return finish(
-        ov || IPAD_PLACEHOLDER,
-        `${name}, colour overview (store shot coming soon)`,
-        "overview",
-        true,
-      );
-    }
+    const angles = storeAngleTabs(modelId, colour, name, colourLabel(colour));
     const src = productSrc(modelId, colour, "product");
-    if (src) {
+    // A16 / 10th-gen Apple hero selects are sharper (full 2k) than the small
+    // store-angle pack — prefer them on cards and PDP front view.
+    const preferHeroSelect = modelId === "ipad-a16" || modelId === "ipad-10";
+    if (preferHeroSelect && src && !isMultiDeviceIpadSrc(src)) {
       return finish(src, `${name} in ${colourLabel(colour)}, front view`, "product", false);
     }
-    const ov = overviewSrc(modelId);
-    return finish(ov || IPAD_PLACEHOLDER, `${name}, overview`, "overview", true);
+    if (angles[0]) {
+      return finish(angles[0].src, angles[0].alt, "product", false);
+    }
+    if (src && !isMultiDeviceIpadSrc(src)) {
+      return finish(src, `${name} in ${colourLabel(colour)}, front view`, "product", false);
+    }
+    // Never fall back to a multi-colour overview on product cards.
+    return finish(
+      IPAD_PLACEHOLDER,
+      `${name} in ${colourLabel(colour)}`,
+      "product",
+      true,
+    );
   }
 
   if (kind === "box" || kind === "back") {
@@ -176,6 +189,45 @@ export function getIpadImage(
 export function defaultIpadColour(model: IpadModel): string {
   if (model.colours.includes(model.defaultColour)) return model.defaultColour;
   return model.colours[0] || "silver";
+}
+
+/**
+ * Primary iPad shop-card image: one well-framed device for the selected colour.
+ * Prefers Apple store angles; never uses multi-colour overview strips.
+ */
+export function ipadCardPrimarySrc(model: IpadModel, colourKey: string): {
+  src: string;
+  srcWebp?: string;
+  alt: string;
+  width: number;
+} {
+  const img = getIpadImage(model.id, colourKey, "product", model.name);
+  return {
+    src: img.src,
+    srcWebp: img.srcWebp,
+    alt: img.alt,
+    width: img.width,
+  };
+}
+
+/**
+ * Hover image for iPad shop cards: a second store angle of the same colour.
+ * Skip other-colour swaps and witb / pencil / colour fans.
+ */
+export function ipadCardHoverSrc(
+  model: IpadModel,
+  colourKey: string,
+  primarySrc: string,
+  _colours: string[] = [],
+): string {
+  // A16 / 10th-gen Apple pack used dual front+back selects; even with cleaned
+  // singles, opacity crossfade + multiply reads as a faded second device.
+  if (model.id === "ipad-a16" || model.id === "ipad-10") return "";
+  const angles = storeAngleTabs(model.id, colourKey, model.name, colourLabel(colourKey));
+  return firstSleekHover(
+    [angles[1]?.srcWebp || angles[1]?.src, angles[2]?.srcWebp || angles[2]?.src],
+    primarySrc,
+  );
 }
 
 export function ipadViewerTabs(model: IpadModel, colourKey: string) {

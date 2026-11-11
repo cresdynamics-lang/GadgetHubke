@@ -3,6 +3,7 @@
  * Product select shots under Gadget_Hub_MacBook_1_…/01_Product_photos are .jpg only (no .jpeg / .webp siblings).
  */
 
+import { firstSleekHover } from "../card-hover";
 import { publicFileExists } from "../public-file";
 import { colourLabel } from "./colours";
 import { storeAngleTabs } from "../store-angles";
@@ -169,6 +170,78 @@ export function defaultMacColour(model: MacModel): string {
   const available = model.colours;
   if (available.includes(model.defaultColour)) return model.defaultColour;
   return available[0] || "silver";
+}
+
+/**
+ * Primary Mac shop-card image: one open laptop with the screen on,
+ * matched to the selected colour. Avoids wide multi-colour card thumbs
+ * that shrink to a useless strip on phones.
+ */
+export function macCardPrimarySrc(model: MacModel, colourKey: string): {
+  src: string;
+  srcWebp?: string;
+  alt: string;
+  width: number;
+} {
+  const angles = storeAngleTabs(model.id, colourKey, model.name, colourLabel(colourKey));
+  if (angles[0]) {
+    return {
+      src: angles[0].src,
+      srcWebp: angles[0].srcWebp,
+      alt: angles[0].alt,
+      width: 1400,
+    };
+  }
+  const product = getMacImage(model.id, colourKey, "product", model.name);
+  return {
+    src: product.src,
+    srcWebp: product.srcWebp,
+    alt: product.alt,
+    width: product.width,
+  };
+}
+
+/**
+ * Hover / alternate Mac card image: prefer a second angle unique to this model.
+ * Never fall back to shared Air/Pro page `display_hero` shots — those made every
+ * Air (or every Pro) swap to the same image on hover.
+ *
+ * When the card already shows a per-model store angle, prefer that model's colour
+ * overview next so remapped chassis siblings (e.g. Air M4 / M5) don't share one
+ * select JPG on hover.
+ */
+export function macCardHoverSrc(
+  model: MacModel,
+  colourKey: string,
+  primarySrc: string,
+  _colours: string[] = [],
+): string {
+  const angles = storeAngleTabs(model.id, colourKey, model.name, colourLabel(colourKey));
+  const product = getMacImage(model.id, colourKey, "product", model.name);
+  const overview = getMacImage(model.id, colourKey, "overview", model.name);
+  const side = getMacImage(model.id, colourKey, "design_side", model.name);
+
+  const angleHover = firstSleekHover(
+    [angles[1]?.srcWebp || angles[1]?.src, angles[2]?.srcWebp || angles[2]?.src],
+    primarySrc,
+  );
+  if (angleHover) return angleHover;
+
+  const productSrc = !product.fallback ? product.srcWebp || product.src : "";
+  const overviewSrc =
+    !overview.fallback && overview.src && overview.src !== primarySrc && overview.src !== MAC_PLACEHOLDER
+      ? overview.srcWebp || overview.src
+      : "";
+  const sideSrc = !side.fallback ? side.srcWebp || side.src : "";
+  const primaryIsStoreAngle = /Gadget_Hub_Store_Angles/i.test(primarySrc);
+
+  if (primaryIsStoreAngle && overviewSrc) return overviewSrc;
+
+  return (
+    firstSleekHover([productSrc, sideSrc], primarySrc) ||
+    overviewSrc ||
+    ""
+  );
 }
 
 /** Build viewer tab list for a model+colour - only include views with real images. */
