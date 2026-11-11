@@ -7,9 +7,11 @@ import { buildCategorySeo, formatKes as formatKesSeoHub } from "../../lib/seo/pr
 import TvHomeStage from "../../components/tv-home/TvHomeStage.astro";
 import TvHomeCard from "../../components/tv-home/TvHomeCard.astro";
 import TvHomeQuiz from "../../components/tv-home/TvHomeQuiz.astro";
+import CategoryFilters from "../../components/CategoryFilters.astro";
 import TvHomeLipaCalc from "../../components/tv-home/TvHomeLipaCalc.astro";
 import TvHomeTradeIn from "../../components/tv-home/TvHomeTradeIn.astro";
 import TvHomeTrademark from "../../components/tv-home/TvHomeTrademark.astro";
+import { listingRows } from "../../lib/listing-offers";
 import {
   tvHomeModels,
   tvHomeModelsByFamily,
@@ -79,11 +81,14 @@ const bundlePayload = tvHomeBundles.map((b) => ({
     return n + p.kes;
   }, 0),
 }));
-const hubProducts = (await livePricedCatalog()).filter((p) => ["TV & Home"].includes(p.group));
+const __liveCat = await livePricedCatalog();
+const hubProducts = __liveCat.filter((p) => ["TV & Home"].includes(p.group));
 const hubSeo = buildCategorySeo({ label: "TV & Home", path: "/tv-home", products: hubProducts });
 const hubFrom = formatKesSeoHub(hubSeo.fromKes);
-// Live price for an accessory link (/accessories/<id>), falling back to the listed price.
-const __liveCat = await livePricedCatalog();
+const tvHomeCardRows = listingRows(newest.slice(0, 8), __liveCat, {
+  href: (model) => `/tv-home/${model.id}`,
+  fallbackPrice: (model) => model.basePriceKes,
+});
 const liveAccessoryKes = (href: string, fallback: number) =>
   __liveCat.find((p) => p.id === (href || "").split("?")[0].split("/").filter(Boolean).pop())?.priceKes || fallback;
 
@@ -119,8 +124,6 @@ const liveAccessoryKes = (href: string, fallback: number) =>
     </ul>
   </section>
 
-  <section class="container"><TvHomeQuiz /></section>
-
   <section class="container tvhome-needs">
     <h2>Shop by need</h2>
     <div class="tvhome-chips" role="group" aria-label="Need">
@@ -130,14 +133,21 @@ const liveAccessoryKes = (href: string, fallback: number) =>
     </div>
   </section>
 
-  <section class="container tvhome-grid-sec">
+  <section class="container tvhome-grid-sec" data-tvhome-landing-grid>
     <div class="tvhome-grid-sec__head">
       <h2>Shop TV &amp; Home</h2>
-      <a href="/tv-home/shop">Open full filters</a>
+      <div class="tvhome-grid-sec__tools">
+        <CategoryFilters>
+          <TvHomeQuiz />
+        </CategoryFilters>
+        <a href="/tv-home/shop">Open full filters</a>
+      </div>
     </div>
     <ul class="tvhome-grid">
-      {newest.slice(0, 8).map((m) => (
-        <li><TvHomeCard model={m} /></li>
+      {tvHomeCardRows.map(({ item: m, offer }) => (
+        <li data-channel={offer.channel}>
+          <TvHomeCard model={m} channel={offer.channel} priceKes={offer.priceKes || m.basePriceKes} coloursInStock={offer.colours} href={offer.href} />
+        </li>
       ))}
     </ul>
   </section>
@@ -280,7 +290,19 @@ const liveAccessoryKes = (href: string, fallback: number) =>
   @media (min-width: 64rem) {
     .tvhome-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
-  .tvhome-grid-sec__head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+  .tvhome-grid-sec__head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem 1rem;
+  }
+  .tvhome-grid-sec__tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.65rem 0.85rem;
+  }
   .tvhome-bundles ul { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: 0.75rem; }
   .tvhome-bundles li {
     display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1rem; background: #f5f5f7; border-radius: 1rem;

@@ -7,6 +7,7 @@ import { buildCategorySeo, formatKes as formatKesSeoHub } from "../../lib/seo/pr
 import AirPodsStage from "../../components/airpods/AirPodsStage.astro";
 import AirPodsCard from "../../components/airpods/AirPodsCard.astro";
 import AirPodsQuiz from "../../components/airpods/AirPodsQuiz.astro";
+import CategoryFilters from "../../components/CategoryFilters.astro";
 import AirPodsLipaCalc from "../../components/airpods/AirPodsLipaCalc.astro";
 import AirPodsTradeIn from "../../components/airpods/AirPodsTradeIn.astro";
 import AirpodsTrademark from "../../components/airpods/AirpodsTrademark.astro";
@@ -147,20 +148,21 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
     </section>
   ) : null}
 
-  <section class="container">
-    <AirPodsQuiz />
-  </section>
-
   <section class="container airpods-grid-sec" data-airpods-landing-grid>
     <div class="airpods-grid-sec__head">
       <h2>Shop AirPods</h2>
-      <div class="airpods-chips" role="group" aria-label="Generation">
-        <button type="button" class="is-active" data-gen="all">All</button>
-        {genChips.map((g) => (
-          <button type="button" data-gen={g}>{g}</button>
-        ))}
+      <div class="airpods-grid-sec__tools">
+        <CategoryFilters>
+          <AirPodsQuiz />
+        </CategoryFilters>
+        <div class="airpods-chips" role="group" aria-label="Generation">
+          <button type="button" class="is-active" data-gen="all">All</button>
+          {genChips.map((g) => (
+            <button type="button" data-gen={g}>{g}</button>
+          ))}
+        </div>
+        <a href="/airpods/shop">Open full filters</a>
       </div>
-      <a href="/airpods/shop">Open full filters</a>
     </div>
     <ul class="airpods-grid">
       {
@@ -172,7 +174,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
           else if (m.generation.startsWith("4")) chip = "4";
           else if (m.generation.includes("Pro 2")) chip = "Pro 2";
           return (
-            <li data-chip-gen={chip}>
+            <li data-chip-gen={chip} data-channel={offer.channel}>
               <AirPodsCard model={m} channel={offer.channel} priceKes={offer.priceKes || m.basePriceKes} coloursInStock={offer.colours} href={offer.href} />
             </li>
           );
@@ -317,6 +319,12 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
     margin: 0; color: #6e6e73; font-style: normal; font-size: 0.75rem; line-height: 1.35;
   }
   .airpods-grid-sec__head { display: grid; gap: 0.75rem; margin-bottom: 1.25rem; }
+  .airpods-grid-sec__tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.65rem 0.85rem;
+  }
   .airpods-chips {
     display: flex;
     flex-wrap: nowrap;

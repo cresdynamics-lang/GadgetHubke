@@ -5,6 +5,8 @@
 export const prerender = false;
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import WatchCard from "../../components/watch/WatchCard.astro";
+import WatchQuiz from "../../components/watch/WatchQuiz.astro";
+import CategoryFilters from "../../components/CategoryFilters.astro";
 import { filterVisibleById, livePricedCatalog, websiteVisibleIdSet } from "../../lib/pricing/live";
 import { listingRows } from "../../lib/listing-offers";
 import { watchModels, formatKes } from "../../lib/watch";
@@ -50,6 +52,9 @@ const payload = filtered.map((m) => ({
     <header class="wshop__head">
       <h1>Shop Apple Watch</h1>
       <p>Live prices. Sealed stock. Compare up to three.</p>
+      <CategoryFilters>
+        <WatchQuiz />
+      </CategoryFilters>
     </header>
 
     <div class="wshop__filters" data-wshop>
@@ -154,10 +159,13 @@ const payload = filtered.map((m) => ({
   function applyClientFilters() {
     const wantEcg = ecg instanceof HTMLInputElement && ecg.checked;
     const wantCell = cell instanceof HTMLInputElement && cell.checked;
+    const channel = document.documentElement.getAttribute("data-listing-channel") || "all";
     const items = [...document.querySelectorAll("[data-shop-item]")];
     items.forEach((li) => {
       if (!(li instanceof HTMLElement)) return;
       let show = true;
+      const ch = li.getAttribute("data-channel") || "new";
+      if (channel !== "all" && ch !== channel) show = false;
       if (wantEcg && li.getAttribute("data-ecg") !== "1") show = false;
       if (wantCell && li.getAttribute("data-cell") !== "1") show = false;
       li.hidden = !show;
@@ -178,12 +186,21 @@ const payload = filtered.map((m) => ({
   ecg?.addEventListener("change", applyClientFilters);
   cell?.addEventListener("change", applyClientFilters);
   sort?.addEventListener("change", applyClientFilters);
+  document.addEventListener("gh:listing-channel", applyClientFilters);
 </script>
 
 <style>
   .wshop { padding-block: 2rem 4rem; }
-  .wshop__head h1 { margin: 0 0 0.35rem; letter-spacing: -0.03em; }
-  .wshop__head p { margin: 0 0 1.5rem; color: #6e6e73; }
+  .wshop__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem 1rem;
+    margin-bottom: 1.25rem;
+  }
+  .wshop__head h1 { margin: 0 0 0.35rem; letter-spacing: -0.03em; width: 100%; }
+  .wshop__head p { margin: 0; color: #6e6e73; flex: 1 1 12rem; }
   .wshop__chips {
     display: flex;
     flex-wrap: nowrap;

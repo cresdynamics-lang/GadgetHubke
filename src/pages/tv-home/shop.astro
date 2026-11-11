@@ -3,6 +3,8 @@ export const prerender = false;
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import TvHomeCard from "../../components/tv-home/TvHomeCard.astro";
+import TvHomeQuiz from "../../components/tv-home/TvHomeQuiz.astro";
+import CategoryFilters from "../../components/CategoryFilters.astro";
 import TvHomeTrademark from "../../components/tv-home/TvHomeTrademark.astro";
 import {
   tvHomeModels,
@@ -10,7 +12,8 @@ import {
   isHomeHub,
   isSpeaker,
 } from "../../lib/tv-home";
-import { filterVisibleById, websiteVisibleIdSet } from "../../lib/pricing/live";
+import { filterVisibleById, livePricedCatalog, websiteVisibleIdSet } from "../../lib/pricing/live";
+import { listingRows } from "../../lib/listing-offers";
 
 const listedModels = filterVisibleById(tvHomeModels, await websiteVisibleIdSet());
 if (!listedModels.length) return Astro.redirect("/shop");
@@ -29,6 +32,10 @@ if (needQ === "hub") filtered = filtered.filter((m) => isHomeHub(m));
 if (needQ === "compact") filtered = filtered.filter((m) => m.family === "HomePod mini" || m.id === "apple-tv-hd");
 if (needQ === "stereo") filtered = filtered.filter((m) => m.stereoPairCapable);
 if (needQ === "budget") filtered = filtered.sort((a, b) => a.basePriceKes - b.basePriceKes);
+const tvHomeShopRows = listingRows(filtered, await livePricedCatalog(), {
+  href: (model) => `/tv-home/${model.id}`,
+  fallbackPrice: (model) => model.basePriceKes,
+});
 ---
 
 <BaseLayout title="Shop TV & Home - GadgetHub" description="Filter Apple TV and HomePod by family, colour and need. Live Nairobi prices.">
@@ -36,6 +43,9 @@ if (needQ === "budget") filtered = filtered.sort((a, b) => a.basePriceKes - b.ba
     <header class="thshop__head">
       <h1>Shop TV &amp; Home</h1>
       <p>Live prices. Sealed stock. Compare up to three.</p>
+      <CategoryFilters>
+        <TvHomeQuiz />
+      </CategoryFilters>
     </header>
 
     <div class="thshop__filters" data-thshop>
@@ -77,16 +87,17 @@ if (needQ === "budget") filtered = filtered.sort((a, b) => a.basePriceKes - b.ba
     </div>
 
     <ul class="thshop__grid" data-shop-grid>
-      {filtered.map((m) => (
+      {tvHomeShopRows.map(({ item: m, offer }) => (
         <li
           data-shop-item
           data-id={m.id}
           data-hub={isHomeHub(m) ? "1" : "0"}
           data-dolby={hasDolbyVision(m) ? "1" : "0"}
           data-year={m.year}
-          data-price={m.basePriceKes}
+          data-price={offer.priceKes || m.basePriceKes}
+          data-channel={offer.channel}
         >
-          <TvHomeCard model={m} />
+          <TvHomeCard model={m} channel={offer.channel} priceKes={offer.priceKes || m.basePriceKes} coloursInStock={offer.colours} href={offer.href} />
         </li>
       ))}
     </ul>
@@ -145,10 +156,13 @@ if (needQ === "budget") filtered = filtered.sort((a, b) => a.basePriceKes - b.ba
   function applyClientFilters() {
     const wantHub = hub instanceof HTMLInputElement && hub.checked;
     const wantDolby = dolby instanceof HTMLInputElement && dolby.checked;
+    const channel = document.documentElement.getAttribute("data-listing-channel") || "all";
     const items = [...document.querySelectorAll("[data-shop-item]")];
     items.forEach((li) => {
       if (!(li instanceof HTMLElement)) return;
       let show = true;
+      const ch = li.getAttribute("data-channel") || "new";
+      if (channel !== "all" && ch !== channel) show = false;
       if (wantHub && li.getAttribute("data-hub") !== "1") show = false;
       if (wantDolby && li.getAttribute("data-dolby") !== "1") show = false;
       li.hidden = !show;
@@ -169,10 +183,21 @@ if (needQ === "budget") filtered = filtered.sort((a, b) => a.basePriceKes - b.ba
   hub?.addEventListener("change", applyClientFilters);
   dolby?.addEventListener("change", applyClientFilters);
   sort?.addEventListener("change", applyClientFilters);
+  document.addEventListener("gh:listing-channel", applyClientFilters);
 </script>
 
 <style>
   .thshop { padding-block: 2rem 4rem; font-family: Inter, system-ui, sans-serif; }
+  .thshop__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem 1rem;
+    margin-bottom: 1.25rem;
+  }
+  .thshop__head h1 { margin: 0 0 0.35rem; letter-spacing: -0.03em; width: 100%; }
+  .thshop__head p { margin: 0; color: #6e6e73; flex: 1 1 12rem; }
   .thshop__chips {
     display: flex;
     flex-wrap: nowrap;

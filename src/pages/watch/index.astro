@@ -10,6 +10,7 @@ import { buildCategorySeo, formatKes as formatKesSeoHub } from "../../lib/seo/pr
 import WatchStage from "../../components/watch/WatchStage.astro";
 import WatchCard from "../../components/watch/WatchCard.astro";
 import WatchQuiz from "../../components/watch/WatchQuiz.astro";
+import CategoryFilters from "../../components/CategoryFilters.astro";
 import WatchLipaCalc from "../../components/watch/WatchLipaCalc.astro";
 import WatchTradeIn from "../../components/watch/WatchTradeIn.astro";
 import {
@@ -111,25 +112,29 @@ const liveAccessoryKes = (href: string, fallback: number) =>
     </ul>
   </section>
 
-  <section class="container">
-    <WatchQuiz />
-  </section>
-
   <section class="container watch-grid-sec" data-watch-landing-grid>
     <div class="watch-grid-sec__head">
       <h2>Shop Apple Watch</h2>
-      <div class="watch-chips" role="group" aria-label="Generation">
-        <button type="button" class="is-active" data-gen="all">All</button>
-        {genChips.map((g) => (
-          <button type="button" data-gen={g}>{g}</button>
-        ))}
+      <div class="watch-grid-sec__tools">
+        <CategoryFilters>
+          <WatchQuiz />
+        </CategoryFilters>
+        <div class="watch-chips" role="group" aria-label="Generation">
+          <button type="button" class="is-active" data-gen="all">All</button>
+          {genChips.map((g) => (
+            <button type="button" data-gen={g}>{g}</button>
+          ))}
+        </div>
+        <a href="/watch/shop">Open full filters</a>
       </div>
-      <a href="/watch/shop">Open full filters</a>
     </div>
     <ul class="watch-grid">
       {
         watchCardRows.map(({ item: m, offer }) => (
-          <li data-chip-gen={m.family === "Ultra" ? "Ultra" : m.family === "SE" ? "SE" : m.generation}>
+          <li
+            data-chip-gen={m.family === "Ultra" ? "Ultra" : m.family === "SE" ? "SE" : m.generation}
+            data-channel={offer.channel}
+          >
             <WatchCard model={m} channel={offer.channel} priceKes={offer.priceKes || m.basePriceKes} coloursInStock={offer.colours} href={offer.href} />
           </li>
         ))
@@ -244,6 +249,12 @@ const liveAccessoryKes = (href: string, fallback: number) =>
   .watch-choose__card h3 { margin: 0; }
   .watch-choose__card p, .watch-choose__card em { margin: 0; color: #6e6e73; font-style: normal; }
   .watch-grid-sec__head { display: grid; gap: 0.75rem; margin-bottom: 1.25rem; }
+  .watch-grid-sec__tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.65rem 0.85rem;
+  }
   .watch-chips {
     display: flex;
     flex-wrap: nowrap;

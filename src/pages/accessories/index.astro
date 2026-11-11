@@ -8,6 +8,7 @@ import AccessoryCard from "../../components/accessories/AccessoryCard.astro";
 import CompatibilityFinder from "../../components/accessories/CompatibilityFinder.astro";
 import AccessoryLipaCalc from "../../components/accessories/AccessoryLipaCalc.astro";
 import AccessoryQuiz from "../../components/accessories/AccessoryQuiz.astro";
+import CategoryFilters from "../../components/CategoryFilters.astro";
 import AccessoryTradeIn from "../../components/accessories/AccessoryTradeIn.astro";
 import AccessoryTrademark from "../../components/accessories/AccessoryTrademark.astro";
 import {
@@ -175,7 +176,11 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
     }
   </section>
 
-  <AccessoryQuiz />
+  <section class="container xland-filters">
+    <CategoryFilters>
+      <AccessoryQuiz />
+    </CategoryFilters>
+  </section>
   <AccessoryLipaCalc />
   <AccessoryTradeIn />
 
@@ -216,6 +221,9 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
     flex-wrap: wrap;
     gap: 0.65rem;
     margin-top: 1.25rem;
+  }
+  .xland-filters {
+    padding: 1.25rem 0 0;
   }
   .xland-groups,
   .xland-featured,

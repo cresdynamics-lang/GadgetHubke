@@ -9,27 +9,37 @@ import {
   isSpeaker,
 } from "../../lib/tv-home";
 import { whatsappUrl } from "../../lib/site";
+import ConditionBadge from "../ConditionBadge.astro";
+import { filterColours, type ListingChannel } from "../../lib/listing-offers";
 
 interface Props {
   model: TvHomeModel;
   compare?: boolean;
+  channel?: ListingChannel;
+  priceKes?: number;
+  coloursInStock?: string[];
+  href?: string;
 }
 
-const { model, compare = true } = Astro.props;
-const colour = defaultTvHomeColour(model);
+const { model, compare = true, channel = "new", priceKes, coloursInStock, href: hrefProp } = Astro.props;
+const colours = filterColours(model.colours, coloursInStock);
+const colour = colours.includes(defaultTvHomeColour(model)) ? defaultTvHomeColour(model) : colours[0] || defaultTvHomeColour(model);
+const href = hrefProp || `/tv-home/${model.id}`;
+const displayKes = priceKes ?? model.basePriceKes;
 const img = getTvHomeImage(model.id, model.noImage ? "hero" : `colour:${colour}`, model.name);
-const secondColour = model.colours.find((c) => c !== colour);
+const secondColour = colours.find((c) => c !== colour);
 const hoverImg = secondColour
   ? getTvHomeImage(model.id, `colour:${secondColour}`, model.name)
   : getTvHomeImage(model.id, "hero", model.name);
 const hoverSrc =
   !model.noImage && !hoverImg.fallback && hoverImg.src !== img.src ? hoverImg.src : "";
-const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}.`);
+const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}${channel === "ex-uk" ? " (Ex-UK)" : ""}.`);
 const square = isSpeaker(model);
 ---
 
-<article class="thcard" data-tvhome-card data-id={model.id}>
-  <a class:list={["thcard__media", { "thcard__media--swap": Boolean(hoverSrc) }]} href={`/tv-home/${model.id}`}>
+<article class="thcard" data-tvhome-card data-id={model.id} data-channel={channel}>
+  <a class:list={["thcard__media", { "thcard__media--swap": Boolean(hoverSrc) }]} href={href}>
+    <ConditionBadge channel={channel} />
     {
       model.noImage ? (
         <div class="thcard__noimg">
@@ -60,17 +70,16 @@ const square = isSpeaker(model);
         </>
       )
     }
-    {model.isNew ? <span class="thcard__tag">New</span> : null}
     {model.overviewOnly ? <span class="thcard__tag thcard__tag--alt">Overview image</span> : null}
   </a>
   <div class="thcard__body">
-    <h3><a href={`/tv-home/${model.id}`}>{model.name}</a></h3>
+    <h3><a href={href}>{model.name}</a></h3>
     <p class="thcard__sub">{model.tagline}</p>
     {
-      model.colours.length > 1 ? (
+      colours.length > 1 ? (
         <div class="thcard__colours" role="list" aria-label="Colours">
           {
-            model.colours.slice(0, 8).map((c) => (
+            colours.slice(0, 8).map((c) => (
               <button
                 type="button"
                 role="listitem"
@@ -87,11 +96,11 @@ const square = isSpeaker(model);
     }
     <div class="thcard__row thcard__row--price">
       <p class="thcard__price">
-        <span data-live-price={model.id} data-live-prefix="">{`KSh ${Math.round(model.basePriceKes).toLocaleString("en-KE")}`}</span>
+        <span>{`KSh ${Math.round(displayKes).toLocaleString("en-KE")}`}</span>
       </p>
     </div>
     <div class="thcard__row thcard__row--links">
-      <a class="btn btn--primary btn--xs" href={`/tv-home/${model.id}`}>Details</a>
+      <a class="btn btn--primary btn--xs" href={href}>Details</a>
       <a class="btn btn--whatsapp btn--xs" href={wa} target="_blank" rel="noopener noreferrer">WhatsApp</a>
     </div>
     {
@@ -105,7 +114,7 @@ const square = isSpeaker(model);
   </div>
 </article>
 
-<script define:vars={{ modelId: model.id, colourMap: Object.fromEntries(model.colours.map((c) => {
+<script define:vars={{ modelId: model.id, colourMap: Object.fromEntries(colours.map((c) => {
   const img = getTvHomeImage(model.id, `colour:${c}`, model.name);
   return [c, { src: img.src, webp: img.srcWebp || "", alt: img.alt, label: colourLabel(c) }];
 })) }}>

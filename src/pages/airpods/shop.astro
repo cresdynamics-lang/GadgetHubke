@@ -2,6 +2,8 @@
 export const prerender = false;
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import AirPodsCard from "../../components/airpods/AirPodsCard.astro";
+import AirPodsQuiz from "../../components/airpods/AirPodsQuiz.astro";
+import CategoryFilters from "../../components/CategoryFilters.astro";
 import AirpodsTrademark from "../../components/airpods/AirpodsTrademark.astro";
 import { filterVisibleById, livePricedCatalog, websiteVisibleIdSet } from "../../lib/pricing/live";
 import { listingRows } from "../../lib/listing-offers";
@@ -34,6 +36,9 @@ const airpodsShopRows = listingRows(filtered, await livePricedCatalog(), {
     <header class="ashop__head">
       <h1>Shop AirPods</h1>
       <p>Live prices. Sealed stock. Compare up to three.</p>
+      <CategoryFilters>
+        <AirPodsQuiz />
+      </CategoryFilters>
     </header>
 
     <div class="ashop__filters" data-ashop>
@@ -148,10 +153,13 @@ const airpodsShopRows = listingRows(filtered, await livePricedCatalog(), {
   function applyClientFilters() {
     const wantAnc = anc instanceof HTMLInputElement && anc.checked;
     const wantHearing = hearing instanceof HTMLInputElement && hearing.checked;
+    const channel = document.documentElement.getAttribute("data-listing-channel") || "all";
     const items = [...document.querySelectorAll("[data-shop-item]")];
     items.forEach((li) => {
       if (!(li instanceof HTMLElement)) return;
       let show = true;
+      const ch = li.getAttribute("data-channel") || "new";
+      if (channel !== "all" && ch !== channel) show = false;
       if (wantAnc && li.getAttribute("data-anc") !== "1") show = false;
       if (wantHearing && li.getAttribute("data-hearing") !== "1") show = false;
       li.hidden = !show;
@@ -171,12 +179,21 @@ const airpodsShopRows = listingRows(filtered, await livePricedCatalog(), {
   anc?.addEventListener("change", applyClientFilters);
   hearing?.addEventListener("change", applyClientFilters);
   sort?.addEventListener("change", applyClientFilters);
+  document.addEventListener("gh:listing-channel", applyClientFilters);
 </script>
 
 <style>
   .ashop { padding-block: 2rem 4rem; overflow-x: hidden; }
-  .ashop__head h1 { margin: 0 0 0.35rem; letter-spacing: -0.03em; }
-  .ashop__head p { margin: 0 0 1.5rem; color: #6e6e73; }
+  .ashop__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem 1rem;
+    margin-bottom: 1.25rem;
+  }
+  .ashop__head h1 { margin: 0 0 0.35rem; letter-spacing: -0.03em; width: 100%; }
+  .ashop__head p { margin: 0; color: #6e6e73; flex: 1 1 12rem; }
   .ashop__chips {
     display: flex;
     flex-wrap: nowrap;
