@@ -36,14 +36,20 @@ async function parseBody(request: Request): Promise<Record<string, unknown>> {
 }
 
 /** Bank connectivity / whitelist probe (POST is the real IPN). */
-export const GET: APIRoute = async () =>
-  json({
+export const GET: APIRoute = async () => {
+  const { paymentsReady } = await import("../../../lib/payments/stanbic");
+  const ready = paymentsReady();
+  return json({
     ok: true,
     endpoint: STANBIC_WEBHOOK_URL,
     method: "POST",
     website: "https://gadgethubke.com",
     product: "STK Push – M-Pesa Checkout",
+    mode: ready.mode,
+    waitingOn: ready.waitingOn,
+    ready: ready.ready,
   });
+};
 
 /**
  * Stanbic Instant Payment Notification / STK result URL.

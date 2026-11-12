@@ -510,6 +510,22 @@ const lipa = iphoneConfig.lipa;
         return;
       }
       showPanel("pay");
+      const wait = root.querySelector("[data-mpesa-wait]");
+      const payErr = root.querySelector("[data-pay-error]");
+      if (data.stk?.message) {
+        if (wait instanceof HTMLElement) {
+          wait.textContent = data.stk.message;
+          wait.hidden = false;
+        }
+        if (payErr instanceof HTMLElement) payErr.hidden = true;
+        await pollMpesa();
+      } else if (data.stkError) {
+        if (wait instanceof HTMLElement) wait.hidden = true;
+        if (payErr instanceof HTMLElement) {
+          payErr.textContent = data.stkError;
+          payErr.hidden = false;
+        }
+      }
       if (typeof window.fbq === "function") {
         const contentIds = items
           .map((i) => String(i.catalogId || i.sheetId || i.id || "").trim())

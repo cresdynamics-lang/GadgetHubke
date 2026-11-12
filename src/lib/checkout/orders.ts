@@ -10,7 +10,14 @@ import type { BagItem, CheckoutCustomer, CheckoutOrder, LipaTerms, OrderIntent, 
 import { pushOrderToOps } from "../ops/push-order";
 import { bagTotal } from "./bag";
 import { STOREFRONT_PAYMENTS } from "../commerce";
+import type { StkResult } from "../payments/stanbic";
 import { buildLipaTerms, nairobiDay, parseIntent } from "./intent";
+
+export type CreateOrderResult = {
+  order: CheckoutOrder;
+  stk?: StkResult;
+  stkError?: string;
+};
 
 const REDIS_KEY = "gh:checkout-orders:v1";
 const LOCAL_FILE = path.join(process.cwd(), ".data", "checkout-orders.json");
@@ -89,14 +96,14 @@ export async function createOrder(input: {
   depositPct?: number;
   months?: number;
   visitorId?: string;
-}): Promise<CheckoutOrder> {
+}): Promise<CreateOrderResult> {
   if (!input.items.length) throw new Error("Cart is empty.");
   const now = new Date().toISOString();
   const catalogKes = bagTotal(input.items);
   const intent = parseIntent(input.intent);
   const lipa: LipaTerms | undefined =
     intent === "lipa" ? buildLipaTerms(catalogKes, input.depositPct, input.months) : undefined;
-  const order: CheckoutOrder = {
+  let order: CheckoutOrder = {
     id: newId(),
     createdAt: now,
     updatedAt: now,
@@ -145,21 +152,57 @@ export async function createOrder(input: {
       console.error("[lipa-plan]", e);
     }
   }
+  let stk: StkResult | undefined;
+  let stkError: string | undefined;
   if (STOREFRONT_PAYMENTS) {
-    try {
-      const result = await sendInvoiceForOrder(order);
-      if (result.ok) {
-        const sentAt = new Date().toISOString();
-        order.invoiceSentAt = sentAt;
-        await updateOrder(order.id, { invoiceSentAt: sentAt });
-      } else {
-        console.error("[invoice-mail]", result.error);
-      }
-    } catch (e) {
-      console.error("[invoice-mail]", e);
+    // Invoice PDF (Gadget Hub details) emails the moment the order / pay link is created.
+    order = await emailInvoice(order);
+    // Then push M-Pesa STK. Failure still leaves the customer with the invoice.
+    const { startOrderStkSafe } = await import("./start-stk");
+    const phone = input.customer.mpesaPhone || input.customer.phone;
+    const stkResult = await startOrderStkSafe(order, phone);
+    order = stkResult.order;
+    stk = stkResult.stk;
+    stkError = stkResult.stkError;
+    // If the first invoice email failed, try again after STK (success or fail).
+    if (!order.invoiceSentAt) {
+      order = await emailInvoice(order);
     }
   }
   void pushOrderToOpsSafe(order);
+  return { order, stk, stkError };
+}
+
+/** Email the one-page Gadget Hub invoice PDF to the customer (+ shop copy). */
+async function emailInvoice(order: CheckoutOrder): Promise<CheckoutOrder> {
+  try {
+    const result = await sendInvoiceForOrder(order);
+    if (result.ok) {
+      const sentAt = new Date().toISOString();
+      const updated = await updateOrder(order.id, { invoiceSentAt: sentAt });
+      return updated || { ...order, invoiceSentAt: sentAt };
+    }
+    console.error("[invoice-mail]", result.error);
+  } catch (e) {
+    console.error("[invoice-mail]", e);
+  }
+  return order;
+}
+
+/** Email the one-page Gadget Hub receipt PDF after successful payment. */
+async function emailReceipt(order: CheckoutOrder): Promise<CheckoutOrder> {
+  if (order.receiptSentAt) return order;
+  try {
+    const result = await sendReceiptForOrder(order);
+    if (result.ok) {
+      const sentAt = new Date().toISOString();
+      const updated = await updateOrder(order.id, { receiptSentAt: sentAt });
+      return updated || { ...order, receiptSentAt: sentAt };
+    }
+    console.error("[receipt-mail]", result.error);
+  } catch (e) {
+    console.error("[receipt-mail]", e);
+  }
   return order;
 }
 
@@ -249,28 +292,22 @@ export async function markPaid(id: string, paymentRef?: string) {
       console.error("[lipa-plan]", e);
     }
   }
-  if (updated && !updated.receiptSentAt) {
-    try {
-      const result = await sendReceiptForOrder(updated);
-      if (result.ok) {
-        const sentAt = new Date().toISOString();
-        updated.receiptSentAt = sentAt;
-        await updateOrder(updated.id, { receiptSentAt: sentAt });
-      } else {
-        console.error("[receipt-mail]", result.error);
-      }
-    } catch (e) {
-      console.error("[receipt-mail]", e);
-    }
+  if (updated) {
+    return emailReceipt(updated);
   }
   return updated;
 }
 
 export async function markFailed(id: string, error: string) {
-  return updateOrder(id, {
+  const updated = await updateOrder(id, {
     status: "failed" satisfies OrderStatus,
     error,
   });
+  // Payment failed — make sure the customer still has the invoice PDF + pay link.
+  if (updated) {
+    return emailInvoice(updated);
+  }
+  return updated;
 }
 
 export function publicOrder(order: CheckoutOrder) {

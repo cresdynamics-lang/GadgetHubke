@@ -31,7 +31,13 @@ const waHref = order
   title={order ? `Pay ${formatKes(order.subtotalKes)} - GadgetHub` : "Pay invoice - GadgetHub"}
   description={STOREFRONT_PAYMENTS ? `Pay your Gadget Hub invoice with M-Pesa. ${site.address}.` : `Finish this order on WhatsApp. ${site.address}.`}
 >
-  <section class="pay container" data-pay-page data-order-id={order?.id || ""}>
+  <section
+    class="pay container"
+    data-pay-page
+    data-order-id={order?.id || ""}
+    data-order-status={order?.status || ""}
+    data-auto-stk={STOREFRONT_PAYMENTS && order && !paid ? "1" : "0"}
+  >
     {
       !order ? (
         <div>
@@ -153,10 +159,10 @@ const waHref = order
         }, 1500);
       }
 
-      root?.querySelector("[data-pay-mpesa-btn]")?.addEventListener("click", async () => {
-        const err = root.querySelector("[data-pay-error]");
-        const wait = root.querySelector("[data-mpesa-wait]");
-        const phoneEl = root.querySelector("[data-mpesa-phone]");
+      async function sendStk() {
+        const err = root?.querySelector("[data-pay-error]");
+        const wait = root?.querySelector("[data-mpesa-wait]");
+        const phoneEl = root?.querySelector("[data-mpesa-phone]");
         const mobileNumber = phoneEl instanceof HTMLInputElement ? phoneEl.value.trim() : "";
         if (err instanceof HTMLElement) err.hidden = true;
         try {
@@ -182,7 +188,26 @@ const waHref = order
             err.hidden = false;
           }
         }
+      }
+
+      root?.querySelector("[data-pay-mpesa-btn]")?.addEventListener("click", () => {
+        void sendStk();
       });
+
+      // Opening the pay link: resume poll if STK already fired, otherwise push STK once.
+      if (root?.getAttribute("data-auto-stk") === "1") {
+        const status = root.getAttribute("data-order-status") || "";
+        const wait = root.querySelector("[data-mpesa-wait]");
+        if (status === "awaiting_payment") {
+          if (wait instanceof HTMLElement) {
+            wait.textContent = "Check your phone for the M-Pesa prompt…";
+            wait.hidden = false;
+          }
+          void poll();
+        } else if (status === "pending" || status === "failed") {
+          void sendStk();
+        }
+      }
     </script>
   ) : null
 }

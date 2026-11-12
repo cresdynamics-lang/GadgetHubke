@@ -1,5 +1,7 @@
 /**
  * One-page branded invoice / receipt PDF (A4).
+ * Always a single page: line items are clipped to the space above the
+ * payment/paid box and footer; Gadget Hub shop details are always shown.
  */
 import { publicFilePath } from "../public-file";
 import fs from "node:fs";
@@ -9,6 +11,12 @@ import { catalogAmount, dueTodayAmount, isLipa } from "../checkout/intent";
 import type { CheckoutOrder } from "../checkout/types";
 import { site } from "../site";
 import { payUrl } from "./pay-link";
+
+const PAGE_W = 595.28;
+const PAGE_H = 841.89;
+const MARGIN = 40;
+const FOOTER_H = 52;
+const ACTION_BOX_H = 78;
 
 const black = rgb(0.114, 0.114, 0.122);
 const muted = rgb(0.42, 0.42, 0.45);
@@ -44,17 +52,45 @@ function logoPath() {
   return publicFilePath("/images/logo-mark.png") ?? publicFilePath("/images/logo.png") ?? "";
 }
 
+function drawWrapped(
+  page: PDFPage,
+  text: string,
+  x: number,
+  y: number,
+  size: number,
+  font: Awaited<ReturnType<PDFDocument["embedFont"]>>,
+  color: ReturnType<typeof rgb>,
+  maxWidth: number,
+) {
+  const words = text.split(/\s+/).filter(Boolean);
+  let lineText = "";
+  let cursor = y;
+  for (const word of words) {
+    const next = lineText ? `${lineText} ${word}` : word;
+    if (font.widthOfTextAtSize(next, size) > maxWidth && lineText) {
+      page.drawText(lineText, { x, y: cursor, size, font, color });
+      cursor -= size + 2;
+      lineText = word;
+    } else {
+      lineText = next;
+    }
+  }
+  if (lineText) {
+    page.drawText(lineText, { x, y: cursor, size, font, color });
+    cursor -= size + 2;
+  }
+  return cursor;
+}
+
 export async function buildOrderPdf(
   order: CheckoutOrder,
   kind: "invoice" | "receipt",
 ): Promise<Uint8Array> {
   const doc = await PDFDocument.create();
-  const page = doc.addPage([595.28, 841.89]);
+  const page = doc.addPage([PAGE_W, PAGE_H]);
   const { width, height } = page.getSize();
   const font = await doc.embedFont(StandardFonts.Helvetica);
   const bold = await doc.embedFont(StandardFonts.HelveticaBold);
-  const margin = 40;
-  let y = height - margin;
 
   page.drawRectangle({ x: 0, y: 0, width, height, color: paper });
   page.drawRectangle({ x: 0, y: height - 72, width, height: 72, color: black });
@@ -63,52 +99,60 @@ export async function buildOrderPdf(
   if (logoFile) {
     try {
       const png = await doc.embedPng(fs.readFileSync(logoFile));
-      page.drawImage(png, { x: margin, y: height - 64, width: 48, height: 48 });
+      page.drawImage(png, { x: MARGIN, y: height - 64, width: 48, height: 48 });
     } catch {
       /* text-only header */
     }
   }
 
   page.drawText(site.name, {
-    x: margin + 58,
-    y: height - 38,
+    x: MARGIN + 58,
+    y: height - 34,
     size: 16,
     font: bold,
     color: paper,
   });
   page.drawText(site.legalName, {
-    x: margin + 58,
-    y: height - 54,
+    x: MARGIN + 58,
+    y: height - 48,
     size: 9,
     font,
     color: rgb(0.78, 0.78, 0.8),
+  });
+  page.drawText(`${site.address} · ${site.phoneDisplay}`, {
+    x: MARGIN + 58,
+    y: height - 60,
+    size: 8,
+    font,
+    color: rgb(0.7, 0.7, 0.72),
   });
 
   const lipa = isLipa(order);
   const kindLabel =
     kind === "receipt" ? (lipa ? "DEPOSIT RECEIPT" : "RECEIPT") : lipa ? "LIPA DEPOSIT" : "INVOICE";
-  const kindWidth = bold.widthOfTextAtSize(kindLabel, 18);
+  const kindWidth = bold.widthOfTextAtSize(kindLabel, 16);
   page.drawText(kindLabel, {
-    x: width - margin - kindWidth,
+    x: width - MARGIN - kindWidth,
     y: height - 42,
-    size: 18,
+    size: 16,
     font: bold,
     color: kind === "receipt" ? rgb(0.55, 0.9, 0.7) : paper,
   });
 
-  y = height - 96;
-  const leftX = margin;
+  let y = height - 92;
+  const leftX = MARGIN;
   const rightX = width / 2 + 8;
 
-  page.drawText("From", { x: leftX, y, size: 9, font: bold, color: muted });
-  page.drawText("Bill to", { x: rightX, y, size: 9, font: bold, color: muted });
-  y -= 16;
+  page.drawText("From", { x: leftX, y, size: 8, font: bold, color: muted });
+  page.drawText("Bill to", { x: rightX, y, size: 8, font: bold, color: muted });
+  y -= 13;
 
   const fromLines = [
     site.legalName,
-    ...site.addressLines,
-    `Tel ${site.phoneDisplay}`,
-    `WhatsApp ${site.phoneDisplay}`,
+    site.addressLines[0],
+    site.addressLines[1],
+    site.addressLines[2],
+    `Tel / WhatsApp ${site.phoneDisplay}`,
     site.email,
     site.url.replace(/^https:\/\//, ""),
     site.hours.short,
@@ -118,143 +162,169 @@ export async function buildOrderPdf(
     order.customer.phone,
     order.customer.email,
     order.customer.fulfillment === "delivery"
-      ? `Delivery · ${(order.customer.deliveryAddress || "Nairobi").slice(0, 70)}`
+      ? `Delivery · ${(order.customer.deliveryAddress || "Nairobi").slice(0, 60)}`
       : `Pickup · ${site.address}`,
-    order.customer.notes ? `Note: ${order.customer.notes}` : "",
+    order.customer.notes ? `Note: ${order.customer.notes.slice(0, 60)}` : "",
   ].filter(Boolean);
 
   const blockTop = y;
   fromLines.forEach((t, i) => {
-    page.drawText(t, { x: leftX, y: blockTop - i * 12, size: 9, font, color: black });
+    page.drawText(t.slice(0, 42), {
+      x: leftX,
+      y: blockTop - i * 11,
+      size: 8.5,
+      font,
+      color: black,
+    });
   });
   billLines.forEach((t, i) => {
-    page.drawText(String(t).slice(0, 48), {
+    page.drawText(String(t).slice(0, 42), {
       x: rightX,
-      y: blockTop - i * 12,
-      size: 9,
+      y: blockTop - i * 11,
+      size: 8.5,
       font,
       color: black,
     });
   });
 
-  y = blockTop - Math.max(fromLines.length, billLines.length) * 12 - 18;
+  y = blockTop - Math.max(fromLines.length, billLines.length) * 11 - 14;
   page.drawText(`No. ${order.id}`, { x: leftX, y, size: 10, font: bold, color: black });
   const issued = `Issued ${nairobiDate(order.createdAt)}`;
   page.drawText(issued, {
-    x: width - margin - font.widthOfTextAtSize(issued, 9),
+    x: width - MARGIN - font.widthOfTextAtSize(issued, 8.5),
     y,
-    size: 9,
+    size: 8.5,
     font,
     color: muted,
   });
 
-  y -= 22;
-  page.drawRectangle({ x: margin, y: y - 4, width: width - margin * 2, height: 18, color: black });
-  page.drawText("Item", { x: margin + 8, y, size: 8, font: bold, color: paper });
+  // Fixed bottom regions so content never spills to a second page.
+  const actionBoxY = FOOTER_H + 8;
+  const totalsFloor = actionBoxY + ACTION_BOX_H + 16;
+  const itemsCeiling = y - 18;
+
+  y -= 18;
+  page.drawRectangle({ x: MARGIN, y: y - 3, width: width - MARGIN * 2, height: 16, color: black });
+  page.drawText("Item", { x: MARGIN + 8, y, size: 8, font: bold, color: paper });
   page.drawText("Qty", { x: 390, y, size: 8, font: bold, color: paper });
   page.drawText("Amount", {
-    x: width - margin - 8 - bold.widthOfTextAtSize("Amount", 8),
+    x: width - MARGIN - 8 - bold.widthOfTextAtSize("Amount", 8),
     y,
     size: 8,
     font: bold,
     color: paper,
   });
 
-  y -= 20;
-  const rows = order.items.slice(0, 10);
-  for (const item of rows) {
-    const title = item.name.slice(0, 52);
-    const meta = bagMetaLine(item).slice(0, 70);
-    page.drawText(title, { x: margin + 8, y, size: 9, font: bold, color: black });
+  y -= 18;
+  const rowBudget = Math.max(0, itemsCeiling - totalsFloor - 70);
+  const approxRowH = 26;
+  const maxRows = Math.max(1, Math.min(order.items.length, Math.floor(rowBudget / approxRowH)));
+  let drawn = 0;
+
+  for (const item of order.items.slice(0, maxRows)) {
+    if (y < totalsFloor + 36) break;
+    const title = item.name.slice(0, 48);
+    const meta = bagMetaLine(item).slice(0, 64);
+    const rowTop = y;
+    page.drawText(title, { x: MARGIN + 8, y: rowTop, size: 9, font: bold, color: black });
     if (meta) {
-      y -= 11;
-      page.drawText(meta, { x: margin + 8, y, size: 7.5, font, color: muted });
+      y -= 10;
+      page.drawText(meta, { x: MARGIN + 8, y, size: 7, font, color: muted });
     }
-    page.drawText(String(item.qty), { x: 396, y: y + (meta ? 11 : 0), size: 9, font, color: black });
-    const amt = formatKes(item.kes * item.qty);
-    page.drawText(amt, {
-      x: width - margin - 8 - font.widthOfTextAtSize(amt, 9),
-      y: y + (meta ? 11 : 0),
+    page.drawText(String(item.qty), {
+      x: 396,
+      y: rowTop,
       size: 9,
       font,
       color: black,
     });
-    y -= 16;
+    const amt = formatKes(item.kes * item.qty);
+    page.drawText(amt, {
+      x: width - MARGIN - 8 - font.widthOfTextAtSize(amt, 9),
+      y: rowTop,
+      size: 9,
+      font,
+      color: black,
+    });
+    y -= 14;
     page.drawLine({
-      start: { x: margin, y: y + 8 },
-      end: { x: width - margin, y: y + 8 },
+      start: { x: MARGIN, y: y + 6 },
+      end: { x: width - MARGIN, y: y + 6 },
       thickness: 0.4,
       color: line,
     });
+    drawn += 1;
   }
-  if (order.items.length > 10) {
-    page.drawText(`+ ${order.items.length - 10} more item(s) on this order`, {
-      x: margin + 8,
+
+  const hidden = order.items.length - drawn;
+  if (hidden > 0) {
+    page.drawText(`+ ${hidden} more item(s) — full list in your email`, {
+      x: MARGIN + 8,
       y,
       size: 8,
       font,
       color: muted,
     });
-    y -= 14;
+    y -= 12;
   }
 
-  y -= 6;
+  // Totals sit just above the action box.
+  let totalsY = Math.max(y - 4, totalsFloor + (lipa ? 44 : 22));
   if (lipa && order.lipa) {
     const catalog = formatKes(catalogAmount(order));
-    page.drawText("Device total", { x: margin + 8, y, size: 9, font, color: muted });
+    page.drawText("Device total", { x: MARGIN + 8, y: totalsY, size: 9, font, color: muted });
     page.drawText(catalog, {
-      x: width - margin - 8 - font.widthOfTextAtSize(catalog, 9),
-      y,
+      x: width - MARGIN - 8 - font.widthOfTextAtSize(catalog, 9),
+      y: totalsY,
       size: 9,
       font,
       color: black,
     });
-    y -= 14;
+    totalsY -= 12;
     const remain = formatKes(order.lipa.remainingKes);
     page.drawText(`Remaining over ${order.lipa.months} ${order.lipa.months === 1 ? "month" : "months"}`, {
-      x: margin + 8,
-      y,
+      x: MARGIN + 8,
+      y: totalsY,
       size: 9,
       font,
       color: muted,
     });
     page.drawText(remain, {
-      x: width - margin - 8 - font.widthOfTextAtSize(remain, 9),
-      y,
+      x: width - MARGIN - 8 - font.widthOfTextAtSize(remain, 9),
+      y: totalsY,
       size: 9,
       font,
       color: black,
     });
-    y -= 16;
+    totalsY -= 14;
   }
   const totalLabel = lipa
     ? `Lipa Mdogo Mdogo deposit ${order.lipa?.depositPct || 40}% due today`
     : "Total (incl. VAT where applicable)";
-  page.drawText(totalLabel, { x: margin + 8, y, size: 10, font, color: muted });
+  page.drawText(totalLabel, { x: MARGIN + 8, y: totalsY, size: 9, font, color: muted });
   const total = formatKes(dueTodayAmount(order));
   page.drawText(total, {
-    x: width - margin - 8 - bold.widthOfTextAtSize(total, 14),
-    y: y - 2,
-    size: 14,
+    x: width - MARGIN - 8 - bold.widthOfTextAtSize(total, 13),
+    y: totalsY - 1,
+    size: 13,
     font: bold,
     color: black,
   });
 
-  y -= 36;
+  const boxY = actionBoxY;
+  const boxH = ACTION_BOX_H;
   if (kind === "invoice") {
-    const boxH = 78;
-    const boxY = Math.max(88, y - boxH);
     page.drawRectangle({
-      x: margin,
+      x: MARGIN,
       y: boxY,
-      width: width - margin * 2,
+      width: width - MARGIN * 2,
       height: boxH,
       color: rgb(0.94, 0.96, 1),
       borderColor: payBlue,
       borderWidth: 1.2,
     });
     page.drawText(lipa ? "Pay this Lipa Mdogo Mdogo deposit" : "Pay this invoice", {
-      x: margin + 14,
+      x: MARGIN + 14,
       y: boxY + boxH - 20,
       size: 11,
       font: bold,
@@ -262,12 +332,12 @@ export async function buildOrderPdf(
     });
     page.drawText(
       lipa
-        ? `Click to pay deposit ${total} with M-Pesa (not the full device price)`
-        : `Click to pay ${total} with M-Pesa on gadgethubke.com`,
+        ? `Pay deposit ${total} with M-Pesa (not the full device price)`
+        : `Pay ${total} with M-Pesa — funds settle to ${site.legalName} (Stanbic)`,
       {
-        x: margin + 14,
+        x: MARGIN + 14,
         y: boxY + boxH - 36,
-        size: 9,
+        size: 8.5,
         font,
         color: black,
       },
@@ -275,27 +345,25 @@ export async function buildOrderPdf(
     const url = payUrl(order.id);
     const shown = url.length > 78 ? `${url.slice(0, 75)}…` : url;
     page.drawText(shown, {
-      x: margin + 14,
+      x: MARGIN + 14,
       y: boxY + 18,
       size: 8,
       font,
       color: payBlue,
     });
-    addLink(page, margin, boxY, width - margin * 2, boxH, url);
+    addLink(page, MARGIN, boxY, width - MARGIN * 2, boxH, url);
   } else {
-    const boxH = 70;
-    const boxY = Math.max(88, y - boxH);
     page.drawRectangle({
-      x: margin,
+      x: MARGIN,
       y: boxY,
-      width: width - margin * 2,
+      width: width - MARGIN * 2,
       height: boxH,
       color: rgb(0.9, 0.97, 0.93),
       borderColor: paidGreen,
       borderWidth: 1.2,
     });
     page.drawText(lipa ? "DEPOSIT PAID" : "PAID", {
-      x: margin + 14,
+      x: MARGIN + 14,
       y: boxY + boxH - 22,
       size: 16,
       font: bold,
@@ -309,8 +377,8 @@ export async function buildOrderPdf(
       .filter(Boolean)
       .join(" · ");
     page.drawText(paidBits.slice(0, 90), {
-      x: margin + 14,
-      y: boxY + 24,
+      x: MARGIN + 14,
+      y: boxY + 28,
       size: 9,
       font,
       color: black,
@@ -318,10 +386,10 @@ export async function buildOrderPdf(
     page.drawText(
       lipa
         ? `Deposit received. Remaining ${formatKes(order.lipa?.remainingKes || 0)} after plan confirmation.`
-        : "Keep this receipt with your device. 1-year warranty on new stock.",
+        : `Keep this receipt with your device. ${site.warranty.years}-year warranty on new stock.`,
       {
-        x: margin + 14,
-        y: boxY + 10,
+        x: MARGIN + 14,
+        y: boxY + 12,
         size: 8,
         font,
         color: muted,
@@ -329,23 +397,19 @@ export async function buildOrderPdf(
     );
   }
 
-  page.drawText(
-    `${site.legalName} · ${site.address}, ${site.location} · ${site.phoneDisplay} · ${site.email}`,
-    {
-      x: margin,
-      y: 48,
-      size: 7.5,
-      font,
-      color: muted,
-    },
-  );
-  page.drawText("This is a computer-generated document. Prices in Kenyan Shillings.", {
-    x: margin,
-    y: 36,
-    size: 7.5,
+  const footer1 = `${site.legalName} · ${site.address}, ${site.location} · ${site.phoneDisplay} · ${site.email}`;
+  drawWrapped(page, footer1, MARGIN, 34, 7, font, muted, width - MARGIN * 2);
+  page.drawText("One-page computer-generated document. Prices in Kenyan Shillings (KES).", {
+    x: MARGIN,
+    y: 18,
+    size: 7,
     font,
     color: muted,
   });
+
+  if (doc.getPageCount() !== 1) {
+    throw new Error("Order PDF must be exactly one page.");
+  }
 
   return doc.save();
 }

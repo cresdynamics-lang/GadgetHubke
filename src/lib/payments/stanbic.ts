@@ -36,6 +36,30 @@ export function cardPaymentsEnabled(): boolean {
   return false;
 }
 
+/** App-side readiness — no secrets. True when STK can be attempted against Stanbic. */
+export function paymentsReady() {
+  const mode = paymentsMode();
+  const hasCreds = Boolean(process.env.STANBIC_CLIENT_ID && process.env.STANBIC_CLIENT_SECRET);
+  const waitingOn =
+    mode === "mock" && !hasCreds ? ("credentials" as const) : ("stanbic_api" as const);
+  return {
+    mode,
+    hasCredentials: hasCreds,
+    cardEnabled: false,
+    product: "STK Push – M-Pesa Checkout",
+    billAccountRef: billAccountRef(),
+    apiBase: apiBase(),
+    tokenUrl: tokenUrl(),
+    stkUrl: stkUrl(),
+    webhookUrl: STANBIC_WEBHOOK_URL,
+    website: site.url,
+    serverIpHint: "143.198.169.74",
+    waitingOn,
+    /** Mock always works locally; sandbox/live need bank credentials present. */
+    ready: mode === "mock" || hasCreds,
+  };
+}
+
 function apiBase(): string {
   return (process.env.STANBIC_API_BASE || SANDBOX_API).replace(/\/$/, "");
 }

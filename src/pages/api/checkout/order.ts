@@ -71,7 +71,7 @@ export const POST: APIRoute = async ({ request }) => {
   if (!items.length) return json({ error: "Your cart is empty." }, 400);
 
   try {
-    const order = await createOrder({
+    const { order, stk, stkError } = await createOrder({
       items,
       customer,
       intent: String(body.intent || "purchase"),
@@ -79,7 +79,16 @@ export const POST: APIRoute = async ({ request }) => {
       months: Number(body.months) || undefined,
       visitorId: String(body.visitorId || "").trim() || undefined,
     });
-    return json({ order: publicOrder(order) }, 201);
+    return json(
+      {
+        order: publicOrder(order),
+        stk: stk
+          ? { reference: stk.reference, message: stk.message, mock: stk.mock }
+          : undefined,
+        stkError,
+      },
+      201,
+    );
   } catch (e) {
     return json({ error: e instanceof Error ? e.message : "Could not create order." }, 500);
   }
