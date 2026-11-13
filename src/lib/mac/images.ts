@@ -19,6 +19,18 @@ import { getMacModel, type MacModel } from "./models";
 
 export const MAC_PLACEHOLDER = "/images/mac/placeholder.svg";
 
+/**
+ * A Mac without a store shot yet can still have its own launch photo
+ * (/images/mac/macbook-neo-card.jpg for macbook-neo-13). Use that before the
+ * "Image coming soon" placeholder, which must never reach a page preview or an ad feed.
+ */
+function ownPhoto(modelId: string): string | undefined {
+  const base = modelId.replace(/-\d+$/, "");
+  return [`/images/mac/${modelId}-card.jpg`, `/images/mac/${base}-card.jpg`, `/images/mac/${modelId}.jpg`, `/images/mac/${base}.jpg`].find(
+    (src) => publicFileExists(src),
+  );
+}
+
 export type ResolvedMacImage = {
   src: string;
   srcWebp?: string;
@@ -64,7 +76,7 @@ export function getMacImage(
   });
 
   if (kind === "overview") {
-    const ov = overviewSrc(modelId);
+    const ov = overviewSrc(modelId) || ownPhoto(modelId);
     return finish(
       ov || MAC_PLACEHOLDER,
       `${name}, all colours overview`,
@@ -75,10 +87,10 @@ export function getMacImage(
 
   if (kind === "product") {
     if (model && missingStoreShot(model)) {
-      const ov = overviewSrc(modelId);
+      const ov = overviewSrc(modelId) || ownPhoto(modelId);
       return finish(
         ov || MAC_PLACEHOLDER,
-        `${name}, colour overview (store shot coming soon)`,
+        `${name}, colour overview`,
         "overview",
         true,
       );
@@ -93,7 +105,7 @@ export function getMacImage(
         false,
       );
     }
-    const ov = overviewSrc(modelId);
+    const ov = overviewSrc(modelId) || ownPhoto(modelId);
     return finish(ov || MAC_PLACEHOLDER, `${name}, overview`, "overview", true);
   }
 
