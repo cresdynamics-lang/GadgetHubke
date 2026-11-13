@@ -85,11 +85,14 @@ for (const link of links) {
   const w = Math.max(1, Math.round(width * scale));
   const h = Math.max(1, Math.round(height * scale));
   const resized = await sharp(product).resize(w, h, { kernel: "lanczos3" }).toBuffer();
-  const name = `${path.basename(pub).replace(/\.[^.]+$/, "")}-${crypto.createHash("md5").update(pub).digest("hex").slice(0, 6)}.jpg`;
-  await sharp({ create: { width: SIDE, height: SIDE, channels: 3, background: bg } })
+  const jpeg = await sharp({ create: { width: SIDE, height: SIDE, channels: 3, background: bg } })
     .composite([{ input: resized, left: Math.round((SIDE - w) / 2), top: Math.round((SIDE - h) / 2) }])
     .jpeg({ quality: 88, mozjpeg: true })
-    .toFile(path.join(OUT_DIR, name));
+    .toBuffer();
+  // Named after the image itself: a changed picture gets a new URL, so Cloudflare and
+  // Meta can never keep showing an old copy under the same name.
+  const name = `${path.basename(pub).replace(/\.[^.]+$/, "")}-${crypto.createHash("md5").update(jpeg).digest("hex").slice(0, 10)}.jpg`;
+  fs.writeFileSync(path.join(OUT_DIR, name), jpeg);
   map[pub] = `/feed-images/${name}`;
   console.log(`${width}x${height} -> ${SIDE}x${SIDE} (x${scale.toFixed(2)})  ${pub.slice(-70)}`);
 }

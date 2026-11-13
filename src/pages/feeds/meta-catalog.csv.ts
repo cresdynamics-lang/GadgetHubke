@@ -10,7 +10,8 @@ export const GET: APIRoute = async () => {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
       "Content-Disposition": 'inline; filename="gadgethub-meta-catalog.csv"',
-      "Cache-Control": "public, max-age=1800",
+      // Never stored by Cloudflare or any cache: Meta and Google must always fetch the live list.
+      "Cache-Control": "no-store, max-age=0",
     },
   });
 };

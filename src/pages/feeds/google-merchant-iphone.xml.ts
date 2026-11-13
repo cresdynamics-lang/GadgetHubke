@@ -9,7 +9,8 @@ export const GET: APIRoute = async () => {
   return new Response(merchantFeedXml(rows), {
     headers: {
       "Content-Type": "application/xml; charset=utf-8",
-      "Cache-Control": "public, max-age=3600",
+      // Never stored by Cloudflare or any cache: Meta and Google must always fetch the live list.
+      "Cache-Control": "no-store, max-age=0",
     },
   });
 };
