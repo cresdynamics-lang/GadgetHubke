@@ -99,7 +99,8 @@ export const GET: APIRoute = async () => {
 
   lines.push(
     "## Useful pages",
-    `- All iPhones: ${abs("/iphone")}`,
+    `- All iPhones: ${abs("/iphone")} · Full iPhone price list: ${abs("/iphone-prices-kenya")}`,
+    `- Black Friday iPhone deals: ${abs("/black-friday-iphone-deals-kenya")}`,
     `- Mac: ${abs("/mac")} · iPad: ${abs("/ipad")} · Apple Watch: ${abs("/watch")} · AirPods: ${abs("/airpods")}`,
     `- Deals: ${abs("/deals")} · Shop location: ${abs("/locations")} · FAQs: ${abs("/faqs")}`,
     `- Buying guides: ${abs("/journal")}`,

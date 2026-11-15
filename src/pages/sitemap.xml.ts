@@ -14,6 +14,8 @@ const staticPaths = [
   "/",
   "/shop",
   "/deals",
+  "/iphone-prices-kenya",
+  "/black-friday-iphone-deals-kenya",
   "/trade-in",
   "/lipa-mdogo-mdogo",
   "/journal",

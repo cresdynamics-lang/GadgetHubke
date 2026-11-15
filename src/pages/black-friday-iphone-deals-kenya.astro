@@ -1,0 +1,186 @@
+---
+/**
+ * Black Friday in Kenya: today's live prices on the Black November picks and the latest
+ * iPhones, with Lipa Mdogo Mdogo and trade-in. States real prices only; offers beyond
+ * the listed price are confirmed on WhatsApp. Targets "Black Friday iPhone deals Kenya".
+ */
+export const prerender = false;
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { listSeoModels } from "../lib/iphone/seo";
+import { withLiveSeoPrices } from "../lib/iphone/seo/live";
+import { buildPriceList } from "../lib/iphone/seo/price-list";
+import { iphoneLiveId, isShownOnWebsite, livePricedCatalog } from "../lib/pricing/live";
+import { isListedForSale, listedFromKes } from "../lib/listing-offers";
+import { lipaPlan } from "../lib/pricing/lipa";
+import { site, whatsappUrl } from "../lib/site";
+
+/** Black November picks (as in the site's Black November popup), priced live. */
+const picks = [
+  { id: "iphone-17", name: "iPhone 17", href: "/iphone/iphone-17", img: "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17/iphone-17_lavender_view1.webp", note: "ProMotion and the A19 chip" },
+  { id: "iphone-18-pro-max", name: "iPhone 18 Pro Max", href: "/iphone/iphone-18-pro-max", img: "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro-max/iphone-18-pro-max_black_view1.webp", note: "The biggest Pro iPhone, A20 Pro" },
+  { id: "ipad-a16", name: "iPad (A16)", href: "/ipad/ipad-a16", img: "/Gadget_Hub_Store_Angles/ipad-a16/pink-1.webp", note: "The everyday iPad" },
+  { id: "macbook-air-13-m4", name: "MacBook Air 13″ M4", href: "/mac/macbook-air-13-m4", img: "/Gadget_Hub_Store_Angles/macbook-air-13-m4/sky-blue-1.webp", note: "Thin, fast, all-day battery" },
+];
+
+const live = await livePricedCatalog();
+const byId = new Map(live.map((p) => [p.id, p]));
+const listedPicks = picks
+  .map((p) => {
+    const product = byId.get(p.id.startsWith("iphone") ? iphoneLiveId(p.id) : p.id);
+    if (!product || !isListedForSale(product)) return null;
+    const fromKes = listedFromKes(product);
+    if (!fromKes) return null;
+    return { ...p, fromKes, plan: lipaPlan(fromKes, 40, 6) };
+  })
+  .filter((p): p is NonNullable<typeof p> => Boolean(p));
+
+const iphones = buildPriceList(
+  listSeoModels()
+    .filter((m) => {
+      const p = byId.get(iphoneLiveId(m.id));
+      return !p || isShownOnWebsite(p);
+    })
+    .map((m) => withLiveSeoPrices(m, byId.get(iphoneLiveId(m.id)))),
+).slice(0, 6);
+
+const kes = (n: number) => `KES ${Math.round(n).toLocaleString("en-KE")}`;
+const checkedOn = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "Africa/Nairobi" }).format(new Date());
+const url = new URL("/black-friday-iphone-deals-kenya", site.url).href;
+const wa = whatsappUrl("Hi Gadget Hub, I'm looking for a Black Friday deal on an iPhone. What do you have?");
+
+const faq = [
+  {
+    question: "When is Black Friday 2026 in Kenya?",
+    answer: "Black Friday is on Friday 27 November 2026. Gadget Hub runs Black November through the whole month.",
+  },
+  {
+    question: "Where can I get Black Friday iPhone deals in Nairobi?",
+    answer: `At Gadget Hub, ${site.address}, ${site.landmark}. Prices on this page are today's shop prices; message us on WhatsApp on ${site.phoneDisplay} to ask about any Black Friday offer before you buy.`,
+  },
+  {
+    question: "Can I pay for a Black Friday iPhone in instalments?",
+    answer: "Yes. With Lipa Mdogo Mdogo you pay 40% today and the balance over 1 to 6 months. The monthly amount for each phone is shown on this page.",
+  },
+  {
+    question: "Can I trade in my old phone on Black Friday?",
+    answer: "Yes. Trade in your current iPhone, iPad or Mac and we take its value off your new device.",
+  },
+];
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ItemList",
+      name: "Black Friday iPhone deals in Kenya at Gadget Hub",
+      itemListElement: [
+        ...listedPicks.map((p) => ({ name: p.name, url: new URL(p.href, site.url).href })),
+        ...iphones.filter((m) => !listedPicks.some((p) => p.href === m.href)).map((m) => ({ name: m.name, url: new URL(m.href, site.url).href })),
+      ].map((x, i) => ({ "@type": "ListItem", position: i + 1, ...x })),
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: site.url },
+        { "@type": "ListItem", position: 2, name: "Deals", item: `${site.url}/deals` },
+        { "@type": "ListItem", position: 3, name: "Black Friday iPhone deals", item: url },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: faq.map((f) => ({ "@type": "Question", name: f.question, acceptedAnswer: { "@type": "Answer", text: f.answer } })),
+    },
+  ],
+};
+---
+
+<BaseLayout
+  title="Black Friday iPhone Deals in Kenya 2026 | Gadget Hub Nairobi"
+  description={`Black Friday 2026 iPhone deals in Nairobi: today's prices on iPhone 18 Pro Max, iPhone 17 and more, with Lipa Mdogo Mdogo from 40% deposit and trade-in. Gadget Hub, Apple Authorised Reseller.`}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <article class="bf container">
+    <nav class="bf__crumbs" aria-label="Breadcrumb"><a href="/">Home</a> › <a href="/deals">Deals</a> › <span aria-current="page">Black Friday</span></nav>
+    <p class="bf__eyebrow">Black November · Black Friday is Friday 27 November 2026</p>
+    <h1>Black Friday iPhone deals in Kenya</h1>
+    <p class="bf__lede">
+      Shopping for an iPhone this Black Friday? Here are Gadget Hub's Black November picks and the latest iPhones at
+      today's prices (checked {checkedOn}), with Lipa Mdogo Mdogo and trade-in on every one. Ask us on WhatsApp about any
+      Black Friday offer before you buy.
+    </p>
+    <p><a class="btn btn--whatsapp" href={wa} target="_blank" rel="noopener noreferrer">Ask for a Black Friday deal on WhatsApp</a></p>
+
+    {listedPicks.length ? (
+      <section aria-labelledby="bf-picks">
+        <h2 id="bf-picks">Black November picks</h2>
+        <ul class="bf__grid">
+          {listedPicks.map((p) => (
+            <li>
+              <a class="bf__card" href={p.href}>
+                <img src={p.img} alt={p.name} width="360" height="360" loading="lazy" decoding="async" />
+                <strong>{p.name}</strong>
+                <span class="bf__muted">{p.note}</span>
+                <span>From {kes(p.fromKes)}</span>
+                <span class="bf__muted">or {kes(p.plan.monthlyKes)}/month after {kes(p.plan.depositKes)}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ) : null}
+
+    <section aria-labelledby="bf-iphones">
+      <h2 id="bf-iphones">Latest iPhones this Black Friday</h2>
+      <div class="bf__table-wrap">
+        <table class="bf__table">
+          <thead><tr><th scope="col">iPhone</th><th scope="col">From</th><th scope="col">Lipa Mdogo Mdogo</th></tr></thead>
+          <tbody>
+            {iphones.map((m) => {
+              const first = m.rows[0];
+              return (
+                <tr>
+                  <th scope="row"><a href={m.href}>{m.name}</a></th>
+                  <td>{kes(m.fromKes)}</td>
+                  <td>{kes(first.monthlyKes)}/month <span class="bf__muted">({first.storage})</span></td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <p><a href="/iphone-prices-kenya">See every iPhone price in Kenya →</a></p>
+    </section>
+
+    <section class="bf__faq">
+      <h2>Black Friday questions</h2>
+      <dl>
+        {faq.map((f) => (
+          <>
+            <dt>{f.question}</dt>
+            <dd>{f.answer}</dd>
+          </>
+        ))}
+      </dl>
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  .bf { padding-block: var(--space-8, 2rem) calc(var(--space-16, 4rem) + var(--fab-clearance, 0px)); max-width: 60rem; }
+  .bf__crumbs { font-size: 0.85rem; color: var(--color-fg-muted); margin-bottom: 0.75rem; }
+  .bf__eyebrow { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--color-fg-muted); margin-bottom: 0.4rem; }
+  .bf h1 { font-size: clamp(1.7rem, 5vw, 2.6rem); letter-spacing: -0.02em; margin-bottom: 0.75rem; }
+  .bf h2 { font-size: 1.3rem; margin: 2rem 0 0.75rem; }
+  .bf__lede { line-height: 1.6; max-width: 44rem; margin-bottom: 1rem; }
+  .bf__grid { list-style: none; padding: 0; display: grid; gap: 0.9rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 9.5rem), 1fr)); }
+  .bf__card { display: flex; flex-direction: column; gap: 0.25rem; padding: 0.9rem; border: 1px solid var(--color-border, #d2d2d7); border-radius: 0.9rem; color: inherit; text-decoration: none; height: 100%; }
+  .bf__card img { width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; margin-bottom: 0.4rem; }
+  .bf__muted { color: var(--color-fg-muted); font-size: 0.85rem; }
+  .bf__table-wrap { overflow-x: auto; }
+  .bf__table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+  .bf__table th, .bf__table td { text-align: left; padding: 0.55rem 0.6rem; border-bottom: 1px solid var(--color-border, #e5e5ea); white-space: nowrap; }
+  .bf__table thead th { font-size: 0.78rem; color: var(--color-fg-muted); font-weight: 600; }
+  .bf__faq dt { font-weight: 600; margin-top: 0.9rem; }
+  .bf__faq dd { margin: 0.25rem 0 0; line-height: 1.6; }
+</style>

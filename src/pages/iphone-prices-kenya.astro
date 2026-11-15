@@ -1,0 +1,168 @@
+---
+/**
+ * Live iPhone price list for Kenya: every listed iPhone and storage, New and Ex-UK,
+ * with the Lipa Mdogo Mdogo monthly amount and a link to each storage page.
+ * Targets "iPhone prices in Kenya" / "iPhone price list Kenya".
+ */
+export const prerender = false;
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { listSeoModels } from "../lib/iphone/seo";
+import { withLiveSeoPrices } from "../lib/iphone/seo/live";
+import { buildPriceList, priceListFaq } from "../lib/iphone/seo/price-list";
+import { iphoneLiveId, isShownOnWebsite, livePricedCatalog } from "../lib/pricing/live";
+import { site, whatsappUrl } from "../lib/site";
+
+const live = await livePricedCatalog();
+const byId = new Map(live.map((p) => [p.id, p]));
+const list = buildPriceList(
+  listSeoModels()
+    .filter((m) => {
+      const p = byId.get(iphoneLiveId(m.id));
+      return !p || isShownOnWebsite(p);
+    })
+    .map((m) => withLiveSeoPrices(m, byId.get(iphoneLiveId(m.id)))),
+);
+const checkedOn = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "Africa/Nairobi" }).format(new Date());
+const monthYear = new Intl.DateTimeFormat("en-GB", { month: "long", year: "numeric", timeZone: "Africa/Nairobi" }).format(new Date());
+const faq = priceListFaq(list, checkedOn);
+const kes = (n: number) => `KES ${Math.round(n).toLocaleString("en-KE")}`;
+const hasExUk = list.some((m) => m.rows.some((r) => r.exUkKes > 0));
+const lowest = Math.min(...list.map((m) => m.fromKes).filter((n) => n > 0));
+const url = new URL("/iphone-prices-kenya", site.url).href;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": `${url}#page`,
+      url,
+      name: `iPhone prices in Kenya (${monthYear})`,
+      dateModified: new Date().toISOString().slice(0, 10),
+      isPartOf: { "@id": `${site.url}/#website` },
+    },
+    {
+      "@type": "ItemList",
+      name: `iPhone price list in Kenya, ${monthYear}`,
+      itemListOrder: "https://schema.org/ItemListOrderDescending",
+      numberOfItems: list.reduce((n, m) => n + m.rows.length, 0),
+      itemListElement: list
+        .flatMap((m) => m.rows.map((r) => ({ m, r })))
+        .map(({ m, r }, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          url: new URL(r.href, site.url).href,
+          name: `${m.name} ${r.storage}`,
+        })),
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: site.url },
+        { "@type": "ListItem", position: 2, name: "iPhone", item: `${site.url}/iphone` },
+        { "@type": "ListItem", position: 3, name: "iPhone prices in Kenya", item: url },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: faq.map((f) => ({ "@type": "Question", name: f.question, acceptedAnswer: { "@type": "Answer", text: f.answer } })),
+    },
+  ],
+};
+---
+
+<BaseLayout
+  title={`iPhone Prices in Kenya (${monthYear}): Full Price List | Gadget Hub`}
+  description={`Every iPhone price in Kenya today, from ${kes(lowest)}: each model and storage, new${hasExUk ? " and Ex-UK" : ""}, with Lipa Mdogo Mdogo monthly amounts. Live prices from Gadget Hub, Nairobi CBD.`}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <article class="ipl container">
+    <nav class="ipl__crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a> › <a href="/iphone">iPhone</a> › <span aria-current="page">iPhone prices in Kenya</span>
+    </nav>
+    <h1>iPhone prices in Kenya ({monthYear})</h1>
+    <p class="ipl__lede">
+      Every iPhone we sell, with the price of each storage size{hasExUk ? ", sealed new and Ex-UK (UK-used)" : ", sealed new"}.
+      Prices come straight from the shop and were checked on <strong>{checkedOn}</strong>. Tap any phone for its colours,
+      photos and full details, or order on WhatsApp.
+    </p>
+    <ul class="ipl__jump" aria-label="Jump to a model">
+      {list.map((m) => <li><a href={`#${m.id}`}>{m.name}</a></li>)}
+    </ul>
+
+    {list.map((m) => (
+      <section class="ipl__model" id={m.id} aria-labelledby={`${m.id}-h`}>
+        <h2 id={`${m.id}-h`}><a href={m.href}>{m.name} price in Kenya</a></h2>
+        <p class="ipl__from">From {kes(m.fromKes)}</p>
+        <div class="ipl__table-wrap">
+          <table class="ipl__table">
+            <thead>
+              <tr>
+                <th scope="col">Storage</th>
+                <th scope="col">New</th>
+                {hasExUk ? <th scope="col">Ex-UK</th> : null}
+                <th scope="col">Lipa Mdogo Mdogo</th>
+              </tr>
+            </thead>
+            <tbody>
+              {m.rows.map((r) => (
+                <tr>
+                  <th scope="row"><a href={r.href}>{m.name} {r.storage}</a>{r.inStock ? null : <span class="ipl__muted"> · ask for stock</span>}</th>
+                  <td>{r.newKes ? kes(r.newKes) : "—"}</td>
+                  {hasExUk ? <td>{r.exUkKes ? kes(r.exUkKes) : "—"}</td> : null}
+                  <td>{kes(r.monthlyKes)}/month <span class="ipl__muted">after {kes(r.depositKes)}</span></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    ))}
+
+    <section class="ipl__how">
+      <h2>How to buy an iPhone at Gadget Hub</h2>
+      <ul>
+        <li><strong>Pay in full</strong> with M-Pesa, or <a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo</a>: 40% today, the balance over 1 to 6 months (6-month amounts shown above).</li>
+        <li><strong>Trade in</strong> your current iPhone, iPad or Mac and we take its value off the price. <a href="/trade-in">Get a trade-in quote</a>.</li>
+        <li><strong>New</strong> iPhones are sealed with a {site.warranty.years}-year warranty{hasExUk ? "; Ex-UK iPhones are genuine UK-used units with condition and warranty stated on your invoice" : ""}.</li>
+        <li>Collect at {site.address}, {site.landmark}, or get <a href="/shipping-delivery">delivery across Kenya</a>.</li>
+      </ul>
+      <p><a class="btn btn--whatsapp" href={whatsappUrl("Hi Gadget Hub, I saw your iPhone price list. Which iPhones do you have in stock today?")} target="_blank" rel="noopener noreferrer">Ask about stock on WhatsApp</a></p>
+    </section>
+
+    <section class="ipl__faq">
+      <h2>iPhone price questions</h2>
+      <dl>
+        {faq.map((f) => (
+          <>
+            <dt>{f.question}</dt>
+            <dd>{f.answer}</dd>
+          </>
+        ))}
+      </dl>
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  .ipl { padding-block: var(--space-8, 2rem) calc(var(--space-16, 4rem) + var(--fab-clearance, 0px)); max-width: 56rem; }
+  .ipl__crumbs { font-size: 0.85rem; color: var(--color-fg-muted); margin-bottom: 0.75rem; }
+  .ipl h1 { font-size: clamp(1.6rem, 5vw, 2.4rem); letter-spacing: -0.02em; margin-bottom: 0.75rem; }
+  .ipl__lede { line-height: 1.6; max-width: 44rem; margin-bottom: 1rem; }
+  .ipl__jump { display: flex; flex-wrap: wrap; gap: 0.4rem; list-style: none; padding: 0; margin: 0 0 2rem; }
+  .ipl__jump a { display: inline-block; padding: 0.3rem 0.65rem; border: 1px solid var(--color-border, #d2d2d7); border-radius: 999px; font-size: 0.82rem; text-decoration: none; color: inherit; }
+  .ipl__model { margin-bottom: 2rem; scroll-margin-top: calc(var(--header-height, 3.5rem) + 1rem); }
+  .ipl__model h2 { font-size: 1.25rem; margin-bottom: 0.15rem; }
+  .ipl__model h2 a { color: inherit; }
+  .ipl__from { color: var(--color-fg-muted); margin-bottom: 0.5rem; }
+  .ipl__table-wrap { overflow-x: auto; }
+  .ipl__table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+  .ipl__table th, .ipl__table td { text-align: left; padding: 0.55rem 0.6rem; border-bottom: 1px solid var(--color-border, #e5e5ea); white-space: nowrap; }
+  .ipl__table thead th { font-size: 0.78rem; color: var(--color-fg-muted); font-weight: 600; }
+  .ipl__muted { color: var(--color-fg-muted); font-size: 0.82rem; font-weight: 400; }
+  .ipl__how, .ipl__faq { margin-top: 2.5rem; }
+  .ipl__how ul { padding-left: 1.1rem; line-height: 1.7; }
+  .ipl__faq dt { font-weight: 600; margin-top: 0.9rem; }
+  .ipl__faq dd { margin: 0.25rem 0 0; line-height: 1.6; }
+</style>

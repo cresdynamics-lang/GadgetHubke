@@ -76,15 +76,16 @@ const useTertiary = Boolean(tertiaryHref && tertiaryLabel);
   </div>
 
   <div class="sig-hero__copy container">
-    <p class="sig-hero__eyebrow">{eyebrow}</p>
-    <h1 id="sig-hero-title">
+    {/* The searchable words are the page heading; the slogan below keeps its display size. */}
+    <h1 class="sig-hero__eyebrow" id="sig-hero-title">{eyebrow}</h1>
+    <p class="sig-hero__headline">
       <span class="sig-hero__title-line">{title}</span>
       <span class="sig-hero__title-line">
         {punchBefore}
         {punchHasBrand ? <span class="sig-hero__brand">Gadget Hub</span> : null}
         {punchAfter}
       </span>
-    </h1>
+    </p>
     <p class="sig-hero__lede">{lede}</p>
     <div class="sig-hero__actions">
       <a class="btn btn--primary" href={primaryHref}>{primaryLabel}</a>
@@ -548,7 +549,7 @@ const useTertiary = Boolean(tertiaryHref && tertiaryLabel);
     margin-inline: auto;
   }
 
-  .sig-hero h1 {
+  .sig-hero__headline {
     font-family: var(--font-hero);
     font-size: clamp(1.35rem, 4.2vw, 3.25rem);
     font-weight: 600;
@@ -798,7 +799,7 @@ const useTertiary = Boolean(tertiaryHref && tertiaryLabel);
       max-width: 16rem;
     }
 
-    .sig-hero h1 {
+    .sig-hero__headline {
       font-size: clamp(1.05rem, 5.2vw, 1.45rem);
       line-height: 1.12;
       margin-bottom: 0.55rem;
