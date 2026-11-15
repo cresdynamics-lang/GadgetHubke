@@ -1,6 +1,6 @@
 ---
 /**
- * Right bag drawer - localStorage, WhatsApp order, next-phase checkout note.
+ * Right bag drawer — localStorage cart, checkout, WhatsApp help.
  */
 import { iphoneConfig } from "../../lib/iphone/config";
 
@@ -13,6 +13,7 @@ const waPhone = iphoneConfig.whatsapp;
       <h2>Cart</h2>
       <button type="button" class="bag__close" data-bag-close aria-label="Close cart">Close</button>
     </header>
+    <p class="bag__note">Checkout with M-Pesa STK. WhatsApp help stays available.</p>
     <div class="bag__empty" data-bag-empty>
       <p>Your cart is empty.</p>
       <a class="btn btn--secondary btn--sm" href="/accessories">Shop accessories</a>
@@ -20,8 +21,9 @@ const waPhone = iphoneConfig.whatsapp;
     <ul class="bag__list" data-bag-list hidden></ul>
     <footer class="bag__foot" data-bag-foot hidden>
       <p class="bag__total">Total <strong data-bag-total></strong></p>
-      <a class="btn btn--whatsapp" data-bag-wa href="#" target="_blank" rel="noopener noreferrer">
-        Order on WhatsApp
+      <a class="btn btn--primary" data-bag-checkout href="/checkout">Checkout</a>
+      <a class="btn btn--whatsapp btn--sm" data-bag-wa href="#" target="_blank" rel="noopener noreferrer">
+        Need help on WhatsApp
       </a>
     </footer>
   </div>
@@ -342,7 +344,7 @@ const waPhone = iphoneConfig.whatsapp;
     else items.push(incoming);
     write(items);
     trackMetaAddToCart(incoming);
-    showToast("Added — order on WhatsApp");
+    showToast("Added to cart");
     openBag();
   });
 
@@ -403,6 +405,13 @@ const waPhone = iphoneConfig.whatsapp;
     font: inherit;
     text-decoration: underline;
     cursor: pointer;
+  }
+
+  .bag__note {
+    margin: 0.35rem 0 0.75rem;
+    color: #6e6e73;
+    font-size: 0.8rem;
+    line-height: 1.35;
   }
 
   .bag__empty {

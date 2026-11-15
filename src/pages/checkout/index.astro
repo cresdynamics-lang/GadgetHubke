@@ -58,7 +58,7 @@ const lipa = iphoneConfig.lipa;
           <input type="text" name="name" required autocomplete="name" placeholder="Your name" />
         </label>
         <label class="checkout__field">
-          <span>Phone</span>
+          <span>M-Pesa phone (STK Push)</span>
           <input type="tel" name="phone" required autocomplete="tel" placeholder="07XX XXX XXX" />
         </label>
         <label class="checkout__field">
@@ -136,7 +136,7 @@ const lipa = iphoneConfig.lipa;
         </label>
         <p class="checkout__error" data-details-error hidden></p>
         <div class="checkout__actions">
-          <button type="submit" class="btn btn--primary">{STOREFRONT_PAYMENTS ? "Continue to invoice" : "Continue on WhatsApp"}</button>
+          <button type="submit" class="btn btn--primary">{STOREFRONT_PAYMENTS ? "Proceed to pay" : "Continue on WhatsApp"}</button>
         </div>
       </form>
 
@@ -464,7 +464,7 @@ const lipa = iphoneConfig.lipa;
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           items,
-          customer,
+          customer: { ...customer, mpesaPhone: customer.phone },
           intent,
           depositPct,
           months,

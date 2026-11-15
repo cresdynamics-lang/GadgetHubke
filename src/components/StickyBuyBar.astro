@@ -32,7 +32,8 @@ const {
   <div class:list={["float-buy__actions", { "float-buy__actions--offers": onPageOffers }]}>
     {onPageOffers ? <a class="btn btn--secondary btn--xs" href="#lipa-on-product">Lipa Mdogo Mdogo</a> : null}
     <a class="btn btn--secondary btn--xs" href={onPageOffers ? "#trade-on-product" : "/trade-in"}>Trade In</a>
-    <a class="btn btn--whatsapp btn--xs" data-sticky-wa href="#">Order on WhatsApp</a>
+    <button type="button" class="btn btn--secondary btn--xs" data-sticky-cart>Add to Cart</button>
+    <button type="button" class="btn btn--primary btn--xs" data-sticky-buy-now>Buy now</button>
   </div>
 </div>
 
@@ -50,17 +51,22 @@ const {
     window.addEventListener("scroll", sync, { passive: true });
     sync();
 
-    const stickyWa = bar.querySelector("[data-sticky-wa]");
-    if (stickyWa instanceof HTMLAnchorElement) {
-      const pageWa = document.querySelector("[data-pdp-wa], [data-wa-link], [data-wa]");
-      if (pageWa instanceof HTMLAnchorElement && pageWa.href) {
-        stickyWa.href = pageWa.href;
-        stickyWa.target = "_blank";
-        stickyWa.rel = "noopener noreferrer";
-      } else {
-        stickyWa.hidden = true;
+    bar.querySelector("[data-sticky-cart]")?.addEventListener("click", () => {
+      const source = document.querySelector(
+        "[data-pdp-cart], [data-add-bag], [data-watch-bag], [data-airpods-bag], [data-tvhome-bag], [data-accessory-bag], [data-add-cart]",
+      );
+      if (source instanceof HTMLElement) source.click();
+    });
+
+    bar.querySelector("[data-sticky-buy-now]")?.addEventListener("click", () => {
+      const checkoutBtn = document.querySelector("[data-buy-now-checkout]");
+      if (checkoutBtn instanceof HTMLElement) {
+        checkoutBtn.click();
+        return;
       }
-    }
+      const source = document.querySelector("[data-pdp-buy], [data-buy-now]");
+      if (source instanceof HTMLElement) source.click();
+    });
   }
 </script>
 
@@ -139,8 +145,8 @@ const {
     flex: 1 1 100%;
   }
 
-  .float-buy__actions--offers :global(.btn--whatsapp) {
-    grid-column: 1 / -1;
+  .float-buy__actions--offers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .float-buy__actions :global(.btn) {

@@ -228,6 +228,12 @@ const pageDescription = seo?.metaDescription ?? product.tagline;
         </fieldset>
 
         <div class="pdp__actions" data-pdp-cta>
+          <button type="button" class="btn btn--secondary btn--xs" data-add-cart data-pdp-cart>
+            Add to Cart
+          </button>
+          <button type="button" class="btn btn--primary btn--xs" data-buy-now data-pdp-buy data-buy-now-checkout>
+            Buy now
+          </button>
           <a class="btn btn--secondary btn--xs" href="/trade-in">Trade In</a>
           <a
             class="btn btn--whatsapp btn--xs"
@@ -325,10 +331,12 @@ const pageDescription = seo?.metaDescription ?? product.tagline;
     <section class="container pdp__section pdp__close">
       <h2>Ready to buy?</h2>
       <p>
-        Configure storage and finish above. Order on WhatsApp{" "}
-        {site.phoneDisplay}, or Trade In toward {product.name}.
+        Configure storage and finish above. Add to Cart or Buy now, or Order on WhatsApp{" "}
+        {site.phoneDisplay}. Trade In toward {product.name} is available too.
       </p>
       <div class="pdp__actions" data-pdp-cta>
+        <button type="button" class="btn btn--secondary btn--xs" data-add-cart data-pdp-cart>Add to Cart</button>
+        <button type="button" class="btn btn--primary btn--xs" data-buy-now data-pdp-buy data-buy-now-checkout>Buy now</button>
         <a class="btn btn--secondary btn--xs" href="/trade-in">Trade In</a>
         <a
           class="btn btn--whatsapp btn--xs"
