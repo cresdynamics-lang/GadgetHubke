@@ -216,9 +216,12 @@ if (seo) {
   }
   const wantStorage = (currentStorage?.storage ?? "").toLowerCase();
   selectedIdx = Math.max(0, prices.findIndex((p) => p.label.toLowerCase() === wantStorage));
+  const chosen = prices[selectedIdx];
+  // Ex-UK when asked for, when the model is not sold New, or when this storage is listed Ex-UK only.
+  const exUkOnly = Boolean(chosen && "newKes" in chosen && !chosen.newKes);
   wantExUk =
-    (Astro.url.searchParams.get("condition") === "ex-uk" || live?.showNewOnWebsite === false) &&
-    (prices[selectedIdx]?.exUkKes ?? 0) > 0;
+    (Astro.url.searchParams.get("condition") === "ex-uk" || live?.showNewOnWebsite === false || exUkOnly) &&
+    (chosen?.exUkKes ?? 0) > 0;
   firstPrice = prices[selectedIdx] ?? { label: "", kes: seo.fromKes };
   priceLine = wantExUk
     ? `Ex-UK · ${formatKes(prices[selectedIdx].exUkKes!)}`
@@ -501,7 +504,7 @@ if (seo) {
                   class:list={["ipdp__storage-btn", { "is-active": i === selectedIdx }]}
                   data-storage={p.label}
                   data-kes={p.kes}
-                  data-kes-new={"newKes" in p && p.newKes ? p.newKes : live?.showNewOnWebsite === false ? "" : p.kes}
+                  data-kes-new={"newKes" in p ? p.newKes || "" : live?.showNewOnWebsite === false ? "" : p.kes}
                   data-kes-exuk={p.exUkKes ?? ""}
                   data-sheet-id={p.sheetId ?? ""}
                 >
@@ -749,12 +752,16 @@ if (seo) {
     tour: null,
   };
 
-  /** Price for the selected storage in the selected channel (New or Ex-UK). */
-  function activeKes() {
-    if (state.channel === "ex-uk" && Number(state.kesExUk) > 0) return Number(state.kesExUk);
-    return Number(state.kesNew) || Number(state.kesExUk) || 0;
+  /** The channel actually shown: Ex-UK when chosen, or when this storage is listed Ex-UK only. */
+  function shownChannel() {
+    if (Number(state.kesExUk) > 0 && (state.channel === "ex-uk" || !(Number(state.kesNew) > 0))) return "ex-uk";
+    return "new";
   }
-  const channelLabel = () => (state.channel === "ex-uk" ? "Ex-UK" : "New");
+  /** Price for the selected storage in the channel shown (New or Ex-UK). */
+  function activeKes() {
+    return shownChannel() === "ex-uk" ? Number(state.kesExUk) : Number(state.kesNew) || 0;
+  }
+  const channelLabel = () => (shownChannel() === "ex-uk" ? "Ex-UK" : "New");
 
   const img = document.querySelector("[data-gallery-img]");
   const webpSource = document.querySelector("[data-gallery-webp]");
@@ -853,7 +860,7 @@ if (seo) {
     const deposit = Math.round((kes * depositPct) / 100);
     const repay = Math.round(((kes - deposit) * lipaRatePct) / 10000) * 100; // same sum as lib/pricing/lipa.ts
     const monthly = Math.round(repay / months);
-    if (priceEl) priceEl.textContent = `${state.channel === "ex-uk" ? "Ex-UK · " : ""}KES ${kes.toLocaleString("en-KE")}`;
+    if (priceEl) priceEl.textContent = `${shownChannel() === "ex-uk" ? "Ex-UK · " : ""}KES ${kes.toLocaleString("en-KE")}`;
     if (monthlyEl)
       monthlyEl.textContent = `or KES ${monthly.toLocaleString("en-KE")} a month for ${months} months after a KES ${deposit.toLocaleString("en-KE")} deposit`;
 
@@ -861,9 +868,11 @@ if (seo) {
       const exUk = Number(btn.getAttribute("data-kes-exuk") || 0);
       const newKes = Number(btn.getAttribute("data-kes-new") || 0);
       const display = Number(btn.getAttribute("data-kes") || 0);
-      const shown = state.channel === "ex-uk" ? exUk || display : newKes || display;
+      // A storage listed Ex-UK only says so, instead of passing its Ex-UK price off as New.
+      const asExUk = exUk > 0 && (state.channel === "ex-uk" || !newKes);
+      const shown = asExUk ? exUk : newKes || display;
       const span = btn.querySelector("[data-storage-price]");
-      if (span) span.textContent = `KES ${shown.toLocaleString("en-KE")}`;
+      if (span) span.textContent = `${asExUk && state.channel !== "ex-uk" ? "Ex-UK " : ""}KES ${shown.toLocaleString("en-KE")}`;
     });
 
     if (wa instanceof HTMLAnchorElement) {
@@ -917,7 +926,7 @@ if (seo) {
       document.querySelectorAll("[data-storage]").forEach((b) => b.classList.remove("is-active"));
       btn.classList.add("is-active");
       state.storage = btn.getAttribute("data-storage");
-      state.kesNew = btn.getAttribute("data-kes-new") || btn.getAttribute("data-kes");
+      state.kesNew = btn.getAttribute("data-kes-new") || "";
       state.kesExUk = btn.getAttribute("data-kes-exuk");
       updatePrice();
     });

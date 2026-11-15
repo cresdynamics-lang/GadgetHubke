@@ -32,6 +32,9 @@ export const PUT: APIRoute = async ({ request, cookies }) => {
     priceKes?: number | null;
     exUkKes?: number | null;
     inStock?: boolean | null;
+    showOnWebsite?: boolean | null;
+    showNewOnWebsite?: boolean | null;
+    exUkShowOnWebsite?: boolean | null;
     storages?: Record<string, OverlayVariantPatch>;
     coloursInStock?: string[] | null;
   };
@@ -54,6 +57,9 @@ export const PUT: APIRoute = async ({ request, cookies }) => {
       priceKes: body.priceKes,
       exUkKes: body.exUkKes,
       inStock: body.inStock,
+      showOnWebsite: body.showOnWebsite,
+      showNewOnWebsite: body.showNewOnWebsite,
+      exUkShowOnWebsite: body.exUkShowOnWebsite,
       storages: body.storages,
       coloursInStock: body.coloursInStock,
     });

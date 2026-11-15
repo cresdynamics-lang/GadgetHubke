@@ -18,7 +18,9 @@ const kes = (n?: number) => (typeof n === "number" ? n : "");
     <h1 class="mgmt-page-title">Prices & stock</h1>
     <p class="mgmt-muted">
       Every price on the site comes from here: product pages, cards, cart and WhatsApp orders.
-      Tick every colour that is in stock (all are available until you untick). Press Save; the shop updates within a few seconds.
+      Tick <strong>New</strong> and/or <strong>Ex-UK</strong> beside each price to show it on the website; untick to hide it.
+      You can list a phone as New only, Ex-UK only, or both. Tick every colour that is in stock.
+      A <strong>Save</strong> button appears on a product as soon as you change it; the shop updates within a few seconds.
     </p>
     <div class="mgmt-filter">
       <input class="mgmt-input" type="search" placeholder="Filter by name or id" data-filter-q style="max-width:16rem;" />
@@ -36,8 +38,8 @@ const kes = (n?: number) => (typeof n === "number" ? n : "");
             <th>Product</th>
             <th>Group</th>
             <th>Option</th>
-            <th>New (KES)</th>
-            <th>Ex-UK (KES)</th>
+            <th>New (KES) · show</th>
+            <th>Ex-UK (KES) · show</th>
             <th>In stock</th>
             <th></th>
           </tr>
@@ -48,6 +50,9 @@ const kes = (n?: number) => (typeof n === "number" ? n : "");
               ? item.variants
               : [{ key: "", label: "Single price", priceKes: item.priceKes, exUkKes: item.exUkKes, inStock: item.inStock }];
             const colourKeys = item.colours || [];
+            // What the website shows right now, so a tick always matches the live list.
+            const productNew = item.showOnWebsite !== false && item.showNewOnWebsite !== false;
+            const productEx = item.showOnWebsite !== false && item.exUkShowOnWebsite !== false;
             const stockColours = item.coloursInStock?.length ? item.coloursInStock : colourKeys;
             return (
               <tbody
@@ -59,7 +64,7 @@ const kes = (n?: number) => (typeof n === "number" ? n : "");
                 class="cat-product"
               >
                 {options.map((v, i) => (
-                  <tr data-variant={v.key}>
+                  <tr data-variant={v.key} data-label={v.label}>
                     {i === 0 ? (
                       <>
                         <td rowspan={options.length}>
@@ -83,12 +88,30 @@ const kes = (n?: number) => (typeof n === "number" ? n : "");
                       </>
                     ) : null}
                     <td>{v.label}</td>
-                    <td><input type="number" min="0" step="500" value={kes(v.priceKes)} data-price style="width:7.5rem;" /></td>
-                    <td><input type="number" min="0" step="500" value={kes(v.exUkKes)} data-exuk style="width:7.5rem;" /></td>
+                    <td>
+                      <div class="cat-price">
+                        <input type="number" min="0" step="500" value={kes(v.priceKes)} data-price aria-label={`${item.name} ${v.label} New price`} />
+                        <label class="cat-show" title="Show the New price on the website">
+                          <input type="checkbox" data-show-new checked={productNew && ("showOnWebsite" in v ? v.showOnWebsite !== false : true) && Number(v.priceKes) > 0} />
+                          New
+                        </label>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="cat-price">
+                        <input type="number" min="0" step="500" value={kes(v.exUkKes)} data-exuk aria-label={`${item.name} ${v.label} Ex-UK price`} />
+                        <label class="cat-show" title="Show the Ex-UK price on the website">
+                          <input type="checkbox" data-show-exuk checked={productEx && ("exUkShowOnWebsite" in v ? v.exUkShowOnWebsite !== false : true) && Number(v.exUkKes) > 0} />
+                          Ex-UK
+                        </label>
+                      </div>
+                    </td>
                     <td><input type="checkbox" checked={v.inStock} data-stock /></td>
                     {i === 0 ? (
                       <td rowspan={options.length} class="mgmt-actions">
-                        <button type="button" class="mgmt-btn mgmt-btn--sm" data-save>Save</button>
+                        <button type="button" class="mgmt-btn mgmt-btn--sm" data-save hidden>Save</button>
+                        <span class="cat-saved" data-saved role="status" hidden>Saved ✓</span>
+                        <span class="cat-error" data-row-err role="alert" hidden></span>
                         <a class="mgmt-btn mgmt-btn--ghost mgmt-btn--sm" href={item.href} target="_blank" rel="noopener">Open</a>
                       </td>
                     ) : null}
@@ -114,6 +137,27 @@ const kes = (n?: number) => (typeof n === "number" ? n : "");
     font-weight: 500;
     text-transform: capitalize;
   }
+  .cat-price {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+  .cat-price input[type="number"] { width: 7.5rem; }
+  .cat-show {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .cat-product.is-dirty td { background: rgba(255, 196, 0, 0.08); }
+  /* .mgmt-btn sets display, which would otherwise beat the hidden attribute. */
+  [data-save][hidden],
+  [data-saved][hidden],
+  [data-row-err][hidden] { display: none !important; }
+  .cat-saved { color: #1a7f37; font-weight: 600; font-size: 0.85rem; }
+  .cat-error { color: #b42318; font-size: 0.8rem; display: block; max-width: 14rem; }
   .cat-colours label {
     display: inline-flex;
     align-items: center;
@@ -146,36 +190,96 @@ const kes = (n?: number) => (typeof n === "number" ? n : "");
     return Number.isFinite(n) && n >= 0 ? n : null;
   }
 
-  document.querySelectorAll("[data-save]").forEach((btn) => {
+  /** A product's current inputs, to tell whether anything changed since the last save. */
+  function snapshot(row: HTMLElement): string {
+    return [...row.querySelectorAll<HTMLInputElement>("input")]
+      .map((el) => (el.type === "checkbox" ? String(el.checked) : el.value.trim()))
+      .join("|");
+  }
+
+  const rows = [...document.querySelectorAll<HTMLElement>("[data-row]")];
+  const saved = new Map(rows.map((row) => [row, snapshot(row)]));
+  const timers = new Map<HTMLElement, number>();
+
+  function refresh(row: HTMLElement) {
+    const dirty = snapshot(row) !== saved.get(row);
+    row.classList.toggle("is-dirty", dirty);
+    row.querySelector<HTMLButtonElement>("[data-save]")!.hidden = !dirty;
+    if (dirty) {
+      row.querySelector<HTMLElement>("[data-saved]")!.hidden = true;
+      window.clearTimeout(timers.get(row));
+    }
+  }
+
+  for (const row of rows) {
+    row.addEventListener("input", () => refresh(row));
+    row.addEventListener("change", () => refresh(row));
+  }
+
+  // Warn before leaving with unsaved changes.
+  window.addEventListener("beforeunload", (e) => {
+    if (rows.some((row) => row.classList.contains("is-dirty"))) e.preventDefault();
+  });
+
+  function rowError(row: HTMLElement, message: string) {
+    const el = row.querySelector<HTMLElement>("[data-row-err]")!;
+    el.textContent = message;
+    el.hidden = !message;
+  }
+
+  document.querySelectorAll<HTMLButtonElement>("[data-save]").forEach((btn) => {
     btn.addEventListener("click", async () => {
-      const row = (btn as HTMLElement).closest<HTMLElement>("[data-row]");
+      const row = btn.closest<HTMLElement>("[data-row]");
       if (!row) return;
       ok?.setAttribute("hidden", "");
       err?.setAttribute("hidden", "");
+      rowError(row, "");
       const body: Record<string, unknown> = { id: row.dataset.id };
       const lines = [...row.querySelectorAll<HTMLTableRowElement>("[data-variant]")];
+
+      // A ticked price needs a figure; say so instead of saving something the shop cannot show.
+      for (const tr of lines) {
+        const label = tr.dataset.label && tr.dataset.label !== "Single price" ? tr.dataset.label : "";
+        if (tr.querySelector<HTMLInputElement>("[data-show-new]")?.checked && !num(tr.querySelector("[data-price]")))
+          return rowError(row, `Enter a New price${label ? ` for ${label}` : ""}, or untick New.`);
+        if (tr.querySelector<HTMLInputElement>("[data-show-exuk]")?.checked && !num(tr.querySelector("[data-exuk]")))
+          return rowError(row, `Enter an Ex-UK price${label ? ` for ${label}` : ""}, or untick Ex-UK.`);
+      }
+
+      const ticked = (tr: HTMLElement, sel: string) => Boolean(tr.querySelector<HTMLInputElement>(sel)?.checked);
       if (row.dataset.hasVariants === "1") {
         const storages: Record<string, unknown> = {};
         for (const tr of lines) {
           storages[tr.dataset.variant || ""] = {
             priceKes: num(tr.querySelector("[data-price]")),
             exUkKes: num(tr.querySelector("[data-exuk]")),
-            inStock: Boolean(tr.querySelector<HTMLInputElement>("[data-stock]")?.checked),
+            inStock: ticked(tr, "[data-stock]"),
+            showOnWebsite: ticked(tr, "[data-show-new]"),
+            exUkShowOnWebsite: ticked(tr, "[data-show-exuk]"),
           };
         }
         body.storages = storages;
-        body.inStock = lines.some((tr) => tr.querySelector<HTMLInputElement>("[data-stock]")?.checked);
+        body.inStock = lines.some((tr) => ticked(tr, "[data-stock]"));
+        // Product-wide switches follow the ticks, so an old "hide all New/Ex-UK" setting cannot override them.
+        body.showNewOnWebsite = lines.some((tr) => ticked(tr, "[data-show-new]"));
+        body.exUkShowOnWebsite = lines.some((tr) => ticked(tr, "[data-show-exuk]"));
+        body.showOnWebsite = null;
       } else {
         const tr = lines[0];
         body.priceKes = num(tr.querySelector("[data-price]"));
         body.exUkKes = num(tr.querySelector("[data-exuk]"));
-        body.inStock = Boolean(tr.querySelector<HTMLInputElement>("[data-stock]")?.checked);
+        body.inStock = ticked(tr, "[data-stock]");
+        body.showNewOnWebsite = ticked(tr, "[data-show-new]");
+        body.exUkShowOnWebsite = ticked(tr, "[data-show-exuk]");
+        body.showOnWebsite = null;
       }
       const colourBoxes = [...row.querySelectorAll<HTMLInputElement>("[data-colour]")];
       if (colourBoxes.length) {
         body.coloursInStock = colourBoxes.filter((el) => el.checked).map((el) => el.value);
       }
-      (btn as HTMLButtonElement).disabled = true;
+
+      btn.disabled = true;
+      btn.textContent = "Saving…";
       try {
         const res = await fetch("/api/admin/catalog", {
           method: "PUT",
@@ -184,17 +288,20 @@ const kes = (n?: number) => (typeof n === "number" ? n : "");
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Save failed");
+        saved.set(row, snapshot(row));
+        refresh(row);
+        const done = row.querySelector<HTMLElement>("[data-saved]")!;
+        done.hidden = false;
+        timers.set(row, window.setTimeout(() => (done.hidden = true), 4000));
         if (ok) {
           ok.textContent = `Saved ${row.dataset.id}`;
           ok.removeAttribute("hidden");
         }
       } catch (e) {
-        if (err) {
-          err.textContent = e instanceof Error ? e.message : "Save failed";
-          err.removeAttribute("hidden");
-        }
+        rowError(row, e instanceof Error ? e.message : "Save failed");
       } finally {
-        (btn as HTMLButtonElement).disabled = false;
+        btn.disabled = false;
+        btn.textContent = "Save";
       }
     });
   });

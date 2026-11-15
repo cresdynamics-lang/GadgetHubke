@@ -34,7 +34,10 @@ export type OverlayVariantPatch = {
   priceKes?: number | null;
   exUkKes?: number | null;
   inStock?: boolean | null;
+  /** New price listed on the website. */
   showOnWebsite?: boolean | null;
+  /** Ex-UK price listed on the website. */
+  exUkShowOnWebsite?: boolean | null;
 };
 
 export async function getOverlayMap(): Promise<CatalogOverlayMap> {
@@ -59,6 +62,8 @@ function applyVariantPatch<T extends CatalogOverlayVariant>(prev: T, patch: Over
   else if (typeof patch.inStock === "boolean") next.inStock = patch.inStock;
   if (patch.showOnWebsite === null) delete next.showOnWebsite;
   else if (typeof patch.showOnWebsite === "boolean") next.showOnWebsite = patch.showOnWebsite;
+  if (patch.exUkShowOnWebsite === null) delete next.exUkShowOnWebsite;
+  else if (typeof patch.exUkShowOnWebsite === "boolean") next.exUkShowOnWebsite = patch.exUkShowOnWebsite;
   return next;
 }
 
@@ -69,6 +74,9 @@ export async function upsertOverlay(
     exUkKes?: number | null;
     inStock?: boolean | null;
     showOnWebsite?: boolean | null;
+    /** Whole product: New listed / Ex-UK listed (single-price products and the product-wide switch). */
+    showNewOnWebsite?: boolean | null;
+    exUkShowOnWebsite?: boolean | null;
     storages?: Record<string, OverlayVariantPatch>;
     coloursInStock?: string[] | null;
   },
@@ -77,12 +85,15 @@ export async function upsertOverlay(
   const now = new Date().toISOString();
   const prev = map[id] || { updatedAt: now };
   const next = applyVariantPatch<CatalogOverlayEntry>({ ...prev, updatedAt: now }, patch);
+  if (patch.showNewOnWebsite === null) delete next.showNewOnWebsite;
+  else if (typeof patch.showNewOnWebsite === "boolean") next.showNewOnWebsite = patch.showNewOnWebsite;
 
   if (patch.storages) {
     const storages = { ...(next.storages || {}) };
     for (const [key, vp] of Object.entries(patch.storages)) {
       const v = applyVariantPatch(storages[key] || {}, vp || {});
-      if (v.priceKes == null && v.exUkKes == null && v.inStock == null && v.showOnWebsite == null) delete storages[key];
+      if (v.priceKes == null && v.exUkKes == null && v.inStock == null && v.showOnWebsite == null && v.exUkShowOnWebsite == null)
+        delete storages[key];
       else storages[key] = v;
     }
     next.storages = storages;
@@ -103,6 +114,8 @@ export async function upsertOverlay(
     next.exUkKes == null &&
     next.inStock == null &&
     next.showOnWebsite == null &&
+    next.showNewOnWebsite == null &&
+    next.exUkShowOnWebsite == null &&
     !Object.keys(next.storages || {}).length &&
     !(next.coloursInStock && next.coloursInStock.length);
   if (empty) delete map[id];
