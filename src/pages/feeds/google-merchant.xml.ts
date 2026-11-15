@@ -11,6 +11,8 @@ export const GET: APIRoute = async () => {
       "Content-Type": "application/xml; charset=utf-8",
       // Never stored by Cloudflare or any cache: Meta and Google must always fetch the live list.
       "Cache-Control": "no-store, max-age=0",
+      // Feeds are for Meta and Merchant Center, not search results.
+      "X-Robots-Tag": "noindex",
     },
   });
 };

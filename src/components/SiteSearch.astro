@@ -865,6 +865,9 @@ const tvListed = tvHomeModels.some((m) => !offList.has(m.id));
         }
       }
 
+      // Links with a query are built here, so the page source never shows Googlebot an
+      // address with unfilled code in it (it follows those and gets errors or duplicates).
+      const link = (path, key, value) => path + String.fromCharCode(63) + key + "=" + encodeURIComponent(String(value));
       if (services && top) {
         const deposit = Math.round(top.priceKes * 0.4); // 40% deposit, 6 months: same sum as lib/pricing/lipa.ts
         const monthly = Math.round((Math.round(((top.priceKes - deposit) * 180) / 10000) * 100) / 6);
@@ -872,37 +875,37 @@ const tvListed = tvHomeModels.some((m) => !offList.has(m.id));
           services.innerHTML = `
             <li><a href="/trade-in">Trade in your Mac</a></li>
             <li><a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo · about KES ${monthly.toLocaleString("en-KE")}/mo</a></li>
-            <li><a href="/mac/compare?ids=${encodeURIComponent(top.id)}">Compare MacBooks</a></li>`;
+            <li><a href="${link("/mac/compare", "ids", top.id)}">Compare MacBooks</a></li>`;
         } else if (mode === "ipad") {
           services.innerHTML = `
             <li><a href="/trade-in">Trade in your iPad</a></li>
             <li><a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo · about KES ${monthly.toLocaleString("en-KE")}/mo</a></li>
-            <li><a href="/ipad/compare?ids=${encodeURIComponent(top.id)}">Compare iPads</a></li>`;
+            <li><a href="${link("/ipad/compare", "ids", top.id)}">Compare iPads</a></li>`;
         } else if (mode === "watch") {
           services.innerHTML = `
             <li><a href="/trade-in">Trade in your Watch</a></li>
             <li><a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo · about KES ${monthly.toLocaleString("en-KE")}/mo</a></li>
-            <li><a href="/watch/compare?ids=${encodeURIComponent(top.id)}">Compare Watches</a></li>`;
+            <li><a href="${link("/watch/compare", "ids", top.id)}">Compare Watches</a></li>`;
         } else if (mode === "airpods") {
           services.innerHTML = `
             <li><a href="/trade-in">Trade in</a></li>
             <li><a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo · about KES ${monthly.toLocaleString("en-KE")}/mo</a></li>
-            <li><a href="/airpods/compare?ids=${encodeURIComponent(top.id)}">Compare AirPods</a></li>`;
+            <li><a href="${link("/airpods/compare", "ids", top.id)}">Compare AirPods</a></li>`;
         } else if (mode === "tv-home") {
           services.innerHTML = `
             <li><a href="/trade-in">Trade in</a></li>
             <li><a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo · about KES ${monthly.toLocaleString("en-KE")}/mo</a></li>
-            <li><a href="/tv-home/compare?ids=${encodeURIComponent(top.id)}">Compare TV & Home</a></li>`;
+            <li><a href="${link("/tv-home/compare", "ids", top.id)}">Compare TV & Home</a></li>`;
         } else if (mode === "accessories") {
           services.innerHTML = `
-            <li><a href="/accessories/compare?group=${top.group || "pencil"}">Compare accessories</a></li>
+            <li><a href="${link("/accessories/compare", "group", top.group || "pencil")}">Compare accessories</a></li>
             <li><a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo · about KES ${monthly.toLocaleString("en-KE")}/mo</a></li>
             <li><a href="/accessories/apple-pencil#finder">Which Pencil fits my iPad?</a></li>`;
         } else {
           services.innerHTML = `
             <li><a href="/trade-in">Trade in your phone</a></li>
             <li><a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo · about KES ${monthly.toLocaleString("en-KE")}/mo</a></li>
-            <li><a href="/iphone?family=${top.family}">Compare the iPhone ${top.family} family</a></li>`;
+            <li><a href="${link("/iphone", "family", top.family)}">Compare the iPhone ${top.family} family</a></li>`;
         }
       }
       if (guides && top) {

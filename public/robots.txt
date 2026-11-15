@@ -11,6 +11,22 @@ Disallow: /api/
 Disallow: /cart
 Disallow: /checkout
 Disallow: /account
+# Shop filters, sorting and compare selections only re-order the same products, and each
+# such page already names the main page as canonical. Keep crawlers on the main pages.
+# (?colour= and ?condition=ex-uk stay open: product markup and feeds link to them.)
+Disallow: /*?*family=
+Disallow: /*?*need=
+Disallow: /*?*sort=
+Disallow: /*?*chip=
+Disallow: /*?*size=
+Disallow: /*?*ai=
+Disallow: /*?*pencilPro=
+Disallow: /*?*band=
+Disallow: /*?*ids=
+Disallow: /*?*group=
+Disallow: /*?*device=
+Disallow: /*?*tab=
+Disallow: /*?*channel=
 
 # Search engines and AI assistants are welcome to read product pages, prices and guides,
 # so they can recommend Gadget Hub. A plain-text summary with live prices: /llms.txt
@@ -39,5 +55,21 @@ Disallow: /api/
 Disallow: /cart
 Disallow: /checkout
 Disallow: /account
+# Shop filters, sorting and compare selections only re-order the same products, and each
+# such page already names the main page as canonical. Keep crawlers on the main pages.
+# (?colour= and ?condition=ex-uk stay open: product markup and feeds link to them.)
+Disallow: /*?*family=
+Disallow: /*?*need=
+Disallow: /*?*sort=
+Disallow: /*?*chip=
+Disallow: /*?*size=
+Disallow: /*?*ai=
+Disallow: /*?*pencilPro=
+Disallow: /*?*band=
+Disallow: /*?*ids=
+Disallow: /*?*group=
+Disallow: /*?*device=
+Disallow: /*?*tab=
+Disallow: /*?*channel=
 
 Sitemap: https://gadgethubke.com/sitemap.xml

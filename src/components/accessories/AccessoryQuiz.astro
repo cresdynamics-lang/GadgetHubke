@@ -55,7 +55,9 @@ const devices = [
     const qs = new URLSearchParams({ use, device, budget });
     // Navigate to landing with hash - server pages also embed quizRecommend for SSR cards.
     if (out) {
-      out.innerHTML = `<p>Open <a href="/accessories/apple-pencil?device=${encodeURIComponent(device)}#finder">the finder</a> for ${device}, or browse <a href="/accessories">Accessories</a>. Use: ${use}, budget: ${budget}.</p>
+      // Query built at run time, so the page source holds no unfilled address for Googlebot to follow.
+      const finder = "/accessories/apple-pencil" + String.fromCharCode(63) + "device=" + encodeURIComponent(device) + "#finder";
+      out.innerHTML = `<p>Open <a href="${finder}">the finder</a> for ${device}, or browse <a href="/accessories">Accessories</a>. Use: ${use}, budget: ${budget}.</p>
       <p class="xquiz__fine">Sample guidance - confirm fit and price with the shop.</p>`;
     }
   });

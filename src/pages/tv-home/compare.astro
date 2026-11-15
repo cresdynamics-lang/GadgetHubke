@@ -144,7 +144,7 @@ if (!tvHomeModels.some((m) => listedIds.has(m.id))) return Astro.redirect("/shop
     const a = document.querySelector("[data-pick-a]");
     const b = document.querySelector("[data-pick-b]");
     if (a instanceof HTMLSelectElement && b instanceof HTMLSelectElement) {
-      window.location.href = `/tv-home/compare?ids=${encodeURIComponent(a.value)},${encodeURIComponent(b.value)}`;
+      window.location.href = "/tv-home/compare" + String.fromCharCode(63) + "ids=" + encodeURIComponent(a.value) + "," + encodeURIComponent(b.value);
     }
   });
 </script>

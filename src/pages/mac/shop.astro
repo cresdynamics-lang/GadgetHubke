@@ -177,7 +177,7 @@ const macShopRows = listingRows(list, await livePricedCatalog(), {
     if (countEl) countEl.textContent = String(selected.size);
     if (pageLink instanceof HTMLAnchorElement) {
       const ids = [...selected].join(",");
-      pageLink.href = ids ? `/mac/compare?ids=${encodeURIComponent(ids)}` : "/mac/compare";
+      pageLink.href = ids ? "/mac/compare" + String.fromCharCode(63) + "ids=" + encodeURIComponent(ids) : "/mac/compare";
     }
   }
 
@@ -265,7 +265,7 @@ const macShopRows = listingRows(list, await livePricedCatalog(), {
           <tbody>${tbody || `<tr><td colspan="${cards.length + 1}">Everything matches on the rows we show.</td></tr>`}</tbody>
         </table>
       </div>
-      <p class="mac-compare-page-link"><a href="/mac/compare?ids=${encodeURIComponent([...selected].join(","))}">Open full compare page</a></p>`;
+      <p class="mac-compare-page-link"><a href="${"/mac/compare" + String.fromCharCode(63) + "ids=" + encodeURIComponent([...selected].join(","))}">Open full compare page</a></p>`;
 
     body.querySelector("[data-mac-diff-only]")?.addEventListener("change", (e) => {
       diffsOnly = e.target instanceof HTMLInputElement ? e.target.checked : true;
