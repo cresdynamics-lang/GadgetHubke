@@ -1,0 +1,25 @@
+---
+/**
+ * Hidden KES 2 checkout for testing real M-Pesa payments end to end.
+ * Only works while CHECKOUT_TEST_ITEM=1 on the server; otherwise it sends people home.
+ * Not linked anywhere, not in the sitemap, noindex, and /checkout is disallowed in robots.txt.
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { TEST_ITEM_ID, TEST_ITEM_KES, testItemEnabled } from "../../lib/checkout/reprice";
+import { EXPRESS_KEY } from "../../lib/checkout/types";
+
+export const prerender = false;
+
+if (!testItemEnabled()) return Astro.redirect("/");
+const line = { id: TEST_ITEM_ID, name: "Payment test", kes: TEST_ITEM_KES, qty: 1 };
+---
+
+<BaseLayout title="Payment test" description="Internal payment test." noindex>
+  <main class="container" style="padding: 3rem 1.25rem;">
+    <p>Opening a KES {TEST_ITEM_KES} test checkout…</p>
+  </main>
+  <script is:inline define:vars={{ line, key: EXPRESS_KEY }}>
+    sessionStorage.setItem(key, JSON.stringify([line]));
+    location.replace("/checkout?mode=buy-now");
+  </script>
+</BaseLayout>
