@@ -42,13 +42,16 @@ module.exports = {
         PAYMENTS_MODE: fileEnv.PAYMENTS_MODE || "sandbox",
         STANBIC_API_BASE:
           fileEnv.STANBIC_API_BASE ||
-          "https://api.connect.stanbicbank.co.ke/api/sandbox",
+          "https://sandbox.connect.stanbicbank.co.ke/api/sandbox",
         STANBIC_TOKEN_URL: fileEnv.STANBIC_TOKEN_URL || "",
         STANBIC_STK_PATH: fileEnv.STANBIC_STK_PATH || "",
+        STANBIC_STATUS_URL: fileEnv.STANBIC_STATUS_URL || "",
         STANBIC_BILL_ACCOUNT_REF: fileEnv.STANBIC_BILL_ACCOUNT_REF || "0100013199528",
         STANBIC_CLIENT_ID: fileEnv.STANBIC_CLIENT_ID || "",
         STANBIC_CLIENT_SECRET: fileEnv.STANBIC_CLIENT_SECRET || "",
         STANBIC_WEBHOOK_SECRET: fileEnv.STANBIC_WEBHOOK_SECRET || "",
+        // "1" opens the hidden KES 2 checkout at /checkout/payment-test.
+        CHECKOUT_TEST_ITEM: fileEnv.CHECKOUT_TEST_ITEM || "",
         SMTP_HOST: fileEnv.SMTP_HOST || "mail.privateemail.com",
         SMTP_PORT: fileEnv.SMTP_PORT || "465",
         SMTP_SECURE: fileEnv.SMTP_SECURE || "true",
