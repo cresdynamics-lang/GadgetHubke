@@ -35,6 +35,7 @@ export const POST: APIRoute = async ({ request }) => {
       stk: { reference: result.stk.reference, message: result.stk.message, mock: result.stk.mock },
     });
   } catch (e) {
-    return json({ error: e instanceof Error ? e.message : "STK push failed." }, 502);
+    // Not 502: Cloudflare swaps 5xx bodies for its own HTML page, and the pay page would show that instead of the reason.
+    return json({ error: e instanceof Error ? e.message : "STK push failed." }, 422);
   }
 };
