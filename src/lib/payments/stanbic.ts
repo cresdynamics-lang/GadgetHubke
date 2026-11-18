@@ -14,24 +14,16 @@
 
 import { site } from "../site";
 import { readStanbicCallback } from "./stanbic-callback";
+import { apiBase, liveSettingsProblem, paymentsMode, statusUrl, stkUrl, tokenUrl } from "./stanbic-config";
+
+export { liveSettingsProblem, paymentsMode, type StanbicMode } from "./stanbic-config";
 
 export const STANBIC_WEBHOOK_URL = `${site.url}/api/checkout/webhook`;
 
 /** Gadget Hub Investments — Stanbic current account (bill / credit account). */
 export const STANBIC_ACCOUNT_NUMBER = "0100013199528";
 
-const SANDBOX_API = "https://sandbox.connect.stanbicbank.co.ke/api/sandbox";
 
-export type StanbicMode = "live" | "sandbox" | "mock";
-
-export function paymentsMode(): StanbicMode {
-  const forced = (process.env.PAYMENTS_MODE || "").toLowerCase();
-  if (forced === "live" || forced === "sandbox" || forced === "mock") return forced;
-  if (process.env.STANBIC_CLIENT_ID && process.env.STANBIC_CLIENT_SECRET) {
-    return "sandbox";
-  }
-  return "mock";
-}
 
 export function cardPaymentsEnabled(): boolean {
   return false;
@@ -41,8 +33,12 @@ export function cardPaymentsEnabled(): boolean {
 export function paymentsReady() {
   const mode = paymentsMode();
   const hasCreds = Boolean(process.env.STANBIC_CLIENT_ID && process.env.STANBIC_CLIENT_SECRET);
-  const waitingOn =
-    mode === "mock" && !hasCreds ? ("credentials" as const) : ("stanbic_api" as const);
+  const liveProblem = liveSettingsProblem();
+  const waitingOn = liveProblem
+    ? ("production_settings" as const)
+    : mode === "mock" && !hasCreds
+      ? ("credentials" as const)
+      : ("stanbic_api" as const);
   return {
     mode,
     hasCredentials: hasCreds,
@@ -56,21 +52,16 @@ export function paymentsReady() {
     website: site.url,
     serverIpHint: "143.198.169.74",
     waitingOn,
+    liveProblem,
     /** Mock always works locally; sandbox/live need bank credentials present. */
-    ready: mode === "mock" || hasCreds,
+    ready: mode === "mock" || (hasCreds && !liveProblem),
   };
 }
 
-function apiBase(): string {
-  return (process.env.STANBIC_API_BASE || SANDBOX_API).replace(/\/$/, "");
-}
 
-function tokenUrl(): string {
-  return process.env.STANBIC_TOKEN_URL || `${apiBase()}/auth/oauth2/token`;
-}
-
-function stkUrl(): string {
-  return process.env.STANBIC_STK_PATH || `${apiBase()}/mpesa-checkout`;
+function assertLiveSettings() {
+  const problem = liveSettingsProblem();
+  if (problem) throw new Error(`Payments are not set up for live yet: ${problem}`);
 }
 
 function billAccountRef(): string {
@@ -175,6 +166,7 @@ export async function initiateStkPush(input: {
     };
   }
 
+  assertLiveSettings();
   const token = await getAccessToken();
   const reference = dbsReferenceId();
   const payload = {
@@ -240,8 +232,9 @@ const BANK_FAILED = new Set(["failed", "failure", "rejected", "rjct", "cancelled
  * Unrecognised answers stay "pending" and are logged, so we learn the bank's wording before trusting it.
  */
 export async function stkTransactionStatus(dbsReferenceId: string): Promise<{ status: BankPaymentStatus; raw: unknown }> {
+  assertLiveSettings();
   const token = await getAccessToken();
-  const url = `${process.env.STANBIC_STATUS_URL || `${apiBase()}/transaction-status-sandbox/`}?dbsReferenceId=${encodeURIComponent(dbsReferenceId)}`;
+  const url = `${statusUrl()}?dbsReferenceId=${encodeURIComponent(dbsReferenceId)}`;
   const res = await fetch(url, { headers: { Authorization: `Bearer ${token}`, Accept: "application/json" } });
   const raw = await res.json().catch(() => ({}));
   console.log("[stanbic-status]", dbsReferenceId, res.status, JSON.stringify(raw).slice(0, 500));
