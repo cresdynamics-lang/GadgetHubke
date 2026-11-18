@@ -18,11 +18,12 @@ export type StanbicCallback = {
 };
 
 const ORDER_KEYS = ["orderid", "externalreference"];
-const REF_KEYS = ["dbsreferenceid", "reference", "transactionid", "checkoutrequestid", "merchantrequestid", "conversationid", "paymentref"];
+// thirdpartyref / ourtxnreference come from Stanbic's account notification ("Letter") format.
+const REF_KEYS = ["dbsreferenceid", "reference", "transactionid", "checkoutrequestid", "merchantrequestid", "conversationid", "paymentref", "thirdpartyref", "ourtxnreference"];
 const CODE_KEYS = ["resultcode", "responsecode", "statuscode", "txnstatuscode"];
 const STATUS_KEYS = ["status", "result", "transactionstatus", "txnstatus", "paymentstatus"];
 const MESSAGE_KEYS = ["resultdesc", "message", "description", "responsedescription", "statusdescription"];
-const AMOUNT_KEYS = ["amount", "transamount", "transactionamount"];
+const AMOUNT_KEYS = ["amount", "transamount", "transactionamount", "txnamount"];
 
 const PAID_WORDS = new Set(["paid", "success", "successful", "completed", "complete", "approved"]);
 const FAILED_WORDS = new Set([
@@ -75,7 +76,8 @@ export function readStanbicCallback(body: unknown): StanbicCallback {
   else if (PAID_WORDS.has(word)) outcome = "paid";
   else if (FAILED_WORDS.has(word)) outcome = "failed";
 
-  const amount = Number(first(fields, AMOUNT_KEYS).replace(/,/g, ""));
+  // "KES 1,234.00" in Stanbic notifications.
+  const amount = Number(first(fields, AMOUNT_KEYS).replace(/[^\d.]/g, ""));
   const refs = [...new Set(REF_KEYS.map((key) => fields.get(key) || "").filter(Boolean))];
   return {
     orderId: first(fields, ORDER_KEYS),

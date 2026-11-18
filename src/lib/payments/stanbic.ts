@@ -4,7 +4,7 @@
  * Card is not available (Stanbic email, Oct 2026).
  *
  * Portal: https://sandbox.stanbicbank.co.ke/
- * API:    https://api.connect.stanbicbank.co.ke/api/sandbox/
+ * API:    https://sandbox.connect.stanbicbank.co.ke/api/sandbox/ (host from the portal's mpesa-checkout spec)
  *
  * Bank whitelist:
  * - Website: https://gadgethubke.com
@@ -20,7 +20,7 @@ export const STANBIC_WEBHOOK_URL = `${site.url}/api/checkout/webhook`;
 /** Gadget Hub Investments — Stanbic current account (bill / credit account). */
 export const STANBIC_ACCOUNT_NUMBER = "0100013199528";
 
-const SANDBOX_API = "https://api.connect.stanbicbank.co.ke/api/sandbox";
+const SANDBOX_API = "https://sandbox.connect.stanbicbank.co.ke/api/sandbox";
 
 export type StanbicMode = "live" | "sandbox" | "mock";
 
@@ -198,7 +198,9 @@ export async function initiateStkPush(input: {
   });
 
   const raw = await res.json().catch(() => ({}));
-  if (!res.ok) {
+  console.log("[stanbic-stk]", res.status, JSON.stringify(raw).slice(0, 500));
+  const accepted = String((raw as { status?: string }).status || "").toLowerCase();
+  if (!res.ok || (accepted && accepted !== "success")) {
     const message =
       typeof (raw as { message?: string }).message === "string"
         ? (raw as { message: string }).message
@@ -225,6 +227,30 @@ export async function initiateStkPush(input: {
     message: "STK push sent. Enter your M-Pesa PIN on your phone.",
     raw,
   };
+}
+
+export type BankPaymentStatus = "paid" | "failed" | "pending";
+
+const BANK_PAID = new Set(["success", "successful", "completed", "complete", "paid", "settled", "acsc", "accp", "processed"]);
+const BANK_FAILED = new Set(["failed", "failure", "rejected", "rjct", "cancelled", "canceled", "declined", "expired", "timeout", "reversed"]);
+
+/**
+ * Ask Stanbic how an STK attempt ended (Retrieve Transaction Status API, by our dbsReferenceId).
+ * Server-to-bank and authenticated, so unlike a webhook call it cannot be faked by a visitor.
+ * Unrecognised answers stay "pending" and are logged, so we learn the bank's wording before trusting it.
+ */
+export async function stkTransactionStatus(dbsReferenceId: string): Promise<{ status: BankPaymentStatus; raw: unknown }> {
+  const token = await getAccessToken();
+  const url = `${process.env.STANBIC_STATUS_URL || `${apiBase()}/transaction-status-sandbox/`}?dbsReferenceId=${encodeURIComponent(dbsReferenceId)}`;
+  const res = await fetch(url, { headers: { Authorization: `Bearer ${token}`, Accept: "application/json" } });
+  const raw = await res.json().catch(() => ({}));
+  console.log("[stanbic-status]", dbsReferenceId, res.status, JSON.stringify(raw).slice(0, 500));
+  if (!res.ok) return { status: "pending", raw };
+  const row = (Array.isArray(raw) ? raw[0] : raw) as { bankStatus?: string; reasonCode?: string } | undefined;
+  const word = String(row?.bankStatus || "").toLowerCase().replace(/[^a-z]/g, "");
+  if (BANK_PAID.has(word)) return { status: "paid", raw };
+  if (BANK_FAILED.has(word)) return { status: "failed", raw };
+  return { status: "pending", raw };
 }
 
 export type CardSessionResult = {

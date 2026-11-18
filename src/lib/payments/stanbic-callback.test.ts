@@ -44,3 +44,10 @@ test("only a stored payment reference proves the notice, never the public order 
   assert.equal(callbackMatchesOrder(readStanbicCallback({ dbsReferenceId: "K7QX2M9PZTR4A", status: "paid" }), order), true);
   assert.equal(callbackMatchesOrder(readStanbicCallback({ dbsReferenceId: "WRONGREF", status: "paid" }), order), false);
 });
+
+test("Stanbic account notifications (Letter format) give their amount and references", () => {
+  const cb = readStanbicCallback({ Letter: { TxnAmount: "KES 1,234.00", ThirdPartyRef: "K7QX2M9PZTR4A", OurTxnReference: "FT20070YCTF8999", ActionType: "CREDIT" } });
+  assert.equal(cb.amountKes, 1234);
+  assert.ok(cb.refs.includes("K7QX2M9PZTR4A"));
+  assert.equal(callbackMatchesOrder(cb, order), true);
+});
