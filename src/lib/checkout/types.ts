@@ -83,6 +83,8 @@ export type CheckoutOrder = {
   currency: "KES";
   paymentMethod?: PaymentMethod;
   paymentRef?: string;
+  /** References sent to Stanbic for this order's STK attempts (dbsReferenceId and the bank's id). Never shown publicly. */
+  stkReferences?: string[];
   paymentProvider: "stanbic" | "whatsapp";
   mock?: boolean;
   paidAt?: string;

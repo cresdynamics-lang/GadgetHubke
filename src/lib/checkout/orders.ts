@@ -217,6 +217,7 @@ export async function getOrder(id: string): Promise<CheckoutOrder | null> {
   return (
     all.find((o) => o.id === needle) ||
     all.find((o) => o.paymentRef && o.paymentRef === needle) ||
+    all.find((o) => o.stkReferences?.includes(needle)) ||
     null
   );
 }
@@ -229,6 +230,7 @@ export async function updateOrder(
       | "status"
       | "paymentMethod"
       | "paymentRef"
+      | "stkReferences"
       | "mock"
       | "paidAt"
       | "error"
@@ -257,11 +259,16 @@ export async function markAwaitingPayment(
   method: PaymentMethod,
   paymentRef: string,
   mock = false,
+  stkReferences: string[] = [],
 ) {
+  const existing = await getOrder(id);
+  // Keep earlier attempts too: a late result for a retried STK is still this order's payment.
+  const refs = [...new Set([...(existing?.stkReferences ?? []), ...stkReferences, paymentRef].filter(Boolean))].slice(-10);
   return updateOrder(id, {
     status: "awaiting_payment",
     paymentMethod: method,
     paymentRef,
+    stkReferences: refs,
     mock,
     error: undefined,
   });

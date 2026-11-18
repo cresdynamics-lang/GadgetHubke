@@ -13,6 +13,7 @@
  */
 
 import { site } from "../site";
+import { readStanbicCallback } from "./stanbic-callback";
 
 export const STANBIC_WEBHOOK_URL = `${site.url}/api/checkout/webhook`;
 
@@ -147,6 +148,8 @@ export type StkResult = {
   ok: boolean;
   mock: boolean;
   reference: string;
+  /** Every id the bank may quote back for this attempt. */
+  references?: string[];
   message: string;
   raw?: unknown;
 };
@@ -218,6 +221,7 @@ export async function initiateStkPush(input: {
     ok: true,
     mock: false,
     reference: bankRef,
+    references: [...new Set([reference, bankRef, ...readStanbicCallback(raw).refs])],
     message: "STK push sent. Enter your M-Pesa PIN on your phone.",
     raw,
   };

@@ -35,7 +35,7 @@ export async function startOrderStk(
     amountKes: order.subtotalKes,
     mobileNumber,
   });
-  const updated = await markAwaitingPayment(order.id, "mpesa", stk.reference, stk.mock);
+  const updated = await markAwaitingPayment(order.id, "mpesa", stk.reference, stk.mock, stk.references);
   return {
     order: updated || order,
     stk,

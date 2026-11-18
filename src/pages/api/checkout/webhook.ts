@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
-import { getOrder, markFailed, markPaid, publicOrder } from "../../../lib/checkout/orders";
+import { getOrder, markFailed, markPaid, publicOrder, updateOrder } from "../../../lib/checkout/orders";
 import { STANBIC_WEBHOOK_URL } from "../../../lib/payments/stanbic";
+import { callbackMatchesOrder, readStanbicCallback } from "../../../lib/payments/stanbic-callback";
 
 export const prerender = false;
 
@@ -12,14 +13,6 @@ function json(data: unknown, status = 200) {
       "Cache-Control": "no-store",
     },
   });
-}
-
-function pick(body: Record<string, unknown>, keys: string[]): string {
-  for (const key of keys) {
-    const value = body[key];
-    if (value != null && String(value).trim()) return String(value).trim();
-  }
-  return "";
 }
 
 async function parseBody(request: Request): Promise<Record<string, unknown>> {
@@ -54,16 +47,15 @@ export const GET: APIRoute = async () => {
 /**
  * Stanbic Instant Payment Notification / STK result URL.
  * Whitelisted: https://gadgethubke.com/api/checkout/webhook
+ *
+ * Anyone can reach this URL, so a notice changes an order only when it proves itself: the shared
+ * secret header (when STANBIC_WEBHOOK_SECRET is set), or a payment reference that was sent to Stanbic
+ * for that order and is never shown publicly. The order id alone is not enough.
  */
 export const POST: APIRoute = async ({ request }) => {
   const secret = process.env.STANBIC_WEBHOOK_SECRET;
-  if (secret) {
-    const header =
-      request.headers.get("x-stanbic-signature") ||
-      request.headers.get("x-webhook-secret") ||
-      "";
-    if (header !== secret) return json({ error: "Unauthorized." }, 401);
-  }
+  const header = request.headers.get("x-stanbic-signature") || request.headers.get("x-webhook-secret") || "";
+  if (secret && header !== secret) return json({ error: "Unauthorized." }, 401);
 
   let body: Record<string, unknown>;
   try {
@@ -72,46 +64,40 @@ export const POST: APIRoute = async ({ request }) => {
     return json({ error: "Invalid JSON or form body." }, 400);
   }
 
-  const orderId = pick(body, [
-    "orderId",
-    "externalReference",
-    "ExternalReference",
-    "dbsReferenceId",
-    "reference",
-    "transactionId",
-    "TransactionID",
-  ]);
-  const status = pick(body, [
-    "status",
-    "Status",
-    "result",
-    "transactionStatus",
-    "txnStatus",
-    "resultCode",
-  ]).toLowerCase();
-  const ref = pick(body, [
-    "dbsReferenceId",
-    "reference",
-    "transactionId",
-    "TransactionID",
-    "paymentRef",
-  ]);
+  const callback = readStanbicCallback(body);
+  console.log("[stanbic-webhook]", JSON.stringify({ outcome: callback.outcome, orderId: callback.orderId, refs: callback.refs, fields: callback.fields }));
 
-  if (!orderId) return json({ error: "orderId / dbsReferenceId / externalReference required." }, 400);
-
-  const order = await getOrder(orderId);
+  let order = callback.orderId ? await getOrder(callback.orderId) : null;
+  for (const ref of callback.refs) {
+    if (order) break;
+    order = await getOrder(ref);
+  }
+  if (!callback.orderId && !callback.refs.length) return json({ error: "orderId / dbsReferenceId / externalReference required." }, 400);
   if (!order) return json({ error: "Order not found." }, 404);
 
-  const paidHints = ["paid", "success", "successful", "completed", "0"];
-  const failHints = ["failed", "failure", "cancelled", "canceled", "timeout", "1"];
+  const verified = Boolean(secret) || callbackMatchesOrder(callback, order);
+  if (!verified) {
+    // Not proof of payment, but worth seeing: the field names show what Stanbic actually sends.
+    console.warn("[stanbic-webhook] unverified notice", order.id, callback.fields.join(","));
+    if (order.status !== "paid") {
+      await updateOrder(order.id, { error: `Payment notice could not be verified (fields: ${callback.fields.join(", ")}).` });
+    }
+    return json({ ok: true, ignored: "unverified" }, 202);
+  }
 
-  if (paidHints.some((h) => status.includes(h))) {
-    const updated = await markPaid(order.id, ref || order.paymentRef);
+  if (callback.outcome === "paid") {
+    if (callback.amountKes != null && callback.amountKes < order.subtotalKes) {
+      console.warn("[stanbic-webhook] amount below order total", order.id, callback.amountKes, order.subtotalKes);
+      await updateOrder(order.id, { error: `Paid ${callback.amountKes} but the order is ${order.subtotalKes}. Check with Stanbic.` });
+      return json({ ok: true, ignored: "amount_mismatch" }, 202);
+    }
+    const paidRef = callback.refs.find((ref) => ref !== order.id) || order.paymentRef;
+    const updated = await markPaid(order.id, paidRef);
     return json({ ok: true, order: updated ? publicOrder(updated) : publicOrder(order) });
   }
 
-  if (failHints.some((h) => status.includes(h))) {
-    const updated = await markFailed(order.id, String(body.message || "Payment failed"));
+  if (callback.outcome === "failed" && order.status !== "paid") {
+    const updated = await markFailed(order.id, callback.message || "Payment failed");
     return json({ ok: true, order: updated ? publicOrder(updated) : publicOrder(order) });
   }
 
