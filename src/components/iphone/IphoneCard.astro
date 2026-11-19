@@ -47,7 +47,7 @@ const overviewOnly = isOverviewOnly(model.id);
 const price = storagePrices(model.basePriceKes, model.storage, model.name)[0];
 const displayKes = priceKes ?? price.kes;
 const href = hrefProp || `/iphone/${model.id}`;
-const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}${channel === "ex-uk" ? " (Ex-UK)" : ""}.`);
+const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}${channel === "ex-uk" ? " (Ex-UK)" : channel === "used" ? " (Slightly used)" : ""}.`);
 const tag = isLatestTag(model) ? "Latest" : isValueTag(model) ? "Value" : null;
 
 const colourPayload = colours.map((key) => {
@@ -131,7 +131,7 @@ const hoverSrc = colourPayload[0]?.hoverSrc || "";
   </a>
   <div class="icard__body">
     <h3 class="icard__name"><a href={href}>{model.name}</a></h3>
-    <p class="icard__channel">{channel === "ex-uk" ? "Ex-UK" : "New"}</p>
+    <p class="icard__channel">{channel === "ex-uk" ? "Ex-UK" : channel === "used" ? "Slightly used" : "New"}</p>
     <p class="icard__sub">{modelSubline(model)}</p>
     {
       overviewOnly ? (
@@ -157,7 +157,7 @@ const hoverSrc = colourPayload[0]?.hoverSrc || "";
     }
     <div class="icard__row icard__row--price">
       <p class="icard__price">
-        <span class="icard__from" data-icard-price data-live-price={model.id} data-live-field={channel === "ex-uk" ? "exUkKes" : "priceKes"} data-live-prefix="">{`KSh ${Math.round(displayKes).toLocaleString("en-KE")}`}</span>
+        <span class="icard__from" data-icard-price data-live-price={model.id} data-live-field={channel === "ex-uk" ? "exUkKes" : channel === "used" ? "usedKes" : "priceKes"} data-live-prefix="">{`KSh ${Math.round(displayKes).toLocaleString("en-KE")}`}</span>
       </p>
       <button
         type="button"

@@ -1,13 +1,16 @@
 ---
 /**
- * Framed Black November deal: 4 devices, then welcome — auto-closes.
+ * Framed Black November deal: up to 4 devices, then welcome — auto-closes.
  * Pops after 5s on first landing per session; dismiss with X anytime.
+ * Prices come from the live list (/api/catalog-overlay) when it opens; a device that is
+ * not on the live list is left out, and a price is shown only when the live list has one.
  */
 const slides = [
   {
     id: "iphone",
     title: "iPhone 17",
-    sub: "ProMotion · A19 · from KSh 120,000",
+    liveId: "iphone-17",
+    sub: "ProMotion · A19",
     href: "/iphone/iphone-17",
     src: "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-17/iphone-17_lavender_view1.webp",
     alt: "iPhone 17 in Lavender",
@@ -15,7 +18,8 @@ const slides = [
   {
     id: "ipad",
     title: "iPad (A16)",
-    sub: "Everyday iPad · from KSh 64,000",
+    liveId: "ipad-a16",
+    sub: "Everyday iPad",
     href: "/ipad/ipad-a16",
     src: "/Gadget_Hub_Store_Angles/ipad-a16/pink-1.webp",
     alt: "iPad A16 in Pink",
@@ -23,7 +27,8 @@ const slides = [
   {
     id: "pro-max",
     title: "iPhone 18 Pro Max",
-    sub: "Biggest Pro · A20 Pro · from KSh 218,000",
+    liveId: "iphone-pro-max",
+    sub: "Biggest Pro · A20 Pro",
     href: "/iphone/iphone-18-pro-max",
     src: "/Gadget_Hub_iPhone_Apple_Store_Images/iphone-18-pro-max/iphone-18-pro-max_black_view1.webp",
     alt: "iPhone 18 Pro Max",
@@ -31,7 +36,8 @@ const slides = [
   {
     id: "mac",
     title: "MacBook Air 13″ M4",
-    sub: "Thin. Fast. All day. · from KSh 148,000",
+    liveId: "macbook-air-13-m4",
+    sub: "Thin. Fast. All day.",
     href: "/mac/macbook-air-13-m4",
     src: "/Gadget_Hub_Store_Angles/macbook-air-13-m4/sky-blue-1.webp",
     alt: "MacBook Air 13 M4 in Sky Blue",
@@ -54,13 +60,15 @@ const slides = [
             class:list={["bn-deal__slide", { "is-active": i === 0 }]}
             data-bn-slide
             data-href={s.href}
+            data-bn-live={s.liveId}
+            data-bn-tagline={s.sub}
             hidden={i !== 0}
           >
             <div class="bn-deal__media">
               <img src={s.src} alt={s.alt} width="900" height="900" decoding="async" />
             </div>
             <h2 class="bn-deal__title">{s.title}</h2>
-            <p class="bn-deal__sub">{s.sub}</p>
+            <p class="bn-deal__sub" data-bn-sub>{s.sub}</p>
             <a class="bn-deal__cta" href={s.href} data-bn-cta>
               View deal
             </a>
@@ -79,7 +87,7 @@ const slides = [
     </div>
 
     <div class="bn-deal__dots" data-bn-dots aria-hidden="true">
-      {slides.map((_, i) => <span class:list={["bn-deal__dot", { "is-active": i === 0 }]} data-bn-dot />)}
+      {slides.map((s, i) => <span class:list={["bn-deal__dot", { "is-active": i === 0 }]} data-bn-dot data-bn-dot-for={s.liveId} />)}
       <span class="bn-deal__dot" data-bn-dot data-bn-dot-welcome></span>
     </div>
   </div>
@@ -103,8 +111,8 @@ const slides = [
     dialog.remove();
   } else {
     const closeBtn = dialog.querySelector("[data-bn-close]");
-    const slides = [...dialog.querySelectorAll("[data-bn-slide]")];
-    const dots = [...dialog.querySelectorAll("[data-bn-dot]")];
+    let slides = [...dialog.querySelectorAll("[data-bn-slide]")];
+    let dots = [...dialog.querySelectorAll("[data-bn-dot]")];
     let opened = false;
     /** @type {number[]} */
     let timers = [];
@@ -157,9 +165,37 @@ const slides = [
       );
     }
 
-    function openDeal() {
+    /** Live "from" prices; drop devices that are not on the live list. Keeps the built-in copy if the list can't be read. */
+    async function applyLivePrices() {
+      try {
+        const ctrl = new AbortController();
+        const stop = window.setTimeout(() => ctrl.abort(), 2500);
+        const res = await fetch("/api/catalog-overlay", { signal: ctrl.signal });
+        window.clearTimeout(stop);
+        if (!res.ok) return;
+        const { overlay } = (await res.json()) as { overlay: Record<string, { fromKes?: number; listed?: boolean }> };
+        dialog!.querySelectorAll<HTMLElement>("[data-bn-live]").forEach((slide) => {
+          const id = slide.dataset.bnLive || "";
+          const entry = overlay?.[id];
+          if (!entry || entry.listed === false || !entry.fromKes) {
+            slide.remove();
+            dialog!.querySelector(`[data-bn-dot-for="${id}"]`)?.remove();
+            return;
+          }
+          const sub = slide.querySelector("[data-bn-sub]");
+          if (sub) sub.textContent = `${slide.dataset.bnTagline} · from KSh ${Math.round(entry.fromKes).toLocaleString("en-KE")}`;
+        });
+        slides = [...dialog!.querySelectorAll("[data-bn-slide]")];
+        dots = [...dialog!.querySelectorAll("[data-bn-dot]")];
+      } catch {
+        /* offline or slow: keep the built-in slides without prices */
+      }
+    }
+
+    async function openDeal() {
       if (opened) return;
       opened = true;
+      await applyLivePrices();
       showSlide(0);
       dialog.showModal();
       document.documentElement.classList.add("bn-deal-open");

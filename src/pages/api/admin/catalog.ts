@@ -37,6 +37,8 @@ export const PUT: APIRoute = async ({ request, cookies }) => {
     exUkShowOnWebsite?: boolean | null;
     storages?: Record<string, OverlayVariantPatch>;
     coloursInStock?: string[] | null;
+    usedShowOnWebsite?: boolean | null;
+    usedColoursInStock?: string[] | null;
   };
   try {
     body = (await request.json()) as typeof body;
@@ -62,6 +64,8 @@ export const PUT: APIRoute = async ({ request, cookies }) => {
       exUkShowOnWebsite: body.exUkShowOnWebsite,
       storages: body.storages,
       coloursInStock: body.coloursInStock,
+      usedShowOnWebsite: body.usedShowOnWebsite,
+      usedColoursInStock: body.usedColoursInStock,
     });
     clearLiveCache();
     const item = await livePricedProduct(id);

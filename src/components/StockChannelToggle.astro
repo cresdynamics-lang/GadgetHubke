@@ -1,8 +1,9 @@
 ---
 /**
- * New | Ex-UK stock toggle. Pages listen for the `gh:channel` event
- * (detail: "new" | "ex-uk") and switch every price they show.
- * Renders nothing when Ex-UK is off site-wide or the product has no Ex-UK prices.
+ * New | Ex-UK | Slightly used stock toggle. Pages listen for the `gh:channel` event
+ * (detail: "new" | "ex-uk" | "used") and switch every price they show.
+ * Pass `channels` to choose the buttons; renders nothing with fewer than two.
+ * Without `channels`, it is New | Ex-UK, shown when `show` is true and Ex-UK is on site-wide.
  */
 import { SHOW_EX_UK, EX_UK_CONDITION_LABEL } from "../lib/iphone/seo/flags";
 
@@ -11,13 +12,27 @@ interface Props {
   class?: string;
   /** Hide when this product has no Ex-UK prices. */
   show?: boolean;
+  /** The conditions this product is sold in, in order. */
+  channels?: ("new" | "ex-uk" | "used")[];
+  /** Which button starts active. */
+  initial?: "new" | "ex-uk" | "used";
 }
 
-const { class: className, show = true } = Astro.props;
+const { class: className, show = true, channels: asked, initial } = Astro.props;
+const channels = (asked ?? (SHOW_EX_UK && show ? ["new", "ex-uk"] : [])).filter((c) => c !== "ex-uk" || SHOW_EX_UK);
+const active = initial && channels.includes(initial) ? initial : channels[0];
+const labels = { new: "New", "ex-uk": EX_UK_CONDITION_LABEL, used: "Slightly used" } as const;
+const hint = [
+  channels.includes("new") ? "New = sealed, 1-year warranty." : "",
+  channels.includes("ex-uk") ? `${EX_UK_CONDITION_LABEL} = UK-used stock.` : "",
+  channels.includes("used") ? "Slightly used = pre-owned, checked by Gadget Hub." : "",
+]
+  .filter(Boolean)
+  .join(" ");
 ---
 
 {
-  SHOW_EX_UK && show ? (
+  channels.length > 1 ? (
     <>
       <div
         class:list={["stock-channel", className]}
@@ -25,14 +40,18 @@ const { class: className, show = true } = Astro.props;
         role="group"
         aria-label="Stock type"
       >
-        <button type="button" class="stock-channel__btn is-active" data-channel="new" aria-pressed="true">
-          New
-        </button>
-        <button type="button" class="stock-channel__btn" data-channel="ex-uk" aria-pressed="false">
-          {EX_UK_CONDITION_LABEL}
-        </button>
+        {channels.map((c) => (
+          <button
+            type="button"
+            class:list={["stock-channel__btn", { "is-active": c === active }]}
+            data-channel={c}
+            aria-pressed={c === active ? "true" : "false"}
+          >
+            {labels[c]}
+          </button>
+        ))}
       </div>
-      <p class="stock-channel__hint">New = sealed, 1-year warranty. {EX_UK_CONDITION_LABEL} = UK-used stock.</p>
+      <p class="stock-channel__hint">{hint}</p>
     </>
   ) : null
 }
@@ -42,7 +61,7 @@ const { class: className, show = true } = Astro.props;
     group.addEventListener("click", (e) => {
       const btn = (e.target as HTMLElement).closest<HTMLButtonElement>("[data-channel]");
       if (!btn) return;
-      const channel = btn.dataset.channel === "ex-uk" ? "ex-uk" : "new";
+      const channel = btn.dataset.channel === "ex-uk" || btn.dataset.channel === "used" ? btn.dataset.channel : "new";
       document.querySelectorAll<HTMLElement>("[data-stock-channel] [data-channel]").forEach((b) => {
         const on = b.dataset.channel === channel;
         b.classList.toggle("is-active", on);
@@ -52,9 +71,10 @@ const { class: className, show = true } = Astro.props;
       document.dispatchEvent(new CustomEvent("gh:channel", { detail: channel }));
     });
   });
-  // Feed links for used stock land with Ex-UK selected (?condition=ex-uk).
-  if (new URLSearchParams(location.search).get("condition") === "ex-uk") {
-    document.querySelector<HTMLButtonElement>('[data-stock-channel] [data-channel="ex-uk"]')?.click();
+  // Feed and card links land with their condition selected (?condition=ex-uk or ?condition=used).
+  const askedCondition = new URLSearchParams(location.search).get("condition");
+  if (askedCondition === "ex-uk" || askedCondition === "used") {
+    document.querySelector<HTMLButtonElement>(`[data-stock-channel] [data-channel="${askedCondition}"]`)?.click();
   }
 </script>
 

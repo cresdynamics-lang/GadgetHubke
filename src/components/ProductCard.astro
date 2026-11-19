@@ -42,7 +42,7 @@ const displayImage = colors[0]?.imageSrc ? { src: colors[0].imageSrc, alt: `${na
 const loadEager = eager || priority;
 const liveId = productId || href.split("/").filter(Boolean).pop() || "";
 const waBase = whatsappUrl();
-const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${name}${channel === "ex-uk" ? " (Ex-UK)" : ""}.`);
+const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${name}${channel === "ex-uk" ? " (Ex-UK)" : channel === "used" ? " (Slightly used)" : ""}.`);
 const hoverSrc =
   colors.find((c) => c.imageSrc && c.imageSrc !== displayImage.src)?.imageSrc || "";
 ---
@@ -94,7 +94,7 @@ const hoverSrc =
     <h3 class="pcard__name">
       <a href={href}>{name}</a>
     </h3>
-    <p class="pcard__channel">{channel === "ex-uk" ? "Ex-UK" : "New"}</p>
+    <p class="pcard__channel">{channel === "ex-uk" ? "Ex-UK" : channel === "used" ? "Slightly used" : "New"}</p>
     {blurb ? <p class="pcard__blurb">{blurb}</p> : null}
     {
       colors.length > 0 ? (
@@ -114,7 +114,7 @@ const hoverSrc =
       ) : null
     }
     <div class="pcard__row pcard__row--price">
-      <p class="pcard__price" data-pcard-price data-live-price={liveId} data-live-field={channel === "ex-uk" ? "exUkKes" : "priceKes"} data-live-prefix="">
+      <p class="pcard__price" data-pcard-price data-live-price={liveId} data-live-field={channel === "ex-uk" ? "exUkKes" : channel === "used" ? "usedKes" : "priceKes"} data-live-prefix="">
         <Price kes={priceKes} />
       </p>
       <a class="btn btn--secondary btn--xs" href={href}>Add to Cart</a>

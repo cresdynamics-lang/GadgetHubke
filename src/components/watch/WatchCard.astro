@@ -33,7 +33,7 @@ const img = getWatchImage(model.id, "main", model.name);
 const hoverCandidate = getWatchImage(model.id, "design", model.name);
 const hoverSrc =
   !hoverCandidate.fallback && hoverCandidate.src !== img.src ? hoverCandidate.src : "";
-const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}${channel === "ex-uk" ? " (Ex-UK)" : ""}.`);
+const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}${channel === "ex-uk" ? " (Ex-UK)" : channel === "used" ? " (Slightly used)" : ""}.`);
 ---
 
 <article class="wcard" data-watch-card data-id={model.id} data-channel={channel}>
@@ -85,7 +85,7 @@ const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}${c
     </div>
     <div class="wcard__row wcard__row--price">
       <p class="wcard__price">
-        <span data-live-price={model.id} data-live-field={channel === "ex-uk" ? "exUkKes" : "priceKes"} data-live-prefix="">{`KSh ${Math.round(displayKes).toLocaleString("en-KE")}`}</span>
+        <span data-live-price={model.id} data-live-field={channel === "ex-uk" ? "exUkKes" : channel === "used" ? "usedKes" : "priceKes"} data-live-prefix="">{`KSh ${Math.round(displayKes).toLocaleString("en-KE")}`}</span>
       </p>
     </div>
     <div class="wcard__row wcard__row--links">

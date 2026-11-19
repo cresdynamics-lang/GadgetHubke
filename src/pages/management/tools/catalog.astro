@@ -20,7 +20,9 @@ const kes = (n?: number) => (typeof n === "number" ? n : "");
       Every price on the site comes from here: product pages, cards, cart and WhatsApp orders.
       Tick <strong>New</strong> and/or <strong>Ex-UK</strong> beside each price to show it on the website; untick to hide it.
       You can list a phone as New only, Ex-UK only, or both. Tick every colour that is in stock.
-      A <strong>Save</strong> button appears on a product as soon as you change it; the shop updates within a few seconds.
+      For iPhones, <strong>+ Add Slightly used</strong> copies the product's prices into a <strong>Slightly used</strong> column:
+      set each price (higher or lower than Ex-UK), tick the colours you have, and it shows as its own listing on the website.
+      A <strong>Save</strong> button appears on a product as soon as you change it and disappears once saved; the shop updates within a few seconds.
     </p>
     <div class="mgmt-filter">
       <input class="mgmt-input" type="search" placeholder="Filter by name or id" data-filter-q style="max-width:16rem;" />
@@ -40,6 +42,7 @@ const kes = (n?: number) => (typeof n === "number" ? n : "");
             <th>Option</th>
             <th>New (KES) · show</th>
             <th>Ex-UK (KES) · show</th>
+            <th>Slightly used (KES) · show</th>
             <th>In stock</th>
             <th></th>
           </tr>
@@ -54,6 +57,10 @@ const kes = (n?: number) => (typeof n === "number" ? n : "");
             const productNew = item.showOnWebsite !== false && item.showNewOnWebsite !== false;
             const productEx = item.showOnWebsite !== false && item.exUkShowOnWebsite !== false;
             const stockColours = item.coloursInStock?.length ? item.coloursInStock : colourKeys;
+            // Slightly used is offered on iPhones, which have a full Slightly used listing on the website.
+            const canUsed = item.variants.length > 0 && /iphone/i.test(item.group) && /iphone/i.test(item.name);
+            const hasUsed = canUsed && item.variants.some((v) => typeof v.usedKes === "number" || v.usedShowOnWebsite);
+            const usedColours = item.usedColoursInStock?.length ? item.usedColoursInStock : stockColours;
             return (
               <tbody
                 data-row
@@ -61,7 +68,8 @@ const kes = (n?: number) => (typeof n === "number" ? n : "");
                 data-group={item.group}
                 data-name={`${item.name} ${item.id}`.toLowerCase()}
                 data-has-variants={item.variants.length ? "1" : "0"}
-                class="cat-product"
+                data-used-on={hasUsed ? "1" : "0"}
+                class:list={["cat-product", { "has-used": hasUsed }]}
               >
                 {options.map((v, i) => (
                   <tr data-variant={v.key} data-label={v.label}>
@@ -80,6 +88,29 @@ const kes = (n?: number) => (typeof n === "number" ? n : "");
                                     {c.replace(/-/g, " ")}
                                   </label>
                                 ))}
+                              </div>
+                            ) : null
+                          }
+                          {
+                            canUsed ? (
+                              <div class="cat-used-box">
+                                <button type="button" class="mgmt-btn mgmt-btn--ghost mgmt-btn--sm cat-used-add" data-used-add>
+                                  + Add Slightly used
+                                </button>
+                                <div class="cat-used-colours" data-used-block>
+                                  <p class="cat-used-title">Slightly used colours</p>
+                                  {colourKeys.length ? (
+                                    <div class="cat-colours">
+                                      {colourKeys.map((c) => (
+                                        <label>
+                                          <input type="checkbox" value={c} data-used-colour checked={hasUsed && usedColours.includes(c)} />
+                                          {c.replace(/-/g, " ")}
+                                        </label>
+                                      ))}
+                                    </div>
+                                  ) : null}
+                                  <button type="button" class="cat-used-remove" data-used-remove>Remove Slightly used</button>
+                                </div>
                               </div>
                             ) : null
                           }
@@ -105,6 +136,19 @@ const kes = (n?: number) => (typeof n === "number" ? n : "");
                           Ex-UK
                         </label>
                       </div>
+                    </td>
+                    <td>
+                      {canUsed ? (
+                        <div class="cat-price cat-used-cell">
+                          <input type="number" min="0" step="500" value={kes((v as { usedKes?: number }).usedKes)} data-used aria-label={`${item.name} ${v.label} Slightly used price`} />
+                          <label class="cat-show" title="Show the Slightly used price on the website">
+                            <input type="checkbox" data-show-used checked={Boolean((v as { usedShowOnWebsite?: boolean }).usedShowOnWebsite) && Number((v as { usedKes?: number }).usedKes) > 0} />
+                            Used
+                          </label>
+                        </div>
+                      ) : (
+                        <span class="mgmt-muted">—</span>
+                      )}
                     </td>
                     <td><input type="checkbox" checked={v.inStock} data-stock /></td>
                     {i === 0 ? (
@@ -158,6 +202,23 @@ const kes = (n?: number) => (typeof n === "number" ? n : "");
   [data-row-err][hidden] { display: none !important; }
   .cat-saved { color: #1a7f37; font-weight: 600; font-size: 0.85rem; }
   .cat-error { color: #b42318; font-size: 0.8rem; display: block; max-width: 14rem; }
+  .cat-used-box { margin-top: 0.6rem; }
+  .cat-product.has-used .cat-used-add,
+  .cat-product:not(.has-used) .cat-used-colours,
+  .cat-product:not(.has-used) .cat-used-cell { display: none; }
+  .cat-used-title { margin: 0.2rem 0 0; font-size: 0.75rem; font-weight: 700; color: #6b4e16; }
+  .cat-used-remove {
+    margin-top: 0.4rem;
+    border: 0;
+    background: none;
+    padding: 0;
+    font: inherit;
+    font-size: 0.75rem;
+    color: #b42318;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .cat-used-cell { background: rgba(176, 128, 32, 0.08); border-radius: 0.4rem; padding: 0.2rem 0.3rem; }
   .cat-colours label {
     display: inline-flex;
     align-items: center;
@@ -216,6 +277,47 @@ const kes = (n?: number) => (typeof n === "number" ? n : "");
     row.addEventListener("change", () => refresh(row));
   }
 
+  // + Add Slightly used: copy each option's Ex-UK price (else New) as a starting point, ticked to show,
+  // with the same colours as in stock. Edit the prices and colours, then Save.
+  document.querySelectorAll<HTMLButtonElement>("[data-used-add]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const row = btn.closest<HTMLElement>("[data-row]");
+      if (!row) return;
+      row.classList.add("has-used");
+      row.dataset.usedOn = "1";
+      row.querySelectorAll<HTMLTableRowElement>("[data-variant]").forEach((tr) => {
+        const used = tr.querySelector<HTMLInputElement>("[data-used]");
+        const show = tr.querySelector<HTMLInputElement>("[data-show-used]");
+        if (!used || !show) return;
+        if (!used.value.trim()) {
+          used.value =
+            tr.querySelector<HTMLInputElement>("[data-exuk]")?.value.trim() ||
+            tr.querySelector<HTMLInputElement>("[data-price]")?.value.trim() ||
+            "";
+        }
+        show.checked = Boolean(num(used));
+      });
+      const stock = new Set(
+        [...row.querySelectorAll<HTMLInputElement>("[data-colour]")].filter((el) => el.checked).map((el) => el.value),
+      );
+      row.querySelectorAll<HTMLInputElement>("[data-used-colour]").forEach((el) => (el.checked = stock.has(el.value)));
+      row.querySelector<HTMLInputElement>("[data-used]")?.focus();
+      refresh(row);
+    });
+  });
+
+  document.querySelectorAll<HTMLButtonElement>("[data-used-remove]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const row = btn.closest<HTMLElement>("[data-row]");
+      if (!row) return;
+      row.classList.remove("has-used");
+      row.dataset.usedOn = "0";
+      row.querySelectorAll<HTMLInputElement>("[data-used]").forEach((el) => (el.value = ""));
+      row.querySelectorAll<HTMLInputElement>("[data-show-used], [data-used-colour]").forEach((el) => (el.checked = false));
+      refresh(row);
+    });
+  });
+
   // Warn before leaving with unsaved changes.
   window.addEventListener("beforeunload", (e) => {
     if (rows.some((row) => row.classList.contains("is-dirty"))) e.preventDefault();
@@ -244,19 +346,37 @@ const kes = (n?: number) => (typeof n === "number" ? n : "");
           return rowError(row, `Enter a New price${label ? ` for ${label}` : ""}, or untick New.`);
         if (tr.querySelector<HTMLInputElement>("[data-show-exuk]")?.checked && !num(tr.querySelector("[data-exuk]")))
           return rowError(row, `Enter an Ex-UK price${label ? ` for ${label}` : ""}, or untick Ex-UK.`);
+        if (tr.querySelector<HTMLInputElement>("[data-show-used]")?.checked && !num(tr.querySelector("[data-used]")))
+          return rowError(row, `Enter a Slightly used price${label ? ` for ${label}` : ""}, or untick Used.`);
       }
+      const usedOn = row.dataset.usedOn === "1";
+      const usedColourBoxes = [...row.querySelectorAll<HTMLInputElement>("[data-used-colour]")];
+      if (usedOn && lines.some((tr) => tr.querySelector<HTMLInputElement>("[data-show-used]")?.checked) && usedColourBoxes.length && !usedColourBoxes.some((el) => el.checked))
+        return rowError(row, "Tick at least one Slightly used colour.");
 
       const ticked = (tr: HTMLElement, sel: string) => Boolean(tr.querySelector<HTMLInputElement>(sel)?.checked);
       if (row.dataset.hasVariants === "1") {
         const storages: Record<string, unknown> = {};
         for (const tr of lines) {
+          const hasUsedCell = Boolean(tr.querySelector("[data-used]"));
           storages[tr.dataset.variant || ""] = {
             priceKes: num(tr.querySelector("[data-price]")),
             exUkKes: num(tr.querySelector("[data-exuk]")),
             inStock: ticked(tr, "[data-stock]"),
             showOnWebsite: ticked(tr, "[data-show-new]"),
             exUkShowOnWebsite: ticked(tr, "[data-show-exuk]"),
+            ...(hasUsedCell
+              ? {
+                  usedKes: usedOn ? num(tr.querySelector("[data-used]")) : null,
+                  usedShowOnWebsite: usedOn && ticked(tr, "[data-show-used]") ? true : null,
+                }
+              : {}),
           };
+        }
+        if (usedColourBoxes.length || lines.some((tr) => tr.querySelector("[data-used]"))) {
+          const anyUsed = usedOn && lines.some((tr) => ticked(tr, "[data-show-used]"));
+          body.usedShowOnWebsite = anyUsed ? true : null;
+          body.usedColoursInStock = usedOn ? usedColourBoxes.filter((el) => el.checked).map((el) => el.value) : null;
         }
         body.storages = storages;
         body.inStock = lines.some((tr) => ticked(tr, "[data-stock]"));

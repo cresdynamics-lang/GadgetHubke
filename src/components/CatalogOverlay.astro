@@ -6,7 +6,7 @@
 ---
 
 <script>
-  type Entry = { priceKes?: number; exUkKes?: number; inStock?: boolean; showOnWebsite?: boolean; [key: string]: unknown };
+  type Entry = { priceKes?: number; exUkKes?: number; usedKes?: number; inStock?: boolean; showOnWebsite?: boolean; [key: string]: unknown };
   let overlay: Record<string, Entry> = {};
 
   const formatKes = (n: number) => `KSh ${Math.round(n).toLocaleString("en-KE")}`;
@@ -19,7 +19,8 @@
     for (const [id, entry] of Object.entries(overlay)) {
       document.querySelectorAll(`[data-live-price="${id}"]`).forEach((el) => {
         const prefix = el.getAttribute("data-live-prefix") || "";
-        const field = el.getAttribute("data-live-field") === "exUkKes" ? "exUkKes" : "priceKes";
+        const asked = el.getAttribute("data-live-field");
+        const field = asked === "exUkKes" || asked === "usedKes" ? asked : "priceKes";
         const value = entry[field];
         if (typeof value === "number") el.textContent = `${prefix}${formatKes(value)}`;
       });

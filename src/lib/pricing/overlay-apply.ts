@@ -1,6 +1,7 @@
 /**
  * Merge an admin overlay onto a priced product.
- * New and Ex-UK stay separate: an Ex-UK-only listing does not keep leftover sheet New prices.
+ * New, Ex-UK and Slightly used stay separate: an Ex-UK-only listing does not keep leftover sheet New prices.
+ * Slightly used has no sheet price; it exists only once admin adds it.
  */
 
 type OverlayVariant = {
@@ -10,6 +11,8 @@ type OverlayVariant = {
   exUkInStock?: boolean;
   showOnWebsite?: boolean;
   exUkShowOnWebsite?: boolean;
+  usedKes?: number;
+  usedShowOnWebsite?: boolean;
 };
 
 type OverlayEntry = {
@@ -23,6 +26,8 @@ type OverlayEntry = {
   storages?: Record<string, OverlayVariant>;
   coloursInStock?: string[];
   exUkColoursInStock?: string[];
+  usedShowOnWebsite?: boolean;
+  usedColoursInStock?: string[];
   updatedAt: string;
 };
 
@@ -42,9 +47,13 @@ type OverlayProduct = {
     exUkInStock?: boolean;
     showOnWebsite?: boolean;
     exUkShowOnWebsite?: boolean;
+    usedKes?: number;
+    usedShowOnWebsite?: boolean;
   }>;
   coloursInStock?: string[];
   exUkColoursInStock?: string[];
+  usedShowOnWebsite?: boolean;
+  usedColoursInStock?: string[];
   sample: boolean;
   updatedAt?: string;
 };
@@ -54,11 +63,12 @@ export function applyOverlay<T extends OverlayProduct>(p: T, entry?: OverlayEntr
   const managedStorages = Boolean(entry.storages && Object.keys(entry.storages).length);
   const newListed = entry.showNewOnWebsite !== false;
   const exListed = entry.exUkShowOnWebsite !== false;
+  const usedListed = entry.usedShowOnWebsite === true;
   const variants = p.variants.map((v) => {
     const o = entry.storages?.[v.key];
     if (!o) {
       if (managedStorages) {
-        return { ...v, showOnWebsite: false, exUkShowOnWebsite: false, inStock: false, exUkInStock: false };
+        return { ...v, showOnWebsite: false, exUkShowOnWebsite: false, inStock: false, exUkInStock: false, usedShowOnWebsite: false };
       }
       return {
         ...v,
@@ -75,6 +85,8 @@ export function applyOverlay<T extends OverlayProduct>(p: T, entry?: OverlayEntr
       showOnWebsite: newListed && (typeof o.showOnWebsite === "boolean" ? o.showOnWebsite : entry.showOnWebsite !== false),
       exUkShowOnWebsite:
         exListed && (typeof o.exUkShowOnWebsite === "boolean" ? o.exUkShowOnWebsite : entry.exUkShowOnWebsite !== false),
+      ...(typeof o.usedKes === "number" ? { usedKes: o.usedKes } : {}),
+      usedShowOnWebsite: usedListed && o.usedShowOnWebsite === true && typeof o.usedKes === "number" && o.usedKes > 0,
     };
   });
   const listedNew = variants.filter((v) => v.showOnWebsite !== false);
@@ -89,8 +101,11 @@ export function applyOverlay<T extends OverlayProduct>(p: T, entry?: OverlayEntr
     (v) => v.exUkShowOnWebsite !== false && typeof v.exUkKes === "number" && v.exUkKes > 0,
   );
   const exUkPrices = listedEx.map((v) => v.exUkKes).filter((n): n is number => typeof n === "number" && n > 0);
+  const listedUsed = variants.filter((v) => v.usedShowOnWebsite === true);
   const showOnWebsite =
-    typeof entry.showOnWebsite === "boolean" ? entry.showOnWebsite : listedNew.length > 0 || listedEx.length > 0;
+    typeof entry.showOnWebsite === "boolean"
+      ? entry.showOnWebsite
+      : listedNew.length > 0 || listedEx.length > 0 || listedUsed.length > 0;
   return {
     ...p,
     variants,
@@ -103,6 +118,8 @@ export function applyOverlay<T extends OverlayProduct>(p: T, entry?: OverlayEntr
     exUkShowOnWebsite: typeof entry.exUkShowOnWebsite === "boolean" ? entry.exUkShowOnWebsite : p.exUkShowOnWebsite,
     coloursInStock: entry.coloursInStock ?? p.coloursInStock,
     exUkColoursInStock: entry.exUkColoursInStock ?? p.exUkColoursInStock,
+    usedShowOnWebsite: listedUsed.length > 0,
+    usedColoursInStock: entry.usedColoursInStock ?? p.usedColoursInStock,
     sample: false,
     updatedAt: entry.updatedAt,
   };

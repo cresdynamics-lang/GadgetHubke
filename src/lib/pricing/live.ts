@@ -35,6 +35,9 @@ export type PriceVariant = {
   exUkInStock?: boolean;
   showOnWebsite?: boolean;
   exUkShowOnWebsite?: boolean;
+  /** Slightly used price; only set once admin adds Slightly used to this option. */
+  usedKes?: number;
+  usedShowOnWebsite?: boolean;
 };
 
 export type PricedProduct = {
@@ -56,6 +59,9 @@ export type PricedProduct = {
   colours?: string[];
   coloursInStock?: string[];
   exUkColoursInStock?: string[];
+  /** True when at least one option is listed Slightly used. */
+  usedShowOnWebsite?: boolean;
+  usedColoursInStock?: string[];
   /** True when nothing has been saved in admin for this product. */
   sample: boolean;
   updatedAt?: string;
@@ -272,6 +278,16 @@ export function variantExUkMap(p: PricedProduct | undefined): Record<string, num
   for (const v of p?.variants ?? []) {
     if (v.showOnWebsite === false || v.exUkShowOnWebsite === false) continue;
     if (typeof v.exUkKes === "number" && v.exUkKes > 0) out[v.key] = v.exUkKes;
+  }
+  return out;
+}
+
+/** key → Slightly used price (only options listed Slightly used). */
+export function variantUsedMap(p: PricedProduct | undefined): Record<string, number> {
+  const out: Record<string, number> = {};
+  for (const v of p?.variants ?? []) {
+    if (v.usedShowOnWebsite !== true) continue;
+    if (typeof v.usedKes === "number" && v.usedKes > 0) out[v.key] = v.usedKes;
   }
   return out;
 }

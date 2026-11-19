@@ -9,6 +9,9 @@ export type CatalogOverlayVariant = {
   exUkInStock?: boolean;
   showOnWebsite?: boolean;
   exUkShowOnWebsite?: boolean;
+  /** Slightly used price for this option. */
+  usedKes?: number;
+  usedShowOnWebsite?: boolean;
 };
 
 export type CatalogOverlayEntry = {
@@ -23,6 +26,9 @@ export type CatalogOverlayEntry = {
   storages?: Record<string, CatalogOverlayVariant>;
   coloursInStock?: string[];
   exUkColoursInStock?: string[];
+  /** Slightly used: listed on the website, and the colours in stock. */
+  usedShowOnWebsite?: boolean;
+  usedColoursInStock?: string[];
   confirmed?: boolean;
   confirmedAt?: string;
   updatedAt: string;
@@ -38,6 +44,9 @@ export type OverlayVariantPatch = {
   showOnWebsite?: boolean | null;
   /** Ex-UK price listed on the website. */
   exUkShowOnWebsite?: boolean | null;
+  /** Slightly used price, and whether it is listed on the website. */
+  usedKes?: number | null;
+  usedShowOnWebsite?: boolean | null;
 };
 
 export async function getOverlayMap(): Promise<CatalogOverlayMap> {
@@ -64,6 +73,10 @@ function applyVariantPatch<T extends CatalogOverlayVariant>(prev: T, patch: Over
   else if (typeof patch.showOnWebsite === "boolean") next.showOnWebsite = patch.showOnWebsite;
   if (patch.exUkShowOnWebsite === null) delete next.exUkShowOnWebsite;
   else if (typeof patch.exUkShowOnWebsite === "boolean") next.exUkShowOnWebsite = patch.exUkShowOnWebsite;
+  if (patch.usedKes === null) delete next.usedKes;
+  else if (money(patch.usedKes) != null) next.usedKes = money(patch.usedKes);
+  if (patch.usedShowOnWebsite === null) delete next.usedShowOnWebsite;
+  else if (typeof patch.usedShowOnWebsite === "boolean") next.usedShowOnWebsite = patch.usedShowOnWebsite;
   return next;
 }
 
@@ -79,12 +92,16 @@ export async function upsertOverlay(
     exUkShowOnWebsite?: boolean | null;
     storages?: Record<string, OverlayVariantPatch>;
     coloursInStock?: string[] | null;
+    usedShowOnWebsite?: boolean | null;
+    usedColoursInStock?: string[] | null;
   },
 ) {
   const map = await getOverlayMap();
   const now = new Date().toISOString();
   const prev = map[id] || { updatedAt: now };
-  const next = applyVariantPatch<CatalogOverlayEntry>({ ...prev, updatedAt: now }, patch);
+  // Per-option fields only: the product row never carries its own Slightly used price.
+  const { usedKes: _usedKes, ...productPatch } = patch as OverlayVariantPatch & typeof patch;
+  const next = applyVariantPatch<CatalogOverlayEntry>({ ...prev, updatedAt: now }, productPatch);
   if (patch.showNewOnWebsite === null) delete next.showNewOnWebsite;
   else if (typeof patch.showNewOnWebsite === "boolean") next.showNewOnWebsite = patch.showNewOnWebsite;
 
@@ -92,7 +109,15 @@ export async function upsertOverlay(
     const storages = { ...(next.storages || {}) };
     for (const [key, vp] of Object.entries(patch.storages)) {
       const v = applyVariantPatch(storages[key] || {}, vp || {});
-      if (v.priceKes == null && v.exUkKes == null && v.inStock == null && v.showOnWebsite == null && v.exUkShowOnWebsite == null)
+      if (
+        v.priceKes == null &&
+        v.exUkKes == null &&
+        v.inStock == null &&
+        v.showOnWebsite == null &&
+        v.exUkShowOnWebsite == null &&
+        v.usedKes == null &&
+        v.usedShowOnWebsite == null
+      )
         delete storages[key];
       else storages[key] = v;
     }
@@ -108,6 +133,10 @@ export async function upsertOverlay(
   else if (Array.isArray(patch.coloursInStock)) {
     next.coloursInStock = patch.coloursInStock.map((c) => String(c).trim()).filter(Boolean);
   }
+  if (patch.usedColoursInStock === null) delete next.usedColoursInStock;
+  else if (Array.isArray(patch.usedColoursInStock)) {
+    next.usedColoursInStock = patch.usedColoursInStock.map((c) => String(c).trim()).filter(Boolean);
+  }
 
   const empty =
     next.priceKes == null &&
@@ -116,6 +145,7 @@ export async function upsertOverlay(
     next.showOnWebsite == null &&
     next.showNewOnWebsite == null &&
     next.exUkShowOnWebsite == null &&
+    next.usedShowOnWebsite == null &&
     !Object.keys(next.storages || {}).length &&
     !(next.coloursInStock && next.coloursInStock.length);
   if (empty) delete map[id];

@@ -1,11 +1,13 @@
 /**
- * Listing cards are one offer per condition. New and Ex-UK never share a card
- * or a toggle — if both are listed, the grid shows two cards of the same model.
+ * Listing cards are one offer per condition. New, Ex-UK and Slightly used never share
+ * a card — if several are listed, the grid shows one card per condition of the same model.
  */
 import { SHOW_EX_UK } from "./iphone/seo/flags.ts";
 import type { PricedProduct } from "./pricing/live.ts";
 
-export type ListingChannel = "new" | "ex-uk";
+export type ListingChannel = "new" | "ex-uk" | "used";
+
+export const CHANNEL_LABEL: Record<ListingChannel, string> = { new: "New", "ex-uk": "Ex-UK", used: "Slightly used" };
 
 export type ListingOffer = {
   channel: ListingChannel;
@@ -28,17 +30,17 @@ export function filterColours<T extends string>(all: readonly T[], inStock?: rea
 }
 
 export function channelHref(href: string, channel: ListingChannel) {
-  if (channel !== "ex-uk") return href;
+  if (channel === "new") return href;
   const joiner = href.includes("?") ? "&" : "?";
   if (/[?&]condition=/.test(href)) return href;
-  return `${href}${joiner}condition=ex-uk`;
+  return `${href}${joiner}condition=${channel}`;
 }
 
 function positive(n: number | undefined) {
   return typeof n === "number" && Number.isFinite(n) && n > 0;
 }
 
-/** New and Ex-UK prices for one storage — leftover sheet figures on an unlisted channel stay at 0. */
+/** New, Ex-UK and Slightly used prices for one storage — leftover sheet figures on an unlisted channel stay at 0. */
 export function listedVariantPrices(
   product: PricedProduct | undefined,
   variant?: PricedProduct["variants"][number],
@@ -46,13 +48,15 @@ export function listedVariantPrices(
   const productNew = product?.showOnWebsite !== false && product?.showNewOnWebsite !== false;
   const productEx = SHOW_EX_UK && product?.showOnWebsite !== false && product?.exUkShowOnWebsite !== false;
   if (!variant) {
-    return { showNew: Boolean(productNew), showEx: Boolean(productEx), newKes: 0, exUkKes: 0, displayKes: 0 };
+    return { showNew: Boolean(productNew), showEx: Boolean(productEx), showUsed: false, newKes: 0, exUkKes: 0, usedKes: 0, displayKes: 0 };
   }
   const showNew = Boolean(productNew) && variant.showOnWebsite !== false && positive(variant.priceKes);
   const showEx = Boolean(productEx) && variant.exUkShowOnWebsite !== false && positive(variant.exUkKes);
+  const showUsed = product?.showOnWebsite !== false && variant.usedShowOnWebsite === true && positive(variant.usedKes);
   const newKes = showNew ? variant.priceKes : 0;
   const exUkKes = showEx ? variant.exUkKes! : 0;
-  return { showNew, showEx, newKes, exUkKes, displayKes: newKes || exUkKes };
+  const usedKes = showUsed ? variant.usedKes! : 0;
+  return { showNew, showEx, showUsed, newKes, exUkKes, usedKes, displayKes: newKes || exUkKes || usedKes };
 }
 
 function newPrice(p: PricedProduct) {
@@ -73,8 +77,13 @@ function exUkPrice(p: PricedProduct) {
   return positive(p.exUkKes) ? p.exUkKes! : 0;
 }
 
+function usedPrice(p: PricedProduct) {
+  const prices = p.variants.map((variant) => listedVariantPrices(p, variant).usedKes).filter(positive);
+  return prices.length ? Math.min(...prices) : 0;
+}
+
 /**
- * On the live list: shown, and at least one New or Ex-UK option is priced and in stock.
+ * On the live list: shown, and at least one New, Ex-UK or Slightly used option is priced and in stock.
  * Search pages, menus, feeds and the sitemap all follow this.
  */
 export function isListedForSale(p: PricedProduct): boolean {
@@ -84,7 +93,8 @@ export function isListedForSale(p: PricedProduct): boolean {
     return rows.some(
       ({ variant, listed }) =>
         (listed.showNew && variant.inStock && p.inStock !== false) ||
-        (listed.showEx && variant.exUkInStock !== false && p.exUkInStock !== false),
+        (listed.showEx && variant.exUkInStock !== false && p.exUkInStock !== false) ||
+        listed.showUsed,
     );
   }
   const flags = listedVariantPrices(p);
@@ -94,11 +104,11 @@ export function isListedForSale(p: PricedProduct): boolean {
   );
 }
 
-/** Lowest listed price, New or Ex-UK. */
+/** Lowest listed price, New, Ex-UK or Slightly used. */
 export function listedFromKes(p: PricedProduct): number {
   const prices = p.variants.flatMap((variant) => {
     const listed = listedVariantPrices(p, variant);
-    return [listed.newKes, listed.exUkKes];
+    return [listed.newKes, listed.exUkKes, listed.usedKes];
   });
   if (!p.variants.length) prices.push(p.priceKes, p.exUkKes ?? 0);
   const shown = prices.filter(positive);
@@ -134,6 +144,19 @@ export function listingOffers(product: PricedProduct | undefined, href: string, 
         colours: product.exUkColoursInStock?.length ? product.exUkColoursInStock : product.coloursInStock ?? [],
         href: channelHref(href, "ex-uk"),
         inStock: product.exUkInStock !== false,
+      });
+    }
+  }
+
+  if (product) {
+    const priceKes = usedPrice(product);
+    if (priceKes > 0) {
+      offers.push({
+        channel: "used",
+        priceKes,
+        colours: product.usedColoursInStock?.length ? product.usedColoursInStock : product.coloursInStock ?? [],
+        href: channelHref(href, "used"),
+        inStock: true,
       });
     }
   }

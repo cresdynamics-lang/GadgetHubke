@@ -1,6 +1,6 @@
 ---
 /**
- * Filters control: opens a sheet with New / Ex-UK + the category quiz (slot).
+ * Filters control: opens a sheet with New / Ex-UK / Slightly used + the category quiz (slot).
  * Cards with [data-channel] are shown/hidden by the condition buttons.
  */
 import { SHOW_EX_UK } from "../lib/iphone/seo/flags";
@@ -36,6 +36,7 @@ const { label = "Filters" } = Astro.props;
               <button type="button" data-channel-filter="ex-uk">Ex-UK</button>
             ) : null
           }
+          <button type="button" data-channel-filter="used" data-used-filter hidden>Slightly used</button>
         </div>
       </fieldset>
 
@@ -52,6 +53,9 @@ const { label = "Filters" } = Astro.props;
     if (!(root instanceof HTMLElement)) return;
     if (root.dataset.bound === "1") return;
     root.dataset.bound = "1";
+    // Slightly used appears only when this page lists a Slightly used card.
+    const usedBtn = root.querySelector("[data-used-filter]");
+    if (usedBtn instanceof HTMLElement) usedBtn.hidden = !document.querySelector('[data-channel="used"]:not([data-channel-filter])');
 
     const dialog = root.querySelector("[data-cfilters-dialog]");
     const openBtn = root.querySelector("[data-cfilters-open]");

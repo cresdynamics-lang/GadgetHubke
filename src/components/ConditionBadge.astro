@@ -1,14 +1,14 @@
 ---
 interface Props {
-  channel?: "new" | "ex-uk";
+  channel?: "new" | "ex-uk" | "used";
   class?: string;
 }
 
 const { channel = "new", class: className } = Astro.props;
-const label = channel === "ex-uk" ? "Ex-UK" : "New";
+const label = channel === "ex-uk" ? "Ex-UK" : channel === "used" ? "Slightly used" : "New";
 ---
 
-<span class:list={["condition-badge", channel === "ex-uk" && "condition-badge--exuk", className]}>{label}</span>
+<span class:list={["condition-badge", channel === "ex-uk" && "condition-badge--exuk", channel === "used" && "condition-badge--used", className]}>{label}</span>
 
 <style>
   .condition-badge {
@@ -24,6 +24,11 @@ const label = channel === "ex-uk" ? "Ex-UK" : "New";
     border-radius: 999px;
     background: var(--color-black);
     color: var(--color-white);
+  }
+
+  .condition-badge--used {
+    background: #8a5a12;
+    color: #fff8ec;
   }
 
   .condition-badge--exuk {

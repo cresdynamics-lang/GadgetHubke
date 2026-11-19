@@ -33,7 +33,7 @@ const colour = colours.includes(defaultMacColour(model)) ? defaultMacColour(mode
 const img = macCardPrimarySrc(model, colour);
 const href = hrefProp || `/mac/${model.id}`;
 const displayKes = priceKes ?? model.basePriceKes;
-const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}${channel === "ex-uk" ? " (Ex-UK)" : ""}.`);
+const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}${channel === "ex-uk" ? " (Ex-UK)" : channel === "used" ? " (Slightly used)" : ""}.`);
 const colourPayload = colours.map((key) => {
   const resolved = macCardPrimarySrc(model, key);
   const hoverSrcForColour = macCardHoverSrc(model, key, resolved.src, colours);
@@ -132,7 +132,7 @@ const hoverSrc = macCardHoverSrc(model, colour, img.src, colours) || colourPaylo
 
     <div class="mcard__row mcard__row--price">
       <p class="mcard__price">
-        <span data-live-price={model.id} data-live-field={channel === "ex-uk" ? "exUkKes" : "priceKes"} data-live-prefix="">{`KSh ${Math.round(displayKes).toLocaleString("en-KE")}`}</span>
+        <span data-live-price={model.id} data-live-field={channel === "ex-uk" ? "exUkKes" : channel === "used" ? "usedKes" : "priceKes"} data-live-prefix="">{`KSh ${Math.round(displayKes).toLocaleString("en-KE")}`}</span>
       </p>
       <button
         type="button"

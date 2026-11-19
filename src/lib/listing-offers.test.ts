@@ -189,3 +189,42 @@ test("Lipa calculator finds a model under its live id", () => {
   assert.equal(options[0]?.id, "seo-id");
   assert.equal(options[0]?.base, 189000);
 });
+
+test("slightly used becomes its own offer with its own price, colours and link", () => {
+  const p = product({
+    id: "iphone-17-pro-max",
+    usedShowOnWebsite: true,
+    coloursInStock: ["deep-blue", "silver"],
+    usedColoursInStock: ["cosmic-orange"],
+    variants: [
+      { key: "256", label: "256GB", priceKes: 189000, exUkKes: 149000, usedKes: 155000, usedShowOnWebsite: true, inStock: true },
+      { key: "512", label: "512GB", priceKes: 209000, exUkKes: 169000, usedKes: 0, usedShowOnWebsite: false, inStock: true },
+    ],
+  });
+  const offers = listingOffers(p, "/iphone/iphone-17-pro-max");
+  assert.deepEqual(
+    offers.map((row) => [row.channel, row.priceKes, row.href]),
+    [
+      ["new", 189000, "/iphone/iphone-17-pro-max"],
+      ["ex-uk", 149000, "/iphone/iphone-17-pro-max?condition=ex-uk"],
+      ["used", 155000, "/iphone/iphone-17-pro-max?condition=used"],
+    ],
+  );
+  assert.deepEqual(offers.find((o) => o.channel === "used")?.colours, ["cosmic-orange"]);
+  assert.equal(listedVariantPrices(p, p.variants[1]).usedKes, 0);
+});
+
+test("a model listed only as slightly used is on the live list from its used price", () => {
+  const p = product({
+    id: "iphone-17-pro-max",
+    showNewOnWebsite: false,
+    exUkShowOnWebsite: false,
+    usedShowOnWebsite: true,
+    variants: [
+      { key: "256", label: "256GB", priceKes: 189000, exUkKes: 149000, showOnWebsite: false, exUkShowOnWebsite: false, usedKes: 139000, usedShowOnWebsite: true, inStock: false },
+    ],
+  });
+  assert.equal(isListedForSale(p), true);
+  assert.equal(listedFromKes(p), 139000);
+  assert.deepEqual(listingOffers(p, "/x").map((o) => o.channel), ["used"]);
+});

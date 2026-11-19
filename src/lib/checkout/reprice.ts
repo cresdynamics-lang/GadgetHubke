@@ -11,12 +11,17 @@ import { iphoneSheet, storageIdFromLabel } from "../pricing/iphone-sheet";
 import { getSeoModelByName } from "../iphone/seo";
 import { iphoneLiveId, livePricedCatalog, type PricedProduct, type PriceVariant } from "../pricing/live";
 
-type Resolved = { product: PricedProduct; variant?: PriceVariant; exUk: boolean };
+type Channel = "new" | "ex-uk" | "used";
+type Resolved = { product: PricedProduct; variant?: PriceVariant; channel: Channel };
 
 const compact = (s?: string | null) => (s || "").replace(/\s+/g, "").toLowerCase();
 
-function isExUk(item: BagItem): boolean {
-  return /ex-?uk|used/i.test(item.channel || "") || /-EXUK$/i.test(item.sheetId || item.catalogId || "");
+function channelOf(item: BagItem): Channel {
+  const label = item.channel || "";
+  const ref = item.sheetId || item.catalogId || "";
+  if (/slightly|^used$/i.test(label) || /-USED$/i.test(ref) || /-used$/i.test(item.id)) return "used";
+  if (/ex-?uk/i.test(label) || /-EXUK$/i.test(ref) || /-ex-?uk$/i.test(item.id)) return "ex-uk";
+  return "new";
 }
 
 function variantFor(p: PricedProduct, item: BagItem): PriceVariant | undefined {
@@ -53,15 +58,15 @@ function hasAddOns(item: BagItem): boolean {
 }
 
 function resolve(item: BagItem, catalog: Map<string, PricedProduct>): Resolved | undefined {
-  const exUk = isExUk(item);
-  const sheetId = (item.sheetId || item.catalogId || "").replace(/-EXUK$/i, "");
+  const channel = channelOf(item);
+  const sheetId = (item.sheetId || item.catalogId || "").replace(/-(EXUK|USED)$/i, "");
   const sheetRow = sheetId ? iphoneSheet.find((r) => r.id === sheetId) : undefined;
   if (sheetRow) {
     const seo = getSeoModelByName(sheetRow.name);
     const product = seo ? catalog.get(iphoneLiveId(seo.id)) : undefined;
     if (product) {
       const key = storageIdFromLabel(sheetRow.storage);
-      return { product, variant: product.variants.find((v) => v.key === key), exUk };
+      return { product, variant: product.variants.find((v) => v.key === key), channel };
     }
   }
   // Longest product id that matches the line id exactly or as a prefix ("iphone-17-pro-256GB").
@@ -74,7 +79,7 @@ function resolve(item: BagItem, catalog: Map<string, PricedProduct>): Resolved |
     product = best ? catalog.get(best) : undefined;
   }
   if (!product) return undefined;
-  return { product, variant: variantFor(product, item), exUk };
+  return { product, variant: variantFor(product, item), channel };
 }
 
 /** Hidden KES 2 line for testing real M-Pesa payments. Works only while CHECKOUT_TEST_ITEM=1 on the server. */
@@ -92,14 +97,16 @@ function notForSale(item: BagItem) {
   return new UnpriceableItemError(`${item.name || "This item"} can't be bought online right now. Ask us on WhatsApp.`);
 }
 
+function priceOn(listed: ReturnType<typeof listedVariantPrices>, channel: Channel) {
+  return channel === "used" ? listed.usedKes : channel === "ex-uk" ? listed.exUkKes : listed.newKes;
+}
+
 /** Lowest listed price on one channel; 0 when that channel is not listed. */
-function listedFloor(product: PricedProduct, exUk: boolean): number {
+function listedFloor(product: PricedProduct, channel: Channel): number {
+  const flags = listedVariantPrices(product);
   const prices = product.variants.length
-    ? product.variants.map((variant) => {
-        const listed = listedVariantPrices(product, variant);
-        return exUk ? listed.exUkKes : listed.newKes;
-      })
-    : [exUk ? listedVariantPrices(product).showEx ? product.exUkKes ?? 0 : 0 : listedVariantPrices(product).showNew ? product.priceKes : 0];
+    ? product.variants.map((variant) => priceOn(listedVariantPrices(product, variant), channel))
+    : [channel === "ex-uk" ? (flags.showEx ? product.exUkKes ?? 0 : 0) : channel === "new" && flags.showNew ? product.priceKes : 0];
   const shown = prices.filter((n) => n > 0);
   return shown.length ? Math.min(...shown) : 0;
 }
@@ -113,12 +120,12 @@ export async function repriceBagItems(items: BagItem[]): Promise<BagItem[]> {
     }
     const hit = resolve(item, catalog);
     if (!hit || !isListedForSale(hit.product)) throw notForSale(item);
-    const { product, variant, exUk } = hit;
+    const { product, variant, channel } = hit;
     const listed = variant ? listedVariantPrices(product, variant) : undefined;
-    const exact = listed ? (exUk ? listed.exUkKes : listed.newKes) : 0;
+    const exact = listed ? priceOn(listed, channel) : 0;
     if (exact > 0 && !hasAddOns(item)) return { ...item, kes: exact };
     // Unknown option or add-ons on top: never below the lowest listed price on that channel.
-    const floor = exact || listedFloor(product, exUk);
+    const floor = exact || listedFloor(product, channel);
     if (!floor) throw notForSale(item);
     return item.kes < floor ? { ...item, kes: floor } : item;
   });

@@ -32,7 +32,7 @@ const colour = colours.includes(defaultIpadColour(model)) ? defaultIpadColour(mo
 const img = ipadCardPrimarySrc(model, colour);
 const href = hrefProp || `/ipad/${model.id}`;
 const displayKes = priceKes ?? model.basePriceKes;
-const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}${channel === "ex-uk" ? " (Ex-UK)" : ""}.`);
+const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}${channel === "ex-uk" ? " (Ex-UK)" : channel === "used" ? " (Slightly used)" : ""}.`);
 const colourPayload = colours.map((key) => {
   const resolved = ipadCardPrimarySrc(model, key);
   const hoverSrcForColour = ipadCardHoverSrc(model, key, resolved.src, colours);
@@ -123,7 +123,7 @@ const hoverSrc = ipadCardHoverSrc(model, colour, img.src, colours) || colourPayl
 
     <div class="icard__row icard__row--price">
       <p class="icard__price">
-        <span data-live-price={model.id} data-live-field={channel === "ex-uk" ? "exUkKes" : "priceKes"} data-live-prefix="">{`KSh ${Math.round(displayKes).toLocaleString("en-KE")}`}</span>
+        <span data-live-price={model.id} data-live-field={channel === "ex-uk" ? "exUkKes" : channel === "used" ? "usedKes" : "priceKes"} data-live-prefix="">{`KSh ${Math.round(displayKes).toLocaleString("en-KE")}`}</span>
       </p>
       <button
         type="button"

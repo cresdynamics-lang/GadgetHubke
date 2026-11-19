@@ -108,6 +108,9 @@ let prices: ReturnType<typeof storagePrices> = [];
 let firstPrice = { label: "", kes: 0 };
 let selectedIdx = 0;
 let wantExUk = false;
+let wantUsed = false;
+let pageChannels: ("new" | "ex-uk" | "used")[] = [];
+let usedColourKeys: string[] = [];
 let priceLine = "";
 let lipa = { depositKes: 0, monthlyKes: 0, months: 6 };
 let tag: string | null = null;
@@ -177,13 +180,19 @@ if (seo) {
       const l = liveByKey.get(storageIdFromLabel(p.label));
       if (!l) return p;
       const listed = listedVariantPrices(live, l);
-      return { ...p, kes: listed.displayKes, newKes: listed.newKes, exUkKes: listed.exUkKes || undefined };
+      return {
+        ...p,
+        kes: listed.displayKes,
+        newKes: listed.newKes,
+        exUkKes: listed.exUkKes || undefined,
+        usedKes: listed.usedKes || undefined,
+      };
     })
     .filter((p) => {
       const l = liveByKey.get(storageIdFromLabel(p.label));
       if (!l) return live?.showOnWebsite !== false && live?.showNewOnWebsite !== false;
       const listed = listedVariantPrices(live, l);
-      return listed.showNew || listed.showEx;
+      return listed.showNew || listed.showEx || listed.showUsed;
     });
   // Every listed storage option has its own page: /iphone/<model>/<storage>.
   storageOptions = seo.variants
@@ -219,14 +228,33 @@ if (seo) {
   const chosen = prices[selectedIdx];
   // Ex-UK when asked for, when the model is not sold New, or when this storage is listed Ex-UK only.
   const exUkOnly = Boolean(chosen && "newKes" in chosen && !chosen.newKes);
+  const chosenUsed = (chosen && "usedKes" in chosen ? chosen.usedKes : 0) ?? 0;
+  const usedOnly = Boolean(chosen && "newKes" in chosen && !chosen.newKes && !chosen.exUkKes && chosenUsed > 0);
+  wantUsed = (Astro.url.searchParams.get("condition") === "used" || usedOnly) && chosenUsed > 0;
   wantExUk =
+    !wantUsed &&
     (Astro.url.searchParams.get("condition") === "ex-uk" || live?.showNewOnWebsite === false || exUkOnly) &&
     (chosen?.exUkKes ?? 0) > 0;
   firstPrice = prices[selectedIdx] ?? { label: "", kes: seo.fromKes };
-  priceLine = wantExUk
-    ? `Ex-UK · ${formatKes(prices[selectedIdx].exUkKes!)}`
-    : formatKes(firstPrice.kes);
-  lipa = lipaMonthly(wantExUk ? prices[selectedIdx].exUkKes! : firstPrice.kes);
+  priceLine = wantUsed
+    ? `Slightly used · ${formatKes(chosenUsed)}`
+    : wantExUk
+      ? `Ex-UK · ${formatKes(prices[selectedIdx].exUkKes!)}`
+      : formatKes(firstPrice.kes);
+  lipa = lipaMonthly(wantUsed ? chosenUsed : wantExUk ? prices[selectedIdx].exUkKes! : firstPrice.kes);
+  // Conditions this model is sold in, for the New | Ex-UK | Slightly used toggle.
+  const anyNew = prices.some((p) => ("newKes" in p ? Number(p.newKes) : p.kes) > 0);
+  pageChannels = [
+    ...(live?.showNewOnWebsite !== false && anyNew ? (["new"] as const) : []),
+    ...(live?.showNewOnWebsite !== false && live?.exUkShowOnWebsite !== false && prices.some((p) => (p.exUkKes ?? 0) > 0)
+      ? (["ex-uk"] as const)
+      : []),
+    ...(prices.some((p) => ("usedKes" in p ? Number(p.usedKes) : 0) > 0) ? (["used"] as const) : []),
+  ];
+  // Ex-UK-only models keep their old single-condition page unless Slightly used is added too.
+  if (!pageChannels.includes("new") && live?.exUkShowOnWebsite !== false && prices.some((p) => (p.exUkKes ?? 0) > 0) && pageChannels.includes("used"))
+    pageChannels = ["ex-uk", ...pageChannels];
+  usedColourKeys = (live?.usedColoursInStock ?? []).map((c) => c.toLowerCase());
   tag = model ? (isLatestTag(model) ? "Latest" : isValueTag(model) ? "Value" : null) : null;
   notes = model ? buyingNotes(model) : [];
   fits = model ? accessoriesFor(model) : [];
@@ -454,7 +482,7 @@ if (seo) {
           <span class="ipdp__pill ipdp__pill--muted">{model.year}</span>
         </div>
         <h1>{copy?.h1 ?? seo.h1}</h1>
-        <StockChannelToggle show={live?.showNewOnWebsite !== false && live?.exUkShowOnWebsite !== false && prices.some((p) => (p.exUkKes ?? 0) > 0)} />
+        <StockChannelToggle channels={pageChannels} initial={wantUsed ? "used" : wantExUk ? "ex-uk" : "new"} />
         <p class="ipdp__tagline">
           Price in Kenya · {formatKesSeo(seo.fromKes)}
           {model?.tagline ? ` · ${model.tagline}` : ""}
@@ -506,6 +534,7 @@ if (seo) {
                   data-kes={p.kes}
                   data-kes-new={"newKes" in p ? p.newKes || "" : live?.showNewOnWebsite === false ? "" : p.kes}
                   data-kes-exuk={p.exUkKes ?? ""}
+                  data-kes-used={("usedKes" in p ? p.usedKes : undefined) ?? ""}
                   data-sheet-id={p.sheetId ?? ""}
                 >
                   {p.label}
@@ -731,11 +760,19 @@ if (seo) {
   modelName: seo.name,
   prices: prices.map((p) =>
     SHOW_EX_UK
-      ? { label: p.label, kes: p.kes, sheetId: p.sheetId, newKes: "newKes" in p ? p.newKes : p.kes, exUkKes: p.exUkKes }
+      ? {
+          label: p.label,
+          kes: p.kes,
+          sheetId: p.sheetId,
+          newKes: "newKes" in p ? p.newKes : p.kes,
+          exUkKes: p.exUkKes,
+          usedKes: "usedKes" in p ? p.usedKes : undefined,
+        }
       : { label: p.label, kes: p.kes, sheetId: p.sheetId },
   ),
   selectedIdx,
-  initialChannel: wantExUk ? "ex-uk" : "new",
+  initialChannel: wantUsed ? "used" : wantExUk ? "ex-uk" : "new",
+  usedColourKeys,
   depositPct: iphoneConfig.lipa.depositDefaultPct,
   months: iphoneConfig.lipa.monthsDefault,
   lipaRatePct: Math.round(lipaRate(iphoneConfig.lipa.monthsDefault) * 100),
@@ -748,20 +785,41 @@ if (seo) {
     storage: prices[selectedIdx]?.label,
     kesNew: prices[selectedIdx]?.newKes ?? (initialChannel === "new" ? prices[selectedIdx]?.kes : 0),
     kesExUk: prices[selectedIdx]?.exUkKes,
+    kesUsed: prices[selectedIdx]?.usedKes,
     channel: initialChannel,
     tour: null,
   };
 
-  /** The channel actually shown: Ex-UK when chosen, or when this storage is listed Ex-UK only. */
+  /** The channel actually shown: the one chosen, or the one this storage is listed in when it is not sold that way. */
   function shownChannel() {
-    if (Number(state.kesExUk) > 0 && (state.channel === "ex-uk" || !(Number(state.kesNew) > 0))) return "ex-uk";
+    const newOk = Number(state.kesNew) > 0;
+    const exOk = Number(state.kesExUk) > 0;
+    const usedOk = Number(state.kesUsed) > 0;
+    if (usedOk && (state.channel === "used" || (!newOk && !exOk))) return "used";
+    if (exOk && (state.channel === "ex-uk" || !newOk)) return "ex-uk";
+    if (!newOk && usedOk) return "used";
     return "new";
   }
-  /** Price for the selected storage in the channel shown (New or Ex-UK). */
+  /** Price for the selected storage in the channel shown (New, Ex-UK or Slightly used). */
   function activeKes() {
-    return shownChannel() === "ex-uk" ? Number(state.kesExUk) : Number(state.kesNew) || 0;
+    const ch = shownChannel();
+    return ch === "used" ? Number(state.kesUsed) : ch === "ex-uk" ? Number(state.kesExUk) : Number(state.kesNew) || 0;
   }
-  const channelLabel = () => (shownChannel() === "ex-uk" ? "Ex-UK" : "New");
+  const channelLabel = () => {
+    const ch = shownChannel();
+    return ch === "used" ? "Slightly used" : ch === "ex-uk" ? "Ex-UK" : "New";
+  };
+
+  /** Slightly used is sold in its own colours: hide the others while it is chosen. */
+  function syncUsedColours() {
+    const limit = shownChannel() === "used" && usedColourKeys.length > 0;
+    const swatches = [...document.querySelectorAll("[data-colour-list] [data-colour]")];
+    swatches.forEach((b) => {
+      b.hidden = limit && !usedColourKeys.includes((b.getAttribute("data-colour") || "").toLowerCase());
+    });
+    const active = swatches.find((b) => b.classList.contains("is-active"));
+    if (active && active.hidden) swatches.find((b) => !b.hidden)?.click();
+  }
 
   const img = document.querySelector("[data-gallery-img]");
   const webpSource = document.querySelector("[data-gallery-webp]");
@@ -860,19 +918,23 @@ if (seo) {
     const deposit = Math.round((kes * depositPct) / 100);
     const repay = Math.round(((kes - deposit) * lipaRatePct) / 10000) * 100; // same sum as lib/pricing/lipa.ts
     const monthly = Math.round(repay / months);
-    if (priceEl) priceEl.textContent = `${shownChannel() === "ex-uk" ? "Ex-UK · " : ""}KES ${kes.toLocaleString("en-KE")}`;
+    const prefix = shownChannel() === "used" ? "Slightly used · " : shownChannel() === "ex-uk" ? "Ex-UK · " : "";
+    if (priceEl) priceEl.textContent = `${prefix}KES ${kes.toLocaleString("en-KE")}`;
     if (monthlyEl)
       monthlyEl.textContent = `or KES ${monthly.toLocaleString("en-KE")} a month for ${months} months after a KES ${deposit.toLocaleString("en-KE")} deposit`;
 
     document.querySelectorAll("[data-storage]").forEach((btn) => {
       const exUk = Number(btn.getAttribute("data-kes-exuk") || 0);
       const newKes = Number(btn.getAttribute("data-kes-new") || 0);
+      const used = Number(btn.getAttribute("data-kes-used") || 0);
       const display = Number(btn.getAttribute("data-kes") || 0);
-      // A storage listed Ex-UK only says so, instead of passing its Ex-UK price off as New.
-      const asExUk = exUk > 0 && (state.channel === "ex-uk" || !newKes);
-      const shown = asExUk ? exUk : newKes || display;
       const span = btn.querySelector("[data-storage-price]");
-      if (span) span.textContent = `${asExUk && state.channel !== "ex-uk" ? "Ex-UK " : ""}KES ${shown.toLocaleString("en-KE")}`;
+      // A storage listed in one condition only says so, instead of passing its price off as another.
+      const asUsed = used > 0 && (state.channel === "used" || (!newKes && !exUk));
+      const asExUk = !asUsed && exUk > 0 && (state.channel === "ex-uk" || !newKes);
+      const shown = asUsed ? used : asExUk ? exUk : newKes || display;
+      const tag = asUsed && state.channel !== "used" ? "Slightly used " : asExUk && state.channel !== "ex-uk" ? "Ex-UK " : "";
+      if (span) span.textContent = `${tag}KES ${shown.toLocaleString("en-KE")}`;
     });
 
     if (wa instanceof HTMLAnchorElement) {
@@ -918,7 +980,7 @@ if (seo) {
       if (storagePagePrefix && !btn.classList.contains("is-active")) {
         const q = new URLSearchParams();
         if (state.colour) q.set("colour", state.colour);
-        if (state.channel === "ex-uk") q.set("condition", "ex-uk");
+        if (state.channel === "ex-uk" || state.channel === "used") q.set("condition", state.channel);
         const query = q.toString();
         location.assign(storagePagePrefix + slug + (query ? `?${query}` : ""));
         return;
@@ -928,12 +990,15 @@ if (seo) {
       state.storage = btn.getAttribute("data-storage");
       state.kesNew = btn.getAttribute("data-kes-new") || "";
       state.kesExUk = btn.getAttribute("data-kes-exuk");
+      state.kesUsed = btn.getAttribute("data-kes-used");
+      syncUsedColours();
       updatePrice();
     });
   });
 
   document.addEventListener("gh:channel", (e) => {
-    state.channel = e.detail === "ex-uk" ? "ex-uk" : "new";
+    state.channel = e.detail === "ex-uk" || e.detail === "used" ? e.detail : "new";
+    syncUsedColours();
     updatePrice();
   });
 
@@ -1046,6 +1111,7 @@ if (seo) {
 
   setImage(currentImage(), false);
   renderThumbs();
+  syncUsedColours();
   updatePrice();
 
   function currentLine() {
@@ -1055,9 +1121,9 @@ if (seo) {
       document.querySelector("[data-storage].is-active")?.getAttribute("data-sheet-id") ||
       "";
     return {
-      id: `${galleryPayload.modelId}-${state.storage}${state.channel === "ex-uk" ? "-exuk" : ""}`,
-      catalogId: sheetId ? (state.channel === "ex-uk" ? `${sheetId}-EXUK` : sheetId) : undefined,
-      sheetId: sheetId ? (state.channel === "ex-uk" ? `${sheetId}-EXUK` : sheetId) : undefined,
+      id: `${galleryPayload.modelId}-${state.storage}${shownChannel() === "used" ? "-used" : shownChannel() === "ex-uk" ? "-exuk" : ""}`,
+      catalogId: sheetId ? (shownChannel() === "used" ? `${sheetId}-USED` : shownChannel() === "ex-uk" ? `${sheetId}-EXUK` : sheetId) : undefined,
+      sheetId: sheetId ? (shownChannel() === "used" ? `${sheetId}-USED` : shownChannel() === "ex-uk" ? `${sheetId}-EXUK` : sheetId) : undefined,
       channel: channelLabel(),
       name: modelName,
       colour: c?.label || "Overview",

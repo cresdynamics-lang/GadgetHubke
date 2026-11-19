@@ -33,7 +33,7 @@ const hoverImg = secondColour
   : getTvHomeImage(model.id, "hero", model.name);
 const hoverSrc =
   !model.noImage && !hoverImg.fallback && hoverImg.src !== img.src ? hoverImg.src : "";
-const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}${channel === "ex-uk" ? " (Ex-UK)" : ""}.`);
+const wa = whatsappUrl(`Hello Gadget Hub, I'm interested in the ${model.name}${channel === "ex-uk" ? " (Ex-UK)" : channel === "used" ? " (Slightly used)" : ""}.`);
 const square = isSpeaker(model);
 ---
 
