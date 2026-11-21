@@ -59,6 +59,7 @@ import {
 } from "../../../lib/iphone/seo";
 import { getProduct } from "../../../lib/products";
 import { withLiveSeoPrices } from "../../../lib/iphone/seo/live";
+import { getEditorial, editorialCtx, withEditorial, mergeStorageFaq, type EditorialCtx } from "../../../lib/iphone/seo/editorial";
 import { livePricedProduct, iphoneLiveId } from "../../../lib/pricing/live";
 import { storageIdFromLabel } from "../../../lib/pricing/iphone-sheet";
 import { listedVariantPrices } from "../../../lib/listing-offers";
@@ -100,7 +101,18 @@ if (seriesPage) {
   if (!listed.some((p) => !p || isListedForSale(p))) return Astro.redirect("/iphone");
 }
 const liveByKey = new Map((live?.variants ?? []).map((v) => [v.key, v]));
-const seo = seoDefault ? withLiveSeoPrices(seoDefault, live) : undefined;
+const seoLive = seoDefault ? withLiveSeoPrices(seoDefault, live) : undefined;
+// Hand-written copy (iPhone 18 series), quoting live prices.
+const editorial = seoLive ? getEditorial(seoLive.id) : undefined;
+let edCtx: EditorialCtx | undefined;
+if (seoLive && editorial) {
+  const others = new Map(
+    await Promise.all(editorial.compareIds.map(async (id) => [id, await livePricedProduct(iphoneLiveId(id))] as const)),
+  );
+  edCtx = editorialCtx(seoLive, (id) => others.get(id));
+}
+const seo = seoLive && editorial && edCtx ? withEditorial(seoLive, editorial, edCtx) : seoLive;
+const edStorage = (s?: string) => (s && editorial ? editorial.storages[s] : undefined);
 
 let hasLegacyGallery = false;
 let model: ReturnType<typeof getModel>;
@@ -122,6 +134,7 @@ let storageOptions: StorageOption[] = [];
 let colourOptions: (ColourOption & { image?: string })[] = [];
 let currentStorage: StorageOption | undefined;
 let copy: StorageCopy | undefined;
+let pageH1 = "";
 let galleryPayload: Record<string, unknown> = {};
 let initialImg = {
   src: "/images/logo.png",
@@ -290,6 +303,21 @@ if (seo) {
       },
     });
   }
+  const es = edStorage(currentStorage?.storage);
+  if (copy && es && edCtx) {
+    const ctx = edCtx;
+    copy = {
+      ...copy,
+      title: es.title,
+      metaDescription: es.metaDescription(ctx),
+      sections: [
+        { id: "overview", heading: `${copy.h1} overview`, paragraphs: [es.intro(ctx)] },
+        ...copy.sections.map((s) => (s.id === "storage" ? { ...s, paragraphs: [es.fit(ctx), ...s.paragraphs.slice(1)] } : s)),
+      ],
+      faq: mergeStorageFaq(copy.faq, es.faq(ctx)),
+    };
+  }
+  pageH1 = (currentStorage ? es?.h1 : editorial?.h1) ?? copy?.h1 ?? seo.h1;
   const absImage = (src: string) => new URL(src, site.url).href;
   jsonLd = buildIphoneVariantJsonLd(seo, {
     modelUrl: pageUrl,
@@ -386,7 +414,7 @@ if (seo) {
           ) : null}
         </div>
         <div class="ipdp__buy">
-          <h1>{copy?.h1 ?? seo.h1}</h1>
+          <h1>{pageH1}</h1>
           <p class="ipdp__tagline">
             Price in Kenya · {formatKesSeo(seo.fromKes)}
           </p>
@@ -428,7 +456,12 @@ if (seo) {
         copy={copy}
         exUkLabel={EX_UK_CONDITION_LABEL}
       />
-      <SeoProductBlocks model={seo} />
+      <SeoProductBlocks
+      model={seo}
+      features={editorial?.keyFeatures}
+      sections={editorial && edCtx ? editorial.sections(edCtx) : undefined}
+      links={editorial?.links}
+    />
     </article>
   ) : (
   <article class="ipdp" data-ipdp>
@@ -481,7 +514,7 @@ if (seo) {
           {tag ? <span class="ipdp__pill">{tag}</span> : null}
           <span class="ipdp__pill ipdp__pill--muted">{model.year}</span>
         </div>
-        <h1>{copy?.h1 ?? seo.h1}</h1>
+        <h1>{pageH1}</h1>
         <StockChannelToggle channels={pageChannels} initial={wantUsed ? "used" : wantExUk ? "ex-uk" : "new"} />
         <p class="ipdp__tagline">
           Price in Kenya · {formatKesSeo(seo.fromKes)}
@@ -730,7 +763,12 @@ if (seo) {
       copy={copy}
       exUkLabel={EX_UK_CONDITION_LABEL}
     />
-    <SeoProductBlocks model={seo} />
+    <SeoProductBlocks
+      model={seo}
+      features={editorial?.keyFeatures}
+      sections={editorial && edCtx ? editorial.sections(edCtx) : undefined}
+      links={editorial?.links}
+    />
   </article>
 
   <dialog class="ipdp-lb" data-lightbox aria-label="Full screen photo">

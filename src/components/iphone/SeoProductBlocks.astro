@@ -14,12 +14,17 @@ import {
   type IphoneSeoModel,
 } from "../../lib/iphone/seo";
 import { whatsappUrl } from "../../lib/site";
+import type { EditorialFeature, EditorialLink, EditorialSection } from "../../lib/iphone/seo/editorial";
 
 interface Props {
   model: IphoneSeoModel;
+  /** Hand-written copy (iPhone 18 series): key features, long description and related links. */
+  features?: EditorialFeature[];
+  sections?: EditorialSection[];
+  links?: EditorialLink[];
 }
 
-const { model } = Astro.props;
+const { model, features, sections, links } = Astro.props;
 const series = seriesHubForModel(model);
 const waDefault = whatsappUrl(
   `Hi Gadget Hub, I'm interested in the ${model.name}. What storage options do you have?`,
@@ -112,6 +117,35 @@ const waDefault = whatsappUrl(
     <p><strong>Best for:</strong> {model.bestFor}</p>
   </div>
 
+  {
+    features?.length ? (
+      <div class="seo-blocks__intro seo-blocks__features">
+        <h2>{model.h1} key features</h2>
+        <ul>
+          {features.map((f) => (
+            <li>
+              <strong>{f.title}</strong> {f.body}
+            </li>
+          ))}
+        </ul>
+      </div>
+    ) : null
+  }
+
+  {
+    sections?.map((s) => (
+      <div class="seo-blocks__intro seo-blocks__section" id={`about-${s.id}`}>
+        <h2>{s.id === "overview" ? `${model.h1} overview` : s.heading}</h2>
+        {s.paragraphs.map((para) => <p>{para}</p>)}
+        {s.list?.length ? (
+          <ul>
+            {s.list.map((item) => <li>{item}</li>)}
+          </ul>
+        ) : null}
+      </div>
+    ))
+  }
+
   <div class="seo-blocks__specs">
     <h2>Specifications</h2>
     <div class="seo-blocks__table-wrap">
@@ -130,7 +164,7 @@ const waDefault = whatsappUrl(
     </div>
   </div>
 
-  <div class="seo-blocks__buying">
+  {sections?.length ? null : <div class="seo-blocks__buying">
     <h2>Buying at Gadget Hub</h2>
     <ul>
       <li>{buyingBlock.payment}</li>
@@ -143,7 +177,7 @@ const waDefault = whatsappUrl(
         Chat on WhatsApp
       </a>
     </p>
-  </div>
+  </div>}
 
   <div class="seo-blocks__tradein">
     <h2>Trade-in</h2>
@@ -175,7 +209,22 @@ const waDefault = whatsappUrl(
   </div>
 
   {
-    model.compareWith.length ? (
+    links?.length ? (
+      <div class="seo-blocks__related">
+        <h2>Related pages</h2>
+        <ul>
+          {links.map((l) => (
+            <li>
+              <a href={l.href}>{l.text}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ) : null
+  }
+
+  {
+    !links?.length && model.compareWith.length ? (
       <div class="seo-blocks__compare">
         <h2>Compare</h2>
         <ul>
@@ -292,6 +341,11 @@ const waDefault = whatsappUrl(
     text-decoration: none;
     white-space: nowrap;
   }
+  .seo-blocks__section p + p,
+  .seo-blocks__section p + ul {
+    margin-top: 0.6rem;
+  }
+  .seo-blocks__intro ul,
   .seo-blocks__buying ul {
     padding-left: 1.1rem;
     line-height: 1.55;

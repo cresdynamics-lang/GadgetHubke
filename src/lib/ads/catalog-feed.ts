@@ -25,6 +25,7 @@ import { livePricedCatalog, iphoneLiveId } from "../pricing/live";
 import { applyLivePricesToRows } from "./feed-live";
 import { iphoneSeoCatalog } from "../iphone/seo/catalog";
 import { withLiveSeoPrices } from "../iphone/seo/live";
+import { getEditorial, editorialCtx, withEditorial } from "../iphone/seo/editorial";
 
 export type CatalogRow = {
   id: string;
@@ -348,21 +349,34 @@ export async function applyLivePrices<T extends { id: string; price: string; ava
 }
 
 /** iPhone rows share their model's description: give each the live "from" price and listed storage sizes. */
-async function liveIphoneDescriptions(): Promise<Map<string, string>> {
+type IphoneFeedText = { description: string; /** Hand-written feed copy (New rows only). */ editorial?: { title: string; description: string } };
+
+async function liveIphoneDescriptions(): Promise<Map<string, IphoneFeedText>> {
   const live = new Map((await livePricedCatalog()).map((p) => [p.id, p]));
-  const bySheet = new Map<string, string>();
+  const bySheet = new Map<string, IphoneFeedText>();
   for (const model of iphoneSeoCatalog) {
-    const { metaDescription } = withLiveSeoPrices(model, live.get(iphoneLiveId(model.id)));
-    for (const v of model.variants) bySheet.set(v.sheetId, metaDescription);
+    const seo = withLiveSeoPrices(model, live.get(iphoneLiveId(model.id)));
+    const ed = getEditorial(model.id);
+    const text = ed ? withEditorial(seo, ed, editorialCtx(seo, (id) => live.get(iphoneLiveId(id)))) : seo;
+    for (const v of model.variants) {
+      const es = ed?.storages[v.storage];
+      bySheet.set(v.sheetId, {
+        description: text.metaDescription,
+        editorial: es ? { title: es.feedTitle, description: es.feedDescription } : undefined,
+      });
+    }
   }
   return bySheet;
 }
 
-export async function applyLiveIphoneDescriptions<T extends { id: string; description: string }>(rows: T[]): Promise<T[]> {
+export async function applyLiveIphoneDescriptions<T extends { id: string; description: string; title?: string }>(rows: T[]): Promise<T[]> {
   const descriptions = await liveIphoneDescriptions();
   return rows.map((row) => {
-    const description = descriptions.get(row.id.replace(/-EXUK$/, ""));
-    return description ? { ...row, description } : row;
+    const exUk = /-EXUK$/.test(row.id);
+    const text = descriptions.get(row.id.replace(/-EXUK$/, ""));
+    if (!text) return row;
+    if (!exUk && text.editorial) return { ...row, title: text.editorial.title, description: text.editorial.description };
+    return { ...row, description: text.description };
   });
 }
 

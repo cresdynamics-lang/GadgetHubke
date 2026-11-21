@@ -1,0 +1,721 @@
+/**
+ * Hand-written product copy for the iPhone 18 series pages (18 Pro, 18 Pro Max, Duo):
+ * titles, descriptions, key features, long description, FAQs and feed text, per model
+ * and per storage page. Source and pattern notes: docs/seo-copy/.
+ *
+ * Every price in the text is read from the live admin prices through `EditorialCtx`,
+ * so changing a price in admin rewrites the copy. Specs are only those on the site's
+ * own tech-spec pages; nothing here is invented.
+ */
+import { lipaPlan, type LipaPlan } from "../../pricing/lipa.ts";
+import type { PricedProduct } from "../../pricing/live.ts";
+import { listedVariantPrices } from "../../listing-offers.ts";
+import type { IphoneSeoModel, SeoFaq, SeoSpec } from "./types.ts";
+
+export type EditorialSection = { id: string; heading: string; paragraphs: string[]; list?: string[] };
+export type EditorialFeature = { title: string; body: string };
+export type EditorialLink = { href: string; text: string };
+
+/** Live figures the copy quotes. */
+export type EditorialCtx = {
+  /** New price of this model at a storage ("256GB"), 0 when not listed. */
+  price: (storage: string) => number;
+  /** Listed storages, smallest first. */
+  storages: string[];
+  /** Lowest listed New and Ex-UK price of another model (by SEO id). 0 when not listed. */
+  other: (seoId: string) => { newKes: number; exUkKes: number };
+};
+
+export type EditorialStorage = {
+  title: string;
+  metaDescription: (c: EditorialCtx) => string;
+  h1: string;
+  intro: (c: EditorialCtx) => string;
+  fit: (c: EditorialCtx) => string;
+  faq: (c: EditorialCtx) => (SeoFaq & { replaces?: RegExp })[];
+  feedTitle: string;
+  feedDescription: string;
+};
+
+export type ModelEditorial = {
+  seoTitle: string;
+  metaDescription: (c: EditorialCtx) => string;
+  h1: string;
+  intro: (c: EditorialCtx) => string;
+  bestFor: string;
+  keyFeatures: EditorialFeature[];
+  sections: (c: EditorialCtx) => EditorialSection[];
+  specs: SeoSpec[];
+  faq: (c: EditorialCtx) => SeoFaq[];
+  links: EditorialLink[];
+  /** Other models whose live prices the copy quotes. */
+  compareIds: string[];
+  storages: Record<string, EditorialStorage>;
+};
+
+export const kes = (n: number) => `KES ${Math.round(n).toLocaleString("en-KE")}`;
+const plan6 = (n: number): LipaPlan => lipaPlan(n, 40, 6);
+
+function joinList(items: string[], word = "and"): string {
+  if (items.length <= 1) return items[0] ?? "";
+  return `${items.slice(0, -1).join(", ")} ${word} ${items.at(-1)}`;
+}
+
+/** "KES 167,000 new or KES 142,000 Ex-UK", or whichever of the two is listed. */
+function otherPrices(o: { newKes: number; exUkKes: number }): string {
+  const bits = [o.newKes ? `${kes(o.newKes)} new` : "", o.exUkKes ? `${kes(o.exUkKes)} Ex-UK` : ""].filter(Boolean);
+  return bits.join(" or ");
+}
+
+/** "256GB: KES 203,000" for every listed storage. */
+function priceList(c: EditorialCtx): string[] {
+  return c.storages.filter((s) => c.price(s) > 0).map((s) => `${s}: ${kes(c.price(s))}`);
+}
+
+/** "KES 203,000 for 256GB, KES 234,000 for 512GB and KES 292,000 for 1TB" */
+function priceSentence(c: EditorialCtx): string {
+  return joinList(c.storages.filter((s) => c.price(s) > 0).map((s) => `${kes(c.price(s))} for ${s}`));
+}
+
+function lipaExample(c: EditorialCtx, storage: string): string {
+  const p = c.price(storage);
+  if (!p) return "";
+  const plan = plan6(p);
+  return `For example, the ${storage} is a ${kes(plan.depositKes)} deposit, then ${kes(plan.monthlyKes)} a month for 6 months.`;
+}
+
+const fromKes = (c: EditorialCtx) => Math.min(...c.storages.map(c.price).filter((n) => n > 0));
+
+const STORE = {
+  address: "Norwich Union House, Suite 15, 4th Floor, opposite the Hilton Hotel in Nairobi CBD",
+  hours: "Mon–Sat 8am–8pm and Sun 10am–8pm",
+  whatsapp: "0729 585 471",
+};
+
+const TRUST =
+  "GadgetHub is an Apple Authorised Reseller and has served over a million customers across Kenya, including Nairobi's Japanese and Chinese communities.";
+
+function whyBuy(name: string): EditorialSection {
+  return {
+    id: "why-gadgethub",
+    heading: "Why buy from GadgetHub",
+    paragraphs: [TRUST],
+    list: [
+      `Genuine, sealed and traceable: every ${name} is new and sealed, and the serial number is printed on your invoice.`,
+      "Warranty: a 1-year warranty. Keep your GadgetHub invoice for support.",
+      "Payment: M-Pesa STK Push at checkout, M-Pesa in store, or Lipa Mdogo Mdogo, our in-house plan: a 40% deposit, then the balance over 1 to 6 months.",
+      `Collection: ${STORE.address}.`,
+      "Delivery: anywhere in Kenya, from KES 1,500.",
+      `Help: WhatsApp us on ${STORE.whatsapp} to confirm colour and stock before you pay.`,
+    ],
+  };
+}
+
+function inTheBox(name: string): EditorialSection {
+  return {
+    id: "in-the-box",
+    heading: "What is in the box",
+    paragraphs: ["There is no power adapter in the box."],
+    list: [name, "USB-C Charge Cable", "Documentation"],
+  };
+}
+
+const kenyaTerms: EditorialSection = {
+  id: "delivery-terms",
+  heading: "Delivery, payment, warranty and returns in Kenya",
+  paragraphs: [],
+  list: [
+    `Nairobi: same-day or next-day delivery may be available, depending on stock and your area. Delivery starts from KES 1,500, or collect from our shop in Nairobi CBD (${STORE.hours}).`,
+    "Outside Nairobi: we deliver by courier once we have confirmed your location. The fee and timeline are quoted on WhatsApp before you pay.",
+    "Payment: M-Pesa STK Push at checkout, M-Pesa in store, or Lipa Mdogo Mdogo with a 40% deposit and 1 to 6 monthly payments.",
+    "Warranty: 1 year on new devices. Keep your GadgetHub invoice. Claims follow GadgetHub's Return & Refund Policy, not AppleCare retail terms.",
+    "Returns: report faulty, damaged or not-as-described items within 7 days of delivery, and transit damage within 48 hours with photos. Sealed new devices can't be returned for a change of mind. Approved refunds are paid within 7 business days after inspection.",
+  ],
+};
+
+// ---------------------------------------------------------------- iPhone 18 Pro Max
+
+const PM_COLOURS = "Burgundy, Black, Glacier and Silver";
+
+const proMax: ModelEditorial = {
+  seoTitle: "iPhone 18 Pro Max Price in Kenya: 256GB, 512GB, 1TB",
+  metaDescription: (c) =>
+    `iPhone 18 Pro Max from ${kes(fromKes(c))}. New and sealed with a 1-year warranty. Pay by M-Pesa or Lipa Mdogo Mdogo; we deliver across Kenya. Order today.`,
+  h1: "Apple iPhone 18 Pro Max, New",
+  intro: (c) =>
+    `The Apple iPhone 18 Pro Max is in stock at GadgetHub in Nairobi. Prices are ${priceSentence(c)}. It suits people who film, edit and work on their phone all day: it has the A20 Pro chip, a 6.9-inch ProMotion display and up to 45 hours of video playback. Every unit is new and sealed with a 1-year warranty, in ${PM_COLOURS}. Collect from our shop in Nairobi CBD, or we deliver anywhere in Kenya.`,
+  bestFor: "people who film, edit and work on their phone all day and want the biggest Pro screen and the longest iPhone battery.",
+  keyFeatures: [
+    { title: "A20 Pro chip with vapor-chamber cooling.", body: "Long gaming, editing and filming sessions stay smooth instead of slowing down as the phone warms up." },
+    { title: "6.9-inch Super Retina XDR display with ProMotion up to 120Hz.", body: "It is the biggest screen in the Pro range, and scrolling, maps and video feel fluid." },
+    { title: "Three 48MP Fusion cameras.", body: "The main, Ultra Wide and Telephoto lenses are all 48MP, so detail holds up whether you shoot wide, close or far away." },
+    { title: "Telephoto at 4x and 8x optical quality.", body: "Get close to the stage at a concert, the pitch on match day or wildlife on a game drive." },
+    { title: "Up to 45 hours of video playback.", body: "Apple calls this the longest battery life in an iPhone, so most people get through a full Nairobi day and evening on one charge." },
+    { title: "Fast USB-C charging.", body: "Reach up to 50% in about 15 minutes with a compatible adapter. MagSafe and Qi wireless charging also work." },
+    { title: "IP68 water resistance (6 m for 30 minutes).", body: "Rain on the commute and a splash at the pool are covered." },
+  ],
+  sections: (c) => [
+    {
+      id: "overview",
+      heading: "Overview",
+      paragraphs: [
+        `The iPhone 18 Pro Max is Apple's largest Pro iPhone for 2026. It is for buyers who want the most screen, the longest battery life in an iPhone and the full Pro camera system in one phone. GadgetHub sells it new and sealed in ${joinList(c.storages)}, and all four colours are available: ${PM_COLOURS}.`,
+        "If you are moving up from an older iPhone, you can trade it in towards the cost, or spread the payment with Lipa Mdogo Mdogo.",
+      ],
+      list: priceList(c),
+    },
+    {
+      id: "design",
+      heading: "Design and display",
+      paragraphs: [
+        "The frame is a forged aluminium unibody. The front is Ceramic Shield 2 and the back is Ceramic Shield. At 249 g it feels solid in the hand without being awkward to carry.",
+        "The 6.9-inch Super Retina XDR display uses ProMotion, which adjusts the refresh rate up to 120Hz. Text, games and scrolling stay smooth, and the screen saves power when nothing is moving. The Dynamic Island can show up to three Live Activities at once, such as a ride, a match score and a timer, so you don't need to open each app to check them.",
+        "The phone also has the Action button, which you set to Silent, Translate, a Shortcut and more, and Camera Control for quick shots.",
+      ],
+    },
+    {
+      id: "performance",
+      heading: "Performance",
+      paragraphs: [
+        "Inside is the A20 Pro chip with a dual 16-core Neural Engine. A next-generation vapor chamber spreads heat so the phone holds its speed during long sessions. That matters if you edit 4K video, play graphics-heavy games or use Apple Intelligence features through the day.",
+        "With 5G, Wi-Fi 7 and eSIM, downloads and video calls feel quick. Safety features include Crash Detection, Messages via satellite and Emergency SOS via satellite where Apple supports them.",
+      ],
+    },
+    {
+      id: "camera",
+      heading: "Camera",
+      paragraphs: [
+        "This is the reason many buyers choose the Pro Max. For video creators it records ProRes RAW, Apple Log 2 and Dual Capture, plus 4K Dolby Vision at up to 120 fps. This is the phone people in Nairobi use to film events, content and client work.",
+      ],
+      list: [
+        "Main camera: 48MP Fusion with a variable aperture from ƒ/1.48 to ƒ/4.0, at 24 mm and 48 mm (1x and 2x), for control over light and background blur.",
+        "Ultra Wide: 48MP at 13 mm (0.5x), which doubles as a macro camera for close-ups.",
+        "Telephoto: 48MP at 100 mm and 200 mm, giving 4x and 8x optical-quality zoom.",
+        "Front: the 18MP Center Stage camera keeps you in frame on video calls.",
+      ],
+    },
+    {
+      id: "battery",
+      heading: "Battery and charging",
+      paragraphs: [
+        "Apple rates the iPhone 18 Pro Max at up to 45 hours of video playback and up to 30 hours of typical use per charge. With a compatible USB-C adapter, wired charging reaches up to 50% in around 15 minutes. MagSafe and Qi wireless charging also work, so cases and chargers snap into place.",
+        "Only a USB-C charge cable is in the box. Add a 20W adapter if you don't already have one.",
+      ],
+    },
+    whyBuy("iPhone 18 Pro Max"),
+    inTheBox("iPhone 18 Pro Max"),
+    kenyaTerms,
+  ],
+  specs: [
+    { label: "Display", value: "6.9-inch Super Retina XDR, ProMotion up to 120Hz, Dynamic Island" },
+    { label: "Chip", value: "A20 Pro, dual 16-core Neural Engine, next-generation vapor chamber" },
+    { label: "Main camera", value: "48MP Fusion, variable aperture ƒ/1.48 to ƒ/4.0, 24/48 mm (1x/2x)" },
+    { label: "Ultra Wide", value: "48MP Fusion Ultra Wide, 13 mm (0.5x/macro), ƒ/2.2" },
+    { label: "Telephoto", value: "48MP Fusion Telephoto, 100/200 mm (4x/8x optical quality), ƒ/2.8" },
+    { label: "Front camera", value: "18MP Center Stage" },
+    { label: "Video", value: "ProRes RAW, Apple Log 2, Dual Capture, 4K Dolby Vision up to 120 fps" },
+    { label: "Battery", value: "Up to 45 hours video playback; up to 30 hours typical use (Apple claims)" },
+    { label: "Charging", value: "USB-C, up to 50% in around 15 minutes with a compatible adapter; MagSafe and Qi wireless" },
+    { label: "Connectivity", value: "5G, Wi-Fi 7, Bluetooth, eSIM" },
+    { label: "Safety", value: "Crash Detection; Messages and Emergency SOS via satellite (where available)" },
+    { label: "Controls", value: "Camera Control, Action button, Face ID" },
+    { label: "Build", value: "Forged aluminium unibody; Ceramic Shield 2 front; Ceramic Shield back" },
+    { label: "Water resistance", value: "IP68 (6 m for 30 minutes)" },
+    { label: "Weight", value: "249 g" },
+    { label: "Colours", value: "Burgundy, Black, Glacier, Silver" },
+    { label: "Software", value: "Apple Intelligence" },
+    { label: "Storage", value: "256GB, 512GB, 1TB" },
+  ],
+  faq: (c) => {
+    const p17 = c.other("iphone-17-pro-max");
+    const p18 = c.other("iphone-18-pro");
+    return [
+      { question: "What is the price of the iPhone 18 Pro Max in Kenya?", answer: `At GadgetHub the iPhone 18 Pro Max costs ${priceSentence(c)}. All are new and sealed.` },
+      { question: "Is this iPhone 18 Pro Max brand new and genuine?", answer: "Yes. GadgetHub is an Apple Authorised Reseller. Every unit is new and sealed, and the serial number is printed on your invoice." },
+      { question: "Does the iPhone 18 Pro Max come with a warranty?", answer: "Yes, a 1-year warranty. Keep your GadgetHub invoice for any claim." },
+      { question: "Can I pay for the iPhone 18 Pro Max by M-Pesa?", answer: "Yes. You can pay by M-Pesa STK Push at checkout or by M-Pesa in our shop." },
+      { question: "Can I buy the iPhone 18 Pro Max on instalments?", answer: `Yes, with Lipa Mdogo Mdogo. You pay a 40% deposit, then the balance over 1 to 6 months. ${lipaExample(c, "256GB")}`.trim() },
+      { question: "Do you deliver the iPhone 18 Pro Max outside Nairobi?", answer: "Yes, by courier anywhere in Kenya. We quote the fee and timeline on WhatsApp before you pay. Delivery starts from KES 1,500." },
+      {
+        question: "What is the difference between the iPhone 18 Pro Max and the iPhone 17 Pro Max?",
+        answer: `The iPhone 18 Pro Max has the A20 Pro chip instead of the A19 Pro, up to 45 hours of video playback instead of 39, and a main camera with a variable aperture. Both have a 6.9-inch 120Hz display. The 17 Pro Max is lighter at 233 g, against 249 g.${otherPrices(p17) ? ` It also costs less: ${otherPrices(p17)}.` : ""}`,
+      },
+      { question: "Which colours does the iPhone 18 Pro Max come in?", answer: `${PM_COLOURS}. All four are available.` },
+      {
+        question: "Is the iPhone 18 Pro Max worth it over the iPhone 18 Pro?",
+        answer: `Choose the Pro Max for the larger 6.9-inch screen and the longer battery: up to 45 hours of video, against 36 on the 18 Pro. The 18 Pro is smaller at 6.3 inches and 211 g${p18.newKes ? `, and costs from ${kes(p18.newKes)}` : ""}.`,
+      },
+      { question: "Can I trade in my old iPhone?", answer: "Yes. Bring or describe your current iPhone and we'll give you an estimate. The final value is confirmed after we check the battery health, screen and iCloud status." },
+    ];
+  },
+  links: [
+    { href: "/iphone/compare/iphone-18-pro-max-vs-iphone-17-pro-max", text: "iPhone 18 Pro Max vs iPhone 17 Pro Max" },
+    { href: "/iphone/compare/iphone-18-pro-vs-iphone-18-pro-max", text: "Compare the iPhone 18 Pro and 18 Pro Max" },
+    { href: "/accessories", text: "iPhone 18 Pro Max cases, MagSafe chargers and USB-C adapters" },
+    { href: "/lipa-mdogo-mdogo", text: "Buy the iPhone 18 Pro Max on Lipa Mdogo Mdogo" },
+    { href: "/journal/iphone-18-pro-price-in-kenya", text: "iPhone 18 prices in Kenya guide" },
+  ],
+  compareIds: ["iphone-17-pro-max", "iphone-18-pro"],
+  storages: {
+    "256GB": {
+      title: "iPhone 18 Pro Max 256GB Price in Kenya | GadgetHub",
+      metaDescription: (c) =>
+        `iPhone 18 Pro Max 256GB at ${kes(c.price("256GB"))}, new and sealed with a 1-year warranty. Pay by M-Pesa or a 40% deposit. Delivery across Kenya.`,
+      h1: "Apple iPhone 18 Pro Max 256GB, New",
+      intro: (c) =>
+        `The iPhone 18 Pro Max 256GB costs ${kes(c.price("256GB"))} at GadgetHub. It is the entry point to Apple's biggest Pro iPhone, with the same A20 Pro chip, 6.9-inch ProMotion display and 48MP Pro Fusion cameras as the larger sizes. It is in stock, new and sealed, in all four colours (${PM_COLOURS}), with a 1-year warranty. Pay by M-Pesa or spread it with Lipa Mdogo Mdogo. Collect in Nairobi CBD or have it delivered anywhere in Kenya.`,
+      fit: () =>
+        "256GB suits most buyers. It holds thousands of photos, your apps and WhatsApp history, plus a good amount of 4K video, especially if you back up to iCloud. Choose it if you mainly take photos and short clips and want the Pro Max screen and battery for less. If you record long ProRes or Apple Log video, look at 512GB or 1TB instead.",
+      faq: (c) => [
+        { question: "How much is the iPhone 18 Pro Max 256GB in Kenya?", answer: `It costs ${kes(c.price("256GB"))} new and sealed at GadgetHub.`, replaces: /^How much is/ },
+        { question: "Can I pay for the iPhone 18 Pro Max 256GB in instalments?", answer: `Yes. With Lipa Mdogo Mdogo, pay a ${kes(plan6(c.price("256GB")).depositKes)} deposit, then ${kes(plan6(c.price("256GB")).monthlyKes)} a month for 6 months. Shorter plans cost less.`, replaces: /instalments\?$/ },
+        { question: "Is 256GB enough on the iPhone 18 Pro Max?", answer: "For most people, yes. Choose 512GB or more if you shoot a lot of 4K or ProRes video." },
+        { question: "Which colours are in stock for the 256GB?", answer: `All four: ${PM_COLOURS}.`, replaces: /^What colours/ },
+      ],
+      feedTitle: "Apple iPhone 18 Pro Max 256GB, New, Glacier, Burgundy, Black or Silver, A20 Pro, 6.9-inch ProMotion, 5G",
+      feedDescription:
+        "Apple iPhone 18 Pro Max with 256GB of storage, sold new and sealed by GadgetHub in Nairobi, Kenya. Available in Burgundy, Black, Glacier and Silver. The phone has a 6.9-inch Super Retina XDR display with ProMotion up to 120Hz and Dynamic Island. It runs on the A20 Pro chip with a dual 16-core Neural Engine and a vapor chamber for sustained performance. The rear camera system has three 48MP Fusion cameras: a main camera with variable aperture from f/1.48 to f/4.0, an Ultra Wide camera with macro, and a Telephoto camera with 4x and 8x optical-quality zoom. The front camera is 18MP Center Stage. Video recording includes ProRes RAW, Apple Log 2, Dual Capture and 4K Dolby Vision up to 120 fps. Battery life is rated by Apple at up to 45 hours of video playback. Charging is by USB-C, reaching up to 50 percent in around 15 minutes with a compatible adapter, with MagSafe and Qi wireless charging supported. Connectivity includes 5G, Wi-Fi 7, Bluetooth and eSIM. Water resistance is rated IP68 to 6 metres for 30 minutes. Weight is 249 g. In the box: iPhone 18 Pro Max, USB-C Charge Cable and documentation. Includes a 1-year warranty from GadgetHub.",
+    },
+    "512GB": {
+      title: "iPhone 18 Pro Max 512GB Price in Kenya | GadgetHub",
+      metaDescription: (c) =>
+        `Buy the iPhone 18 Pro Max 512GB for ${kes(c.price("512GB"))} in Nairobi. New, sealed, 1-year warranty, M-Pesa or Lipa Mdogo Mdogo, delivery across Kenya.`,
+      h1: "Apple iPhone 18 Pro Max 512GB, New",
+      intro: (c) => {
+        const diff = c.price("512GB") - c.price("256GB");
+        return `The iPhone 18 Pro Max 512GB costs ${kes(c.price("512GB"))} at GadgetHub${c.price("256GB") && diff > 0 ? `, double the storage of the 256GB for ${kes(diff)} more` : ""}. It is built for people who keep everything on the phone: long 4K clips, big photo libraries, offline Netflix and games. You get the A20 Pro chip, a 6.9-inch ProMotion display and up to 45 hours of video playback, in ${PM_COLOURS}. It is new and sealed with a 1-year warranty, and we deliver anywhere in Kenya.`;
+      },
+      fit: () =>
+        "This is the size for content creators, wedding and event shooters, and anyone who doesn't want to keep deleting things. The iPhone 18 Pro Max records ProRes RAW and Apple Log 2, and those files fill storage quickly. 512GB gives you room to film a full event before you offload it, and leaves space for years of apps and updates if you plan to keep the phone a long time.",
+      faq: (c) => [
+        { question: "What is the iPhone 18 Pro Max 512GB price in Kenya?", answer: `It is ${kes(c.price("512GB"))}, new and sealed.`, replaces: /^How much is/ },
+        { question: "How much is the deposit for the iPhone 18 Pro Max 512GB on Lipa Mdogo Mdogo?", answer: `The deposit is ${kes(plan6(c.price("512GB")).depositKes)}, then ${kes(plan6(c.price("512GB")).monthlyKes)} a month over 6 months. Shorter plans cost less.`, replaces: /instalments\?$/ },
+        { question: "Should I get 512GB or 256GB?", answer: `Choose 512GB if you shoot a lot of video or keep large files offline.${c.price("256GB") ? ` The 256GB is ${kes(c.price("256GB"))}.` : ""}`, replaces: /^Should I buy the .* or / },
+        { question: "Do you deliver the 512GB outside Nairobi?", answer: "Yes, by courier anywhere in Kenya. We quote the fee and timeline on WhatsApp before you pay.", replaces: /^Do you deliver/ },
+      ],
+      feedTitle: "Apple iPhone 18 Pro Max 512GB, New, Burgundy, Black, Glacier or Silver, A20 Pro, 48MP Pro Fusion Camera, 5G",
+      feedDescription:
+        "Apple iPhone 18 Pro Max with 512GB of storage, new and sealed, sold by GadgetHub in Nairobi, Kenya. Colours: Burgundy, Black, Glacier and Silver. The 512GB capacity suits users who record long 4K, ProRes RAW or Apple Log 2 video, or who keep large photo and media libraries on the device. Display: 6.9-inch Super Retina XDR with ProMotion up to 120Hz and Dynamic Island. Chip: A20 Pro with a dual 16-core Neural Engine and next-generation vapor chamber cooling. Rear cameras: 48MP Fusion main camera with variable aperture, 48MP Fusion Ultra Wide with macro, and 48MP Fusion Telephoto with 4x and 8x optical-quality zoom. Front camera: 18MP Center Stage. Battery: up to 45 hours of video playback and up to 30 hours of typical use, as rated by Apple. Charging: USB-C wired charging to around 50 percent in 15 minutes with a compatible adapter, plus MagSafe and Qi wireless. Connectivity: 5G, Wi-Fi 7, Bluetooth and eSIM. Build: forged aluminium unibody with Ceramic Shield 2 front, IP68 water resistance to 6 metres for 30 minutes, 249 g. In the box: iPhone 18 Pro Max, USB-C Charge Cable and documentation. 1-year warranty.",
+    },
+    "1TB": {
+      title: "iPhone 18 Pro Max 1TB Price in Kenya | Buy in Nairobi",
+      metaDescription: (c) =>
+        `iPhone 18 Pro Max 1TB for ${kes(c.price("1TB"))}. New and sealed, for creators who film ProRes and 4K. 1-year warranty, M-Pesa, delivery across Kenya.`,
+      h1: "Apple iPhone 18 Pro Max 1TB, New",
+      intro: (c) =>
+        `The iPhone 18 Pro Max 1TB costs ${kes(c.price("1TB"))} at GadgetHub. It is the largest capacity we stock of Apple's biggest Pro iPhone, meant for filmmakers, photographers and business owners who treat the phone as their main camera and archive. You get the A20 Pro chip, three 48MP Fusion cameras, ProRes RAW recording and up to 45 hours of video playback, in ${PM_COLOURS}. It is new and sealed with a 1-year warranty: collect it in Nairobi CBD or have it delivered across Kenya.`,
+      fit: (c) =>
+        `1TB is for people who don't want storage to limit them: a full day of ProRes RAW or Apple Log 2 footage, years of photos at full resolution, and large offline libraries for travel. It is also a good choice if you work away from reliable Wi-Fi and can't upload to the cloud often. If you mostly take photos and short clips, the 256GB${c.price("256GB") ? ` at ${kes(c.price("256GB"))}` : ""} or the 512GB${c.price("512GB") ? ` at ${kes(c.price("512GB"))}` : ""} will do the same job for less.`,
+      faq: (c) => [
+        { question: "How much is the iPhone 18 Pro Max 1TB in Kenya?", answer: `It is ${kes(c.price("1TB"))}, new and sealed at GadgetHub.`, replaces: /^How much is/ },
+        { question: "Is there a 2TB iPhone 18 Pro Max for sale?", answer: `We currently stock ${joinList(c.storages)}. Ask us on WhatsApp about other sizes.` },
+        { question: "Can I buy the 1TB on instalments?", answer: `Yes. Pay a ${kes(plan6(c.price("1TB")).depositKes)} deposit, then ${kes(plan6(c.price("1TB")).monthlyKes)} a month over 6 months with Lipa Mdogo Mdogo.`, replaces: /instalments\?$/ },
+        { question: "Is the 1TB model genuine and sealed?", answer: "Yes. It is new and sealed from an Apple Authorised Reseller, with the serial number on your invoice.", replaces: /original\?$/ },
+      ],
+      feedTitle: "Apple iPhone 18 Pro Max 1TB, New, Burgundy, Black, Glacier or Silver, A20 Pro, ProRes RAW Video, 6.9-inch, 5G",
+      feedDescription:
+        "Apple iPhone 18 Pro Max with 1TB of storage, new and sealed, sold by GadgetHub in Nairobi, Kenya. Available in Burgundy, Black, Glacier and Silver. The 1TB capacity is suited to recording long ProRes RAW, Apple Log 2 and 4K Dolby Vision video and to keeping large photo libraries on the phone. The device has a 6.9-inch Super Retina XDR display with ProMotion up to 120Hz, Dynamic Island, and the A20 Pro chip with a dual 16-core Neural Engine and vapor chamber cooling. The camera system includes a 48MP Fusion main camera with variable aperture from f/1.48 to f/4.0, a 48MP Fusion Ultra Wide camera with macro, a 48MP Fusion Telephoto camera with 4x and 8x optical-quality zoom, and an 18MP Center Stage front camera. Camera Control and the Action button are included. Battery life is rated at up to 45 hours of video playback. Charging is through USB-C, with up to 50 percent in about 15 minutes using a compatible adapter, and MagSafe and Qi wireless support. Connectivity: 5G, Wi-Fi 7, Bluetooth, eSIM. IP68 water resistance to 6 metres for 30 minutes. Weight 249 g. In the box: iPhone 18 Pro Max, USB-C Charge Cable and documentation. 1-year warranty.",
+    },
+  },
+};
+
+// ---------------------------------------------------------------- iPhone 18 Pro
+
+const PRO_COLOURS = "Burgundy, Black, Glacier and Silver";
+
+const pro: ModelEditorial = {
+  seoTitle: "iPhone 18 Pro Price in Kenya: 256GB and 512GB | GadgetHub",
+  metaDescription: (c) =>
+    `iPhone 18 Pro from ${kes(fromKes(c))}: A20 Pro, 6.3-inch ProMotion, 48MP cameras. New, sealed, 1-year warranty. Pay by M-Pesa; delivery across Kenya.`,
+  h1: "Apple iPhone 18 Pro, New",
+  intro: (c) =>
+    `The iPhone 18 Pro brings Apple's newest Pro features to a phone that fits easily in one hand. GadgetHub sells it new and sealed for ${priceSentence(c)}. It has the same A20 Pro chip and 48MP Pro Fusion camera system as the Pro Max, in a 6.3-inch body that weighs 211 g. Every colour is in stock (${PRO_COLOURS}) with a 1-year warranty. Collect in Nairobi CBD, or we deliver across Kenya.`,
+  bestFor: "buyers who want Pro cameras and Pro speed in a compact phone that fits one hand.",
+  keyFeatures: [
+    { title: "A20 Pro in a compact phone.", body: "You get full Pro speed for editing, gaming and Apple Intelligence without carrying a big phone." },
+    { title: "6.3-inch ProMotion display up to 120Hz.", body: "It is smooth and bright, and easy to use with one thumb on a matatu or walking through town." },
+    { title: "Telephoto with 4x and 8x optical-quality zoom.", body: "The small Pro still zooms as far as the Pro Max, which is good for events, sport and kids on stage." },
+    { title: "Variable-aperture 48MP main camera (ƒ/1.48 to ƒ/4.0).", body: "You control how much light comes in, from dim restaurants to bright midday sun." },
+    { title: "Up to 36 hours of video playback.", body: "That is a full day of calls, maps, WhatsApp and video on one charge." },
+    { title: "Fast USB-C and MagSafe charging.", body: "Reach up to 50% in about 15 minutes with a compatible adapter, or charge wirelessly with MagSafe and Qi." },
+    { title: "IP68 and Crash Detection.", body: "Rated to 6 m for 30 minutes, and it can call for help after a severe car crash." },
+  ],
+  sections: (c) => [
+    {
+      id: "overview",
+      heading: "Overview",
+      paragraphs: [
+        "Many buyers want Pro cameras and Pro speed but find the Max models too big. The iPhone 18 Pro is Apple's answer for 2026. It shares the A20 Pro chip and the 48MP Fusion camera trio with the iPhone 18 Pro Max, but has a 6.3-inch screen and weighs 211 g.",
+        `Every size is new and sealed, in ${PRO_COLOURS}. Trade-in and Lipa Mdogo Mdogo are available on all of them.`,
+      ],
+      list: priceList(c),
+    },
+    {
+      id: "design",
+      heading: "Design and display",
+      paragraphs: [
+        "The iPhone 18 Pro uses a forged aluminium unibody, with Ceramic Shield 2 on the front and Ceramic Shield on the back. The 6.3-inch Super Retina XDR display has ProMotion up to 120Hz, so scrolling and games feel fluid, and the Dynamic Island can show up to three Live Activities at once.",
+        "On the side is Camera Control, for capturing shots and adjusting settings without touching the screen. There is also the Action button, which you set for Silent, Translate, a Shortcut and more. Face ID unlocks the phone.",
+      ],
+    },
+    {
+      id: "performance",
+      heading: "Performance",
+      paragraphs: [
+        "The A20 Pro chip has a dual 16-core Neural Engine, and a next-generation vapor chamber keeps it cool during long video edits, graphics-heavy games and Apple Intelligence tasks. In daily use, apps open quickly and the phone stays responsive when you switch between M-Pesa, WhatsApp, maps and the camera. It supports 5G on Kenyan networks that offer it.",
+      ],
+    },
+    {
+      id: "camera",
+      heading: "Camera",
+      paragraphs: [
+        "There are three 48MP cameras on the back, and on the front the 18MP Center Stage camera keeps you centred on video calls and group selfies.",
+      ],
+      list: [
+        "Main camera: 48MP Fusion with a variable aperture from ƒ/1.48 to ƒ/4.0, at 24 mm and 48 mm (1x and 2x). Open it up for low light, or close it down for sharper group shots and landscapes.",
+        "Ultra Wide: 48MP at 13 mm (0.5x), which also shoots macro close-ups of food, flowers and product details.",
+        "Telephoto: 48MP at 100 mm and 200 mm (4x and 8x optical quality), so you can fill the frame from the back of a hall or the stands at a match.",
+      ],
+    },
+    {
+      id: "battery",
+      heading: "Battery and charging",
+      paragraphs: [
+        "Apple rates the iPhone 18 Pro at up to 36 hours of video playback. With a compatible USB-C adapter, wired charging reaches up to 50% in about 15 minutes, which is handy before you head out for the evening. MagSafe and Qi wireless charging are supported.",
+        "The box includes a USB-C charge cable only. Add a 20W adapter or a MagSafe charger from our accessories range if you need one.",
+      ],
+    },
+    whyBuy("iPhone 18 Pro"),
+    inTheBox("iPhone 18 Pro"),
+    kenyaTerms,
+  ],
+  specs: [
+    { label: "Display", value: "6.3-inch Super Retina XDR, ProMotion up to 120Hz, Dynamic Island" },
+    { label: "Chip", value: "A20 Pro, dual 16-core Neural Engine, next-generation vapor chamber" },
+    { label: "Main camera", value: "48MP Fusion, variable aperture ƒ/1.48 to ƒ/4.0, 24/48 mm (1x/2x)" },
+    { label: "Ultra Wide", value: "48MP Fusion Ultra Wide, 13 mm (0.5x/macro)" },
+    { label: "Telephoto", value: "48MP Fusion Telephoto, 100/200 mm (4x/8x optical quality)" },
+    { label: "Front camera", value: "18MP Center Stage" },
+    { label: "Battery", value: "Up to 36 hours video playback (Apple claim)" },
+    { label: "Charging", value: "USB-C, up to 50% in about 15 minutes with a compatible adapter; MagSafe and Qi wireless" },
+    { label: "Cellular", value: "5G" },
+    { label: "Controls", value: "Camera Control, Action button, Face ID" },
+    { label: "Safety", value: "Crash Detection" },
+    { label: "Build", value: "Forged aluminium unibody; Ceramic Shield 2 front; Ceramic Shield back" },
+    { label: "Water resistance", value: "IP68 (6 m for 30 minutes)" },
+    { label: "Weight", value: "211 g" },
+    { label: "Colours", value: "Burgundy, Black, Glacier, Silver" },
+    { label: "Software", value: "Apple Intelligence" },
+    { label: "Storage", value: "256GB, 512GB" },
+  ],
+  faq: (c) => {
+    const p17 = c.other("iphone-17-pro");
+    const pm = c.other("iphone-18-pro-max");
+    return [
+      { question: "What is the price of the iPhone 18 Pro in Kenya?", answer: `The iPhone 18 Pro costs ${priceSentence(c)}, new and sealed at GadgetHub.` },
+      { question: "Is the iPhone 18 Pro genuine and brand new?", answer: "Yes. GadgetHub is an Apple Authorised Reseller. Every iPhone 18 Pro is sealed, and its serial number is printed on your invoice." },
+      { question: "Does the iPhone 18 Pro have a warranty?", answer: "Yes, 1 year. Keep your GadgetHub invoice for support." },
+      { question: "Can I pay for the iPhone 18 Pro with M-Pesa?", answer: "Yes. You can pay by M-Pesa STK Push at checkout or by M-Pesa in store." },
+      { question: "Can I get the iPhone 18 Pro on Lipa Mdogo Mdogo?", answer: `Yes. ${lipaExample(c, "256GB")} Shorter plans cost less.`.trim() },
+      {
+        question: "What is the difference between the iPhone 18 Pro and the iPhone 17 Pro?",
+        answer: `Both have a 6.3-inch 120Hz display and three 48MP rear cameras. The iPhone 18 Pro adds the A20 Pro chip (the 17 Pro has the A19 Pro), longer video playback (up to 36 hours, against 33) and a variable-aperture main camera. The 17 Pro is a little lighter at 206 g, against 211 g.${otherPrices(p17) ? ` It costs ${otherPrices(p17)}.` : ""}`,
+      },
+      {
+        question: "iPhone 18 Pro or iPhone 18 Pro Max: which should I buy?",
+        answer: `They have the same chip and the same camera system. Choose the 18 Pro for a smaller, lighter phone (6.3 inches, 211 g, from ${kes(fromKes(c))}). Choose the Pro Max for a 6.9-inch screen and up to 45 hours of video playback${pm.newKes ? ` (from ${kes(pm.newKes)})` : ""}.`,
+      },
+      { question: "Do you deliver the iPhone 18 Pro outside Nairobi?", answer: "Yes, anywhere in Kenya by courier. We quote the fee and timeline on WhatsApp before you pay." },
+      { question: "Which iPhone 18 Pro colours are available?", answer: `${PRO_COLOURS}. All four are available.` },
+    ];
+  },
+  links: [
+    { href: "/iphone/compare/iphone-18-pro-vs-iphone-17-pro", text: "iPhone 18 Pro vs iPhone 17 Pro" },
+    { href: "/iphone/compare/iphone-18-pro-vs-iphone-18-pro-max", text: "iPhone 18 Pro or 18 Pro Max" },
+    { href: "/iphone/iphone-18-pro-max", text: "See the bigger iPhone 18 Pro Max" },
+    { href: "/accessories", text: "Cases and MagSafe chargers for iPhone 18 Pro" },
+    { href: "/trade-in", text: "Trade in your old iPhone for an iPhone 18 Pro" },
+  ],
+  compareIds: ["iphone-17-pro", "iphone-18-pro-max"],
+  storages: {
+    "256GB": {
+      title: "iPhone 18 Pro 256GB Price in Kenya | GadgetHub",
+      metaDescription: (c) =>
+        `iPhone 18 Pro 256GB for ${kes(c.price("256GB"))}, new and sealed with a 1-year warranty. Pay by M-Pesa or Lipa Mdogo Mdogo. Delivery across Kenya.`,
+      h1: "Apple iPhone 18 Pro 256GB, New",
+      intro: (c) =>
+        `The iPhone 18 Pro 256GB costs ${kes(c.price("256GB"))} at GadgetHub, the lowest price for a new iPhone 18 Pro in our range. You still get the full Pro package: the A20 Pro chip, three 48MP cameras with 8x optical-quality zoom, and a 6.3-inch ProMotion display. It is in stock in all four colours (${PRO_COLOURS}), new and sealed with a 1-year warranty. Pay by M-Pesa or Lipa Mdogo Mdogo, then collect in Nairobi CBD or have it delivered.`,
+      fit: () =>
+        "It suits anyone moving up from an older iPhone who wants Pro cameras in a compact phone. 256GB holds your apps, chats and a large photo library, and you can keep adding to it if you use iCloud. If you film long 4K videos every week, the 512GB gives you more room.",
+      faq: (c) => [
+        { question: "How much is the iPhone 18 Pro 256GB in Kenya?", answer: `It costs ${kes(c.price("256GB"))}, new and sealed.`, replaces: /^How much is/ },
+        { question: "What is the Lipa Mdogo Mdogo plan for the iPhone 18 Pro 256GB?", answer: `Pay a ${kes(plan6(c.price("256GB")).depositKes)} deposit, then ${kes(plan6(c.price("256GB")).monthlyKes)} a month for 6 months.`, replaces: /instalments\?$/ },
+        { question: "Is there a 128GB iPhone 18 Pro?", answer: `We stock ${joinList(c.storages)}. Ask us on WhatsApp about other sizes.` },
+        { question: "Can I collect the 256GB the same day?", answer: "If it is in stock, yes. Collect from our shop opposite the Hilton Hotel in Nairobi CBD.", replaces: /^Where can I buy/ },
+      ],
+      feedTitle: "Apple iPhone 18 Pro 256GB, New, Burgundy, Black, Glacier or Silver, A20 Pro Chip, 6.3-inch ProMotion, 5G",
+      feedDescription:
+        "Apple iPhone 18 Pro with 256GB of storage, sold new and sealed by GadgetHub in Nairobi, Kenya. Colours: Burgundy, Black, Glacier and Silver. The iPhone 18 Pro has a 6.3-inch Super Retina XDR display with ProMotion up to 120Hz and Dynamic Island. It is powered by the A20 Pro chip with a dual 16-core Neural Engine and a next-generation vapor chamber. The rear camera system includes a 48MP Fusion main camera with variable aperture from f/1.48 to f/4.0, a 48MP Fusion Ultra Wide camera at 13 mm with macro, and a 48MP Fusion Telephoto camera with 4x and 8x optical-quality zoom. The front camera is 18MP Center Stage. Camera Control, the Action button and Face ID are included. Apple rates battery life at up to 36 hours of video playback. Charging is through USB-C, reaching up to 50 percent in about 15 minutes with a compatible adapter, with MagSafe and Qi wireless charging supported. The phone supports 5G and Crash Detection and is rated IP68 to 6 metres for 30 minutes. Build: forged aluminium unibody, Ceramic Shield 2 front, Ceramic Shield back. Weight 211 g. In the box: iPhone 18 Pro, USB-C Charge Cable and documentation. 1-year warranty.",
+    },
+    "512GB": {
+      title: "iPhone 18 Pro 512GB Price in Kenya | Buy in Nairobi",
+      metaDescription: (c) =>
+        `Buy the iPhone 18 Pro 512GB for ${kes(c.price("512GB"))}. New and sealed, room for 4K video, 1-year warranty, M-Pesa or Lipa Mdogo Mdogo, delivery in Kenya.`,
+      h1: "Apple iPhone 18 Pro 512GB, New",
+      intro: (c) =>
+        `The iPhone 18 Pro 512GB costs ${kes(c.price("512GB"))} at GadgetHub. It is the compact Pro iPhone with twice the storage of the 256GB, for people who shoot a lot and don't want to keep clearing space. It has the A20 Pro chip, a variable-aperture 48MP main camera and up to 36 hours of video playback, in a 211 g body, in ${PRO_COLOURS}. New and sealed with a 1-year warranty, with delivery anywhere in Kenya.`,
+      fit: () =>
+        "Choose 512GB if your phone is also your camera for work: real estate walkthroughs, product shoots for your online shop, church services or family events. 4K clips take up space quickly, and 512GB lets you keep months of footage before you offload. It also leaves room for large games and offline maps for upcountry trips where the network is weak.",
+      faq: (c) => {
+        const diff = c.price("512GB") - c.price("256GB");
+        return [
+          { question: "What is the iPhone 18 Pro 512GB price in Kenya?", answer: `It is ${kes(c.price("512GB"))}, new and sealed at GadgetHub.`, replaces: /^How much is/ },
+          { question: "How much deposit do I pay for the 512GB on Lipa Mdogo Mdogo?", answer: `The deposit is ${kes(plan6(c.price("512GB")).depositKes)}, then ${kes(plan6(c.price("512GB")).monthlyKes)} a month over 6 months. Shorter plans cost less.`, replaces: /instalments\?$/ },
+          { question: "Is the 512GB worth the extra over the 256GB?", answer: `If you record a lot of video, yes.${c.price("256GB") && diff > 0 ? ` It costs ${kes(diff)} more than the 256GB, for twice the storage.` : ""}`, replaces: /^Should I buy the .* or / },
+          { question: "Can it be delivered to me outside Nairobi?", answer: "Yes, by courier anywhere in Kenya. We quote the fee and timeline on WhatsApp first.", replaces: /^Do you deliver/ },
+        ];
+      },
+      feedTitle: "Apple iPhone 18 Pro 512GB, New, Burgundy, Black, Glacier or Silver, A20 Pro, 48MP Pro Fusion Camera, 5G",
+      feedDescription:
+        "Apple iPhone 18 Pro with 512GB of storage, new and sealed, sold by GadgetHub in Nairobi, Kenya. Available in Burgundy, Black, Glacier and Silver. The 512GB capacity suits users who record a lot of 4K video or keep large photo, game and offline media libraries on the phone. Display: 6.3-inch Super Retina XDR with ProMotion up to 120Hz and Dynamic Island. Chip: A20 Pro with a dual 16-core Neural Engine and next-generation vapor chamber cooling. Rear cameras: 48MP Fusion main camera with variable aperture from f/1.48 to f/4.0 at 24 and 48 mm, 48MP Fusion Ultra Wide with macro, and 48MP Fusion Telephoto at 100 and 200 mm for 4x and 8x optical-quality zoom. Front camera: 18MP Center Stage. Controls: Camera Control, Action button and Face ID. Battery: up to 36 hours of video playback as rated by Apple. Charging: USB-C, up to 50 percent in about 15 minutes with a compatible adapter, plus MagSafe and Qi wireless. Connectivity: 5G. Safety: Crash Detection. IP68 water resistance to 6 metres for 30 minutes. Weight 211 g. In the box: iPhone 18 Pro, USB-C Charge Cable and documentation. 1-year warranty.",
+    },
+  },
+};
+
+// ---------------------------------------------------------------- iPhone Duo
+
+const DUO_COLOURS = "Star White and Night Sky";
+
+const duo: ModelEditorial = {
+  seoTitle: "iPhone Duo Price in Kenya: Folding iPhone | GadgetHub",
+  metaDescription: (c) =>
+    `iPhone Duo, Apple's folding iPhone, from ${kes(fromKes(c))}. New, sealed, 1-year warranty. Pay by M-Pesa or Lipa Mdogo Mdogo; delivery across Kenya.`,
+  h1: "Apple iPhone Duo, New Folding iPhone",
+  intro: (c) =>
+    `The iPhone Duo is Apple's folding iPhone, and GadgetHub has it in stock in Nairobi from ${kes(fromKes(c))}. Folded, it is a phone with a 5.4-inch display. Open it and you get a 7.6-inch screen for documents, spreadsheets, video and split-screen work. It runs on the A20 Pro chip, comes in ${DUO_COLOURS}, and is new and sealed with a 1-year warranty. Collect it in Nairobi CBD or get it delivered across Kenya.`,
+  bestFor: "business owners, professionals and creators who want a phone and a small tablet in one device.",
+  keyFeatures: [
+    { title: "7.6-inch inner folding display with nano-texture.", body: "Close to a small tablet, for reading contracts, editing slides or watching a match, and the nano-texture finish cuts glare." },
+    { title: "5.4-inch outer display.", body: "Calls, M-Pesa, WhatsApp and quick replies work without opening the phone." },
+    { title: "A20 Pro chip with vapor cooling.", body: "The same chip as the iPhone 18 Pro models, so multitasking on the big screen stays smooth." },
+    { title: "Grade 5 titanium frame and hinge cover.", body: "The parts that take the most stress on a folding phone are made of titanium." },
+    { title: "48MP Dual Fusion camera system with Smart Take.", body: "Sharp photos, plus capture modes that help you get the shot first time." },
+    { title: "Dual-battery system.", body: "Up to 44 hours of video playback on the outer display and up to 31 hours on the inner display (Apple claims)." },
+    { title: "USB-C and MagSafe.", body: "Standard USB-C charging, and MagSafe cases and chargers snap into place." },
+  ],
+  sections: (c) => [
+    {
+      id: "overview",
+      heading: "Overview",
+      paragraphs: [
+        "The iPhone Duo is the first folding iPhone and the most advanced iPhone GadgetHub stocks. It is for people who want a phone and a small tablet in one device: business owners, lawyers, consultants and creators who read and work on the move and would rather not carry an iPad as well.",
+        `We sell it new and sealed, in two colours: ${DUO_COLOURS}.`,
+      ],
+      list: priceList(c),
+    },
+    {
+      id: "design",
+      heading: "Design and display",
+      paragraphs: [
+        "The frame and hinge cover are Grade 5 titanium. The front is Ceramic Shield 2 and the back is Ceramic Shield.",
+        "Closed, you use the 5.4-inch Super Retina XDR outer display like a normal compact iPhone: one hand, quick tasks, pocket-friendly. Open, the 7.6-inch Super Retina XDR folding display gives you room to run two apps side by side, read a full page without zooming, and watch video on a far bigger screen than any other iPhone. The inner display also has a nano-texture finish, which reduces reflections in bright light.",
+      ],
+    },
+    {
+      id: "performance",
+      heading: "Performance",
+      paragraphs: [
+        "The iPhone Duo uses the A20 Pro, the same chip as the iPhone 18 Pro and iPhone 18 Pro Max, and it is vapor-cooled for sustained Pro performance. On a folding phone that matters, because the big screen makes multitasking more likely: a video call on one side and notes on the other, or a spreadsheet next to your email.",
+      ],
+    },
+    {
+      id: "camera",
+      heading: "Camera",
+      paragraphs: [
+        "The iPhone Duo has a 48MP Dual Fusion camera system. Smart Take and advanced capture modes are designed to help you get a well-timed, well-exposed shot without fiddling with settings. Because the phone folds, you can stand it partly open on a table for hands-free photos, group shots and video calls.",
+      ],
+    },
+    {
+      id: "battery",
+      heading: "Battery and charging",
+      paragraphs: [
+        "The Duo has a dual-battery system for all-day power. Apple rates video playback at up to 44 hours on the outer display and up to 31 hours on the inner display. If you mostly use the outer screen and open it for longer tasks, you get through a full working day comfortably. It charges over USB-C and supports MagSafe.",
+        "The box includes a USB-C charge cable but no power adapter.",
+      ],
+    },
+    {
+      ...whyBuy("iPhone Duo"),
+      list: [
+        `Try it first: a folding iPhone is a big purchase, so come into our shop at ${STORE.address} and see it before you decide.`,
+        ...(whyBuy("iPhone Duo").list ?? []),
+      ],
+    },
+    inTheBox("iPhone Duo"),
+    kenyaTerms,
+  ],
+  specs: [
+    { label: "Inner display", value: "7.6-inch Super Retina XDR folding display with nano-texture" },
+    { label: "Outer display", value: "5.4-inch Super Retina XDR display" },
+    { label: "Chip", value: "A20 Pro, vapor-cooled" },
+    { label: "Rear camera", value: "48MP Dual Fusion camera system, Smart Take and advanced capture modes" },
+    { label: "Battery", value: "Dual-battery system" },
+    { label: "Video playback", value: "Up to 44 hours (outer display); up to 31 hours (inner display), Apple claims" },
+    { label: "Port and charging", value: "USB-C; MagSafe" },
+    { label: "Build", value: "Grade 5 titanium frame and hinge cover; Ceramic Shield 2 front; Ceramic Shield back" },
+    { label: "Colours", value: "Star White, Night Sky" },
+    { label: "Storage", value: "256GB, 512GB, 1TB" },
+  ],
+  faq: (c) => {
+    const pm = c.other("iphone-18-pro-max");
+    return [
+      { question: "What is the price of the iPhone Duo in Kenya?", answer: `At GadgetHub the iPhone Duo costs ${priceSentence(c)}. All are new and sealed.` },
+      { question: "Is the iPhone Duo Apple's foldable iPhone?", answer: "Yes. It folds from a 7.6-inch inner display down to a phone with a 5.4-inch outer display." },
+      { question: "Is the iPhone Duo genuine and sealed?", answer: "Yes. GadgetHub is an Apple Authorised Reseller. Every iPhone Duo is new and sealed, and its serial number is printed on your invoice." },
+      { question: "Does the iPhone Duo come with a warranty?", answer: "Yes, a 1-year warranty. Keep your GadgetHub invoice." },
+      { question: "Can I buy the iPhone Duo on instalments?", answer: `Yes, with Lipa Mdogo Mdogo. ${lipaExample(c, "256GB")}`.trim() },
+      { question: "Can I pay for the iPhone Duo with M-Pesa?", answer: "Yes, by M-Pesa STK Push at checkout or by M-Pesa in our shop." },
+      {
+        question: "What is the difference between the iPhone Duo and the iPhone 18 Pro Max?",
+        answer: `Both run the A20 Pro chip. The iPhone Duo folds open to a 7.6-inch display and has a titanium frame, from ${kes(fromKes(c))}. The iPhone 18 Pro Max has a single 6.9-inch display, the triple 48MP Pro Fusion camera with 8x zoom and up to 45 hours of video playback${pm.newKes ? `, from ${kes(pm.newKes)}` : ""}.`,
+      },
+      { question: "Which colours does the iPhone Duo come in?", answer: `${DUO_COLOURS}. Both are available.` },
+      { question: "Can I see the iPhone Duo before I buy?", answer: `Yes. Visit our shop at Norwich Union House, opposite the Hilton Hotel, Nairobi CBD. We're open ${STORE.hours}.` },
+      { question: "Do you deliver the iPhone Duo outside Nairobi?", answer: "Yes, by courier anywhere in Kenya. We quote the fee and timeline on WhatsApp before you pay." },
+    ];
+  },
+  links: [
+    { href: "/iphone/compare/iphone-duo-vs-iphone-18-pro-max", text: "iPhone Duo vs iPhone 18 Pro Max" },
+    { href: "/iphone/iphone-18-pro-max", text: "The iPhone 18 Pro Max, if you prefer a single screen" },
+    { href: "/accessories", text: "iPhone Duo accessories and MagSafe chargers" },
+    { href: "/lipa-mdogo-mdogo", text: "Pay for the iPhone Duo in instalments" },
+    { href: "/locations", text: "Visit our Nairobi CBD shop to try the iPhone Duo" },
+  ],
+  compareIds: ["iphone-18-pro-max"],
+  storages: {
+    "256GB": {
+      title: "iPhone Duo 256GB Price in Kenya | GadgetHub",
+      metaDescription: (c) =>
+        `iPhone Duo 256GB, Apple's folding iPhone, for ${kes(c.price("256GB"))}. New and sealed, 1-year warranty, M-Pesa or Lipa Mdogo Mdogo, delivery across Kenya.`,
+      h1: "Apple iPhone Duo 256GB, New",
+      intro: (c) =>
+        `The iPhone Duo 256GB costs ${kes(c.price("256GB"))} at GadgetHub, the most affordable way into Apple's folding iPhone. You get the full Duo experience: a 7.6-inch inner display, a 5.4-inch outer display, the A20 Pro chip and a Grade 5 titanium frame. It is in stock in ${DUO_COLOURS}, new and sealed with a 1-year warranty. Pay by M-Pesa or Lipa Mdogo Mdogo, and collect in Nairobi CBD or have it delivered.`,
+      fit: () =>
+        "256GB is the right size if you will use the Duo mainly for email, documents, browsing and video calls, and keep photos backed up to iCloud. It gives you the big folding screen for the lowest price. Choose 512GB or 1TB if you plan to download a lot of films for travel or record long videos.",
+      faq: (c) => [
+        { question: "How much is the iPhone Duo 256GB in Kenya?", answer: `It costs ${kes(c.price("256GB"))}, new and sealed.`, replaces: /^How much is/ },
+        { question: "What deposit do I pay for the iPhone Duo 256GB on Lipa Mdogo Mdogo?", answer: `${kes(plan6(c.price("256GB")).depositKes)}, then ${kes(plan6(c.price("256GB")).monthlyKes)} a month for 6 months.`, replaces: /instalments\?$/ },
+        { question: "Is the 256GB Duo the same phone as the 1TB?", answer: "Yes. Only the storage differs. The screens, chip and camera are the same." },
+        { question: "Which colours are available?", answer: `${DUO_COLOURS}.`, replaces: /^What colours/ },
+      ],
+      feedTitle: "Apple iPhone Duo 256GB, New, Star White or Night Sky, Folding iPhone, 7.6-inch Inner Display, A20 Pro",
+      feedDescription:
+        "Apple iPhone Duo with 256GB of storage, new and sealed, sold by GadgetHub in Nairobi, Kenya. The iPhone Duo is Apple's folding iPhone, available in Star White and Night Sky. It has a 7.6-inch Super Retina XDR folding inner display with nano-texture and a 5.4-inch Super Retina XDR outer display, so it can be used as a compact phone when closed and as a larger screen when open. It is powered by the A20 Pro chip and is vapor-cooled for sustained performance. The frame and hinge cover are made of Grade 5 titanium, with Ceramic Shield 2 on the front and Ceramic Shield on the back. The rear camera is a 48MP Dual Fusion camera system with Smart Take and advanced capture modes. A dual-battery system is rated by Apple at up to 44 hours of video playback on the outer display and up to 31 hours on the inner display. Charging is through USB-C, and MagSafe accessories are supported. In the box: iPhone Duo, USB-C Charge Cable and documentation. Includes a 1-year warranty from GadgetHub.",
+    },
+    "512GB": {
+      title: "iPhone Duo 512GB Price in Kenya | Buy in Nairobi",
+      metaDescription: (c) =>
+        `Buy the iPhone Duo 512GB for ${kes(c.price("512GB"))} in Nairobi. New and sealed folding iPhone, 1-year warranty, M-Pesa and instalments, delivery across Kenya.`,
+      h1: "Apple iPhone Duo 512GB, New",
+      intro: (c) => {
+        const diff = c.price("512GB") - c.price("256GB");
+        return `The iPhone Duo 512GB costs ${kes(c.price("512GB"))} at GadgetHub${c.price("256GB") && diff > 0 ? `, double the storage of the 256GB for ${kes(diff)} more` : ""}. It is the size most heavy users will want, because a big screen invites big downloads: offline films, large PDFs, design files and games. You get the 7.6-inch folding display, the A20 Pro chip and the dual-battery system, in ${DUO_COLOURS}. It is new and sealed, with a 1-year warranty and delivery anywhere in Kenya.`;
+      },
+      fit: () =>
+        "This size suits professionals who keep work files on the device and frequent travellers who load up on offline content before a flight from JKIA. It also suits anyone who wants the Duo to last several years without managing storage. 512GB gives you that headroom without the 1TB price.",
+      faq: (c) => [
+        { question: "What is the iPhone Duo 512GB price in Kenya?", answer: `It is ${kes(c.price("512GB"))}, new and sealed at GadgetHub.`, replaces: /^How much is/ },
+        { question: "How much is the deposit for the 512GB on Lipa Mdogo Mdogo?", answer: `The deposit is ${kes(plan6(c.price("512GB")).depositKes)}, then ${kes(plan6(c.price("512GB")).monthlyKes)} a month over 6 months. Shorter plans cost less.`, replaces: /instalments\?$/ },
+        { question: "Should I buy 512GB or 256GB?", answer: `If you download films, keep large files or shoot video, take 512GB. For mostly email and browsing, the 256GB${c.price("256GB") ? ` at ${kes(c.price("256GB"))}` : ""} is enough.`, replaces: /^Should I buy the .* or / },
+        { question: "Do you deliver the 512GB outside Nairobi?", answer: "Yes, by courier anywhere in Kenya. We quote the fee and timeline on WhatsApp before you pay.", replaces: /^Do you deliver/ },
+      ],
+      feedTitle: "Apple iPhone Duo 512GB, New, Star White or Night Sky, Folding iPhone, A20 Pro, Grade 5 Titanium Frame",
+      feedDescription:
+        "Apple iPhone Duo with 512GB of storage, sold new and sealed by GadgetHub in Nairobi, Kenya. Colours: Star White and Night Sky. The 512GB capacity suits users who keep large documents, offline video and media libraries on the device. The iPhone Duo is a folding iPhone with a 7.6-inch Super Retina XDR inner display with nano-texture and a 5.4-inch Super Retina XDR outer display. It runs on the A20 Pro chip with vapor cooling for sustained performance. The design uses a Grade 5 titanium frame and hinge cover, a Ceramic Shield 2 front and a Ceramic Shield back. Camera: 48MP Dual Fusion camera system with Smart Take and advanced capture modes. Battery: dual-battery system with up to 44 hours of video playback on the outer display and up to 31 hours on the inner display, as rated by Apple. Port: USB-C, with MagSafe support. In the box: iPhone Duo, USB-C Charge Cable and documentation. 1-year warranty.",
+    },
+    "1TB": {
+      title: "iPhone Duo 1TB Price in Kenya | GadgetHub Nairobi",
+      metaDescription: (c) =>
+        `iPhone Duo 1TB for ${kes(c.price("1TB"))}, Apple's folding iPhone with maximum storage. New and sealed, 1-year warranty, M-Pesa, delivery across Kenya.`,
+      h1: "Apple iPhone Duo 1TB, New",
+      intro: (c) =>
+        `The iPhone Duo 1TB costs ${kes(c.price("1TB"))} at GadgetHub. It is the top configuration of Apple's folding iPhone, for buyers who want the most storage and never want to think about space. It has the same 7.6-inch nano-texture folding display, A20 Pro chip and titanium frame as the other sizes, with 1TB for files, footage and media, in ${DUO_COLOURS}. It is new and sealed with a 1-year warranty. See it in our Nairobi CBD shop or order for delivery across Kenya.`,
+      fit: (c) =>
+        `1TB is for executives and creators who run their work from the phone: full project folders, years of photos at full resolution, and a library of offline films and music for long trips. It is also the choice for anyone who wants to keep the Duo for years and never move files off it. If that isn't you, the 512GB${c.price("512GB") ? ` at ${kes(c.price("512GB"))}` : ""} covers most heavy users.`,
+      faq: (c) => [
+        { question: "How much is the iPhone Duo 1TB in Kenya?", answer: `It costs ${kes(c.price("1TB"))}, new and sealed at GadgetHub.`, replaces: /^How much is/ },
+        { question: "Can I pay for the 1TB in instalments?", answer: `Yes. Pay a ${kes(plan6(c.price("1TB")).depositKes)} deposit, then ${kes(plan6(c.price("1TB")).monthlyKes)} a month over 6 months with Lipa Mdogo Mdogo.`, replaces: /instalments\?$/ },
+        { question: "Is the 1TB genuine and sealed?", answer: "Yes. It is new and sealed from an Apple Authorised Reseller, with the serial number on your invoice.", replaces: /original\?$/ },
+        { question: "Is there a 2TB iPhone Duo?", answer: `We currently stock ${joinList(c.storages)}. Ask us on WhatsApp about other sizes.` },
+      ],
+      feedTitle: "Apple iPhone Duo 1TB, New, Star White or Night Sky, Folding iPhone, 7.6-inch Nano-texture Display, A20 Pro",
+      feedDescription:
+        "Apple iPhone Duo with 1TB of storage, new and sealed, sold by GadgetHub in Nairobi, Kenya. Available in Star White and Night Sky. The 1TB capacity is the largest configuration stocked and suits users who store large work files, full-resolution photo libraries and offline media on the device. The iPhone Duo folds between a 5.4-inch Super Retina XDR outer display and a 7.6-inch Super Retina XDR inner folding display with nano-texture. It is powered by the A20 Pro chip, vapor-cooled for sustained performance. The frame and hinge cover are Grade 5 titanium, with a Ceramic Shield 2 front and a Ceramic Shield back. The rear camera is a 48MP Dual Fusion camera system with Smart Take and advanced capture modes. Apple rates the dual-battery system at up to 44 hours of video playback on the outer display and up to 31 hours on the inner display. It charges over USB-C and supports MagSafe accessories. In the box: iPhone Duo, USB-C Charge Cable and documentation. 1-year warranty.",
+    },
+  },
+};
+
+export const iphoneEditorial: Record<string, ModelEditorial> = {
+  "iphone-18-pro-max": proMax,
+  "iphone-18-pro": pro,
+  "iphone-duo": duo,
+};
+
+export function getEditorial(seoId: string): ModelEditorial | undefined {
+  return iphoneEditorial[seoId];
+}
+
+const storageOrder = (s: string) => {
+  const m = /^(\d+)\s*(GB|TB)$/i.exec(s);
+  return m ? Number(m[1]) * (m[2].toUpperCase() === "TB" ? 1024 : 1) : 0;
+};
+
+/** Lowest listed New / Ex-UK price of a live product. */
+export function listedFrom(p: PricedProduct | undefined): { newKes: number; exUkKes: number } {
+  if (!p) return { newKes: 0, exUkKes: 0 };
+  const rows = p.variants.map((v) => listedVariantPrices(p, v));
+  const min = (xs: number[]) => (xs.length ? Math.min(...xs) : 0);
+  return { newKes: min(rows.map((r) => r.newKes).filter((n) => n > 0)), exUkKes: min(rows.map((r) => r.exUkKes).filter((n) => n > 0)) };
+}
+
+/**
+ * Context from a model already carrying live prices (`withLiveSeoPrices`) and a lookup of
+ * other models' live products, by SEO id.
+ */
+export function editorialCtx(model: IphoneSeoModel, otherLive: (seoId: string) => PricedProduct | undefined): EditorialCtx {
+  const byStorage = new Map(model.variants.map((v) => [v.storage.toUpperCase(), v.newKes]));
+  const storages = model.variants
+    .filter((v) => v.newKes > 0)
+    .map((v) => v.storage)
+    .sort((a, b) => storageOrder(a) - storageOrder(b));
+  return {
+    price: (s) => byStorage.get(s.toUpperCase()) ?? 0,
+    storages,
+    other: (id) => listedFrom(otherLive(id)),
+  };
+}
+
+/** The model with the editorial title, description, intro, specs and FAQ swapped in. */
+export function withEditorial(model: IphoneSeoModel, ed: ModelEditorial, c: EditorialCtx): IphoneSeoModel {
+  if (!c.storages.length) return model;
+  return {
+    ...model,
+    seoTitle: ed.seoTitle,
+    metaDescription: ed.metaDescription(c),
+    intro: ed.intro(c),
+    bestFor: ed.bestFor,
+    specs: ed.specs.map((s) => (s.label === "Storage" ? { ...s, value: c.storages.join(", ") } : s)),
+    faq: ed.faq(c),
+  };
+}
+
+/** Swap editorial FAQs into a generated storage-page FAQ: replace matching questions, append the rest. */
+export function mergeStorageFaq(generated: SeoFaq[], extra: (SeoFaq & { replaces?: RegExp })[]): SeoFaq[] {
+  const out = [...generated];
+  const append: SeoFaq[] = [];
+  for (const { replaces, ...f } of extra) {
+    const i = replaces ? out.findIndex((g) => replaces.test(g.question)) : -1;
+    if (i >= 0) out[i] = f;
+    else append.push(f);
+  }
+  return [...out, ...append];
+}
