@@ -93,6 +93,15 @@ const hideFloatWhatsApp = path === "/contact";
 <html lang="en" class:list={{ "storefront-wa-only": !STOREFRONT_PAYMENTS }}>
   <head>
     <meta charset="utf-8" />
+    {/* Google Tag Manager — GTM-WRVDMKR4. Kept high in <head> as Google asks; the gtm.start push lets page-view triggers fire. */}
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+    </script>
+    <script is:inline async src="https://www.googletagmanager.com/gtm.js?id=GTM-WRVDMKR4"></script>
+    {/* End Google Tag Manager */}
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="description" content={description} />
     <meta name="color-scheme" content="light only" />
@@ -130,6 +139,7 @@ const hideFloatWhatsApp = path === "/contact";
     <slot name="head" />
   </head>
   <body>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WRVDMKR4" height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe></noscript>
     <a class="sr-only" href="#main">Skip to content</a>
     <Header />
     <main id="main">
