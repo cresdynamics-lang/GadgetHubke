@@ -28,6 +28,20 @@ Portal username/password is **not** the API token. After login, create an app (u
 
 Sandbox contact: Ann Minjire (`@Minjire, Ann A`) via Andrew Njonjo, Head of Digital, eCommerce & Personalization.
 
+## Payment notifications (UAT, Nov 2026)
+
+Stanbic posts a payment notification to the callback URL (whitelisted, not registered). Shape:
+`TransactionType`, `TransID`, `TransTime`, `TransAmount` ("KES 1.00"), `BillRefNumber`, `ThirdPartyTransID`,
+`apiClientId`, `secureHash`, plus balances and payer details (never stored).
+
+- The webhook answers every notice with `{"ResultCode":"0","ResultDesc":"Accepted"}`.
+- A notice whose `BillRefNumber`, `ThirdPartyTransID` or `TransID` equals the order's STK `dbsReferenceId`
+  marks that order paid (amount must cover the order). Anything else is logged as unmatched.
+- Every notice is logged (ids and amount only) in `gh:bank-notices:v1`.
+- `STANBIC_NOTIFY_API_KEY` / `STANBIC_NOTIFY_API_SECRET` (server `.env`) are the ApiKey/ApiSecret given to
+  Stanbic for mapping. Accepted as Basic auth or `x-api-key` / `x-api-secret`. Still to confirm with Stanbic:
+  how they send them and how `secureHash` is computed, so it can be enforced.
+
 ## Customer flow
 
 1. Add to cart → checkout

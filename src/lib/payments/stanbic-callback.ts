@@ -1,6 +1,8 @@
 /**
  * Reads a Stanbic STK result / payment notification. The bank's exact shape is not documented to us,
  * so this accepts flat fields and Safaricom-style nesting (Body.stkCallback, CallbackMetadata.Item).
+ * It also reads Stanbic's payment notification (TransactionType, TransID, TransAmount, BillRefNumber,
+ * ThirdPartyTransID, secureHash …), which reports money credited to the Gadget Hub account.
  */
 
 export type CallbackOutcome = "paid" | "failed" | "unknown";
@@ -15,11 +17,19 @@ export type StanbicCallback = {
   amountKes?: number;
   /** Field names that arrived, for the log when a notice cannot be matched. Never values. */
   fields: string[];
+  /** True for Stanbic's payment notification (a credit to the account), not an STK result. */
+  notification: boolean;
+  /** Notification details for the staff log: ids and amount only, never names, phones or balances. */
+  notice?: { transactionType: string; transId: string; billRef: string; thirdPartyRef: string; transTime: string; hasSecureHash: boolean };
 };
 
 const ORDER_KEYS = ["orderid", "externalreference"];
 // thirdpartyref / ourtxnreference come from Stanbic's account notification ("Letter") format.
-const REF_KEYS = ["dbsreferenceid", "reference", "transactionid", "checkoutrequestid", "merchantrequestid", "conversationid", "paymentref", "thirdpartyref", "ourtxnreference"];
+// transid / billrefnumber / thirdpartytransid come from Stanbic's payment notification.
+const REF_KEYS = [
+  "dbsreferenceid", "reference", "transactionid", "checkoutrequestid", "merchantrequestid", "conversationid", "paymentref",
+  "thirdpartyref", "ourtxnreference", "billrefnumber", "thirdpartytransid", "transid",
+];
 const CODE_KEYS = ["resultcode", "responsecode", "statuscode", "txnstatuscode"];
 const STATUS_KEYS = ["status", "result", "transactionstatus", "txnstatus", "paymentstatus"];
 const MESSAGE_KEYS = ["resultdesc", "message", "description", "responsedescription", "statusdescription"];
@@ -76,6 +86,10 @@ export function readStanbicCallback(body: unknown): StanbicCallback {
   else if (PAID_WORDS.has(word)) outcome = "paid";
   else if (FAILED_WORDS.has(word)) outcome = "failed";
 
+  // A payment notification reports money already credited, so it is a payment unless a status says otherwise.
+  const notification = fields.has("transactiontype") && fields.has("transamount");
+  if (notification && outcome === "unknown") outcome = "paid";
+
   // "KES 1,234.00" in Stanbic notifications.
   const amount = Number(first(fields, AMOUNT_KEYS).replace(/[^\d.]/g, ""));
   const refs = [...new Set(REF_KEYS.map((key) => fields.get(key) || "").filter(Boolean))];
@@ -86,6 +100,19 @@ export function readStanbicCallback(body: unknown): StanbicCallback {
     message: first(fields, MESSAGE_KEYS),
     amountKes: Number.isFinite(amount) && amount > 0 ? amount : undefined,
     fields: [...fields.keys()],
+    notification,
+    ...(notification
+      ? {
+          notice: {
+            transactionType: fields.get("transactiontype") || "",
+            transId: fields.get("transid") || "",
+            billRef: fields.get("billrefnumber") || "",
+            thirdPartyRef: fields.get("thirdpartytransid") || "",
+            transTime: fields.get("transtime") || "",
+            hasSecureHash: fields.has("securehash"),
+          },
+        }
+      : {}),
   };
 }
 

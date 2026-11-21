@@ -51,3 +51,37 @@ test("Stanbic account notifications (Letter format) give their amount and refere
   assert.ok(cb.refs.includes("K7QX2M9PZTR4A"));
   assert.equal(callbackMatchesOrder(cb, order), true);
 });
+
+const stanbicNotice = {
+  TransactionType: "ACTRANSFER",
+  TransID: "FT26324S7LZC",
+  TransTime: "20/11/2026 at 01:41PM",
+  TransAmount: "KES 1.00",
+  BusinessShortCode: "0100013199528",
+  BusinessAccountNo: "0100013199528",
+  BillRefNumber: "FT26324S7LZC",
+  InvoiceNumber: "TRANSACTION NARRATIVE",
+  OrgAccountBalance: "KES 496773.30",
+  ThirdPartyTransID: "9898927177140",
+  MSISDN: "Funds Transfer\\nFT26324S7LZC\\nName",
+  CallbackUrl: "https://gadgethubke.com/api/checkout/webhook",
+  apiClientId: "7072",
+  dealReference: "",
+  secureHash: "MTZlZDNm",
+};
+
+test("Stanbic's payment notification is read as a payment with its references", () => {
+  const cb = readStanbicCallback(stanbicNotice);
+  assert.equal(cb.notification, true);
+  assert.equal(cb.outcome, "paid");
+  assert.equal(cb.amountKes, 1);
+  assert.deepEqual(cb.refs, ["FT26324S7LZC", "9898927177140"]);
+  assert.equal(cb.notice?.transId, "FT26324S7LZC");
+  assert.equal(cb.notice?.hasSecureHash, true);
+});
+
+test("a notification quoting our STK reference matches that order", () => {
+  const cb = readStanbicCallback({ ...stanbicNotice, BillRefNumber: "K7QX2M9PZTR4A" });
+  assert.equal(callbackMatchesOrder(cb, order), true);
+  assert.equal(callbackMatchesOrder(readStanbicCallback(stanbicNotice), order), false);
+});
