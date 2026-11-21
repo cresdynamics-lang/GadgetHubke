@@ -141,6 +141,24 @@ const wa = whatsappUrl(
       });
     }
 
+    if (typeof window.ghTrack === "function") {
+      window.ghTrack("purchase", {
+        ecommerce: {
+          transaction_id: String(order.id),
+          value,
+          currency: "KES",
+          payment_type: order.paymentMethod === "card" ? "card" : order.paymentMethod === "mpesa" ? "mpesa" : String(order.paymentMethod || ""),
+          items: items.map((i) => ({
+            item_id: String(i.catalogId || i.sheetId || i.id || ""),
+            item_name: String(i.name || ""),
+            item_variant: [i.storage, i.colour, i.channel].filter(Boolean).join(" / "),
+            price: Number(i.kes) || 0,
+            quantity: Number(i.qty) || 1,
+          })),
+        },
+      });
+    }
+
     if (typeof window.gtag === "function") {
       window.gtag("event", "purchase", {
         transaction_id: String(order.id),

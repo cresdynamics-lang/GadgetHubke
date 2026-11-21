@@ -98,6 +98,25 @@ const waPhone = iphoneConfig.whatsapp;
   }
 
 
+  /** One cart line as a GA4 item for Tag Manager. */
+  function gaItem(item, qty) {
+    return {
+      item_id: metaCatalogId(item),
+      item_name: item.name || "",
+      item_variant: [item.storage, item.colour, item.channel].filter(Boolean).join(" / "),
+      price: Number(item.kes) || 0,
+      quantity: qty || Number(item.qty) || 1,
+    };
+  }
+
+  function trackCart(event, items, qty) {
+    if (typeof window.ghTrack !== "function" || !items.length) return;
+    const list = items.map((i) => gaItem(i, qty));
+    window.ghTrack(event, {
+      ecommerce: { currency: "KES", value: list.reduce((n, i) => n + i.price * i.quantity, 0), items: list },
+    });
+  }
+
   function lineKey(item) {
     return [
       item.id,
@@ -296,6 +315,7 @@ const waPhone = iphoneConfig.whatsapp;
         const next = read();
         if (next[i]) next[i].qty = (next[i].qty || 1) + 1;
         write(next);
+        if (next[i]) trackCart("add_to_cart", [next[i]], 1);
       });
     });
     list.querySelectorAll("[data-bag-dec]").forEach((btn) => {
@@ -303,6 +323,7 @@ const waPhone = iphoneConfig.whatsapp;
         const i = Number(btn.getAttribute("data-bag-dec"));
         const next = read();
         if (!next[i]) return;
+        trackCart("remove_from_cart", [next[i]], 1);
         next[i].qty = (next[i].qty || 1) - 1;
         if (next[i].qty <= 0) next.splice(i, 1);
         write(next);
@@ -314,6 +335,7 @@ const waPhone = iphoneConfig.whatsapp;
     if (drawer instanceof HTMLDialogElement) {
       render();
       drawer.showModal();
+      trackCart("view_cart", read());
     }
   }
 
@@ -344,6 +366,7 @@ const waPhone = iphoneConfig.whatsapp;
     else items.push(incoming);
     write(items);
     trackMetaAddToCart(incoming);
+    trackCart("add_to_cart", [incoming], 1);
     showToast("Added to cart");
     openBag();
   });

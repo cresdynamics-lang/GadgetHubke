@@ -69,6 +69,8 @@ const waBase = whatsappUrl();
       body: JSON.stringify({ kind: "track", name, phone, ref }),
       keepalive: true,
     }).catch(() => {});
+    // Tag Manager (no personal details).
+    window.ghTrack?.("track_order_request", { page_path: location.pathname });
     window.open(`${waBase}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
   });
 </script>

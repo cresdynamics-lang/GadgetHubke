@@ -231,6 +231,9 @@ const payload = JSON.stringify(tradeInQuestions.map((q) => ({ id: q.id, label: q
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Could not save.");
       savedId = json.id || "";
+      // Tag Manager: no names or phone numbers, only what was traded and wanted.
+      (window as any).ghTrack?.("trade_in_request", { trade_in_device: current, wanted_product: want.productId || "", condition: want.channel || "" });
+      (window as any).ghTrack?.("generate_lead", { lead_source: "trade_in", page_path: location.pathname });
     } catch (err) {
       if (status) status.textContent = err instanceof Error ? err.message : "Could not save. Continuing on WhatsApp.";
     }

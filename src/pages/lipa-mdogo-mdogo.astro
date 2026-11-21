@@ -207,6 +207,9 @@ const monthWord = (m: number) => (m === 1 ? "month" : "months");
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Could not save.");
       savedId = json.id || "";
+      // Tag Manager: no names or phone numbers, only the device and plan.
+      (window as any).ghTrack?.("lipa_application", { product_id: device.productId, condition: device.channel, value: device.priceKes, currency: "KES", deposit_pct: depositPct, months: plan.months });
+      (window as any).ghTrack?.("generate_lead", { lead_source: "lipa_mdogo_mdogo", value: device.priceKes, currency: "KES", page_path: location.pathname });
     } catch (err) {
       if (status) status.textContent = err instanceof Error ? err.message : "Could not save. Continuing on WhatsApp.";
     }

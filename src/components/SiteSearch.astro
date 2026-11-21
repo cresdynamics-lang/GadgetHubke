@@ -784,6 +784,11 @@ const tvListed = tvHomeModels.some((m) => !offList.has(m.id));
       }
       popular.hidden = true;
       const { hits, future, top, mode } = search(q);
+      // Tag Manager: one search event once typing pauses, not one per key.
+      window.clearTimeout(window.__ghSearchTimer);
+      window.__ghSearchTimer = window.setTimeout(() => {
+        window.ghTrack?.("search", { search_term: q, search_results: hits.length });
+      }, 1200);
       if (!hits.length && !future) {
         results.hidden = true;
         empty.hidden = false;

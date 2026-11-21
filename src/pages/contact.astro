@@ -399,6 +399,9 @@ const headlineWords = contactHero.headline.split(" ");
       body: JSON.stringify({ kind: "contact", name, phone, topic, message }),
       keepalive: true,
     }).catch(() => {});
+    // Tag Manager (no personal details).
+    window.ghTrack?.("contact_form", { page_path: location.pathname });
+    window.ghTrack?.("generate_lead", { lead_source: "contact", page_path: location.pathname });
 
     if (done instanceof HTMLElement) {
       done.hidden = false;

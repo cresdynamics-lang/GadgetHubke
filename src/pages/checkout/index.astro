@@ -216,6 +216,24 @@ const lipa = iphoneConfig.lipa;
   let items = expressMode ? readExpressItems() : readBagFromStorage();
   if (expressMode && !items.length) items = readBagFromStorage();
 
+  // Tag Manager: checkout started, once per page load.
+  if (items.length && typeof window.ghTrack === "function") {
+    window.ghTrack("begin_checkout", {
+      checkout_type: expressMode ? "buy_now" : "cart",
+      ecommerce: {
+        currency: "KES",
+        value: items.reduce((n, i) => n + (Number(i.kes) || 0) * (Number(i.qty) || 1), 0),
+        items: items.map((i) => ({
+          item_id: String(i.catalogId || i.sheetId || i.id || ""),
+          item_name: String(i.name || ""),
+          item_variant: [i.storage, i.colour, i.channel].filter(Boolean).join(" / "),
+          price: Number(i.kes) || 0,
+          quantity: Number(i.qty) || 1,
+        })),
+      },
+    });
+  }
+
   let orderId = "";
   let customer = {
     name: "",
@@ -525,6 +543,21 @@ const lipa = iphoneConfig.lipa;
           payErr.textContent = data.stkError;
           payErr.hidden = false;
         }
+      }
+      if (typeof window.ghTrack === "function") {
+        window.ghTrack("add_payment_info", {
+          ecommerce: {
+            currency: "KES",
+            value: items.reduce((n, i) => n + (Number(i.kes) || 0) * (Number(i.qty) || 1), 0),
+            payment_type: "mpesa",
+            items: items.map((i) => ({
+              item_id: String(i.catalogId || i.sheetId || i.id || ""),
+              item_name: String(i.name || ""),
+              price: Number(i.kes) || 0,
+              quantity: Number(i.qty) || 1,
+            })),
+          },
+        });
       }
       if (typeof window.fbq === "function") {
         const contentIds = items

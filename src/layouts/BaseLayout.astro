@@ -99,6 +99,29 @@ const hideFloatWhatsApp = path === "/contact";
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+      /**
+       * Every site event goes to Tag Manager as { event, ...params } (GA4 recommended names).
+       * Ecommerce events carry an `ecommerce` object, cleared first as Google asks.
+       */
+      window.ghTrack = function (event, params) {
+        params = params || {};
+        if (params.ecommerce) dataLayer.push({ ecommerce: null });
+        dataLayer.push(Object.assign({ event: event }, params));
+      };
+      /** Contact taps anywhere on the site: WhatsApp, phone, email. */
+      document.addEventListener('click', function (e) {
+        var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+        if (!a) return;
+        var href = a.getAttribute('href') || '';
+        var method = /wa\.me|whatsapp\.com/i.test(href) ? 'whatsapp' : /^tel:/i.test(href) ? 'phone' : /^mailto:/i.test(href) ? 'email' : '';
+        if (!method) return;
+        window.ghTrack(method === 'whatsapp' ? 'whatsapp_click' : method + '_click', {
+          contact_method: method,
+          link_text: (a.textContent || '').trim().slice(0, 100),
+          page_path: location.pathname,
+        });
+        window.ghTrack('generate_lead', { lead_source: method, page_path: location.pathname });
+      }, true);
     </script>
     <script is:inline async src="https://www.googletagmanager.com/gtm.js?id=GTM-WRVDMKR4"></script>
     {/* End Google Tag Manager */}

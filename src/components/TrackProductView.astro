@@ -32,6 +32,7 @@ const metaIds = (contentIds?.length ? contentIds : [id]).filter(Boolean);
 <script>
   let firedMeta = false;
   let firedGoogle = false;
+  let firedGtm = false;
 
   function fireViewContent() {
     const el = document.querySelector("[data-ads-view]");
@@ -59,6 +60,17 @@ const metaIds = (contentIds?.length ? contentIds : [id]).filter(Boolean);
         currency: "KES",
       });
       firedMeta = true;
+    }
+
+    if (!firedGtm && typeof window.ghTrack === "function") {
+      window.ghTrack("view_item", {
+        ecommerce: {
+          currency: "KES",
+          value,
+          items: contentIds.map((item_id) => ({ item_id, item_name: contentName, price: value, quantity: 1 })),
+        },
+      });
+      firedGtm = true;
     }
 
     if (!firedGoogle && typeof window.gtag === "function") {
