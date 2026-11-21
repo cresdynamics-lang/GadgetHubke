@@ -4,7 +4,7 @@ import { getEditorial, mergeStorageFaq, type EditorialCtx } from "./editorial.ts
 
 const ctx: EditorialCtx = {
   price: (s) => ({ "256GB": 203000, "512GB": 234000, "1TB": 292000 })[s] ?? 0,
-  exUk: (s) => ({ "256GB": 142000, "512GB": 155000 })[s] ?? 0,
+  exUk: (s) => ({ "128GB": 93000, "256GB": 142000, "512GB": 155000 })[s] ?? 0,
   storages: ["256GB", "512GB", "1TB"],
   other: (id) => (id === "iphone-17-pro-max" ? { newKes: 167000, exUkKes: 142000 } : { newKes: 0, exUkKes: 0 }),
 };
@@ -21,7 +21,7 @@ test("copy quotes live prices and drops prices that are not listed", () => {
 });
 
 test("meta descriptions and titles stay within limits", () => {
-  for (const id of ["iphone-18-pro-max", "iphone-18-pro", "iphone-duo", "iphone-17", "iphone-17-pro", "iphone-17-pro-max"]) {
+  for (const id of ["iphone-18-pro-max", "iphone-18-pro", "iphone-duo", "iphone-17", "iphone-17-pro", "iphone-17-pro-max", "iphone-16", "iphone-16-pro", "iphone-16-pro-max"]) {
     const ed = getEditorial(id)!;
     assert.ok(ed.seoTitle.length <= 60, ed.seoTitle);
     assert.ok(ed.metaDescription(ctx).length <= 155, ed.metaDescription(ctx));
@@ -62,4 +62,18 @@ test("iPhone 17 copy quotes New and Ex-UK prices side by side", () => {
   assert.match(ed.storages["256GB"].faq(ctx)[1].answer, /Ex-UK: a KES 56,800 deposit/);
   assert.match(ed.storages["256GB"].feedExUkDescription!, /Ex-UK \(UK-used\)/);
   assert.doesNotMatch(ed.storages["256GB"].feedExUkDescription!, /sealed|1-year warranty/);
+});
+
+test("iPhone 16 copy is Ex-UK only: no sealed or 1-year warranty claims", () => {
+  for (const id of ["iphone-16", "iphone-16-pro", "iphone-16-pro-max"]) {
+    const ed = getEditorial(id)!;
+    const all = [
+      ed.intro(ctx), ed.metaDescription(ctx),
+      ...ed.sections(ctx).flatMap((s) => [...s.paragraphs, ...(s.list ?? [])]),
+      ...ed.faq(ctx).map((f) => f.answer),
+      ...Object.values(ed.storages).flatMap((s) => [s.intro(ctx), s.metaDescription(ctx), s.feedDescription, ...s.faq(ctx).map((f) => f.answer)]),
+    ].join(" ");
+    assert.doesNotMatch(all, /sealed|1-year warranty/, id);
+    assert.match(all, /Ex-UK/);
+  }
 });

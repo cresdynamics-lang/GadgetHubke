@@ -1072,7 +1072,370 @@ const pm17: ModelEditorial = {
   storages: pro17Storages("iPhone 17 Pro Max", PM17_BODY, "6.9-inch"),
 };
 
+// ---------------------------------------------------------------- iPhone 16 series (Ex-UK only)
+
+const EX_TERMS =
+  "Ex-UK means a UK-used iPhone. Condition and warranty terms are stated on your GadgetHub invoice, so ask us on WhatsApp before you buy.";
+
+function whyBuyExUk(name: string): EditorialSection {
+  return {
+    id: "why-gadgethub",
+    heading: "Why buy from GadgetHub",
+    paragraphs: [TRUST],
+    list: [
+      `Genuine Apple: every ${name} we sell is a genuine UK-used iPhone, not a copy or a refurbished clone.`,
+      `Clear terms: ${EX_TERMS}`,
+      "Payment: M-Pesa STK Push at checkout, M-Pesa in store, or Lipa Mdogo Mdogo, our in-house plan: a 40% deposit, then the balance over 1 to 6 months.",
+      `See it first: ${STORE.address}.`,
+      "Delivery: anywhere in Kenya, from KES 1,500.",
+      `Help: WhatsApp us on ${STORE.whatsapp} to confirm colour, condition and stock before you pay.`,
+    ],
+  };
+}
+
+const whatComes: EditorialSection = {
+  id: "in-the-box",
+  heading: "What comes with it",
+  paragraphs: ["What is included with an Ex-UK unit can vary. We confirm exactly what comes with your phone on WhatsApp before you pay, and it is listed on your invoice."],
+};
+
+const kenyaTermsExUk: EditorialSection = {
+  ...kenyaTerms,
+  list: [
+    ...(kenyaTerms.list ?? []).slice(0, 3),
+    `Warranty: ${EX_TERMS}`,
+    "Returns: report faulty, damaged or not-as-described items within 7 days of delivery, and transit damage within 48 hours with photos. Approved refunds are paid within 7 business days after inspection.",
+  ],
+};
+
+const exList = (c: EditorialCtx) => c.storages.filter((s) => c.exUk(s) > 0);
+const exSentence = (c: EditorialCtx) => joinList(exList(c).map((s) => `${kes(c.exUk(s))} for ${s}`));
+const exFrom = (c: EditorialCtx) => fromExUk(c);
+const exPriceList = (c: EditorialCtx) => exList(c).map((s) => `${s}: ${kes(c.exUk(s))} Ex-UK`);
+
+function exLipa(c: EditorialCtx, s: string): string {
+  const e = c.exUk(s);
+  return e ? `For the ${s}, pay a ${kes(plan6(e).depositKes)} deposit, then ${kes(plan6(e).monthlyKes)} a month for 6 months. Shorter plans cost less.` : "";
+}
+
+function feed16(model: string, storage: string, colours: string, body: string): string {
+  return `Apple ${model} with ${storage} of storage, sold Ex-UK (UK-used) by GadgetHub in Nairobi, Kenya. Condition, included items and warranty terms are stated on the GadgetHub invoice. Colours: ${colours}. ${body}`;
+}
+
+type I16 = {
+  name: string; short: string; metaBit: string; colours: string; body: string; small: string; large: string;
+  smallFit: string; largeFit: string; feedSmall: string; feedLarge: string;
+};
+
+function storages16(o: I16): Record<string, EditorialStorage> {
+  const one = (s: string, fit: string, feedTitle: string, isSmall: boolean): EditorialStorage => ({
+    title: `${o.name} ${s} Price in Kenya, Ex-UK | GadgetHub`,
+    metaDescription: (c) =>
+      `${o.name} ${s} Ex-UK for ${kes(c.exUk(s))} at GadgetHub. ${o.metaBit}. M-Pesa or Lipa Mdogo Mdogo, delivery in Kenya.`,
+    h1: `Apple ${o.name} ${s}, Ex-UK`,
+    intro: (c) => {
+      const other = isSmall ? o.large : o.small;
+      const d = Math.abs(c.exUk(other) - c.exUk(s));
+      return `The ${o.name} ${s} costs ${kes(c.exUk(s))} Ex-UK at GadgetHub in Nairobi.${c.exUk(other) && d ? ` ${isSmall ? `It is the lowest price into the ${o.name}, ${kes(d)} less than the ${other}.` : `It doubles the storage of the ${other} for ${kes(d)} more.`}` : ""} ${o.short}, in ${o.colours}. Ex-UK means a UK-used unit; condition and warranty terms are on your invoice. Pay by M-Pesa or Lipa Mdogo Mdogo, and collect in Nairobi CBD or have it delivered.`;
+    },
+    fit: () => fit,
+    faq: (c) => [
+      { question: `How much is the ${o.name} ${s} in Kenya?`, answer: `It is ${kes(c.exUk(s))} Ex-UK at GadgetHub in Nairobi CBD.`, replaces: /^How much is/ },
+      { question: `Can I pay for the ${o.name} ${s} in instalments?`, answer: `Yes, with Lipa Mdogo Mdogo. ${exLipa(c, s)}`.trim(), replaces: /instalments\?$/ },
+      { question: `Is the ${o.name} ${s} new?`, answer: `No. We sell the ${o.name} Ex-UK: a genuine UK-used iPhone. Its condition and warranty terms are stated on your invoice, and we can share photos and battery health on WhatsApp before you pay.` },
+      { question: `Which colours are available for the ${s}?`, answer: `The ${o.name} comes in ${o.colours}. Ex-UK colour stock changes, so we confirm yours on WhatsApp before you pay.`, replaces: /^What colours/ },
+    ],
+    feedTitle,
+    feedDescription: feed16(o.name, s, o.colours, o.body),
+    feedExUkTitle: feedTitle,
+    feedExUkDescription: feed16(o.name, s, o.colours, o.body),
+  });
+  return {
+    [o.small]: one(o.small, o.smallFit, o.feedSmall, true),
+    [o.large]: one(o.large, o.largeFit, o.feedLarge, false),
+  };
+}
+
+const I16_COLOURS = "Black, Pink, Teal, Ultramarine and White";
+const I16_BODY =
+  "The iPhone 16 has a 6.1-inch Super Retina XDR display (2556×1179, 460 ppi) with Dynamic Island. It runs on the A18 chip and supports Apple Intelligence. The rear cameras are a 48MP Fusion camera and a 12MP Ultra Wide camera; the front camera is 12MP TrueDepth. Camera Control and the Action button are included. Apple rates battery life at up to 22 hours of video playback for a new battery. Charging is through USB-C, with MagSafe support. Connectivity: 5G and Wi-Fi 7, with Face ID and Crash Detection. Build: aluminium frame with Ceramic Shield, IP68 water resistance to 6 metres for 30 minutes, 170 g.";
+
+const i16: ModelEditorial = {
+  seoTitle: "iPhone 16 Price in Kenya: Ex-UK 128GB, 256GB | GadgetHub",
+  metaDescription: (c) =>
+    `iPhone 16 Ex-UK from ${kes(exFrom(c))} at GadgetHub Nairobi. A18 chip, 48MP camera, Camera Control. M-Pesa or Lipa Mdogo Mdogo, delivery across Kenya.`,
+  h1: "Apple iPhone 16, Ex-UK",
+  intro: (c) =>
+    `The iPhone 16 is a strong value iPhone for Kenya: the A18 chip, a 48MP Fusion camera, Camera Control and Apple Intelligence, for much less than a new model. GadgetHub sells it Ex-UK (UK-used) for ${exSentence(c)}, in ${I16_COLOURS}. Condition and warranty terms are on your invoice, and you can check the phone before you pay. Collect in Nairobi CBD, or we deliver across Kenya.`,
+  bestFor: "buyers who want a recent iPhone with a 48MP camera and Apple Intelligence at an Ex-UK price.",
+  keyFeatures: [
+    { title: "A18 chip.", body: "Quick for WhatsApp, M-Pesa, banking apps, games and Apple Intelligence." },
+    { title: "48MP Fusion camera.", body: "Sharp daylight and low-light photos, with a 12MP Ultra Wide for groups and landscapes." },
+    { title: "Camera Control.", body: "A dedicated button to open the camera, shoot and adjust settings without touching the screen." },
+    { title: "6.1-inch Super Retina XDR display with Dynamic Island.", body: "A comfortable one-hand size with a sharp 460 ppi screen." },
+    { title: "Action button.", body: "Set it for Silent, a Shortcut, the torch and more." },
+    { title: "USB-C, MagSafe and Wi-Fi 7.", body: "The same cable as your other devices, snap-on chargers and fast Wi-Fi." },
+    { title: "IP68 water resistance.", body: "Rated to 6 m for 30 minutes, so rain and splashes are covered." },
+  ],
+  sections: (c) => {
+    const p17 = c.other("iphone-17");
+    const p15 = c.other("iphone-15");
+    return [
+      {
+        id: "overview",
+        heading: "Overview",
+        paragraphs: [
+          `The iPhone 16 arrived with Apple Intelligence, Camera Control and the A18 chip, and as an Ex-UK phone it is one of the most affordable ways to get them. GadgetHub sells it UK-used in ${joinList(exList(c))}, in ${I16_COLOURS}.`,
+          `Compared with the iPhone 15, it adds the A18 chip (the 15 has the A16 Bionic), Camera Control, the Action button and up to 22 hours of video playback instead of 20.${otherPrices(p15) ? ` The iPhone 15 costs ${otherPrices(p15)}.` : ""}${otherPrices(p17) ? ` If you want the 120Hz screen, the iPhone 17 costs ${otherPrices(p17)}.` : ""}`,
+        ],
+        list: exPriceList(c),
+      },
+      {
+        id: "design",
+        heading: "Design and display",
+        paragraphs: [
+          "The iPhone 16 has an aluminium frame with Ceramic Shield on the front, weighs 170 g and is rated IP68 (6 m for 30 minutes). The 6.1-inch Super Retina XDR display (2556×1179, 460 ppi) runs at 60Hz and has the Dynamic Island for Live Activities and alerts.",
+          "On the side are Camera Control and the Action button, which you set for Silent, a Shortcut, the torch and more.",
+        ],
+      },
+      {
+        id: "performance",
+        heading: "Performance",
+        paragraphs: [
+          "The A18 chip keeps everyday apps, games and photo editing smooth and runs Apple Intelligence features on the phone. 5G and Wi-Fi 7 keep downloads and video calls fast, and Face ID and Crash Detection are built in.",
+        ],
+      },
+      {
+        id: "camera",
+        heading: "Camera",
+        paragraphs: [
+          "The 48MP Fusion main camera takes detailed photos in daylight and dim rooms, and the 12MP Ultra Wide covers groups, landscapes and interiors. The 12MP TrueDepth front camera handles selfies and video calls, and Camera Control lets you shoot and adjust settings with one button.",
+        ],
+      },
+      {
+        id: "battery",
+        heading: "Battery and charging",
+        paragraphs: [
+          "Apple rates the iPhone 16 at up to 22 hours of video playback with a new battery. On an Ex-UK unit, ask us for the battery health figure before you buy; it is checked before sale. The phone charges over USB-C and works with MagSafe chargers and cases.",
+        ],
+      },
+      whyBuyExUk("iPhone 16"),
+      whatComes,
+      kenyaTermsExUk,
+    ];
+  },
+  specs: [
+    { label: "Condition", value: "Ex-UK (UK-used); terms on invoice" },
+    { label: "Display", value: "6.1-inch Super Retina XDR, 2556×1179 (460 ppi), 60Hz, Dynamic Island" },
+    { label: "Chip", value: "A18" },
+    { label: "Rear cameras", value: "48MP Fusion; 12MP Ultra Wide" },
+    { label: "Front camera", value: "12MP TrueDepth" },
+    { label: "Battery", value: "Up to 22 hours video playback (Apple claim, new battery)" },
+    { label: "Port and charging", value: "USB-C; MagSafe" },
+    { label: "Connectivity", value: "5G, Wi-Fi 7" },
+    { label: "Controls", value: "Camera Control, Action button, Face ID" },
+    { label: "Safety", value: "Crash Detection" },
+    { label: "Build", value: "Aluminium frame; Ceramic Shield" },
+    { label: "Water resistance", value: "IP68 (6 m for 30 minutes)" },
+    { label: "Weight", value: "170 g" },
+    { label: "Colours", value: "Black, Pink, Teal, Ultramarine, White" },
+    { label: "Software", value: "Apple Intelligence" },
+    { label: "Storage", value: "128GB, 256GB" },
+  ],
+  faq: (c) => {
+    const p17 = c.other("iphone-17");
+    return [
+      { question: "What is the price of the iPhone 16 in Kenya?", answer: `At GadgetHub the iPhone 16 costs ${exSentence(c)}, Ex-UK.` },
+      { question: "Is the iPhone 16 at GadgetHub new?", answer: `No, we sell the iPhone 16 Ex-UK. ${EX_TERMS}` },
+      { question: "Is the Ex-UK iPhone 16 genuine?", answer: "Yes. It is a genuine UK-used Apple iPhone from an Apple Authorised Reseller, and we can share its photos and battery health on WhatsApp." },
+      { question: "Can I buy the iPhone 16 on Lipa Mdogo Mdogo?", answer: `Yes. ${exLipa(c, exList(c)[0] ?? "128GB")}`.trim() },
+      { question: "Can I pay for the iPhone 16 by M-Pesa?", answer: "Yes, by M-Pesa STK Push at checkout or by M-Pesa in our shop." },
+      { question: "What is the difference between the iPhone 16 and the iPhone 15?", answer: "The iPhone 16 has the A18 chip instead of the A16 Bionic, adds Camera Control and the Action button, supports Apple Intelligence and Wi-Fi 7, and is rated for up to 22 hours of video playback instead of 20." },
+      { question: "iPhone 16 or iPhone 17?", answer: `The iPhone 17 adds a 6.3-inch 120Hz display, the A19 chip, a 48MP Ultra Wide and up to 30 hours of video.${otherPrices(p17) ? ` It costs ${otherPrices(p17)}.` : ""} The iPhone 16 is the lower-cost choice.` },
+      { question: "Which colours does the iPhone 16 come in?", answer: `${I16_COLOURS}. Ex-UK colour stock changes, so we confirm yours on WhatsApp.` },
+      { question: "Do you deliver the iPhone 16 outside Nairobi?", answer: "Yes, by courier anywhere in Kenya. We quote the fee and timeline on WhatsApp before you pay. Delivery starts from KES 1,500." },
+    ];
+  },
+  links: [
+    { href: "/iphone/iphone-17", text: "Compare with the iPhone 17" },
+    { href: "/iphone/iphone-16-pro", text: "iPhone 16 Pro Ex-UK price" },
+    { href: "/accessories", text: "iPhone 16 cases, MagSafe chargers and adapters" },
+    { href: "/lipa-mdogo-mdogo", text: "Buy the iPhone 16 on Lipa Mdogo Mdogo" },
+    { href: "/trade-in", text: "Trade in your old iPhone for an iPhone 16" },
+  ],
+  compareIds: ["iphone-17", "iphone-15"],
+  storages: storages16({
+    name: "iPhone 16",
+    short: "A18 chip, 48MP Fusion camera, Camera Control and a 6.1-inch display",
+    metaBit: "A18 chip, 48MP camera, Camera Control",
+    colours: I16_COLOURS,
+    body: I16_BODY,
+    small: "128GB",
+    large: "256GB",
+    smallFit: "128GB suits buyers who back photos up to iCloud or Google Photos and mostly use WhatsApp, social media, M-Pesa and streaming. If you film a lot of video or keep big games, take 256GB.",
+    largeFit: "256GB is the comfortable size: years of photos, a good amount of video and all your apps without managing storage. It is the better pick if you plan to keep the phone for several years.",
+    feedSmall: "Apple iPhone 16 128GB, Ex-UK (UK-used), Black, Pink, Teal, Ultramarine or White, A18 Chip, 48MP Camera, 5G",
+    feedLarge: "Apple iPhone 16 256GB, Ex-UK (UK-used), Black, Pink, Teal, Ultramarine or White, A18 Chip, 48MP Camera, 5G",
+  }),
+};
+
+const PRO16_COLOURS = "Black Titanium, Desert Titanium, Natural Titanium and White Titanium";
+const pro16Body = (size: string, res: string, hours: number, grams: number) =>
+  `It has a ${size} Super Retina XDR display (${res}, 460 ppi) with ProMotion at 120Hz and Dynamic Island. It runs on the A18 Pro chip and supports Apple Intelligence. The rear cameras are a 48MP Fusion camera, a 48MP Ultra Wide camera and a 12MP 5x Telephoto camera; the front camera is 12MP TrueDepth. Camera Control and the Action button are included. Apple rates battery life at up to ${hours} hours of video playback for a new battery. The port is USB-C (USB 3), with MagSafe support. Connectivity: 5G and Wi-Fi 7, with Face ID and Crash Detection. Build: titanium frame with Ceramic Shield, IP68 water resistance to 6 metres for 30 minutes, ${grams} g.`;
+
+function pro16(o: {
+  id: string; name: string; size: string; res: string; hours: number; grams: number;
+  prevName: string; prevId: string; prevHours: number; prevChip: string; prevTele: string;
+  nextName: string; nextId: string; nextHours: number;
+  small: string; large: string; smallFit: string; largeFit: string; title: string; link: EditorialLink;
+}): ModelEditorial {
+  const body = pro16Body(o.size, o.res, o.hours, o.grams);
+  return {
+    seoTitle: o.title,
+    metaDescription: (c) =>
+      `${o.name} Ex-UK from ${kes(exFrom(c))}. A18 Pro, 5x Telephoto, ${o.size} 120Hz display, titanium. M-Pesa or Lipa Mdogo Mdogo, delivery in Kenya.`,
+    h1: `Apple ${o.name}, Ex-UK`,
+    intro: (c) =>
+      `The ${o.name} gives you Pro cameras with a 5x Telephoto, the A18 Pro chip and a ${o.size} 120Hz ProMotion display in a titanium frame, at an Ex-UK price. GadgetHub sells it UK-used for ${exSentence(c)}, in ${PRO16_COLOURS}. Condition and warranty terms are on your invoice, and you can check the phone before you pay. Collect in Nairobi CBD, or we deliver across Kenya.`,
+    bestFor: `buyers who want Pro cameras and a 5x zoom at an Ex-UK price${o.size === "6.9-inch" ? ", on a big screen" : ", in a compact size"}.`,
+    keyFeatures: [
+      { title: "12MP 5x Telephoto.", body: "Real optical zoom for stage shows, sport and wildlife." },
+      { title: "48MP Fusion and 48MP Ultra Wide.", body: "Detailed main shots and sharp wide and macro-style shots." },
+      { title: "A18 Pro chip.", body: "Pro speed for 4K editing, gaming and Apple Intelligence." },
+      { title: `${o.size} ProMotion display at 120Hz.`, body: `Smooth scrolling and video on a sharp ${o.res} screen.` },
+      { title: "Titanium frame with Ceramic Shield.", body: `Strong and light at ${o.grams} g, rated IP68.` },
+      { title: `Up to ${o.hours} hours of video playback.`, body: "Apple's figure for a new battery; ask us for the battery health of your unit." },
+      { title: "USB-C at USB 3 speed.", body: "Move long 4K clips to a computer or drive quickly." },
+    ],
+    sections: (c) => {
+      const prev = c.other(o.prevId);
+      const next = c.other(o.nextId);
+      return [
+        {
+          id: "overview",
+          heading: "Overview",
+          paragraphs: [
+            `The ${o.name} was Apple's 2024 Pro iPhone${o.size === "6.9-inch" ? " in the big size" : ""}, and as an Ex-UK phone it brings titanium, a 5x Telephoto and ProMotion within reach. GadgetHub sells it UK-used in ${joinList(exList(c))}, in ${PRO16_COLOURS}.`,
+            `Against the ${o.prevName}, it has the A18 Pro instead of the ${o.prevChip}, a 48MP Ultra Wide instead of 12MP, Camera Control, and up to ${o.hours} hours of video instead of ${o.prevHours}.${otherPrices(prev) ? ` The ${o.prevName} costs ${otherPrices(prev)}.` : ""}`,
+          ],
+          list: exPriceList(c),
+        },
+        {
+          id: "design",
+          heading: "Design and display",
+          paragraphs: [
+            `The titanium frame with Ceramic Shield on the front keeps the ${o.name} strong at ${o.grams} g, and it is rated IP68 (6 m for 30 minutes). The ${o.size} Super Retina XDR display (${o.res}, 460 ppi) runs ProMotion at 120Hz, and the Dynamic Island keeps Live Activities in view. Camera Control and the Action button sit on the side.`,
+          ],
+        },
+        {
+          id: "performance",
+          heading: "Performance",
+          paragraphs: [
+            "The A18 Pro chip handles 4K editing, long gaming sessions and Apple Intelligence comfortably. 5G and Wi-Fi 7 keep downloads fast, and the USB-C port runs at USB 3 speed for quick transfers of large video files. Face ID and Crash Detection are built in.",
+          ],
+        },
+        {
+          id: "camera",
+          heading: "Camera",
+          paragraphs: [
+            `The ${o.name} has three rear cameras, and the 12MP TrueDepth front camera handles selfies and video calls. Compared with the ${o.prevName}'s ${o.prevTele} telephoto, the 48MP Ultra Wide is the big step up for wide and close-up shots.`,
+          ],
+          list: ["48MP Fusion main camera", "48MP Ultra Wide camera", "12MP 5x Telephoto camera", "12MP TrueDepth front camera"],
+        },
+        {
+          id: "battery",
+          heading: "Battery and charging",
+          paragraphs: [
+            `Apple rates the ${o.name} at up to ${o.hours} hours of video playback with a new battery. On an Ex-UK unit, ask us for the battery health figure before you buy. It charges over USB-C and works with MagSafe chargers and cases.${otherPrices(next) ? ` If you want a newer battery and three 48MP cameras, the ${o.nextName} (up to ${o.nextHours} hours) costs ${otherPrices(next)}.` : ""}`,
+          ],
+        },
+        whyBuyExUk(o.name),
+        whatComes,
+        kenyaTermsExUk,
+      ];
+    },
+    specs: [
+      { label: "Condition", value: "Ex-UK (UK-used); terms on invoice" },
+      { label: "Display", value: `${o.size} Super Retina XDR, ${o.res} (460 ppi), ProMotion 120Hz, Dynamic Island` },
+      { label: "Chip", value: "A18 Pro" },
+      { label: "Rear cameras", value: "48MP Fusion; 48MP Ultra Wide; 12MP 5x Telephoto" },
+      { label: "Front camera", value: "12MP TrueDepth" },
+      { label: "Battery", value: `Up to ${o.hours} hours video playback (Apple claim, new battery)` },
+      { label: "Port and charging", value: "USB-C (USB 3); MagSafe" },
+      { label: "Connectivity", value: "5G, Wi-Fi 7" },
+      { label: "Controls", value: "Camera Control, Action button, Face ID" },
+      { label: "Safety", value: "Crash Detection" },
+      { label: "Build", value: "Titanium frame; Ceramic Shield" },
+      { label: "Water resistance", value: "IP68 (6 m for 30 minutes)" },
+      { label: "Weight", value: `${o.grams} g` },
+      { label: "Colours", value: "Black Titanium, Desert Titanium, Natural Titanium, White Titanium" },
+      { label: "Software", value: "Apple Intelligence" },
+      { label: "Storage", value: `${o.small}, ${o.large}` },
+    ],
+    faq: (c) => {
+      const next = c.other(o.nextId);
+      return [
+        { question: `What is the price of the ${o.name} in Kenya?`, answer: `At GadgetHub the ${o.name} costs ${exSentence(c)}, Ex-UK.` },
+        { question: `Is the ${o.name} at GadgetHub new?`, answer: `No, we sell the ${o.name} Ex-UK. ${EX_TERMS}` },
+        { question: `Is the Ex-UK ${o.name} genuine?`, answer: "Yes. It is a genuine UK-used Apple iPhone from an Apple Authorised Reseller, and we can share its photos and battery health on WhatsApp." },
+        { question: `Can I buy the ${o.name} on Lipa Mdogo Mdogo?`, answer: `Yes. ${exLipa(c, exList(c)[0] ?? o.small)}`.trim() },
+        { question: `Can I pay for the ${o.name} by M-Pesa?`, answer: "Yes, by M-Pesa STK Push at checkout or by M-Pesa in our shop." },
+        { question: `What is the difference between the ${o.name} and the ${o.prevName}?`, answer: `The ${o.name} has the A18 Pro instead of the ${o.prevChip}, a 48MP Ultra Wide instead of 12MP, Camera Control, and up to ${o.hours} hours of video playback instead of ${o.prevHours}.` },
+        { question: `${o.name} or ${o.nextName}?`, answer: `The ${o.nextName} has the A19 Pro, three 48MP cameras including the Telephoto, and up to ${o.nextHours} hours of video playback.${otherPrices(next) ? ` It costs ${otherPrices(next)}.` : ""} The ${o.name} is the lower-cost way to get a 5x zoom and titanium.` },
+        { question: `Which colours does the ${o.name} come in?`, answer: `${PRO16_COLOURS}. Ex-UK colour stock changes, so we confirm yours on WhatsApp.` },
+        { question: `Do you deliver the ${o.name} outside Nairobi?`, answer: "Yes, by courier anywhere in Kenya. We quote the fee and timeline on WhatsApp before you pay." },
+      ];
+    },
+    links: [
+      { href: `/iphone/${o.nextId}`, text: `Compare with the ${o.nextName}` },
+      o.link,
+      { href: "/accessories", text: `${o.name} cases and MagSafe chargers` },
+      { href: "/lipa-mdogo-mdogo", text: `Buy the ${o.name} on Lipa Mdogo Mdogo` },
+      { href: "/trade-in", text: `Trade in your old iPhone for an ${o.name}` },
+    ],
+    compareIds: [o.prevId, o.nextId],
+    storages: storages16({
+      name: o.name,
+      short: `A18 Pro, a 5x Telephoto and a ${o.size} 120Hz display in titanium`,
+      metaBit: `A18 Pro, 5x zoom, ${o.size} 120Hz, titanium`,
+      colours: PRO16_COLOURS,
+      body,
+      small: o.small,
+      large: o.large,
+      smallFit: o.smallFit,
+      largeFit: o.largeFit,
+      feedSmall: `Apple ${o.name} ${o.small}, Ex-UK (UK-used), Titanium, A18 Pro, 5x Telephoto, ${o.size} 120Hz ProMotion, 5G`,
+      feedLarge: `Apple ${o.name} ${o.large}, Ex-UK (UK-used), Titanium, A18 Pro, 5x Telephoto, ${o.size} 120Hz ProMotion, 5G`,
+    }),
+  };
+}
+
+const pro16m = pro16({
+  id: "iphone-16-pro", name: "iPhone 16 Pro", size: "6.3-inch", res: "2622×1206", hours: 27, grams: 199,
+  prevName: "iPhone 15 Pro", prevId: "iphone-15-pro", prevHours: 23, prevChip: "A17 Pro", prevTele: "12MP 3x",
+  nextName: "iPhone 17 Pro", nextId: "iphone-17-pro", nextHours: 33,
+  small: "128GB", large: "256GB",
+  smallFit: "128GB suits buyers who back up to iCloud and mostly take photos and short clips. If you shoot a lot of 4K video with the Pro cameras, take 256GB.",
+  largeFit: "256GB is the better fit for a Pro camera phone: room for 4K video, a big photo library and all your apps, for years.",
+  title: "iPhone 16 Pro Price in Kenya: Ex-UK 128GB, 256GB",
+  link: { href: "/iphone/iphone-16-pro-max", text: "See the bigger iPhone 16 Pro Max" },
+});
+
+const pm16 = pro16({
+  id: "iphone-16-pro-max", name: "iPhone 16 Pro Max", size: "6.9-inch", res: "2868×1320", hours: 33, grams: 227,
+  prevName: "iPhone 15 Pro Max", prevId: "iphone-15-pro-max", prevHours: 29, prevChip: "A17 Pro", prevTele: "12MP 5x",
+  nextName: "iPhone 17 Pro Max", nextId: "iphone-17-pro-max", nextHours: 39,
+  small: "256GB", large: "512GB",
+  smallFit: "256GB suits most Pro Max buyers: thousands of photos, plenty of 4K video and all your apps, especially with iCloud backup.",
+  largeFit: "512GB is for people who film a lot of 4K, keep large offline libraries of films, music or games, or never want to delete anything.",
+  title: "iPhone 16 Pro Max Price in Kenya: Ex-UK 256GB, 512GB",
+  link: { href: "/iphone/iphone-16-pro", text: "See the compact iPhone 16 Pro" },
+});
+
 export const iphoneEditorial: Record<string, ModelEditorial> = {
+  "iphone-16": i16,
+  "iphone-16-pro": pro16m,
+  "iphone-16-pro-max": pm16,
   "iphone-17": i17,
   "iphone-17-pro": pro17,
   "iphone-17-pro-max": pm17,
