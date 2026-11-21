@@ -839,7 +839,7 @@ const i17: ModelEditorial = {
     "256GB": {
       title: "iPhone 17 256GB Price in Kenya, New and Ex-UK",
       metaDescription: (c) =>
-        `iPhone 17 256GB: ${both(c, "256GB")} at GadgetHub Nairobi. 120Hz display, A19, 48MP cameras. M-Pesa or Lipa Mdogo Mdogo, delivery in Kenya.`,
+        `iPhone 17 256GB: ${both(c, "256GB")} at GadgetHub. 120Hz display, A19, 48MP cameras. M-Pesa or Lipa Mdogo Mdogo, delivery in Kenya.`,
       h1: "Apple iPhone 17 256GB, New and Ex-UK",
       intro: (c) =>
         `The iPhone 17 256GB costs ${both(c, "256GB")} at GadgetHub. It gives you the 6.3-inch 120Hz ProMotion display, the A19 chip and two 48MP cameras, with 256GB for years of photos, apps and chats. Choose any of the five colours: ${I17_COLOURS}. New units are sealed with a 1-year warranty; Ex-UK terms are on your invoice. Pay by M-Pesa or Lipa Mdogo Mdogo and collect in Nairobi CBD or get it delivered.`,
