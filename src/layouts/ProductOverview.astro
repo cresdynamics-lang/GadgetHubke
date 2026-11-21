@@ -61,9 +61,6 @@ const gallery =
   product.gallery && product.gallery.length > 0
     ? product.gallery
     : [{ src: product.image.src, alt: product.image.alt }];
-const lipaMonths = product.lipaMonths ?? 0;
-const lipaFrom =
-  lipaMonths > 0 ? Math.ceil(basePrice / lipaMonths) : 0;
 const pageUrl = new URL(seo ? `/iphone/${seo.id}` : product.overviewHref, site.url).href;
 const jsonLd = seo
   ? buildIphoneProductJsonLd(seo, {
@@ -139,7 +136,7 @@ const pageDescription = seo?.metaDescription ?? product.tagline;
         }
       </div>
 
-      <div class="pdp__buy" id="buy" data-configurator data-lipa-months={lipaMonths || ""} data-channel={initialChannel}>
+      <div class="pdp__buy" id="buy" data-configurator data-channel={initialChannel}>
         <nav class="pdp__crumb" aria-label="Breadcrumb">
           <a href="/shop">Shop</a>
           <span aria-hidden="true">/</span>
@@ -160,18 +157,6 @@ const pageDescription = seo?.metaDescription ?? product.tagline;
               </span>
             </span>
           </p>
-          {
-            lipaMonths > 0 ? (
-              <p class="pdp__lipa">
-                or{" "}
-                <span data-lipa-price>
-                  {`KSh ${lipaFrom.toLocaleString("en-KE")}`}
-                </span>
-                /mo. for {lipaMonths} mo. with{" "}
-                <a href="/lipa-mdogo-mdogo">Lipa Mdogo Mdogo</a>
-              </p>
-            ) : null
-          }
         </div>
 
         <fieldset class="pdp__fieldset">
@@ -379,7 +364,6 @@ const pageDescription = seo?.metaDescription ?? product.tagline;
   const root = document.querySelector("[data-configurator]");
   if (!root) throw new Error("configurator missing");
 
-  const lipaMonths = Number(root.getAttribute("data-lipa-months") || 0);
   let channel = root.getAttribute("data-channel") || "new";
 
   function selected() {
@@ -411,11 +395,6 @@ const pageDescription = seo?.metaDescription ?? product.tagline;
     const priceHost = root.querySelector("[data-config-price]");
     const amount = priceHost?.querySelector(".price__amount") || priceHost;
     if (amount) amount.textContent = formatKes(priceKes);
-
-    const lipaEl = root.querySelector("[data-lipa-price]");
-    if (lipaEl && lipaMonths > 0) {
-      lipaEl.textContent = formatKes(Math.ceil(priceKes / lipaMonths));
-    }
 
     const stickyPrice = document.querySelector("[data-sticky-price]");
     const floatDesc = document.querySelector("[data-float-desc]");
@@ -649,18 +628,6 @@ const pageDescription = seo?.metaDescription ?? product.tagline;
     font-size: clamp(1.15rem, 2.5vw, 1.35rem);
     font-weight: var(--font-weight-semibold);
     margin: 0 0 var(--space-2);
-  }
-
-  .pdp__lipa {
-    margin: 0;
-    font-size: var(--text-sm);
-    color: var(--color-fg-muted);
-    line-height: var(--leading-snug);
-  }
-
-  .pdp__lipa a {
-    font-weight: var(--font-weight-medium);
-    color: var(--color-fg);
   }
 
   .pdp__fieldset {

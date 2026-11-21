@@ -62,7 +62,6 @@ export type Product = {
   /** Large battery callout */
   batteryStat?: { value: string; label: string };
   /** Show Lipa installment line (months) */
-  lipaMonths?: number;
   /** Sibling model link (e.g. Pro ↔ Pro Max) */
   related?: { label: string; href: string };
   apps: string[];
@@ -217,7 +216,6 @@ export const products: Product[] = [
       { id: "star-white", label: "Star White", hex: "#F4F1EA" },
       { id: "night-sky", label: "Night Sky", hex: "#0C0C0E" },
     ],
-    lipaMonths: 24,
     highlights: [
       { label: "Inner display", value: "7.6″ XDR" },
       { label: "Outer display", value: "5.4″ XDR" },
@@ -361,7 +359,6 @@ export const products: Product[] = [
       { id: "2tb", label: "2TB", priceKes: 258000 },
     ],
     colors: pro18Colors,
-    lipaMonths: 24,
     related: {
       label: "iPhone 18 Pro Max",
       href: "/shop/iphone/iphone-pro-max",
@@ -573,7 +570,6 @@ export const products: Product[] = [
       { id: "2tb", label: "2TB", priceKes: 405000 }
     ],
     colors: pro18Colors,
-    lipaMonths: 24,
     related: {
       label: "iPhone 18 Pro",
       href: "/shop/iphone/iphone-pro",
@@ -853,7 +849,6 @@ export const products: Product[] = [
       { id: "space-black", label: "Space Black", hex: "#1C1C1E" },
       { id: "light-gold", label: "Light Gold", hex: "#E8D5B5" },
     ],
-    lipaMonths: 24,
     related: {
       label: "iPhone 18 Pro",
       href: "/shop/iphone/iphone-pro",
@@ -1105,7 +1100,6 @@ export const products: Product[] = [
       { id: "sage", label: "Sage", hex: "#A8B89A" },
       { id: "black", label: "Black", hex: "#1C1C1E" },
     ],
-    lipaMonths: 24,
     related: {
       label: "iPhone Air",
       href: "/shop/iphone/iphone-air",
@@ -1353,7 +1347,6 @@ export const products: Product[] = [
       { id: "white", label: "White", hex: "#F5F5F7" },
       { id: "black", label: "Black", hex: "#1C1C1E" },
     ],
-    lipaMonths: 24,
     related: {
       label: "iPhone 17",
       href: "/shop/iphone/iphone-17",
@@ -1589,7 +1582,6 @@ export const products: Product[] = [
       { id: "white", label: "White", hex: "#F5F5F7" },
       { id: "black", label: "Black", hex: "#1C1C1E" },
     ],
-    lipaMonths: 24,
     related: {
       label: "iPhone 17",
       href: "/shop/iphone/iphone-17",

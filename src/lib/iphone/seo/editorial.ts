@@ -20,6 +20,8 @@ export type EditorialLink = { href: string; text: string };
 export type EditorialCtx = {
   /** New price of this model at a storage ("256GB"), 0 when not listed. */
   price: (storage: string) => number;
+  /** Ex-UK price at a storage, 0 when not listed. */
+  exUk: (storage: string) => number;
   /** Listed storages, smallest first. */
   storages: string[];
   /** Lowest listed New and Ex-UK price of another model (by SEO id). 0 when not listed. */
@@ -35,6 +37,9 @@ export type EditorialStorage = {
   faq: (c: EditorialCtx) => (SeoFaq & { replaces?: RegExp })[];
   feedTitle: string;
   feedDescription: string;
+  /** Feed copy for the Ex-UK item of this storage, when it is sold Ex-UK. */
+  feedExUkTitle?: string;
+  feedExUkDescription?: string;
 };
 
 export type ModelEditorial = {
@@ -67,9 +72,16 @@ function otherPrices(o: { newKes: number; exUkKes: number }): string {
   return bits.join(" or ");
 }
 
-/** "256GB: KES 203,000" for every listed storage. */
+/** "256GB: KES 203,000" (plus "new, KES n Ex-UK" when sold Ex-UK) for every listed storage. */
 function priceList(c: EditorialCtx): string[] {
-  return c.storages.filter((s) => c.price(s) > 0).map((s) => `${s}: ${kes(c.price(s))}`);
+  return c.storages
+    .filter((s) => c.price(s) > 0 || c.exUk(s) > 0)
+    .map((s) => `${s}: ${both(c, s)}`);
+}
+
+/** "KES 158,000 new or KES 136,000 Ex-UK", or whichever is listed. */
+function both(c: EditorialCtx, s: string): string {
+  return otherPrices({ newKes: c.price(s), exUkKes: c.exUk(s) });
 }
 
 /** "KES 203,000 for 256GB, KES 234,000 for 512GB and KES 292,000 for 1TB" */
@@ -85,6 +97,12 @@ function lipaExample(c: EditorialCtx, storage: string): string {
 }
 
 const fromKes = (c: EditorialCtx) => Math.min(...c.storages.map(c.price).filter((n) => n > 0));
+const fromExUk = (c: EditorialCtx) => {
+  const xs = c.storages.map(c.exUk).filter((n) => n > 0);
+  return xs.length ? Math.min(...xs) : 0;
+};
+/** Lowest price in either condition. */
+const fromAny = (c: EditorialCtx) => Math.min(...[fromKes(c), fromExUk(c)].filter((n) => n > 0 && Number.isFinite(n)));
 
 const STORE = {
   address: "Norwich Union House, Suite 15, 4th Floor, opposite the Hilton Hotel in Nairobi CBD",
@@ -94,6 +112,22 @@ const STORE = {
 
 const TRUST =
   "GadgetHub is an Apple Authorised Reseller and has served over a million customers across Kenya, including Nairobi's Japanese and Chinese communities.";
+
+const EX_UK_LINE =
+  "Ex-UK: UK-used units, sold at a lower price. Condition and warranty terms are stated on your GadgetHub invoice, so ask us on WhatsApp before you buy.";
+
+function whyBuyBoth(name: string): EditorialSection {
+  const s = whyBuy(name);
+  return {
+    ...s,
+    list: [
+      `Genuine and traceable: every new ${name} is sealed, and the serial number is printed on your invoice.`,
+      "Warranty: new units carry a 1-year warranty. Keep your GadgetHub invoice for support.",
+      EX_UK_LINE,
+      ...(s.list ?? []).slice(2),
+    ],
+  };
+}
 
 function whyBuy(name: string): EditorialSection {
   return {
@@ -131,6 +165,11 @@ const kenyaTerms: EditorialSection = {
     "Warranty: 1 year on new devices. Keep your GadgetHub invoice. Claims follow GadgetHub's Return & Refund Policy, not AppleCare retail terms.",
     "Returns: report faulty, damaged or not-as-described items within 7 days of delivery, and transit damage within 48 hours with photos. Sealed new devices can't be returned for a change of mind. Approved refunds are paid within 7 business days after inspection.",
   ],
+};
+
+const kenyaTermsBoth: EditorialSection = {
+  ...kenyaTerms,
+  list: [...(kenyaTerms.list ?? []).slice(0, 3), (kenyaTerms.list ?? [])[3], EX_UK_LINE, ...(kenyaTerms.list ?? []).slice(4)],
 };
 
 // ---------------------------------------------------------------- iPhone 18 Pro Max
@@ -654,7 +693,389 @@ const duo: ModelEditorial = {
   },
 };
 
+// ---------------------------------------------------------------- iPhone 17 series (New and Ex-UK)
+
+/** Feed opening and closing by condition, around the model's spec body. */
+function feed17(model: string, storage: string, colours: string, body: string, exUk: boolean): string {
+  const open = exUk
+    ? `Apple ${model} with ${storage} of storage, sold Ex-UK (UK-used) by GadgetHub in Nairobi, Kenya. Condition and warranty terms are stated on the GadgetHub invoice. Colours: ${colours}.`
+    : `Apple ${model} with ${storage} of storage, sold new and sealed by GadgetHub in Nairobi, Kenya. Colours: ${colours}.`;
+  return `${open} ${body} In the box: ${model}, USB-C Charge Cable and documentation.${exUk ? "" : " 1-year warranty."}`;
+}
+
+function lipaBoth(c: EditorialCtx, s: string): string {
+  const n = c.price(s);
+  const e = c.exUk(s);
+  const bits = [
+    n ? `new: a ${kes(plan6(n).depositKes)} deposit, then ${kes(plan6(n).monthlyKes)} a month for 6 months` : "",
+    e ? `Ex-UK: a ${kes(plan6(e).depositKes)} deposit, then ${kes(plan6(e).monthlyKes)} a month for 6 months` : "",
+  ].filter(Boolean);
+  return bits.length ? `For the ${s}, ${bits.join("; ")}. Shorter plans cost less.` : "";
+}
+
+const newOrExUk = (c: EditorialCtx, name: string, s: string): SeoFaq => ({
+  question: `Should I buy the ${name} ${s} new or Ex-UK?`,
+  answer:
+    c.price(s) && c.exUk(s)
+      ? `New is sealed with a 1-year warranty for ${kes(c.price(s))}. Ex-UK is a UK-used unit for ${kes(c.exUk(s))}, saving ${kes(c.price(s) - c.exUk(s))}; its condition and warranty terms are on your invoice. Choose new for the full warranty, or Ex-UK to save.`
+      : `We currently sell the ${s} ${c.price(s) ? "new" : "Ex-UK"} at ${kes(c.price(s) || c.exUk(s))}.`,
+});
+
+const I17_COLOURS = "Lavender, Mist Blue, Sage, White and Black";
+const I17_BODY =
+  "The iPhone 17 has a 6.3-inch Super Retina XDR display with ProMotion up to 120Hz, up to 3000 nits peak brightness and Dynamic Island. It runs on the A19 chip with a 5-core GPU and supports Apple Intelligence. The rear cameras are a 48MP Fusion Main camera with 2x optical-quality zoom and a 48MP Fusion Ultra Wide camera. The front camera is 18MP Center Stage with Dual Capture. Video records up to 4K at 60 fps in Dolby Vision. Camera Control and the Action button are included. Apple rates battery life at up to 30 hours of video playback. Charging is through USB-C, with MagSafe and Qi wireless support. Connectivity: 5G and Wi-Fi 7. Build: aluminium with a Ceramic Shield 2 front, IP68 water resistance to 6 metres for 30 minutes, 177 g.";
+
+const i17: ModelEditorial = {
+  seoTitle: "iPhone 17 Price in Kenya: New and Ex-UK | GadgetHub",
+  metaDescription: (c) =>
+    `iPhone 17 from ${kes(fromAny(c))}: ${both(c, c.storages[0])}. A19, 6.3-inch 120Hz display, 48MP cameras. M-Pesa, delivery across Kenya.`,
+  h1: "Apple iPhone 17, New and Ex-UK",
+  intro: (c) =>
+    `The iPhone 17 is Apple's standard iPhone for 2025, and the first standard model with a 120Hz ProMotion display. At GadgetHub in Nairobi it costs ${c.storages.map((s) => `${both(c, s)} for ${s}`).join("; ")}. It has the A19 chip, two 48MP cameras and up to 30 hours of video playback, in ${I17_COLOURS}. New units are sealed with a 1-year warranty. Collect in Nairobi CBD, or we deliver across Kenya.`,
+  bestFor: "everyday users who want a smooth 120Hz screen, strong cameras and all-day battery without paying for Pro.",
+  keyFeatures: [
+    { title: "ProMotion up to 120Hz on a standard iPhone.", body: "Scrolling, maps and games feel as smooth as on the Pro models." },
+    { title: "Up to 3000 nits peak brightness.", body: "The 6.3-inch screen stays readable outdoors in the Nairobi midday sun." },
+    { title: "A19 chip with a 5-core GPU.", body: "Fast for M-Pesa, WhatsApp, banking apps, games and Apple Intelligence." },
+    { title: "48MP Fusion Main camera with 2x optical-quality zoom.", body: "Sharp everyday photos, and a clean 2x for portraits without a separate telephoto." },
+    { title: "48MP Fusion Ultra Wide.", body: "Wide group shots, landscapes and interiors with real detail." },
+    { title: "18MP Center Stage front camera with Dual Capture.", body: "Group selfies and video calls stay framed, and you can record front and back at once." },
+    { title: "Up to 30 hours of video playback.", body: "A full day of calls, social media and streaming on one charge." },
+  ],
+  sections: (c) => {
+    const p16 = c.other("iphone-16");
+    return [
+      {
+        id: "overview",
+        heading: "Overview",
+        paragraphs: [
+          `The iPhone 17 brings features that used to be Pro-only, such as the 120Hz ProMotion display, to Apple's standard iPhone. GadgetHub sells it in two conditions: new and sealed with a 1-year warranty, or Ex-UK (UK-used) for less. All five colours are available: ${I17_COLOURS}.`,
+          `Moving up from an iPhone 16 or older, you get a bigger 6.3-inch screen (the iPhone 16 has 6.1 inches at 60Hz), a 48MP Ultra Wide instead of 12MP, and up to 30 hours of video instead of 22.${otherPrices(p16) ? ` The iPhone 16 costs ${otherPrices(p16)} if you want to spend less.` : ""}`,
+        ],
+        list: priceList(c),
+      },
+      {
+        id: "design",
+        heading: "Design and display",
+        paragraphs: [
+          "The iPhone 17 is built from aluminium and glass, with Ceramic Shield 2 on the front, and weighs 177 g. It is rated IP68, to 6 m for 30 minutes.",
+          "The 6.3-inch Super Retina XDR display (2622×1206, 460 ppi) adjusts up to 120Hz, so text and video move smoothly, and it reaches up to 3000 nits peak brightness for outdoor use. The Dynamic Island shows Live Activities and alerts, and the side has Camera Control and the Action button, which you set for Silent, Translation, Shortcuts and more.",
+        ],
+      },
+      {
+        id: "performance",
+        heading: "Performance",
+        paragraphs: [
+          "The A19 chip with a 5-core GPU keeps everyday apps, gaming and photo editing quick. Apple Intelligence features such as Writing Tools, Clean Up and visual intelligence run on the phone. 5G and Wi-Fi 7 keep downloads and video calls fast, and Face ID and Crash Detection are built in.",
+        ],
+      },
+      {
+        id: "camera",
+        heading: "Camera",
+        paragraphs: [
+          "Video records up to 4K at 60 fps in Dolby Vision, with ultra-stabilised video for walking shots and matatu rides.",
+        ],
+        list: [
+          "Main: 48MP Fusion, with 2x optical-quality zoom for portraits and closer shots.",
+          "Ultra Wide: 48MP Fusion (24MP by default) for groups, landscapes and rooms.",
+          "Front: 18MP Center Stage with flexible framing, group selfies and Dual Capture.",
+        ],
+      },
+      {
+        id: "battery",
+        heading: "Battery and charging",
+        paragraphs: [
+          "Apple rates the iPhone 17 at up to 30 hours of video playback. It charges over USB-C and supports MagSafe and Qi wireless charging. Only a USB-C cable is in the box, so add an adapter if you need one.",
+        ],
+      },
+      whyBuyBoth("iPhone 17"),
+      inTheBox("iPhone 17"),
+      kenyaTermsBoth,
+    ];
+  },
+  specs: [
+    { label: "Display", value: "6.3-inch Super Retina XDR, 2622×1206 (460 ppi), ProMotion up to 120Hz, up to 3000 nits peak, Dynamic Island" },
+    { label: "Chip", value: "A19, 5-core GPU" },
+    { label: "Main camera", value: "48MP Fusion Main, 2x optical-quality zoom" },
+    { label: "Ultra Wide", value: "48MP Fusion Ultra Wide (24MP by default)" },
+    { label: "Front camera", value: "18MP Center Stage, Dual Capture" },
+    { label: "Video", value: "Up to 4K 60 fps Dolby Vision; ultra-stabilised video" },
+    { label: "Battery", value: "Up to 30 hours video playback (Apple claim)" },
+    { label: "Charging", value: "USB-C; MagSafe and Qi wireless" },
+    { label: "Connectivity", value: "5G, Wi-Fi 7" },
+    { label: "Controls", value: "Camera Control, Action button, Face ID" },
+    { label: "Safety", value: "Crash Detection" },
+    { label: "Build", value: "Aluminium and glass; Ceramic Shield 2 front" },
+    { label: "Water resistance", value: "IP68 (6 m for 30 minutes)" },
+    { label: "Weight", value: "177 g" },
+    { label: "Colours", value: "Lavender, Mist Blue, Sage, White, Black" },
+    { label: "Software", value: "Apple Intelligence" },
+    { label: "Storage", value: "256GB" },
+  ],
+  faq: (c) => {
+    const s = c.storages[0];
+    const p18 = c.other("iphone-17-pro");
+    return [
+      { question: "What is the price of the iPhone 17 in Kenya?", answer: `At GadgetHub the iPhone 17 costs ${c.storages.map((x) => `${both(c, x)} for ${x}`).join("; ")}.` },
+      newOrExUk(c, "iPhone 17", s),
+      { question: "Is the iPhone 17 genuine?", answer: "Yes. GadgetHub is an Apple Authorised Reseller. New units are sealed with the serial number on your invoice; Ex-UK units are genuine UK-used iPhones." },
+      { question: "Does the iPhone 17 come with a warranty?", answer: "New units have a 1-year warranty. Ex-UK condition and warranty terms are stated on your invoice." },
+      { question: "Can I pay for the iPhone 17 by M-Pesa or in instalments?", answer: `Yes. Pay by M-Pesa STK Push at checkout or in store, or use Lipa Mdogo Mdogo. ${lipaBoth(c, s)}`.trim() },
+      { question: "What is the difference between the iPhone 17 and the iPhone 16?", answer: "The iPhone 17 has a 6.3-inch 120Hz ProMotion display (the 16 has 6.1 inches at 60Hz), the A19 chip instead of the A18, a 48MP Ultra Wide instead of 12MP, and up to 30 hours of video playback instead of 22." },
+      { question: "iPhone 17 or iPhone 17 Pro?", answer: `The 17 Pro adds the A19 Pro chip, a third 48MP Telephoto camera and up to 33 hours of video playback, in an aluminium unibody.${otherPrices(p18) ? ` It costs from ${otherPrices(p18)}.` : ""} Choose the iPhone 17 if you don't need the telephoto.` },
+      { question: "Which colours does the iPhone 17 come in?", answer: `${I17_COLOURS}. All five are available.` },
+      { question: "Do you deliver the iPhone 17 outside Nairobi?", answer: "Yes, by courier anywhere in Kenya. We quote the fee and timeline on WhatsApp before you pay. Delivery starts from KES 1,500." },
+    ];
+  },
+  links: [
+    { href: "/iphone/iphone-17-pro", text: "Compare with the iPhone 17 Pro" },
+    { href: "/iphone/iphone-16", text: "iPhone 16 price in Kenya" },
+    { href: "/accessories", text: "iPhone 17 cases, MagSafe chargers and adapters" },
+    { href: "/lipa-mdogo-mdogo", text: "Buy the iPhone 17 on Lipa Mdogo Mdogo" },
+    { href: "/trade-in", text: "Trade in your old iPhone for an iPhone 17" },
+  ],
+  compareIds: ["iphone-16", "iphone-17-pro"],
+  storages: {
+    "256GB": {
+      title: "iPhone 17 256GB Price in Kenya, New and Ex-UK",
+      metaDescription: (c) =>
+        `iPhone 17 256GB: ${both(c, "256GB")} at GadgetHub Nairobi. 120Hz display, A19, 48MP cameras. M-Pesa or Lipa Mdogo Mdogo, delivery in Kenya.`,
+      h1: "Apple iPhone 17 256GB, New and Ex-UK",
+      intro: (c) =>
+        `The iPhone 17 256GB costs ${both(c, "256GB")} at GadgetHub. It gives you the 6.3-inch 120Hz ProMotion display, the A19 chip and two 48MP cameras, with 256GB for years of photos, apps and chats. Choose any of the five colours: ${I17_COLOURS}. New units are sealed with a 1-year warranty; Ex-UK terms are on your invoice. Pay by M-Pesa or Lipa Mdogo Mdogo and collect in Nairobi CBD or get it delivered.`,
+      fit: () =>
+        "256GB is the size most iPhone 17 buyers need. It holds thousands of photos, a good amount of 4K video, your apps and years of WhatsApp history, especially if you back up to iCloud. Take the Ex-UK unit if you want the same phone for less and are happy with a UK-used device.",
+      faq: (c) => [
+        { question: "How much is the iPhone 17 256GB in Kenya?", answer: `It is ${both(c, "256GB")} at GadgetHub in Nairobi CBD.`, replaces: /^How much is/ },
+        { question: "Can I pay for the iPhone 17 256GB in instalments?", answer: `Yes, with Lipa Mdogo Mdogo. ${lipaBoth(c, "256GB")}`.trim(), replaces: /instalments\?$/ },
+        { question: "Is there a 512GB iPhone 17?", answer: `We currently sell the iPhone 17 in ${joinList(c.storages)}. Ask us on WhatsApp about other sizes.` },
+        { question: "Which colours are available for the 256GB?", answer: `All five: ${I17_COLOURS}.`, replaces: /^What colours/ },
+      ],
+      feedTitle: "Apple iPhone 17 256GB, New, Lavender, Mist Blue, Sage, White or Black, A19, 6.3-inch 120Hz ProMotion, 5G",
+      feedDescription: feed17("iPhone 17", "256GB", I17_COLOURS, I17_BODY, false),
+      feedExUkTitle: "Apple iPhone 17 256GB, Ex-UK (UK-used), Lavender, Mist Blue, Sage, White or Black, A19, 6.3-inch 120Hz",
+      feedExUkDescription: feed17("iPhone 17", "256GB", I17_COLOURS, I17_BODY, true),
+    },
+  },
+};
+
+const PRO17_COLOURS = "Cosmic Orange, Deep Blue and Silver";
+const pro17Body = (size: string, res: string, hours: number, grams: number) =>
+  `It has a ${size} Super Retina XDR display (${res}, 460 ppi) with ProMotion up to 120Hz and Dynamic Island. It runs on the A19 Pro chip and supports Apple Intelligence. The rear camera system has three 48MP cameras: Fusion, Ultra Wide and Telephoto. The front camera is 18MP Center Stage. Camera Control and the Action button are included. Apple rates battery life at up to ${hours} hours of video playback. The port is USB-C (USB 3), with MagSafe support. Connectivity: 5G and Wi-Fi 7, with Face ID and Crash Detection. Build: aluminium unibody with Ceramic Shield 2, IP68 water resistance to 6 metres for 30 minutes, ${grams} g.`;
+const PRO17_BODY = pro17Body("6.3-inch", "2622×1206", 33, 206);
+const PM17_BODY = pro17Body("6.9-inch", "2868×1320", 39, 233);
+
+function pro17Sections(c: EditorialCtx, o: { name: string; size: string; res: string; hours: number; grams: number; prevName: string; prevId: string; prevHours: number; nextId: string; nextName: string; nextHours: number }): EditorialSection[] {
+  const prev = c.other(o.prevId);
+  const next = c.other(o.nextId);
+  return [
+    {
+      id: "overview",
+      heading: "Overview",
+      paragraphs: [
+        `The ${o.name} is Apple's 2025 Pro iPhone${o.size === "6.9-inch" ? " in the big size" : " in the compact size"}: three 48MP cameras, the A19 Pro chip and a ${o.size} ProMotion display in an aluminium unibody. GadgetHub sells it new and sealed with a 1-year warranty, or Ex-UK (UK-used) for less, in ${PRO17_COLOURS}.`,
+        `Since the ${o.nextName} arrived, the ${o.name} has become the value Pro: you keep three 48MP cameras and up to ${o.hours} hours of video for less.${otherPrices(next) ? ` The ${o.nextName} costs from ${otherPrices(next)}.` : ""}`,
+      ],
+      list: priceList(c),
+    },
+    {
+      id: "design",
+      heading: "Design and display",
+      paragraphs: [
+        `The aluminium unibody has Ceramic Shield 2 on the front, is rated IP68 (6 m for 30 minutes) and weighs ${o.grams} g. The ${o.size} Super Retina XDR display (${o.res}, 460 ppi) runs ProMotion up to 120Hz, so scrolling, games and video feel smooth, and the Dynamic Island keeps Live Activities in view.`,
+        "Camera Control sits on the side for quick shots and settings, next to the Action button you set for Silent, Translate, a Shortcut and more.",
+      ],
+    },
+    {
+      id: "performance",
+      heading: "Performance",
+      paragraphs: [
+        "The A19 Pro chip handles 4K editing, long gaming sessions and Apple Intelligence without slowing down. 5G and Wi-Fi 7 keep downloads and video calls quick, and the USB-C port runs at USB 3 speed, so moving large video files to a Mac or drive takes minutes rather than hours.",
+      ],
+    },
+    {
+      id: "camera",
+      heading: "Camera",
+      paragraphs: [
+        `Every rear camera is 48MP, so detail holds up whether you shoot wide, normal or zoomed in. That is a step up from the ${o.prevName}, which has a 12MP telephoto. On the front, the 18MP Center Stage camera keeps you framed on video calls and group selfies.`,
+      ],
+      list: ["48MP Fusion main camera", "48MP Ultra Wide camera", "48MP Telephoto camera", "18MP Center Stage front camera"],
+    },
+    {
+      id: "battery",
+      heading: "Battery and charging",
+      paragraphs: [
+        `Apple rates the ${o.name} at up to ${o.hours} hours of video playback, against ${o.prevHours} on the ${o.prevName}.${otherPrices(prev) ? ` (The ${o.prevName} costs ${otherPrices(prev)}.)` : ""} It charges over USB-C and works with MagSafe chargers and cases. Only a USB-C cable is in the box.`,
+      ],
+    },
+    whyBuyBoth(o.name),
+    inTheBox(o.name),
+    kenyaTermsBoth,
+  ];
+}
+
+const proSpecs = (size: string, res: string, hours: number, grams: number): SeoSpec[] => [
+  { label: "Display", value: `${size} Super Retina XDR, ${res} (460 ppi), ProMotion up to 120Hz, Dynamic Island` },
+  { label: "Chip", value: "A19 Pro" },
+  { label: "Rear cameras", value: "48MP Fusion; 48MP Ultra Wide; 48MP Telephoto" },
+  { label: "Front camera", value: "18MP Center Stage" },
+  { label: "Battery", value: `Up to ${hours} hours video playback (Apple claim)` },
+  { label: "Port and charging", value: "USB-C (USB 3); MagSafe" },
+  { label: "Connectivity", value: "5G, Wi-Fi 7" },
+  { label: "Controls", value: "Camera Control, Action button, Face ID" },
+  { label: "Safety", value: "Crash Detection" },
+  { label: "Build", value: "Aluminium unibody; Ceramic Shield 2" },
+  { label: "Water resistance", value: "IP68 (6 m for 30 minutes)" },
+  { label: "Weight", value: `${grams} g` },
+  { label: "Colours", value: "Cosmic Orange, Deep Blue, Silver" },
+  { label: "Software", value: "Apple Intelligence" },
+  { label: "Storage", value: "256GB, 512GB" },
+];
+
+function pro17Storages(name: string, body: string, short: string): Record<string, EditorialStorage> {
+  return {
+    "256GB": {
+      title: `${name} 256GB Price in Kenya, New and Ex-UK`,
+      metaDescription: (c) =>
+        `${name} 256GB: ${both(c, "256GB")} at GadgetHub Nairobi. A19 Pro, three 48MP cameras. M-Pesa or Lipa Mdogo Mdogo, delivery in Kenya.`,
+      h1: `Apple ${name} 256GB, New and Ex-UK`,
+      intro: (c) =>
+        `The ${name} 256GB costs ${both(c, "256GB")} at GadgetHub. It is the lowest price into the ${name}, with the same A19 Pro chip, three 48MP cameras and ${short} ProMotion display as the 512GB. All three colours are available: ${PRO17_COLOURS}. New units are sealed with a 1-year warranty; Ex-UK terms are on your invoice. Pay by M-Pesa or Lipa Mdogo Mdogo, then collect in Nairobi CBD or have it delivered.`,
+      fit: () =>
+        "256GB suits most buyers: thousands of photos, a fair amount of 4K video, all your apps and years of chats, especially with iCloud backup. If you film long 4K videos every week, the 512GB gives you more room.",
+      faq: (c) => [
+        { question: `How much is the ${name} 256GB in Kenya?`, answer: `It is ${both(c, "256GB")} at GadgetHub in Nairobi CBD.`, replaces: /^How much is/ },
+        { question: `Can I pay for the ${name} 256GB in instalments?`, answer: `Yes, with Lipa Mdogo Mdogo. ${lipaBoth(c, "256GB")}`.trim(), replaces: /instalments\?$/ },
+        { question: `Is 256GB enough on the ${name}?`, answer: "For most people, yes. Choose 512GB if you shoot a lot of 4K video or keep large files offline." },
+        { question: "Which colours are available for the 256GB?", answer: `All three: ${PRO17_COLOURS}.`, replaces: /^What colours/ },
+      ],
+      feedTitle: `Apple ${name} 256GB, New, Cosmic Orange, Deep Blue or Silver, A19 Pro, Three 48MP Cameras, ${short}, 5G`,
+      feedDescription: feed17(name, "256GB", PRO17_COLOURS, body, false),
+      feedExUkTitle: `Apple ${name} 256GB, Ex-UK (UK-used), Cosmic Orange, Deep Blue or Silver, A19 Pro, Three 48MP Cameras`,
+      feedExUkDescription: feed17(name, "256GB", PRO17_COLOURS, body, true),
+    },
+    "512GB": {
+      title: `${name} 512GB Price in Kenya | GadgetHub`,
+      metaDescription: (c) =>
+        `Buy the ${name} 512GB for ${both(c, "512GB")} in Nairobi. Room for 4K video, M-Pesa or Lipa Mdogo Mdogo, delivery across Kenya.`,
+      h1: `Apple ${name} 512GB, New and Ex-UK`,
+      intro: (c) => {
+        const d = c.price("512GB") - c.price("256GB");
+        return `The ${name} 512GB costs ${both(c, "512GB")} at GadgetHub.${c.price("256GB") && d > 0 ? ` New, that is ${kes(d)} more than the 256GB for twice the storage.` : ""} It is for people who film a lot, keep big photo libraries and don't want to keep clearing space. You get the A19 Pro chip, three 48MP cameras and the ${short} ProMotion display, in ${PRO17_COLOURS}. New units are sealed with a 1-year warranty, and we deliver anywhere in Kenya.`;
+      },
+      fit: () =>
+        "Choose 512GB if your phone is also your work camera: events, product shoots for your online shop, church services or family occasions. 4K clips fill storage quickly, and 512GB lets you keep months of footage, large games and offline maps for upcountry trips.",
+      faq: (c) => [
+        { question: `What is the ${name} 512GB price in Kenya?`, answer: `It is ${both(c, "512GB")} at GadgetHub.`, replaces: /^How much is/ },
+        { question: `Can I buy the ${name} 512GB on Lipa Mdogo Mdogo?`, answer: `Yes. ${lipaBoth(c, "512GB")}`.trim(), replaces: /instalments\?$/ },
+        { question: "Should I get 512GB or 256GB?", answer: `Take 512GB if you shoot a lot of 4K video or keep large files offline.${c.storages.includes("256GB") ? ` The 256GB is ${both(c, "256GB")}.` : ""}`, replaces: /^Should I buy the .* or \d/ },
+        { question: "Do you deliver the 512GB outside Nairobi?", answer: "Yes, by courier anywhere in Kenya. We quote the fee and timeline on WhatsApp before you pay.", replaces: /^Do you deliver/ },
+      ],
+      feedTitle: `Apple ${name} 512GB, New, Cosmic Orange, Deep Blue or Silver, A19 Pro, Three 48MP Cameras, ${short}, 5G`,
+      feedDescription: feed17(name, "512GB", PRO17_COLOURS, body, false),
+      feedExUkTitle: `Apple ${name} 512GB, Ex-UK (UK-used), Cosmic Orange, Deep Blue or Silver, A19 Pro, Three 48MP Cameras`,
+      feedExUkDescription: feed17(name, "512GB", PRO17_COLOURS, body, true),
+    },
+  };
+}
+
+const pro17: ModelEditorial = {
+  seoTitle: "iPhone 17 Pro Price in Kenya: New and Ex-UK | GadgetHub",
+  metaDescription: (c) =>
+    `iPhone 17 Pro from ${kes(fromAny(c))}. A19 Pro, three 48MP cameras, 6.3-inch ProMotion. New or Ex-UK, M-Pesa and delivery across Kenya.`,
+  h1: "Apple iPhone 17 Pro, New and Ex-UK",
+  intro: (c) =>
+    `The iPhone 17 Pro puts three 48MP cameras and the A19 Pro chip in a 6.3-inch phone that fits one hand. At GadgetHub it costs ${c.storages.map((s) => `${both(c, s)} for ${s}`).join("; ")}. It comes in ${PRO17_COLOURS}, with up to 33 hours of video playback. New units are sealed with a 1-year warranty, and Ex-UK units save you money. Collect in Nairobi CBD, or we deliver across Kenya.`,
+  bestFor: "photo and video users who want Pro cameras without the largest size.",
+  keyFeatures: [
+    { title: "Three 48MP cameras.", body: "Fusion, Ultra Wide and Telephoto are all 48MP, so zoomed shots keep their detail." },
+    { title: "A19 Pro chip.", body: "Pro speed for 4K editing, gaming and Apple Intelligence." },
+    { title: "6.3-inch ProMotion display up to 120Hz.", body: "Smooth and sharp at 460 ppi, in a size that works with one thumb." },
+    { title: "Up to 33 hours of video playback.", body: "Six hours more than the iPhone 16 Pro, by Apple's figures." },
+    { title: "Aluminium unibody with Ceramic Shield 2.", body: "A tough build, rated IP68 to 6 m for 30 minutes." },
+    { title: "USB-C at USB 3 speed.", body: "Move long 4K clips to a computer or drive quickly." },
+    { title: "Wi-Fi 7 and 5G.", body: "Fast downloads, backups and video calls." },
+  ],
+  sections: (c) =>
+    pro17Sections(c, { name: "iPhone 17 Pro", size: "6.3-inch", res: "2622×1206", hours: 33, grams: 206, prevName: "iPhone 16 Pro", prevId: "iphone-16-pro", prevHours: 27, nextId: "iphone-18-pro", nextName: "iPhone 18 Pro", nextHours: 36 }),
+  specs: proSpecs("6.3-inch", "2622×1206", 33, 206),
+  faq: (c) => {
+    const p18 = c.other("iphone-18-pro");
+    const p16 = c.other("iphone-16-pro");
+    const s = c.storages[0];
+    return [
+      { question: "What is the price of the iPhone 17 Pro in Kenya?", answer: `At GadgetHub the iPhone 17 Pro costs ${c.storages.map((x) => `${both(c, x)} for ${x}`).join("; ")}.` },
+      newOrExUk(c, "iPhone 17 Pro", s),
+      { question: "Is the iPhone 17 Pro genuine?", answer: "Yes. GadgetHub is an Apple Authorised Reseller. New units are sealed with the serial number on your invoice; Ex-UK units are genuine UK-used iPhones." },
+      { question: "Does the iPhone 17 Pro have a warranty?", answer: "New units have a 1-year warranty. Ex-UK condition and warranty terms are stated on your invoice." },
+      { question: "Can I pay for the iPhone 17 Pro in instalments?", answer: `Yes, with Lipa Mdogo Mdogo. ${lipaBoth(c, s)}`.trim() },
+      { question: "What is the difference between the iPhone 17 Pro and the iPhone 18 Pro?", answer: `The iPhone 18 Pro has the newer A20 Pro chip, up to 36 hours of video playback (against 33) and a variable-aperture main camera. Both have a 6.3-inch 120Hz display and three 48MP cameras.${otherPrices(p18) ? ` The 18 Pro costs from ${otherPrices(p18)}.` : ""}` },
+      { question: "What is the difference between the iPhone 17 Pro and the iPhone 16 Pro?", answer: `The 17 Pro has the A19 Pro instead of the A18 Pro, a 48MP Telephoto instead of 12MP, and up to 33 hours of video instead of 27.${otherPrices(p16) ? ` The 16 Pro costs ${otherPrices(p16)}.` : ""}` },
+      { question: "Which colours does the iPhone 17 Pro come in?", answer: `${PRO17_COLOURS}. All three are available.` },
+      { question: "Do you deliver the iPhone 17 Pro outside Nairobi?", answer: "Yes, by courier anywhere in Kenya. We quote the fee and timeline on WhatsApp before you pay." },
+    ];
+  },
+  links: [
+    { href: "/iphone/compare/iphone-17-pro-vs-iphone-18-pro", text: "iPhone 17 Pro vs iPhone 18 Pro" },
+    { href: "/iphone/compare/iphone-17-pro-vs-iphone-17-pro-max", text: "iPhone 17 Pro or 17 Pro Max" },
+    { href: "/iphone/iphone-17-pro-max", text: "See the bigger iPhone 17 Pro Max" },
+    { href: "/accessories", text: "Cases and MagSafe chargers for iPhone 17 Pro" },
+    { href: "/lipa-mdogo-mdogo", text: "Buy the iPhone 17 Pro on Lipa Mdogo Mdogo" },
+  ],
+  compareIds: ["iphone-18-pro", "iphone-16-pro"],
+  storages: pro17Storages("iPhone 17 Pro", PRO17_BODY, "6.3-inch"),
+};
+
+const pm17: ModelEditorial = {
+  seoTitle: "iPhone 17 Pro Max Price in Kenya: New and Ex-UK",
+  metaDescription: (c) =>
+    `iPhone 17 Pro Max from ${kes(fromAny(c))}. A19 Pro, three 48MP cameras, 6.9-inch display, 39-hour battery. New or Ex-UK, M-Pesa, delivery in Kenya.`,
+  h1: "Apple iPhone 17 Pro Max, New and Ex-UK",
+  intro: (c) =>
+    `The iPhone 17 Pro Max is the big-screen Pro iPhone from 2025, with a 6.9-inch ProMotion display, three 48MP cameras and up to 39 hours of video playback. At GadgetHub it costs ${c.storages.map((s) => `${both(c, s)} for ${s}`).join("; ")}, in ${PRO17_COLOURS}. New units are sealed with a 1-year warranty, and Ex-UK units save you money. Collect in Nairobi CBD, or we deliver anywhere in Kenya.`,
+  bestFor: "big-screen users who want the most battery and Pro cameras at a lower price than the newest Pro Max.",
+  keyFeatures: [
+    { title: "6.9-inch ProMotion display up to 120Hz.", body: "A big, sharp 2868×1320 screen for video, reading and games." },
+    { title: "Up to 39 hours of video playback.", body: "Six hours more than the iPhone 16 Pro Max, by Apple's figures." },
+    { title: "Three 48MP cameras.", body: "Fusion, Ultra Wide and Telephoto all at 48MP, for detail at every focal length." },
+    { title: "A19 Pro chip.", body: "Fast for 4K editing, long gaming sessions and Apple Intelligence." },
+    { title: "USB-C at USB 3 speed.", body: "Offload long 4K recordings to a computer or drive quickly." },
+    { title: "Aluminium unibody, Ceramic Shield 2 and IP68.", body: "Built to handle daily knocks, rain and splashes." },
+  ],
+  sections: (c) =>
+    pro17Sections(c, { name: "iPhone 17 Pro Max", size: "6.9-inch", res: "2868×1320", hours: 39, grams: 233, prevName: "iPhone 16 Pro Max", prevId: "iphone-16-pro-max", prevHours: 33, nextId: "iphone-18-pro-max", nextName: "iPhone 18 Pro Max", nextHours: 45 }),
+  specs: proSpecs("6.9-inch", "2868×1320", 39, 233),
+  faq: (c) => {
+    const p18 = c.other("iphone-18-pro-max");
+    const p16 = c.other("iphone-16-pro-max");
+    const s = c.storages[0];
+    return [
+      { question: "What is the price of the iPhone 17 Pro Max in Kenya?", answer: `At GadgetHub the iPhone 17 Pro Max costs ${c.storages.map((x) => `${both(c, x)} for ${x}`).join("; ")}.` },
+      newOrExUk(c, "iPhone 17 Pro Max", s),
+      { question: "Is the iPhone 17 Pro Max genuine?", answer: "Yes. GadgetHub is an Apple Authorised Reseller. New units are sealed with the serial number on your invoice; Ex-UK units are genuine UK-used iPhones." },
+      { question: "Does the iPhone 17 Pro Max have a warranty?", answer: "New units have a 1-year warranty. Ex-UK condition and warranty terms are stated on your invoice." },
+      { question: "Can I buy the iPhone 17 Pro Max on instalments?", answer: `Yes, with Lipa Mdogo Mdogo. ${lipaBoth(c, s)}`.trim() },
+      { question: "iPhone 17 Pro Max or iPhone 18 Pro Max?", answer: `The 18 Pro Max has the A20 Pro chip, up to 45 hours of video playback (against 39) and a variable-aperture main camera; the 17 Pro Max is lighter at 233 g against 249 g.${otherPrices(p18) ? ` The 18 Pro Max costs from ${otherPrices(p18)}.` : ""}` },
+      { question: "What is the difference between the iPhone 17 Pro Max and the iPhone 16 Pro Max?", answer: `The 17 Pro Max has the A19 Pro instead of the A18 Pro, a 48MP Telephoto instead of 12MP, and up to 39 hours of video instead of 33.${otherPrices(p16) ? ` The 16 Pro Max costs ${otherPrices(p16)}.` : ""}` },
+      { question: "Which colours does the iPhone 17 Pro Max come in?", answer: `${PRO17_COLOURS}. All three are available.` },
+      { question: "Do you deliver the iPhone 17 Pro Max outside Nairobi?", answer: "Yes, by courier anywhere in Kenya. We quote the fee and timeline on WhatsApp before you pay." },
+    ];
+  },
+  links: [
+    { href: "/iphone/compare/iphone-17-pro-max-vs-iphone-18-pro-max", text: "iPhone 17 Pro Max vs iPhone 18 Pro Max" },
+    { href: "/iphone/compare/iphone-17-pro-vs-iphone-17-pro-max", text: "iPhone 17 Pro or 17 Pro Max" },
+    { href: "/iphone/iphone-18-pro-max", text: "See the newer iPhone 18 Pro Max" },
+    { href: "/accessories", text: "iPhone 17 Pro Max cases and MagSafe chargers" },
+    { href: "/trade-in", text: "Trade in your old iPhone for an iPhone 17 Pro Max" },
+  ],
+  compareIds: ["iphone-18-pro-max", "iphone-16-pro-max"],
+  storages: pro17Storages("iPhone 17 Pro Max", PM17_BODY, "6.9-inch"),
+};
+
 export const iphoneEditorial: Record<string, ModelEditorial> = {
+  "iphone-17": i17,
+  "iphone-17-pro": pro17,
+  "iphone-17-pro-max": pm17,
   "iphone-18-pro-max": proMax,
   "iphone-18-pro": pro,
   "iphone-duo": duo,
@@ -683,12 +1104,14 @@ export function listedFrom(p: PricedProduct | undefined): { newKes: number; exUk
  */
 export function editorialCtx(model: IphoneSeoModel, otherLive: (seoId: string) => PricedProduct | undefined): EditorialCtx {
   const byStorage = new Map(model.variants.map((v) => [v.storage.toUpperCase(), v.newKes]));
+  const exByStorage = new Map(model.variants.map((v) => [v.storage.toUpperCase(), v.exUkKes]));
   const storages = model.variants
-    .filter((v) => v.newKes > 0)
+    .filter((v) => v.newKes > 0 || v.exUkKes > 0)
     .map((v) => v.storage)
     .sort((a, b) => storageOrder(a) - storageOrder(b));
   return {
     price: (s) => byStorage.get(s.toUpperCase()) ?? 0,
+    exUk: (s) => exByStorage.get(s.toUpperCase()) ?? 0,
     storages,
     other: (id) => listedFrom(otherLive(id)),
   };

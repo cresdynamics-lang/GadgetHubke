@@ -349,7 +349,8 @@ export async function applyLivePrices<T extends { id: string; price: string; ava
 }
 
 /** iPhone rows share their model's description: give each the live "from" price and listed storage sizes. */
-type IphoneFeedText = { description: string; /** Hand-written feed copy (New rows only). */ editorial?: { title: string; description: string } };
+type FeedCopy = { title: string; description: string };
+type IphoneFeedText = { description: string; /** Hand-written feed copy, by condition. */ editorial?: FeedCopy; editorialExUk?: FeedCopy };
 
 async function liveIphoneDescriptions(): Promise<Map<string, IphoneFeedText>> {
   const live = new Map((await livePricedCatalog()).map((p) => [p.id, p]));
@@ -363,6 +364,7 @@ async function liveIphoneDescriptions(): Promise<Map<string, IphoneFeedText>> {
       bySheet.set(v.sheetId, {
         description: text.metaDescription,
         editorial: es ? { title: es.feedTitle, description: es.feedDescription } : undefined,
+        editorialExUk: es?.feedExUkTitle && es.feedExUkDescription ? { title: es.feedExUkTitle, description: es.feedExUkDescription } : undefined,
       });
     }
   }
@@ -375,7 +377,8 @@ export async function applyLiveIphoneDescriptions<T extends { id: string; descri
     const exUk = /-EXUK$/.test(row.id);
     const text = descriptions.get(row.id.replace(/-EXUK$/, ""));
     if (!text) return row;
-    if (!exUk && text.editorial) return { ...row, title: text.editorial.title, description: text.editorial.description };
+    const ed = exUk ? text.editorialExUk : text.editorial;
+    if (ed) return { ...row, title: ed.title, description: ed.description };
     return { ...row, description: text.description };
   });
 }
