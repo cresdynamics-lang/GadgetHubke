@@ -937,7 +937,7 @@ function pro17Storages(name: string, body: string, short: string): Record<string
     "256GB": {
       title: `${name} 256GB Price in Kenya, New and Ex-UK`,
       metaDescription: (c) =>
-        `${name} 256GB: ${both(c, "256GB")} at GadgetHub Nairobi. A19 Pro, three 48MP cameras. M-Pesa or Lipa Mdogo Mdogo, delivery in Kenya.`,
+        `${name} 256GB: ${both(c, "256GB")} at GadgetHub. A19 Pro, three 48MP cameras. M-Pesa or Lipa Mdogo Mdogo, delivery in Kenya.`,
       h1: `Apple ${name} 256GB, New and Ex-UK`,
       intro: (c) =>
         `The ${name} 256GB costs ${both(c, "256GB")} at GadgetHub. It is the lowest price into the ${name}, with the same A19 Pro chip, three 48MP cameras and ${short} ProMotion display as the 512GB. All three colours are available: ${PRO17_COLOURS}. New units are sealed with a 1-year warranty; Ex-UK terms are on your invoice. Pay by M-Pesa or Lipa Mdogo Mdogo, then collect in Nairobi CBD or have it delivered.`,

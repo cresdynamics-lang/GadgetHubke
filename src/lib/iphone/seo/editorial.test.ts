@@ -24,14 +24,14 @@ test("meta descriptions and titles stay within limits", () => {
   for (const id of ["iphone-18-pro-max", "iphone-18-pro", "iphone-duo", "iphone-17", "iphone-17-pro", "iphone-17-pro-max"]) {
     const ed = getEditorial(id)!;
     assert.ok(ed.seoTitle.length <= 60, ed.seoTitle);
-    assert.ok(ed.metaDescription(ctx).length <= 160, ed.metaDescription(ctx));
+    assert.ok(ed.metaDescription(ctx).length <= 155, ed.metaDescription(ctx));
     const words = ed.intro(ctx).split(/\s+/).length;
     assert.ok(words >= 55 && words <= 95, `${id} intro ${words} words`);
     const body = ed.sections(ctx).flatMap((s) => [...s.paragraphs, ...(s.list ?? [])]).join(" ").split(/\s+/).length;
     assert.ok(body >= 400 && body <= 900, `${id} description ${body} words`);
     for (const s of Object.values(ed.storages)) {
       assert.ok(s.title.length <= 60, s.title);
-      assert.ok(s.metaDescription(ctx).length <= 160, s.metaDescription(ctx));
+      assert.ok(s.metaDescription(ctx).length <= 155, s.metaDescription(ctx));
       if (s.feedExUkTitle) {
         assert.ok(s.feedExUkTitle.length >= 80 && s.feedExUkTitle.length <= 150, s.feedExUkTitle);
         assert.ok(s.feedExUkDescription!.length >= 800 && s.feedExUkDescription!.length <= 1500, s.feedExUkTitle);
