@@ -5,7 +5,8 @@
 export const prerender = false;
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { liveFromPrices } from "../../lib/pricing/live";
+import { liveFromPrices, livePricedCatalog } from "../../lib/pricing/live";
+import { isListedForSale, listedFromKes } from "../../lib/listing-offers";
 import { formatKes } from "../../lib/mac";
 import {
   macModels,
@@ -24,24 +25,31 @@ const ids = raw
   .slice(0, 3);
 
 const fromPrice = await liveFromPrices();
-// A model with no price yet (a new Mac before admin prices it) is not offered for comparison.
-const priced = (m: (typeof macModels)[number]) => (fromPrice(m.id).newKes ?? m.basePriceKes) > 0;
+const liveById = new Map((await livePricedCatalog()).map((p) => [p.id, p]));
+// Only Macs on sale (New or Ex-UK priced and listed) can be compared; an unpriced model never shows "KES 0".
+const priced = (m: (typeof macModels)[number]) => {
+  const live = liveById.get(m.id);
+  return live ? isListedForSale(live) : m.basePriceKes > 0;
+};
 let models = ids
   .map((id) => macModels.find((m) => m.id === id))
   .filter((m): m is (typeof macModels)[number] => Boolean(m) && priced(m!));
 
 if (models.length < 2) {
-  // Sensible defaults so the page is never empty
-  models = [
-    macModels.find((m) => m.id === "macbook-air-13-m4")!,
-    macModels.find((m) => m.id === "macbook-pro-14-m4")!,
-  ].filter(Boolean);
+  // Defaults so the page is never empty: the newest Air and the newest Pro that are on sale.
+  const newest = (family: "Air" | "Pro") =>
+    macModels.filter((m) => m.family === family && priced(m)).sort((a, b) => b.year - a.year)[0];
+  const pair = [newest("Air"), newest("Pro")].filter((m): m is (typeof macModels)[number] => Boolean(m));
+  models = pair.length >= 2 ? pair : macModels.filter(priced).slice(0, 2);
 }
 
 const cards = models.map((m) => {
   const live = fromPrice(m.id);
-  const price = live.newKes ?? m.basePriceKes;
-  return { ...macCompareCard(m), price, priceLabel: formatKes(price), exUkLabel: live.exUkKes ? formatKes(live.exUkKes) : "—" };
+  const listed = liveById.get(m.id);
+  const newKes = listed ? (live.newKes && live.newKes > 0 ? live.newKes : 0) : m.basePriceKes;
+  // A Mac sold only Ex-UK has no New price: show "—" there, and its Ex-UK price on the next row.
+  const price = newKes > 0 ? newKes : listed ? listedFromKes(listed) : m.basePriceKes;
+  return { ...macCompareCard(m), price, priceLabel: newKes > 0 ? formatKes(newKes) : "—", exUkLabel: live.exUkKes ? formatKes(live.exUkKes) : "—" };
 });
 const rows = macCompareRows(cards);
 const honest = honestMacDifference(models);
