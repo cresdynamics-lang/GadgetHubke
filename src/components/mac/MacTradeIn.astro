@@ -4,18 +4,24 @@
  */
 import { macModels, formatKes, tradeInEstimate, macConfig } from "../../lib/mac";
 import { models as iphoneModels } from "../../lib/iphone";
+import { livePricedCatalog } from "../../lib/pricing/live";
+import { listedFromKes } from "../../lib/listing-offers";
 
 interface Props {
   modelId?: string;
 }
 
 const { modelId } = Astro.props;
-const macOpts = macModels.map((m) => ({
-  id: m.id,
-  name: m.name,
-  base: m.basePriceKes,
-  kind: "mac",
-}));
+// A Mac with no price yet (a new model before admin prices it) has no trade-in value to show.
+const live = new Map((await livePricedCatalog()).map((p) => [p.id, p]));
+const macOpts = macModels
+  .map((m) => ({
+    id: m.id,
+    name: m.name,
+    base: m.basePriceKes > 0 ? m.basePriceKes : (live.get(m.id) ? listedFromKes(live.get(m.id)!) : 0),
+    kind: "mac",
+  }))
+  .filter((o) => o.base > 0);
 const phoneOpts = iphoneModels.map((m) => ({
   id: m.id,
   name: m.name,

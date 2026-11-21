@@ -123,6 +123,8 @@ export const macBasePricesKes = {
   "macbook-pro-14-m5": 255000,
   "macbook-pro-14-m5-pro": 365000,
   "macbook-pro-16-m5-pro": 430000,
+  /** 0 = not on sale yet: hidden from the shop and feeds until a price is set in admin Prices & stock. */
+  "macbook-pro-14-m6": 0,
 } as const;
 
 /** EX-UK base prices from sheet / overlay. */

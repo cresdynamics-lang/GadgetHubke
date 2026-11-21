@@ -10,12 +10,16 @@ export type AngleTab = { id: string; label: string; src: string; alt: string; sr
 
 const angles = data as Record<string, Record<string, StoreAngle[]>>;
 
+/** Models whose body and finishes are identical to an earlier one reuse its store photos. */
+const SAME_BODY: Record<string, string> = { "macbook-pro-14-m6": "macbook-pro-14-m5" };
+const angleKey = (modelId: string) => (angles[modelId] ? modelId : SAME_BODY[modelId] ?? modelId);
+
 export function storeAngles(modelId: string, colour: string): StoreAngle[] {
-  return angles[modelId]?.[colour] ?? [];
+  return angles[angleKey(modelId)]?.[colour] ?? [];
 }
 
 export function hasStoreAngles(modelId: string): boolean {
-  return Boolean(angles[modelId]);
+  return Boolean(angles[angleKey(modelId)]);
 }
 
 /** Viewer tabs for one finish; WebP is used as the main source (jpg kept for feeds). */

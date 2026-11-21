@@ -8,7 +8,7 @@
 import { macBasePricesKes } from "./config";
 
 export type MacFamily = "Air" | "Pro";
-export type MacChipGen = "M1" | "M2" | "M3" | "M4" | "M5";
+export type MacChipGen = "M1" | "M2" | "M3" | "M4" | "M5" | "M6";
 
 export type MacModel = {
   id: keyof typeof macBasePricesKes;
@@ -1106,6 +1106,56 @@ export const macModels: MacModel[] = [
     externalDisplays: "Confirm on Apple’s page",
     thicknessKey: "pro-14",
     checkFinalSpecs: true,
+    isNew: true,
+  },
+  {
+    id: "macbook-pro-14-m6",
+    name: "MacBook Pro 14″ M6",
+    family: "Pro",
+    chipGen: "M6",
+    chip: "M6",
+    year: 2026,
+    screenInches: 14,
+    // Apple tech specs, support.apple.com/en-us/148300 (released 6 Nov 2026).
+    cpuCores: "12-core (2 super, 4 performance, 6 efficiency)",
+    gpuCores: "12-core with Neural Accelerators and hardware ray tracing",
+    memoryOptionsGb: [16, 24, 32],
+    storageOptions: ["1TB", "2TB", "4TB"],
+    display: {
+      diagonal: 14.2,
+      resolution: "3024×1964",
+      ppi: 254,
+      panel: "Liquid Retina XDR",
+      brightnessNits: 1000,
+      peakHdrNits: 1600,
+      refreshHz: 120,
+      promotion: true,
+      nanoTextureOptional: true,
+    },
+    batteryVideoHours: 24,
+    batteryWebHours: 16,
+    charging: "MagSafe 3 · 70W USB-C adapter in the box · 50% in 30 min with 96W",
+    ports: ["3× Thunderbolt 4", "HDMI", "SDXC", "MagSafe 3", "3.5 mm"],
+    camera: "12MP Center Stage with Desk View",
+    speakers: "Six-speaker system with force-cancelling woofers, Spatial Audio",
+    weightKg: 1.55,
+    colours: ["silver", "space-black"],
+    wifi: "Wi-Fi 7 (Apple N1)",
+    bluetooth: "Bluetooth 6",
+    tagline: "The newest 14″ Pro, up to 1.3× faster than M5.",
+    whoItSuits: "Creators and developers who want the latest chip, Wi-Fi 7 and all-day battery in the 14″ body.",
+    whyChoose: [
+      "M6 with 12-core CPU and dual 16-core Neural Engine.",
+      "1TB storage as standard, up to 32GB memory.",
+      "Up to 24 hours of battery and Wi-Fi 7.",
+    ],
+    basePriceKes: P["macbook-pro-14-m6"],
+    defaultColour: "space-black",
+    fanless: false,
+    magsafe: true,
+    externalDisplays: "Up to two (two 6K at 60Hz, or one 8K at 60Hz)",
+    thicknessKey: "pro-14",
+    notes: "Same body as the M5 model. Memory bandwidth 153GB/s (16GB) or 170GB/s (24/32GB). Ships with macOS 27.",
     isNew: true,
   },
   {

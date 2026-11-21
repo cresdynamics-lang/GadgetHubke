@@ -45,6 +45,7 @@ const PRODUCT_FOLDER: Record<string, string | null> = {
   "macbook-pro-14-m5": "MacBook_Pro/Pro_14in_16in_M4_family_2024", // same chassis as M4; store angles preferred
   "macbook-pro-14-m5-pro": "MacBook_Pro/Pro_14in_16in_M4_family_2024",
   "macbook-pro-16-m5-pro": "MacBook_Pro/Pro_14in_16in_M4_family_2024",
+  "macbook-pro-14-m6": "MacBook_Pro/Pro_14in_16in_M4_family_2024", // same body as M5; store angles preferred
 };
 
 const OVERVIEW_KEY: Record<string, string> = {
@@ -127,9 +128,14 @@ export function productSrc(modelId: string, colourKey: string): string | undefin
   return Object.values(map)[0];
 }
 
+/** Apple press photos (supplied to authorised resellers), used as-is. */
+const PRESS_OVERVIEW: Record<string, string> = {
+  "macbook-pro-14-m6": "/images/mac/macbook-pro-14-m6/Apple-MacBook-Pro-14-in-with-M6-hero-261027.jpg",
+};
+
 export function overviewSrc(modelId: string): string | undefined {
   const key = OVERVIEW_KEY[modelId];
-  return key ? g.overviews[key] : undefined;
+  return key ? g.overviews[key] : PRESS_OVERVIEW[modelId];
 }
 
 export function pageAsset(family: "Air" | "Pro", kind: string): string | undefined {

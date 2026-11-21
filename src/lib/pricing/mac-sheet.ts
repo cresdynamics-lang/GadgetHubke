@@ -56,6 +56,11 @@ export const macSheet: MacSheetRow[] = [
   { id: "MAC-037", product: "MacBook Pro 14-inch (M5, 2026)", config: "10-core CPU, 10-core GPU, 16GB memory, 1TB SSD", newKes: 285000, exUkKes: 205000, modelId: "macbook-pro-14-m5", memoryGb: 16, storage: "1TB" },
   { id: "MAC-038", product: "MacBook Pro 14-inch (M5, 2026)", config: "10-core CPU, 10-core GPU, 24GB memory, 1TB SSD", newKes: 305000, exUkKes: 228000, modelId: "macbook-pro-14-m5", memoryGb: 24, storage: "1TB" },
   { id: "MAC-039", product: "MacBook Pro 14-inch (M5, 2026)", config: "10-core CPU, 10-core GPU, 32GB memory, 1TB SSD", newKes: 305000, exUkKes: 248000, modelId: "macbook-pro-14-m5", memoryGb: 32, storage: "1TB" },
+  // MacBook Pro 14-inch (M6, 2026): prices 0 until set in admin Prices & stock; hidden until then.
+  { id: "MAC-M6-01", product: "MacBook Pro 14-inch (M6, 2026)", config: "12-core CPU, 12-core GPU, 16GB memory, 1TB SSD", newKes: 0, exUkKes: 0, modelId: "macbook-pro-14-m6", memoryGb: 16, storage: "1TB" },
+  { id: "MAC-M6-02", product: "MacBook Pro 14-inch (M6, 2026)", config: "12-core CPU, 12-core GPU, 24GB memory, 1TB SSD", newKes: 0, exUkKes: 0, modelId: "macbook-pro-14-m6", memoryGb: 24, storage: "1TB" },
+  { id: "MAC-M6-03", product: "MacBook Pro 14-inch (M6, 2026)", config: "12-core CPU, 12-core GPU, 32GB memory, 1TB SSD", newKes: 0, exUkKes: 0, modelId: "macbook-pro-14-m6", memoryGb: 32, storage: "1TB" },
+  { id: "MAC-M6-04", product: "MacBook Pro 14-inch (M6, 2026)", config: "12-core CPU, 12-core GPU, 32GB memory, 2TB SSD", newKes: 0, exUkKes: 0, modelId: "macbook-pro-14-m6", memoryGb: 32, storage: "2TB" },
   { id: "MAC-040", product: "MacBook Pro 14-inch (M5 Pro)", config: "15-core CPU, 16-core GPU, 24GB memory, 1TB SSD", newKes: 365000, exUkKes: 295000, modelId: "macbook-pro-14-m5-pro", memoryGb: 24, storage: "1TB" },
   { id: "MAC-041", product: "MacBook Pro 14-inch (M5 Pro)", config: "15-core CPU, 16-core GPU, 24GB memory, 2TB SSD", newKes: 410000, exUkKes: 330000, modelId: "macbook-pro-14-m5-pro", memoryGb: 24, storage: "2TB" },
   { id: "MAC-042", product: "MacBook Pro 14-inch (M5 Pro)", config: "18-core CPU, 20-core GPU, 24GB memory, 2TB SSD", newKes: 440000, exUkKes: 355000, modelId: "macbook-pro-14-m5-pro", memoryGb: 24, storage: "2TB" },

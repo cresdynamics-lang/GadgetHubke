@@ -19,6 +19,18 @@ import { getMacModel, type MacModel } from "./models";
 
 export const MAC_PLACEHOLDER = "/images/mac/placeholder.svg";
 
+const M6 = "/images/mac/macbook-pro-14-m6/Apple-MacBook-Pro-14-in-with-M6";
+/** Apple press photos supplied to authorised resellers; shown unaltered. */
+const PRESS_PHOTOS: Record<string, { id: string; label: string; src: string; alt: string }[]> = {
+  "macbook-pro-14-m6": [
+    { id: "press-hero", label: "Overview", src: `${M6}-hero-261027.jpg`, alt: "Space Black and Silver" },
+    { id: "press-display", label: "Display", src: `${M6}-Liquid-Retina-XDR-display-261027.jpg`, alt: "Liquid Retina XDR display" },
+    { id: "press-ports", label: "Ports", src: `${M6}-connectivity-261027.jpg`, alt: "Thunderbolt 4, HDMI and SDXC ports" },
+    { id: "press-chip", label: "M6 chip", src: `${M6}-chip-261027.jpg`, alt: "the M6 chip" },
+    { id: "press-lifestyle", label: "In use", src: `${M6}-lifestyle-261027.jpg`, alt: "in use" },
+  ],
+};
+
 /**
  * A Mac without a store shot yet can still have its own launch photo
  * (/images/mac/macbook-neo-card.jpg for macbook-neo-13). Use that before the
@@ -270,6 +282,11 @@ export function macViewerTabs(model: MacModel, colourKey: string) {
     tabs.push({ id: "front", label: "Front", src: front.src, alt: front.alt, srcWebp: front.srcWebp });
   }
 
+  // Apple press photos for a new model (chip, display, ports, in use), after the colour shots.
+  for (const photo of PRESS_PHOTOS[id] ?? []) {
+    tabs.push({ id: photo.id, label: photo.label, src: photo.src, alt: `${name}, ${photo.alt}` });
+  }
+
   const top = getMacImage(id, colourKey, "design_top", name);
   const side = getMacImage(id, colourKey, "design_side", name);
   if (!top.fallback) tabs.push({ id: "top", label: "Top", src: top.src, alt: top.alt, srcWebp: top.srcWebp });
@@ -292,7 +309,9 @@ export function macViewerTabs(model: MacModel, colourKey: string) {
   const size = getMacImage(id, colourKey, "size", name);
   if (!size.fallback) tabs.push({ id: "size", label: "Size", src: size.src, alt: size.alt, srcWebp: size.srcWebp });
 
-  return tabs;
+  // Press photos already cover some views (Display, Ports): keep the first tab of each label.
+  const seen = new Set<string>();
+  return tabs.filter((tab) => (seen.has(tab.label) ? false : (seen.add(tab.label), true)));
 }
 
 export function macLidFrames(model: MacModel) {

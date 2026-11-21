@@ -23,9 +23,12 @@ const ids = raw
   .filter(Boolean)
   .slice(0, 3);
 
+const fromPrice = await liveFromPrices();
+// A model with no price yet (a new Mac before admin prices it) is not offered for comparison.
+const priced = (m: (typeof macModels)[number]) => (fromPrice(m.id).newKes ?? m.basePriceKes) > 0;
 let models = ids
   .map((id) => macModels.find((m) => m.id === id))
-  .filter((m): m is (typeof macModels)[number] => Boolean(m));
+  .filter((m): m is (typeof macModels)[number] => Boolean(m) && priced(m!));
 
 if (models.length < 2) {
   // Sensible defaults so the page is never empty
@@ -35,7 +38,6 @@ if (models.length < 2) {
   ].filter(Boolean);
 }
 
-const fromPrice = await liveFromPrices();
 const cards = models.map((m) => {
   const live = fromPrice(m.id);
   const price = live.newKes ?? m.basePriceKes;
@@ -43,7 +45,7 @@ const cards = models.map((m) => {
 });
 const rows = macCompareRows(cards);
 const honest = honestMacDifference(models);
-const pickList = macModels.filter((m) => m.year >= 2023 || m.isNew);
+const pickList = macModels.filter((m) => (m.year >= 2023 || m.isNew) && priced(m));
 ---
 
 <BaseLayout title="Compare MacBooks - GadgetHub" description="Side-by-side MacBook Air and Pro comparison.">

@@ -9,15 +9,20 @@ import {
   macSubline,
   macCardPrimarySrc,
 } from "../../lib/mac";
+import { livePricedCatalog } from "../../lib/pricing/live";
+import { isListedForSale, listedFromKes } from "../../lib/listing-offers";
 
-const payload = macModels.map((m) => {
+// Only Macs on sale, at their live price (a new model stays out until it is priced in admin).
+const live = new Map((await livePricedCatalog()).map((p) => [p.id, p]));
+const onSale = macModels.filter((m) => { const p = live.get(m.id); return p ? isListedForSale(p) : m.basePriceKes > 0; });
+const payload = onSale.map((m) => {
   const colour = defaultMacColour(m);
   const img = macCardPrimarySrc(m, colour);
   return {
     id: m.id,
     name: m.name,
     href: `/mac/${m.id}`,
-    priceKes: m.basePriceKes,
+    priceKes: (live.get(m.id) && listedFromKes(live.get(m.id)!)) || m.basePriceKes,
     family: m.family,
     chipGen: m.chipGen,
     screen: m.screenInches,

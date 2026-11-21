@@ -1,6 +1,6 @@
 ---
 import { lipaRate } from "../../lib/pricing/lipa";
-import { isListedForSale } from "../../lib/listing-offers";
+import { isListedForSale, listedFromKes } from "../../lib/listing-offers";
 import { livePricedCatalog } from "../../lib/pricing/live";
 /**
  * MacBook PDP - sticky viewer + buy panel + feel sections + specs/FAQ.
@@ -89,6 +89,13 @@ const wa = whatsappUrl(
 );
 // Live price for an accessory link (/accessories/<id>), falling back to the listed price.
 const __liveCat = await livePricedCatalog();
+// "Compare with" shows only Macs on sale, at their live from-price (an unpriced new model stays out).
+const relatedOnSale = related.flatMap((r) => {
+  const live = __liveCat.find((p) => p.id === r.id);
+  if (live && !isListedForSale(live)) return [];
+  const kes = (live && listedFromKes(live)) || r.basePriceKes;
+  return kes > 0 ? [{ model: r, kes }] : [];
+});
 const liveAccessoryKes = (href: string, fallback: number) =>
   __liveCat.find((p) => p.id === (href || "").split("?")[0].split("/").filter(Boolean).pop())?.priceKes || fallback;
 
@@ -360,18 +367,18 @@ const liveAccessoryKes = (href: string, fallback: number) =>
     </section>
 
     {
-      related.length ? (
+      relatedOnSale.length ? (
         <section class="container mpdp__block">
           <h2>Compare with</h2>
           <div class="mpdp__related">
-            {related.map((r) => {
+            {relatedOnSale.map(({ model: r, kes }) => {
               const c = defaultMacColour(r);
               const rimg = getMacImage(r.id, c, "product", r.name);
               return (
                 <a href={`/mac/compare?ids=${encodeURIComponent(`${model.id},${r.id}`)}`}>
                   <MacStage src={rimg.src} srcWebp={rimg.srcWebp} alt={rimg.alt} width={760} height={475} />
                   <span>{r.name}</span>
-                  <em>{formatKes(r.basePriceKes)}</em>
+                  <em>{formatKes(kes)}</em>
                   <b>Compare with {r.name.replace("MacBook ", "")}</b>
                 </a>
               );
