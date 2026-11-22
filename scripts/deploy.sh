@@ -33,10 +33,7 @@ if [[ "${SKIP_BUILD:-}" != "1" ]]; then
   npm run build
 fi
 
-stamp="$(date +%Y%m%d-%H%M%S)"
-echo "→ Backing up server build ($stamp)"
-ssh -o BatchMode=yes "$HOST" "cd $ROOT && sudo -n -u $RUN_AS tar czf .dist-server-backup-$stamp.tgz dist/server"
-
+# No backup copy is kept on the server (owner's rule, 22 Nov 2026). To roll back, revert the commit and deploy again.
 export COPYFILE_DISABLE=1
 RSYNC_PATH="sudo -n -u $RUN_AS rsync"
 echo "→ Uploading server bundle"
@@ -64,8 +61,7 @@ echo "  Google feed items: $items"
 [[ "$items" -gt 0 ]] || fail=1
 
 if [[ "$fail" == "1" ]]; then
-  echo "✗ Smoke test failed. Roll back with:" >&2
-  echo "  ssh $HOST \"cd $ROOT && sudo -n -u $RUN_AS tar xzf .dist-server-backup-$stamp.tgz && $PM2 restart gadgethub\"" >&2
+  echo "✗ Smoke test failed. Roll back: git revert HEAD && git push && npm run deploy" >&2
   exit 1
 fi
 echo "✓ Deployed $(git rev-parse --short HEAD)"
