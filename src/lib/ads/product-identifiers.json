@@ -1,0 +1,1110 @@
+{
+ "IP-104": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-103": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-102": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-100-BURGUNDY": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-100-BLACK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-100-GLACIER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-100-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-099-BURGUNDY": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-099-BLACK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-099-GLACIER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-099-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-098-BURGUNDY": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-098-BLACK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-098-GLACIER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-098-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-095-BURGUNDY": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-095-BLACK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-095-GLACIER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-095-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-094-BURGUNDY": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-094-BLACK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-094-GLACIER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-094-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-090-COSMICORANGE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-090-DEEPBLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-090-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-090-EXUK-COSMICORANGE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-090-EXUK-DEEPBLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-090-EXUK-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-089-COSMICORANGE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-089-DEEPBLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-089-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-089-EXUK-COSMICORANGE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-089-EXUK-DEEPBLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-089-EXUK-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-087-COSMICORANGE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-087-DEEPBLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-087-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-087-EXUK-COSMICORANGE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-087-EXUK-DEEPBLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-087-EXUK-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-086-COSMICORANGE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-086-DEEPBLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-086-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-086-EXUK-COSMICORANGE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-086-EXUK-DEEPBLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-086-EXUK-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-081-BLACK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-081-LAVENDER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-081-MISTBLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-081-SAGE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-081-WHITE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-081-EXUK-BLACK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-081-EXUK-LAVENDER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-081-EXUK-MISTBLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-081-EXUK-SAGE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-081-EXUK-WHITE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-077-EXUK-BLACKTITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-077-EXUK-DESERTTITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-077-EXUK-NATURALTITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-077-EXUK-WHITETITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-076-EXUK-BLACKTITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-076-EXUK-DESERTTITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-076-EXUK-NATURALTITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-076-EXUK-WHITETITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-073-EXUK-BLACKTITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-073-EXUK-DESERTTITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-073-EXUK-NATURALTITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-073-EXUK-WHITETITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-072-EXUK-BLACKTITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-072-EXUK-DESERTTITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-072-EXUK-NATURALTITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-072-EXUK-WHITETITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-067-EXUK-BLACK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-067-EXUK-PINK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-067-EXUK-TEAL": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-067-EXUK-ULTRAMARINE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-067-EXUK-WHITE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-066-EXUK-BLACK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-066-EXUK-PINK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-066-EXUK-TEAL": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-066-EXUK-ULTRAMARINE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-066-EXUK-WHITE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-061-EXUK-BLACKTITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-061-EXUK-BLUETITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-061-EXUK-NATURALTITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-061-EXUK-WHITETITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-060-EXUK-BLACKTITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-060-EXUK-BLUETITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-060-EXUK-NATURALTITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-060-EXUK-WHITETITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-057-EXUK-BLACKTITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-057-EXUK-BLUETITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-057-EXUK-NATURALTITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-057-EXUK-WHITETITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-056-EXUK-BLACKTITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-056-EXUK-BLUETITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-056-EXUK-NATURALTITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-056-EXUK-WHITETITANIUM": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-051-EXUK-BLACK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-051-EXUK-BLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-051-EXUK-GREEN": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-051-EXUK-PINK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-051-EXUK-YELLOW": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-050-EXUK-BLACK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-050-EXUK-BLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-050-EXUK-GREEN": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-050-EXUK-PINK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-050-EXUK-YELLOW": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-047-EXUK-DEEPPURPLE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-047-EXUK-GOLD": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-047-EXUK-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-047-EXUK-SPACEBLACK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-046-EXUK-DEEPPURPLE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-046-EXUK-GOLD": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-046-EXUK-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-046-EXUK-SPACEBLACK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-043-EXUK-DEEPPURPLE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-043-EXUK-GOLD": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-043-EXUK-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-043-EXUK-SPACEBLACK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-042-EXUK-DEEPPURPLE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-042-EXUK-GOLD": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-042-EXUK-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-042-EXUK-SPACEBLACK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-040-EXUK-BLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-040-EXUK-MIDNIGHT": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-040-EXUK-PURPLE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-040-EXUK-RED": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-040-EXUK-STARLIGHT": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-040-EXUK-YELLOW": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-039-EXUK-BLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-039-EXUK-MIDNIGHT": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-039-EXUK-PURPLE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-039-EXUK-RED": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-039-EXUK-STARLIGHT": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-039-EXUK-YELLOW": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-037-EXUK-BLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-037-EXUK-MIDNIGHT": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-037-EXUK-PURPLE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-037-EXUK-RED": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-037-EXUK-STARLIGHT": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-037-EXUK-YELLOW": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-036-EXUK-BLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-036-EXUK-MIDNIGHT": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-036-EXUK-PURPLE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-036-EXUK-RED": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-036-EXUK-STARLIGHT": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-036-EXUK-YELLOW": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-033-EXUK-GOLD": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-033-EXUK-GRAPHITE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-033-EXUK-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-033-EXUK-SIERRA-BLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-033-EXUK-ALPINE-GREEN": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-032-EXUK-GOLD": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-032-EXUK-GRAPHITE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-032-EXUK-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-032-EXUK-SIERRA-BLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-032-EXUK-ALPINE-GREEN": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-029-EXUK-GOLD": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-029-EXUK-GRAPHITE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-029-EXUK-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-029-EXUK-SIERRA-BLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-029-EXUK-ALPINE-GREEN": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-028-EXUK-GOLD": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-028-EXUK-GRAPHITE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-028-EXUK-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-028-EXUK-SIERRA-BLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-028-EXUK-ALPINE-GREEN": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-026-EXUK-BLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-026-EXUK-GREEN": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-026-EXUK-MIDNIGHT": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-026-EXUK-PINK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-026-EXUK-PRODUCT-RED": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-026-EXUK-STARLIGHT": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-025-EXUK-BLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-025-EXUK-GREEN": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-025-EXUK-MIDNIGHT": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-025-EXUK-PINK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-025-EXUK-PRODUCT-RED": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-025-EXUK-STARLIGHT": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-020-EXUK-BLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-020-EXUK-GOLD": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-020-EXUK-GRAPHITE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-020-EXUK-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-019-EXUK-BLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-019-EXUK-GOLD": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-019-EXUK-GRAPHITE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-019-EXUK-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-017-EXUK-BLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-017-EXUK-GOLD": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-017-EXUK-GRAPHITE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-017-EXUK-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-016-EXUK-BLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-016-EXUK-GOLD": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-016-EXUK-GRAPHITE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-016-EXUK-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-015-EXUK-BLACK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-015-EXUK-BLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-015-EXUK-GREEN": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-015-EXUK-PURPLE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-015-EXUK-RED": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-015-EXUK-WHITE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-014-EXUK-BLACK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-014-EXUK-BLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-014-EXUK-GREEN": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-014-EXUK-PURPLE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-014-EXUK-RED": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-014-EXUK-WHITE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-013-EXUK-BLACK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-013-EXUK-BLUE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-013-EXUK-GREEN": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-013-EXUK-PURPLE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-013-EXUK-RED": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-013-EXUK-WHITE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-008-EXUK-GOLD": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-008-EXUK-MIDNIGHT-GREEN": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-008-EXUK-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-008-EXUK-SPACE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-007-EXUK-GOLD": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-007-EXUK-MIDNIGHT-GREEN": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-007-EXUK-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-007-EXUK-SPACE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-005-EXUK-GOLD": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-005-EXUK-MIDNIGHT-GREEN": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-005-EXUK-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-005-EXUK-SPACE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-004-EXUK-GOLD": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-004-EXUK-MIDNIGHT-GREEN": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-004-EXUK-SILVER": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-004-EXUK-SPACE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-002-EXUK-BLACK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-002-EXUK-GREEN": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-002-EXUK-PURPLE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-002-EXUK-RED": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-002-EXUK-WHITE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-002-EXUK-YELLOW": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-001-EXUK-BLACK": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-001-EXUK-GREEN": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-001-EXUK-PURPLE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-001-EXUK-RED": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-001-EXUK-WHITE": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "IP-001-EXUK-YELLOW": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "macbook-air-13-m5": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "macbook-air-15-m5": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "macbook-neo-13": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "macbook-pro-14-m5": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "macbook-pro-16-m5-pro": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "ipad-a16": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "ipad-air-11-m4": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "ipad-air-13-m4": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "ipad-mini-a17-pro": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "ipad-pro-11-m5": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "ipad-pro-13-m5": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "watch-se3-40": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "watch-se3-44": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "watch-s11-42": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "watch-s11-46": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "watch-s12-42": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "watch-s12-46": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "watch-ultra-2": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "watch-ultra-3": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "watch-ultra-4": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "airpods-3": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "airpods-4": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "airpods-4-anc": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "airpods-pro-2": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "airpods-pro-3": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "pencil-2": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "pencil-usbc": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "pencil-pro": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "keyboard-folio": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "keyboard-ipad-air-11": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "keyboard-ipad-air-13": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "keyboard-ipad-pro-11": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "keyboard-ipad-pro-13": {
+  "gtin": "",
+  "mpn": ""
+ },
+ "mouse-usbc-white": {
+  "gtin": "",
+  "mpn": ""
+ }
+}

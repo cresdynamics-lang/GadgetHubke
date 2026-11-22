@@ -11,20 +11,28 @@ interface Props {
   /** Preselect model id */
   modelId?: string;
   compact?: boolean;
+  /** Prices of the storage size shown on the page; otherwise the model's lowest listed price. */
+  newKes?: number;
+  exUkKes?: number;
+  /** Condition the page opened on (Ex-UK links start the calculator on Ex-UK). */
+  channel?: "new" | "ex-uk";
 }
 
-const { modelId, compact = false } = Astro.props;
+const { modelId, compact = false, newKes, exUkKes, channel = "new" } = Astro.props;
 // Only models on the live list, at their listed New and Ex-UK prices.
-const options = lipaCalcOptions([...newerModels, ...models], await livePricedCatalog(), iphoneLiveId);
+const options = lipaCalcOptions([...newerModels, ...models], await livePricedCatalog(), iphoneLiveId).map((o) =>
+  o.id === modelId && (newKes || exUkKes) ? { ...o, base: newKes ?? 0, exUk: exUkKes ?? 0 } : o,
+);
 const hasExUkOption = options.some((o) => (o.exUk ?? 0) > 0);
 const initial = options.find((o) => o.id === modelId) || options[0];
 const cfg = iphoneConfig.lipa;
-const startKes = initial ? initial.base || initial.exUk : 0;
+const startExUk = Boolean(initial?.exUk) && (channel === "ex-uk" || !initial?.base);
+const startKes = initial ? (startExUk ? initial.exUk : initial.base || initial.exUk) : 0;
 const start = lipaMonthly(startKes, cfg.depositDefaultPct, cfg.monthsDefault);
 ---
 
 {initial ? (
-<section id="lipa-on-product" class="lipa-calc" data-lipa-calc data-compact={compact ? "1" : "0"}>
+<section id="lipa-on-product" class="lipa-calc" data-lipa-calc data-compact={compact ? "1" : "0"} data-channel={startExUk ? "ex-uk" : "new"}>
   <header>
     <h3>Lipa Mdogo Mdogo</h3>
     <p>{cfg.note}</p>
@@ -43,8 +51,8 @@ const start = lipaMonthly(startKes, cfg.depositDefaultPct, cfg.monthsDefault);
   </label>
   {hasExUkOption ? (
     <div class="lipa-channel" role="group" aria-label="Stock type" data-lipa-channel-group>
-      <button type="button" class="is-active" data-lipa-channel="new">New</button>
-      <button type="button" data-lipa-channel="ex-uk">Ex-UK</button>
+      <button type="button" class:list={{ "is-active": !startExUk }} data-lipa-channel="new">New</button>
+      <button type="button" class:list={{ "is-active": startExUk }} data-lipa-channel="ex-uk">Ex-UK</button>
     </div>
   ) : null}
   <label>
@@ -83,7 +91,7 @@ const start = lipaMonthly(startKes, cfg.depositDefaultPct, cfg.monthsDefault);
       <small>/ month</small>
     </p>
     <p class="lipa-calc__line" data-lipa-line>
-      {formatKes(start.depositKes)} deposit · {start.months} payments · total {formatKes(start.totalKes)}
+      {formatKes(start.depositKes)} deposit · {start.months} payments · {startExUk ? "Ex-UK " : ""}total {formatKes(start.totalKes)}
     </p>
   </div>
 </section>
@@ -128,6 +136,15 @@ const start = lipaMonthly(startKes, cfg.depositDefaultPct, cfg.monthsDefault);
       b.addEventListener("click", () => setChannel(b.getAttribute("data-lipa-channel") || "new")),
     );
     document.addEventListener("gh:channel", (e) => setChannel(e.detail === "ex-uk" ? "ex-uk" : "new"));
+    // The page's storage picker: price the page's model at the size just chosen.
+    document.addEventListener("gh:storage", (e) => {
+      if (!(model instanceof HTMLSelectElement)) return;
+      const opt = [...model.options].find((o) => o.value === e.detail?.modelId);
+      if (!opt) return;
+      opt.setAttribute("data-base", String(e.detail.newKes || ""));
+      opt.setAttribute("data-exuk", String(e.detail.exUkKes || ""));
+      if (model.value === opt.value) tick();
+    });
 
     model?.addEventListener("change", tick);
     deposit?.addEventListener("input", tick);

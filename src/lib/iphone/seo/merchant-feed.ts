@@ -83,7 +83,8 @@ export function buildIphoneMerchantFeed(): {
   for (const model of iphoneSeoCatalog) {
     const image = resolveImage(model.id, model.name);
     for (const v of model.variants) {
-      if (!v.newKes || v.newKes <= 0) {
+      // A size may be sold Ex-UK only, so it needs a price in at least one condition.
+      if (!(v.newKes > 0) && !(SHOW_EX_UK && v.exUkKes > 0)) {
         exclusions.push({
           sheetId: v.sheetId,
           model: model.name,
@@ -101,7 +102,7 @@ export function buildIphoneMerchantFeed(): {
         });
         continue;
       }
-      rows.push({
+      if (v.newKes > 0) rows.push({
         id: v.sheetId,
         title: `${model.name} ${v.storage}`,
         description: model.metaDescription,

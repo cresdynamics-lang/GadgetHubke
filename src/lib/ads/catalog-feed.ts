@@ -26,6 +26,8 @@ import { applyLivePricesToRows } from "./feed-live";
 import { iphoneSeoCatalog } from "../iphone/seo/catalog";
 import { withLiveSeoPrices } from "../iphone/seo/live";
 import { getEditorial, editorialCtx, withEditorial } from "../iphone/seo/editorial";
+import { expandIphoneRows, idFields, type ColourRow, type MissingPhoto } from "./iphone-colour-feed";
+import { lipaPlan } from "../pricing/lipa";
 
 export type CatalogRow = {
   id: string;
@@ -352,7 +354,7 @@ export async function applyLivePrices<T extends { id: string; price: string; ava
 type FeedCopy = { title: string; description: string };
 type IphoneFeedText = { description: string; /** Hand-written feed copy, by condition. */ editorial?: FeedCopy; editorialExUk?: FeedCopy };
 
-async function liveIphoneDescriptions(): Promise<Map<string, IphoneFeedText>> {
+export async function liveIphoneDescriptions(): Promise<Map<string, IphoneFeedText>> {
   const live = new Map((await livePricedCatalog()).map((p) => [p.id, p]));
   const bySheet = new Map<string, IphoneFeedText>();
   for (const model of iphoneSeoCatalog) {
@@ -385,4 +387,113 @@ export async function applyLiveIphoneDescriptions<T extends { id: string; descri
 
 export async function buildAdsCatalogLive(): Promise<CatalogRow[]> {
   return applyLiveIphoneDescriptions(await applyLivePrices(buildAdsCatalog()));
+}
+
+/* ------------------------------------------------------------------ */
+/* Google Merchant Center feed: iPhones by colour, other products as before. */
+
+export type GoogleRow = ColourRow;
+
+function kesText(n: number): string {
+  return `KES ${Math.round(n).toLocaleString("en-KE")}`;
+}
+
+/** Longer buyer copy for non-iPhone rows, from the same facts as their pages. */
+function otherDescription(r: CatalogRow): string {
+  const kes = Number(r.price.replace(/[^\d.]/g, ""));
+  const plan = lipaPlan(kes, 40, 6);
+  const accessory = r.product_type.includes("Accessories");
+  const base = r.description.replace(/\s*(From |Buy at )?Gadget Hub,? Nairobi\.?$/i, "").trim();
+  return [
+    `Apple ${r.title.replace(/^Apple\s+/, "")}, sold new by GadgetHub, an Apple Authorised Reseller in Nairobi, Kenya.`,
+    base.endsWith(".") ? base : `${base}.`,
+    accessory ? "New and sealed." : `New and sealed, with a ${site.warranty.years}-year warranty.`,
+    `Pay in full by M-Pesa, or with Lipa Mdogo Mdogo: a 40% deposit of ${kesText(plan.depositKes)} today and the balance over 1 to 6 months.`,
+    `Delivery in Nairobi and across Kenya, priced by location, or collect from our shop at ${site.address}, ${site.landmark}.`,
+  ].join(" ");
+}
+
+function otherRow(r: CatalogRow): GoogleRow {
+  const family = r.product_type.split(" > ").slice(2).join(" ") || r.product_type;
+  return {
+    ...r,
+    ...idFields(r.id),
+    title: r.title.startsWith("Apple ") ? r.title : `Apple ${r.title}`,
+    description: otherDescription(r),
+    custom_label_0: family,
+    custom_label_1: r.condition === "used" ? "Ex-UK" : "New",
+  };
+}
+
+/** Every Merchant Center row, from live shop data at request time. */
+export async function buildGoogleFeedLive(): Promise<{ rows: GoogleRow[]; missingPhotos: MissingPhoto[] }> {
+  const catalog = await livePricedCatalog();
+  const live = new Map(catalog.map((p) => [p.id, p]));
+  const texts = await liveIphoneDescriptions();
+  const iphoneRows = await applyLiveIphoneDescriptions(await applyLivePrices(buildIphoneMerchantFeed().rows));
+  const { rows: iphones, missingPhotos } = expandIphoneRows(
+    iphoneRows.map((r) => ({ ...r, image_link: squareFeedImage(r.image_link) })),
+    {
+      stockFor: (seoId) => live.get(iphoneLiveId(seoId)),
+      hasEditorial: (sheetId, exUk) => Boolean(exUk ? texts.get(sheetId)?.editorialExUk : texts.get(sheetId)?.editorial),
+      square: (p) => squareFeedImage(absUrl(p)),
+    },
+  );
+  // Newest models first, then storage and colour in page order.
+  iphones.sort((a, b) => sheetSortKey(b.id) - sheetSortKey(a.id));
+  const others = (await applyLivePrices(buildAdsCatalog()))
+    .filter((r) => categoryRank(r.product_type) !== 0)
+    .map(otherRow);
+  return { rows: [...iphones, ...others], missingPhotos };
+}
+
+function tag(name: string, value: string | undefined): string {
+  return value ? `\n      <g:${name}>${escXml(value)}</g:${name}>` : "";
+}
+
+export function googleFeedXml(rows: GoogleRow[]): string {
+  const items = rows
+    .map((r) => {
+      const extra = [
+        tag("item_group_id", r.item_group_id),
+        tag("color", r.color),
+        tag("gtin", r.gtin),
+        tag("mpn", r.mpn),
+        tag("identifier_exists", r.identifier_exists),
+        ...(r.additional_image_link ?? []).map((l) => tag("additional_image_link", l)),
+        ...(r.product_detail ?? []).map(
+          (d) =>
+            `\n      <g:product_detail>\n        <g:section_name>${escXml(d.section)}</g:section_name>\n        <g:attribute_name>${escXml(d.attribute)}</g:attribute_name>\n        <g:attribute_value>${escXml(d.value)}</g:attribute_value>\n      </g:product_detail>`,
+        ),
+        ...(r.product_highlight ?? []).map((h) => tag("product_highlight", h)),
+        tag("custom_label_0", r.custom_label_0),
+        tag("custom_label_1", r.custom_label_1),
+        tag("custom_label_2", r.custom_label_2),
+      ].join("");
+      return `    <item>
+      <g:id>${escXml(r.id)}</g:id>
+      <g:title>${escXml(r.title)}</g:title>
+      <g:description>${escXml(r.description)}</g:description>
+      <g:link>${escXml(r.link)}</g:link>
+      <g:image_link>${escXml(r.image_link)}</g:image_link>
+      <g:availability>${r.availability}</g:availability>
+      <g:condition>${r.condition}</g:condition>
+      <g:price>${escXml(r.price)}</g:price>
+      <g:brand>${r.brand}</g:brand>
+      <g:google_product_category>${escXml(r.google_product_category)}</g:google_product_category>
+      <g:product_type>${escXml(r.product_type)}</g:product_type>${extra}
+    </item>`;
+    })
+    .join("\n");
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
+  <channel>
+    <title>Gadget Hub Kenya</title>
+    <link>${site.url}</link>
+    <description>Apple products from Gadget Hub, Nairobi — live shop prices</description>
+${items}
+  </channel>
+</rss>
+`;
 }

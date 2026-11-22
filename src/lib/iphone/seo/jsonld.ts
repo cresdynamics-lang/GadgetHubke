@@ -8,6 +8,8 @@ import {
 import { sharedProductFaq } from "./shared";
 import type { IphoneSeoModel } from "./types";
 import { offerExtras, type ReviewSchema } from "../../seo/offer-schema";
+import { colourSku } from "../../ads/feed-ids";
+import { identifiersFor } from "../../ads/identifiers";
 
 function availability(status: IphoneSeoModel["variants"][0]["stockStatus"]): string {
   return status === "out_of_stock" ? "https://schema.org/OutOfStock" : "https://schema.org/InStock";
@@ -172,7 +174,11 @@ export function buildIphoneVariantJsonLd(
     pageName?: string;
     storages: import("./variant-pages").StorageOption[];
     colours: import("./variant-pages").ColourOption[];
+    /** Ex-UK stock by colour, when admin lists it separately from New. */
+    exUkInStock?: (colourKey: string) => boolean | null;
     imageFor: (colourKey: string | null) => string;
+    /** Every photo of a colour, main view first (defaults to imageFor). */
+    imagesFor?: (colourKey: string | null) => string[];
     seriesUrl?: string;
     faq: { question: string; answer: string }[];
     reviews?: ReviewSchema;
@@ -195,16 +201,22 @@ export function buildIphoneVariantJsonLd(
         if (c.exUk) params.set("condition", "ex-uk");
         const query = params.toString();
         const label = [model.name, s.storage, colour?.label].filter(Boolean).join(" ");
-        const inStock = s.inStock && colour?.inStock !== false;
+        const colourStock = colour ? (c.exUk && opts.exUkInStock ? opts.exUkInStock(colour.key) : colour.inStock) : null;
+        const inStock = s.inStock && colourStock !== false;
+        // Same id as the Merchant Center row, so Google can match page and feed.
+        const sku = colourSku(s.sheetId, colour?.key, c.exUk);
+        const ids = identifiersFor(sku);
         return {
           "@type": "Product",
           "@id": `${storageUrl}#${colour?.key ?? "any"}${c.exUk ? "-exuk" : ""}`,
-          sku: [s.sheetId, colour?.key.toUpperCase(), c.exUk ? "EXUK" : ""].filter(Boolean).join("-"),
+          sku,
+          ...(ids.gtin ? { gtin: ids.gtin } : {}),
+          ...(ids.mpn ? { mpn: ids.mpn } : {}),
           name: c.exUk ? `${label} (${EX_UK_CONDITION_LABEL})` : label,
           description: c.exUk
             ? `${label}, ${EX_UK_CONDITION_LABEL}. ${EX_UK_WARRANTY}`
             : `${label}, sealed new, at Gadget Hub in Nairobi CBD.`,
-          image: [opts.imageFor(colour?.key ?? null)],
+          image: opts.imagesFor ? opts.imagesFor(colour?.key ?? null) : [opts.imageFor(colour?.key ?? null)],
           brand: { "@type": "Brand", name: "Apple" },
           size: s.storage,
           ...(colour ? { color: colour.label } : {}),

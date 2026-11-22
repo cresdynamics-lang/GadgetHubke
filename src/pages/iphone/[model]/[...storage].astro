@@ -326,6 +326,14 @@ if (seo) {
     storages: currentStorage ? [currentStorage] : storageOptions,
     colours: colourOptions,
     imageFor: (key) => absImage(key && model && colours.includes(key) ? getImage(model.id, key, 1, model.name).src : initialImg.src),
+    imagesFor: (key) =>
+      key && model && colours.includes(key)
+        ? availableViews(model.id, key).map((v) => absImage(getImage(model.id, key, v, model.name).src))
+        : [absImage(initialImg.src)],
+    exUkInStock: (key) => {
+      const list = (live?.exUkColoursInStock ?? []).map(squash);
+      return list.length ? list.includes(squash(key)) || list.includes(squash(colourLabel(key))) : null;
+    },
     seriesUrl: new URL(`/iphone/${seriesHub.slug}`, site.url).href,
     faq: copy ? copy.faq : [...seo.faq, ...sharedProductFaq],
     reviews: currentStorage ? undefined : await reviewSchema(seo.id, seoIdToShopProductId[seo.id]),
@@ -416,7 +424,7 @@ if (seo) {
         <div class="ipdp__buy">
           <h1>{pageH1}</h1>
           <p class="ipdp__tagline">
-            Price in Kenya · {formatKesSeo(seo.fromKes)}
+            Price in Kenya · {currentStorage ? `${currentStorage.storage} ` : "from "}{formatKesSeo(currentStorage ? (wantExUk ? prices[selectedIdx]?.exUkKes ?? firstPrice.kes : firstPrice.kes) : seo.fromKes)}
           </p>
           <div class="ipdp__field">
             <p class="ipdp__label">Storage</p>
@@ -517,7 +525,7 @@ if (seo) {
         <h1>{pageH1}</h1>
         <StockChannelToggle channels={pageChannels} initial={wantUsed ? "used" : wantExUk ? "ex-uk" : "new"} />
         <p class="ipdp__tagline">
-          Price in Kenya · {formatKesSeo(seo.fromKes)}
+          Price in Kenya · {currentStorage ? `${currentStorage.storage} ` : "from "}{formatKesSeo(currentStorage ? (wantExUk ? prices[selectedIdx]?.exUkKes ?? firstPrice.kes : firstPrice.kes) : seo.fromKes)}
           {model?.tagline ? ` · ${model.tagline}` : ""}
         </p>
 
@@ -654,7 +662,12 @@ if (seo) {
     }
 
     <section class="container ipdp__tools">
-      <LipaCalc modelId={model.id} />
+      <LipaCalc
+        modelId={model.id}
+        newKes={prices[selectedIdx] && "newKes" in prices[selectedIdx] ? Number(prices[selectedIdx].newKes) || 0 : prices[selectedIdx]?.kes}
+        exUkKes={prices[selectedIdx]?.exUkKes ?? 0}
+        channel={wantExUk ? "ex-uk" : "new"}
+      />
       <TradeInCalc modelId={model.id} />
     </section>
 
@@ -1029,6 +1042,11 @@ if (seo) {
       state.kesNew = btn.getAttribute("data-kes-new") || "";
       state.kesExUk = btn.getAttribute("data-kes-exuk");
       state.kesUsed = btn.getAttribute("data-kes-used");
+      document.dispatchEvent(
+        new CustomEvent("gh:storage", {
+          detail: { modelId: galleryPayload.modelId, newKes: Number(state.kesNew) || 0, exUkKes: Number(state.kesExUk) || 0 },
+        }),
+      );
       syncUsedColours();
       updatePrice();
     });
