@@ -48,7 +48,9 @@ const model = getIpadModel(Astro.params.model!);
 if (!model) return Astro.redirect("/ipad");
 if (!isListedIpadModel(model.id)) return Astro.redirect("/ipad");
 
-const colour = defaultIpadColour(model);
+// Feed and shared links (?colour=sky-blue) open on that finish.
+const askedColour = (Astro.url.searchParams.get("colour") || "").toLowerCase();
+const colour = model.colours.includes(askedColour) ? askedColour : defaultIpadColour(model);
 const tabs = ipadViewerTabs(model, colour);
 const img = tabs[0] || getIpadImage(model.id, colour, "product", model.name);
 const liveProduct = await livePricedProduct(model.id);
@@ -660,6 +662,9 @@ const wa = whatsappUrl(
     if (state.nano && nanoAllowed && /1 TB|2 TB/i.test(storLabel)) kes += nanoStep;
     state.kes = kes;
     if (priceEl) priceEl.textContent = `${state.channel === "ex-uk" ? "Ex-UK · " : ""}KES ${kes.toLocaleString("en-KE")}`;
+    // Lipa Mdogo Mdogo calculator follows the option shown here.
+    window.__ghPrice = { kes: kes, channel: state.channel === "ex-uk" ? "ex-uk" : "new" };
+    document.dispatchEvent(new CustomEvent("gh:price", { detail: window.__ghPrice }));
     const deposit = Math.round((kes * depositPct) / 100);
     const repay = Math.round(((kes - deposit) * lipaRatePct) / 10000) * 100; // same sum as lib/pricing/lipa.ts
     const monthly = Math.round(repay / months);

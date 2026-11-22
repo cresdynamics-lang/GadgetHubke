@@ -510,6 +510,9 @@ const scaleVbH = scaleMidY + Math.max(scaleWatchR, scaleCoinR) + 18;
     const repay = Math.round(((kes - deposit) * lipaRatePct) / 10000) * 100; // same sum as lib/pricing/lipa.ts
     const monthly = Math.round(repay / months);
     if (priceEl) priceEl.textContent = `${state.channel === "ex-uk" ? "Ex-UK · " : ""}KES ${kes.toLocaleString("en-KE")}`;
+    // Lipa Mdogo Mdogo calculator follows the option shown here.
+    window.__ghPrice = { kes: kes, channel: state.channel === "ex-uk" ? "ex-uk" : "new" };
+    document.dispatchEvent(new CustomEvent("gh:price", { detail: window.__ghPrice }));
     if (lipaEl) lipaEl.textContent = `or KES ${monthly.toLocaleString("en-KE")} / mo`;
     if (bag instanceof HTMLElement) {
       bag.setAttribute("data-kes", String(kes));

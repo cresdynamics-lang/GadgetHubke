@@ -13,6 +13,7 @@ import type { IphoneSeoModel } from "../iphone/seo/types";
 import { getModel, type IphoneModel } from "../iphone/models";
 import { availableColours, availableViews, getImage, textOnlyColours } from "../iphone/images";
 import { colourLabel } from "../iphone/colours";
+import { getEditorial } from "../iphone/seo/editorial";
 import { identifiersFor } from "./identifiers";
 import { colourSku, modelGroupCode } from "./feed-ids";
 
@@ -183,9 +184,14 @@ export function colourDescription(opts: {
   return text;
 }
 
-function highlights(m: IphoneModel | undefined, storage: string, exUk: boolean): string[] {
+function highlights(m: IphoneModel | undefined, storage: string, exUk: boolean, seoId: string): string[] {
   const out: string[] = [];
-  if (m && !m.specsPending) {
+  if (!m || m.specsPending) {
+    // Spec sheet not in the model data yet: use the page's own spec table (e.g. iPhone Duo).
+    const want = ["Chip", "Display", "Inner display", "Main camera", "Rear camera", "Video playback"];
+    for (const row of getEditorial(seoId)?.specs ?? [])
+      if (want.includes(row.label) && out.length < 4) out.push(`${row.label}: ${row.value}`.slice(0, 150));
+  } else {
     if (m.chip) out.push(`${m.chip} chip${m.appleIntelligence ? " with Apple Intelligence" : ""}`);
     if (m.displayInches) out.push(`${m.displayInches}-inch display${m.refreshHz > 60 ? ` up to ${m.refreshHz}Hz` : ""}`);
     if (m.rearCameras.length) out.push(`${joinList(m.rearCameras)} rear camera${m.rearCameras.length > 1 ? "s" : ""}`);
@@ -244,7 +250,7 @@ export function expandIphoneRows(
       google_product_category: "267",
       product_type: `Phones > iPhone > iPhone ${family || ""}`.trim() + ` > ${seo.name}`,
       product_detail: [{ section: "General", attribute: "Storage", value: storage }],
-      product_highlight: highlights(model, storage, exUk),
+      product_highlight: highlights(model, storage, exUk, seo.id),
       custom_label_0: family ? `iPhone ${family}` : seo.series,
       custom_label_1: exUk ? "Ex-UK" : "New",
       custom_label_2: storage,

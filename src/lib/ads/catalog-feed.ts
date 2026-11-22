@@ -28,6 +28,9 @@ import { withLiveSeoPrices } from "../iphone/seo/live";
 import { getEditorial, editorialCtx, withEditorial } from "../iphone/seo/editorial";
 import { expandIphoneRows, idFields, type ColourRow, type MissingPhoto } from "./iphone-colour-feed";
 import { lipaPlan } from "../pricing/lipa";
+import { storeAngles } from "../store-angles";
+import { colourLabel as macColourLabel } from "../mac/colours";
+import { colourLabel as ipadColourLabel } from "../ipad/colours";
 
 export type CatalogRow = {
   id: string;
@@ -425,8 +428,8 @@ function otherRow(r: CatalogRow): GoogleRow {
   };
 }
 
-/** Every Merchant Center row, from live shop data at request time. */
-export async function buildGoogleFeedLive(): Promise<{ rows: GoogleRow[]; missingPhotos: MissingPhoto[] }> {
+/** iPhone rows, one per colour × storage × condition, shared by the Google and Meta feeds. */
+export async function buildIphoneColourRowsLive(): Promise<{ rows: ColourRow[]; missingPhotos: MissingPhoto[] }> {
   const catalog = await livePricedCatalog();
   const live = new Map(catalog.map((p) => [p.id, p]));
   const texts = await liveIphoneDescriptions();
@@ -441,9 +444,54 @@ export async function buildGoogleFeedLive(): Promise<{ rows: GoogleRow[]; missin
   );
   // Newest models first, then storage and colour in page order.
   iphones.sort((a, b) => sheetSortKey(b.id) - sheetSortKey(a.id));
+  return { rows: iphones, missingPhotos };
+}
+
+/**
+ * Mac and iPad rows split by finish, when Apple store photos exist for at least two finishes.
+ * The finish does not change the price, and the page preselects it from ?colour=.
+ * Watch finishes change the case material and price, so Watch rows stay one per model.
+ */
+function splitByColour(r: GoogleRow): GoogleRow[] {
+  const mac = macModels.find((m) => m.id === r.id);
+  const ipad = mac ? undefined : ipadModels.find((m) => m.id === r.id);
+  const model = mac ?? ipad;
+  if (!model) return [r];
+  const label = mac ? macColourLabel : ipadColourLabel;
+  // Store photos are WebP: only their square JPEG copies (scripts/build-feed-images.mjs) go in the feed.
+  const shot = (c: string) =>
+    storeAngles(model.id, c)
+      .map((a) => (diskExists(a.src) ? squareFeedImage(absUrl(a.src)) : ""))
+      .filter((link) => /\/feed-images\/.+\.jpg$/.test(link));
+  const colours = model.colours.filter((c) => shot(c).length);
+  if (colours.length < 2) return [r];
+  return colours.map((c) => {
+    const photos = shot(c);
+    const link = new URL(r.link);
+    link.searchParams.set("colour", c);
+    const id = `${r.id}-${c.toUpperCase()}`;
+    return {
+      ...r,
+      ...idFields(id),
+      id,
+      item_group_id: r.id,
+      title: `${r.title} ${label(c)}`,
+      description: r.description.replace(/^([^.]+)\./, `$1. Colour: ${label(c)}.`),
+      link: link.href,
+      image_link: photos[0],
+      additional_image_link: photos.slice(1, 11),
+      color: label(c),
+    };
+  });
+}
+
+/** Every Merchant Center row, from live shop data at request time. */
+export async function buildGoogleFeedLive(): Promise<{ rows: GoogleRow[]; missingPhotos: MissingPhoto[] }> {
+  const { rows: iphones, missingPhotos } = await buildIphoneColourRowsLive();
   const others = (await applyLivePrices(buildAdsCatalog()))
     .filter((r) => categoryRank(r.product_type) !== 0)
-    .map(otherRow);
+    .map(otherRow)
+    .flatMap(splitByColour);
   return { rows: [...iphones, ...others], missingPhotos };
 }
 
@@ -496,4 +544,55 @@ ${items}
   </channel>
 </rss>
 `;
+}
+
+/* ------------------------------------------------------------------ */
+/* Meta Commerce Manager CSV: iPhones by colour (same rows as Google), other products unchanged. */
+
+const META_HEADERS = [
+  ...CSV_HEADERS,
+  "additional_image_link",
+  "color",
+  "size",
+  "custom_label_0",
+  "custom_label_1",
+  "custom_label_2",
+] as const;
+
+type MetaRow = Partial<Record<(typeof META_HEADERS)[number], string>>;
+
+function metaIphoneRow(r: ColourRow): MetaRow {
+  return {
+    id: r.id,
+    title: r.title,
+    description: r.description,
+    availability: r.availability,
+    condition: r.condition,
+    // Meta's own format: whole shillings, then the currency.
+    price: `${Math.round(Number(r.price.replace(/[^\d.]/g, "")))} KES`,
+    link: r.link,
+    image_link: r.image_link,
+    brand: r.brand,
+    google_product_category: r.google_product_category,
+    product_type: r.product_type,
+    item_group_id: r.item_group_id,
+    additional_image_link: (r.additional_image_link ?? []).join(","),
+    color: r.color ?? "",
+    size: r.custom_label_2 ?? "",
+    custom_label_0: r.custom_label_0 ?? "",
+    custom_label_1: r.custom_label_1 ?? "",
+    custom_label_2: r.custom_label_2 ?? "",
+  };
+}
+
+export async function buildMetaFeedLive(): Promise<MetaRow[]> {
+  const { rows: iphones } = await buildIphoneColourRowsLive();
+  const others = (await buildAdsCatalogLive()).filter((r) => categoryRank(r.product_type) !== 0);
+  return [...iphones.map(metaIphoneRow), ...others.map((r) => ({ ...r }) as MetaRow)];
+}
+
+export function metaFeedCsv(rows: MetaRow[]): string {
+  const lines = [META_HEADERS.join(",")];
+  for (const r of rows) lines.push(META_HEADERS.map((h) => csvEscape(String(r[h] ?? ""))).join(","));
+  return lines.join("\n") + "\n";
 }

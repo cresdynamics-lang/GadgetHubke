@@ -34,11 +34,14 @@ const feeds = feedArgs.length
 
 function imageLinks(csv) {
   const lines = csv.split("\n");
-  const col = lines[0].split(",").indexOf("image_link");
+  const head = lines[0].split(",");
+  const col = head.indexOf("image_link");
+  const extra = head.indexOf("additional_image_link");
   const links = [];
   for (const line of lines.slice(1)) {
     const cells = line.match(/("([^"]|"")*"|[^,]*)(,|$)/g)?.map((c) => c.replace(/,$/, "").replace(/^"|"$/g, "").replace(/""/g, '"'));
     if (cells?.[col]) links.push(cells[col]);
+    if (extra >= 0 && cells?.[extra]) links.push(...cells[extra].split(",").filter(Boolean));
   }
   return links;
 }

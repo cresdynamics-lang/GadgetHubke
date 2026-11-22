@@ -21,7 +21,7 @@ const start = lipaMonthly(startKes, cfg.depositDefaultPct, cfg.monthsDefault);
 ---
 
 {initial ? (
-<section class="ipad-lipa" data-ipad-lipa>
+<section class="ipad-lipa" data-ipad-lipa data-page-model={modelId ?? ""}>
   <header>
     <h3>Lipa Mdogo Mdogo</h3>
     <p>{cfg.note}</p>
@@ -117,6 +117,15 @@ const start = lipaMonthly(startKes, cfg.depositDefaultPct, cfg.monthsDefault);
       b.addEventListener("click", () => setChannel(b.getAttribute("data-lipa-channel") || "new")),
     );
     document.addEventListener("gh:channel", (e) => setChannel(e.detail === "ex-uk" ? "ex-uk" : "new"));
+    // The page's own configurator: price the page's model at the option chosen there.
+    const pagePrice = (detail) => {
+      const opt = model instanceof HTMLSelectElement ? [...model.options].find((o) => o.value === root.getAttribute("data-page-model")) : undefined;
+      if (!opt || !detail?.kes) return;
+      opt.setAttribute(detail.channel === "ex-uk" ? "data-exuk" : "data-base", String(detail.kes));
+      if (model.value === opt.value) run();
+    };
+    document.addEventListener("gh:price", (e) => pagePrice(e.detail));
+    if (window.__ghPrice) pagePrice(window.__ghPrice);
 
     model?.addEventListener("change", run);
     deposit?.addEventListener("input", run);

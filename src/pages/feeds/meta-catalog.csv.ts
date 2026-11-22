@@ -1,11 +1,11 @@
 import type { APIRoute } from "astro";
-import { buildAdsCatalogLive, catalogToCsv } from "../../lib/ads/catalog-feed";
+import { buildMetaFeedLive, metaFeedCsv } from "../../lib/ads/catalog-feed";
 
-/** Meta Commerce Manager scheduled feed (CSV). */
+/** Meta Commerce Manager scheduled feed (CSV): iPhones one row per colour × storage × condition, as in the Google feed. */
 export const prerender = false;
 
 export const GET: APIRoute = async () => {
-  const csv = catalogToCsv(await buildAdsCatalogLive());
+  const csv = metaFeedCsv(await buildMetaFeedLive());
   return new Response(csv, {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",

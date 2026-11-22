@@ -4,7 +4,11 @@
  *   node scripts/validate-merchant-feed.mjs [feed URL] [--fast]
  *   (default feed: https://gadgethubke.com/feeds/google-merchant.xml)
  *
- * Checks every row for:
+ * Then checks the Meta catalogue CSV (same site, /feeds/meta-catalog.csv, or --meta=URL):
+ * unique ids, images HTTP 200 and at least 1080×1080, links HTTP 200, and prices that match
+ * the landing page. --google-only skips it.
+ *
+ * Checks every Google row for:
  *   - a unique id and every required field (title ≤150, iPhone descriptions 500–1,500)
  *   - item_group_id: one model and one condition per group
  *   - image_link and additional_image_link: HTTP 200, at least 800×800
@@ -83,11 +87,10 @@ function checkImage(url) {
         const res = await get(url);
         if (res.status !== 200) return `HTTP ${res.status}`;
         const type = res.headers.get("content-type") ?? "";
-        if (!/image\/(jpeg|png|gif)/.test(type)) return `type ${type} (Google needs JPG, PNG or GIF)`;
+        if (!/image\/(jpeg|png|gif)/.test(type)) return { problem: `type ${type} (needs JPG, PNG or GIF)` };
         const { width = 0, height = 0 } = await sharp(Buffer.from(await res.arrayBuffer())).metadata();
-        if (width < 800 || height < 800) return `${width}×${height}, under 800×800`;
-        return null;
-      })().catch((e) => e.message),
+        return { width, height };
+      })().catch((e) => ({ problem: e.message })),
     );
   return imageCache.get(url);
 }
@@ -169,7 +172,8 @@ for (const r of rows) {
 // --- item_group_id consistency ---
 const groups = new Map();
 for (const r of rows.filter((r) => r.item_group_id)) {
-  const model = r.title.replace(/^Apple\s+/, "").replace(/\s+\d+(GB|TB)\b.*$/, "");
+  let model = r.title.replace(/^Apple\s+/, "").replace(/\s+\d+(GB|TB)\b.*$/, "");
+  if (r.color && model.endsWith(` ${r.color}`)) model = model.slice(0, -r.color.length - 1);
   const g = groups.get(r.item_group_id) ?? { models: new Set(), conditions: new Set(), keys: new Set() };
   g.models.add(model);
   g.conditions.add(r.condition);
@@ -191,8 +195,9 @@ if (!fast) {
   console.log("done");
   for (const r of rows)
     for (const u of [r.image_link, ...r.additional_image_link]) {
-      const problem = await imageCache.get(u);
-      if (problem) err(r.id, `image ${u}: ${problem}`);
+      const img = await imageCache.get(u);
+      if (img.problem) err(r.id, `image ${u}: ${img.problem}`);
+      else if (img.width < 800 || img.height < 800) err(r.id, `image ${u}: ${img.width}×${img.height}, under 800×800`);
     }
 }
 
@@ -210,8 +215,10 @@ for (const r of rows) {
   const html = p.html;
   const colourKey = new URL(r.link).searchParams.get("colour");
   if (colourKey) {
-    const active = html.match(/<button[^>]*data-colour="([^"]+)"[^>]*aria-selected="true"|<button[^>]*aria-selected="true"[^>]*data-colour="([^"]+)"/);
-    const activeKey = active?.[1] ?? active?.[2];
+    // The swatch marked selected (iPhone pages) or active (Mac and iPad pages).
+    const swatches = [...html.matchAll(/<button[^>]*data-colour="[^"]+"[^>]*>/g)].map(([t]) => t);
+    const activeTag = swatches.find((t) => /aria-selected="true"/.test(t)) ?? swatches.find((t) => /class="[^"]*\bis-active\b/.test(t));
+    const activeKey = activeTag?.match(/data-colour="([^"]+)"/)?.[1];
     const shownName = html.match(/data-colour-name[^>]*>([^<]*)</)?.[1]?.trim();
     if (activeKey !== colourKey) err(r.id, `page preselects colour ${activeKey ?? "none"}, not ${colourKey}`);
     if (r.color && shownName !== r.color) err(r.id, `page shows colour "${shownName}", feed says "${r.color}"`);
@@ -252,14 +259,107 @@ for (const r of rows) {
   }
 }
 
+
+// --- Meta catalogue CSV ---
+function parseCsv(text) {
+  const rows = [];
+  let row = [], cell = "", quoted = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (quoted) {
+      if (ch === '"' && text[i + 1] === '"') { cell += '"'; i++; }
+      else if (ch === '"') quoted = false;
+      else cell += ch;
+    } else if (ch === '"') quoted = true;
+    else if (ch === ",") { row.push(cell); cell = ""; }
+    else if (ch === "\n") { row.push(cell); rows.push(row); row = []; cell = ""; }
+    else if (ch !== "\r") cell += ch;
+  }
+  if (cell || row.length) { row.push(cell); rows.push(row); }
+  const [head, ...body] = rows;
+  return body.filter((r) => r.length > 1).map((r) => Object.fromEntries(head.map((h, i) => [h, r[i] ?? ""])));
+}
+
+let metaRows = [];
+if (!args.includes("--google-only")) {
+  const metaUrl = args.find((a) => a.startsWith("--meta="))?.slice(7) ?? feedUrl.replace(/google-merchant(-iphone)?\.xml$/, "meta-catalog.csv");
+  const res = await fetch(metaUrl);
+  if (!res.ok) err("meta", `${metaUrl}: HTTP ${res.status}`);
+  else {
+    metaRows = parseCsv(await res.text());
+    console.log(`${metaRows.length} rows in ${metaUrl}`);
+    const ids = new Set();
+    for (const r of metaRows) {
+      const id = `meta ${r.id}`;
+      if (ids.has(r.id)) err(id, "duplicate id");
+      ids.add(r.id);
+      for (const f of ["id", "title", "description", "availability", "condition", "price", "link", "image_link", "brand"]) if (!r[f]) err(id, `missing ${f}`);
+      if (!/^\d+(\.\d{2})? KES$/.test(r.price)) err(id, `price "${r.price}" is not like 234000 KES`);
+      if (r.google_product_category === "267") {
+        for (const f of ["item_group_id", "color", "size", "custom_label_0", "custom_label_1", "custom_label_2"])
+          if (!r[f] && !(f === "color" && !new URL(r.link).searchParams.get("colour"))) err(id, `missing ${f}`);
+        const g = rows.find((x) => x.id === r.id);
+        if (!g) err(id, "not in the Google feed");
+        else {
+          if (g.item_group_id !== r.item_group_id) err(id, `item_group_id ${r.item_group_id}, Google ${g.item_group_id}`);
+          if (kesNumber(g.price) !== kesNumber(r.price)) err(id, `price ${r.price}, Google ${g.price}`);
+          if (g.link !== r.link) err(id, "link differs from the Google feed");
+        }
+      }
+    }
+    const imgs = [...new Set(metaRows.flatMap((r) => [r.image_link, ...(r.additional_image_link || "").split(",")]).filter(Boolean))];
+    if (!fast) {
+      process.stdout.write(`Checking ${imgs.length} Meta images… `);
+      await pool(imgs, checkImage);
+      console.log("done");
+      for (const r of metaRows)
+        for (const u of [r.image_link, ...(r.additional_image_link || "").split(",")].filter(Boolean)) {
+          const img = await imageCache.get(u);
+          if (img.problem) err(`meta ${r.id}`, `image ${u}: ${img.problem}`);
+          else if (img.width < 1080 || img.height < 1080) err(`meta ${r.id}`, `image ${u}: ${img.width}×${img.height}, under 1080×1080`);
+        }
+    }
+    const metaLinks = [...new Set(metaRows.map((r) => r.link))];
+    process.stdout.write(`Checking ${metaLinks.length} Meta landing pages… `);
+    await pool(metaLinks, page);
+    console.log("done\n");
+    for (const r of metaRows) {
+      const p = await pageCache.get(r.link);
+      if (p.status !== 200) {
+        err(`meta ${r.id}`, `link ${r.link}: HTTP ${p.status}${p.location ? ` → ${p.location}` : ""}`);
+        continue;
+      }
+      const kes = kesNumber(r.price);
+      if (r.google_product_category === "267") {
+        const v = jsonLdNodes(p.html).flatMap((n) => (n["@type"] === "ProductGroup" ? n.hasVariant ?? [] : [n])).find((n) => n.sku === r.id);
+        const o = v && (Array.isArray(v.offers) ? v.offers[0] : v.offers);
+        if (!o) err(`meta ${r.id}`, "no JSON-LD variant with this sku on the landing page");
+        else if (Number(o.price) !== kes) err(`meta ${r.id}`, `price ${kes} in feed, ${o.price} on page`);
+        const shown = p.html.match(/data-price-display[^>]*>([^<]*)</)?.[1] ?? "";
+        if (kesNumber(shown) !== kes) err(`meta ${r.id}`, `page price shows "${shown.trim()}", feed ${kes}`);
+      } else if (!p.html.includes(kes.toLocaleString("en-KE"))) err(`meta ${r.id}`, `price KES ${kes.toLocaleString("en-KE")} not found on the landing page`);
+    }
+  }
+}
+
 // --- report ---
 const byModel = new Map();
 for (const r of rows) {
   const key = r.google_product_category === "267" ? `${r.title.replace(/^Apple\s+/, "").replace(/\s+\d+(GB|TB)\b.*$/, "")} (${r.custom_label_1})` : "Other products";
   byModel.set(key, (byModel.get(key) ?? 0) + 1);
 }
-console.log("Rows by model:");
+console.log("Google rows by model:");
 for (const [k, n] of byModel) console.log(`  ${String(n).padStart(4)}  ${k}`);
+
+if (metaRows.length) {
+  const metaBy = new Map();
+  for (const r of metaRows) {
+    const key = r.google_product_category === "267" ? `${r.title.replace(/^Apple\s+/, "").replace(/\s+\d+(GB|TB)\b.*$/, "")} (${r.custom_label_1})` : "Other products";
+    metaBy.set(key, (metaBy.get(key) ?? 0) + 1);
+  }
+  console.log("\nMeta rows by model:");
+  for (const [k, n] of metaBy) console.log(`  ${String(n).padStart(4)}  ${k}`);
+}
 
 const noIds = rows.filter((r) => !r.gtin || !r.mpn);
 console.log(`\nRows missing gtin or mpn: ${noIds.length} of ${rows.length} (fill in src/lib/ads/product-identifiers.json)`);

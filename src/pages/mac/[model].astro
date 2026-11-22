@@ -53,7 +53,9 @@ const exactExUk = variantExUkMap(liveMac);
 const exactKey = (gb: number, storage: string) => `${gb}gb-${storage.replace(/\s+/g, "").toLowerCase()}`;
 const hasExact = Object.keys(exact).length > 0;
 
-const colour = defaultMacColour(model);
+// Feed and shared links (?colour=sky-blue) open on that finish.
+const askedColour = (Astro.url.searchParams.get("colour") || "").toLowerCase();
+const colour = model.colours.includes(askedColour) ? askedColour : defaultMacColour(model);
 const tabs = macViewerTabs(model, colour);
 const lid = macLidFrames(model);
 const img = tabs[0] || getMacImage(model.id, colour, "product", model.name);
@@ -546,6 +548,9 @@ const liveAccessoryKes = (href: string, fallback: number) =>
     const hit = (state.channel === "ex-uk" ? exactExUk[optionKey] : undefined) ?? exact[optionKey];
     state.kes = hit ?? base + state.memory * memStep + state.storage * storStep;
     if (priceEl) priceEl.textContent = `${state.channel === "ex-uk" ? "Ex-UK · " : ""}KES ${state.kes.toLocaleString("en-KE")}`;
+    // Lipa Mdogo Mdogo calculator follows the option shown here.
+    window.__ghPrice = { kes: state.kes, channel: state.channel === "ex-uk" ? "ex-uk" : "new" };
+    document.dispatchEvent(new CustomEvent("gh:price", { detail: window.__ghPrice }));
     const deposit = Math.round((state.kes * depositPct) / 100);
     const repay = Math.round(((state.kes - deposit) * lipaRatePct) / 10000) * 100; // same sum as lib/pricing/lipa.ts
     const monthly = Math.round(repay / months);
