@@ -209,16 +209,21 @@ if (seo) {
       return listed.showNew || listed.showEx || listed.showUsed;
     });
   // Every listed storage option has its own page: /iphone/<model>/<storage>.
+  const usedKesFor = (storage: string) => {
+    const l = liveByKey.get(storageIdFromLabel(storage));
+    return l ? listedVariantPrices(live, l).usedKes : 0;
+  };
   storageOptions = seo.variants
-    .filter((v) => v.newKes > 0 || v.exUkKes > 0)
     .map((v) => ({
       storage: v.storage,
       slug: storageSlug(v.storage),
       sheetId: v.sheetId,
       newKes: v.newKes,
       exUkKes: v.exUkKes,
+      usedKes: usedKesFor(v.storage),
       inStock: v.stockStatus !== "out_of_stock",
     }))
+    .filter((v) => v.newKes > 0 || v.exUkKes > 0 || v.usedKes > 0)
     .sort((a, b) => storageGb(a.storage) - storageGb(b.storage));
   const keepQuery = (drop: string[]) => {
     const q = new URLSearchParams(Astro.url.search);
@@ -334,6 +339,11 @@ if (seo) {
         : [absImage(initialImg.src)],
     exUkInStock: (key) => {
       const list = (live?.exUkColoursInStock ?? []).map(squash);
+      return list.length ? list.includes(squash(key)) || list.includes(squash(colourLabel(key))) : null;
+    },
+    usedInStock: (key) => {
+      // Slightly used falls back to the New colour ticks, as the colour picker does.
+      const list = (live?.usedColoursInStock?.length ? live.usedColoursInStock : live?.coloursInStock ?? []).map(squash);
       return list.length ? list.includes(squash(key)) || list.includes(squash(colourLabel(key))) : null;
     },
     seriesUrl: new URL(`/iphone/${seriesHub.slug}`, site.url).href,

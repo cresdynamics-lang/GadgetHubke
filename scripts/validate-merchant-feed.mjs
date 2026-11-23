@@ -10,7 +10,7 @@
  *
  * Checks every Google row for:
  *   - a unique id and every required field (title ≤150, iPhone descriptions 500–1,500)
- *   - item_group_id: one model and one condition per group
+ *   - item_group_id: one model and one condition per group; every iPhone row is its own group (= id)
  *   - image_link and additional_image_link: HTTP 200, at least 800×800
  *   - link: HTTP 200, the page preselects the row's colour, and the page's JSON-LD
  *     has a variant with sku = id at the same price, condition and availability
@@ -154,7 +154,7 @@ for (const r of rows) {
   for (const f of required) if (!r[f]) err(r.id, `missing ${f}`);
   if (!/^\d+(\.\d{2})? KES$/.test(r.price ?? "")) err(r.id, `price "${r.price}" is not like 234000.00 KES`);
   if ((r.title ?? "").length > 150) err(r.id, `title is ${r.title.length} characters (max 150)`);
-  if (/\b[A-Z]{5,}\b/.test((r.title ?? "").replace(/\b(KES|USB|EXUK)\b/g, ""))) warn(r.id, "title has an all-caps word");
+  if (/\b[A-Z]{5,}\b/.test((r.title ?? "").replace(/\b(KES|USB|EXUK|USED)\b/g, ""))) warn(r.id, "title has an all-caps word");
   const iphone = r.google_product_category === "267";
   const len = (r.description ?? "").length;
   if (iphone && (len < 500 || len > 1500)) err(r.id, `description is ${len} characters (500–1,500)`);
@@ -164,6 +164,7 @@ for (const r of rows) {
   if ((r.gtin || r.mpn) && r.identifier_exists) err(r.id, "identifier_exists set although gtin or mpn exists");
   if (iphone) {
     for (const f of ["item_group_id", "product_type", "custom_label_0", "custom_label_1", "custom_label_2"]) if (!r[f]) err(r.id, `missing ${f}`);
+    if (r.item_group_id && r.item_group_id !== r.id) err(r.id, `item_group_id ${r.item_group_id} is shared; each iPhone colour, storage and condition stands alone`);
     if (r.product_highlight.length && (r.product_highlight.length < 4 || r.product_highlight.length > 6)) warn(r.id, `${r.product_highlight.length} product highlights`);
     if (r.additional_image_link.length > 10) err(r.id, "more than 10 additional images");
   }

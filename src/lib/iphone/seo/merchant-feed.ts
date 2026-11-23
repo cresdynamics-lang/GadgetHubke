@@ -67,9 +67,9 @@ function resolveImage(modelId: string, name: string): string | undefined {
 }
 
 /** The storage option's own page (and Ex-UK), so the page price matches the feed with no redirect. */
-function variantLink(modelId: string, storage: string, exUk = false): string {
+function variantLink(modelId: string, storage: string, condition: boolean | "used" = false): string {
   const url = new URL(storagePath(modelId, storage), site.url);
-  if (exUk) url.searchParams.set("condition", "ex-uk");
+  if (condition) url.searchParams.set("condition", condition === "used" ? "used" : "ex-uk");
   return url.href;
 }
 
@@ -83,6 +83,19 @@ export function buildIphoneMerchantFeed(): {
   for (const model of iphoneSeoCatalog) {
     const image = resolveImage(model.id, model.name);
     for (const v of model.variants) {
+      // Slightly used has no sheet price: this row stays only when admin lists the size Slightly used (live prices).
+      if (image)
+        rows.push({
+          id: `${v.sheetId}-USED`,
+          title: `${model.name} ${v.storage} Slightly used`,
+          description: model.metaDescription,
+          link: variantLink(model.id, v.storage, "used"),
+          image_link: image,
+          price: "0 KES",
+          availability: "in_stock",
+          condition: "used",
+          brand: "Apple",
+        });
       // A size may be sold Ex-UK only, so it needs a price in at least one condition.
       if (!(v.newKes > 0) && !(SHOW_EX_UK && v.exUkKes > 0)) {
         exclusions.push({

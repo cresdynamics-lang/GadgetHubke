@@ -62,17 +62,28 @@ export type ColourRow = {
 } & GoogleExtras;
 
 /** Live colour stock lists for one product (empty or missing = every colour). */
-export type ColourStock = { coloursInStock?: string[]; exUkColoursInStock?: string[] };
+export type ColourStock = { coloursInStock?: string[]; exUkColoursInStock?: string[]; usedColoursInStock?: string[] };
+
+/** New, Ex-UK (UK-used) or Slightly used: each is its own feed item. */
+export type FeedChannel = "new" | "ex-uk" | "used";
+
+/** Storage row id → sheet id and channel: IP-090, IP-090-EXUK, IP-090-USED. */
+export function channelOfRowId(id: string): { sheetId: string; channel: FeedChannel } {
+  const m = id.match(/^(.*)-(EXUK|USED)$/);
+  if (!m) return { sheetId: id, channel: "new" };
+  return { sheetId: m[1], channel: m[2] === "USED" ? "used" : "ex-uk" };
+}
 
 export type MissingPhoto = { model: string; storage?: string; colour: string };
 
 const STORE_LINE = `${site.address}, ${site.landmark}`;
 const squash = (v: string) => v.toLowerCase().replace(/[^a-z0-9]/g, "");
 
-export function colourLink(seoId: string, storage: string, colourKey: string | null, exUk: boolean): string {
+export function colourLink(seoId: string, storage: string, colourKey: string | null, channel: FeedChannel | boolean): string {
+  const ch: FeedChannel = channel === true ? "ex-uk" : channel === false ? "new" : channel;
   const url = new URL(storagePath(seoId, storage), site.url);
   if (colourKey) url.searchParams.set("colour", colourKey);
-  if (exUk) url.searchParams.set("condition", "ex-uk");
+  if (ch !== "new") url.searchParams.set("condition", ch);
   return url.href;
 }
 
@@ -119,8 +130,12 @@ function specSentences(m: IphoneModel, exUk: boolean): string[] {
   return out;
 }
 
-function conditionLines(name: string, exUk: boolean): string[] {
-  return exUk
+function conditionLines(name: string, channel: FeedChannel): string[] {
+  if (channel === "used")
+    return [
+      "Slightly used, sold by GadgetHub. Condition, included items and warranty terms are stated on the GadgetHub invoice, and battery health is checked on request before you buy.",
+    ];
+  return channel === "ex-uk"
     ? [
         "Ex-UK means UK-used. Condition, included items and warranty terms are stated on the GadgetHub invoice, and battery health is checked on request before you buy.",
       ]
@@ -147,10 +162,12 @@ export function colourDescription(opts: {
   model?: IphoneModel;
   storage: string;
   colour?: string;
-  exUk: boolean;
+  channel: FeedChannel;
   priceKes: number;
 }): string {
-  const { seo, model, storage, colour, exUk, priceKes } = opts;
+  const { seo, model, storage, colour, channel, priceKes } = opts;
+  const exUk = channel !== "new";
+  const sold = channel === "used" ? "slightly used" : channel === "ex-uk" ? "Ex-UK (UK-used)" : "new";
   const colourLine = colour ? `Colour: ${colour}.` : "";
   let body: string[];
   if (opts.hasEditorial) {
@@ -160,18 +177,18 @@ export function colourDescription(opts: {
     body = [text];
   } else {
     body = [
-      `Apple ${seo.name} with ${storage} of storage, sold ${exUk ? "Ex-UK (UK-used)" : "new"} by GadgetHub in Nairobi, Kenya.`,
+      `Apple ${seo.name} with ${storage} of storage, sold ${sold} by GadgetHub in Nairobi, Kenya.`,
       colourLine,
       ...(model ? specSentences(model, exUk) : []),
       storageUse(storage),
-      ...conditionLines(seo.name, exUk),
+      ...conditionLines(seo.name, channel),
     ].filter(Boolean);
   }
   const tail = buyingLines(priceKes);
   // Keep within Google's limit: drop spec sentences from the end of the body, never the condition or payment lines.
   let text = [...body, ...tail].join(" ");
   if (!opts.hasEditorial) {
-    const fixed = conditionLines(seo.name, exUk).length + 1;
+    const fixed = conditionLines(seo.name, channel).length + 1;
     while (text.length > 1500 && body.length > fixed + 2) {
       body.splice(body.length - fixed - 1, 1);
       text = [...body, ...tail].join(" ");
@@ -184,7 +201,8 @@ export function colourDescription(opts: {
   return text;
 }
 
-function highlights(m: IphoneModel | undefined, storage: string, exUk: boolean, seoId: string): string[] {
+function highlights(m: IphoneModel | undefined, storage: string, channel: FeedChannel, seoId: string): string[] {
+  const exUk = channel !== "new";
   const out: string[] = [];
   if (!m || m.specsPending) {
     // Spec sheet not in the model data yet: use the page's own spec table (e.g. iPhone Duo).
@@ -198,7 +216,13 @@ function highlights(m: IphoneModel | undefined, storage: string, exUk: boolean, 
     if (m.batteryVideoHours) out.push(`Up to ${m.batteryVideoHours} hours of video playback${exUk ? " (new battery)" : ""}`);
   }
   out.push(`${storage} storage`);
-  out.push(exUk ? "Ex-UK (UK-used), terms on the GadgetHub invoice" : `New and sealed, ${site.warranty.years}-year warranty`);
+  out.push(
+    channel === "used"
+      ? "Slightly used, terms on the GadgetHub invoice"
+      : channel === "ex-uk"
+        ? "Ex-UK (UK-used), terms on the GadgetHub invoice"
+        : `New and sealed, ${site.warranty.years}-year warranty`,
+  );
   return out.slice(0, 6);
 }
 
@@ -226,8 +250,9 @@ export function expandIphoneRows(
   const missing: MissingPhoto[] = [];
   const missingSeen = new Set<string>();
   for (const row of rows) {
-    const exUk = row.id.endsWith("-EXUK");
-    const sheetId = exUk ? row.id.slice(0, -5) : row.id;
+    const { sheetId, channel } = channelOfRowId(row.id);
+    const exUk = channel === "ex-uk";
+    const used = channel === "used";
     const hit = bySheet.get(sheetId);
     if (!hit) continue;
     const { seo, storage } = hit;
@@ -240,31 +265,40 @@ export function expandIphoneRows(
       missing.push({ model: seo.name, colour: colourLabel(c) });
     }
     const stock = opts.stockFor(seo.id);
-    const list = ((exUk ? stock?.exUkColoursInStock : stock?.coloursInStock) ?? []).map(squash);
+    // Slightly used falls back to the New colour ticks, as the website does.
+    const list = (
+      (used
+        ? stock?.usedColoursInStock?.length
+          ? stock.usedColoursInStock
+          : stock?.coloursInStock
+        : exUk
+          ? stock?.exUkColoursInStock
+          : stock?.coloursInStock) ?? []
+    ).map(squash);
     const family = model?.family ?? Number(seo.name.match(/\d+/)?.[0] ?? 0);
     const common = {
-      item_group_id: `${modelGroupCode(seo.id)}-${exUk ? "EXUK" : "NEW"}`,
       price: row.price,
-      condition: (exUk ? "used" : "new") as ColourRow["condition"],
+      condition: (channel === "new" ? "new" : "used") as ColourRow["condition"],
       brand: "Apple" as const,
       google_product_category: "267",
       product_type: `Phones > iPhone > iPhone ${family || ""}`.trim() + ` > ${seo.name}`,
       product_detail: [{ section: "General", attribute: "Storage", value: storage }],
-      product_highlight: highlights(model, storage, exUk, seo.id),
+      product_highlight: highlights(model, storage, channel, seo.id),
       custom_label_0: family ? `iPhone ${family}` : seo.series,
-      custom_label_1: exUk ? "Ex-UK" : "New",
+      custom_label_1: used ? "Slightly used" : exUk ? "Ex-UK" : "New",
       custom_label_2: storage,
     };
-    const condTitle = exUk ? "Used ex-UK" : "Brand New, Sealed";
+    const condTitle = used ? "Slightly Used" : exUk ? "Used ex-UK" : "Brand New, Sealed";
     const description = (colour?: string) =>
       colourDescription({
         base: row.description,
-        hasEditorial: opts.hasEditorial(sheetId, exUk),
+        // Hand-written copy exists for New and Ex-UK only.
+        hasEditorial: !used && opts.hasEditorial(sheetId, exUk),
         seo,
         model,
         storage,
         colour,
-        exUk,
+        channel,
         priceKes,
       });
 
@@ -274,11 +308,13 @@ export function expandIphoneRows(
       const id = row.id;
       out.push({
         ...common,
+        // Every storage, condition and colour is its own product: no shared group.
+        item_group_id: id,
         ...idFields(id),
         id,
         title: `Apple ${seo.name} ${storage} – ${condTitle}`,
         description: description(),
-        link: colourLink(seo.id, storage, null, exUk),
+        link: colourLink(seo.id, storage, null, channel),
         image_link: row.image_link,
         availability: row.availability as ColourRow["availability"],
       });
@@ -289,14 +325,15 @@ export function expandIphoneRows(
       const label = colourLabel(key);
       const photos = colourPhotos(seo.id, key).map(opts.square);
       const inStock = !list.length || list.includes(squash(key)) || list.includes(squash(label));
-      const id = colourSku(sheetId, key, exUk);
+      const id = colourSku(sheetId, key, channel);
       out.push({
         ...common,
+        item_group_id: id,
         ...idFields(id),
         id,
         title: `Apple ${seo.name} ${storage} ${label} – ${condTitle}`,
         description: description(label),
-        link: colourLink(seo.id, storage, key, exUk),
+        link: colourLink(seo.id, storage, key, channel),
         image_link: photos[0],
         additional_image_link: photos.slice(1, 11),
         availability: inStock ? (row.availability as ColourRow["availability"]) : "out_of_stock",

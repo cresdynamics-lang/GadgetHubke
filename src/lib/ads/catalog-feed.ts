@@ -85,8 +85,8 @@ function pushRow(
     ...row,
     image_link: squareFeedImage(row.image_link),
     brand: "Apple",
-    // Ex-UK (UK-used) iPhone rows carry ids ending -EXUK.
-    condition: /-EXUK$/i.test(row.id) ? "used" : "new",
+    // Ex-UK (UK-used) and Slightly used iPhone rows carry ids ending -EXUK / -USED.
+    condition: /-(EXUK|USED)$/i.test(row.id) ? "used" : "new",
     availability: row.availability ?? "in_stock",
   });
 }
@@ -334,7 +334,7 @@ function escXml(s: string): string {
 }
 
 /** iPhone sheet id ("IP-081") → live product id + storage key. */
-function iphoneSheetLiveIndex(): Map<string, { id: string; key: string }> {
+export function iphoneSheetLiveIndex(): Map<string, { id: string; key: string }> {
   const out = new Map<string, { id: string; key: string }>();
   for (const r of iphoneSheet) {
     const seo = getSeoModelByName(r.name);
@@ -443,7 +443,8 @@ export async function buildIphoneColourRowsLive(): Promise<{ rows: ColourRow[]; 
     },
   );
   // Newest models first, then storage and colour in page order.
-  iphones.sort((a, b) => sheetSortKey(b.id) - sheetSortKey(a.id));
+  const conditionRank = (id: string) => (/-USED(-|$)/.test(id) ? 2 : /-EXUK(-|$)/.test(id) ? 1 : 0);
+  iphones.sort((a, b) => sheetSortKey(b.id) - sheetSortKey(a.id) || conditionRank(a.id) - conditionRank(b.id));
   return { rows: iphones, missingPhotos };
 }
 

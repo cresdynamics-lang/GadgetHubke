@@ -17,6 +17,8 @@ export type StorageOption = {
   newKes: number;
   /** 0 when Ex-UK is not listed for this storage. */
   exUkKes: number;
+  /** Slightly used price; 0 or missing when not listed Slightly used. */
+  usedKes?: number;
   inStock: boolean;
 };
 

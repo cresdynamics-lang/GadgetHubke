@@ -4,6 +4,7 @@ export const prerender = false;
 import ManagementLayout from "../../../layouts/ManagementLayout.astro";
 import { isAdminAuthed, listCatalogMerged } from "../../../lib/admin";
 import { sampleStaff } from "../../../lib/management/sample";
+import { buildIphoneColourRowsLive, iphoneSheetLiveIndex } from "../../../lib/ads/catalog-feed";
 
 const authed = await isAdminAuthed(Astro.cookies);
 if (!authed) return Astro.redirect("/management");
@@ -11,6 +12,29 @@ if (!authed) return Astro.redirect("/management");
 const items = await listCatalogMerged();
 const groups = [...new Set(items.map((i) => i.group))];
 const kes = (n?: number) => (typeof n === "number" ? n : "");
+
+/** Google / Meta feed items per iPhone product: each colour, storage and condition is its own item. */
+type FeedItem = { id: string; storage: string; condition: string; colour: string; price: number; inStock: boolean };
+const feedByProduct = new Map<string, FeedItem[]>();
+try {
+  const sheetIndex = iphoneSheetLiveIndex();
+  for (const r of (await buildIphoneColourRowsLive()).rows) {
+    const productId = sheetIndex.get(r.id.match(/^IP-\d+/)?.[0] ?? "")?.id;
+    if (!productId) continue;
+    const list = feedByProduct.get(productId) ?? [];
+    list.push({
+      id: r.id,
+      storage: r.custom_label_2 ?? "",
+      condition: r.custom_label_1 ?? "",
+      colour: r.color ?? "All colours",
+      price: Math.round(Number(r.price.replace(/[^\d.]/g, ""))),
+      inStock: r.availability === "in_stock",
+    });
+    feedByProduct.set(productId, list);
+  }
+} catch {
+  /* the price table still works without the feed list */
+}
 ---
 
 <ManagementLayout title="Prices & stock - Management" authed active="catalog" staffName={sampleStaff.name} staffRole={sampleStaff.role}>
@@ -89,6 +113,28 @@ const kes = (n?: number) => (typeof n === "number" ? n : "");
                                   </label>
                                 ))}
                               </div>
+                            ) : null
+                          }
+                          {
+                            feedByProduct.get(item.id)?.length ? (
+                              <details class="cat-feed">
+                                <summary>Google &amp; Meta feed: {feedByProduct.get(item.id)!.length} separate items</summary>
+                                <p class="mgmt-muted">Each colour, storage and condition is its own product, with its own photo and link. Updates after Save (reload to refresh).</p>
+                                <table>
+                                  <tbody>
+                                    {feedByProduct.get(item.id)!.map((f) => (
+                                      <tr class:list={{ "is-oos": !f.inStock }}>
+                                        <td><code>{f.id}</code></td>
+                                        <td>{f.storage}</td>
+                                        <td>{f.condition}</td>
+                                        <td>{f.colour}</td>
+                                        <td>{f.price.toLocaleString("en-KE")}</td>
+                                        <td>{f.inStock ? "In stock" : "Out of stock"}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </details>
                             ) : null
                           }
                           {
@@ -171,6 +217,11 @@ const kes = (n?: number) => (typeof n === "number" ? n : "");
 </ManagementLayout>
 
 <style>
+  .cat-feed { margin-top: 0.55rem; font-size: 0.75rem; max-width: 30rem; }
+  .cat-feed summary { cursor: pointer; font-weight: 600; }
+  .cat-feed table { border-collapse: collapse; margin-top: 0.3rem; }
+  .cat-feed td { padding: 0.1rem 0.45rem 0.1rem 0; border: 0; white-space: nowrap; }
+  .cat-feed tr.is-oos { opacity: 0.55; }
   .cat-product + .cat-product tr:first-child td { border-top: 2px solid rgba(0, 0, 0, 0.12); }
   .cat-colours {
     display: flex;

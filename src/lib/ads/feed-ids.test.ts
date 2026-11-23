@@ -16,3 +16,9 @@ test("group codes are short and distinct per model", () => {
   assert.equal(modelGroupCode("iphone-air"), "IPAIR");
   assert.equal(modelGroupCode("iphone-duo"), "IPDUO");
 });
+
+test("Slightly used ids carry USED", async () => {
+  const { colourSku } = await import("./feed-ids.ts");
+  assert.equal(colourSku("IP-090", "black", "used"), "IP-090-USED-BLACK");
+  assert.equal(colourSku("IP-090", "black", "ex-uk"), "IP-090-EXUK-BLACK");
+});

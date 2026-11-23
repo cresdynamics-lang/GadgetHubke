@@ -176,6 +176,8 @@ export function buildIphoneVariantJsonLd(
     colours: import("./variant-pages").ColourOption[];
     /** Ex-UK stock by colour, when admin lists it separately from New. */
     exUkInStock?: (colourKey: string) => boolean | null;
+    /** Slightly used stock by colour. */
+    usedInStock?: (colourKey: string) => boolean | null;
     imageFor: (colourKey: string | null) => string;
     /** Every photo of a colour, main view first (defaults to imageFor). */
     imagesFor?: (colourKey: string | null) => string[];
@@ -190,32 +192,43 @@ export function buildIphoneVariantJsonLd(
 
   const products = opts.storages.flatMap((s) => {
     const storageUrl = new URL(`/iphone/${model.id}/${s.slug}`, opts.modelUrl).href;
+    type Cond = { exUk: boolean; used: boolean; price: number };
     const conditions = [
-      s.newKes > 0 ? { exUk: false, price: s.newKes } : null,
-      SHOW_EX_UK && s.exUkKes > 0 ? { exUk: true, price: s.exUkKes } : null,
-    ].filter((c): c is { exUk: boolean; price: number } => Boolean(c));
+      s.newKes > 0 ? { exUk: false, used: false, price: s.newKes } : null,
+      SHOW_EX_UK && s.exUkKes > 0 ? { exUk: true, used: false, price: s.exUkKes } : null,
+      (s.usedKes ?? 0) > 0 ? { exUk: false, used: true, price: s.usedKes! } : null,
+    ].filter((c): c is Cond => Boolean(c));
     return conditions.flatMap((c) =>
       colours.map((colour) => {
         const params = new URLSearchParams();
         if (colour) params.set("colour", colour.key);
         if (c.exUk) params.set("condition", "ex-uk");
+        if (c.used) params.set("condition", "used");
         const query = params.toString();
         const label = [model.name, s.storage, colour?.label].filter(Boolean).join(" ");
-        const colourStock = colour ? (c.exUk && opts.exUkInStock ? opts.exUkInStock(colour.key) : colour.inStock) : null;
+        const colourStock = colour
+          ? c.exUk && opts.exUkInStock
+            ? opts.exUkInStock(colour.key)
+            : c.used && opts.usedInStock
+              ? opts.usedInStock(colour.key)
+              : colour.inStock
+          : null;
         const inStock = s.inStock && colourStock !== false;
         // Same id as the Merchant Center row, so Google can match page and feed.
-        const sku = colourSku(s.sheetId, colour?.key, c.exUk);
+        const sku = colourSku(s.sheetId, colour?.key, c.used ? "used" : c.exUk);
         const ids = identifiersFor(sku);
         return {
           "@type": "Product",
-          "@id": `${storageUrl}#${colour?.key ?? "any"}${c.exUk ? "-exuk" : ""}`,
+          "@id": `${storageUrl}#${colour?.key ?? "any"}${c.exUk ? "-exuk" : c.used ? "-used" : ""}`,
           sku,
           ...(ids.gtin ? { gtin: ids.gtin } : {}),
           ...(ids.mpn ? { mpn: ids.mpn } : {}),
-          name: c.exUk ? `${label} (${EX_UK_CONDITION_LABEL})` : label,
+          name: c.exUk ? `${label} (${EX_UK_CONDITION_LABEL})` : c.used ? `${label} (Slightly used)` : label,
           description: c.exUk
             ? `${label}, ${EX_UK_CONDITION_LABEL}. ${EX_UK_WARRANTY}`
-            : `${label}, sealed new, at Gadget Hub in Nairobi CBD.`,
+            : c.used
+              ? `${label}, slightly used, at Gadget Hub in Nairobi CBD. Condition and warranty terms are on the invoice.`
+              : `${label}, sealed new, at Gadget Hub in Nairobi CBD.`,
           image: opts.imagesFor ? opts.imagesFor(colour?.key ?? null) : [opts.imageFor(colour?.key ?? null)],
           brand: { "@type": "Brand", name: "Apple" },
           size: s.storage,
@@ -225,7 +238,7 @@ export function buildIphoneVariantJsonLd(
             "@type": "Offer",
             price: c.price,
             priceCurrency: "KES",
-            itemCondition: c.exUk ? "https://schema.org/UsedCondition" : "https://schema.org/NewCondition",
+            itemCondition: c.exUk || c.used ? "https://schema.org/UsedCondition" : "https://schema.org/NewCondition",
             url: query ? `${storageUrl}?${query}` : storageUrl,
             availability: inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
             ...(c.exUk ? { description: `${EX_UK_CONDITION_LABEL}. ${EX_UK_WARRANTY}` } : {}),

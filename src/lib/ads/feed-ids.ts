@@ -6,7 +6,16 @@ export function modelGroupCode(seoId: string): string {
   return "IP" + seoId.replace(/^iphone-?/, "").split("-").map((w) => words[w] ?? w.toUpperCase()).join("");
 }
 
-/** Feed id: IP-099-GLACIER (New), IP-090-EXUK-BLACK (Ex-UK). Same id in the page's JSON-LD. */
-export function colourSku(sheetId: string, colourKey: string | null | undefined, exUk: boolean): string {
-  return [sheetId, exUk ? "EXUK" : "", colourKey ? colourKey.toUpperCase() : ""].filter(Boolean).join("-");
+/** Condition part of a feed id: "" (New), "EXUK" or "USED" (Slightly used). `true` means Ex-UK. */
+export type FeedCondition = boolean | "new" | "ex-uk" | "used";
+
+function conditionCode(c: FeedCondition): string {
+  if (c === true || c === "ex-uk") return "EXUK";
+  if (c === "used") return "USED";
+  return "";
+}
+
+/** Feed id: IP-099-GLACIER (New), IP-090-EXUK-BLACK (Ex-UK), IP-090-USED-BLACK (Slightly used). Same id in the page's JSON-LD. */
+export function colourSku(sheetId: string, colourKey: string | null | undefined, condition: FeedCondition): string {
+  return [sheetId, conditionCode(condition), colourKey ? colourKey.toUpperCase() : ""].filter(Boolean).join("-");
 }
