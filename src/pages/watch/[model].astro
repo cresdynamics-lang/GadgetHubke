@@ -1,4 +1,5 @@
 ---
+import { relatedAtLivePrices } from "../../lib/related-live";
 import { lipaRate } from "../../lib/pricing/lipa";
 /**
  * Watch PDP - sticky 4:3 viewer + buy panel + feel + specs/FAQ.
@@ -83,7 +84,8 @@ const notes = watchBuyingNotes(model);
 const faq = watchFaq();
 const bands = bandsForWatch(model);
 const fits = accessoriesForWatch(model).filter((a) => a.category !== "cross");
-const related = relatedWatchModels(model, watchModels);
+// "Compare with" shows only products on sale, at the same live from-price as the menu.
+const related = await relatedAtLivePrices(relatedWatchModels(model, watchModels));
 const materials = model.materials;
 
 const heroStart = getWatchImage(model.id, "hero_startframe", model.name);

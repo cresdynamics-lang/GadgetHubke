@@ -89,3 +89,25 @@ test("the description takes the listed price and storage sizes", () => {
   assert.equal(priced.metaDescription.includes(`from KES ${priced.fromKes.toLocaleString("en-KE")}.`), true);
 });
 
+
+test("copy names only listed storage sizes, and Ex-UK-only models are not called sealed new", () => {
+  const model = {
+    ...seo(),
+    intro: "Shop the iPhone 16 at Gadget Hub in Nairobi. KES 93,000 sealed new, with storage options 128GB, 256GB, 512GB. Covered by the manufacturer's standard warranty.",
+    faq: [{ question: "Price?", answer: "At Gadget Hub, iPhone 16 is KES 93,000 for sealed new stock. Storage options: 128GB, 256GB, 512GB." }],
+    specs: [{ label: "Storage", value: "128GB, 256GB, 512GB" }],
+  };
+  const live = {
+    id: "iphone-16", name: "iPhone 16", group: "", href: "", priceKes: 0, basePriceKes: 0, inStock: true,
+    showOnWebsite: true, showNewOnWebsite: false, exUkShowOnWebsite: true, sample: false,
+    variants: [
+      { key: "128", label: "128GB", priceKes: 0, exUkKes: 78000, inStock: true, exUkInStock: true },
+      { key: "256", label: "256GB", priceKes: 0, exUkKes: 87000, inStock: true, exUkInStock: true },
+    ],
+  } as unknown as PricedProduct;
+  const out = withLiveSeoPrices(model, live);
+  const text = [out.intro, ...out.faq.map((f) => f.answer), ...out.specs.map((r) => r.value)].join(" ");
+  assert.doesNotMatch(text, /512GB/);
+  assert.doesNotMatch(text, /sealed new|manufacturer's standard warranty/);
+  assert.match(out.intro, /with storage options 128GB, 256GB\./);
+});

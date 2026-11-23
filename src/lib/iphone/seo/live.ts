@@ -23,6 +23,22 @@ function liveDescription(text: string, fromKes: number, storages: string[]) {
   return text.replace(PRICE_AND_STORAGE, (_, opening: string) => `${opening}from ${kes(fromKes)}. ${storageList(storages)}. `);
 }
 
+/** Catalogue intros name the storage sizes and say "sealed new": keep both true to what is listed. */
+function liveIntro(text: string, storages: string[], exUkOnly: boolean) {
+  let out = text.replace(/with storage options (?:\d+(?:GB|TB)(?:, )?)+\./, `with storage options ${storages.join(", ")}.`);
+  if (exUkOnly)
+    out = out
+      .replace(/ sealed new,/, " Ex-UK (UK-used),")
+      .replace("Covered by the manufacturer's standard warranty.", "Condition and warranty terms are stated on your GadgetHub invoice.");
+  return out;
+}
+
+function liveFaqAnswer(text: string, storages: string[], exUkOnly: boolean) {
+  let out = text.replace(/Storage options: (?:\d+(?:GB|TB)(?:, )?)+\./, `Storage options: ${storages.join(", ")}.`);
+  if (exUkOnly) out = out.replace(" for sealed new stock.", " for Ex-UK (UK-used) stock.");
+  return out;
+}
+
 export function withLiveSeoPrices(model: IphoneSeoModel, live: PricedProduct | undefined): IphoneSeoModel {
   if (!live) return model;
   const byKey = new Map(live.variants.map((v) => [v.key, v]));
@@ -48,6 +64,8 @@ export function withLiveSeoPrices(model: IphoneSeoModel, live: PricedProduct | u
   const fromKes = listedPrices.length ? Math.min(...listedPrices) : 0;
   const oldFrom = kes(model.fromKes);
   const newFrom = kes(fromKes);
+  const listedStorages = variants.map((v) => v.storage);
+  const exUkOnly = !variants.some((v) => v.newKes > 0);
   const fix = (t: string) => (oldFrom === newFrom ? t : t.split(oldFrom).join(newFrom));
   return {
     ...model,
@@ -58,7 +76,9 @@ export function withLiveSeoPrices(model: IphoneSeoModel, live: PricedProduct | u
       fromKes,
       variants.map((v) => v.storage),
     ),
-    intro: fix(model.intro),
-    faq: model.faq.map((f) => ({ ...f, answer: fix(f.answer) })),
+    intro: liveIntro(fix(model.intro), listedStorages, exUkOnly),
+    // Only sizes on sale: a size with no price is not shown anywhere on the page.
+    specs: model.specs.map((row) => (row.label === "Storage" ? { ...row, value: listedStorages.join(", ") } : row)),
+    faq: model.faq.map((f) => ({ ...f, answer: liveFaqAnswer(fix(f.answer), listedStorages, exUkOnly) })),
   };
 }

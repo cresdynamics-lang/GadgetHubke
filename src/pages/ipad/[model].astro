@@ -1,4 +1,5 @@
 ---
+import { relatedAtLivePrices } from "../../lib/related-live";
 import { lipaRate } from "../../lib/pricing/lipa";
 /**
  * iPad PDP - sticky viewer + buy panel + feel hooks + specs/FAQ.
@@ -82,6 +83,8 @@ const listedKeys = listedIpadKeys(model.id);
 const storageOptions = model.storageOptions.filter(
   (s) => listedKeys.includes(exactKey(s, false)) || listedKeys.includes(exactKey(s, true)),
 );
+// Nano-texture glass is offered on the 1 TB and 2 TB models only: say so only for sizes on sale.
+const nanoSizes = storageOptions.filter((s) => /^(1|2) ?TB$/i.test(s.trim()));
 const showWifi = listedKeys.some((key) => !key.endsWith("-cell"));
 const showCell = listedKeys.some((key) => key.endsWith("-cell"));
 const defaultStorage = storageOptions[0] || model.storageOptions[0];
@@ -92,7 +95,8 @@ const lipa = lipaMonthly(price.kes);
 const notes = ipadBuyingNotes(model);
 const faq = ipadFaq();
 const fitsList = accessoriesForIpad(model).filter((a) => a.category !== "cross");
-const related = relatedIpadModels(model, ipadModels).filter((m) => isListedIpadModel(m.id));
+// "Compare with" shows only products on sale, at the same live from-price as the menu.
+const related = await relatedAtLivePrices(relatedIpadModels(model, ipadModels).filter((m) => isListedIpadModel(m.id)));
 const thickness = ipadConfig.thicknessMm[model.thicknessKey];
 const pencils = pencilCatalog().filter((a) => fits(model, a));
 const keyboards = keyboardCatalog().filter((a) => fits(model, a));
@@ -237,12 +241,12 @@ const wa = whatsappUrl(
           </div>
 
           {
-            model.display.nanoTextureOptional ? (
+            model.display.nanoTextureOptional && nanoSizes.length ? (
               <>
                 <p class="ipdp__cfg-label">Glass</p>
                 <label class="ipdp__check">
                   <input type="checkbox" data-nano />
-                  Nano-texture (+{formatKes(ipadConfig.nanoTextureStepKes)} on 1 TB / 2 TB)
+                  Nano-texture (+{formatKes(ipadConfig.nanoTextureStepKes)} on {nanoSizes.join(" / ")})
                 </label>
               </>
             ) : null
@@ -404,7 +408,7 @@ const wa = whatsappUrl(
         <summary>Memory and storage</summary>
         <table>
           <tr><th>Memory</th><td>{model.memoryGb.join(" / ")} GB</td></tr>
-          <tr><th>Storage</th><td>{model.storageOptions.join(" / ")}</td></tr>
+          <tr><th>Storage</th><td>{(storageOptions.length ? storageOptions : model.storageOptions).join(" / ")}</td></tr>
         </table>
       </details>
       <details class="ipdp__acc">

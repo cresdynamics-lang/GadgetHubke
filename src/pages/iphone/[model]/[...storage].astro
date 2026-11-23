@@ -1,4 +1,5 @@
 ---
+import { relatedAtLivePrices } from "../../../lib/related-live";
 import { lipaRate } from "../../../lib/pricing/lipa";
 /**
  * iPhone SEO product page (11–18). Gallery + buying panel for catalog models;
@@ -271,7 +272,8 @@ if (seo) {
   tag = model ? (isLatestTag(model) ? "Latest" : isValueTag(model) ? "Value" : null) : null;
   notes = model ? buyingNotes(model) : [];
   fits = model ? accessoriesFor(model) : [];
-  related = model ? relatedModels(model, models) : [];
+  // "Compare with" shows only iPhones on sale, at the same live from-price as the menu.
+  related = model ? await relatedAtLivePrices(relatedModels(model, models), iphoneLiveId) : [];
   // Colours: the photographed finishes plus any listed without photos yet.
   const squash = (v: string) => v.toLowerCase().replace(/[^a-z0-9]/g, "");
   const stockList = (live?.coloursInStock ?? []).map(squash);
@@ -755,7 +757,7 @@ if (seo) {
       <details class="ipdp__acc" open={model.specsPending ? true : undefined}>
         <summary>Storage and colours</summary>
         <table>
-          <tr><th>Storage</th><td>{model.storage.join(", ")}</td></tr>
+          <tr><th>Storage</th><td>{prices.map((p) => p.label).join(", ")}</td></tr>
           <tr><th>Colours (imaged)</th><td>{colours.map(colourLabel).join(", ") || "Overview only"}</td></tr>
           {textColours.length ? <tr><th>Also listed</th><td>{textColours.map(colourLabel).join(", ")}</td></tr> : null}
         </table>

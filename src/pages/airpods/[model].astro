@@ -1,4 +1,5 @@
 ---
+import { relatedAtLivePrices } from "../../lib/related-live";
 import { lipaRate } from "../../lib/pricing/lipa";
 import { isListedForSale } from "../../lib/listing-offers";
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -74,7 +75,8 @@ const lipa = lipaMonthly(price.kes);
 const notes = airpodsBuyingNotes(model);
 const faq = airpodsFaq();
 const fits = accessoriesForAirpods(model).filter((a) => a.category !== "cross");
-const related = relatedAirpodsModels(model, airpodsModels);
+// "Compare with" shows only products on sale, at the same live from-price as the menu.
+const related = await relatedAtLivePrices(relatedAirpodsModels(model, airpodsModels));
 const defaultColour = defaultAirpodsColour(model);
 const canWireless = model.caseOptions.includes("wireless");
 
