@@ -35,6 +35,7 @@
     "test:payments": "node --experimental-strip-types --test src/lib/payments/stanbic-callback.test.ts src/lib/payments/stanbic-live.test.ts"
   },
   "dependencies": {
+    "@allan70/stanbic-connect": "1.0.0",
     "@astrojs/node": "^11.1.7",
     "@astrojs/vercel": "^11.0.12",
     "@fontsource-variable/inter": "^5.2.8",

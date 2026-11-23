@@ -1,3 +1,4 @@
+import { recordWebsiteSettlement } from "../../../lib/ops/push-order";
 import type { APIRoute } from "astro";
 import { getOrder, markFailed, markPaid, publicOrder, updateOrder } from "../../../lib/checkout/orders";
 import { STANBIC_WEBHOOK_URL } from "../../../lib/payments/stanbic";
@@ -144,7 +145,7 @@ export const POST: APIRoute = async ({ request }) => {
   const log = (result: BankNotice["result"]) =>
     callback.notification ? recordBankNotice(noticeRow(callback, result, authed, order!.id)) : Promise.resolve();
 
-  const verified = Boolean(secret) || callbackMatchesOrder(callback, order);
+  const verified = (Boolean(secret) || authed) && callbackMatchesOrder(callback, order) && !order.mock;
   if (!verified) {
     // Not proof of payment, but worth seeing: the field names show what Stanbic actually sends.
     console.warn("[stanbic-webhook] unverified notice", order.id, callback.fields.join(","));
@@ -157,14 +158,21 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   if (callback.outcome === "paid") {
-    if (callback.amountKes != null && callback.amountKes < order.subtotalKes) {
+    if (callback.amountKes !== order.subtotalKes || !callback.receipt) {
       console.warn("[stanbic-webhook] amount below order total", order.id, callback.amountKes, order.subtotalKes);
       await updateOrder(order.id, { error: `Paid ${callback.amountKes} but the order is ${order.subtotalKes}. Check with Stanbic.` });
       await log("amount_mismatch");
       if (callback.notification) return ack({ matched: true, ignored: "amount_mismatch" });
       return json({ ok: true, ignored: "amount_mismatch" }, 202);
     }
-    const paidRef = callback.refs.find((ref) => ref !== order.id) || order.paymentRef;
+    const paidRef = callback.receipt;
+    const providerReference = order.stkReferences?.find(ref => callback.refs.includes(ref)) || order.paymentRef;
+    if (!providerReference) return json({ error: "Missing payment reference" }, 409);
+    try {
+      await recordWebsiteSettlement(order.id, paidRef, callback.amountKes, providerReference);
+    } catch {
+      return json({ error: "Awaiting system reconciliation" }, 503);
+    }
     const wasPaid = order.status === "paid";
     const updated = await markPaid(order.id, paidRef);
     await log(wasPaid ? "already_paid" : "paid");

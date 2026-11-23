@@ -1,3 +1,5 @@
+import { recordWebsiteSettlement } from "../../../../lib/ops/push-order";
+import { readStanbicCallback } from "../../../../lib/payments/stanbic-callback";
 import type { APIRoute } from "astro";
 import { getOrder, markFailed, markPaid, publicOrder } from "../../../../lib/checkout/orders";
 import { mockStkShouldSucceed, paymentsMode, stkTransactionStatus } from "../../../../lib/payments/stanbic";
@@ -40,7 +42,13 @@ export const GET: APIRoute = async ({ url }) => {
       lastBankCheck.set(order.id, Date.now());
       try {
         const bank = await stkTransactionStatus(dbsRef);
-        if (bank.status === "paid") order = (await markPaid(order.id, order.paymentRef)) || order;
+        if (bank.status === "paid") {
+          const result = readStanbicCallback(bank.raw);
+          if (result.receipt && result.amountKes === order.subtotalKes && result.refs.includes(dbsRef)) {
+            await recordWebsiteSettlement(order.id, result.receipt, result.amountKes, dbsRef);
+            order = (await markPaid(order.id, result.receipt)) || order;
+          }
+        }
         else if (bank.status === "failed") order = (await markFailed(order.id, "M-Pesa payment did not complete.")) || order;
       } catch (e) {
         console.error("[stanbic-status]", e instanceof Error ? e.message : e);

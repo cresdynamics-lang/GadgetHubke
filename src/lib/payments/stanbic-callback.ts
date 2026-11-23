@@ -15,6 +15,7 @@ export type StanbicCallback = {
   outcome: CallbackOutcome;
   message: string;
   amountKes?: number;
+  receipt?: string;
   /** Field names that arrived, for the log when a notice cannot be matched. Never values. */
   fields: string[];
   /** True for Stanbic's payment notification (a credit to the account), not an STK result. */
@@ -91,9 +92,11 @@ export function readStanbicCallback(body: unknown): StanbicCallback {
   if (notification && outcome === "unknown") outcome = "paid";
 
   // "KES 1,234.00" in Stanbic notifications.
-  const amount = Number(first(fields, AMOUNT_KEYS).replace(/[^\d.]/g, ""));
+  const amountText = first(fields, AMOUNT_KEYS).replace(/^KES\s*/i, "");
+  const amount = /^(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/.test(amountText) ? Number(amountText.replaceAll(",", "")) : NaN;
   const refs = [...new Set(REF_KEYS.map((key) => fields.get(key) || "").filter(Boolean))];
   return {
+    receipt: first(fields, ["mpesareceiptnumber", "mpesaref", "transid"]).toUpperCase() || undefined,
     orderId: first(fields, ORDER_KEYS),
     refs,
     outcome,
