@@ -7,6 +7,17 @@
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { whatsappUrl } from "../../lib/site";
+import { finishSplitModelIds } from "../../lib/ads/catalog-feed";
+import identifiers from "../../lib/ads/product-identifiers.json";
+
+/** Google Merchant Center account for Google Customer Reviews. */
+const GCR_MERCHANT_ID = 5876471550;
+// Only barcodes that have been filled in; the survey's product list is optional.
+const gtins = Object.fromEntries(
+  Object.entries(identifiers as Record<string, { gtin?: string }>)
+    .map(([id, row]) => [id, (row.gtin || "").replace(/\s+/g, "")])
+    .filter(([, gtin]) => /^\d{8,14}$/.test(gtin)),
+);
 
 
 const orderId = Astro.url.searchParams.get("order") || "";
@@ -26,6 +37,9 @@ const wa = whatsappUrl(
     data-success
     data-order-id={orderId}
     data-paid="0"
+    data-finish-split={JSON.stringify(finishSplitModelIds())}
+    data-gtins={JSON.stringify(gtins)}
+    data-gcr-merchant={GCR_MERCHANT_ID}
     hidden
   >
     <p class="ok__eyebrow">Payment successful</p>
@@ -55,6 +69,7 @@ const wa = whatsappUrl(
 <script>
   import { formatKes } from "../../lib/checkout/bag";
   import { RECENT_ORDER_KEY } from "../../lib/checkout/types";
+  import { feedItemId } from "../../lib/ads/feed-item-id";
 
   const root = document.querySelector("[data-success]");
   const wait = document.querySelector("[data-success-wait]");
@@ -116,15 +131,57 @@ const wa = whatsappUrl(
     trackPurchase(order);
   }
 
+  const finishSplit = JSON.parse(root?.getAttribute("data-finish-split") || "[]");
+  const gtins = JSON.parse(root?.getAttribute("data-gtins") || "{}");
+  /** Google feed id (Mac/iPad split by finish); Meta's catalogue splits iPhones only. */
+  const googleId = (i) => feedItemId(i, finishSplit);
+  const metaId = (i) => feedItemId(i);
+
+  /** Date in Nairobi, n days from today, as YYYY-MM-DD. */
+  function nairobiDate(days) {
+    const d = new Date(Date.now() + days * 86400000);
+    return new Intl.DateTimeFormat("en-CA", { timeZone: "Africa/Nairobi" }).format(d);
+  }
+
+  /** Google Customer Reviews opt-in: full purchases with an email only, once per order. */
+  function renderReviewOptIn(order) {
+    const email = String(order.customer?.email || "").trim();
+    if (!email || order.intent === "lipa" || order.mock) return;
+    const key = `gh-gcr-${order.id}`;
+    if (sessionStorage.getItem(key)) return;
+    sessionStorage.setItem(key, "1");
+    const products = (Array.isArray(order.items) ? order.items : [])
+      .map((i) => gtins[googleId(i)])
+      .filter(Boolean)
+      .map((gtin) => ({ gtin }));
+    window.renderOptIn = function () {
+      window.gapi.load("surveyoptin", function () {
+        window.gapi.surveyoptin.render({
+          merchant_id: Number(root?.getAttribute("data-gcr-merchant")),
+          order_id: String(order.id),
+          email,
+          delivery_country: "KE",
+          // Pickup is same day in Nairobi; delivery is priced by location, so allow three days.
+          estimated_delivery_date: nairobiDate(order.customer?.fulfillment === "delivery" ? 3 : 0),
+          ...(products.length ? { products } : {}),
+        });
+      });
+    };
+    const s = document.createElement("script");
+    s.src = "https://apis.google.com/js/platform.js?onload=renderOptIn";
+    s.async = true;
+    s.defer = true;
+    document.head.appendChild(s);
+  }
+
   function trackPurchase(order) {
     if (!order || order.status !== "paid") return;
+    renderReviewOptIn(order);
     const key = `gh-purchase-${order.id}`;
     if (sessionStorage.getItem(key)) return;
     const items = Array.isArray(order.items) ? order.items : [];
     const value = Number(order.subtotalKes) || 0;
-    const contentIds = items
-      .map((i) => String(i.catalogId || i.sheetId || i.id || "").trim())
-      .filter(Boolean);
+    const contentIds = items.map(metaId).filter(Boolean);
 
     if (typeof window.fbq === "function" && contentIds.length) {
       window.fbq("track", "Purchase", {
@@ -133,7 +190,7 @@ const wa = whatsappUrl(
         value,
         currency: "KES",
         contents: items.map((i) => ({
-          id: String(i.catalogId || i.sheetId || i.id || ""),
+          id: metaId(i),
           quantity: Number(i.qty) || 1,
           item_price: Number(i.kes) || 0,
         })),
@@ -149,7 +206,7 @@ const wa = whatsappUrl(
           currency: "KES",
           payment_type: order.paymentMethod === "card" ? "card" : order.paymentMethod === "mpesa" ? "mpesa" : String(order.paymentMethod || ""),
           items: items.map((i) => ({
-            item_id: String(i.catalogId || i.sheetId || i.id || ""),
+            item_id: googleId(i),
             item_name: String(i.name || ""),
             item_variant: [i.storage, i.colour, i.channel].filter(Boolean).join(" / "),
             price: Number(i.kes) || 0,
@@ -165,7 +222,7 @@ const wa = whatsappUrl(
         value,
         currency: "KES",
         items: items.map((i) => ({
-          item_id: String(i.catalogId || i.sheetId || i.id || ""),
+          item_id: googleId(i),
           item_name: String(i.name || ""),
           price: Number(i.kes) || 0,
           quantity: Number(i.qty) || 1,

@@ -157,8 +157,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
                     const photo = getImage(item.id, key, 1, item.name);
                     return { id: key, label: colourLabel(key), hex: colourHex(key), imageSrc: cardImageSrc(item.id, photo.src) };
                   })}
-                  eager
-                  priority={i < 2}
+                  eager={i < 2}
                 />
               </li>
             ))
@@ -184,8 +183,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
                     const photo = getImage(item.id, key, 1, item.name);
                     return { id: key, label: colourLabel(key), hex: colourHex(key), imageSrc: cardImageSrc(item.id, photo.src) };
                   })}
-                  eager
-                  priority={i === 0 && latest18Rows.length === 0}
+                  eager={i < 2 && latest18Rows.length === 0}
                 />
               </li>
             ))
@@ -231,7 +229,7 @@ const hubFrom = formatKesSeoHub(hubSeo.fromKes);
               data-channel={offer.channel}
               style={`--i: ${Math.min(i, 11)}`}
             >
-              <IphoneCard model={model} eager={i < 12} channel={offer.channel} priceKes={offer.priceKes || model.basePriceKes} coloursInStock={offer.colours} href={offer.href} />
+              <IphoneCard model={model} eager={false} channel={offer.channel} priceKes={offer.priceKes || model.basePriceKes} coloursInStock={offer.colours} href={offer.href} />
             </li>
           ))
         }

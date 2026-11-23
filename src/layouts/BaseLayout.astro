@@ -115,6 +115,9 @@ const hideFloatWhatsApp = path === "/contact";
         var href = a.getAttribute('href') || '';
         var method = /wa\.me|whatsapp\.com/i.test(href) ? 'whatsapp' : /^tel:/i.test(href) ? 'phone' : /^mailto:/i.test(href) ? 'email' : '';
         if (!method) return;
+        // Google tag events (GA4 via the Tag Manager Google tag; Google Ads imports them as conversions).
+        if (method === 'whatsapp') gtag('event', 'whatsapp_click', { link_url: href, page_path: location.pathname });
+        if (method === 'phone') gtag('event', 'call_click', { phone_link: href, page_path: location.pathname });
         window.ghTrack(method === 'whatsapp' ? 'whatsapp_click' : method + '_click', {
           contact_method: method,
           link_text: (a.textContent || '').trim().slice(0, 100),
@@ -123,7 +126,20 @@ const hideFloatWhatsApp = path === "/contact";
         window.ghTrack('generate_lead', { lead_source: method, page_path: location.pathname });
       }, true);
     </script>
-    <script is:inline async src="https://www.googletagmanager.com/gtm.js?id=GTM-WRVDMKR4"></script>
+    <script is:inline>
+      // Tag Manager loads once the page has loaded, so it never competes with the first view.
+      // Events pushed before then wait in dataLayer and are sent when it arrives.
+      (function () {
+        function loadGtm() {
+          var s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-WRVDMKR4';
+          document.head.appendChild(s);
+        }
+        if (document.readyState === 'complete') loadGtm();
+        else window.addEventListener('load', loadGtm, { once: true });
+      })();
+    </script>
     {/* End Google Tag Manager */}
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="description" content={description} />

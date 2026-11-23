@@ -1,57 +1,17 @@
 ---
 /**
  * Full-screen search (/ or header). iPhone + MacBook + iPad model-aware ranking.
+ * The product indexes load from /api/search-index when search first opens.
  */
-import { iphoneLiveId, isShownOnWebsite, livePricedCatalog } from "../lib/pricing/live";
-import {
-  buildIphoneSearchIndex,
-  iphonePopularSearches,
-  iphoneConfig,
-  models,
-  accessoriesFor,
-} from "../lib/iphone";
-import {
-  buildMacSearchIndex,
-  macPopularSearches,
-  accessoriesForMac,
-  macModels,
-} from "../lib/mac";
-import {
-  buildIpadSearchIndex,
-  ipadPopularSearches,
-  accessoriesForIpad,
-  ipadModels,
-} from "../lib/ipad";
-import {
-  buildWatchSearchIndex,
-  watchPopularSearches,
-  accessoriesForWatch,
-  watchModels,
-} from "../lib/watch";
-import {
-  buildAirpodsSearchIndex,
-  airpodsPopularSearches,
-  accessoriesForAirpods,
-  airpodsModels,
-} from "../lib/airpods";
-import {
-  buildTvHomeSearchIndex,
-  tvHomePopularSearches,
-  accessoriesForTvHome,
-  tvHomeModels,
-} from "../lib/tv-home";
-import {
-  buildAccessoriesSearchIndex,
-  accessoriesPopularSearches,
-} from "../lib/accessories";
+import { iphoneConfig, iphonePopularSearches } from "../lib/iphone";
+import { macPopularSearches } from "../lib/mac";
+import { ipadPopularSearches } from "../lib/ipad";
+import { watchPopularSearches } from "../lib/watch";
+import { airpodsPopularSearches } from "../lib/airpods";
+import { tvHomePopularSearches } from "../lib/tv-home";
+import { accessoriesPopularSearches } from "../lib/accessories";
+import { tvHomeListed } from "../lib/site-search-data";
 
-const phoneIndex = buildIphoneSearchIndex();
-const macIndex = buildMacSearchIndex();
-const ipadIndex = buildIpadSearchIndex();
-const watchIndex = buildWatchSearchIndex();
-const airpodsIndex = buildAirpodsSearchIndex();
-const tvHomeIndex = buildTvHomeSearchIndex();
-const accessoriesIndex = buildAccessoriesSearchIndex();
 const waPhone = iphoneConfig.whatsapp;
 const popular = [
   ...iphonePopularSearches.slice(0, 2),
@@ -62,93 +22,7 @@ const popular = [
   ...tvHomePopularSearches.slice(0, 1),
   ...accessoriesPopularSearches.slice(0, 2),
 ];
-const phoneAcc = Object.fromEntries(
-  models.map((m) => [
-    m.id,
-    accessoriesFor(m).map((a) => ({
-      id: a.id,
-      name: a.name,
-      blurb: a.blurb,
-      priceKes: a.priceKes,
-    })),
-  ]),
-);
-const macAcc = Object.fromEntries(
-  macModels.map((m) => [
-    m.id,
-    accessoriesForMac(m)
-      .filter((a) => a.category !== "cross")
-      .slice(0, 4)
-      .map((a) => ({
-        id: a.id,
-        name: a.name,
-        blurb: a.blurb,
-        priceKes: a.priceKes,
-      })),
-  ]),
-);
-const ipadAcc = Object.fromEntries(
-  ipadModels.map((m) => [
-    m.id,
-    accessoriesForIpad(m)
-      .filter((a) => a.category !== "cross")
-      .slice(0, 4)
-      .map((a) => ({
-        id: a.id,
-        name: a.name,
-        blurb: a.blurb,
-        priceKes: a.priceKes,
-      })),
-  ]),
-);
-const watchAcc = Object.fromEntries(
-  watchModels.map((m) => [
-    m.id,
-    accessoriesForWatch(m)
-      .filter((a) => a.category !== "cross")
-      .slice(0, 4)
-      .map((a) => ({
-        id: a.id,
-        name: a.name,
-        blurb: a.blurb,
-        priceKes: a.priceKes,
-      })),
-  ]),
-);
-const airpodsAcc = Object.fromEntries(
-  airpodsModels.map((m) => [
-    m.id,
-    accessoriesForAirpods(m)
-      .filter((a) => a.category !== "cross")
-      .slice(0, 4)
-      .map((a) => ({
-        id: a.id,
-        name: a.name,
-        blurb: a.blurb,
-        priceKes: a.priceKes,
-      })),
-  ]),
-);
-const tvHomeAcc = Object.fromEntries(
-  tvHomeModels.map((m) => [
-    m.id,
-    accessoriesForTvHome(m)
-      .filter((a) => a.category !== "cross")
-      .slice(0, 4)
-      .map((a) => ({
-        id: a.id,
-        name: a.name,
-        blurb: a.blurb,
-        priceKes: a.priceKes,
-      })),
-  ]),
-);
-
-// Search offers only what is on the live list.
-const offList = new Set((await livePricedCatalog()).filter((p) => !isShownOnWebsite(p)).map((p) => p.id));
-const onLiveList = (item: { id: string }) => !offList.has(iphoneLiveId(item.id));
-const tvListed = tvHomeModels.some((m) => !offList.has(m.id));
-
+const tvListed = await tvHomeListed();
 ---
 
 <dialog class="site-search" data-site-search aria-label="Search products">
@@ -263,7 +137,26 @@ const tvListed = tvHomeModels.some((m) => !offList.has(m.id));
   </div>
 </dialog>
 
-<script define:vars={{ phoneIndex: phoneIndex.filter(onLiveList), macIndex: macIndex.filter(onLiveList), ipadIndex: ipadIndex.filter(onLiveList), watchIndex: watchIndex.filter(onLiveList), airpodsIndex: airpodsIndex.filter(onLiveList), tvHomeIndex: tvHomeIndex.filter(onLiveList), accessoriesIndex: accessoriesIndex.filter(onLiveList), waPhone, phoneAcc, macAcc, ipadAcc, watchAcc, airpodsAcc, tvHomeAcc }}>
+<script define:vars={{ waPhone }}>
+  // Product indexes: fetched once, the first time search is opened or touched.
+  let phoneIndex = [], macIndex = [], ipadIndex = [], watchIndex = [], airpodsIndex = [], tvHomeIndex = [], accessoriesIndex = [];
+  let phoneAcc = {}, macAcc = {}, ipadAcc = {}, watchAcc = {}, airpodsAcc = {}, tvHomeAcc = {};
+  let searchReady = null;
+  let searchLoaded = false;
+  function loadSearchIndex() {
+    if (!searchReady) {
+      searchReady = fetch("/api/search-index")
+        .then((r) => r.json())
+        .then((d) => {
+          ({ phoneIndex, macIndex, ipadIndex, watchIndex, airpodsIndex, tvHomeIndex, accessoriesIndex, phoneAcc, macAcc, ipadAcc, watchAcc, airpodsAcc, tvHomeAcc } = d);
+          searchLoaded = true;
+        })
+        .catch(() => {
+          searchReady = null;
+        });
+    }
+    return searchReady;
+  }
   const PHONE_VOCAB = [
     "pro", "max", "plus", "mini", "titanium", "black", "white", "blue", "pink", "teal",
     "case", "charger", "cable", "magsafe", "screen", "protector", "ultramarine", "desert", "natural",
@@ -760,6 +653,7 @@ const tvListed = tvHomeModels.some((m) => !offList.has(m.id));
 
   if (dialog instanceof HTMLDialogElement && input instanceof HTMLInputElement && list) {
     function openSearch(prefill) {
+      loadSearchIndex();
       dialog.showModal();
       if (prefill) {
         input.value = prefill;
@@ -775,6 +669,10 @@ const tvListed = tvHomeModels.some((m) => !offList.has(m.id));
     }
     function render(query) {
       const q = query.trim();
+      if (q && !searchLoaded) {
+        loadSearchIndex()?.then(() => searchLoaded && render(input.value));
+        return;
+      }
       if (!q) {
         popular.hidden = false;
         results.hidden = true;

@@ -531,7 +531,7 @@ if (seo) {
           {model?.tagline ? ` · ${model.tagline}` : ""}
         </p>
 
-        <div class="ipdp__field">
+        <div class="ipdp__field ipdp__field--colour">
           <p class="ipdp__label">
             Colour
             <span data-colour-name>{initialColour ? colourLabel(initialColour) : "See overview"}</span>
@@ -565,7 +565,7 @@ if (seo) {
           }
         </div>
 
-        <div class="ipdp__field">
+        <div class="ipdp__field ipdp__field--storage">
           <p class="ipdp__label">Storage</p>
           <div class="ipdp__storage" data-storage-list>
             {
@@ -1216,6 +1216,7 @@ if (seo) {
     gap: var(--space-6);
   }
 
+
   @media (min-width: 56rem) {
     .ipdp__grid {
       grid-template-columns: 1.05fr 0.95fr;
@@ -1303,6 +1304,8 @@ if (seo) {
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
+    /* Thumbnails are drawn by script: keep their row's height so the page does not jump. */
+    min-height: 4rem;
   }
 
   .ipdp__thumb {
@@ -1867,4 +1870,70 @@ if (seo) {
   }
   .ipdp__seo-gallery { list-style: none; margin: 0.75rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 0.5rem; }
   .ipdp__seo-gallery img { width: 100%; height: auto; border-radius: 12px; background: #f5f5f7; }
+
+  /*
+   * Phones: price, colour, Lipa Mdogo Mdogo and WhatsApp on the first screen.
+   * A shorter photo stage, no hint or tour button, and the buy panel reordered.
+   */
+  @media (max-width: 55.99rem) {
+    .ipdp {
+      padding-top: 0.5rem;
+    }
+    .ipdp__grid {
+      gap: 0.85rem;
+    }
+    .ipdp__stage {
+      aspect-ratio: 4 / 3;
+    }
+    .ipdp__hint,
+    .ipdp__tour,
+    .ipdp__pills {
+      display: none;
+    }
+    .ipdp__thumbs-row {
+      margin-top: 0.5rem;
+    }
+    .ipdp__thumbs {
+      min-height: 3.25rem;
+    }
+    .ipdp__thumbs :global(.ipdp__thumb) {
+      width: 3.25rem;
+      height: 3.25rem;
+    }
+    .ipdp__buy {
+      display: flex;
+      flex-direction: column;
+    }
+    .ipdp__buy > :global(*) {
+      order: 10;
+    }
+    .ipdp__buy > h1 {
+      order: 1;
+      margin-bottom: 0.25rem;
+    }
+    .ipdp__buy > .ipdp__price-block {
+      order: 2;
+    }
+    .ipdp__buy > .ipdp__field--colour {
+      order: 3;
+    }
+    .ipdp__buy > .ipdp__cta {
+      order: 4;
+    }
+    .ipdp__buy > :global(.stock-channel) {
+      order: 5;
+    }
+    .ipdp__buy > :global(.stock-channel__hint) {
+      order: 6;
+    }
+    .ipdp__buy > .ipdp__field--storage {
+      order: 7;
+    }
+    .ipdp__buy > .ipdp__stock {
+      order: 8;
+    }
+    .ipdp__buy > .ipdp__tagline {
+      order: 9;
+    }
+  }
 </style>

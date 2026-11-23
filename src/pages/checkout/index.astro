@@ -3,6 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import { iphoneConfig } from "../../lib/iphone/config";
 import { STOREFRONT_PAYMENTS } from "../../lib/commerce";
 import { site } from "../../lib/site";
+import { finishSplitModelIds } from "../../lib/ads/catalog-feed";
 
 const waNumber = site.whatsapp;
 const lipa = iphoneConfig.lipa;
@@ -20,6 +21,7 @@ const lipa = iphoneConfig.lipa;
     data-lipa-pct={lipa.depositDefaultPct}
     data-lipa-months={lipa.monthsDefault}
     data-payments={STOREFRONT_PAYMENTS ? "1" : "0"}
+    data-finish-split={JSON.stringify(finishSplitModelIds())}
   >
     <header class="checkout__intro">
       <button type="button" class="checkout__back" data-checkout-back>← Back</button>
@@ -181,6 +183,7 @@ const lipa = iphoneConfig.lipa;
 </BaseLayout>
 
 <script>
+  import { feedItemId } from "../../lib/ads/feed-item-id";
   import { lipaPlan } from "../../lib/pricing/lipa";
   import {
     bagMetaLine,
@@ -216,15 +219,30 @@ const lipa = iphoneConfig.lipa;
   let items = expressMode ? readExpressItems() : readBagFromStorage();
   if (expressMode && !items.length) items = readBagFromStorage();
 
-  // Tag Manager: checkout started, once per page load.
+  // Checkout started, once per page load: Tag Manager (dataLayer) and Google tag (GA4 / Ads).
+  // Item ids are the Merchant Center feed ids, so Google can match the cart to Shopping ads.
+  const finishSplit = JSON.parse(root.getAttribute("data-finish-split") || "[]");
+  const checkoutValue = items.reduce((n, i) => n + (Number(i.kes) || 0) * (Number(i.qty) || 1), 0);
+  if (items.length && typeof window.gtag === "function") {
+    window.gtag("event", "begin_checkout", {
+      value: checkoutValue,
+      currency: "KES",
+      items: items.map((i) => ({
+        item_id: feedItemId(i, finishSplit),
+        item_name: String(i.name || ""),
+        price: Number(i.kes) || 0,
+        quantity: Number(i.qty) || 1,
+      })),
+    });
+  }
   if (items.length && typeof window.ghTrack === "function") {
     window.ghTrack("begin_checkout", {
       checkout_type: expressMode ? "buy_now" : "cart",
       ecommerce: {
         currency: "KES",
-        value: items.reduce((n, i) => n + (Number(i.kes) || 0) * (Number(i.qty) || 1), 0),
+        value: checkoutValue,
         items: items.map((i) => ({
-          item_id: String(i.catalogId || i.sheetId || i.id || ""),
+          item_id: feedItemId(i, finishSplit),
           item_name: String(i.name || ""),
           item_variant: [i.storage, i.colour, i.channel].filter(Boolean).join(" / "),
           price: Number(i.kes) || 0,

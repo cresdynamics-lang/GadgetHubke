@@ -452,19 +452,32 @@ export async function buildIphoneColourRowsLive(): Promise<{ rows: ColourRow[]; 
  * The finish does not change the price, and the page preselects it from ?colour=.
  * Watch finishes change the case material and price, so Watch rows stay one per model.
  */
+/** Square JPEG feed photos of one Mac or iPad finish (store photos are WebP; only their square copies go in). */
+function finishPhotos(modelId: string, colour: string): string[] {
+  return storeAngles(modelId, colour)
+    .map((a) => (diskExists(a.src) ? squareFeedImage(absUrl(a.src)) : ""))
+    .filter((link) => /\/feed-images\/.+\.jpg$/.test(link));
+}
+
+function finishesInFeed(model: { id: string; colours: string[] }): string[] {
+  const colours = model.colours.filter((c) => finishPhotos(model.id, c).length);
+  return colours.length >= 2 ? colours : [];
+}
+
+/** Mac and iPad ids whose Google rows are split by finish (id-FINISH), for tag item ids. */
+export function finishSplitModelIds(): string[] {
+  return [...macModels, ...ipadModels].filter((m) => finishesInFeed(m).length).map((m) => m.id);
+}
+
 function splitByColour(r: GoogleRow): GoogleRow[] {
   const mac = macModels.find((m) => m.id === r.id);
   const ipad = mac ? undefined : ipadModels.find((m) => m.id === r.id);
   const model = mac ?? ipad;
   if (!model) return [r];
   const label = mac ? macColourLabel : ipadColourLabel;
-  // Store photos are WebP: only their square JPEG copies (scripts/build-feed-images.mjs) go in the feed.
-  const shot = (c: string) =>
-    storeAngles(model.id, c)
-      .map((a) => (diskExists(a.src) ? squareFeedImage(absUrl(a.src)) : ""))
-      .filter((link) => /\/feed-images\/.+\.jpg$/.test(link));
-  const colours = model.colours.filter((c) => shot(c).length);
-  if (colours.length < 2) return [r];
+  const shot = (c: string) => finishPhotos(model.id, c);
+  const colours = finishesInFeed(model);
+  if (!colours.length) return [r];
   return colours.map((c) => {
     const photos = shot(c);
     const link = new URL(r.link);
