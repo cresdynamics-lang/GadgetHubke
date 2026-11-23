@@ -46,3 +46,22 @@ export async function pushOrderToOps(order: CheckoutOrder) {
     console.error("[ops-order]", error);
   }
 }
+
+/** Commit the verified receipt to the system before showing the customer a paid order. */
+export async function recordWebsiteSettlement(orderId: string, receipt: string, amountKes: number, providerReference: string) {
+  const base = process.env.OPS_CATALOG_URL?.trim();
+  const secret = process.env.WEBSITE_SYNC_SECRET?.trim();
+  if (!base || !secret) throw new Error("Website payment synchronization is not configured.");
+  const endpoint = new URL("/api/website/orders", base);
+  if (endpoint.protocol !== "https:" && !["localhost", "127.0.0.1"].includes(endpoint.hostname)) {
+    throw new Error("Website payment synchronization requires HTTPS.");
+  }
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${secret}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ orderId, receipt, amountKes, providerReference }),
+    redirect: "error",
+    signal: AbortSignal.timeout(10000),
+  });
+  if (!response.ok || (await response.json()).recorded !== true) throw new Error("The system could not record this website payment.");
+}
