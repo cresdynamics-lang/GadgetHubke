@@ -12,6 +12,7 @@
  * - Callback: https://gadgethubke.com/api/checkout/webhook
  */
 
+import { StanbicClient } from "@allan70/stanbic-connect";
 import { site } from "../site";
 import { readStanbicCallback } from "./stanbic-callback";
 import { apiBase, liveSettingsProblem, paymentsMode, statusUrl, stkUrl, tokenUrl } from "./stanbic-config";
@@ -86,53 +87,25 @@ function dbsReferenceId(): string {
   return out;
 }
 
-type TokenCache = { token: string; expiresAt: number };
-let tokenCache: TokenCache | null = null;
+let client: StanbicClient | undefined;
 
-async function getAccessToken(): Promise<string> {
-  if (tokenCache && tokenCache.expiresAt > Date.now() + 30_000) {
-    return tokenCache.token;
-  }
-  const id = process.env.STANBIC_CLIENT_ID;
-  const secret = process.env.STANBIC_CLIENT_SECRET;
-  if (!id || !secret) {
-    throw new Error("Stanbic sandbox credentials are not configured.");
-  }
-
-  const body = new URLSearchParams({
-    grant_type: "client_credentials",
-    client_id: id,
-    client_secret: secret,
-    scope: "payments",
-  });
-
-  const res = await fetch(tokenUrl(), {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      Accept: "application/json",
+function bankClient() {
+  if (client) return client;
+  const clientId = process.env.STANBIC_CLIENT_ID;
+  const clientSecret = process.env.STANBIC_CLIENT_SECRET;
+  if (!clientId || !clientSecret) throw new Error("Stanbic credentials are missing.");
+  const baseUrl = apiBase();
+  client = new StanbicClient({
+    clientId, clientSecret, baseUrl,
+    environment: paymentsMode() === "live" ? "production" : "sandbox",
+    fetch: (url, init) => {
+      const endpoint = String(url);
+      if (endpoint === baseUrl + "/auth/oauth2/token") return fetch(tokenUrl(), init);
+      if (endpoint === baseUrl + "/mpesa-checkout") return fetch(stkUrl(), init);
+      return fetch(url, init);
     },
-    body,
   });
-
-  const data = (await res.json().catch(() => ({}))) as {
-    access_token?: string;
-    expires_in?: number;
-    error?: string;
-    error_description?: string;
-    description?: string;
-  };
-
-  if (!res.ok || !data.access_token || data.access_token === "None") {
-    const detail = data.error_description || data.description || data.error || `HTTP ${res.status}`;
-    throw new Error(`Stanbic auth failed (${detail})`);
-  }
-
-  tokenCache = {
-    token: data.access_token,
-    expiresAt: Date.now() + (Number(data.expires_in) || 3600) * 1000,
-  };
-  return tokenCache.token;
+  return client;
 }
 
 export type StkResult = {
@@ -155,7 +128,7 @@ export async function initiateStkPush(input: {
   if (!/^2547\d{8}$/.test(msisdn) && !/^2541\d{8}$/.test(msisdn)) {
     throw new Error("Enter a valid Safaricom M-Pesa number (07… or 01…).");
   }
-  if (input.amountKes < 1) throw new Error("Invalid amount.");
+  if (!Number.isSafeInteger(input.amountKes) || input.amountKes < 1) throw new Error("Invalid amount.");
 
   if (mode === "mock") {
     return {
@@ -167,46 +140,27 @@ export async function initiateStkPush(input: {
   }
 
   assertLiveSettings();
-  const token = await getAccessToken();
   const reference = dbsReferenceId();
   const payload = {
     dbsReferenceId: reference,
     billAccountRef: billAccountRef(),
-    amount: String(Math.round(input.amountKes)),
+    amount: input.amountKes.toFixed(2),
     mobileNumber: msisdn,
     callBackUrl: STANBIC_WEBHOOK_URL,
     callbackUrl: STANBIC_WEBHOOK_URL,
     externalReference: input.orderId,
   };
 
-  const res = await fetch(stkUrl(), {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify(payload),
-  });
-
-  const raw = await res.json().catch(() => ({}));
-  console.log("[stanbic-stk]", res.status, JSON.stringify(raw).slice(0, 500));
-  const accepted = String((raw as { status?: string }).status || "").toLowerCase();
-  if (!res.ok || (accepted && accepted !== "success")) {
-    const message =
-      typeof (raw as { message?: string }).message === "string"
-        ? (raw as { message: string }).message
-        : typeof (raw as { description?: string }).description === "string"
-          ? (raw as { description: string }).description
-          : `Stanbic STK failed (${res.status})`;
-    throw new Error(message);
+  const raw = await bankClient().payments.mpesaStkPush(payload) as Record<string, unknown> | null;
+  if (!raw || typeof raw !== "object" || String(raw.status || "").toLowerCase() !== "success") {
+    throw new Error("Stanbic did not confirm receipt of the STK request.");
   }
 
   const bankRef = String(
-    (raw as { transactionId?: string; reference?: string; ConversationID?: string; dbsReferenceId?: string })
+    (raw as { transactionId?: string; reference?: string; conversationId?: string; dbsReferenceId?: string })
       .transactionId ||
       (raw as { reference?: string }).reference ||
-      (raw as { ConversationID?: string }).ConversationID ||
+      (raw as { conversationId?: string }).conversationId ||
       (raw as { dbsReferenceId?: string }).dbsReferenceId ||
       reference,
   );
@@ -233,7 +187,7 @@ const BANK_FAILED = new Set(["failed", "failure", "rejected", "rjct", "cancelled
  */
 export async function stkTransactionStatus(dbsReferenceId: string): Promise<{ status: BankPaymentStatus; raw: unknown }> {
   assertLiveSettings();
-  const token = await getAccessToken();
+  const token = await bankClient().getToken();
   const url = `${statusUrl()}?dbsReferenceId=${encodeURIComponent(dbsReferenceId)}`;
   const res = await fetch(url, { headers: { Authorization: `Bearer ${token}`, Accept: "application/json" } });
   const raw = await res.json().catch(() => ({}));
