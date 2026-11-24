@@ -3,7 +3,7 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import FloatingActions from "../components/FloatingActions.astro";
 import CookieBanner from "../components/CookieBanner.astro";
-import BlackNovemberDeal from "../components/BlackNovemberDeal.astro";
+import BlackNovemberMarquee from "../components/BlackNovemberMarquee.astro";
 import Analytics from "../components/Analytics.astro";
 import PresenceBeacon from "../components/PresenceBeacon.astro";
 import SiteSearch from "../components/SiteSearch.astro";
@@ -180,6 +180,7 @@ const hideFloatWhatsApp = path === "/contact";
   <body>
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WRVDMKR4" height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe></noscript>
     <a class="sr-only" href="#main">Skip to content</a>
+    <BlackNovemberMarquee />
     <Header />
     <main id="main">
       <slot />
@@ -190,7 +191,6 @@ const hideFloatWhatsApp = path === "/contact";
     <BagDrawer />
     <FloatingActions hideWhatsApp={hideFloatWhatsApp} />
     <CookieBanner />
-    <BlackNovemberDeal />
     <Analytics />
     <PresenceBeacon />
     <CatalogOverlay />

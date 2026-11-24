@@ -1,0 +1,95 @@
+---
+/**
+ * Thin Black November strip above the header. Scrolls right to left; pauses on hover.
+ * Gone after 27 Nov 2026 (Nairobi time): left out of the page by the server, and removed
+ * by the browser too, in case a cached page is shown later.
+ */
+const ENDS_AT = Date.parse("2026-11-28T00:00:00+03:00");
+const show = Date.now() < ENDS_AT;
+const path = Astro.url.pathname;
+const skip = path.startsWith("/admin") || path.startsWith("/management") || path.startsWith("/checkout");
+
+const items = [
+  "Black November at Gadget Hub",
+  "Deals on iPhone, iPad and MacBook",
+  "Sealed, New or Ex-UK",
+  "Pay by M-Pesa or Lipa Mdogo Mdogo",
+  "Ends 27 November",
+];
+---
+
+{
+  show && !skip && (
+    <a class="bn-marquee" href="/black-friday-iphone-deals-kenya" data-bn-marquee data-ends={ENDS_AT} aria-label="Black November deals, ends 27 November">
+      <span class="bn-marquee__track" aria-hidden="true">
+        {[0, 1].map(() => (
+          <span class="bn-marquee__group">
+            {items.map((t) => (
+              <span class="bn-marquee__item">{t}</span>
+            ))}
+          </span>
+        ))}
+      </span>
+    </a>
+  )
+}
+
+<script>
+  const el = document.querySelector<HTMLElement>("[data-bn-marquee]");
+  if (el && Date.now() >= Number(el.dataset.ends)) el.remove();
+</script>
+
+<style>
+  .bn-marquee {
+    display: block;
+    overflow: hidden;
+    height: 1.6rem;
+    background: #0c0c0d;
+    color: #f5a623;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    line-height: 1.6rem;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+
+  .bn-marquee__track {
+    display: inline-flex;
+    animation: bn-marquee 32s linear infinite;
+  }
+
+  .bn-marquee:hover .bn-marquee__track {
+    animation-play-state: paused;
+  }
+
+  .bn-marquee__group {
+    display: inline-flex;
+    flex-shrink: 0;
+  }
+
+  .bn-marquee__item {
+    padding-inline: 1.25rem;
+  }
+
+  .bn-marquee__item::after {
+    content: "•";
+    margin-left: 2.5rem;
+    color: rgba(245, 245, 247, 0.45);
+  }
+
+  @keyframes bn-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bn-marquee__track {
+      animation: none;
+    }
+  }
+</style>
