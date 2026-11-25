@@ -39,7 +39,7 @@ const priceById = new Map(catalog.map((p) => [p.id, listedFromKes(p)]));
 const onlyListed = <T extends { id: string }>(items: T[]) => items.filter((item) => listed.has(item.id));
 const liveKes = (id: string, fallback: number) => priceById.get(id) ?? fallback;
 
-const iphoneGens = [16, 15, 14, 13, 12, 11] as const;
+const iphoneGens = [17, 16, 15, 14, 13, 12, 11] as const;
 const iphoneNewest = liveMerchItems(
   megaNewIphones().map((m) => ({ ...m, priceKes: m.preview.priceKes })),
   catalog,

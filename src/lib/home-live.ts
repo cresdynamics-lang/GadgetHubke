@@ -91,8 +91,8 @@ export function resolveLiveProduct(
   const href = item.href.split("?")[0];
 
   if (/iphone duo/.test(name) || href.includes("iphone-duo")) return listedById(byId, "iphone-duo");
-  if (/iphone 18 pro max/.test(name) || href.includes("iphone-pro-max")) return listedById(byId, "iphone-pro-max");
-  if (/iphone 18 pro/.test(name) || /\/iphone-pro$/.test(href)) return listedById(byId, "iphone-pro");
+  if (/iphone 18 pro max/.test(name) || /iphone-(18-)?pro-max/.test(href)) return listedById(byId, "iphone-pro-max");
+  if (/iphone 18 pro/.test(name) || /\/iphone-(18-)?pro$/.test(href)) return listedById(byId, "iphone-pro");
   if (/ipad pro/.test(name) || href.includes("ipad-pro")) {
     return cheapestListed(catalog, (product) => product.group === "iPad" && product.id.includes("ipad-pro"));
   }
@@ -121,6 +121,19 @@ function displayName(item: { name: string }, live: PricedProduct): string {
   return item.name;
 }
 
+/** The /shop/iphone/* overviews name these product pages as canonical; link to them directly. */
+const IPHONE_PRODUCT_PAGES: Record<string, string> = {
+  "/shop/iphone/iphone-pro": "/iphone/iphone-18-pro",
+  "/shop/iphone/iphone-pro-max": "/iphone/iphone-18-pro-max",
+  "/shop/iphone/iphone-duo": "/iphone/iphone-duo",
+  "/shop/iphone/iphone-17": "/iphone/iphone-17",
+  "/shop/iphone/iphone-16": "/iphone/iphone-16",
+};
+
+export function productPageHref(href: string): string {
+  return IPHONE_PRODUCT_PAGES[href] ?? href;
+}
+
 export function liveMerchItems<T extends { id: string; name: string; href: string; priceKes: number }>(
   items: T[],
   catalog: PricedProduct[],
@@ -134,7 +147,7 @@ export function liveMerchItems<T extends { id: string; name: string; href: strin
     out.push({
       ...item,
       id: live.id,
-      href: live.href || item.href,
+      href: productPageHref(live.href || item.href),
       priceKes: listedFromKes(live) || live.priceKes,
       name: displayName(item, live),
     });

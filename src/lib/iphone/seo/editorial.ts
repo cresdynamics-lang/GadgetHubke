@@ -177,7 +177,7 @@ const kenyaTermsBoth: EditorialSection = {
 const PM_COLOURS = "Burgundy, Black, Glacier and Silver";
 
 const proMax: ModelEditorial = {
-  seoTitle: "iPhone 18 Pro Max Price in Kenya: 256GB, 512GB, 1TB",
+  seoTitle: "iPhone 18 Pro Max Price in Kenya: 256GB to 1TB | Gadget Hub",
   metaDescription: (c) =>
     `iPhone 18 Pro Max from ${kes(fromKes(c))}. New and sealed with a 1-year warranty. Pay by M-Pesa or Lipa Mdogo Mdogo; we deliver across Kenya. Order today.`,
   h1: "Apple iPhone 18 Pro Max, New",
@@ -363,7 +363,7 @@ const proMax: ModelEditorial = {
 const PRO_COLOURS = "Burgundy, Black, Glacier and Silver";
 
 const pro: ModelEditorial = {
-  seoTitle: "iPhone 18 Pro Price in Kenya: 256GB and 512GB | GadgetHub",
+  seoTitle: "iPhone 18 Pro Price in Kenya: 256GB and 512GB | Gadget Hub",
   metaDescription: (c) =>
     `iPhone 18 Pro from ${kes(fromKes(c))}: A20 Pro, 6.3-inch ProMotion, 48MP cameras. New, sealed, 1-year warranty. Pay by M-Pesa; delivery across Kenya.`,
   h1: "Apple iPhone 18 Pro, New",
@@ -980,7 +980,7 @@ function pro17Storages(name: string, body: string, short: string): Record<string
 }
 
 const pro17: ModelEditorial = {
-  seoTitle: "iPhone 17 Pro Price in Kenya: New and Ex-UK | GadgetHub",
+  seoTitle: "iPhone 17 Pro Price in Kenya: New and Ex-UK | Gadget Hub",
   metaDescription: (c) =>
     `iPhone 17 Pro from ${kes(fromAny(c))}. A19 Pro, three 48MP cameras, 6.3-inch ProMotion. New or Ex-UK, M-Pesa and delivery across Kenya.`,
   h1: "Apple iPhone 17 Pro, New and Ex-UK",
@@ -1027,7 +1027,7 @@ const pro17: ModelEditorial = {
 };
 
 const pm17: ModelEditorial = {
-  seoTitle: "iPhone 17 Pro Max Price in Kenya: New and Ex-UK",
+  seoTitle: "iPhone 17 Pro Max Price in Kenya: New and Ex-UK | Gadget Hub",
   metaDescription: (c) =>
     `iPhone 17 Pro Max from ${kes(fromAny(c))}. A19 Pro, three 48MP cameras, 6.9-inch display, 39-hour battery. New or Ex-UK, M-Pesa, delivery in Kenya.`,
   h1: "Apple iPhone 17 Pro Max, New and Ex-UK",

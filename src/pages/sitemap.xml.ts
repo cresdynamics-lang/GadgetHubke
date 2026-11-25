@@ -90,6 +90,7 @@ export const GET: APIRoute = async () => {
     const liveModel = live.find((p) => p.id === iphoneLiveId(m.id));
     const priced = withLiveSeoPrices(m, liveModel);
     const changed = (liveModel?.updatedAt || "").slice(0, 10);
+    if (changed) lastmod.set(abs(`/iphone/${m.id}`), changed);
     for (const v of priced.variants) {
       if (!(v.newKes > 0 || v.exUkKes > 0)) continue;
       const loc = abs(storagePath(m.id, v.storage));

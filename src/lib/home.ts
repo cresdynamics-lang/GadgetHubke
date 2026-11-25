@@ -20,7 +20,7 @@ export type DealItem = {
 /** Cinematic Apple frames for the home spotlight strip */
 export const homeCinemaShots = [
   {
-    href: "/shop/iphone/iphone-pro",
+    href: "/iphone/iphone-18-pro",
     src: "/images/home/cinema-iphone-18-pro-1600.webp",
     alt: "iPhone 18 Pro - Pro camera system",
     eyebrow: "iPhone 18 Pro",
@@ -104,7 +104,7 @@ export const heroPhones: [HeroPhone, HeroPhone, HeroPhone, HeroPhone] = [
   {
     src: "/images/home/hero/iphone-18-pro-1600.webp",
     alt: "iPhone 18 Pro",
-    href: "/shop/iphone/iphone-pro",
+    href: "/iphone/iphone-18-pro",
   },
   {
     src: "/images/home/hero/macbook-pro-1600.webp",
@@ -127,7 +127,7 @@ export const heroPhones: [HeroPhone, HeroPhone, HeroPhone, HeroPhone] = [
 export const homeLatestIphones = [
   {
     name: "iPhone 18 Pro",
-    href: "/shop/iphone/iphone-pro",
+    href: "/iphone/iphone-18-pro",
     priceKes: 185000,
     badge: "New" as const,
     blurb: "Pro camera system",
@@ -142,7 +142,7 @@ export const homeLatestIphones = [
   },
   {
     name: "iPhone 18 Pro Max",
-    href: "/shop/iphone/iphone-pro-max",
+    href: "/iphone/iphone-18-pro-max",
     priceKes: 218000,
     badge: "New" as const,
     blurb: "Biggest Pro display",
@@ -265,7 +265,7 @@ export const homeDeals: DealItem[] = [
   {
     id: "iphone-pro",
     name: "iPhone 18 Pro",
-    href: "/shop/iphone/iphone-pro",
+    href: "/iphone/iphone-18-pro",
     priceKes: 154999,
     badge: "New",
     image: {
@@ -276,7 +276,7 @@ export const homeDeals: DealItem[] = [
   {
     id: "iphone-pro-max",
     name: "iPhone 18 Pro Max",
-    href: "/shop/iphone/iphone-pro-max",
+    href: "/iphone/iphone-18-pro-max",
     priceKes: 168999,
     badge: "New",
     image: {
@@ -418,7 +418,7 @@ export const homeNewIn: DealItem[] = [
   {
     id: "new-pro",
     name: "iPhone 18 Pro",
-    href: "/shop/iphone/iphone-pro",
+    href: "/iphone/iphone-18-pro",
     priceKes: 185000,
     badge: "New",
     image: { src: ghImages.iphone.proBlue, alt: "iPhone 18 Pro" },

@@ -47,6 +47,15 @@ const tagsById: Record<string, IphoneListItem["tags"]> = {
   "iphone-16": ["value", "camera"],
 };
 
+/** Product pages Google ranks (the /shop/iphone/* overviews name these as canonical). */
+const productPageById: Record<string, string> = {
+  "iphone-pro": "/iphone/iphone-18-pro",
+  "iphone-pro-max": "/iphone/iphone-18-pro-max",
+  "iphone-duo": "/iphone/iphone-duo",
+  "iphone-17": "/iphone/iphone-17",
+  "iphone-16": "/iphone/iphone-16",
+};
+
 function badgeFor(id: string, subBadge?: string): IphoneListItem["badge"] {
   if (subBadge === "New" || subBadge === "Pre-order" || subBadge === "Coming soon") {
     return subBadge;
@@ -75,7 +84,7 @@ export function listIphones(): IphoneListItem[] {
     return {
       id: p.id,
       name: p.name,
-      href: p.overviewHref,
+      href: productPageById[p.id] ?? p.overviewHref,
       priceKes: p.storages[0]?.priceKes ?? sub?.fromPriceKes ?? 0,
       badge: badgeFor(p.id, sub?.badge),
       blurb: p.tagline,
