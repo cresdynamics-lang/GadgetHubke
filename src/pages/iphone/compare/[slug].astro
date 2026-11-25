@@ -29,7 +29,7 @@ const offList = [leftLive, rightLive].some((p) => p && !isListedForSale(p));
 const left = withLiveSeoPrices(leftDefault, leftLive);
 const right = withLiveSeoPrices(rightDefault, rightLive);
 
-const title = `${left.name} vs ${right.name}: Price in Kenya & Specs | Gadget Hub`;
+const title = `${left.name} vs ${right.name}: Price in Kenya & Specs`;
 const exUkFrom = (m: typeof left) => {
   const ex = m.variants.map((v) => v.exUkKes).filter((n) => n > 0);
   return ex.length ? Math.min(...ex) : 0;

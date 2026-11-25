@@ -46,7 +46,7 @@ export function listSeriesHubs(): IphoneSeriesHub[] {
         slug: seriesSlug(family),
         family,
         name,
-        title: `${name} Price in Kenya | Gadget Hub`,
+        title: `${name} Price in Kenya`,
         metaDescription: `Compare every ${name} model at Gadget Hub Nairobi. KES ${from.toLocaleString("en-KE")}. Pay in full or Lipa Mdogo Mdogo.`,
         intro: SERIES_INTROS[family] ?? `Compare ${name} models and starting prices at Gadget Hub, Norwich Union House.`,
         models: models.sort((a, b) => a.fromKes - b.fromKes || a.name.localeCompare(b.name)),

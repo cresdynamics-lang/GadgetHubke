@@ -177,7 +177,7 @@ const kenyaTermsBoth: EditorialSection = {
 const PM_COLOURS = "Burgundy, Black, Glacier and Silver";
 
 const proMax: ModelEditorial = {
-  seoTitle: "iPhone 18 Pro Max Price in Kenya: 256GB to 1TB | Gadget Hub",
+  seoTitle: "iPhone 18 Pro Max Price in Kenya: 256GB to 1TB",
   metaDescription: (c) =>
     `iPhone 18 Pro Max from ${kes(fromKes(c))}. New and sealed with a 1-year warranty. Pay by M-Pesa or Lipa Mdogo Mdogo; we deliver across Kenya. Order today.`,
   h1: "Apple iPhone 18 Pro Max, New",
@@ -297,7 +297,7 @@ const proMax: ModelEditorial = {
   compareIds: ["iphone-17-pro-max", "iphone-18-pro"],
   storages: {
     "256GB": {
-      title: "iPhone 18 Pro Max 256GB Price in Kenya | GadgetHub",
+      title: "iPhone 18 Pro Max 256GB Price in Kenya",
       metaDescription: (c) =>
         `iPhone 18 Pro Max 256GB at ${kes(c.price("256GB"))}, new and sealed with a 1-year warranty. Pay by M-Pesa or a 40% deposit. Delivery across Kenya.`,
       h1: "Apple iPhone 18 Pro Max 256GB, New",
@@ -316,7 +316,7 @@ const proMax: ModelEditorial = {
         "Apple iPhone 18 Pro Max with 256GB of storage, sold new and sealed by GadgetHub in Nairobi, Kenya. Available in Burgundy, Black, Glacier and Silver. The phone has a 6.9-inch Super Retina XDR display with ProMotion up to 120Hz and Dynamic Island. It runs on the A20 Pro chip with a dual 16-core Neural Engine and a vapor chamber for sustained performance. The rear camera system has three 48MP Fusion cameras: a main camera with variable aperture from f/1.48 to f/4.0, an Ultra Wide camera with macro, and a Telephoto camera with 4x and 8x optical-quality zoom. The front camera is 18MP Center Stage. Video recording includes ProRes RAW, Apple Log 2, Dual Capture and 4K Dolby Vision up to 120 fps. Battery life is rated by Apple at up to 45 hours of video playback. Charging is by USB-C, reaching up to 50 percent in around 15 minutes with a compatible adapter, with MagSafe and Qi wireless charging supported. Connectivity includes 5G, Wi-Fi 7, Bluetooth and eSIM. Water resistance is rated IP68 to 6 metres for 30 minutes. Weight is 249 g. In the box: iPhone 18 Pro Max, USB-C Charge Cable and documentation. Includes a 1-year warranty from GadgetHub.",
     },
     "512GB": {
-      title: "iPhone 18 Pro Max 512GB Price in Kenya | GadgetHub",
+      title: "iPhone 18 Pro Max 512GB Price in Kenya",
       metaDescription: (c) =>
         `Buy the iPhone 18 Pro Max 512GB for ${kes(c.price("512GB"))} in Nairobi. New, sealed, 1-year warranty, M-Pesa or Lipa Mdogo Mdogo, delivery across Kenya.`,
       h1: "Apple iPhone 18 Pro Max 512GB, New",
@@ -363,7 +363,7 @@ const proMax: ModelEditorial = {
 const PRO_COLOURS = "Burgundy, Black, Glacier and Silver";
 
 const pro: ModelEditorial = {
-  seoTitle: "iPhone 18 Pro Price in Kenya: 256GB and 512GB | Gadget Hub",
+  seoTitle: "iPhone 18 Pro Price in Kenya: 256GB and 512GB",
   metaDescription: (c) =>
     `iPhone 18 Pro from ${kes(fromKes(c))}: A20 Pro, 6.3-inch ProMotion, 48MP cameras. New, sealed, 1-year warranty. Pay by M-Pesa; delivery across Kenya.`,
   h1: "Apple iPhone 18 Pro, New",
@@ -478,7 +478,7 @@ const pro: ModelEditorial = {
   compareIds: ["iphone-17-pro", "iphone-18-pro-max"],
   storages: {
     "256GB": {
-      title: "iPhone 18 Pro 256GB Price in Kenya | GadgetHub",
+      title: "iPhone 18 Pro 256GB Price in Kenya",
       metaDescription: (c) =>
         `iPhone 18 Pro 256GB for ${kes(c.price("256GB"))}, new and sealed with a 1-year warranty. Pay by M-Pesa or Lipa Mdogo Mdogo. Delivery across Kenya.`,
       h1: "Apple iPhone 18 Pro 256GB, New",
@@ -526,7 +526,7 @@ const pro: ModelEditorial = {
 const DUO_COLOURS = "Star White and Night Sky";
 
 const duo: ModelEditorial = {
-  seoTitle: "iPhone Duo Price in Kenya: Folding iPhone | GadgetHub",
+  seoTitle: "iPhone Duo Price in Kenya: Folding iPhone",
   metaDescription: (c) =>
     `iPhone Duo, Apple's folding iPhone, from ${kes(fromKes(c))}. New, sealed, 1-year warranty. Pay by M-Pesa or Lipa Mdogo Mdogo; delivery across Kenya.`,
   h1: "Apple iPhone Duo, New Folding iPhone",
@@ -632,7 +632,7 @@ const duo: ModelEditorial = {
   compareIds: ["iphone-18-pro-max"],
   storages: {
     "256GB": {
-      title: "iPhone Duo 256GB Price in Kenya | GadgetHub",
+      title: "iPhone Duo 256GB Price in Kenya",
       metaDescription: (c) =>
         `iPhone Duo 256GB, Apple's folding iPhone, for ${kes(c.price("256GB"))}. New and sealed, 1-year warranty, M-Pesa or Lipa Mdogo Mdogo, delivery across Kenya.`,
       h1: "Apple iPhone Duo 256GB, New",
@@ -672,7 +672,7 @@ const duo: ModelEditorial = {
         "Apple iPhone Duo with 512GB of storage, sold new and sealed by GadgetHub in Nairobi, Kenya. Colours: Star White and Night Sky. The 512GB capacity suits users who keep large documents, offline video and media libraries on the device. The iPhone Duo is a folding iPhone with a 7.6-inch Super Retina XDR inner display with nano-texture and a 5.4-inch Super Retina XDR outer display. It runs on the A20 Pro chip with vapor cooling for sustained performance. The design uses a Grade 5 titanium frame and hinge cover, a Ceramic Shield 2 front and a Ceramic Shield back. Camera: 48MP Dual Fusion camera system with Smart Take and advanced capture modes. Battery: dual-battery system with up to 44 hours of video playback on the outer display and up to 31 hours on the inner display, as rated by Apple. Port: USB-C, with MagSafe support. In the box: iPhone Duo, USB-C Charge Cable and documentation. 1-year warranty.",
     },
     "1TB": {
-      title: "iPhone Duo 1TB Price in Kenya | GadgetHub Nairobi",
+      title: "iPhone Duo 1TB Price in Kenya",
       metaDescription: (c) =>
         `iPhone Duo 1TB for ${kes(c.price("1TB"))}, Apple's folding iPhone with maximum storage. New and sealed, 1-year warranty, M-Pesa, delivery across Kenya.`,
       h1: "Apple iPhone Duo 1TB, New",
@@ -726,7 +726,7 @@ const I17_BODY =
   "The iPhone 17 has a 6.3-inch Super Retina XDR display with ProMotion up to 120Hz, up to 3000 nits peak brightness and Dynamic Island. It runs on the A19 chip with a 5-core GPU and supports Apple Intelligence. The rear cameras are a 48MP Fusion Main camera with 2x optical-quality zoom and a 48MP Fusion Ultra Wide camera. The front camera is 18MP Center Stage with Dual Capture. Video records up to 4K at 60 fps in Dolby Vision. Camera Control and the Action button are included. Apple rates battery life at up to 30 hours of video playback. Charging is through USB-C, with MagSafe and Qi wireless support. Connectivity: 5G and Wi-Fi 7. Build: aluminium with a Ceramic Shield 2 front, IP68 water resistance to 6 metres for 30 minutes, 177 g.";
 
 const i17: ModelEditorial = {
-  seoTitle: "iPhone 17 Price in Kenya: New and Ex-UK | GadgetHub",
+  seoTitle: "iPhone 17 Price in Kenya: New and Ex-UK",
   metaDescription: (c) =>
     `iPhone 17 from ${kes(fromAny(c))}: ${both(c, c.storages[0])}. A19, 6.3-inch 120Hz display, 48MP cameras. M-Pesa, delivery across Kenya.`,
   h1: "Apple iPhone 17, New and Ex-UK",
@@ -955,7 +955,7 @@ function pro17Storages(name: string, body: string, short: string): Record<string
       feedExUkDescription: feed17(name, "256GB", PRO17_COLOURS, body, true),
     },
     "512GB": {
-      title: `${name} 512GB Price in Kenya | GadgetHub`,
+      title: `${name} 512GB Price in Kenya`,
       metaDescription: (c) =>
         `Buy the ${name} 512GB for ${both(c, "512GB")} in Nairobi. Room for 4K video, M-Pesa or Lipa Mdogo Mdogo, delivery across Kenya.`,
       h1: `Apple ${name} 512GB, New and Ex-UK`,
@@ -980,7 +980,7 @@ function pro17Storages(name: string, body: string, short: string): Record<string
 }
 
 const pro17: ModelEditorial = {
-  seoTitle: "iPhone 17 Pro Price in Kenya: New and Ex-UK | Gadget Hub",
+  seoTitle: "iPhone 17 Pro Price in Kenya: New and Ex-UK",
   metaDescription: (c) =>
     `iPhone 17 Pro from ${kes(fromAny(c))}. A19 Pro, three 48MP cameras, 6.3-inch ProMotion. New or Ex-UK, M-Pesa and delivery across Kenya.`,
   h1: "Apple iPhone 17 Pro, New and Ex-UK",
@@ -1027,7 +1027,7 @@ const pro17: ModelEditorial = {
 };
 
 const pm17: ModelEditorial = {
-  seoTitle: "iPhone 17 Pro Max Price in Kenya: New and Ex-UK | Gadget Hub",
+  seoTitle: "iPhone 17 Pro Max Price in Kenya: New and Ex-UK",
   metaDescription: (c) =>
     `iPhone 17 Pro Max from ${kes(fromAny(c))}. A19 Pro, three 48MP cameras, 6.9-inch display, 39-hour battery. New or Ex-UK, M-Pesa, delivery in Kenya.`,
   h1: "Apple iPhone 17 Pro Max, New and Ex-UK",
@@ -1129,7 +1129,7 @@ type I16 = {
 
 function storages16(o: I16): Record<string, EditorialStorage> {
   const one = (s: string, fit: string, feedTitle: string, isSmall: boolean): EditorialStorage => ({
-    title: `${o.name} ${s} Price in Kenya, Ex-UK | GadgetHub`,
+    title: `${o.name} ${s} Price in Kenya, Ex-UK`,
     metaDescription: (c) =>
       `${o.name} ${s} Ex-UK for ${kes(c.exUk(s))} at GadgetHub. ${o.metaBit}. M-Pesa or Lipa Mdogo Mdogo, delivery in Kenya.`,
     h1: `Apple ${o.name} ${s}, Ex-UK`,
@@ -1161,7 +1161,7 @@ const I16_BODY =
   "The iPhone 16 has a 6.1-inch Super Retina XDR display (2556×1179, 460 ppi) with Dynamic Island. It runs on the A18 chip and supports Apple Intelligence. The rear cameras are a 48MP Fusion camera and a 12MP Ultra Wide camera; the front camera is 12MP TrueDepth. Camera Control and the Action button are included. Apple rates battery life at up to 22 hours of video playback for a new battery. Charging is through USB-C, with MagSafe support. Connectivity: 5G and Wi-Fi 7, with Face ID and Crash Detection. Build: aluminium frame with Ceramic Shield, IP68 water resistance to 6 metres for 30 minutes, 170 g.";
 
 const i16: ModelEditorial = {
-  seoTitle: "iPhone 16 Price in Kenya: Ex-UK 128GB, 256GB | GadgetHub",
+  seoTitle: "iPhone 16 Price in Kenya: Ex-UK 128GB, 256GB",
   metaDescription: (c) =>
     `iPhone 16 Ex-UK from ${kes(exFrom(c))} at GadgetHub Nairobi. A18 chip, 48MP camera, Camera Control. M-Pesa or Lipa Mdogo Mdogo, delivery across Kenya.`,
   h1: "Apple iPhone 16, Ex-UK",
