@@ -92,6 +92,11 @@ export function bagMetaLine(item: BagItem): string {
     .join(" · ");
 }
 
+/** Closing line of every WhatsApp order, trade-in and Lipa message. */
+export const WHATSAPP_CALL_BACK_LINE = "Kindly call me back to arrange delivery or pickup at the shop.";
+
+const CHANNEL_WORD: Record<string, string> = { new: "New", "ex-uk": "Ex-UK", used: "Slightly used" };
+
 export function whatsappOrderMessage(
   items: BagItem[],
   total: number,
@@ -100,42 +105,53 @@ export function whatsappOrderMessage(
     phone?: string;
     email?: string;
     fulfillment?: string;
+    deliveryAddress?: string;
     notes?: string;
   },
   orderId?: string,
+  lipa?: { depositPct: number; depositKes: number; months: number; remainingKes: number; monthlyKes?: number; totalKes?: number },
 ): string {
   const lines = items.map((i) => {
-    const bits = [
-      i.name,
+    const options = [
       i.chip,
       i.size,
       i.material,
       i.memory,
+      i.storage,
       i.connectivity,
       i.connector,
-      i.colour || "-",
-      i.caseOption ? `case: ${i.caseOption}` : "",
-      i.storage,
+      i.colour ? `Colour: ${i.colour}` : "",
+      i.caseOption ? `Case: ${i.caseOption}` : "",
       i.pair,
       i.band,
       i.extras,
-      i.deviceFor ? `for: ${i.deviceFor}` : "",
-      i.channel,
+      i.deviceFor ? `For: ${i.deviceFor}` : "",
+      i.channel ? `Condition: ${CHANNEL_WORD[i.channel] ?? i.channel}` : "",
     ].filter(Boolean);
-    return `• ${bits.join(" / ")} ×${i.qty} = ${formatKes(i.kes * i.qty)}`;
+    return [`• ${i.name} ×${i.qty} = ${formatKes(i.kes * i.qty)}`, ...(options.length ? [`   ${options.join(" · ")}`] : [])].join("\n");
   });
   const parts = ["Hi Gadget Hub, I'd like to order:"];
   if (orderId) parts.push(`Order: ${orderId}`);
+  parts.push("", ...lines, "", `Total: ${formatKes(total)}`);
+  if (lipa) {
+    const monthly = lipa.monthlyKes ?? Math.round(lipa.remainingKes / Math.max(1, lipa.months));
+    const planTotal = lipa.totalKes ?? lipa.depositKes + lipa.remainingKes;
+    parts.push(
+      `Payment: Lipa Mdogo Mdogo — ${lipa.depositPct}% deposit ${formatKes(lipa.depositKes)}, then ${formatKes(monthly)} a month for ${lipa.months} ${lipa.months === 1 ? "month" : "months"} (total ${formatKes(planTotal)})`,
+    );
+  } else {
+    parts.push("Payment: Pay in full");
+  }
+  parts.push("");
   if (customer?.name) parts.push(`Name: ${customer.name}`);
   if (customer?.phone) parts.push(`Phone: ${customer.phone}`);
   if (customer?.email) parts.push(`Email: ${customer.email}`);
   if (customer?.fulfillment) {
-    parts.push(
-      `Fulfillment: ${customer.fulfillment === "delivery" ? "Delivery" : "Pickup"}`,
-    );
+    parts.push(`Preferred: ${customer.fulfillment === "delivery" ? "Delivery" : "Pickup at the shop"}`);
+    if (customer.fulfillment === "delivery" && customer.deliveryAddress) parts.push(`Delivery address: ${customer.deliveryAddress}`);
   }
   if (customer?.notes) parts.push(`Notes: ${customer.notes}`);
-  parts.push("", ...lines, "", `Total: ${formatKes(total)}`);
+  parts.push("", WHATSAPP_CALL_BACK_LINE);
   return parts.join("\n");
 }
 

@@ -13,7 +13,7 @@ import RecentlyViewed from "../components/RecentlyViewed.astro";
 import interLatin from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
 import "../styles/global.css";
 import { site } from "../lib/site";
-import { STOREFRONT_PAYMENTS } from "../lib/commerce";
+import { ONLINE_PAYMENTS, STOREFRONT_PAYMENTS } from "../lib/commerce";
 
 interface Props {
   title?: string;
@@ -66,7 +66,7 @@ const storeJsonLd = {
   email: site.email,
   priceRange: "KES 3,000 - KES 600,000",
   currenciesAccepted: "KES",
-  paymentAccepted: STOREFRONT_PAYMENTS ? "M-Pesa, Lipa Mdogo Mdogo" : "WhatsApp order, M-Pesa in store",
+  paymentAccepted: ONLINE_PAYMENTS ? "M-Pesa, Lipa Mdogo Mdogo" : "WhatsApp order, M-Pesa in store, Lipa Mdogo Mdogo",
   address: {
     "@type": "PostalAddress",
     streetAddress: `${site.address}, ${site.landmark}`,

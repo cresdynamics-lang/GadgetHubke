@@ -9,7 +9,7 @@ import { sendInvoiceForOrder, sendReceiptForOrder } from "../mail/orders";
 import type { BagItem, CheckoutCustomer, CheckoutOrder, LipaTerms, OrderIntent, OrderStatus, PaymentMethod } from "./types";
 import { pushOrderToOps } from "../ops/push-order";
 import { bagTotal } from "./bag";
-import { STOREFRONT_PAYMENTS } from "../commerce";
+import { ONLINE_PAYMENTS } from "../commerce";
 import type { StkResult } from "../payments/stanbic";
 import { buildLipaTerms, nairobiDay, parseIntent } from "./intent";
 
@@ -115,7 +115,7 @@ export async function createOrder(input: {
     intent,
     lipa,
     currency: "KES",
-    paymentProvider: STOREFRONT_PAYMENTS ? "stanbic" : "whatsapp",
+    paymentProvider: ONLINE_PAYMENTS ? "stanbic" : "whatsapp",
   };
   const all = await readAll();
   all.unshift(order);
@@ -154,7 +154,7 @@ export async function createOrder(input: {
   }
   let stk: StkResult | undefined;
   let stkError: string | undefined;
-  if (STOREFRONT_PAYMENTS) {
+  if (ONLINE_PAYMENTS) {
     // Invoice PDF (Gadget Hub details) emails the moment the order / pay link is created.
     order = await emailInvoice(order);
     // Then push M-Pesa STK. Failure still leaves the customer with the invoice.

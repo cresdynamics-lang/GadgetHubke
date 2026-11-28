@@ -162,6 +162,7 @@ const payload = JSON.stringify(tradeInQuestions.map((q) => ({ id: q.id, label: q
 
 <script>
   import { holdWhatsAppTab, initDevicePickers, readPicker } from "../scripts/devicePicker";
+  import { WHATSAPP_CALL_BACK_LINE } from "../lib/checkout/bag";
 
   initDevicePickers();
   const form = document.querySelector<HTMLFormElement>("[data-tradein-form]");
@@ -258,6 +259,8 @@ const payload = JSON.stringify(tradeInQuestions.map((q) => ({ id: q.id, label: q
       `ID or passport: ${text("idNumber")}`,
       `Email: ${text("email")}`,
       `Phone: ${text("phone")}`,
+      "",
+      WHATSAPP_CALL_BACK_LINE,
     ]
       .filter((line, i, all) => line !== "" || all[i - 1] !== "")
       .join("\n");

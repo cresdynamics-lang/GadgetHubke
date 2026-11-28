@@ -123,6 +123,7 @@ const monthWord = (m: number) => (m === 1 ? "month" : "months");
 <script>
   import { holdWhatsAppTab, initDevicePickers, readPicker } from "../scripts/devicePicker";
   import { lipaPlan } from "../lib/pricing/lipa";
+  import { WHATSAPP_CALL_BACK_LINE } from "../lib/checkout/bag";
 
   initDevicePickers();
   const form = document.querySelector<HTMLFormElement>("[data-lipa-form]");
@@ -221,7 +222,7 @@ const monthWord = (m: number) => (m === 1 ? "month" : "months");
       `Device: ${device.name}`,
       device.size ? `Storage: ${device.size}` : "",
       device.colour ? `Colour: ${device.colour}` : "",
-      `Condition: ${device.channel === "ex-uk" ? "Ex-UK" : "New"}`,
+      `Condition: ${device.channel === "ex-uk" ? "Ex-UK" : device.channel === "used" ? "Slightly used" : "New"}`,
       ...(device.available
         ? [
             `Price: ${kes(device.priceKes)}`,
@@ -237,6 +238,8 @@ const monthWord = (m: number) => (m === 1 ? "month" : "months");
       `Name: ${contact.name}`,
       `Phone: ${contact.phone}`,
       `Email: ${contact.email}`,
+      "",
+      WHATSAPP_CALL_BACK_LINE,
     ]
       .filter((line, i, all) => line !== "" || (all[i - 1] !== "" && i > 0))
       .join("\n");
